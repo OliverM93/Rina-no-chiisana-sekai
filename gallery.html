@@ -1,0 +1,17 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <title>3D-Galerie (Entwicklung)</title>
+    <style>
+      html, body { margin: 0; height: 100%; background: #fff8ef; overflow: hidden; }
+      #view { width: 100%; height: 100%; display: block; }
+      #ctrl { position: fixed; top: 8px; left: 8px; font: 14px system-ui; background: #fffd; padding: 6px 10px; border-radius: 10px; }
+    </style>
+  </head>
+  <body>
+    <canvas id="view"></canvas>
+    <div id="ctrl">Ansicht: <span id="label"></span> · Tasten 1–3 wechseln, Maus ziehen = drehen</div>
+    <script type="module" src="/src/dev/gallery3d.ts"></script>
+  </body>
+</html>

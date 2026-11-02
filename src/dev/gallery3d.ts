@@ -1,0 +1,141 @@
+/**
+ * Entwickler-Galerie in 3D: Figuren und Modelle nebeneinander.
+ * Aufruf: http://localhost:5173/gallery.html  (?ansicht=figuren|natur|gebaeude, ?winkel=0..360)
+ */
+import * as THREE from 'three';
+import { DEFAULT_LINA, type Appearance } from '../core/appearance';
+import { GISELA } from '../data/npcs/gisela';
+import { palette } from '../style/palette';
+import { makeBench, makeBoard, makeBridge, makeFountain, makeHouse, makeLantern, makeMailbox, makePlotMarks, makeSellbox, makeSign } from '../world3d/models/buildings';
+import { Chibi3D } from '../world3d/models/chibi3d';
+import { makeBush, makeFlower, makePine, makeRock, makeTree, FLOWER_COLORS } from '../world3d/models/nature';
+
+const canvas = document.getElementById('view') as HTMLCanvasElement;
+const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
+renderer.setPixelRatio(Math.min(2, devicePixelRatio));
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+const scene = new THREE.Scene();
+scene.background = new THREE.Color('#cfe9f7');
+const camera = new THREE.PerspectiveCamera(30, 1, 0.1, 200);
+scene.add(new THREE.HemisphereLight('#ffffff', '#b9d99c', 1.4));
+const sun = new THREE.DirectionalLight('#fff4e0', 2.2);
+sun.position.set(4, 8, 6);
+sun.castShadow = true;
+sun.shadow.mapSize.set(2048, 2048);
+Object.assign(sun.shadow.camera, { left: -12, right: 12, top: 12, bottom: -12 });
+scene.add(sun);
+const ground = new THREE.Mesh(new THREE.PlaneGeometry(60, 60), new THREE.MeshLambertMaterial({ color: palette.grass.base }));
+ground.rotation.x = -Math.PI / 2;
+ground.receiveShadow = true;
+scene.add(ground);
+
+const params = new URLSearchParams(location.search);
+const views = ['figuren', 'natur', 'gebaeude'];
+let view = params.get('ansicht') ?? 'figuren';
+let angle = Number(params.get('winkel') ?? 0) * (Math.PI / 180);
+const content = new THREE.Group();
+scene.add(content);
+
+const people: Array<[string, Appearance]> = [
+  ['Lina', DEFAULT_LINA],
+  ['Gisela', GISELA.appearance],
+  ['Lars', { ...DEFAULT_LINA, hairStyle: 'kurz', hairColor: palette.hair.dunkelbraun, outfit: 'hemd', outfitColor: '#a9cdf2', accentColor: '#7d6a73', height: 1.18, build: 1.05, beard: 'voll', blush: false }],
+  ['Olaf', { ...DEFAULT_LINA, hairStyle: 'kurz', hairColor: palette.hair.angegraut, outfit: 'hemd', outfitColor: '#ffffff', accentColor: '#8a9bc4', height: 0.95, build: 1.05, beard: 'kurz', glasses: true, blush: false }],
+  ['Bob', { ...DEFAULT_LINA, hairStyle: 'bob', outfit: 'latzhose', outfitColor: '#a8dcc8' }],
+  ['Zopf', { ...DEFAULT_LINA, hairStyle: 'zopf', hairColor: palette.hair.blond, outfit: 'pulli' }],
+];
+const chibis: Chibi3D[] = [];
+
+function build() {
+  content.clear();
+  chibis.length = 0;
+  (document.getElementById('label') as HTMLElement).textContent = view;
+  if (view === 'figuren') {
+    people.forEach(([, a], i) => {
+      const c = new Chibi3D(a);
+      c.root.position.set((i - (people.length - 1) / 2) * 0.9, 0, 0);
+      content.add(c.root);
+      chibis.push(c);
+    });
+    const sitter = new Chibi3D(GISELA.appearance);
+    const bench = makeBench();
+    bench.position.set(0, 0, -1.6);
+    sitter.root.position.set(-0.3, 0.37, -1.55);
+    content.add(bench, sitter.root);
+    sitter.pose({ step: 0, moving: false, running: false, sitting: true, blink: false, t: 0 });
+    camera.position.set(Math.sin(angle) * 6.5, 2.4, Math.cos(angle) * 6.5);
+    camera.lookAt(0, 0.45, -0.3);
+  } else if (view === 'natur') {
+    const items: THREE.Object3D[] = [];
+    for (const s of ['fruehling', 'sommer', 'herbst', 'winter'] as const) items.push(makeTree(s, 3).group);
+    items.push(makePine('sommer', 1).group, makePine('winter', 2).group, makeBush('herbst', 4), makeRock(5));
+    items.forEach((o, i) => {
+      o.position.set((i % 4) * 2.2 - 3.3, 0, Math.floor(i / 4) * 2.4 - 1.2);
+      content.add(o);
+    });
+    FLOWER_COLORS.forEach((c, i) => {
+      const f = makeFlower(c);
+      f.position.set(-1 + i * 0.4, 0, 2.6);
+      content.add(f);
+    });
+    camera.position.set(Math.sin(angle) * 13, 6, Math.cos(angle) * 13);
+    camera.lookAt(0, 0.8, 0);
+  } else {
+    const house = makeHouse(palette.roof.rose).group;
+    house.position.set(-3, 0, -1.5);
+    const house2 = makeHouse(palette.roof.lilac).group;
+    house2.position.set(3, 0, -1.5);
+    const mb = makeMailbox();
+    mb.group.position.set(-0.3, 0, 1);
+    const props: Array<[THREE.Object3D, number, number]> = [
+      [mb.group, -0.3, 1],
+      [makeSellbox(), 0.6, 1],
+      [makeLantern(), 1.5, 1],
+      [makeBench(), 3.2, 1.2],
+      [makeBoard(), -2.8, 1.5],
+      [makeFountain(), -0.5, 3.6],
+      [makeBridge(), 3.2, 3.5],
+      [makeSign('Bauplatz'), 5.5, 1.2],
+      [makePlotMarks(5, 3), 6.5, 2.5],
+    ];
+    content.add(house, house2);
+    for (const [o, x, z] of props) {
+      o.position.set(x, 0, z);
+      content.add(o);
+    }
+    camera.position.set(Math.sin(angle) * 16, 9, Math.cos(angle) * 16 + 2);
+    camera.lookAt(0.5, 0.6, 1);
+  }
+}
+
+function resize() {
+  renderer.setSize(innerWidth, innerHeight, false);
+  camera.aspect = innerWidth / innerHeight;
+  camera.updateProjectionMatrix();
+}
+addEventListener('resize', resize);
+addEventListener('keydown', (e) => {
+  const i = Number(e.key) - 1;
+  if (views[i]) {
+    view = views[i];
+    build();
+  }
+});
+let drag: number | null = null;
+addEventListener('pointerdown', (e) => (drag = e.clientX));
+addEventListener('pointerup', () => (drag = null));
+addEventListener('pointermove', (e) => {
+  if (drag === null) return;
+  angle -= (e.clientX - drag) * 0.01;
+  drag = e.clientX;
+  build();
+});
+resize();
+build();
+let t = 0;
+renderer.setAnimationLoop(() => {
+  t += 1 / 60;
+  chibis.forEach((c, i) => c.pose({ step: t * 3, moving: i % 2 === 1, running: false, sitting: false, blink: Math.sin(t * 2 + i) > 0.97, t }));
+  renderer.render(scene, camera);
+});
