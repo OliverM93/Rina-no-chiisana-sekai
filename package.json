@@ -1,0 +1,29 @@
+{
+  "name": "rina-no-chiisana-sekai",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Rina no Chiisana Sekai – ein gemütliches Life-Sim-Spiel für Lina",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "dependencies": {
+    "@fontsource-variable/nunito": "^5.3.0",
+    "phaser": "^4.2.1",
+    "preact": "^11.1.1"
+  },
+  "devDependencies": {
+    "@preact/preset-vite": "^2.10.6",
+    "typescript": "^7.0.2",
+    "vite": "^8.3.5",
+    "vitest": "^5.0.5"
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}
