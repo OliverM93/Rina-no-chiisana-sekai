@@ -1,0 +1,810 @@
+/**
+ * Die 3D-Dorfwelt: Renderer, Kamera, Licht (Tag & Nacht), Lina, Bewohner,
+ * Interaktionen und Maus-/Tastatursteuerung.
+ *
+ * Zwei Modi:
+ *  - Titel: Die Kamera schwebt langsam über das Dorf.
+ *  - Spiel: Lina ist da und lässt sich steuern.
+ */
+import * as THREE from 'three';
+import { DPR, TILE, UNIT } from '../config';
+import { findPath, nearestWalkable, type Tile } from '../core/grid';
+import { getDaylight } from '../core/time';
+import { findInteraction, type MapObject, OBJECT_KINDS, objectById, tileOf } from '../core/worldmap';
+import { itemCountLabel } from '../data/items';
+import { fillPlaceholders, INTERACTIONS } from '../data/interactions';
+import { NPCS } from '../data/npcs';
+import { GISELA_WELCOME, GISELA_WELCOME_2 } from '../data/npcs/gisela';
+import { INTRO_LINES } from '../data/story';
+import { itemIconUrl } from '../gfx/items';
+import {
+  chatWithNpc,
+  checkDailyMail,
+  giftToNpc,
+  giveItem,
+  goodbyeLine,
+  hasUnreadMail,
+  knockRock,
+  npcHearts,
+  talkToNpc,
+  welcomeLetter,
+} from '../game/gameplay';
+import { KeyboardInput } from '../game/input';
+import type { Session } from '../game/session';
+import { mixHex, palette } from '../style/palette';
+import { Character, FEET_OFFSET } from './Character3D';
+import { Collectibles } from './Collectibles3D';
+import { lampGlass, windowGlass } from './models/buildings';
+import { buildMapView3D, footprintCenter, type MapView3D } from './MapView3D';
+import { Npc } from './Npc';
+import { Tweens } from './tweens';
+
+type Target =
+  | { kind: 'pickup'; id: string }
+  | { kind: 'npc'; npc: Npc }
+  | { kind: 'object'; id: string }
+  | { kind: 'flowers'; tile: Tile };
+
+const SPECIAL_OBJECTS = ['verkaufskiste', 'haus-gisela', 'briefkasten-lina'];
+const DIRS = { down: [0, 1], up: [0, -1], left: [-1, 0], right: [1, 0] } as const;
+
+/** Kamera-Versatz zum Blickziel (schräg von oben, wie im Vorbild) */
+const CAM_OFFSET = new THREE.Vector3(0, 5.4, 7.2);
+const LANTERN_LIGHTS = 6;
+
+export class World3D {
+  readonly renderer: THREE.WebGLRenderer;
+  private scene = new THREE.Scene();
+  private camera = new THREE.PerspectiveCamera(32, 1, 0.1, 120);
+  private sun = new THREE.DirectionalLight('#fff4e0', 2.2);
+  private hemi = new THREE.HemisphereLight('#ffffff', '#a9d48e', 1.3);
+  private lampLights: THREE.PointLight[] = [];
+  private view: MapView3D;
+  private collectibles: Collectibles;
+  private tweens = new Tweens();
+  private keys = new KeyboardInput();
+  private player: Character | null = null;
+  private npcs = new Map<string, Npc>();
+  private interactive = new Set<string>();
+  private cutscene = false;
+  private camTarget = new THREE.Vector3(27.5, 0, 19);
+  private camPos = new THREE.Vector3();
+  private zoom = 1;
+  private titleTime = 0;
+  private dayCheck = 0;
+  private lightCheck = 1;
+  private night = 0;
+  private bubble: THREE.Sprite;
+  private bubbleKey: string | null = null;
+  private marker: THREE.Mesh;
+  private leaves: THREE.InstancedMesh;
+  private leafState: Array<{ p: THREE.Vector3; v: THREE.Vector3; spin: number; phase: number }> = [];
+  private faded = new Map<string, number>();
+  private raycaster = new THREE.Raycaster();
+  private pointerDown: { x: number; y: number } | null = null;
+  private lastTime = performance.now();
+  private unsubscribers: Array<() => void> = [];
+
+  constructor(
+    private readonly canvas: HTMLCanvasElement,
+    private readonly session: Session,
+  ) {
+    this.renderer = new THREE.WebGLRenderer({ canvas, antialias: true, powerPreference: 'high-performance' });
+    this.renderer.setPixelRatio(DPR);
+    this.renderer.shadowMap.enabled = true;
+    this.renderer.shadowMap.type = THREE.PCFShadowMap;
+    this.renderer.outputColorSpace = THREE.SRGBColorSpace;
+
+    const map = session.map;
+    this.view = buildMapView3D(this.scene, map, session.season, this.renderer.capabilities.getMaxAnisotropy());
+    this.collectibles = new Collectibles(this.scene, session, this.view, this.tweens);
+
+    // Licht
+    this.sun.castShadow = true;
+    this.sun.shadow.mapSize.set(2048, 2048);
+    Object.assign(this.sun.shadow.camera, { left: -16, right: 16, top: 16, bottom: -16, near: 1, far: 60 });
+    this.sun.shadow.bias = -0.0008;
+    this.sun.shadow.normalBias = 0.02;
+    this.scene.add(this.sun, this.sun.target, this.hemi);
+    for (let i = 0; i < LANTERN_LIGHTS; i++) {
+      const l = new THREE.PointLight('#ffcf80', 0, 7, 1.6);
+      this.lampLights.push(l);
+      this.scene.add(l);
+    }
+    this.scene.fog = new THREE.Fog('#cfe9f7', 26, 55);
+
+    for (const id of Object.keys(INTERACTIONS)) this.interactive.add(id);
+    for (const id of SPECIAL_OBJECTS) this.interactive.add(id);
+    for (const o of map.objects) if (o.kind === 'tree' || o.kind === 'rock') this.interactive.add(o.id);
+    for (const [id, node] of this.view.nodes) node.userData.objectId = id;
+
+    for (const def of NPCS) {
+      const npc = new Npc(this.scene, def, session, this.view.terrain.heightAt);
+      npc.char.root.userData.npcId = def.id;
+      this.npcs.set(def.id, npc);
+    }
+
+    this.bubble = new THREE.Sprite(new THREE.SpriteMaterial({ map: bubbleTexture(), transparent: true, depthTest: false }));
+    this.bubble.scale.set(0.5, 0.42, 1);
+    this.bubble.renderOrder = 10;
+    this.bubble.visible = false;
+    this.scene.add(this.bubble);
+
+    this.marker = new THREE.Mesh(
+      new THREE.RingGeometry(0.22, 0.3, 28).rotateX(-Math.PI / 2),
+      new THREE.MeshBasicMaterial({ color: palette.ui.accent, transparent: true, opacity: 0.9, depthWrite: false }),
+    );
+    this.marker.visible = false;
+    this.scene.add(this.marker);
+
+    this.leaves = this.makeLeaves();
+
+    canvas.addEventListener('pointerdown', this.onPointerDown);
+    canvas.addEventListener('pointerup', this.onPointerUp);
+    canvas.addEventListener('pointermove', this.onPointerMove);
+    canvas.addEventListener('wheel', this.onWheel, { passive: false });
+    window.addEventListener('resize', this.resize);
+    this.unsubscribers.push(
+      this.keys.onAction(() => this.tryInteract()),
+      session.bus.on('game:started', () => this.startPlay()),
+      session.bus.on('appearance:changed', (a) => this.player?.setAppearance(a)),
+      session.bus.on('state:changed', () => this.updateMailbox()),
+    );
+
+    this.resize();
+    this.applyLight();
+    this.renderer.setAnimationLoop(() => this.frame());
+    if (session.playing) this.startPlay();
+    session.markWorldReady();
+  }
+
+  // -------------------------------------------------------------------------
+  // Grundgerüst
+  // -------------------------------------------------------------------------
+
+  private resize = () => {
+    const parent = this.canvas.parentElement as HTMLElement;
+    const w = parent.clientWidth;
+    const h = parent.clientHeight;
+    this.renderer.setSize(w, h, false);
+    this.camera.aspect = w / Math.max(1, h);
+    this.camera.updateProjectionMatrix();
+  };
+
+  private frame() {
+    const now = performance.now();
+    const dtMs = Math.min(100, now - this.lastTime);
+    this.lastTime = now;
+    const dt = dtMs / 1000;
+
+    this.tweens.update();
+    this.lightCheck += dt;
+    if (this.lightCheck > 1) {
+      this.lightCheck = 0;
+      this.applyLight();
+    }
+    for (const npc of this.npcs.values()) npc.update(dtMs);
+    this.collectibles.update(dt);
+    this.view.terrain.update(now / 1000);
+    this.updateLeaves(dt);
+
+    const player = this.player;
+    const data = this.session.data;
+    if (player && data) {
+      this.dayCheck += dtMs;
+      if (this.dayCheck > 3000) {
+        this.dayCheck = 0;
+        if (this.collectibles.checkDay()) checkDailyMail(this.session);
+      }
+      const blocked = this.session.uiBlocking || this.cutscene;
+      const intent = blocked ? { dx: 0, dy: 0, run: false } : this.keys.direction();
+      if (blocked && player.hasPath && !this.cutscene) player.cancelPath();
+      const grid = this.session.map.grid;
+      player.update(dtMs, intent, (tx, ty) => grid.isBlocked(tx, ty));
+      data.player.x = Math.round(player.x * 10) / 10;
+      data.player.y = Math.round(player.y * 10) / 10;
+      data.player.facing = player.facing;
+      if (!player.hasPath) this.marker.visible = false;
+
+      // Kamera folgt Lina weich
+      const target = new THREE.Vector3(player.x * UNIT, 0, player.y * UNIT);
+      this.camTarget.lerp(target, 1 - Math.pow(0.002, dt));
+      this.updateOccluders(player);
+      this.updateBubble(player, blocked);
+    } else {
+      // Titelbildschirm: langsamer Schwenk über das Dorf
+      this.titleTime += dt;
+      this.camTarget.set(24 + Math.sin(this.titleTime * 0.05) * 9, 0, 21 + Math.sin(this.titleTime * 0.035) * 3);
+    }
+    this.updateCamera();
+    this.renderer.render(this.scene, this.camera);
+  }
+
+  private updateCamera() {
+    const desired = this.camTarget.clone().add(CAM_OFFSET.clone().multiplyScalar(this.zoom));
+    this.camPos.copy(desired);
+    this.camera.position.copy(this.camPos);
+    this.camera.lookAt(this.camTarget.x, 0.75, this.camTarget.z);
+    // Schatten folgen dem sichtbaren Bereich
+    this.sun.target.position.set(this.camTarget.x, 0, this.camTarget.z);
+    this.sun.position.set(this.camTarget.x + 7, 16, this.camTarget.z + 9);
+  }
+
+  private onWheel = (e: WheelEvent) => {
+    e.preventDefault();
+    this.zoom = Math.min(1.45, Math.max(0.55, this.zoom * (e.deltaY > 0 ? 1.08 : 0.93)));
+  };
+
+  // -------------------------------------------------------------------------
+  // Tag & Nacht
+  // -------------------------------------------------------------------------
+
+  private applyLight() {
+    const now = this.session.clock();
+    const light = getDaylight(now);
+    this.night = light.night;
+    const n = light.night;
+    const tint = light.tint;
+    const sky = mixHex(mixHex('#bfe6f7', tint, 0.55), '#2a2e5c', n * 0.75);
+    (this.scene.background as THREE.Color | null) ?? (this.scene.background = new THREE.Color());
+    (this.scene.background as THREE.Color).set(sky);
+    (this.scene.fog as THREE.Fog).color.set(sky);
+    this.sun.color.set(mixHex('#fff4e0', tint, 0.6));
+    this.sun.intensity = 2.3 * (1 - n) + 0.45 * n;
+    this.hemi.color.set(mixHex('#ffffff', tint, 0.7));
+    this.hemi.groundColor.set(mixHex('#a9d48e', '#2d3560', n));
+    this.hemi.intensity = 1.35 * (1 - n * 0.55);
+    windowGlass.emissiveIntensity = Math.max(0, n - 0.15) * 1.6;
+    lampGlass.emissiveIntensity = 0.2 + Math.max(0, n - 0.1) * 2.2;
+    this.placeLampLights();
+  }
+
+  /** Die nächsten Laternen zur Kamera bekommen echte Lichtquellen */
+  private placeLampLights() {
+    const glow = Math.max(0, this.night - 0.1);
+    const sorted = [...this.view.lanterns].sort((a, b) => a.distanceToSquared(this.camTarget) - b.distanceToSquared(this.camTarget));
+    this.lampLights.forEach((l, i) => {
+      const pos = sorted[i];
+      if (!pos || glow <= 0) {
+        l.intensity = 0;
+        return;
+      }
+      l.position.copy(pos);
+      l.intensity = glow * 3.2;
+    });
+  }
+
+  // -------------------------------------------------------------------------
+  // Atmosphäre: fallende Blätter / Blüten / Schnee
+  // -------------------------------------------------------------------------
+
+  private makeLeaves(): THREE.InstancedMesh {
+    const season = this.session.season;
+    const count = { fruehling: 40, sommer: 14, herbst: 50, winter: 120 }[season];
+    const color = { fruehling: '#ffc6d9', sommer: palette.leaves.sommer[1], herbst: '#f2a35e', winter: '#ffffff' }[season];
+    const geo = season === 'winter' ? new THREE.SphereGeometry(0.03, 6, 4) : new THREE.PlaneGeometry(0.09, 0.06);
+    const mat = new THREE.MeshLambertMaterial({ color, side: THREE.DoubleSide });
+    const inst = new THREE.InstancedMesh(geo, mat, count);
+    inst.frustumCulled = false;
+    for (let i = 0; i < count; i++) {
+      this.leafState.push({
+        p: new THREE.Vector3((Math.random() - 0.5) * 22, Math.random() * 6, (Math.random() - 0.5) * 16),
+        v: new THREE.Vector3(season === 'winter' ? 0 : 0.25 + Math.random() * 0.3, -(0.35 + Math.random() * 0.35), 0.05),
+        spin: (Math.random() - 0.5) * 4,
+        phase: Math.random() * 10,
+      });
+    }
+    this.scene.add(inst);
+    return inst;
+  }
+
+  private updateLeaves(dt: number) {
+    const m = new THREE.Matrix4();
+    const q = new THREE.Quaternion();
+    const e = new THREE.Euler();
+    const s = new THREE.Vector3(1, 1, 1);
+    const t = performance.now() / 1000;
+    this.leafState.forEach((l, i) => {
+      l.p.x += (l.v.x + Math.sin(t * 1.3 + l.phase) * 0.25) * dt;
+      l.p.y += l.v.y * dt;
+      l.p.z += l.v.z * dt;
+      if (l.p.y < 0) {
+        l.p.set((Math.random() - 0.5) * 22, 6 + Math.random() * 2, (Math.random() - 0.5) * 16);
+      }
+      e.set(t * l.spin, t * l.spin * 0.7, 0);
+      q.setFromEuler(e);
+      m.compose(new THREE.Vector3(this.camTarget.x + l.p.x, l.p.y, this.camTarget.z + l.p.z), q, s);
+      this.leaves.setMatrixAt(i, m);
+    });
+    this.leaves.instanceMatrix.needsUpdate = true;
+  }
+
+  // -------------------------------------------------------------------------
+  // Spielstart & Story
+  // -------------------------------------------------------------------------
+
+  private startPlay() {
+    const data = this.session.data;
+    if (!data) return;
+    this.player?.destroy();
+    const p = data.player;
+    this.player = new Character(this.scene, p.appearance, p.x, p.y, p.facing, this.view.terrain.heightAt);
+    this.camTarget.set(p.x * UNIT, 0, p.y * UNIT);
+
+    this.collectibles.refresh();
+    checkDailyMail(this.session);
+    this.updateMailbox();
+
+    if (!data.flags.introSeen) {
+      window.setTimeout(() => {
+        if (this.session.data !== data) return;
+        const ctx = this.session.interactionContext();
+        this.session.bus.emit('dialog:open', {
+          lines: INTRO_LINES.map((l) => fillPlaceholders(l, ctx)),
+          onClose: () => {
+            this.session.setFlag('introSeen');
+            this.session.save();
+            window.setTimeout(() => this.welcomeScene(), 500);
+          },
+        });
+      }, 1100);
+    } else if (!data.flags.giselaWelcomed) {
+      window.setTimeout(() => this.welcomeScene(), 1300);
+    }
+  }
+
+  private welcomeScene() {
+    const player = this.player;
+    const gisela = this.npcs.get('gisela');
+    const data = this.session.data;
+    if (!player || !gisela || !data || data.flags.giselaWelcomed) return;
+    this.cutscene = true;
+    player.cancelPath();
+    const grid = this.session.map.grid;
+    const lt = player.tile;
+    const start = nearestWalkable(grid, { x: lt.x + 5, y: lt.y + 3 }, lt) ?? lt;
+    const meet = nearestWalkable(grid, { x: lt.x + 1, y: lt.y }, lt) ?? lt;
+    gisela.scriptPlace(start);
+    let arrived = false;
+    const onArrive = () => {
+      if (arrived) return;
+      arrived = true;
+      gisela.char.faceTowards(player.x, player.y);
+      player.faceTowards(gisela.x, gisela.y);
+      const title = gisela.def.name;
+      this.session.bus.emit('dialog:open', {
+        title,
+        lines: [...GISELA_WELCOME],
+        onClose: () => {
+          giveItem(this.session, 'keks', 1);
+          this.session.bus.emit('dialog:open', {
+            title,
+            lines: GISELA_WELCOME_2.map((l) => fillPlaceholders(l, this.session.interactionContext())),
+            onClose: () => {
+              this.session.setFlag('giselaWelcomed');
+              welcomeLetter(this.session);
+              this.session.save();
+              gisela.scriptDone();
+              this.cutscene = false;
+            },
+          });
+        },
+      });
+    };
+    gisela.scriptWalkTo(meet, onArrive);
+    window.setTimeout(() => {
+      if (arrived) return;
+      gisela.scriptPlace(meet);
+      onArrive();
+    }, 12000);
+  }
+
+  // -------------------------------------------------------------------------
+  // Anzeige-Helfer
+  // -------------------------------------------------------------------------
+
+  /** Bäume & Häuser zwischen Kamera und Lina werden durchsichtig. */
+  private updateOccluders(player: Character) {
+    const px = player.x * UNIT;
+    const pz = player.y * UNIT;
+    for (const o of this.view.occluders) {
+      const dz = o.z - pz;
+      const inFront = dz > 0.2 && dz < (o.id.startsWith('haus') ? 3.2 : 1.9);
+      const near = Math.abs(o.x - px) < o.w / 2 + 0.3;
+      const target = inFront && near ? 0.35 : 1;
+      const current = this.faded.get(o.id) ?? 1;
+      if (Math.abs(current - target) < 0.01) continue;
+      const next = current + (target - current) * 0.2;
+      this.faded.set(o.id, next);
+      setOpacity(o.node, next);
+    }
+  }
+
+  private updateBubble(player: Character, blocked: boolean) {
+    const target = blocked ? null : this.resolveTarget(player);
+    let key: string | null = null;
+    let pos: THREE.Vector3 | null = null;
+    if (target?.kind === 'npc') {
+      key = `npc:${target.npc.def.id}`;
+      pos = target.npc.char.root.position.clone().add(new THREE.Vector3(0, target.npc.bubbleHeight, 0));
+    } else if (target?.kind === 'object') {
+      const obj = objectById(this.session.map, target.id);
+      if (obj && obj.kind !== 'tree' && obj.kind !== 'rock') {
+        key = `obj:${target.id}`;
+        const c = footprintCenter(obj);
+        const h = obj.kind === 'house' ? 1.9 : obj.kind === 'board' ? 1.9 : obj.kind === 'fountain' ? 1.7 : obj.kind === 'plot' ? 1.3 : 1.25;
+        pos = new THREE.Vector3(c.x, h, obj.kind === 'house' || obj.kind === 'plot' ? c.z + obj.h / 2 - 0.3 : c.z);
+      }
+    }
+    this.bubble.visible = !!pos;
+    if (pos) {
+      this.bubble.position.set(pos.x, pos.y + Math.sin(performance.now() / 300) * 0.05, pos.z);
+      if (key !== this.bubbleKey) this.bubble.scale.set(0.5, 0.42, 1);
+    }
+    this.bubbleKey = key;
+  }
+
+  private updateMailbox() {
+    const mb = this.view.mailbox;
+    if (!mb) return;
+    const full = hasUnreadMail(this.session);
+    mb.flag.rotation.z = full ? 0 : -Math.PI / 2;
+    mb.letter.visible = full;
+  }
+
+  // -------------------------------------------------------------------------
+  // Interaktion
+  // -------------------------------------------------------------------------
+
+  private resolveTarget(player: Character): Target | null {
+    const tile = player.tile;
+    const pickup = this.collectibles.pickupNear(tile, player.facing, player.x, player.y);
+    if (pickup) return { kind: 'pickup', id: pickup };
+    const [fx, fy] = DIRS[player.facing];
+    for (const npc of this.npcs.values()) {
+      if (!npc.present) continue;
+      const dx = npc.x - player.x;
+      const dy = npc.y - player.y;
+      const d = Math.hypot(dx, dy);
+      if (d < TILE * 1.35 && dx * fx + dy * fy > d * 0.35) return { kind: 'npc', npc };
+    }
+    const id = findInteraction(this.session.map, tile, player.facing, this.interactive);
+    if (id) return { kind: 'object', id };
+    if (this.collectibles.canPickFlowers(tile)) return { kind: 'flowers', tile };
+    return null;
+  }
+
+  private tryInteract() {
+    const player = this.player;
+    if (!player || this.session.uiBlocking || this.cutscene) return;
+    const target = this.resolveTarget(player);
+    if (target) this.act(target);
+  }
+
+  private act(target: Target) {
+    const player = this.player;
+    if (!player) return;
+    switch (target.kind) {
+      case 'pickup':
+        this.collectibles.pickUp(target.id, { x: player.x, y: player.y });
+        return;
+      case 'npc':
+        this.talkTo(target.npc);
+        return;
+      case 'flowers':
+        this.collectibles.pickFlowers(target.tile);
+        return;
+      case 'object':
+        this.useObject(target.id);
+    }
+  }
+
+  private useObject(id: string) {
+    const player = this.player;
+    const obj = objectById(this.session.map, id);
+    if (!obj || !player) return;
+    if (obj.kind === 'tree') {
+      const msg = this.collectibles.shakeTree(obj, player.tile);
+      if (msg) this.session.bus.emit('toast', { text: msg });
+      return;
+    }
+    if (obj.kind === 'rock') {
+      const found = knockRock(this.session, obj.id);
+      const node = this.view.nodes.get(obj.id);
+      if (node) this.tweens.add(200, (t) => node.scale.set(1 + Math.sin(t * Math.PI) * 0.06, 1 - Math.sin(t * Math.PI) * 0.06, 1));
+      if (found) {
+        giveItem(this.session, found, 1, false);
+        this.session.bus.emit('toast', {
+          text: found === 'glitzerstein' ? 'Tock tock … ein Glitzerstein! ✨' : `Tock tock … ${itemCountLabel(found, 1)} kullert heraus!`,
+          icon: itemIconUrl(found),
+        });
+      } else {
+        this.session.bus.emit('toast', { text: 'Tock tock. Heute ist hier nichts mehr zu finden.' });
+      }
+      return;
+    }
+    if (id === 'verkaufskiste') {
+      this.session.bus.emit('ui:open', { kind: 'sell' });
+      return;
+    }
+    if (id === 'briefkasten-lina' && (this.session.data?.mail.letters.length ?? 0) > 0) {
+      this.session.bus.emit('ui:open', { kind: 'mail' });
+      return;
+    }
+    if (id === 'haus-gisela') {
+      this.knockAtHome('gisela');
+      return;
+    }
+    this.openInteraction(id);
+  }
+
+  private knockAtHome(npcId: string) {
+    const npc = this.npcs.get(npcId);
+    if (!npc) return;
+    const ctx = this.session.interactionContext();
+    const pick = <T>(list: readonly T[]) => list[(ctx.now.getDate() + ctx.now.getHours()) % list.length];
+    let lines: readonly string[];
+    if (npc.present) lines = [`${npc.def.name}s Häuschen.`, 'Die Tür ist abgeschlossen. Auf einem Zettel steht: „Bin unterwegs. Nicht einbrechen!“'];
+    else lines = pick(npc.isSleeping ? npc.def.dialogue.atHomeSleeping : npc.def.dialogue.atHome);
+    this.session.bus.emit('dialog:open', { title: `${npc.def.name}s Häuschen`, lines: lines.map((l) => fillPlaceholders(l, ctx)) });
+  }
+
+  private openInteraction(id: string) {
+    const interaction = INTERACTIONS[id];
+    if (!interaction) return;
+    const ctx = this.session.interactionContext();
+    this.session.bus.emit('dialog:open', { title: interaction.title, lines: interaction.lines(ctx).map((l) => fillPlaceholders(l, ctx)) });
+  }
+
+  // -------------------------------------------------------------------------
+  // Gespräche
+  // -------------------------------------------------------------------------
+
+  private talkTo(npc: Npc) {
+    const player = this.player;
+    if (!player) return;
+    npc.startTalk(player.x, player.y);
+    player.faceTowards(npc.x, npc.y);
+    const out = talkToNpc(this.session, npc.def.id);
+    this.npcDialog(npc, out.lines, out.hearts);
+  }
+
+  private npcDialog(npc: Npc, lines: string[], hearts: number) {
+    const id = npc.def.id;
+    const title = npc.def.name;
+    this.session.bus.emit('dialog:open', {
+      title,
+      hearts,
+      lines,
+      choices: [
+        {
+          label: '💬 Plaudern',
+          onSelect: () => {
+            const o = chatWithNpc(this.session, id);
+            this.npcDialog(npc, o.lines, o.hearts);
+          },
+        },
+        {
+          label: '🎁 Etwas schenken',
+          onSelect: () =>
+            this.session.bus.emit('ui:open', {
+              kind: 'gift',
+              npcId: id,
+              onPick: (itemId) => {
+                const o = giftToNpc(this.session, id, itemId);
+                if (o) this.npcDialog(npc, o.lines, o.hearts);
+                else npc.endTalk();
+              },
+              onCancel: () => this.npcDialog(npc, ['Na? Doch nichts? Macht nix, Kindchen.'], npcHearts(this.session, id)),
+            }),
+        },
+        {
+          label: '👋 Tschüss',
+          onSelect: () =>
+            this.session.bus.emit('dialog:open', {
+              title,
+              hearts: npcHearts(this.session, id),
+              lines: [goodbyeLine(this.session, id)],
+              onClose: () => npc.endTalk(),
+            }),
+        },
+      ],
+    });
+  }
+
+  // -------------------------------------------------------------------------
+  // Maus
+  // -------------------------------------------------------------------------
+
+  private ndc(e: PointerEvent): THREE.Vector2 {
+    const r = this.canvas.getBoundingClientRect();
+    return new THREE.Vector2(((e.clientX - r.left) / r.width) * 2 - 1, -((e.clientY - r.top) / r.height) * 2 + 1);
+  }
+
+  /** Was liegt unter dem Mauszeiger? */
+  private pick(e: PointerEvent): { npc?: Npc; objectId?: string; ground?: THREE.Vector3 } {
+    this.raycaster.setFromCamera(this.ndc(e), this.camera);
+    const candidates: THREE.Object3D[] = [];
+    for (const npc of this.npcs.values()) if (npc.present) candidates.push(npc.char.root);
+    for (const id of this.interactive) {
+      const node = this.view.nodes.get(id);
+      if (node) candidates.push(node);
+    }
+    const hits = this.raycaster.intersectObjects(candidates, true);
+    for (const h of hits) {
+      let o: THREE.Object3D | null = h.object;
+      while (o) {
+        if (o.userData.npcId) return { npc: this.npcs.get(o.userData.npcId as string) };
+        if (o.userData.objectId) {
+          // Bei Bäumen nur den Stamm-Bereich (unten) als Ziel – sonst schüttelt man beim Laufen ständig
+          const obj = objectById(this.session.map, o.userData.objectId as string);
+          if (obj?.kind === 'tree' && h.point.y > 1.2) break;
+          return { objectId: o.userData.objectId as string };
+        }
+        o = o.parent;
+      }
+    }
+    const g = this.raycaster.intersectObject(this.view.terrain.ground, false)[0];
+    return { ground: g?.point };
+  }
+
+  private onPointerDown = (e: PointerEvent) => {
+    if (e.button === 0) this.pointerDown = { x: e.clientX, y: e.clientY };
+  };
+
+  private onPointerMove = (e: PointerEvent) => {
+    if (!this.player || this.session.uiBlocking) {
+      this.canvas.style.cursor = '';
+      return;
+    }
+    const hit = this.pick(e);
+    this.canvas.style.cursor = hit.npc || hit.objectId ? 'pointer' : '';
+  };
+
+  private onPointerUp = (e: PointerEvent) => {
+    const down = this.pointerDown;
+    this.pointerDown = null;
+    const player = this.player;
+    if (!player || !down || this.cutscene || !this.session.acceptsPointer()) return;
+    if (Math.hypot(e.clientX - down.x, e.clientY - down.y) > 8) return;
+    const hit = this.pick(e);
+    const grid = this.session.map.grid;
+
+    if (hit.ground) {
+      const wx = hit.ground.x / UNIT;
+      const wy = hit.ground.z / UNIT;
+      const pickup = this.collectibles.pickupAt(wx, wy);
+      if (pickup) {
+        const t = tileOf(pickup.x, pickup.y);
+        this.walkTo([t, ...neighbours(t)], () => {
+          const pos = this.collectibles.pickupPosition(pickup.id);
+          if (pos) player.faceTowards(pos.x, pos.y);
+          this.collectibles.pickUp(pickup.id, { x: player.x, y: player.y });
+        });
+        return;
+      }
+    }
+    if (hit.npc) {
+      const npc = hit.npc;
+      const t = tileOf(npc.x, npc.y + (npc.char.sitting ? TILE : 0));
+      const spots = npc.char.sitting ? [t, { x: t.x + 1, y: t.y }] : neighbours(t);
+      this.walkTo(spots, () => {
+        player.faceTowards(npc.x, npc.y);
+        this.talkTo(npc);
+      });
+      return;
+    }
+    if (hit.objectId) {
+      const obj = objectById(this.session.map, hit.objectId);
+      if (obj) this.walkToObject(obj);
+      return;
+    }
+    if (hit.ground) {
+      const t = tileOf(hit.ground.x / UNIT, hit.ground.z / UNIT);
+      const target = nearestWalkable(grid, t, player.tile);
+      if (!target) return;
+      const path = findPath(grid, player.tile, target);
+      if (!path) return;
+      this.marker.position.set(target.x + 0.5, Math.max(0, this.view.terrain.heightAt(target.x + 0.5, target.y + 0.5)) + 0.03, target.y + 0.5 + FEET_OFFSET * UNIT);
+      this.marker.visible = true;
+      this.tweens.add(220, (k) => this.marker.scale.setScalar(1.5 - 0.5 * k));
+      player.followPath(path);
+    }
+  };
+
+  private walkTo(spots: Tile[], onArrive: () => void): boolean {
+    const player = this.player;
+    if (!player) return false;
+    const grid = this.session.map.grid;
+    let best: Tile[] | null = null;
+    for (const s of spots) {
+      if (grid.isBlocked(s.x, s.y)) continue;
+      const path = findPath(grid, player.tile, s);
+      if (path && (!best || path.length < best.length)) best = path;
+    }
+    if (!best) return false;
+    this.marker.visible = false;
+    player.followPath(best, onArrive);
+    return true;
+  }
+
+  private walkToObject(obj: MapObject) {
+    const player = this.player;
+    if (!player) return;
+    const map = this.session.map;
+    const spots = (OBJECT_KINDS[obj.kind].interactFrom ?? []).map(([dx, dy]) => ({ x: obj.x + dx, y: obj.y + dy }));
+    this.walkTo(spots, () => {
+      const cx = obj.x + obj.w / 2 - 0.5;
+      const cy = obj.y + obj.h / 2 - 0.5;
+      const t = player.tile;
+      const dx = cx - t.x;
+      const dy = cy - t.y;
+      player.face(Math.abs(dx) > Math.abs(dy) ? (dx > 0 ? 'right' : 'left') : dy > 0 ? 'down' : 'up');
+      const id = findInteraction(map, t, player.facing, this.interactive);
+      this.useObject(id ?? obj.id);
+    });
+  }
+
+  /** Für Tests & Fehlersuche */
+  get debug() {
+    return { player: this.player, npcs: this.npcs, collectibles: this.collectibles, resolveTarget: () => (this.player ? this.resolveTarget(this.player) : null), tryInteract: () => this.tryInteract() };
+  }
+
+  dispose() {
+    this.renderer.setAnimationLoop(null);
+    this.keys.destroy();
+    for (const u of this.unsubscribers) u();
+    window.removeEventListener('resize', this.resize);
+  }
+}
+
+function neighbours(t: Tile): Tile[] {
+  return [
+    { x: t.x, y: t.y + 1 },
+    { x: t.x - 1, y: t.y },
+    { x: t.x + 1, y: t.y },
+    { x: t.x, y: t.y - 1 },
+  ];
+}
+
+/** Macht ein Objekt (mit allen Teilen) halbdurchsichtig. Materialien werden dafür einmalig kopiert. */
+function setOpacity(node: THREE.Object3D, opacity: number) {
+  node.traverse((o) => {
+    const m = o as THREE.Mesh;
+    if (!m.isMesh) return;
+    if (!m.userData.ownMaterial) {
+      m.material = (m.material as THREE.Material).clone();
+      m.userData.ownMaterial = true;
+    }
+    const mat = m.material as THREE.Material;
+    mat.transparent = opacity < 0.99;
+    mat.opacity = opacity;
+    mat.depthWrite = opacity >= 0.99;
+  });
+}
+
+function bubbleTexture(): THREE.Texture {
+  const c = document.createElement('canvas');
+  c.width = 128;
+  c.height = 108;
+  const ctx = c.getContext('2d') as CanvasRenderingContext2D;
+  ctx.fillStyle = '#ffffff';
+  ctx.strokeStyle = palette.ui.accent;
+  ctx.lineWidth = 7;
+  ctx.beginPath();
+  ctx.roundRect(8, 8, 112, 72, 36);
+  ctx.moveTo(50, 78);
+  ctx.lineTo(62, 100);
+  ctx.lineTo(76, 78);
+  ctx.stroke();
+  ctx.fill();
+  ctx.fillStyle = palette.ui.accentDark;
+  for (const x of [38, 64, 90]) {
+    ctx.beginPath();
+    ctx.arc(x, 44, 8, 0, Math.PI * 2);
+    ctx.fill();
+  }
+  const t = new THREE.CanvasTexture(c);
+  t.colorSpace = THREE.SRGBColorSpace;
+  return t;
+}

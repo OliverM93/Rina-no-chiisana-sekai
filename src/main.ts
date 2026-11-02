@@ -5,7 +5,7 @@ import '@fontsource-variable/nunito';
 import './ui/ui.css';
 import { h, render } from 'preact';
 import { createClock, parseTimeOverride } from './core/time';
-import { createGame } from './game/createGame';
+import { World3D } from './world3d/World3D';
 import { browserStorage, Session } from './game/session';
 import { palette } from './style/palette';
 import { App } from './ui/App';
@@ -40,7 +40,10 @@ async function start() {
   connectBlocking(session);
 
   render(h(App, { session }), document.getElementById('ui') as HTMLElement);
-  const game = createGame(document.getElementById('game') as HTMLElement, session);
+  const host = document.getElementById('game') as HTMLElement;
+  const canvas = document.createElement('canvas');
+  host.appendChild(canvas);
+  const game = new World3D(canvas, session);
   // Für Tests & Fehlersuche im Entwicklungsmodus
   if (import.meta.env.DEV) Object.assign(window, { __rina: { session, game, ui } });
 
