@@ -30,6 +30,8 @@ export interface MapView {
   lights: LightSpot[];
   waterTiles: Array<{ x: number; y: number }>;
   objectSprites: Map<string, Phaser.GameObjects.Image>;
+  /** Kachel-Index → Blümchen-Deko (zum Pflücken) */
+  flowerSprites: Map<number, Phaser.GameObjects.Image[]>;
 }
 
 /** Sprite an Weltposition mit Ankerpunkt platzieren. */
@@ -62,6 +64,7 @@ export function buildMapView(scene: Phaser.Scene, map: WorldMap, season: Season)
   });
 
   // 3) Kleine Deko (Blümchen, Grasbüschel, Kiesel, Muscheln)
+  const flowerSprites = new Map<number, Phaser.GameObjects.Image[]>();
   for (let y = 0; y < map.height; y++) {
     for (let x = 0; x < map.width; x++) {
       const t = terrainAt(map, x, y);
@@ -76,14 +79,15 @@ export function buildMapView(scene: Phaser.Scene, map: WorldMap, season: Season)
           const fx = (x + 0.15 + tileNoise(x, y, 10 + k) * 0.7) * TILE;
           const fy = (y + 0.2 + tileNoise(x, y, 20 + k) * 0.7) * TILE;
           const color = Math.floor(tileNoise(x, y, 30 + k) * FLOWER_COLORS.length);
-          placeSprite(scene, `flower-${color}`, fx, fy, DEPTH.decor + fy / 1000);
+          const img = placeSprite(scene, `flower-${color}`, fx, fy, DEPTH.decor + fy / 1000);
+          const list = flowerSprites.get(idx) ?? [];
+          list.push(img);
+          flowerSprites.set(idx, list);
         }
       } else if (t === 'grass' && n < 0.22) {
         placeSprite(scene, 'tuft', px, py, DEPTH.decor);
       } else if (t === 'path' && n < 0.16) {
         placeSprite(scene, 'pebble', px, py, DEPTH.decor);
-      } else if (t === 'sand' && n < 0.07) {
-        placeSprite(scene, 'shell', px, py, DEPTH.decor);
       }
     }
   }
@@ -117,7 +121,7 @@ export function buildMapView(scene: Phaser.Scene, map: WorldMap, season: Season)
     }
   }
 
-  return { occluders, lights, waterTiles, objectSprites };
+  return { occluders, lights, waterTiles, objectSprites, flowerSprites };
 }
 
 function placeObject(scene: Phaser.Scene, obj: MapObject, lights: LightSpot[]): Phaser.GameObjects.Image | null {
@@ -152,6 +156,8 @@ function placeObject(scene: Phaser.Scene, obj: MapObject, lights: LightSpot[]): 
     }
     case 'mailbox':
       return placeSprite(scene, 'mailbox', cx, by - 10, by - 10);
+    case 'sellbox':
+      return placeSprite(scene, 'sellbox', cx, by - 10, by - 10);
     case 'board':
       return placeSprite(scene, 'board', cx, by - 8, by - 8);
     case 'lantern': {

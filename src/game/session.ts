@@ -4,6 +4,7 @@
  */
 import type { Appearance } from '../core/appearance';
 import { Emitter } from '../core/events';
+import { createNpcState } from '../core/friendship';
 import { hashString } from '../core/rng';
 import {
   createNewSave,
@@ -17,13 +18,31 @@ import {
 } from '../core/save';
 import { type Clock, formatIsoDay, getDayPhase, getSeason, type Season } from '../core/time';
 import { buildWorldMap, tileCenter, type WorldMap } from '../core/worldmap';
+import { isKnownItem } from '../data/items';
 import { VILLAGE_LAYOUT, VILLAGE_OBJECTS, VILLAGE_SPAWN } from '../data/maps/village';
+import { NPCS } from '../data/npcs';
 import type { InteractionContext } from '../data/interactions';
+
+export interface DialogChoice {
+  label: string;
+  onSelect: () => void;
+}
 
 export interface DialogRequest {
   title?: string;
+  /** Herzen neben dem Namen (Freundschaft) */
+  hearts?: number;
   lines: string[];
+  /** Auswahl nach der letzten Zeile (z. B. Plaudern / Geschenk / Tschüss) */
+  choices?: DialogChoice[];
   onClose?: () => void;
+}
+
+export type UiPanel = { kind: 'inventory' } | { kind: 'sell' } | { kind: 'mail' } | { kind: 'gift'; npcId: string; onPick: (itemId: string) => void; onCancel: () => void };
+
+export interface Toast {
+  text: string;
+  icon?: string;
 }
 
 export type GameEvents = {
@@ -34,7 +53,11 @@ export type GameEvents = {
   'dialog:open': DialogRequest;
   'dialog:closed': undefined;
   'appearance:changed': Appearance;
-  toast: string;
+  toast: Toast;
+  /** Tasche, Sternchen, Post oder Freundschaft haben sich geändert */
+  'state:changed': undefined;
+  /** Die Welt bittet die Oberfläche, ein Fenster zu öffnen */
+  'ui:open': UiPanel;
 };
 
 export class Session {
@@ -55,8 +78,20 @@ export class Session {
     readonly clock: Clock,
   ) {
     this.map = buildWorldMap(VILLAGE_LAYOUT, VILLAGE_OBJECTS, VILLAGE_SPAWN);
-    this.saves = new SaveManager(storage, this.spawnPoint(), clock);
+    this.saves = new SaveManager(storage, this.spawnPoint(), clock, this.saveOptions);
     this.season = getSeason(clock());
+  }
+
+  readonly saveOptions = { isKnownItem, npcIds: NPCS.map((n) => n.id) };
+
+  /** Heutiger Tag als JJJJ-MM-TT */
+  today(): string {
+    return formatIsoDay(this.clock());
+  }
+
+  /** Meldet der Oberfläche, dass sich Spielzustand geändert hat. */
+  changed() {
+    this.bus.emit('state:changed', undefined);
   }
 
   /** Wenn true, ignoriert die Spielwelt Steuerungseingaben (Menü/Dialog offen). */
@@ -100,6 +135,7 @@ export class Session {
 
   startNewGame(appearance: Appearance, villageName: string) {
     const data = createNewSave({ appearance, villageName, spawn: this.spawnPoint(), now: this.clock() });
+    for (const npc of NPCS) data.npcs[npc.id] = createNpcState();
     this.begin(data);
     this.save();
   }
@@ -132,7 +168,7 @@ export class Session {
 
   /** Prüft eine Datei, ohne sie schon zu übernehmen. */
   checkImport(json: string): ParseResult {
-    return parseSave(json, this.spawnPoint(), this.clock());
+    return parseSave(json, this.spawnPoint(), this.clock(), this.saveOptions);
   }
 
   importSave(data: SaveData) {

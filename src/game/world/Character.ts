@@ -1,5 +1,6 @@
 /**
- * Lina in der Spielwelt: Bewegung, Lauf-Animation, Blinzeln, Wegfolgen.
+ * Eine Figur in der Spielwelt (Lina oder ein Bewohner): Bewegung,
+ * Lauf-Animation, Blinzeln, Sitzen, Wegfolgen.
  */
 import type Phaser from 'phaser';
 import { RES, RUN_SPEED, TILE, WALK_SPEED } from '../../config';
@@ -20,13 +21,19 @@ export interface MoveIntent {
   run: boolean;
 }
 
-export class Player {
+export class Character {
   readonly sprite: Phaser.GameObjects.Sprite;
   readonly shadow: Phaser.GameObjects.Image;
   x: number;
   y: number;
   facing: Facing;
   moving = false;
+  /** sitzt (z. B. auf einer Bank) – dann keine Bewegung */
+  sitting = false;
+  /** Geschwindigkeitsfaktor (Bewohner schlendern etwas gemütlicher) */
+  speedFactor = 1;
+  /** zusätzliche Tiefe, z. B. damit eine sitzende Figur vor der Banklehne liegt */
+  depthBias = 0;
 
   private stepPhase = 0;
   private blinkIn = 2.5;
@@ -89,10 +96,47 @@ export class Player {
     this.applyFrame();
   }
 
+  /** Dreht sich zu einem Punkt hin. */
+  faceTowards(x: number, y: number) {
+    const dx = x - this.x;
+    const dy = y - this.y;
+    this.face(Math.abs(dx) > Math.abs(dy) ? (dx > 0 ? 'right' : 'left') : dy > 0 ? 'down' : 'up');
+  }
+
+  /** Setzt die Figur direkt an eine Stelle (ohne Laufen). */
+  teleport(x: number, y: number) {
+    this.x = x;
+    this.y = y;
+    this.cancelPath();
+    this.applyFrame();
+  }
+
+  setSitting(on: boolean) {
+    this.sitting = on;
+    if (on) {
+      this.cancelPath();
+      this.facing = 'down';
+    }
+    this.applyFrame();
+  }
+
+  setVisible(on: boolean) {
+    this.sprite.setVisible(on);
+    this.shadow.setVisible(on);
+  }
+
+  get visible(): boolean {
+    return this.sprite.visible;
+  }
+
   update(dtMs: number, intent: MoveIntent, solid: SolidFn) {
     const dt = Math.min(0.05, dtMs / 1000);
     let { dx, dy } = intent;
     let run = intent.run;
+    if (this.sitting) {
+      dx = 0;
+      dy = 0;
+    }
 
     // Tastatur hat Vorrang vor Klick-Wegen
     if ((dx !== 0 || dy !== 0) && this.path) this.cancelPath();
@@ -117,7 +161,7 @@ export class Player {
         dy = vy / dist;
         run = run || (this.path?.length ?? 0) > 6;
         // Nicht über das Ziel hinausschießen
-        const speed = run ? RUN_SPEED : WALK_SPEED;
+        const speed = (run ? RUN_SPEED : WALK_SPEED) * this.speedFactor;
         if (speed * dt > dist) {
           dx *= dist / (speed * dt);
           dy *= dist / (speed * dt);
@@ -132,7 +176,7 @@ export class Player {
         dx /= len;
         dy /= len;
       }
-      const speed = run ? RUN_SPEED : WALK_SPEED;
+      const speed = (run ? RUN_SPEED : WALK_SPEED) * this.speedFactor;
       const total = speed * dt;
       const steps = Math.max(1, Math.ceil(total / 6));
       const sx = (dx * total) / steps;
@@ -159,6 +203,7 @@ export class Player {
       this.stepPhase = 0;
       this.idleTime += dt;
     }
+    if (this.sitting) this.moving = false;
 
     // Blinzeln
     this.blinkIn -= dt;
@@ -176,7 +221,10 @@ export class Player {
     let frame = `${dir}-idle`;
     let bob = 0;
     let squash = 1;
-    if (this.moving) {
+    if (this.sitting) {
+      frame = this.blinkLeft > 0 ? 'down-sit-blink' : 'down-sit';
+      squash = 1 + Math.sin(this.idleTime * 2) * 0.01;
+    } else if (this.moving) {
       const cycle = Math.floor(this.stepPhase) % 4;
       frame = cycle === 0 ? `${dir}-walk1` : cycle === 2 ? `${dir}-walk2` : `${dir}-idle`;
       const t = this.stepPhase % 1;
@@ -188,12 +236,13 @@ export class Player {
       squash = 1 + Math.sin(this.idleTime * 2.4) * 0.012;
     }
     this.sprite.setFrame(frame);
-    this.sprite.setFlipX(this.facing === 'right');
+    this.sprite.setFlipX(!this.sitting && this.facing === 'right');
     this.sprite.setPosition(this.x, this.y + bob);
     this.sprite.setScale((1 / RES) * (2 - squash), (1 / RES) * squash);
-    this.sprite.setDepth(this.y);
+    this.sprite.setDepth(this.y + this.depthBias);
     this.shadow.setPosition(this.x, this.y - 1);
-    this.shadow.setDepth(this.y - 1);
+    this.shadow.setDepth(this.y - 1 + this.depthBias);
+    this.shadow.setAlpha(this.sitting ? 0 : 1);
     this.shadow.setScale((1 / RES) * (1 + bob * 0.03));
   }
 
