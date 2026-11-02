@@ -7,6 +7,8 @@ import * as fx from '../gfx/effects';
 import * as obj from '../gfx/objects';
 import type { SpriteDef } from '../gfx/objects';
 import { renderGrassTexture, renderTerrainTileset, terrainLayers } from '../gfx/terrain';
+import { ITEMS } from '../data/items';
+import { drawItemIcon, ICON } from '../gfx/items';
 import { palette } from '../style/palette';
 
 type SectionFn = (title: string) => HTMLElement;
@@ -38,6 +40,9 @@ export function renderWorldGallery(section: SectionFn, cell: CellFn) {
   defCell(cell, b, obj.plotAreaDef());
   defCell(cell, b, obj.signDef('Bauplatz', 'sign'));
   defCell(cell, b, obj.mailboxDef());
+  defCell(cell, b, obj.mailboxDef(true));
+  defCell(cell, b, obj.sellboxDef());
+  defCell(cell, b, obj.houseDef(palette.roof.lilac, 'house-lilac'));
   defCell(cell, b, obj.boardDef());
   defCell(cell, b, obj.lanternDef());
   defCell(cell, b, obj.benchDef());
@@ -45,6 +50,12 @@ export function renderWorldGallery(section: SectionFn, cell: CellFn) {
   defCell(cell, b, obj.bridgeDeckDef());
   defCell(cell, b, obj.bridgeRailDef());
   defCell(cell, b, obj.rockDef());
+
+  const it = section('Gegenstände');
+  for (const id of Object.keys(ITEMS)) cell(it, id, ICON * 2, ICON * 2, (ctx) => {
+    ctx.scale(2, 2);
+    drawItemIcon(ctx, id);
+  });
 
   const e = section('Effekte & Deko');
   for (const def of [fx.glowDef(), fx.windowGlowDef(), fx.sparkleDef(), fx.cloudShadowDef(), fx.charShadowDef(), fx.pebbleDef(), fx.shellDef(), fx.markerDef(), fx.bubbleDef()]) {

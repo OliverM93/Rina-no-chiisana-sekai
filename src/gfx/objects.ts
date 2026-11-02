@@ -503,13 +503,14 @@ export function signDef(label: string, key: string): SpriteDef {
   };
 }
 
-export function mailboxDef(): SpriteDef {
+/** Briefkasten; `full` = Fähnchen oben und ein Brief schaut heraus. */
+export function mailboxDef(full = false): SpriteDef {
   const w = 60;
   const h = 96;
   const ax = 30;
   const ay = 84;
   return {
-    key: 'mailbox',
+    key: full ? 'mailbox-full' : 'mailbox',
     w,
     h,
     ax,
@@ -527,9 +528,26 @@ export function mailboxDef(): SpriteDef {
       fillWithOutline(ctx, c, darken(c, 0.32), 2);
       roundRect(ctx, ax - 12, ay - 60, 24, 6, 3, darken(c, 0.25), null);
       shine(ctx, ax - 10, ay - 72, 4, 0.7);
-      // Fähnchen
-      roundRect(ctx, ax + 18, ay - 76, 4, 26, 2, '#f08a9c', darken('#f08a9c', 0.3), 1.2);
-      roundRect(ctx, ax + 20, ay - 78, 14, 10, [2, 5, 5, 2], '#f08a9c', darken('#f08a9c', 0.3), 1.2);
+      // Fähnchen: oben = neue Post, sonst eingeklappt
+      if (full) {
+        roundRect(ctx, ax + 18, ay - 76, 4, 26, 2, '#f08a9c', darken('#f08a9c', 0.3), 1.2);
+        roundRect(ctx, ax + 20, ay - 78, 14, 10, [2, 5, 5, 2], '#f08a9c', darken('#f08a9c', 0.3), 1.2);
+        // Brief schaut heraus
+        ctx.save();
+        ctx.translate(ax - 2, ay - 60);
+        ctx.rotate(-0.12);
+        roundRect(ctx, -9, -8, 18, 11, 2, '#ffffff', '#d9c4b0', 1);
+        ctx.strokeStyle = '#e8a0b6';
+        ctx.lineWidth = 1.2;
+        ctx.beginPath();
+        ctx.moveTo(-9, -8);
+        ctx.lineTo(0, -1);
+        ctx.lineTo(9, -8);
+        ctx.stroke();
+        ctx.restore();
+      } else {
+        roundRect(ctx, ax + 18, ay - 52, 22, 4, 2, '#f08a9c', darken('#f08a9c', 0.3), 1.2);
+      }
       // Herz
       ctx.fillStyle = '#ffffff';
       ctx.beginPath();
@@ -769,6 +787,53 @@ export function bridgeRailDef(): SpriteDef {
       const dark = darken(palette.wood.light, 0.32);
       for (let x = 12; x <= w - 18; x += (w - 30) / 4) roundRect(ctx, x, 10, 8, 30, 3, palette.wood.base, dark, 1.6);
       roundRect(ctx, 6, 6, w - 12, 10, 5, palette.wood.light, dark, 1.8);
+    },
+  };
+}
+
+/** Verkaufskiste vor Linas Haus */
+export function sellboxDef(): SpriteDef {
+  const w = 72;
+  const h = 80;
+  const ax = 36;
+  const ay = 70;
+  return {
+    key: 'sellbox',
+    w,
+    h,
+    ax,
+    ay,
+    draw: (ctx) => {
+      groundShadow(ctx, ax, ay - 2, 30, 8, 0.2);
+      const wood = palette.wood.light;
+      const dark = darken(wood, 0.32);
+      // Kiste
+      roundRect(ctx, ax - 28, ay - 40, 56, 38, 7, wood, dark, 2);
+      ctx.strokeStyle = darken(wood, 0.15);
+      ctx.lineWidth = 2;
+      for (const y of [ay - 28, ay - 15]) {
+        ctx.beginPath();
+        ctx.moveTo(ax - 26, y);
+        ctx.lineTo(ax + 26, y);
+        ctx.stroke();
+      }
+      // Deckel
+      roundRect(ctx, ax - 31, ay - 50, 62, 13, 6, palette.wood.base, darken(palette.wood.base, 0.3), 2);
+      // Sternchen-Schild
+      const sx = ax;
+      const sy = ay - 22;
+      ctx.beginPath();
+      for (let i = 0; i < 10; i++) {
+        const a = (i / 10) * Math.PI * 2 - Math.PI / 2;
+        const r = i % 2 === 0 ? 10 : 4.5;
+        const x = sx + Math.cos(a) * r;
+        const y = sy + Math.sin(a) * r;
+        if (i === 0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+      }
+      ctx.closePath();
+      fillWithOutline(ctx, '#ffe39b', '#d9a94a', 1.4);
+      shine(ctx, ax - 18, ay - 45, 4, 0.6);
     },
   };
 }

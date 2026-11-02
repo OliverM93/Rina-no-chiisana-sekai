@@ -5,6 +5,7 @@
  */
 import { DEFAULT_LINA, type Appearance } from '../core/appearance';
 import { CHIBI_FRAMES, CHIBI_FEET, CHIBI_H, CHIBI_W, drawChibi } from '../gfx/chibi';
+import { GISELA } from '../data/npcs/gisela';
 import { palette } from '../style/palette';
 
 const root = document.getElementById('gallery')!;
@@ -55,9 +56,9 @@ function chibiRow(title: string, a: Appearance) {
 
 export const SAMPLE_PEOPLE: Record<string, Appearance> = {
   Lina: DEFAULT_LINA,
-  'Oma Gisela (Probe)': { ...DEFAULT_LINA, hairStyle: 'dutt', hairColor: palette.hair.grau, outfit: 'strickjacke', outfitColor: '#c8b6e8', accentColor: '#ffffff', height: 0.86, build: 0.9, glasses: true },
+  'Oma Gisela': GISELA.appearance,
   'Lars (Probe)': { ...DEFAULT_LINA, hairStyle: 'kurz', hairColor: palette.hair.dunkelbraun, outfit: 'hemd', outfitColor: '#a9cdf2', accentColor: '#7d6a73', height: 1.18, build: 1.05, beard: 'voll', blush: false },
-  'Olaf (Probe)': { ...DEFAULT_LINA, hairStyle: 'kurz', hairColor: palette.hair.grau, outfit: 'hemd', outfitColor: '#ffffff', accentColor: '#8a9bc4', height: 0.95, build: 1.05, beard: 'kurz', glasses: true, blush: false },
+  'Olaf (Probe)': { ...DEFAULT_LINA, hairStyle: 'kurz', hairColor: palette.hair.angegraut, outfit: 'hemd', outfitColor: '#ffffff', accentColor: '#8a9bc4', height: 0.95, build: 1.05, beard: 'kurz', glasses: true, blush: false },
   'Jens (Probe)': { ...DEFAULT_LINA, hairStyle: 'wuschel', hairColor: palette.hair.grau, outfit: 'strickjacke', outfitColor: '#f6b39e', accentColor: '#ffffff', height: 0.98, build: 1.25, blush: true },
 };
 
