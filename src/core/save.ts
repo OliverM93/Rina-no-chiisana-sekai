@@ -10,9 +10,12 @@
  * - Vor jedem Überschreiben wird der vorherige Stand als Backup behalten.
  */
 import { type Appearance, DEFAULT_LINA, normalizeAppearance } from './appearance';
+import { createNpcState, type NpcState, normalizeNpcState } from './friendship';
+import { createInventory, type Inventory, normalizeInventory } from './inventory';
+import { createMailbox, type Mailbox, normalizeMailbox } from './mail';
 import { type DayMonth, DEFAULT_LINA_BIRTHDAY, formatIsoDay } from './time';
 
-export const SAVE_VERSION = 1;
+export const SAVE_VERSION = 2;
 export const SAVE_KEY = 'rina-no-chiisana-sekai.save';
 export const BACKUP_KEY = 'rina-no-chiisana-sekai.save.backup';
 
@@ -33,6 +36,34 @@ export interface Settings {
   sfxVolume: number; // 0..1
 }
 
+/** Ein Gegenstand, der auf dem Boden liegt (Weltkoordinaten). */
+export interface GroundItem {
+  id: string;
+  itemId: string;
+  x: number;
+  y: number;
+}
+
+/** Zustand der Welt, der sich durch Lina ändert. */
+export interface WorldState {
+  /** Baum-ID → Tag der letzten Ernte */
+  fruitHarvest: Record<string, string>;
+  /** Baum-ID → Tag, an dem zuletzt ein Ast heruntergefallen ist */
+  branchDay: Record<string, string>;
+  /** Felsen-ID → Tag des letzten Klopfens */
+  rockDay: Record<string, string>;
+  /** Kachel-Index → Tag, an dem dort Blumen gepflückt wurden */
+  flowerDay: Record<string, string>;
+  /** Heute schon eingesammelte tägliche Funde */
+  picked: { day: string; ids: string[] };
+  /** Herumliegende Gegenstände (z. B. heruntergefallenes Obst) */
+  ground: GroundItem[];
+}
+
+export function createWorldState(): WorldState {
+  return { fruitHarvest: {}, branchDay: {}, rockDay: {}, flowerDay: {}, picked: { day: '', ids: [] }, ground: [] };
+}
+
 export interface SaveData {
   version: number;
   createdAt: string;
@@ -43,6 +74,20 @@ export interface SaveData {
   settings: Settings;
   /** Kleine Story-/Fortschritts-Flags, z. B. `introSeen`. */
   flags: Record<string, boolean>;
+  inventory: Inventory;
+  /** Sternchen ⭐ */
+  money: number;
+  /** Freundschaft je Bewohner-ID */
+  npcs: Record<string, NpcState>;
+  mail: Mailbox;
+  world: WorldState;
+}
+
+export interface SaveOptions {
+  /** Prüft, ob es einen Gegenstand (noch) gibt – unbekannte werden beim Laden entfernt. */
+  isKnownItem?: (id: string) => boolean;
+  /** IDs aller Bewohner, für die ein Freundschaftszustand angelegt wird */
+  npcIds?: readonly string[];
 }
 
 export const DEFAULT_SETTINGS: Settings = { musicVolume: 0.6, sfxVolume: 0.8 };
@@ -73,6 +118,11 @@ export function createNewSave(opts: NewGameOptions): SaveData {
     },
     settings: { ...DEFAULT_SETTINGS },
     flags: {},
+    inventory: createInventory(),
+    money: 0,
+    npcs: {},
+    mail: createMailbox(),
+    world: createWorldState(),
   };
 }
 
@@ -89,8 +139,10 @@ export function sanitizeVillageName(name: unknown): string {
 type RawSave = Record<string, unknown>;
 
 export const MIGRATIONS: Record<number, (old: RawSave) => RawSave> = {
-  // Beispiel für später:
-  // 1: (old) => ({ ...old, version: 2, inventory: [] }),
+  // v1 → v2 (M2): Inventar, Sternchen, Freundschaft, Briefkasten, Weltzustand.
+  // Die neuen Felder füllt `normalizeSave` mit Startwerten; Oma Gisela begrüßt
+  // Lina beim nächsten Laden (Flag `giselaWelcomed` fehlt noch).
+  1: (old) => ({ ...old, money: 0 }),
 };
 
 export function migrate(raw: RawSave, migrations = MIGRATIONS, target = SAVE_VERSION): RawSave {
@@ -135,7 +187,39 @@ function normalizeDayMonth(v: unknown, fallback: DayMonth): DayMonth {
  * Füllt fehlende/ungültige Felder auf. `spawn` wird genutzt, falls die
  * gespeicherte Position unbrauchbar ist.
  */
-export function normalizeSave(raw: RawSave, spawn: { x: number; y: number }, now: Date): SaveData {
+function stringRecord(v: unknown): Record<string, string> {
+  const out: Record<string, string> = {};
+  if (isObj(v)) for (const [k, val] of Object.entries(v)) if (typeof val === 'string') out[k] = val;
+  return out;
+}
+
+export function normalizeWorld(raw: unknown, isKnownItem: (id: string) => boolean): WorldState {
+  const w = createWorldState();
+  if (!isObj(raw)) return w;
+  w.fruitHarvest = stringRecord(raw.fruitHarvest);
+  w.branchDay = stringRecord(raw.branchDay);
+  w.rockDay = stringRecord(raw.rockDay);
+  w.flowerDay = stringRecord(raw.flowerDay);
+  if (isObj(raw.picked) && typeof raw.picked.day === 'string' && Array.isArray(raw.picked.ids)) {
+    w.picked = { day: raw.picked.day, ids: raw.picked.ids.filter((i): i is string => typeof i === 'string') };
+  }
+  if (Array.isArray(raw.ground)) {
+    for (const g of raw.ground) {
+      if (!isObj(g)) continue;
+      const { id, itemId, x, y } = g;
+      if (typeof id === 'string' && typeof itemId === 'string' && isKnownItem(itemId) && typeof x === 'number' && typeof y === 'number') {
+        w.ground.push({ id, itemId, x, y });
+      }
+    }
+  }
+  return w;
+}
+
+export function normalizeSave(raw: RawSave, spawn: { x: number; y: number }, now: Date, opts: SaveOptions = {}): SaveData {
+  const isKnownItem = opts.isKnownItem ?? (() => true);
+  const npcs: Record<string, NpcState> = {};
+  if (isObj(raw.npcs)) for (const [id, st] of Object.entries(raw.npcs)) npcs[id] = normalizeNpcState(st);
+  for (const id of opts.npcIds ?? []) if (!npcs[id]) npcs[id] = createNpcState();
   const nowIso = now.toISOString();
   const p = isObj(raw.player) ? raw.player : {};
   const s = isObj(raw.settings) ? raw.settings : {};
@@ -162,6 +246,11 @@ export function normalizeSave(raw: RawSave, spawn: { x: number; y: number }, now
       sfxVolume: clamp01(s.sfxVolume, DEFAULT_SETTINGS.sfxVolume),
     },
     flags,
+    inventory: normalizeInventory(raw.inventory, isKnownItem),
+    money: Math.max(0, Math.floor(finite(raw.money, 0))),
+    npcs,
+    mail: normalizeMailbox(raw.mail),
+    world: normalizeWorld(raw.world, isKnownItem),
   };
 }
 
@@ -175,7 +264,7 @@ export function serializeSave(data: SaveData): string {
   return JSON.stringify(data, null, 2);
 }
 
-export function parseSave(json: string, spawn: { x: number; y: number }, now: Date): ParseResult {
+export function parseSave(json: string, spawn: { x: number; y: number }, now: Date, opts: SaveOptions = {}): ParseResult {
   let raw: unknown;
   try {
     raw = JSON.parse(json);
@@ -194,7 +283,7 @@ export function parseSave(json: string, spawn: { x: number; y: number }, now: Da
   }
   try {
     const migrated = migrate(raw);
-    return { ok: true, data: normalizeSave(migrated, spawn, now) };
+    return { ok: true, data: normalizeSave(migrated, spawn, now, opts) };
   } catch (e) {
     return { ok: false, error: e instanceof Error ? e.message : String(e) };
   }
@@ -220,6 +309,7 @@ export class SaveManager {
     private readonly storage: StorageLike,
     private readonly spawn: { x: number; y: number },
     private readonly now: () => Date = () => new Date(),
+    private readonly opts: SaveOptions = {},
   ) {}
 
   hasSave(): boolean {
@@ -231,7 +321,7 @@ export class SaveManager {
     for (const key of [SAVE_KEY, BACKUP_KEY]) {
       const json = this.safeGet(key);
       if (json === null) continue;
-      const result = parseSave(json, this.spawn, this.now());
+      const result = parseSave(json, this.spawn, this.now(), this.opts);
       if (result.ok) return result.data;
     }
     return null;

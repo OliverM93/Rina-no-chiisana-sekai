@@ -158,6 +158,37 @@ describe('SaveManager', () => {
   });
 });
 
+describe('Version 2 (M2)', () => {
+  it('hebt alte Spielstände an und ergänzt Tasche, Sternchen & Co.', () => {
+    const v1 = {
+      version: 1,
+      createdAt: NOW.toISOString(),
+      villageName: 'Altdorf',
+      player: { name: 'Lina', x: 50, y: 60, facing: 'up', appearance: DEFAULT_LINA },
+      flags: { introSeen: true },
+    };
+    const result = parseSave(JSON.stringify(v1), SPAWN, NOW, { npcIds: ['gisela'] });
+    expect(result.ok).toBe(true);
+    if (!result.ok) return;
+    expect(result.data.version).toBe(SAVE_VERSION);
+    expect(result.data.villageName).toBe('Altdorf');
+    expect(result.data.money).toBe(0);
+    expect(result.data.inventory.slots.every((s) => s === null)).toBe(true);
+    expect(result.data.npcs.gisela.points).toBe(0);
+    expect(result.data.flags.giselaWelcomed).toBeUndefined();
+  });
+
+  it('entfernt unbekannte Gegenstände beim Laden', () => {
+    const s = freshSave();
+    s.inventory.slots[0] = { itemId: 'apfel', count: 2 };
+    s.inventory.slots[1] = { itemId: 'gibtsnicht', count: 1 };
+    s.world.ground.push({ id: 'g', itemId: 'gibtsnicht', x: 1, y: 1 });
+    const result = parseSave(serializeSave(s), SPAWN, NOW, { isKnownItem: (id) => id === 'apfel' });
+    expect(result.ok && result.data.inventory.slots[1]).toBeNull();
+    expect(result.ok && result.data.world.ground).toEqual([]);
+  });
+});
+
 describe('Export', () => {
   it('erzeugt einen Dateinamen mit Datum', () => {
     expect(exportFileName(NOW)).toBe('rina-spielstand-2026-11-02.json');
