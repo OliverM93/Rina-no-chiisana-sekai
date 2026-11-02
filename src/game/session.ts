@@ -1,0 +1,188 @@
+/**
+ * Die laufende Spielsitzung: Spielstand, Uhr, Karte und der Event-Bus
+ * zwischen Spielwelt (Phaser) und Oberfläche (Preact).
+ */
+import type { Appearance } from '../core/appearance';
+import { Emitter } from '../core/events';
+import { hashString } from '../core/rng';
+import {
+  createNewSave,
+  exportFileName,
+  type ParseResult,
+  parseSave,
+  type SaveData,
+  SaveManager,
+  serializeSave,
+  type StorageLike,
+} from '../core/save';
+import { type Clock, formatIsoDay, getDayPhase, getSeason, type Season } from '../core/time';
+import { buildWorldMap, tileCenter, type WorldMap } from '../core/worldmap';
+import { VILLAGE_LAYOUT, VILLAGE_OBJECTS, VILLAGE_SPAWN } from '../data/maps/village';
+import type { InteractionContext } from '../data/interactions';
+
+export interface DialogRequest {
+  title?: string;
+  lines: string[];
+  onClose?: () => void;
+}
+
+export type GameEvents = {
+  /** Texturen fertig, Welt sichtbar (Titelbildschirm) */
+  'world:ready': undefined;
+  /** Spielstand geladen/erstellt – Lina erscheint */
+  'game:started': undefined;
+  'dialog:open': DialogRequest;
+  'dialog:closed': undefined;
+  'appearance:changed': Appearance;
+  toast: string;
+};
+
+export class Session {
+  readonly bus = new Emitter<GameEvents>();
+  readonly map: WorldMap;
+  readonly saves: SaveManager;
+  data: SaveData | null = null;
+  private blocking = true;
+  private unblockedAt = 0;
+  /** Wird true, sobald die Welt gezeichnet ist (bleibt gesetzt – kein Wettlauf mit der UI). */
+  worldReady = false;
+  /** Jahreszeit beim Start (Texturen werden dafür erzeugt). */
+  readonly season: Season;
+  private playStart = 0;
+
+  constructor(
+    storage: StorageLike,
+    readonly clock: Clock,
+  ) {
+    this.map = buildWorldMap(VILLAGE_LAYOUT, VILLAGE_OBJECTS, VILLAGE_SPAWN);
+    this.saves = new SaveManager(storage, this.spawnPoint(), clock);
+    this.season = getSeason(clock());
+  }
+
+  /** Wenn true, ignoriert die Spielwelt Steuerungseingaben (Menü/Dialog offen). */
+  get uiBlocking(): boolean {
+    return this.blocking;
+  }
+
+  set uiBlocking(value: boolean) {
+    if (this.blocking && !value) this.unblockedAt = performance.now();
+    this.blocking = value;
+  }
+
+  /**
+   * Darf die Welt gerade Klicks/Taps annehmen? Kurz nach dem Schließen eines
+   * Fensters nicht – sonst würde derselbe Tipp Lina gleich loslaufen lassen.
+   */
+  acceptsPointer(): boolean {
+    return !this.blocking && performance.now() - this.unblockedAt > 350;
+  }
+
+  spawnPoint(): { x: number; y: number } {
+    const c = tileCenter(this.map.spawn);
+    return { x: c.x, y: c.y + 8 };
+  }
+
+  get playing(): boolean {
+    return this.data !== null;
+  }
+
+  hasSave(): boolean {
+    return this.saves.hasSave();
+  }
+
+  /** Lädt den vorhandenen Spielstand. */
+  continueGame(): boolean {
+    const data = this.saves.load();
+    if (!data) return false;
+    this.begin(data);
+    return true;
+  }
+
+  startNewGame(appearance: Appearance, villageName: string) {
+    const data = createNewSave({ appearance, villageName, spawn: this.spawnPoint(), now: this.clock() });
+    this.begin(data);
+    this.save();
+  }
+
+  markWorldReady() {
+    this.worldReady = true;
+    this.bus.emit('world:ready', undefined);
+  }
+
+  private begin(data: SaveData) {
+    this.data = data;
+    this.playStart = performance.now();
+    this.bus.emit('game:started', undefined);
+  }
+
+  /** Speichert (inkl. Spielzeit). Gibt false zurück, wenn der Browser-Speicher nicht verfügbar ist. */
+  save(): boolean {
+    if (!this.data) return false;
+    const now = performance.now();
+    this.data.playTimeSec += Math.max(0, (now - this.playStart) / 1000);
+    this.playStart = now;
+    return this.saves.save(this.data);
+  }
+
+  exportSave(): { fileName: string; json: string } | null {
+    if (!this.data) return null;
+    this.save();
+    return { fileName: exportFileName(this.clock()), json: serializeSave(this.data) };
+  }
+
+  /** Prüft eine Datei, ohne sie schon zu übernehmen. */
+  checkImport(json: string): ParseResult {
+    return parseSave(json, this.spawnPoint(), this.clock());
+  }
+
+  importSave(data: SaveData) {
+    this.saves.save(data);
+    this.begin(data);
+  }
+
+  deleteSave() {
+    this.saves.clear();
+  }
+
+  setAppearance(appearance: Appearance) {
+    if (!this.data) return;
+    this.data.player.appearance = appearance;
+    this.save();
+    this.bus.emit('appearance:changed', appearance);
+  }
+
+  setFlag(flag: string, value = true) {
+    if (!this.data) return;
+    this.data.flags[flag] = value;
+  }
+
+  interactionContext(): InteractionContext {
+    const now = this.clock();
+    const day = formatIsoDay(now);
+    return {
+      now,
+      season: getSeason(now),
+      phase: getDayPhase(now),
+      villageName: this.data?.villageName ?? '',
+      birthday: this.data?.player.birthday ?? { day: 16, month: 6 },
+      dayRandom: (hashString(day) % 1000) / 1000,
+    };
+  }
+}
+
+/** localStorage, falls verfügbar – sonst ein flüchtiger Speicher. */
+export function browserStorage(): StorageLike {
+  try {
+    const probe = '__rina_probe__';
+    window.localStorage.setItem(probe, '1');
+    window.localStorage.removeItem(probe);
+    return window.localStorage;
+  } catch {
+    const mem = new Map<string, string>();
+    return {
+      getItem: (k) => mem.get(k) ?? null,
+      setItem: (k, v) => void mem.set(k, v),
+      removeItem: (k) => void mem.delete(k),
+    };
+  }
+}
