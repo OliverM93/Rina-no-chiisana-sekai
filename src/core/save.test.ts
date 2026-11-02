@@ -1,0 +1,165 @@
+import { describe, expect, it } from 'vitest';
+import { DEFAULT_LINA } from './appearance';
+import {
+  BACKUP_KEY,
+  createNewSave,
+  DEFAULT_VILLAGE_NAME,
+  exportFileName,
+  MemoryStorage,
+  migrate,
+  parseSave,
+  SAVE_KEY,
+  SAVE_VERSION,
+  SaveManager,
+  sanitizeVillageName,
+  serializeSave,
+} from './save';
+
+const NOW = new Date(2026, 10, 2, 14, 0, 0);
+const SPAWN = { x: 100, y: 200 };
+
+function freshSave() {
+  return createNewSave({ villageName: 'Wolkenwiese', appearance: DEFAULT_LINA, spawn: SPAWN, now: NOW });
+}
+
+describe('Neuer Spielstand', () => {
+  it('enthält sinnvolle Startwerte', () => {
+    const s = freshSave();
+    expect(s.version).toBe(SAVE_VERSION);
+    expect(s.player.name).toBe('Lina');
+    expect(s.player.x).toBe(100);
+    expect(s.player.birthday).toEqual({ day: 16, month: 6 });
+    expect(s.villageName).toBe('Wolkenwiese');
+    expect(s.flags).toEqual({});
+  });
+
+  it('säubert Dorfnamen', () => {
+    expect(sanitizeVillageName('  Kirsch   tal ')).toBe('Kirsch tal');
+    expect(sanitizeVillageName('')).toBe(DEFAULT_VILLAGE_NAME);
+    expect(sanitizeVillageName(42)).toBe(DEFAULT_VILLAGE_NAME);
+    expect(sanitizeVillageName('x'.repeat(50))).toHaveLength(24);
+  });
+});
+
+describe('Serialisieren & Laden', () => {
+  it('übersteht einen Hin- und Rückweg unverändert', () => {
+    const s = freshSave();
+    s.flags.introSeen = true;
+    s.player.facing = 'left';
+    const result = parseSave(serializeSave(s), SPAWN, NOW);
+    expect(result.ok).toBe(true);
+    if (result.ok) expect(result.data).toEqual(s);
+  });
+
+  it('meldet kaputte Dateien freundlich', () => {
+    const notJson = parseSave('{oops', SPAWN, NOW);
+    expect(notJson.ok).toBe(false);
+    const wrongShape = parseSave('[1,2,3]', SPAWN, NOW);
+    expect(wrongShape.ok).toBe(false);
+  });
+
+  it('lehnt Spielstände aus der Zukunft ab', () => {
+    const s = { ...freshSave(), version: SAVE_VERSION + 1 };
+    const result = parseSave(JSON.stringify(s), SPAWN, NOW);
+    expect(result.ok).toBe(false);
+  });
+
+  it('ergänzt fehlende und ersetzt ungültige Felder', () => {
+    const partial = {
+      version: 1,
+      player: { x: 'kaputt', y: 5, facing: 'seitwärts', appearance: { hairColor: 'lila', hairStyle: 'bob' } },
+      settings: { musicVolume: 7 },
+      flags: { introSeen: true, quatsch: 'ja' },
+    };
+    const result = parseSave(JSON.stringify(partial), SPAWN, NOW);
+    expect(result.ok).toBe(true);
+    if (!result.ok) return;
+    expect(result.data.player.x).toBe(SPAWN.x);
+    expect(result.data.player.y).toBe(5);
+    expect(result.data.player.facing).toBe('down');
+    expect(result.data.player.appearance.hairStyle).toBe('bob');
+    expect(result.data.player.appearance.hairColor).toBe(DEFAULT_LINA.hairColor);
+    expect(result.data.settings.musicVolume).toBe(1);
+    expect(result.data.flags).toEqual({ introSeen: true });
+    expect(result.data.villageName).toBe(DEFAULT_VILLAGE_NAME);
+  });
+});
+
+describe('Migrationen', () => {
+  it('führt Schritte nacheinander aus', () => {
+    const migrations = {
+      1: (old: Record<string, unknown>) => ({ ...old, a: 1 }),
+      2: (old: Record<string, unknown>) => ({ ...old, b: (old.a as number) + 1 }),
+    };
+    const out = migrate({ version: 1 }, migrations, 3);
+    expect(out).toEqual({ version: 3, a: 1, b: 2 });
+  });
+
+  it('bricht ab, wenn eine Migration fehlt', () => {
+    expect(() => migrate({ version: 1 }, {}, 2)).toThrow();
+  });
+});
+
+describe('SaveManager', () => {
+  it('speichert, lädt und legt Backups an', () => {
+    const storage = new MemoryStorage();
+    const manager = new SaveManager(storage, SPAWN, () => NOW);
+    expect(manager.hasSave()).toBe(false);
+    expect(manager.load()).toBeNull();
+
+    const s = freshSave();
+    expect(manager.save(s)).toBe(true);
+    expect(manager.hasSave()).toBe(true);
+    expect(storage.getItem(BACKUP_KEY)).toBeNull();
+
+    s.player.x = 999;
+    manager.save(s);
+    expect(storage.getItem(BACKUP_KEY)).not.toBeNull();
+    expect(manager.load()?.player.x).toBe(999);
+  });
+
+  it('fällt bei beschädigtem Spielstand auf das Backup zurück', () => {
+    const storage = new MemoryStorage();
+    const manager = new SaveManager(storage, SPAWN, () => NOW);
+    const s = freshSave();
+    manager.save(s);
+    s.player.x = 123;
+    manager.save(s);
+    storage.setItem(SAVE_KEY, '{kaputt');
+    expect(manager.load()?.player.x).toBe(SPAWN.x);
+  });
+
+  it('übersteht einen gesperrten Speicher ohne Absturz', () => {
+    const broken = {
+      getItem: () => {
+        throw new Error('blockiert');
+      },
+      setItem: () => {
+        throw new Error('voll');
+      },
+      removeItem: () => {
+        throw new Error('blockiert');
+      },
+    };
+    const manager = new SaveManager(broken, SPAWN, () => NOW);
+    expect(manager.hasSave()).toBe(false);
+    expect(manager.load()).toBeNull();
+    expect(manager.save(freshSave())).toBe(false);
+    expect(() => manager.clear()).not.toThrow();
+  });
+
+  it('löscht auf Wunsch alles', () => {
+    const storage = new MemoryStorage();
+    const manager = new SaveManager(storage, SPAWN, () => NOW);
+    manager.save(freshSave());
+    manager.save(freshSave());
+    manager.clear();
+    expect(manager.hasSave()).toBe(false);
+  });
+});
+
+describe('Export', () => {
+  it('erzeugt einen Dateinamen mit Datum', () => {
+    expect(exportFileName(NOW)).toBe('rina-spielstand-2026-11-02.json');
+  });
+});

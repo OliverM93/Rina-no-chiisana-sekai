@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Grafik-Galerie (Entwicklung)</title>
+    <style>
+      body { margin: 0; padding: 16px; background: #fff8ef; font-family: system-ui, sans-serif; color: #6a4d5a; }
+      h2 { margin: 18px 0 8px; font-size: 16px; }
+      .row { display: flex; flex-wrap: wrap; gap: 10px; align-items: flex-end; }
+      .cell { background: #eaf6df; border-radius: 12px; padding: 6px; display: flex; flex-direction: column; align-items: center; font-size: 11px; }
+      .cell canvas { display: block; }
+    </style>
+  </head>
+  <body>
+    <div id="gallery"></div>
+    <script type="module" src="/src/dev/gallery.ts"></script>
+  </body>
+</html>
