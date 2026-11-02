@@ -7,7 +7,7 @@
  */
 import { palette } from '../style/palette';
 
-export type HairStyle = 'locken' | 'bob' | 'zopf' | 'dutt' | 'kurz' | 'wuschel';
+export type HairStyle = 'locken' | 'schulterlang' | 'bob' | 'zopf' | 'dutt' | 'kurz' | 'wuschel';
 export type Outfit = 'kleid' | 'pulli' | 'latzhose' | 'hemd' | 'strickjacke';
 export type Beard = 'keiner' | 'kurz' | 'voll';
 
@@ -34,6 +34,7 @@ export interface Option<T> {
 
 export const HAIR_STYLES: Option<HairStyle>[] = [
   { id: 'locken', label: 'Locken' },
+  { id: 'schulterlang', label: 'Schulterlang' },
   { id: 'bob', label: 'Bob' },
   { id: 'zopf', label: 'Pferdeschwanz' },
   { id: 'dutt', label: 'Dutt' },

@@ -49,6 +49,7 @@ export const palette = {
     rotblond: '#d9875a',
     schwarz: '#352a2d',
     grau: '#c8c2c8',
+    angegraut: '#5f5654',
     weiss: '#f3efec',
     rosa: '#f5a9c4',
     mint: '#9fd8c8',

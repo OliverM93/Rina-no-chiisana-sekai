@@ -20,6 +20,7 @@ export type ObjectKind =
   | 'bench'
   | 'fountain'
   | 'bridge'
+  | 'sellbox'
   | NatureKind;
 
 export interface MapObjectDef {
@@ -40,6 +41,13 @@ interface KindInfo {
   interactFrom?: Array<[number, number]>;
 }
 
+const AROUND: Array<[number, number]> = [
+  [0, 1],
+  [-1, 0],
+  [1, 0],
+  [0, -1],
+];
+
 export const OBJECT_KINDS: Record<ObjectKind, KindInfo> = {
   house: { w: 5, h: 3, blocks: 'all', interactFrom: [[2, 3]] },
   // Bauplatz: Grundfläche frei, nur das Schild vorne mittig blockiert.
@@ -50,10 +58,11 @@ export const OBJECT_KINDS: Record<ObjectKind, KindInfo> = {
   bench: { w: 2, h: 1, blocks: 'all', interactFrom: [[0, 1], [1, 1]] },
   fountain: { w: 3, h: 2, blocks: 'all', interactFrom: [[1, 2], [-1, 0], [3, 0], [1, -1], [-1, 1], [3, 1]] },
   bridge: { w: 3, h: 1, blocks: 'none' },
-  tree: { w: 1, h: 1, blocks: 'all' },
+  sellbox: { w: 1, h: 1, blocks: 'all', interactFrom: [[0, 1], [1, 0]] },
+  tree: { w: 1, h: 1, blocks: 'all', interactFrom: AROUND },
   pine: { w: 1, h: 1, blocks: 'all' },
   bush: { w: 1, h: 1, blocks: 'all' },
-  rock: { w: 1, h: 1, blocks: 'all' },
+  rock: { w: 1, h: 1, blocks: 'all', interactFrom: AROUND },
 };
 
 export interface MapObject extends MapObjectDef {
