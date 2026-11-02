@@ -35,9 +35,23 @@ Legende: ✅ erledigt · 🚧 in Arbeit · ⬜ geplant
 - ✅ Briefkasten: Willkommensbrief, gelegentliche Briefe mit Geschenken
 - ✅ Spielstand Version 2 mit Migration (alte Spielstände bleiben erhalten)
 - ✅ Tests: Inventar, Freundschaft, Tagesablauf, Dialogauswahl, tägliche Funde, Briefkasten, Migration
-- ⬜ Erster kleiner Laden zum Ausgeben der Sternchen → kommt mit dem Möbelkatalog in M4
+- ⬜ Erster kleiner Laden zum Ausgeben der Sternchen → kommt mit dem Möbelkatalog in M5
 
-## ⬜ M3 – Natur: Angeln, Insekten, Gärtnern, Wetter, Museum
+## ✅ M3 – Umstieg auf 3D
+
+- ✅ Three.js statt Phaser: 3D-Welt im PS2-Stil mit weichem Toon-Licht und Schatten
+- ✅ Gelände als Höhenraster (Flussbett, Meer) mit gemalter Textur und Wasseroberfläche
+- ✅ 3D-Modelle aus Grundformen: Laubbäume & Tannen je Jahreszeit, Büsche, Felsen, Blumen, Häuser mit
+  Satteldach & Herzfenster, Briefkasten (Fähnchen), Laternen, Bänke, Brunnen, Brücke, Bauplätze, Verkaufskiste
+- ✅ 3D-Chibi-Figuren (Lina, Oma Gisela …) mit gezeichnetem Gesicht, Blinzeln, Lauf- und Sitzanimation
+- ✅ Feste Schrägsicht-Kamera mit Mausrad-Zoom, Bäume/Häuser vor Lina werden durchsichtig
+- ✅ Tag & Nacht: Himmel, Sonne, leuchtende Fenster, Laternen mit echtem Licht
+- ✅ Fallende Blätter/Blüten/Schnee, Maus: Klick zum Laufen/Anschauen, Zeiger über Interaktivem
+- ✅ Charakter-Editor mit drehbarer 3D-Vorschau
+- ✅ Alle Funktionen aus M1/M2 übernommen, Spielstände bleiben gültig
+- ⬜ Charakter-Feinschliff (Locken, Gesichter, Proportionen) → nächster Schritt
+
+## ⬜ M4 – Natur: Angeln, Insekten, Gärtnern, Wetter, Museum
 
 - ⬜ Angeln (Minispiel), Insektenfangen (Netz) – saisonale, tageszeitabhängige Arten
 - ⬜ Gärtnern: Pflanzen, Gießen, Wachsen, Blumen-Kreuzungen
@@ -46,7 +60,7 @@ Legende: ✅ erledigt · 🚧 in Arbeit · ⬜ geplant
 - ⬜ Sammelkatalog & Museum
 - ⬜ Werkzeuge (Angel, Netz, Gießkanne, Schaufel)
 
-## ⬜ M4 – Hauseinrichtung (Sims-Elemente, Teil 1)
+## ⬜ M5 – Hauseinrichtung (Sims-Elemente, Teil 1)
 
 - ⬜ Innenraum von Linas Haus (eigene Szene), Ein- und Ausgang
 - ⬜ Grid-basiertes Platzieren, Drehen, Verschieben; Stapeln (Deko auf Tischen)
@@ -54,13 +68,13 @@ Legende: ✅ erledigt · 🚧 in Arbeit · ⬜ geplant
 - ⬜ Einrichtungsstile (Cottagecore, japanisch, französisches Bistro, modern, Retro-Oma-Chic)
 - ⬜ Katalog aller freigeschalteten Gegenstände
 
-## ⬜ M5 – Hausausbau, Außengestaltung, Crafting
+## ⬜ M6 – Hausausbau, Außengestaltung, Crafting
 
 - ⬜ Räume hinzufügen, Wände ziehen/entfernen, Raumaufteilung (Kredit bei Olafs Dorfkasse)
 - ⬜ Außenbereich: Zäune, Wege, Beete, Gartenmöbel, Lichterketten
 - ⬜ Crafting mit freischaltbaren Rezepten (Werkbank)
 
-## ⬜ M6 – Alle Bewohner, Shops & Events
+## ⬜ M7 – Alle Bewohner, Shops & Events
 
 - ⬜ Story-Einzüge: Oli, Lars, Olaf, Jens, Thalia (jeweils mit eigener Szene)
 - ⬜ Lars: Praxis/Apotheke (Heiltränke, Pflaster), Gesundheitstipps
@@ -71,11 +85,11 @@ Legende: ✅ erledigt · 🚧 in Arbeit · ⬜ geplant
 - ⬜ NPCs interagieren untereinander (Kaffeeklatsch, gemeinsames Angeln)
 - ⬜ Feste: Weihnachten, Silvester, Linas Geburtstag (16.06.), Geburtstage der Bewohner
 
-## ⬜ M7 – Feinschliff
+## ⬜ M8 – Feinschliff
 
 - ⬜ Musik & Soundeffekte (Web Audio, selbst generiert) mit Lautstärkeregler
 - ⬜ Mehr Animationen & Partikel, Balancing
-- ⬜ Mobile: virtueller Joystick/Bedienhilfen, PWA (installierbar, offline)
+- ⬜ PWA (installierbar, offline)
 - ⬜ Barrierefreiheit (Textgröße, reduzierte Bewegung)
 
 ## 💡 Ideen-Parkplatz
