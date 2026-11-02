@@ -21,17 +21,21 @@ Legende: ✅ erledigt · 🚧 in Arbeit · ⬜ geplant
 - ✅ Automatisches Speichern (localStorage, versioniert, Backup), Export/Import als Datei
 - ✅ Tests für Zeit, Speichern, Wegfindung, Bewegung, Karte
 
-## ⬜ M2 – Oma Gisela, Inventar, Sammeln & Verkaufen
+## ✅ M2 – Oma Gisela, Inventar, Sammeln & Verkaufen
 
-- ⬜ NPC-System: Persönlichkeit, Tagesablauf (Zeitplan nach Uhrzeit), eigenes Haus, Lieblingsgegenstände
-- ⬜ Oma Gisela zieht ein (Einzugsszene), sitzt auf ihrer Bank, verteilt Weisheiten & Kekse
-- ⬜ Dialogsystem mit vielen Zeilen (abhängig von Tageszeit, Wetter, Jahreszeit, Freundschaft)
-- ⬜ Freundschaft (Herzen), Geschenke
-- ⬜ Inventar (Taschen-Raster), Gegenstands-Datenbank
-- ⬜ Sammeln: Obst von Bäumen schütteln, Muscheln, Äste, Steine, Blumen
-- ⬜ Währung & Verkaufen (z. B. Verkaufskiste/Laden), erster kleiner Shop
-- ⬜ Briefkasten: gelegentliche Briefe & Geschenke
-- ⬜ Tests: Inventar, Freundschaft, Tagesablauf
+- ✅ NPC-System: Persönlichkeit, Tagesablauf (Bank, Spaziergang, Zuhause, Schlafen), eigenes Haus, Vorlieben
+- ✅ Oma Gisela zieht gleich ein (Begrüßungsszene mit Keks), sitzt auf ihrer Bank, läuft durchs Dorf
+- ✅ Dialogsystem mit vielen Zeilen (Tageszeit, Jahreszeit, Wochentag, Herzen, Linas Geburtstag)
+  und Auswahl (Plaudern / Etwas schenken / Tschüss)
+- ✅ Freundschaft (5 Herzen), Geschenke mit Reaktionen („köstlich!“ / „pfui!“), Herz-Belohnungen per Brief
+- ✅ Tasche (20 Plätze, Stapel, Sortieren), Gegenstands-Datenbank mit Symbolen
+- ✅ Sammeln: Bäume schütteln (Äpfel, Birnen, Pfirsiche, Äste), Muscheln & Seesterne am Strand,
+  Wildblumen pflücken, an Felsen klopfen (Kiesel, Glitzersteine)
+- ✅ Sternchen ⭐ & Verkaufskiste vor Linas Haus
+- ✅ Briefkasten: Willkommensbrief, gelegentliche Briefe mit Geschenken
+- ✅ Spielstand Version 2 mit Migration (alte Spielstände bleiben erhalten)
+- ✅ Tests: Inventar, Freundschaft, Tagesablauf, Dialogauswahl, tägliche Funde, Briefkasten, Migration
+- ⬜ Erster kleiner Laden zum Ausgeben der Sternchen → kommt mit dem Möbelkatalog in M4
 
 ## ⬜ M3 – Natur: Angeln, Insekten, Gärtnern, Wetter, Museum
 

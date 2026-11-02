@@ -19,14 +19,23 @@ Browser gespeichert.
 |---|---|---|
 | Laufen | WASD oder Pfeiltasten | irgendwohin klicken/tippen |
 | Rennen | Umschalttaste halten | (lange Wege rennt Lina von allein) |
-| Anschauen / Reden | Leertaste, E oder Enter | auf Dinge tippen |
+| Anschauen / Reden / Aufheben | Leertaste, E oder Enter | auf Dinge tippen |
+| Tasche | I oder Tab | 🎒 unten rechts |
 | Menü | Esc | ☰ oben rechts |
+
+**Was es zu tun gibt:** Oma Gisela besuchen (sie sitzt gern auf ihrer Bank), plaudern und ihr etwas
+schenken, Bäume schütteln, Muscheln sammeln, Blumen pflücken, an Felsen klopfen, Gesammeltes in der
+Verkaufskiste gegen Sternchen ⭐ tauschen und Briefe im Briefkasten lesen.
 
 Im Menü: Aussehen ändern, speichern, **Spielstand exportieren/laden** (als Datei – praktisch zum Sichern
 oder für ein anderes Gerät), Vollbild, Hilfe.
 
 Die Uhrzeit im Dorf ist die **echte Uhrzeit**: Abends gehen die Laternen an, nachts leuchten die Fenster,
 und jede Jahreszeit sieht anders aus.
+
+| Oma Gisela | Tasche & Verkaufskiste | Post (Handy) |
+|---|---|---|
+| ![Gespräch](docs/screenshots/m2-gespraech.png) | ![Verkaufskiste](docs/screenshots/m2-verkaufskiste.png) | ![Briefkasten](docs/screenshots/m2-briefkasten-handy.png) |
 
 | Abenddämmerung | Nacht | Handy |
 |---|---|---|

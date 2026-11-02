@@ -23,13 +23,13 @@ Meilensteine und Fortschritt: siehe [`ROADMAP.md`](ROADMAP.md).
 
 | Figur | Rolle | Aussehen (für die Chibi-Figuren) |
 |---|---|---|
-| **Lina** | Spielerin | braune Locken (im Editor anpassbar), Geburtstag **16.06.** |
+| **Lina** | Spielerin | braune Locken, etwas länger als schulterlang, Mittelscheitel, kein Pony (im Editor anpassbar), Geburtstag **16.06.** |
 | **Oliver („Oli“)** | Linas Freund – höchste Bindung, romantische Szenen, gemeinsames Haus/Zimmer | noch offen |
 | **Lars** | großer Bruder, Arzt – Praxis/Apotheke | groß, Bart |
-| **Olaf** | Papa, Finanzamt – Dorfkasse/Bank | eher klein, Bart |
+| **Olaf** | Papa, Finanzamt – Dorfkasse/Bank | eher klein, Bart, dunkle, etwas angegraute Haare (keine grauen) |
 | **Jens** | Onkel, Coach, Dandy – Bistro/Kochstudio & Galerie, Französisch + Sächsisch | untersetzter, kein Bart, sieht Olaf ähnlich |
 | **Thalia** | beste Freundin, Geografie – Partys, Karten, Gesteine/Fossilien | noch offen |
-| **Oma Gisela** | Oma – Bank vorm Haus, Weisheiten, Kekse, Strickrezepte; Likörchen/Zigarette dezent & humorvoll, nie glorifizierend | klein, zierlich |
+| **Oma Gisela** | Oma – Bank vorm Haus, Weisheiten, Kekse, Strickrezepte; hat **immer das letzte Wort**, misstrauisch („Die Ärzte wollen nur dein Geld …“), starke Meinung zu allem („köstlich!“ – „pfui!“); Likörchen/Zigarette dezent & humorvoll, nie glorifizierend | klein, zierlich, offene schulterlange Haare (kein Dutt), Brille |
 
 Figuren sind **Chibi-Menschen** (keine Tiere) – erkennbar an Frisur, Bart, Brille, Größe, Statur, Kleidung.
 
@@ -84,20 +84,30 @@ src/
     save.ts        Spielstand-Format, Versionierung, Migrationen, Normalisierung, SaveManager
     appearance.ts  Aussehen von Figuren (Parameter für die Chibi-Zeichnung)
     worldmap.ts    Kartenmodell aus ASCII + Objekten, Kollision, Interaktionspunkte
+    inventory.ts   Tasche (Plätze, Stapel, Sortieren)
+    friendship.ts  Herzen, Plaudern, Geschenke, Herz-Belohnungen
+    schedule.ts    Tagesabläufe der Bewohner
+    dialogue.ts    Auswahl von Dialogzeilen nach Tageszeit/Jahreszeit/Herzen/Tagen
+    daily.ts       tägliche Funde, Obst-Nachwachsen
+    mail.ts        Briefkasten
     grid.ts        Kollisionsraster, A*-Wegfindung, nächste freie Kachel
     movement.ts    Bewegung mit Kollision (Fuß-Box), Um-Ecken-Gleiten
     events.ts      typisierter Event-Emitter
     rng.ts         reproduzierbarer Zufall
-  data/        Inhalte (leicht erweiterbar): Karten, Interaktionstexte, Story-Texte
+  data/        Inhalte (leicht erweiterbar): Karten, Interaktionstexte, Story-Texte,
+               items.ts (alle Gegenstände + Preise), npcs/ (je Bewohner eine Datei)
   style/       palette.ts – EINZIGE Quelle für Farben (auch CSS-Variablen der UI)
   gfx/         Prozedurale Grafiken (Canvas 2D): chibi.ts, objects.ts, terrain.ts, effects.ts;
                textures.ts überträgt sie in Phaser
   game/        Phaser-Schicht
     session.ts     laufende Sitzung: Spielstand, Uhr, Karte, Event-Bus Welt ↔ UI
+    gameplay.ts    Spielregeln: Sammeln, Verkaufen, Plaudern, Schenken, Post
     scenes/        BootScene (Texturen erzeugen), WorldScene (Welt, Kamera, Input, Interaktion)
-    world/         MapView, Player, DayNight, Ambient
+    world/         MapView, Character (Lina & Bewohner), Npc (Tagesablauf-KI),
+                   Collectibles (Boden, Obstbäume, Blumen), DayNight, Ambient
     input.ts       eigene Tastatursteuerung (blockiert keine Textfelder)
-  ui/          Preact-Overlay: App, TitleScreen, CharacterEditor, Hud, DialogBox, Menu, store.ts
+  ui/          Preact-Overlay: App, TitleScreen, CharacterEditor, Hud, DialogBox (mit Auswahl & Herzen),
+               InventoryPanel (Tasche/Verkaufen/Schenken), MailPanel, Menu, store.ts
   dev/         Entwickler-Galerie (wird nicht ins Spiel gebaut)
 ```
 
@@ -120,6 +130,13 @@ src/
 - **Figuren:** `gfx/chibi.ts` zeichnet jede Figur aus `Appearance` (Frisur, Farben, Größe, Statur, Bart,
   Brille …) – 12 Frames (3 Richtungen × Stand/Blinzeln/2 Schritte); rechts = gespiegelt.
 - **Tag & Nacht:** Multiplikations-Overlay über der Welt + additive Lichtscheine (Laternen, Fenster).
+- **Bewohner:** Daten in `src/data/npcs/<id>.ts` (Aussehen, Haus, Tagesablauf, Vorlieben, Dialog-Pools,
+  Briefe). Ein neuer Bewohner braucht: Datei + Eintrag in `npcs/index.ts` + Haus/Bank in `VILLAGE_OBJECTS`.
+  Dialogzeilen haben Bedingungen (`when`) und Gewichte; ausgewählt wird reproduzierbar pro Tag.
+- **Freundschaft:** sinkt nie. Erstes Gespräch am Tag und erstes Geschenk am Tag zählen; Herz-Belohnungen
+  kommen per Brief.
+- **Tägliches:** Muscheln (reproduzierbar pro Datum), Obst wächst nach 3 Tagen nach, Felsen & Blumen 1×/Tag.
+  Heruntergefallenes bleibt liegen (gespeichert in `world.ground`).
 - **Spielstand:** `SAVE_VERSION` + `MIGRATIONS` in `core/save.ts`. Nach jeder Migration wird normalisiert
   (fehlende Felder → Standardwerte). Vor jedem Speichern bleibt der alte Stand als Backup erhalten.
 
