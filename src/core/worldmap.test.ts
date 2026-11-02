@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { VILLAGE_LAYOUT, VILLAGE_OBJECTS, VILLAGE_SPAWN } from '../data/maps/village';
 import { INTERACTIONS } from '../data/interactions';
+import { NPCS } from '../data/npcs';
 import { findPath, nearestWalkable } from './grid';
 import { buildWorldMap, findInteraction, KNOWN_CHARS, OBJECT_KINDS, objectById, terrainAt } from './worldmap';
 
@@ -72,6 +73,31 @@ describe('Dorfkarte', () => {
     ]) {
       const target = nearestWalkable(map.grid, goal)!;
       expect(findPath(map.grid, VILLAGE_SPAWN, target), JSON.stringify(goal)).not.toBeNull();
+    }
+  });
+});
+
+describe('Bewohner auf der Karte', () => {
+  it('haben ein Haus mit erreichbarer Tür und gültige Orte im Tagesablauf', () => {
+    for (const npc of NPCS) {
+      const house = objectById(map, npc.home);
+      expect(house, `${npc.id}: Haus fehlt`).toBeDefined();
+      const door = { x: house!.x + 2, y: house!.y + 3 };
+      expect(findPath(map.grid, VILLAGE_SPAWN, door), `${npc.id}: Tür unerreichbar`).not.toBeNull();
+      for (const entry of npc.schedule) {
+        const a = entry.activity;
+        if (a.kind === 'sitzen') {
+          const bench = objectById(map, a.bench);
+          expect(bench?.kind, `${npc.id}: ${a.bench}`).toBe('bench');
+          expect(findPath(map.grid, door, { x: bench!.x + 1, y: bench!.y + 1 })).not.toBeNull();
+        }
+        if (a.kind === 'spazieren') {
+          let free = 0;
+          for (let y = a.area.y; y < a.area.y + a.area.h; y++)
+            for (let x = a.area.x; x < a.area.x + a.area.w; x++) if (!map.grid.isBlocked(x, y)) free++;
+          expect(free, `${npc.id}: ${entry.label}`).toBeGreaterThan(5);
+        }
+      }
     }
   });
 });

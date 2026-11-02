@@ -9,6 +9,8 @@ import { palette } from '../style/palette';
 import { makeCanvas } from './canvas';
 import { CHIBI_FEET, CHIBI_H, CHIBI_W, renderChibiSheet } from './chibi';
 import * as fx from './effects';
+import { drawItemIcon, ICON } from './items';
+import { ITEMS } from '../data/items';
 import * as obj from './objects';
 import type { SpriteDef } from './objects';
 import { renderGrassTexture, renderTerrainTileset, terrainLayers } from './terrain';
@@ -55,6 +57,8 @@ export function registerWorldTextures(scene: Phaser.Scene, season: Season) {
   addSprite(scene, obj.plotAreaDef());
   addSprite(scene, obj.signDef('Bauplatz', 'sign-plot'));
   addSprite(scene, obj.mailboxDef());
+  addSprite(scene, obj.mailboxDef(true));
+  addSprite(scene, obj.sellboxDef());
   addSprite(scene, obj.boardDef());
   addSprite(scene, obj.lanternDef());
   addSprite(scene, obj.benchDef());
@@ -79,6 +83,12 @@ export function registerWorldTextures(scene: Phaser.Scene, season: Season) {
     addSprite(scene, def);
   }
   for (let i = 0; i < fx.FLOWER_COLORS.length; i++) addSprite(scene, fx.flowerDef(i));
+
+  // Gegenstände (am Boden, an Bäumen)
+  for (const id of Object.keys(ITEMS)) {
+    addSprite(scene, { key: `item-${id}`, w: ICON, h: ICON, ax: ICON / 2, ay: ICON / 2, draw: (ctx) => drawItemIcon(ctx, id) });
+  }
+  addSprite(scene, fx.heartDef());
 
   // Gelände
   for (const layer of terrainLayers(season)) {

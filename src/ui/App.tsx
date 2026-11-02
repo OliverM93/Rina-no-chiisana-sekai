@@ -10,7 +10,9 @@ import { DialogBox } from './DialogBox';
 import { Hud } from './Hud';
 import { Menu } from './Menu';
 import { TitleScreen } from './TitleScreen';
-import { type ConfirmRequest, ui, useUI } from './store';
+import { InventoryPanel } from './InventoryPanel';
+import { MailPanel } from './MailPanel';
+import { type ConfirmRequest, showToast, ui, useUI } from './store';
 
 export function App({ session }: { session: Session }) {
   const state = useUI();
@@ -19,7 +21,12 @@ export function App({ session }: { session: Session }) {
     const onReady = () => {
       if (ui.state.screen === 'loading') ui.set({ screen: session.playing ? 'playing' : 'title' });
     };
-    const offs = [session.bus.on('world:ready', onReady), session.bus.on('dialog:open', (dialog) => ui.set({ dialog }))];
+    const offs = [
+      session.bus.on('world:ready', onReady),
+      session.bus.on('dialog:open', (dialog) => ui.set({ dialog })),
+      session.bus.on('toast', (t) => showToast(t.text, t.icon)),
+      session.bus.on('ui:open', (panel) => ui.set({ panel })),
+    ];
     if (session.worldReady) onReady();
     return () => offs.forEach((off) => off());
   }, [session]);
@@ -28,8 +35,12 @@ export function App({ session }: { session: Session }) {
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       const s = ui.state;
-      if (e.code === 'Escape' && s.screen === 'playing' && !s.menuOpen && !s.dialog && !s.confirm) {
-        ui.set({ menuOpen: true });
+      const free = s.screen === 'playing' && !s.menuOpen && !s.dialog && !s.confirm && !s.panel;
+      const typing = document.activeElement instanceof HTMLInputElement;
+      if (e.code === 'Escape' && free) ui.set({ menuOpen: true });
+      if ((e.code === 'KeyI' || e.code === 'Tab') && free && !typing) {
+        e.preventDefault();
+        ui.set({ panel: { kind: 'inventory' } });
       }
     };
     window.addEventListener('keydown', onKey);
@@ -41,6 +52,12 @@ export function App({ session }: { session: Session }) {
     ui.set({ dialog: null });
     d?.onClose?.();
     session.bus.emit('dialog:closed', undefined);
+  };
+
+  const chooseInDialog = (index: number) => {
+    const choice = ui.state.dialog?.choices?.[index];
+    ui.set({ dialog: null });
+    choice?.onSelect();
   };
 
   return (
@@ -62,9 +79,11 @@ export function App({ session }: { session: Session }) {
       )}
       {state.screen === 'playing' && <Hud session={session} />}
       {state.menuOpen && <Menu session={session} />}
-      {state.dialog && <DialogBox dialog={state.dialog} onClose={closeDialog} />}
+      {state.panel?.kind === 'mail' && <MailPanel session={session} />}
+      {state.panel && state.panel.kind !== 'mail' && <InventoryPanel session={session} panel={state.panel} />}
+      {state.dialog && <DialogBox dialog={state.dialog} onClose={closeDialog} onChoose={chooseInDialog} />}
       {state.confirm && <Confirm request={state.confirm} />}
-      {state.toast && <Toast key={state.toast.id} text={state.toast.text} />}
+      {state.toast && <Toast key={state.toast.id} text={state.toast.text} icon={state.toast.icon} />}
     </>
   );
 }
@@ -108,10 +127,15 @@ function Confirm({ request }: { request: ConfirmRequest }) {
   );
 }
 
-function Toast({ text }: { text: string }) {
+function Toast({ text, icon }: { text: string; icon?: string }) {
   useEffect(() => {
     const id = window.setTimeout(() => ui.set({ toast: null }), 2600);
     return () => window.clearTimeout(id);
   }, [text]);
-  return <div class="toast pop-in">{text}</div>;
+  return (
+    <div class="toast pop-in">
+      {icon && <img class="toast-icon" src={icon} alt="" />}
+      {text}
+    </div>
+  );
 }

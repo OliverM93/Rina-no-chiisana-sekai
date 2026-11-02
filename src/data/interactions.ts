@@ -71,14 +71,6 @@ export const INTERACTIONS: Record<string, Interaction> = {
     ],
   },
 
-  'bauplatz-2': {
-    title: 'Bauplatz',
-    lines: () => [
-      '„Bauplatz – reserviert.“',
-      'Jemand hat ein kleines Wollknäuel und eine Keksdose an den Schildrand gemalt …',
-    ],
-  },
-
   'bauplatz-3': {
     title: 'Bauplatz',
     lines: () => [
@@ -136,6 +128,14 @@ export const INTERACTIONS: Record<string, Interaction> = {
       ctx.phase === 'abend' || ctx.phase === 'abenddaemmerung'
         ? ['Du setzt dich und schaust aufs Meer. Der Himmel färbt sich rosa und orange. 🌅']
         : ['Du setzt dich und lauschst dem Rauschen der Wellen. 🌊'],
+  },
+
+  'bank-gisela': {
+    title: 'Omas Bank',
+    lines: () => [
+      'Oma Giselas Bank. Auf dem Kissen ist ein Zettel festgesteckt:',
+      '„Reserviert. Für immer.“',
+    ],
   },
 
   'bank-wiese': {

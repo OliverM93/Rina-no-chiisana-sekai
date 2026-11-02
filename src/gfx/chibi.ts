@@ -17,6 +17,8 @@ export interface ChibiPose {
   /** 0 = Stand, 1 = linkes Bein vorne, 3 = rechtes Bein vorne */
   leg: 0 | 1 | 3;
   blink: boolean;
+  /** sitzt (nur Vorderansicht): Füße baumeln vor der Sitzfläche */
+  sit?: boolean;
 }
 
 /** Rahmengröße einer Figur in Welteinheiten. */
@@ -96,29 +98,53 @@ function drawHairBack(ctx: Ctx, a: Appearance, d: Dims, dir: ChibiDir) {
   const { hx, hy, rx, ry } = d;
   switch (a.hairStyle) {
     case 'locken': {
+      // Lange Locken (etwas länger als schulterlang), Mittelscheitel
       const curls: Circle[] = [
         ...arcCircles(hx, hy - 1, rx + 3, ry + 3, 150, 390, 11, 9),
-        // Locken, die bis auf die Schultern fallen
         { x: hx - rx + 1, y: hy + 12, r: 8.5 },
         { x: hx + rx - 1, y: hy + 12, r: 8.5 },
-        { x: hx - rx + 3, y: hy + 23, r: 8 },
-        { x: hx + rx - 3, y: hy + 23, r: 8 },
-        { x: hx - rx + 9, y: hy + 30, r: 6.5 },
-        { x: hx + rx - 9, y: hy + 30, r: 6.5 },
+        { x: hx - rx + 2, y: hy + 23, r: 8.5 },
+        { x: hx + rx - 2, y: hy + 23, r: 8.5 },
+        { x: hx - rx + 4, y: hy + 33, r: 8 },
+        { x: hx + rx - 4, y: hy + 33, r: 8 },
+        { x: hx - rx + 10, y: hy + 40, r: 6.5 },
+        { x: hx + rx - 10, y: hy + 40, r: 6.5 },
       ];
       if (dir === 'up') {
         curls.push(
-          ...arcCircles(hx, hy + 22, rx - 8, 4, 180, 360, 5, 8),
-          { x: hx, y: hy + 28, r: 8.5 },
-          { x: hx - 9, y: hy + 30, r: 7.5 },
-          { x: hx + 9, y: hy + 30, r: 7.5 },
+          ...arcCircles(hx, hy + 24, rx - 8, 5, 180, 360, 5, 8.5),
+          ...arcCircles(hx, hy + 34, rx - 10, 4, 180, 360, 4, 8),
+          { x: hx, y: hy + 40, r: 7.5 },
+          { x: hx - 10, y: hy + 41, r: 6.5 },
+          { x: hx + 10, y: hy + 41, r: 6.5 },
         );
       }
       if (dir === 'side') {
-        // Hinterkopf (rechts) voller, vorne kürzer
-        curls.push({ x: hx + rx * 0.5, y: hy + 6, r: 13 }, { x: hx + rx * 0.35, y: hy + 22, r: 9 }, { x: hx + rx * 0.7, y: hy + 28, r: 7 });
+        curls.push(
+          { x: hx + rx * 0.5, y: hy + 6, r: 13 },
+          { x: hx + rx * 0.4, y: hy + 22, r: 10 },
+          { x: hx + rx * 0.55, y: hy + 33, r: 8.5 },
+          { x: hx + rx * 0.3, y: hy + 40, r: 7 },
+        );
       }
       blob(ctx, curls, c, out(c));
+      curlShine(ctx, lighten(c, 0.22), curls.slice(11));
+      break;
+    }
+    case 'schulterlang': {
+      // Offen, schulterlang, weich gewellte Spitzen
+      ctx.beginPath();
+      ctx.moveTo(hx - rx - 6, hy + 22);
+      ctx.lineTo(hx - rx - 5, hy - 2);
+      ctx.ellipse(hx, hy - 2, rx + 5, ry + 5, 0, Math.PI, Math.PI * 2);
+      ctx.lineTo(hx + rx + 6, hy + 22);
+      ctx.quadraticCurveTo(hx + rx + 6, hy + 29, hx + rx - 2, hy + 27);
+      ctx.quadraticCurveTo(hx + rx - 7, hy + 25, hx + rx - 10, hy + 27);
+      ctx.lineTo(hx - rx + 10, hy + 27);
+      ctx.quadraticCurveTo(hx - rx + 7, hy + 25, hx - rx + 2, hy + 27);
+      ctx.quadraticCurveTo(hx - rx - 6, hy + 29, hx - rx - 6, hy + 22);
+      ctx.closePath();
+      fillWithOutline(ctx, c, out(c), 2.2);
       break;
     }
     case 'bob': {
@@ -199,23 +225,65 @@ function drawHairFront(ctx: Ctx, a: Appearance, d: Dims, dir: ChibiDir) {
   const side = dir === 'side';
   switch (a.hairStyle) {
     case 'locken': {
-      const bangs = side
-        ? [
-            ...arcCircles(hx, hy - 3, rx - 3, ry - 3, 185, 300, 5, 8),
-            { x: hx + rx * 0.2, y: hy - ry * 0.55, r: 12 },
-            { x: hx + rx * 0.62, y: hy - 6, r: 11 },
-            { x: hx + rx * 0.5, y: hy + 7, r: 11 },
-            { x: hx + rx * 0.62, y: hy + 16, r: 8.5 },
-          ]
-        : [...arcCircles(hx, hy - 4, rx - 4, ry - 6, 195, 345, 7, (i) => (i % 2 === 0 ? 7.5 : 6.8)), { x: hx - rx + 3, y: hy + 1, r: 6 }, { x: hx + rx - 3, y: hy + 1, r: 6 }];
-      blob(ctx, bangs, c, out(c));
-      // Glanzlichter auf einzelnen Locken
-      ctx.fillStyle = hl;
-      for (const b of bangs.slice(0, side ? 5 : 7)) {
-        ctx.beginPath();
-        ctx.ellipse(b.x - 1.8, b.y - 2.4, 2.4, 1.4, -0.5, 0, Math.PI * 2);
-        ctx.fill();
+      if (side) {
+        // Seitenansicht: Haar oben und hinten, Stirn frei
+        const back: Circle[] = [
+          ...arcCircles(hx, hy - 3, rx - 2, ry - 2, 222, 300, 4, 8.5),
+          { x: hx + rx * 0.2, y: hy - ry * 0.55, r: 12 },
+          { x: hx + rx * 0.62, y: hy - 6, r: 11 },
+          { x: hx + rx * 0.5, y: hy + 7, r: 11 },
+          { x: hx + rx * 0.62, y: hy + 17, r: 9 },
+        ];
+        blob(ctx, back, c, out(c));
+        curlShine(ctx, hl, back.slice(0, 4));
+        break;
       }
+      // Vorne: Mittelscheitel, zwei lockige „Vorhänge“ rahmen das Gesicht
+      ctx.beginPath();
+      ctx.moveTo(hx - rx - 1, hy + 6);
+      ctx.quadraticCurveTo(hx - rx - 2, hy - ry - 4, hx - 2, hy - ry - 3);
+      ctx.lineTo(hx + 2, hy - ry - 3);
+      ctx.quadraticCurveTo(hx + rx + 2, hy - ry - 4, hx + rx + 1, hy + 6);
+      ctx.quadraticCurveTo(hx + rx - 7, hy - 6, hx + 2, hy - ry * 0.5);
+      ctx.lineTo(hx - 2, hy - ry * 0.5);
+      ctx.quadraticCurveTo(hx - rx + 7, hy - 6, hx - rx - 1, hy + 6);
+      ctx.closePath();
+      fillWithOutline(ctx, c, out(c), 2.2);
+      // lockige Außenkanten
+      const sides: Circle[] = [
+        ...arcCircles(hx, hy - 2, rx + 0.5, ry + 1, 200, 340, 7, 6.5),
+        { x: hx - rx + 1, y: hy + 3, r: 6.5 },
+        { x: hx + rx - 1, y: hy + 3, r: 6.5 },
+        { x: hx - rx + 2, y: hy + 12, r: 6 },
+        { x: hx + rx - 2, y: hy + 12, r: 6 },
+      ];
+      blob(ctx, sides, c, out(c), 1.8);
+      // Scheitel
+      ctx.strokeStyle = out(c);
+      ctx.lineWidth = 1.6;
+      ctx.beginPath();
+      ctx.moveTo(hx, hy - ry - 2);
+      ctx.lineTo(hx, hy - ry * 0.55);
+      ctx.stroke();
+      curlShine(ctx, hl, sides);
+      break;
+    }
+    case 'schulterlang': {
+      ctx.beginPath();
+      if (side) {
+        sideHairPath(ctx, d, 25);
+      } else {
+        // Seitenscheitel, Haare locker zur Seite gekämmt
+        ctx.moveTo(hx - rx - 2, hy + 8);
+        ctx.quadraticCurveTo(hx - rx - 2, hy - ry - 5, hx - 6, hy - ry - 4);
+        ctx.quadraticCurveTo(hx + rx + 2, hy - ry - 4, hx + rx + 2, hy + 8);
+        ctx.quadraticCurveTo(hx + rx - 5, hy - 4, hx + 4, hy - ry * 0.45);
+        ctx.quadraticCurveTo(hx - 6, hy - 9, hx - rx + 4, hy - 2);
+        ctx.quadraticCurveTo(hx - rx + 1, hy + 2, hx - rx - 2, hy + 8);
+      }
+      ctx.closePath();
+      fillWithOutline(ctx, c, out(c), 2.2);
+      shineHair(ctx, hl, hx + 6, hy - ry + 2);
       break;
     }
     case 'bob': {
@@ -274,6 +342,16 @@ function sideHairPath(ctx: Ctx, d: Dims, nape: number) {
   ctx.quadraticCurveTo(hx - 4, hy - 9, hx - rx + 2, hy - 4);
 }
 
+/** Glanzpunkte auf einzelnen Locken */
+function curlShine(ctx: Ctx, color: string, curls: Circle[]) {
+  ctx.fillStyle = color;
+  for (const b of curls) {
+    ctx.beginPath();
+    ctx.ellipse(b.x - b.r * 0.25, b.y - b.r * 0.35, b.r * 0.32, b.r * 0.19, -0.5, 0, Math.PI * 2);
+    ctx.fill();
+  }
+}
+
 function shineHair(ctx: Ctx, color: string, x: number, y: number) {
   ctx.fillStyle = color;
   ctx.beginPath();
@@ -326,6 +404,16 @@ function outfitColors(a: Appearance): OutfitColors {
 function drawLegs(ctx: Ctx, a: Appearance, d: Dims, dir: ChibiDir, pose: ChibiPose, oc: OutfitColors) {
   const legW = 7.2 * Math.min(1.15, a.build);
   const top = d.hipY - 2;
+  if (pose.sit) {
+    // Sitzend: kurze, baumelnde Beinchen vor der Sitzfläche
+    for (const x of [-d.legX, d.legX]) {
+      ctx.beginPath();
+      ctx.roundRect(x - legW / 2, top, legW, 10, legW / 2.2);
+      fillWithOutline(ctx, oc.legs, out(oc.legs), 1.8);
+      ellipse(ctx, x, top + 10, legW * 0.62, 3.6, oc.shoes, out(oc.shoes), 1.6);
+    }
+    return;
+  }
   const draw = (x: number, lift: number, shoeDx: number) => {
     const bottom = d.footY - lift;
     ctx.beginPath();
@@ -574,6 +662,9 @@ function drawFace(ctx: Ctx, a: Appearance, d: Dims, dir: ChibiDir, pose: ChibiPo
 export function drawChibi(ctx: Ctx, a: Appearance, dir: ChibiDir, pose: ChibiPose) {
   const d = dims(a);
   const oc = outfitColors(a);
+  ctx.save();
+  // Sitzend: ganze Figur absenken – die Hüfte liegt auf der Sitzfläche (Ursprung)
+  if (pose.sit) ctx.translate(0, -7 - d.hipY);
   if (dir !== 'up') drawHairBack(ctx, a, d, dir);
   drawLegs(ctx, a, d, dir, pose, oc);
   drawBody(ctx, a, d, dir, pose, oc);
@@ -581,17 +672,23 @@ export function drawChibi(ctx: Ctx, a: Appearance, dir: ChibiDir, pose: ChibiPos
   drawHead(ctx, a, d, dir);
   drawFace(ctx, a, d, dir, pose);
   drawHairFront(ctx, a, d, dir);
+  ctx.restore();
 }
 
 /** Alle Einzelbilder, die das Spiel pro Figur braucht. */
-export const CHIBI_FRAMES: Array<{ name: string; dir: ChibiDir; pose: ChibiPose }> = (['down', 'up', 'side'] as const).flatMap(
-  (dir) => [
+type FrameDef = { name: string; dir: ChibiDir; pose: ChibiPose };
+
+export const CHIBI_FRAMES: FrameDef[] = (['down', 'up', 'side'] as const).flatMap(
+  (dir): FrameDef[] => [
     { name: `${dir}-idle`, dir, pose: { leg: 0, blink: false } },
     { name: `${dir}-blink`, dir, pose: { leg: 0, blink: true } },
     { name: `${dir}-walk1`, dir, pose: { leg: 1, blink: false } },
     { name: `${dir}-walk2`, dir, pose: { leg: 3, blink: false } },
   ],
-);
+).concat(<FrameDef[]>[
+  { name: 'down-sit', dir: 'down', pose: { leg: 0, blink: false, sit: true } },
+  { name: 'down-sit-blink', dir: 'down', pose: { leg: 0, blink: true, sit: true } },
+]);
 
 /**
  * Zeichnet alle Frames nebeneinander in ein Canvas (Spritesheet).

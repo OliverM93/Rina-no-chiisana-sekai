@@ -232,3 +232,20 @@ export function bubbleDef(): SpriteDef {
     for (const x of [13, 22, 31]) ellipse(ctx, x, 16, 2.6, 2.6, palette.ui.accentDark);
   });
 }
+
+/** Kleines Herz (Freundschaft) */
+export function heartDef(): SpriteDef {
+  return simple('heart', 24, 22, (ctx) => {
+    ctx.beginPath();
+    ctx.moveTo(12, 20);
+    ctx.bezierCurveTo(-1, 11, 4, 0, 12, 6);
+    ctx.bezierCurveTo(20, 0, 25, 11, 12, 20);
+    ctx.closePath();
+    ctx.lineWidth = 2.4;
+    ctx.strokeStyle = '#e27896';
+    ctx.stroke();
+    ctx.fillStyle = '#ff9fbb';
+    ctx.fill();
+    ellipse(ctx, 8, 8, 2, 1.4, 'rgba(255,255,255,0.8)');
+  });
+}

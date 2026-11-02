@@ -66,11 +66,15 @@ export const VILLAGE_OBJECTS: readonly MapObjectDef[] = [
   // Linas Häuschen (Tür unten in der Mitte)
   { id: 'haus-lina', kind: 'house', x: 12, y: 11, variant: 'rose' },
   { id: 'briefkasten-lina', kind: 'mailbox', x: 16, y: 14 },
+  { id: 'verkaufskiste', kind: 'sellbox', x: 12, y: 14 },
   { id: 'laterne-lina', kind: 'lantern', x: 11, y: 14 },
+
+  // Oma Giselas Häuschen mit ihrer Bank
+  { id: 'haus-gisela', kind: 'house', x: 42, y: 14, variant: 'lilac' },
+  { id: 'bank-gisela', kind: 'bench', x: 45, y: 17 },
 
   // Bauplätze für zukünftige Bewohner
   { id: 'bauplatz-1', kind: 'plot', x: 17, y: 15 },
-  { id: 'bauplatz-2', kind: 'plot', x: 42, y: 14 },
   { id: 'bauplatz-3', kind: 'plot', x: 48, y: 14 },
 
   // Dorfplatz

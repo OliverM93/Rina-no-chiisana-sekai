@@ -3,7 +3,7 @@
  * Fenster, Dialog, Hinweise) plus Preact-Hook.
  */
 import { useEffect, useState } from 'preact/hooks';
-import type { DialogRequest, Session } from '../game/session';
+import type { DialogRequest, Session, UiPanel } from '../game/session';
 
 export type Screen = 'loading' | 'title' | 'editor' | 'playing';
 
@@ -22,7 +22,9 @@ export interface UIState {
   menuOpen: boolean;
   dialog: DialogRequest | null;
   confirm: ConfirmRequest | null;
-  toast: { id: number; text: string } | null;
+  /** Tasche, Verkaufskiste, Briefkasten, Geschenk-Auswahl */
+  panel: UiPanel | null;
+  toast: { id: number; text: string; icon?: string } | null;
 }
 
 type Listener = (s: UIState) => void;
@@ -35,6 +37,7 @@ class UIStore {
     menuOpen: false,
     dialog: null,
     confirm: null,
+    panel: null,
     toast: null,
   };
 
@@ -58,14 +61,21 @@ export function useUI(): UIState {
 }
 
 let toastId = 0;
-export function showToast(text: string) {
-  ui.set({ toast: { id: ++toastId, text } });
+export function showToast(text: string, icon?: string) {
+  ui.set({ toast: { id: ++toastId, text, icon } });
+}
+
+/** Zählt bei jeder Änderung am Spielzustand hoch – zum Neuzeichnen von Anzeigen. */
+export function useSessionVersion(session: Session): number {
+  const [v, setV] = useState(0);
+  useEffect(() => session.bus.on('state:changed', () => setV((x) => x + 1)), [session]);
+  return v;
 }
 
 /** Hält `session.uiBlocking` passend zum Oberflächenzustand. */
 export function connectBlocking(session: Session) {
   const sync = (s: UIState) => {
-    session.uiBlocking = s.screen !== 'playing' || s.menuOpen || s.dialog !== null || s.confirm !== null;
+    session.uiBlocking = s.screen !== 'playing' || s.menuOpen || s.dialog !== null || s.confirm !== null || s.panel !== null;
   };
   sync(ui.state);
   ui.subscribe(sync);
