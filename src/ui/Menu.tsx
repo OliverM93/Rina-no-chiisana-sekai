@@ -114,7 +114,11 @@ export function Menu({ session }: { session: Session }) {
               <b>Maus &amp; Touch:</b> Irgendwohin tippen, um dorthin zu laufen. Auf Dinge tippen, um sie anzusehen.
             </p>
             <p>
-              <b>Anschauen/Reden:</b> Leertaste, E oder Enter · <b>Menü:</b> Esc
+              <b>Anschauen/Reden/Aufheben:</b> Leertaste, E oder Enter · <b>Tasche:</b> I oder Tab · <b>Menü:</b> Esc
+            </p>
+            <p>
+              <b>Sammeln:</b> Bäume schütteln, Muscheln am Strand, Blumen pflücken, an Felsen klopfen. Was du nicht
+              brauchst, kommt in die Verkaufskiste vor deinem Haus. ⭐
             </p>
             <p class="soft">Das Spiel speichert automatisch. Die Uhrzeit im Dorf ist die echte Uhrzeit.</p>
           </div>

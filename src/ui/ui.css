@@ -756,3 +756,385 @@ body {
   background: rgba(255, 253, 249, 0.8);
   border-color: rgba(243, 202, 214, 0.8);
 }
+
+/* ---------------------------------------------------------------- M2: Sternchen, Tasche, Post */
+
+.hud-bottom {
+  position: fixed;
+  right: max(12px, env(safe-area-inset-right));
+  bottom: max(14px, env(safe-area-inset-bottom));
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  pointer-events: none;
+}
+
+.hud-money {
+  background: rgba(255, 253, 249, 0.95);
+  border: 3px solid var(--ui-border);
+  border-radius: 999px;
+  padding: 6px 14px;
+  font-weight: 900;
+  font-size: 17px;
+  box-shadow: 0 4px 0 var(--ui-border);
+}
+
+.hud-bag {
+  pointer-events: auto;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  border: 3px solid var(--ui-border);
+  background: var(--ui-butter);
+  box-shadow: 0 4px 0 var(--ui-border);
+  font-size: 30px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.hud-bag:active {
+  transform: translateY(2px);
+  box-shadow: 0 2px 0 var(--ui-border);
+}
+
+.hud-mail {
+  position: fixed;
+  right: max(16px, env(safe-area-inset-right));
+  top: calc(max(12px, env(safe-area-inset-top)) + 64px);
+  background: var(--ui-accent);
+  color: #fff;
+  border-radius: 999px;
+  padding: 4px 10px;
+  font-size: 16px;
+  border: 3px solid #fff;
+  box-shadow: 0 3px 0 var(--ui-accent-dark);
+  animation: bounce 1.2s ease-in-out infinite;
+}
+
+.toast {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  bottom: calc(max(26px, env(safe-area-inset-bottom)) + 70px);
+}
+
+.toast-icon {
+  width: 26px;
+  height: 26px;
+}
+
+/* Herzen im Dialog */
+.hearts {
+  margin-left: 8px;
+  letter-spacing: 1px;
+}
+
+.heart {
+  color: rgba(255, 255, 255, 0.45);
+  font-size: 14px;
+}
+
+.heart.on {
+  color: #fff;
+}
+
+/* Auswahl im Dialog */
+.dialog-layer {
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.dialog-choices {
+  align-self: flex-end;
+  margin-right: max(0px, calc((100% - 680px) / 2));
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  background: var(--ui-panel);
+  border: 3px solid var(--ui-border);
+  border-radius: 22px;
+  padding: 8px;
+  box-shadow: 0 5px 0 var(--ui-border);
+  cursor: default;
+}
+
+.choice {
+  font: inherit;
+  font-weight: 800;
+  font-size: 16px;
+  text-align: left;
+  color: var(--ui-text);
+  background: transparent;
+  border: 0;
+  border-radius: 999px;
+  padding: 9px 18px;
+  cursor: pointer;
+}
+
+.choice.selected {
+  background: var(--ui-accent);
+  color: #fff;
+}
+
+/* Tasche */
+.inventory {
+  width: min(540px, 100%);
+}
+
+.inventory-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin: -4px 0 10px;
+}
+
+.money {
+  font-weight: 900;
+  font-size: 17px;
+}
+
+.slot-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 8px;
+}
+
+.slot {
+  position: relative;
+  aspect-ratio: 1;
+  border-radius: 18px;
+  border: 3px solid var(--ui-border);
+  background: #fff;
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.slot.empty {
+  background: var(--ui-bg);
+  border-style: dashed;
+  cursor: default;
+}
+
+.slot img {
+  width: 78%;
+  height: 78%;
+  pointer-events: none;
+}
+
+.slot .count {
+  position: absolute;
+  right: 4px;
+  bottom: 2px;
+  font-weight: 900;
+  font-size: 13px;
+  background: var(--ui-text);
+  color: #fff;
+  border-radius: 999px;
+  padding: 0 6px;
+}
+
+.slot.selected {
+  border-color: var(--ui-accent);
+  box-shadow: 0 0 0 3px rgba(244, 151, 176, 0.35);
+}
+
+.slot.marked {
+  background: #fff3c4;
+  border-color: #e8be52;
+}
+
+.slot.marked::after {
+  content: '⭐';
+  position: absolute;
+  left: 3px;
+  top: 1px;
+  font-size: 13px;
+}
+
+.item-detail {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  min-height: 92px;
+  margin-top: 12px;
+  background: var(--ui-bg);
+  border-radius: 18px;
+  padding: 10px 14px;
+}
+
+.item-detail img {
+  width: 64px;
+  height: 64px;
+  flex: none;
+}
+
+.item-name {
+  font-weight: 900;
+  font-size: 17px;
+}
+
+.item-cat {
+  font-size: 12px;
+  font-weight: 800;
+  color: var(--ui-accent-dark);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.item-desc {
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.item-price {
+  font-size: 13px;
+  font-weight: 800;
+  margin-top: 2px;
+}
+
+.center {
+  text-align: center;
+  width: 100%;
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: default;
+  transform: none;
+}
+
+/* Briefkasten */
+.mail {
+  width: min(720px, 100%);
+}
+
+.mail-body {
+  display: flex;
+  gap: 14px;
+  min-height: 280px;
+}
+
+.letter-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  flex: 0 0 210px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  max-height: 360px;
+  overflow: auto;
+}
+
+.letter-item {
+  font: inherit;
+  width: 100%;
+  text-align: left;
+  border: 2.5px solid var(--ui-border);
+  background: #fff;
+  border-radius: 16px;
+  padding: 7px 10px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  color: var(--ui-text);
+}
+
+.letter-item.active {
+  border-color: var(--ui-accent);
+  background: #fff4f7;
+}
+
+.letter-item .dot {
+  position: absolute;
+  right: 8px;
+  top: 8px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--ui-accent);
+}
+
+.letter-subject {
+  font-weight: 900;
+  font-size: 14px;
+  padding-right: 14px;
+}
+
+.letter-from {
+  font-size: 12px;
+  color: var(--ui-text-soft);
+}
+
+.letter-paper {
+  flex: 1;
+  background: repeating-linear-gradient(#fffdf6, #fffdf6 27px, #f3e6d4 28px);
+  border-radius: 14px;
+  padding: 14px 20px;
+  box-shadow: inset 0 0 0 2px #f1dfc8;
+  position: relative;
+}
+
+.letter-paper h3 {
+  margin: 0 0 6px;
+  color: var(--ui-accent-dark);
+}
+
+.letter-text {
+  margin: 0;
+  white-space: pre-wrap;
+  line-height: 28px;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.letter-gift {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 12px;
+  background: #fff;
+  border-radius: 14px;
+  padding: 6px 10px;
+  border: 2px dashed var(--ui-border);
+  font-weight: 800;
+}
+
+.letter-gift img {
+  width: 36px;
+  height: 36px;
+}
+
+@media (max-width: 620px) {
+  .slot-grid {
+    gap: 6px;
+  }
+
+  .mail-body {
+    flex-direction: column;
+  }
+
+  .letter-list {
+    flex: none;
+    max-height: 130px;
+  }
+
+  .hud-bag {
+    width: 54px;
+    height: 54px;
+    font-size: 26px;
+  }
+
+  .hud-money {
+    font-size: 15px;
+  }
+}
