@@ -1,0 +1,105 @@
+/**
+ * Aussehen von Linas Liebsten – nach Fotos nachempfunden (Chibi-Stil).
+ * Die Fotos selbst sind NICHT Teil des Projekts.
+ */
+import type { Appearance } from '../../core/appearance';
+import { palette } from '../../style/palette';
+
+const base: Appearance = {
+  hairStyle: 'kurz',
+  hairColor: palette.hair.dunkelbraun,
+  skinTone: palette.skin[1],
+  outfit: 'hemd',
+  outfitColor: '#ffffff',
+  accentColor: '#5b6f99',
+  height: 1,
+  build: 1,
+  beard: 'keiner',
+  beardColor: '',
+  glasses: false,
+  glassesShape: 'rund',
+  blush: true,
+  eyeColor: palette.eyeColors.blau,
+  freckles: false,
+  smile: 'laecheln',
+};
+
+export const LOOKS: Readonly<Record<string, Appearance>> = {
+  /** Oma Gisela: klein & zierlich, silbergraue, offene Haare, königsblauer Mantel mit rotem Tuch, Brille */
+  gisela: {
+    ...base,
+    hairStyle: 'schulterlang',
+    hairColor: palette.hair.silber,
+    skinTone: palette.skin[0],
+    outfit: 'mantel',
+    outfitColor: '#3f5fc8',
+    accentColor: '#b8324a',
+    height: 0.86,
+    build: 0.9,
+    glasses: true,
+    glassesShape: 'rund',
+    eyeColor: palette.eyeColors.graublau,
+    smile: 'grinsen',
+  },
+  /** Olaf (Papa): kurze dunkle, angegraute Haare, grauer Bart, eckige Brille, weißes Hemd mit dunkler Weste */
+  olaf: {
+    ...base,
+    hairStyle: 'kurz',
+    hairColor: palette.hair.angegraut,
+    beard: 'kurz',
+    beardColor: '#b9b2ae',
+    outfit: 'weste',
+    outfitColor: '#2f3e5c',
+    accentColor: '#f7f4ee',
+    height: 0.95,
+    build: 1.02,
+    glasses: true,
+    glassesShape: 'eckig',
+    blush: false,
+    eyeColor: palette.eyeColors.graublau,
+  },
+  /** Christin (Olafs Freundin): dunkelbrauner Bob mit Seitenscheitel, schlank, korallrotes Oberteil */
+  christin: {
+    ...base,
+    hairStyle: 'bob',
+    hairColor: '#4a3329',
+    skinTone: palette.skin[1],
+    outfit: 'pulli',
+    outfitColor: '#ec6b52',
+    accentColor: '#3a3a48',
+    height: 0.98,
+    build: 0.9,
+    eyeColor: palette.eyeColors.braun,
+    smile: 'grinsen',
+  },
+  /** Lars (großer Bruder): groß & kräftig, kurz geschorene rotblonde Haare, rotblonder Vollbart, Streifenhemd */
+  lars: {
+    ...base,
+    hairStyle: 'kurzgeschoren',
+    hairColor: palette.hair.rotblond,
+    beard: 'voll',
+    beardColor: '#b0703f',
+    outfit: 'streifenhemd',
+    outfitColor: '#22283d',
+    accentColor: '#d9dbe6',
+    height: 1.2,
+    build: 1.12,
+    blush: false,
+    eyeColor: palette.eyeColors.blau,
+    smile: 'grinsen',
+  },
+  /** Jens (Onkel): dunkle, zerzauste Haare, kein Bart, rundes Gesicht, untersetzt, schwarzer Hoodie, Zahnlücken-Grinsen */
+  jens: {
+    ...base,
+    hairStyle: 'zerzaust',
+    hairColor: '#40342f',
+    skinTone: '#f6cfb4',
+    outfit: 'hoodie',
+    outfitColor: '#2d2d35',
+    accentColor: '#3a3a44',
+    height: 0.98,
+    build: 1.2,
+    eyeColor: palette.eyeColors.blau,
+    smile: 'zahnluecke',
+  },
+};

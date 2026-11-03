@@ -6,7 +6,7 @@
  * Bank vorm Haus, verteilt Weisheiten und Kekse.
  * Likörchen & Zigarette: nur dezent und humorvoll, nie glorifizierend.
  */
-import { palette } from '../../style/palette';
+import { LOOKS } from './looks';
 import type { NpcDef } from './types';
 
 const PLATZ = { x: 23, y: 16, w: 9, h: 7 };
@@ -16,19 +16,7 @@ export const GISELA: NpcDef = {
   id: 'gisela',
   name: 'Oma Gisela',
   personality: 'herzlich, frech, misstrauisch, starke Meinungen, immer das letzte Wort',
-  appearance: {
-    hairStyle: 'schulterlang',
-    hairColor: palette.hair.grau,
-    skinTone: palette.skin[0],
-    outfit: 'strickjacke',
-    outfitColor: '#c8b6e8',
-    accentColor: '#ffffff',
-    height: 0.86,
-    build: 0.9,
-    beard: 'keiner',
-    glasses: true,
-    blush: true,
-  },
+  appearance: LOOKS.gisela,
   home: 'haus-gisela',
   schedule: [
     { from: '00:00', label: 'schläft', activity: { kind: 'zuhause', sleeping: true } },

@@ -5,6 +5,7 @@
 import * as THREE from 'three';
 import { DEFAULT_LINA, type Appearance } from '../core/appearance';
 import { GISELA } from '../data/npcs/gisela';
+import { LOOKS } from '../data/npcs/looks';
 import { palette } from '../style/palette';
 import { makeBench, makeBoard, makeBridge, makeFountain, makeHouse, makeLantern, makeMailbox, makePlotMarks, makeSellbox, makeSign } from '../world3d/models/buildings';
 import { Chibi3D } from '../world3d/models/chibi3d';
@@ -39,11 +40,11 @@ scene.add(content);
 
 const people: Array<[string, Appearance]> = [
   ['Lina', DEFAULT_LINA],
-  ['Gisela', GISELA.appearance],
-  ['Lars', { ...DEFAULT_LINA, hairStyle: 'kurz', hairColor: palette.hair.dunkelbraun, outfit: 'hemd', outfitColor: '#a9cdf2', accentColor: '#7d6a73', height: 1.18, build: 1.05, beard: 'voll', blush: false }],
-  ['Olaf', { ...DEFAULT_LINA, hairStyle: 'kurz', hairColor: palette.hair.angegraut, outfit: 'hemd', outfitColor: '#ffffff', accentColor: '#8a9bc4', height: 0.95, build: 1.05, beard: 'kurz', glasses: true, blush: false }],
-  ['Bob', { ...DEFAULT_LINA, hairStyle: 'bob', outfit: 'latzhose', outfitColor: '#a8dcc8' }],
-  ['Zopf', { ...DEFAULT_LINA, hairStyle: 'zopf', hairColor: palette.hair.blond, outfit: 'pulli' }],
+  ['Gisela', LOOKS.gisela],
+  ['Olaf', LOOKS.olaf],
+  ['Christin', LOOKS.christin],
+  ['Lars', LOOKS.lars],
+  ['Jens', LOOKS.jens],
 ];
 const chibis: Chibi3D[] = [];
 
@@ -64,8 +65,9 @@ function build() {
     sitter.root.position.set(-0.3, 0.37, -1.55);
     content.add(bench, sitter.root);
     sitter.pose({ step: 0, moving: false, running: false, sitting: true, blink: false, t: 0 });
-    camera.position.set(Math.sin(angle) * 6.5, 2.4, Math.cos(angle) * 6.5);
-    camera.lookAt(0, 0.45, -0.3);
+    const zoom = Number(params.get('zoom') ?? 1);
+    camera.position.set(Math.sin(angle) * 6.5 * zoom, 2.4 * zoom, Math.cos(angle) * 6.5 * zoom);
+    camera.lookAt(Number(params.get('x') ?? 0), 0.5, -0.3);
   } else if (view === 'natur') {
     const items: THREE.Object3D[] = [];
     for (const s of ['fruehling', 'sommer', 'herbst', 'winter'] as const) items.push(makeTree(s, 3).group);
