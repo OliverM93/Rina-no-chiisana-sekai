@@ -74,13 +74,18 @@ Legende: ✅ erledigt · 🚧 in Arbeit · ⬜ geplant
 - ⬜ Museum → kommt mit Thalia (M7); Schaufel & Fossilien ebenfalls mit Thalia
 - ⬜ Blumen-Kreuzungen (neue Farben) → später
 
-## ⬜ M5 – Hauseinrichtung (Sims-Elemente, Teil 1)
+## ✅ M5 – Hauseinrichtung (Sims-Elemente, Teil 1)
 
-- ⬜ Innenraum von Linas Haus (eigene Szene), Ein- und Ausgang
-- ⬜ Grid-basiertes Platzieren, Drehen, Verschieben; Stapeln (Deko auf Tischen)
-- ⬜ Tapeten, Bodenbeläge, Farbvarianten für Möbel
-- ⬜ Einrichtungsstile (Cottagecore, japanisch, französisches Bistro, modern, Retro-Oma-Chic)
-- ⬜ Katalog aller freigeschalteten Gegenstände
+- ✅ Innenraum von Linas Haus (eigener Raum, 8×6 Felder), Tür rein & raus, Fenster mit Tageslicht
+- ✅ Raster-Platzieren, Drehen, Verschieben, Wegräumen; Deko auf Tischen & Kommoden; Teppiche unter Möbeln
+- ✅ Tapeten & Böden (5 + 4), Farbvarianten für Futon, Kotatsu, Zabuton
+- ✅ Erster Stil: **japanisch** (Futon, Chabudai, Kotatsu, Zabuton, Andon, Tansu, Byōbu, Bambus,
+  Zimmerbrunnen, Tatami-Matte, Bonsai, Teeservice, Ikebana, Winkekatze, Kokeshi) + Basis-Möbel
+- ✅ Möbelkatalog am Pult – der erste Ort zum Sternchen-Ausgeben
+- ✅ Sitzen auf Kissen & Futon, Lampen leuchten abends (an-/ausknipsbar)
+- ✅ 3D-Vorschaubilder der Möbel in Katalog & Tasche; Spielstand Version 5
+- ⬜ Weitere Stile (Cottagecore, französisches Bistro, modern, Retro-Oma-Chic) → nach und nach
+- ⬜ Wand-Deko (Bilder, Rollbilder, Regale an der Wand)
 
 ## ⬜ M6 – Hausausbau, Außengestaltung, Crafting
 

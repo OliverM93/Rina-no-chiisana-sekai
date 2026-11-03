@@ -21,6 +21,7 @@ export class Weather3D {
   private flash = 0;
   private nextFlash = 6;
   private m = new THREE.Matrix4();
+  private enabled = true;
 
   constructor(scene: THREE.Scene) {
     const drop = new THREE.CylinderGeometry(0.012, 0.012, 0.42, 3);
@@ -37,8 +38,14 @@ export class Weather3D {
 
   set(state: WeatherNow) {
     this.state = state;
-    this.rain.visible = state.kind === 'regen' || state.kind === 'gewitter';
-    this.snow.visible = state.kind === 'schnee';
+    this.rain.visible = this.enabled && (state.kind === 'regen' || state.kind === 'gewitter');
+    this.snow.visible = this.enabled && state.kind === 'schnee';
+  }
+
+  /** Zu Hause regnet es nicht */
+  setEnabled(on: boolean) {
+    this.enabled = on;
+    this.set(this.state);
   }
 
   get current(): WeatherNow {
@@ -76,7 +83,7 @@ export class Weather3D {
     }
     // Gewitter: ab und zu ein sanftes Aufleuchten (kein Schreck – eher ein Flackern)
     this.flash = Math.max(0, this.flash - dt * 3);
-    if (this.state.kind === 'gewitter') {
+    if (this.state.kind === 'gewitter' && this.enabled) {
       this.nextFlash -= dt;
       if (this.nextFlash <= 0) {
         this.flash = 1;

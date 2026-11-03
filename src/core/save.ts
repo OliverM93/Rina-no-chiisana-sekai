@@ -13,11 +13,12 @@ import { type Appearance, DEFAULT_LINA, normalizeAppearance } from './appearance
 import { createNpcState, type NpcState, normalizeNpcState } from './friendship';
 import { type Collection, normalizeCollection } from './catching';
 import { type Garden, normalizeGarden } from './garden';
+import { type Home, type InfoFn, normalizeHome } from './room';
 import { createInventory, type Inventory, normalizeInventory } from './inventory';
 import { createMailbox, type Mailbox, normalizeMailbox } from './mail';
 import { type DayMonth, DEFAULT_LINA_BIRTHDAY, formatIsoDay } from './time';
 
-export const SAVE_VERSION = 4;
+export const SAVE_VERSION = 5;
 export const SAVE_KEY = 'rina-no-chiisana-sekai.save';
 export const BACKUP_KEY = 'rina-no-chiisana-sekai.save.backup';
 
@@ -87,6 +88,8 @@ export interface SaveData {
   world: WorldState;
   /** Sammelbuch: gefangene Fische & Insekten */
   collection: Collection;
+  /** Linas Zimmer: Tapete, Boden, Möbel */
+  home: Home;
 }
 
 export interface SaveOptions {
@@ -94,7 +97,13 @@ export interface SaveOptions {
   isKnownItem?: (id: string) => boolean;
   /** IDs aller Bewohner, für die ein Freundschaftszustand angelegt wird */
   npcIds?: readonly string[];
+  /** Einrichtung für neue/alte Spielstände ohne Zimmer */
+  defaultHome?: Home;
+  /** Größe & Art der Möbel (für die Raumlogik) */
+  furnitureInfo?: InfoFn;
 }
+
+const EMPTY_HOME: Home = { wallpaper: '', floor: '', items: [] };
 
 export const DEFAULT_SETTINGS: Settings = { musicVolume: 0.6, sfxVolume: 0.8 };
 export const DEFAULT_VILLAGE_NAME = 'Wolkenwiese';
@@ -104,6 +113,7 @@ export interface NewGameOptions {
   appearance: Appearance;
   spawn: { x: number; y: number };
   now: Date;
+  home?: Home;
 }
 
 export function createNewSave(opts: NewGameOptions): SaveData {
@@ -130,6 +140,7 @@ export function createNewSave(opts: NewGameOptions): SaveData {
     mail: createMailbox(),
     world: createWorldState(),
     collection: {},
+    home: structuredClone(opts.home ?? EMPTY_HOME),
   };
 }
 
@@ -156,6 +167,8 @@ export const MIGRATIONS: Record<number, (old: RawSave) => RawSave> = {
   // v3 → v4 (M4 Natur): Sammelbuch und Beet. Startwerte ergänzt `normalizeSave`;
   // die Werkzeuge bekommt Lina beim nächsten Gespräch von Oma Gisela.
   3: (old) => ({ ...old }),
+  // v4 → v5 (M5 Einrichtung): Linas Zimmer. `normalizeSave` richtet es mit der Start-Einrichtung ein.
+  4: (old) => ({ ...old }),
 };
 
 export function migrate(raw: RawSave, migrations = MIGRATIONS, target = SAVE_VERSION): RawSave {
@@ -266,6 +279,7 @@ export function normalizeSave(raw: RawSave, spawn: { x: number; y: number }, now
     mail: normalizeMailbox(raw.mail),
     world: normalizeWorld(raw.world, isKnownItem),
     collection: normalizeCollection(raw.collection, isKnownItem),
+    home: normalizeHome(raw.home, opts.defaultHome ?? EMPTY_HOME, isKnownItem, opts.furnitureInfo ?? (() => undefined)),
   };
 }
 

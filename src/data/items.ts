@@ -1,3 +1,4 @@
+import { FLOORS, FURNITURE_ITEMS, VARIANT_LABELS, WALLPAPERS } from './furniture';
 import { FISH, INSECTS } from './species';
 
 /**
@@ -7,7 +8,7 @@ import { FISH, INSECTS } from './species';
  * zeichnen (sonst erscheint ein Platzhalter). Preise in „Sternchen“ ⭐.
  */
 
-export type ItemCategory = 'obst' | 'muschel' | 'blume' | 'material' | 'fund' | 'essen' | 'geschenk' | 'werkzeug' | 'samen' | 'fisch' | 'insekt';
+export type ItemCategory = 'obst' | 'muschel' | 'blume' | 'material' | 'fund' | 'essen' | 'geschenk' | 'werkzeug' | 'samen' | 'fisch' | 'insekt' | 'moebel' | 'tapete' | 'boden';
 
 export interface ItemDef {
   id: string;
@@ -72,6 +73,13 @@ const list: ItemDef[] = [
 // Fische & Insekten (aus `species.ts`)
 for (const f of FISH) list.push({ id: f.id, name: f.name, plural: f.plural, category: 'fisch', price: f.price, maxStack: 10, description: f.description });
 for (const i of INSECTS) list.push({ id: i.id, name: i.name, plural: i.plural, category: 'insekt', price: i.price, maxStack: 10, description: i.description });
+
+// Möbel, Tapeten & Böden (aus `furniture.ts`). Verkaufswert = ein Viertel des Katalogpreises.
+for (const f of FURNITURE_ITEMS) {
+  const name = f.variant ? `${f.def.name} (${VARIANT_LABELS[f.variant] ?? f.variant})` : f.def.name;
+  list.push({ id: f.itemId, name, plural: name, category: 'moebel', price: Math.round(f.def.price / 4), maxStack: 1, description: f.def.description });
+}
+for (const w of [...WALLPAPERS, ...FLOORS]) list.push({ id: w.id, name: w.name, plural: w.name, category: w.kind, price: Math.round(w.price / 4), maxStack: 1, description: w.description });
 
 export const ITEMS: Readonly<Record<string, ItemDef>> = Object.fromEntries(list.map((i) => [i.id, i]));
 

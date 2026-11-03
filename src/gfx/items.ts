@@ -5,6 +5,8 @@
 import { darken, lighten } from '../style/palette';
 import { blob, type Ctx, ellipse, roundRect, shine } from './canvas';
 import { natureIcons } from './nature-icons';
+import { drawPattern } from './interior';
+import { FURNITURE_ITEMS, FLOORS, WALLPAPERS } from '../data/furniture';
 
 export const ICON = 32;
 
@@ -292,6 +294,33 @@ const DRAW: Record<string, Draw> = {
 
 Object.assign(DRAW, natureIcons());
 
+// Tapeten & Böden: das Muster als Kachel
+for (const def of [...WALLPAPERS, ...FLOORS]) {
+  DRAW[def.id] = (ctx) => {
+    ctx.save();
+    ctx.beginPath();
+    ctx.roundRect(4, 4, 24, 24, 4);
+    ctx.clip();
+    ctx.translate(4, 4);
+    drawPattern(ctx as CanvasRenderingContext2D, def, 24);
+    ctx.restore();
+    ctx.strokeStyle = darken(def.color, 0.3);
+    ctx.lineWidth = 1.4;
+    ctx.beginPath();
+    ctx.roundRect(4, 4, 24, 24, 4);
+    ctx.stroke();
+  };
+}
+// Möbel: Platzhalter, bis die 3D-Vorschaubilder fertig sind (setIconImage)
+for (const f of FURNITURE_ITEMS) DRAW[f.itemId] = (ctx) => roundRect(ctx, 7, 9, 18, 16, 4, f.color ?? '#e6c59c', darken(f.color ?? '#e6c59c', 0.3), 1.4);
+
+const imageOverrides = new Map<string, string>();
+
+/** Fertiges Bild (z. B. 3D-Vorschau eines Möbels) als Symbol verwenden */
+export function setIconImage(itemId: string, url: string) {
+  imageOverrides.set(itemId, url);
+}
+
 /** Zeichnet das Symbol eines Gegenstands (32×32 Einheiten). */
 export function drawItemIcon(ctx: Ctx, itemId: string) {
   ctx.lineJoin = 'round';
@@ -314,6 +343,8 @@ const urlCache = new Map<string, string>();
 
 /** Symbol als Bild-URL für die Oberfläche. */
 export function itemIconUrl(itemId: string, size = 64): string {
+  const override = imageOverrides.get(itemId);
+  if (override) return override;
   const key = `${itemId}@${size}`;
   const cached = urlCache.get(key);
   if (cached) return cached;

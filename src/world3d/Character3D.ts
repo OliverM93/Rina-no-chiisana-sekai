@@ -55,7 +55,7 @@ export class Character {
     x: number,
     y: number,
     facing: Facing,
-    private readonly heightAt: (x: number, z: number) => number,
+    public heightAt: (x: number, z: number) => number,
     season: Season = 'sommer',
   ) {
     this.chibi = new Chibi3D(appearance, season);

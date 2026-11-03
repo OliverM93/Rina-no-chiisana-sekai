@@ -8,12 +8,14 @@
  */
 import * as THREE from 'three';
 import { DPR, TILE, UNIT } from '../config';
-import { findPath, nearestWalkable, type Tile } from '../core/grid';
+import { CollisionGrid, findPath, nearestWalkable, type Tile } from '../core/grid';
+import { checkPlacement, DESK_CELL, DOOR_CELLS, footprint, ROOM_H, ROOM_W, type Rotation } from '../core/room';
+import { FURNITURE_BY_ITEM, furnitureInfo } from '../data/furniture';
 import { getDaylight } from '../core/time';
 import { isWatered, spotKey } from '../core/garden';
 import { WEATHER_LABELS } from '../core/weather';
 import { findInteraction, type MapObject, OBJECT_KINDS, objectById, terrainAt, tileOf } from '../core/worldmap';
-import { itemCountLabel, type ToolId, TOOLS } from '../data/items';
+import { itemCountLabel, itemDef, type ToolId, TOOLS } from '../data/items';
 import { FISH_BY_ID, type FishHabitat } from '../data/species';
 import { fillPlaceholders, INTERACTIONS } from '../data/interactions';
 import { NPCS } from '../data/npcs';
@@ -33,6 +35,8 @@ import {
   welcomeLetter,
 } from '../game/gameplay';
 import { KeyboardInput } from '../game/input';
+import { moveFurniture, pickUpFurniture, placeFromBag } from '../game/home';
+import type { DecorCommand } from '../game/session';
 import {
   biteFish,
   catchFish,
@@ -55,6 +59,7 @@ import { Collectibles } from './Collectibles3D';
 import { Fishing3D } from './Fishing3D';
 import { Garden3D } from './Garden3D';
 import { Insects3D } from './Insects3D';
+import { Interior3D, ROOM_X, ROOM_Y } from './Interior3D';
 import { makeCan, makeNet, makeRod, type ToolModel } from './models/critters';
 import { Weather3D } from './Weather3D';
 import { lampGlass, windowGlass } from './models/buildings';
@@ -67,7 +72,9 @@ type Target =
   | { kind: 'npc'; npc: Npc }
   | { kind: 'object'; id: string }
   | { kind: 'flowers'; tile: Tile }
-  | { kind: 'beet'; tile: Tile };
+  | { kind: 'beet'; tile: Tile }
+  | { kind: 'moebel'; uid: string }
+  | { kind: 'katalog' };
 
 const SPECIAL_OBJECTS = ['verkaufskiste', 'haus-gisela', 'briefkasten-lina'];
 const DIRS = { down: [0, 1], up: [0, -1], left: [-1, 0], right: [1, 0] } as const;
@@ -115,6 +122,10 @@ export class World3D {
   private held: { tool: ToolId; model: ToolModel } | null = null;
   private baseHemi = 1.3;
   private patienceToast = 0;
+  private interior: Interior3D;
+  /** Einrichten: was gerade gehalten wird (uid = schon im Zimmer, sonst aus der Tasche) */
+  private decor: { itemId: string; uid: string | null; rot: Rotation } | null = null;
+  private hoverCell: { x: number; y: number } | null = null;
 
   constructor(
     private readonly canvas: HTMLCanvasElement,
@@ -174,6 +185,7 @@ export class World3D {
     this.insects = new Insects3D(this.scene, session, this.view, this.tweens);
     this.garden = new Garden3D(this.scene, session, this.tweens);
     this.interactive.add('beet-lina');
+    this.interior = new Interior3D(this.scene);
 
     canvas.addEventListener('pointerdown', this.onPointerDown);
     canvas.addEventListener('pointerup', this.onPointerUp);
@@ -187,8 +199,10 @@ export class World3D {
       session.bus.on('state:changed', () => {
         this.updateMailbox();
         this.garden.refresh();
+        if (this.session.inside && this.session.data) this.interior.refresh(this.session.data.home);
       }),
       session.bus.on('tool:changed', (t) => this.equip(t)),
+      session.bus.on('decor:command', (c) => this.decorCommand(c)),
       this.keys.onKey((code) => this.onKey(code)),
     );
 
@@ -245,18 +259,30 @@ export class World3D {
       if (blocked && player.hasPath && !this.cutscene) player.cancelPath();
       const grid = this.session.map.grid;
       if (this.fishing.active && (intent.dx !== 0 || intent.dy !== 0 || player.hasPath)) this.stopFishing();
-      player.update(dtMs, intent, (tx, ty) => grid.isBlocked(tx, ty));
+      if (player.sitting && (intent.dx !== 0 || intent.dy !== 0)) this.standUp();
+      const home = data.home;
+      const solid = this.session.inside
+        ? (tx: number, ty: number) => this.interior.isBlocked(home, tx - ROOM_X, ty - ROOM_Y)
+        : (tx: number, ty: number) => grid.isBlocked(tx, ty);
+      if (this.session.decorActive) intent.dx = intent.dy = 0;
+      player.update(dtMs, intent, solid);
+      if (this.session.inside && !this.session.decorActive) {
+        const t = player.tile;
+        const onDoor = DOOR_CELLS.some(([dx]) => dx === t.x - ROOM_X);
+        // Auf der Türmatte nach unten laufen (oder hingeklickt) = hinausgehen
+        if (onDoor && (t.y - ROOM_Y >= ROOM_H || (t.y - ROOM_Y === ROOM_H - 1 && (intent.dy > 0 || !player.hasPath) && player.facing === 'down'))) this.exitHome();
+      }
       this.fishing.update(dt, this.rodTip());
       data.player.x = Math.round(player.x * 10) / 10;
       data.player.y = Math.round(player.y * 10) / 10;
       data.player.facing = player.facing;
       if (!player.hasPath) this.marker.visible = false;
 
-      // Kamera folgt Lina weich
-      const target = new THREE.Vector3(player.x * UNIT, 0, player.y * UNIT);
+      // Kamera folgt Lina weich (zu Hause: fester Blick ins Zimmer)
+      const target = this.session.inside ? new THREE.Vector3(ROOM_X + ROOM_W / 2, 0, ROOM_Y + ROOM_H / 2 - 0.2) : new THREE.Vector3(player.x * UNIT, 0, player.y * UNIT);
       this.camTarget.lerp(target, 1 - Math.pow(0.002, dt));
-      this.updateOccluders(player);
-      this.updateBubble(player, blocked);
+      if (!this.session.inside) this.updateOccluders(player);
+      this.updateBubble(player, blocked || this.session.decorActive);
     } else {
       // Titelbildschirm: langsamer Schwenk über das Dorf
       this.titleTime += dt;
@@ -267,7 +293,7 @@ export class World3D {
   }
 
   private updateCamera() {
-    const desired = this.camTarget.clone().add(CAM_OFFSET.clone().multiplyScalar(this.zoom));
+    const desired = this.camTarget.clone().add(CAM_OFFSET.clone().multiplyScalar(this.session.inside ? 1.22 : this.zoom));
     this.camPos.copy(desired);
     this.camera.position.copy(this.camPos);
     this.camera.lookAt(this.camTarget.x, 0.75, this.camTarget.z);
@@ -278,6 +304,10 @@ export class World3D {
 
   private onWheel = (e: WheelEvent) => {
     e.preventDefault();
+    if (this.session.decorActive) {
+      if (Math.abs(e.deltaY) > 2) this.rotateHeld();
+      return;
+    }
     this.zoom = Math.min(1.45, Math.max(0.55, this.zoom * (e.deltaY > 0 ? 1.08 : 0.93)));
   };
 
@@ -294,7 +324,11 @@ export class World3D {
     const w = currentWeather(this.session);
     this.weather.set(w);
     const clouds = w.clouds;
-    const sky = mixHex(mixHex(mixHex('#bfe6f7', tint, 0.55), '#9aa6b4', clouds * 0.7), '#2a2e5c', n * 0.75);
+    const outside = mixHex(mixHex(mixHex('#bfe6f7', tint, 0.55), '#9aa6b4', clouds * 0.7), '#2a2e5c', n * 0.75);
+    const sky = this.session.inside ? mixHex('#f3e3cf', '#3a3450', n * 0.7) : outside;
+    this.interior.updateLight(n, clouds);
+    this.weather.setEnabled(!this.session.inside);
+    this.leaves.visible = !this.session.inside;
     (this.scene.background as THREE.Color | null) ?? (this.scene.background = new THREE.Color());
     (this.scene.background as THREE.Color).set(sky);
     (this.scene.fog as THREE.Fog).color.set(sky);
@@ -382,6 +416,14 @@ export class World3D {
     const data = this.session.data;
     if (!data) return;
     this.player?.destroy();
+    if (data.player.x / TILE > ROOM_X - 5) {
+      // Gespeichert im Haus → draußen vor der Tür weitermachen
+      const sp = this.session.spawnPoint();
+      data.player.x = sp.x;
+      data.player.y = sp.y;
+    }
+    this.session.inside = false;
+    this.session.decorActive = false;
     const p = data.player;
     this.player = new Character(this.scene, p.appearance, p.x, p.y, p.facing, this.view.terrain.heightAt, this.session.season);
     this.camTarget.set(p.x * UNIT, 0, p.y * UNIT);
@@ -522,6 +564,7 @@ export class World3D {
 
   private resolveTarget(player: Character): Target | null {
     const tile = player.tile;
+    if (this.session.inside) return this.homeTarget(player);
     const pickup = this.collectibles.pickupNear(tile, player.facing, player.x, player.y);
     if (pickup) return { kind: 'pickup', id: pickup };
     const [fx, fy] = DIRS[player.facing];
@@ -547,7 +590,19 @@ export class World3D {
       this.reelIn();
       return;
     }
+    if (this.session.decorActive) {
+      this.decorClick();
+      return;
+    }
+    if (player.sitting) {
+      this.standUp();
+      return;
+    }
     const target = this.resolveTarget(player);
+    if (this.session.inside) {
+      if (target) this.act(target);
+      return;
+    }
     const tool = this.session.tool;
     if (tool === 'netz' && target?.kind !== 'npc' && this.swingNet()) return;
     if (tool === 'angel' && (!target || target.kind === 'flowers') && this.castRod()) return;
@@ -734,6 +789,12 @@ export class World3D {
       case 'beet':
         this.useBeet(target.tile);
         return;
+      case 'katalog':
+        this.session.bus.emit('ui:open', { kind: 'catalog' });
+        return;
+      case 'moebel':
+        this.useFurniture(target.uid);
+        return;
       case 'object':
         this.useObject(target.id);
     }
@@ -761,6 +822,10 @@ export class World3D {
       } else {
         this.session.bus.emit('toast', { text: 'Tock tock. Heute ist hier nichts mehr zu finden.' });
       }
+      return;
+    }
+    if (id === 'haus-lina') {
+      this.enterHome();
       return;
     }
     if (id === 'verkaufskiste') {
@@ -916,6 +981,14 @@ export class World3D {
       this.canvas.style.cursor = '';
       return;
     }
+    if (this.session.inside) {
+      this.hoverCell = this.roomCellAt(e);
+      if (this.session.decorActive) this.updateGhost();
+      const t = this.hoverCell && this.data?.home ? this.interior.topAt(this.data.home, this.hoverCell.x, this.hoverCell.y) : null;
+      const desk = this.hoverCell && this.hoverCell.x === DESK_CELL[0] && this.hoverCell.y === DESK_CELL[1];
+      this.canvas.style.cursor = this.session.decorActive ? (this.decor ? 'grabbing' : t ? 'grab' : '') : t || desk ? 'pointer' : '';
+      return;
+    }
     const hit = this.pick(e);
     this.canvas.style.cursor = hit.npc || hit.objectId ? 'pointer' : '';
   };
@@ -926,6 +999,12 @@ export class World3D {
     const player = this.player;
     if (!player || !down || this.cutscene || !this.session.acceptsPointer()) return;
     if (Math.hypot(e.clientX - down.x, e.clientY - down.y) > 8) return;
+    if (this.session.inside) {
+      this.hoverCell = this.roomCellAt(e);
+      if (this.session.decorActive) this.decorClick();
+      else this.roomClick();
+      return;
+    }
     const hit = this.pick(e);
     const grid = this.session.map.grid;
 
@@ -1004,9 +1083,297 @@ export class World3D {
     });
   }
 
+  // -------------------------------------------------------------------------
+  // Zu Hause
+  // -------------------------------------------------------------------------
+
+  private get data() {
+    return this.session.data;
+  }
+
+  private enterHome() {
+    const player = this.player;
+    const data = this.data;
+    if (!player || !data) return;
+    this.stopFishing();
+    this.session.inside = true;
+    this.interior.refresh(data.home, true);
+    player.heightAt = () => 0;
+    player.teleport((ROOM_X + 4) * TILE + 2, (ROOM_Y + ROOM_H - 2) * TILE + 40);
+    player.face('up');
+    this.camTarget.set(ROOM_X + ROOM_W / 2, 0, ROOM_Y + ROOM_H / 2 - 0.2);
+    this.marker.visible = false;
+    this.applyLight();
+    this.session.bus.emit('home:inside', true);
+  }
+
+  private exitHome() {
+    const player = this.player;
+    if (!player) return;
+    this.stopDecor();
+    this.session.inside = false;
+    player.heightAt = this.view.terrain.heightAt;
+    const sp = this.session.spawnPoint();
+    player.teleport(sp.x, sp.y);
+    player.face('down');
+    this.camTarget.set(sp.x * UNIT, 0, sp.y * UNIT);
+    this.applyLight();
+    this.session.save();
+    this.session.bus.emit('home:inside', false);
+  }
+
+  /** Zimmerzelle vor Lina */
+  private homeTarget(player: Character): Target | null {
+    const home = this.data?.home;
+    if (!home) return null;
+    const [fx, fy] = DIRS[player.facing];
+    const t = player.tile;
+    const cx = t.x - ROOM_X + fx;
+    const cy = t.y - ROOM_Y + fy;
+    if (cx === DESK_CELL[0] && cy === DESK_CELL[1]) return { kind: 'katalog' };
+    // auch das Feld, auf dem Lina steht (Teppich), zählt nicht – nur davor
+    const top = this.interior.topAt(home, cx, cy);
+    return top ? { kind: 'moebel', uid: top.uid } : null;
+  }
+
+  private useFurniture(uid: string) {
+    const home = this.data?.home;
+    const player = this.player;
+    const item = home?.items.find((i) => i.uid === uid);
+    const f = item ? FURNITURE_BY_ITEM[item.itemId] : undefined;
+    if (!item || !f || !player || !home) return;
+    if (f.def.light) {
+      this.interior.toggleLamp(uid);
+      this.interior.updateLight(this.night, currentWeather(this.session).clouds);
+      return;
+    }
+    if (f.def.sit) {
+      const { w, d } = footprint(f.def, item.rot);
+      const cx = ROOM_X + item.x + w / 2;
+      const cy = ROOM_Y + item.y + d / 2;
+      player.teleport(cx * TILE, cy * TILE - (f.def.sit === 'liegen' ? 10 : 0));
+      player.setSitting(true);
+      player.seatHeight = this.interior.model(uid)?.seatY ?? 0.1;
+      this.session.bus.emit('toast', { text: f.def.sit === 'liegen' ? 'Ach, ist das gemütlich … 💤' : 'Lina macht es sich gemütlich. ☕' });
+      return;
+    }
+    const name = itemDef(item.itemId)?.name ?? f.def.name;
+    this.session.bus.emit('dialog:open', { title: name, lines: [f.def.description] });
+  }
+
+  private standUp() {
+    const player = this.player;
+    if (!player?.sitting) return;
+    player.setSitting(false);
+    const home = this.data?.home;
+    if (!home || !this.session.inside) return;
+    // aufs nächste freie Feld treten
+    const grid = this.roomGrid();
+    const t = player.tile;
+    const free = nearestWalkable(grid, { x: t.x - ROOM_X, y: t.y - ROOM_Y + 1 });
+    if (free) player.teleport((ROOM_X + free.x) * TILE + 32, (ROOM_Y + free.y) * TILE + 40);
+  }
+
+  private roomGrid(): CollisionGrid {
+    const g = new CollisionGrid(ROOM_W, ROOM_H);
+    const home = this.data?.home;
+    if (home) for (let x = 0; x < ROOM_W; x++) for (let y = 0; y < ROOM_H; y++) if (this.interior.isBlocked(home, x, y)) g.setBlocked(x, y);
+    return g;
+  }
+
+  private roomCellAt(e: PointerEvent): { x: number; y: number } | null {
+    this.raycaster.setFromCamera(this.ndc(e), this.camera);
+    const hits = this.decor ? this.raycaster.intersectObject(this.interior.floor, false) : this.raycaster.intersectObject(this.interior.group, true);
+    if (hits.length === 0) return null;
+    // Bei Möbeln zählt das Feld unter dem Treffer; sonst Bodenpunkt
+    const p = hits[0].point;
+    const cell = this.interior.cellFromPoint(p);
+    return cell.x >= 0 && cell.y >= 0 && cell.x < ROOM_W && cell.y < ROOM_H ? cell : null;
+  }
+
+  /** Klick im Zimmer (ohne Einrichten): hinlaufen bzw. benutzen */
+  private roomClick() {
+    const player = this.player;
+    const cell = this.hoverCell;
+    const home = this.data?.home;
+    if (!player || !cell || !home) return;
+    if (player.sitting) this.standUp();
+    const grid = this.roomGrid();
+    const from = { x: player.tile.x - ROOM_X, y: player.tile.y - ROOM_Y };
+    const isDesk = cell.x === DESK_CELL[0] && cell.y === DESK_CELL[1];
+    const top = this.interior.topAt(home, cell.x, cell.y);
+    const toWorld = (path: Tile[]) => path.map((t) => ({ x: t.x + ROOM_X, y: t.y + ROOM_Y }));
+    if (isDesk || (top && grid.isBlocked(cell.x, cell.y))) {
+      const spots = neighbours(cell).filter((n) => !grid.isBlocked(n.x, n.y));
+      let best: Tile[] | null = null;
+      let goal: Tile | null = null;
+      for (const sp of spots) {
+        const path = findPath(grid, from, sp);
+        if (path && (!best || path.length < best.length)) {
+          best = path;
+          goal = sp;
+        }
+      }
+      if (!best || !goal) return;
+      const g = goal;
+      player.followPath(toWorld(best), () => {
+        player.face(cell.x > g.x ? 'right' : cell.x < g.x ? 'left' : cell.y > g.y ? 'down' : 'up');
+        if (isDesk) this.session.bus.emit('ui:open', { kind: 'catalog' });
+        else if (top) this.useFurniture(top.uid);
+      });
+      return;
+    }
+    const target = nearestWalkable(grid, cell, from);
+    const path = target ? findPath(grid, from, target) : null;
+    if (path) player.followPath(toWorld(path), top && FURNITURE_BY_ITEM[top.itemId]?.def.sit ? () => this.useFurniture(top.uid) : null);
+  }
+
+  // --- Einrichten ----------------------------------------------------------
+
+  private decorCommand(c: DecorCommand) {
+    if (!this.session.inside) return;
+    switch (c.kind) {
+      case 'start':
+        this.session.decorActive = true;
+        this.standUp();
+        this.player?.cancelPath();
+        this.player?.setVisible(false);
+        break;
+      case 'stop':
+        this.stopDecor();
+        return;
+      case 'take':
+        this.session.decorActive = true;
+        this.cancelHold();
+        this.decor = { itemId: c.itemId, uid: null, rot: 0 };
+        break;
+      case 'rotate':
+        this.rotateHeld();
+        return;
+      case 'store':
+        this.storeHeld();
+        return;
+      case 'cancel':
+        this.cancelHold();
+        break;
+    }
+    this.updateGhost();
+    this.emitDecor();
+  }
+
+  private stopDecor() {
+    if (!this.session.decorActive) return;
+    this.cancelHold();
+    this.session.decorActive = false;
+    this.interior.hideGhost();
+    const player = this.player;
+    if (player) {
+      player.setVisible(true);
+      // Falls jetzt ein Möbel auf Linas Platz steht: zur Tür
+      const t = player.tile;
+      if (this.data && this.interior.isBlocked(this.data.home, t.x - ROOM_X, t.y - ROOM_Y)) {
+        const free = nearestWalkable(this.roomGrid(), { x: t.x - ROOM_X, y: t.y - ROOM_Y }) ?? { x: DOOR_CELLS[0][0], y: ROOM_H - 1 };
+        player.teleport((ROOM_X + free.x) * TILE + 32, (ROOM_Y + free.y) * TILE + 40);
+      }
+    }
+    this.emitDecor();
+  }
+
+  private cancelHold() {
+    this.decor = null;
+    this.interior.setHidden(null);
+    this.interior.hideGhost();
+  }
+
+  private emitDecor(valid = true) {
+    this.session.bus.emit('decor:state', { active: this.session.decorActive, holding: this.decor?.itemId ?? null, valid });
+  }
+
+  private rotateHeld() {
+    if (!this.decor) return;
+    this.decor.rot = ((this.decor.rot + 1) % 4) as Rotation;
+    this.updateGhost();
+  }
+
+  private storeHeld() {
+    const d = this.decor;
+    if (!d) return;
+    if (d.uid) {
+      if (!pickUpFurniture(this.session, d.uid)) {
+        this.session.bus.emit('toast', { text: 'Deine Tasche ist voll! 🎒' });
+        return;
+      }
+    }
+    this.cancelHold();
+    if (this.data) this.interior.refresh(this.data.home);
+    this.emitDecor();
+  }
+
+  /** Vorschau an der Mausposition */
+  private updateGhost() {
+    const d = this.decor;
+    const cell = this.hoverCell;
+    const home = this.data?.home;
+    if (!d || !cell || !home) {
+      this.interior.hideGhost();
+      return;
+    }
+    const info = furnitureInfo(d.itemId);
+    if (!info) return;
+    // Zelle unter dem Mauszeiger = Mitte des Möbels
+    const fp = footprint(info, d.rot);
+    const x = cell.x - Math.floor((fp.w - 1) / 2);
+    const y = cell.y - Math.floor((fp.d - 1) / 2);
+    const p = checkPlacement(home, d.itemId, x, y, d.rot, furnitureInfo, d.uid ?? undefined);
+    const base = p.on ? home.items.find((i) => i.uid === p.on) : undefined;
+    const h = base ? (FURNITURE_BY_ITEM[base.itemId]?.def.surfaceHeight ?? 0) : 0;
+    this.interior.showGhost(d.itemId, x, y, d.rot, p.ok, h);
+    this.emitDecor(p.ok);
+  }
+
+  /** Klick beim Einrichten: hochheben oder abstellen */
+  private decorClick() {
+    const home = this.data?.home;
+    const cell = this.hoverCell;
+    if (!home || !cell) return;
+    const d = this.decor;
+    if (!d) {
+      const top = this.interior.topAt(home, cell.x, cell.y);
+      if (!top) return;
+      this.decor = { itemId: top.itemId, uid: top.uid, rot: top.rot };
+      this.interior.setHidden(top.uid);
+      this.updateGhost();
+      return;
+    }
+    const info = furnitureInfo(d.itemId);
+    if (!info) return;
+    const fp = footprint(info, d.rot);
+    const x = cell.x - Math.floor((fp.w - 1) / 2);
+    const y = cell.y - Math.floor((fp.d - 1) / 2);
+    const ok = d.uid ? moveFurniture(this.session, d.uid, x, y, d.rot) : placeFromBag(this.session, d.itemId, x, y, d.rot);
+    if (!ok) {
+      this.session.bus.emit('toast', { text: 'Hier ist kein Platz dafür.' });
+      return;
+    }
+    this.cancelHold();
+    this.interior.refresh(home);
+    this.emitDecor();
+  }
+
   /** Für Tests & Fehlersuche */
   get debug() {
-    return { player: this.player, npcs: this.npcs, collectibles: this.collectibles, insects: this.insects, fishing: this.fishing, weather: () => WEATHER_LABELS[currentWeather(this.session).kind], resolveTarget: () => (this.player ? this.resolveTarget(this.player) : null), tryInteract: () => this.tryInteract() };
+    return {
+      enterHome: () => this.enterHome(),
+      decorAt: (x: number, y: number) => {
+        this.hoverCell = { x, y };
+        this.updateGhost();
+        this.decorClick();
+      },
+      hoverAt: (x: number, y: number) => {
+        this.hoverCell = { x, y };
+        this.updateGhost();
+      },
+      interior: this.interior, player: this.player, npcs: this.npcs, collectibles: this.collectibles, insects: this.insects, fishing: this.fishing, weather: () => WEATHER_LABELS[currentWeather(this.session).kind], resolveTarget: () => (this.player ? this.resolveTarget(this.player) : null), tryInteract: () => this.tryInteract() };
   }
 
   dispose() {

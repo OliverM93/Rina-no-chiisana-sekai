@@ -20,6 +20,8 @@ import { type Clock, formatIsoDay, getDayPhase, getSeason, type Season } from '.
 import { parseWeatherOverride, type WeatherKind } from '../core/weather';
 import { buildWorldMap, tileCenter, type WorldMap } from '../core/worldmap';
 import { isKnownItem, type ToolId } from '../data/items';
+import { furnitureInfo, STARTER_HOME } from '../data/furniture';
+import { type Home, normalizeHome } from '../core/room';
 import { VILLAGE_LAYOUT, VILLAGE_OBJECTS, VILLAGE_SPAWN } from '../data/maps/village';
 import { NPCS } from '../data/npcs';
 import type { InteractionContext } from '../data/interactions';
@@ -44,8 +46,27 @@ export type UiPanel =
   | { kind: 'sell' }
   | { kind: 'mail' }
   | { kind: 'book' }
+  | { kind: 'catalog' }
   | { kind: 'gift'; npcId: string; onPick: (itemId: string) => void; onCancel: () => void }
   | { kind: 'seeds'; onPick: (itemId: string) => void; onCancel: () => void };
+
+export interface DecorState {
+  active: boolean;
+  /** Gegenstand, der gerade platziert/verschoben wird */
+  holding: string | null;
+  /** passt er an die Stelle unter dem Mauszeiger? */
+  valid: boolean;
+}
+
+export type DecorCommand =
+  | { kind: 'start' }
+  | { kind: 'stop' }
+  /** Möbel aus der Tasche nehmen */
+  | { kind: 'take'; itemId: string }
+  | { kind: 'rotate' }
+  /** gehaltenes Möbel zurück in die Tasche */
+  | { kind: 'store' }
+  | { kind: 'cancel' };
 
 export interface Toast {
   text: string;
@@ -67,6 +88,12 @@ export type GameEvents = {
   'ui:open': UiPanel;
   /** Werkzeug in der Hand (null = keins) */
   'tool:changed': ToolId | null;
+  /** Lina ist zu Hause (true) bzw. draußen */
+  'home:inside': boolean;
+  /** Einrichtungsmodus: an/aus, was gerade gehalten wird */
+  'decor:state': DecorState;
+  /** Oberfläche → Welt: Einrichten steuern */
+  'decor:command': DecorCommand;
 };
 
 export class Session {
@@ -81,6 +108,10 @@ export class Session {
   /** Jahreszeit beim Start (Texturen werden dafür erzeugt). */
   readonly season: Season;
   private playStart = 0;
+  /** Ist Lina gerade zu Hause? (wird nicht gespeichert – geladen wird immer draußen) */
+  inside = false;
+  /** Einrichtungsmodus aktiv */
+  decorActive = false;
   /** Werkzeug in Linas Hand (wird nicht gespeichert) */
   tool: ToolId | null = null;
   /** Erzwungenes Wetter (`?wetter=regen`, zum Testen) */
@@ -95,7 +126,7 @@ export class Session {
     this.season = getSeason(clock());
   }
 
-  readonly saveOptions = { isKnownItem, npcIds: NPCS.map((n) => n.id) };
+  readonly saveOptions = { isKnownItem, npcIds: NPCS.map((n) => n.id), defaultHome: starterHome(), furnitureInfo };
 
   /** Heutiger Tag als JJJJ-MM-TT */
   today(): string {
@@ -147,7 +178,7 @@ export class Session {
   }
 
   startNewGame(appearance: Appearance, villageName: string) {
-    const data = createNewSave({ appearance, villageName, spawn: this.spawnPoint(), now: this.clock() });
+    const data = createNewSave({ appearance, villageName, spawn: this.spawnPoint(), now: this.clock(), home: starterHome() });
     for (const npc of NPCS) data.npcs[npc.id] = createNpcState();
     this.begin(data);
     this.save();
@@ -218,6 +249,11 @@ export class Session {
       dayRandom: (hashString(day) % 1000) / 1000,
     };
   }
+}
+
+/** Start-Einrichtung von Linas Zimmer (mit eindeutigen IDs) */
+function starterHome(): Home {
+  return normalizeHome(structuredClone(STARTER_HOME), { wallpaper: STARTER_HOME.wallpaper, floor: STARTER_HOME.floor, items: [] }, isKnownItem, furnitureInfo);
 }
 
 /** localStorage, falls verfügbar – sonst ein flüchtiger Speicher. */
