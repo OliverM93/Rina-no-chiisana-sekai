@@ -13,6 +13,7 @@ import { TitleScreen } from './TitleScreen';
 import { InventoryPanel } from './InventoryPanel';
 import { MailPanel } from './MailPanel';
 import { CollectionBook } from './CollectionBook';
+import { CatalogPanel } from './CatalogPanel';
 import { type ConfirmRequest, showToast, ui, useUI } from './store';
 
 export function App({ session }: { session: Session }) {
@@ -38,7 +39,8 @@ export function App({ session }: { session: Session }) {
       const s = ui.state;
       const free = s.screen === 'playing' && !s.menuOpen && !s.dialog && !s.confirm && !s.panel;
       const typing = document.activeElement instanceof HTMLInputElement;
-      if (e.code === 'Escape' && free) ui.set({ menuOpen: true });
+      if (e.code === 'Escape' && free && session.decorActive) session.bus.emit('decor:command', { kind: 'stop' });
+      else if (e.code === 'Escape' && free) ui.set({ menuOpen: true });
       if ((e.code === 'KeyI' || e.code === 'Tab') && free && !typing) {
         e.preventDefault();
         ui.set({ panel: { kind: 'inventory' } });
@@ -84,7 +86,8 @@ export function App({ session }: { session: Session }) {
       {state.menuOpen && <Menu session={session} />}
       {state.panel?.kind === 'mail' && <MailPanel session={session} />}
       {state.panel?.kind === 'book' && <CollectionBook session={session} />}
-      {state.panel && state.panel.kind !== 'mail' && state.panel.kind !== 'book' && <InventoryPanel session={session} panel={state.panel} />}
+      {state.panel?.kind === 'catalog' && <CatalogPanel session={session} />}
+      {state.panel && !['mail', 'book', 'catalog'].includes(state.panel.kind) && <InventoryPanel session={session} panel={state.panel} />}
       {state.dialog && <DialogBox dialog={state.dialog} onClose={closeDialog} onChoose={chooseInDialog} />}
       {state.confirm && <Confirm request={state.confirm} />}
       {state.toast && <Toast key={state.toast.id} text={state.toast.text} icon={state.toast.icon} />}

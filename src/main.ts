@@ -9,6 +9,9 @@ import { World3D } from './world3d/World3D';
 import { browserStorage, Session } from './game/session';
 import { palette } from './style/palette';
 import { App } from './ui/App';
+import { FURNITURE_ITEMS } from './data/furniture';
+import { setIconImage } from './gfx/items';
+import { renderFurnitureThumbnails } from './world3d/models/furniture';
 import { connectBlocking, showToast, ui } from './ui/store';
 
 // Palette als CSS-Variablen bereitstellen (eine Quelle für alle Farben)
@@ -50,6 +53,12 @@ async function start() {
   const canvas = document.createElement('canvas');
   host.appendChild(canvas);
   const game = new World3D(canvas, session);
+  // 3D-Vorschaubilder der Möbel für Katalog & Tasche (kurz nach dem Start)
+  window.setTimeout(() => {
+    const thumbs = renderFurnitureThumbnails(FURNITURE_ITEMS.map((f) => f.itemId));
+    for (const [id, url] of Object.entries(thumbs)) setIconImage(id, url);
+    session.changed();
+  }, 300);
   // Für Tests & Fehlersuche im Entwicklungsmodus
   if (import.meta.env.DEV) Object.assign(window, { __rina: { session, game, ui } });
 

@@ -197,7 +197,7 @@ describe('Version 4 (M4 Natur)', () => {
     const result = parseSave(JSON.stringify(v3), SPAWN, NOW);
     expect(result.ok).toBe(true);
     if (!result.ok) return;
-    expect(result.data.version).toBe(4);
+    expect(result.data.version).toBe(SAVE_VERSION);
     expect(result.data.money).toBe(123);
     expect(result.data.collection).toEqual({});
     expect(result.data.world.garden).toEqual({});
@@ -210,6 +210,17 @@ describe('Version 4 (M4 Natur)', () => {
     const result = parseSave(serializeSave(s), SPAWN, NOW);
     expect(result.ok && result.data.collection.barsch.count).toBe(3);
     expect(result.ok && result.data.world.garden['7,11'].stage).toBe(2);
+  });
+});
+
+describe('Version 5 (M5 Einrichtung)', () => {
+  it('richtet alten Spielständen das Start-Zimmer ein', () => {
+    const v4 = { ...freshSave(), version: 4 } as Record<string, unknown>;
+    delete v4.home;
+    const defaultHome = { wallpaper: 'tapete-creme', floor: 'boden-dielen', items: [{ uid: 'a', itemId: 'andon', x: 7, y: 0, rot: 0 as const }] };
+    const result = parseSave(JSON.stringify(v4), SPAWN, NOW, { defaultHome, furnitureInfo: () => ({ w: 1, d: 1 }) });
+    expect(result.ok && result.data.version).toBe(5);
+    expect(result.ok && result.data.home.items.map((i) => i.itemId)).toEqual(['andon']);
   });
 });
 

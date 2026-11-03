@@ -10,6 +10,7 @@ import { itemIconUrl } from '../gfx/items';
 import type { Session } from '../game/session';
 import { formatMoney, hasUnreadMail } from '../game/gameplay';
 import { ui, useSessionVersion } from './store';
+import { DecorBar, useHomeState } from './DecorBar';
 
 const PHASE_ICON: Record<string, string> = {
   nacht: '🌙',
@@ -32,6 +33,7 @@ export function Hud({ session }: { session: Session }) {
   const season = getSeason(now);
   const weather = currentWeather(session);
   const tools = ownedTools(session);
+  const { inside, decor } = useHomeState(session);
   return (
     <>
       {weather.rainbow && <div class="rainbow-overlay" aria-hidden="true" />}
@@ -42,7 +44,7 @@ export function Hud({ session }: { session: Session }) {
         </div>
         <div class="hud-date">{formatDate(now)}</div>
         <div class="hud-season">
-          {SEASON_ICONS[season]} {SEASON_LABELS[season]} · {session.data?.villageName}
+          {SEASON_ICONS[season]} {SEASON_LABELS[season]} · {inside ? 'Zu Hause' : session.data?.villageName}
         </div>
         <div class="hud-weather">
           {weather.rainbow ? '🌈 Regenbogen!' : `${WEATHER_ICONS[weather.kind]} ${WEATHER_LABELS[weather.kind]}`}
@@ -69,7 +71,8 @@ export function Hud({ session }: { session: Session }) {
           </div>
         )}
       </div>
-      {tools.length > 0 && (
+      {inside && <DecorBar session={session} decor={decor} />}
+      {tools.length > 0 && !decor.active && (
         <div class="hud-tools pop-in">
           {tools.map((t, i) => (
             <button key={t} class={`hud-tool ${session.tool === t ? 'active' : ''}`} title={`${itemDef(t)?.name} (${i + 1})`} onClick={() => toggleTool(session, t)}>

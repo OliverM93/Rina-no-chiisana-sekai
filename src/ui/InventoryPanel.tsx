@@ -7,6 +7,7 @@ import { CURRENCY, FLOWER_BY_SEED, ITEM_ORDER, itemDef, maxStackOf, type ToolId,
 import { NPC_BY_ID } from '../data/npcs';
 import { formatMoney, sellSlots } from '../game/gameplay';
 import { toggleTool } from '../game/nature';
+import { applySurface, isSurface } from '../game/home';
 import type { Session, UiPanel } from '../game/session';
 import { itemIconUrl } from '../gfx/items';
 import { showToast, ui, useSessionVersion } from './store';
@@ -20,6 +21,9 @@ const CATEGORY_LABEL: Record<string, string> = {
   essen: 'Leckerei',
   geschenk: 'Erinnerungsstück',
   werkzeug: 'Werkzeug',
+  moebel: 'Möbel',
+  tapete: 'Tapete',
+  boden: 'Boden',
   samen: 'Samen',
   fisch: 'Fisch',
   insekt: 'Insekt',
@@ -205,6 +209,17 @@ export function InventoryPanel({ session, panel }: { session: Session; panel: Ui
           {mode === 'seeds' && (
             <button class="btn primary" disabled={!sel} onClick={plant}>
               🌱 Pflanzen
+            </button>
+          )}
+          {mode === 'inventory' && sel && isSurface(sel.itemId) && session.inside && (
+            <button
+              class="btn primary"
+              onClick={() => {
+                if (applySurface(session, sel.itemId)) showToast(`${selDef?.name} angebracht! ✨`);
+                setSelected(null);
+              }}
+            >
+              ✨ Anbringen
             </button>
           )}
           {mode === 'inventory' && selTool && (
