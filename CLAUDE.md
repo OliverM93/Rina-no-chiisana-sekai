@@ -75,7 +75,7 @@ npm run preview      # Build lokal ansehen → http://localhost:4173
 - **3D-Galerie (nur Dev):** <http://localhost:5173/gallery.html> zeigt Figuren, Natur und Gebäude in 3D
   (`?ansicht=figuren|natur|gebaeude`, `&winkel=0..360`, Tasten 1–3, Maus ziehen = drehen).
 - **Zeit testen:** `?zeit=21:30` und/oder `?datum=2026-12-24` an die URL hängen. Die Uhr startet dort und
-  läuft normal weiter.
+  läuft normal weiter. **Wetter testen:** `?wetter=regen|sonnig|wolkig|gewitter|schnee|regenbogen`.
 - **Debug im Dev-Modus:** `window.__rina` enthält `{ session, game, ui }` (`game.debug` → Lina, Bewohner …).
 
 ## Architektur
@@ -93,24 +93,31 @@ src/
     dialogue.ts    Auswahl von Dialogzeilen nach Tageszeit/Jahreszeit/Herzen/Tagen
     daily.ts       tägliche Funde, Obst-Nachwachsen
     mail.ts        Briefkasten
+    weather.ts     Wetter pro Tag (reproduzierbar), Regen-Stunden, Regenbogen, `?wetter=` zum Testen
+    catching.ts    Wann welche Art unterwegs ist (Monat/Uhrzeit/Regen), Sammelbuch
+    garden.ts      Beet: pflanzen, gießen, wachsen (1 Stufe pro gegossenem Tag), pflücken – nie vertrocknen
     grid.ts        Kollisionsraster, A*-Wegfindung, nächste freie Kachel
     movement.ts    Bewegung mit Kollision (Fuß-Box), Um-Ecken-Gleiten
     events.ts      typisierter Event-Emitter
     rng.ts         reproduzierbarer Zufall
   data/        Inhalte (leicht erweiterbar): Karten, Interaktionstexte, Story-Texte,
-               items.ts (alle Gegenstände + Preise), npcs/ (je Bewohner eine Datei)
+               items.ts (alle Gegenstände + Preise, Gartenblumen, Werkzeuge), species.ts (Fische & Insekten –
+               echte heimische Arten), npcs/ (je Bewohner eine Datei)
   style/       palette.ts – EINZIGE Quelle für Farben (auch CSS-Variablen der UI)
   gfx/         2D-Zeichnungen für Texturen & Symbole: terrain.ts (Gelände-Textur), items.ts (Symbole),
                canvas.ts (Hilfen)
   game/        Sitzung & Spielregeln (ohne Darstellung)
     session.ts     laufende Sitzung: Spielstand, Uhr, Karte, Event-Bus Welt ↔ UI
     gameplay.ts    Spielregeln: Sammeln, Verkaufen, Plaudern, Schenken, Post
+    nature.ts      Werkzeuge, Angeln, Insekten, Beet, aktuelles Wetter
     input.ts       eigene Tastatursteuerung (blockiert keine Textfelder)
   world3d/     Three.js-Schicht
     World3D.ts     Renderer, Kamera, Licht/Tag-Nacht, Interaktion, Maus (Raycasting), Story-Szenen
     MapView3D.ts   baut die Welt aus dem Kartenmodell; terrain3d.ts (Höhenraster + gemalte Textur)
-    Character3D.ts Figur (Bewegung, Wegfolgen, Sitzen); Npc.ts (Tagesablauf-KI); Collectibles3D.ts
-    models/        chibi3d.ts (Figuren), nature.ts, buildings.ts; materials.ts (Toon-Materialien)
+    Character3D.ts Figur (Bewegung, Wegfolgen, Sitzen, Werkzeug in der Hand); Npc.ts (Tagesablauf-KI); Collectibles3D.ts
+    Weather3D.ts   Regen, Schnee, Blitze · Fishing3D.ts Angeln · Insects3D.ts Insekten · Garden3D.ts Beet
+    models/        chibi3d.ts (Figuren), nature.ts, buildings.ts, critters.ts (Werkzeuge, Insekten, Pflanzen);
+                   materials.ts (Toon-Materialien)
   ui/          Preact-Overlay: App, TitleScreen, CharacterEditor, Hud, DialogBox (mit Auswahl & Herzen),
                InventoryPanel (Tasche/Verkaufen/Schenken), MailPanel, Menu, store.ts
   dev/         Entwickler-Galerie (wird nicht ins Spiel gebaut)
@@ -143,6 +150,10 @@ src/
   kommen per Brief.
 - **Tägliches:** Muscheln (reproduzierbar pro Datum), Obst wächst nach 3 Tagen nach, Felsen & Blumen 1×/Tag.
   Heruntergefallenes bleibt liegen (gespeichert in `world.ground`).
+- **Natur:** Fische/Insekten in `data/species.ts` werden automatisch zu Gegenständen, Symbolen
+  (`gfx/nature-icons.ts`) und Sammelbuch-Einträgen. Insekten wechseln stündlich (reproduzierbar), fliehen nie.
+  Angeln: Verpassen ist kein Scheitern – der Fisch knabbert einfach nochmal. Regen gießt das Beet.
+  Der Regenbogen ist ein Bogen in der Oberfläche (die Schrägsicht zeigt keinen Himmel).
 - **Spielstand:** `SAVE_VERSION` + `MIGRATIONS` in `core/save.ts`. Nach jeder Migration wird normalisiert
   (fehlende Felder → Standardwerte). Vor jedem Speichern bleibt der alte Stand als Backup erhalten.
 

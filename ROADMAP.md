@@ -58,14 +58,21 @@ Legende: ✅ erledigt · 🚧 in Arbeit · ⬜ geplant
 - ✅ Linas Standard-Outfit ganz in Schwarz; Schuhe je nach Jahreszeit (Herbst/Winter Schnürstiefel,
   Frühling/Sommer weiße Sneaker) – im Editor wählbar
 
-## ⬜ M4 – Natur: Angeln, Insekten, Gärtnern, Wetter, Museum
+## ✅ M4 – Natur: Angeln, Insekten, Gärtnern, Wetter, Sammelbuch
 
-- ⬜ Angeln (Minispiel), Insektenfangen (Netz) – saisonale, tageszeitabhängige Arten
-- ⬜ Gärtnern: Pflanzen, Gießen, Wachsen, Blumen-Kreuzungen
-- ⬜ Wetter: Sonne, Wolken, Regen, Schnee, Gewitter, Regenbogen (deterministisch pro Tag)
-- ⬜ Jahreszeiten-Inhalte (Arten, Früchte, Deko)
-- ⬜ Sammelkatalog & Museum
-- ⬜ Werkzeuge (Angel, Netz, Gießkanne, Schaufel)
+- ✅ Angeln ganz entspannt (Fischschatten, Schwimmer, Biss – verpassen geht nicht schief) in Fluss & Meer
+- ✅ Insekten mit dem Kescher fangen (fliehen nicht); Schmetterlinge, Käfer, Libellen, Glühwürmchen, Krabben …
+- ✅ 17 Fische & 24 Insekten – echte heimische Arten, je nach Monat, Uhrzeit und Wetter
+- ✅ Sammelbuch mit Schatten für Unentdecktes, Ort/Monaten/Uhrzeit, Anzahl und erstem Fang
+- ✅ Gärtnern: Beet neben Linas Haus, 5 Blumen (Samen → Keimling → Knospe → Blüte), Gießen, Regen gießt mit,
+  nichts vertrocknet; beim Pflücken fallen manchmal Samen ab
+- ✅ Wetter pro Tag reproduzierbar: Sonne, Wolken, Regen, Gewitter (Sommer), Schnee (Winter), Regenbogen;
+  Linas Geburtstag immer sonnig, Heiligabend Schnee; Licht & Himmel passen sich an
+- ✅ Werkzeuge (Angel, Kescher, Gießkanne) von Oma Gisela, Werkzeugleiste mit Tasten 1–3
+- ✅ Oma Gisela: Meinungen zu Fischen & Krabbeltieren („Pfui, eine Schnecke!“), Wetter-Sprüche
+- ✅ Spielstand Version 4 (Sammelbuch & Beet), Tests für Wetter, Fangen, Garten, Migration
+- ⬜ Museum → kommt mit Thalia (M7); Schaufel & Fossilien ebenfalls mit Thalia
+- ⬜ Blumen-Kreuzungen (neue Farben) → später
 
 ## ⬜ M5 – Hauseinrichtung (Sims-Elemente, Teil 1)
 
