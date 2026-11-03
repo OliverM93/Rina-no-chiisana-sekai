@@ -213,14 +213,19 @@ describe('Version 4 (M4 Natur)', () => {
   });
 });
 
-describe('Version 5 (M5 Einrichtung)', () => {
-  it('richtet alten Spielständen das Start-Zimmer ein', () => {
-    const v4 = { ...freshSave(), version: 4 } as Record<string, unknown>;
-    delete v4.home;
-    const defaultHome = { wallpaper: 'tapete-creme', floor: 'boden-dielen', items: [{ uid: 'a', itemId: 'andon', x: 7, y: 0, rot: 0 as const }] };
-    const result = parseSave(JSON.stringify(v4), SPAWN, NOW, { defaultHome, furnitureInfo: () => ({ w: 1, d: 1 }) });
-    expect(result.ok && result.data.version).toBe(5);
-    expect(result.ok && result.data.home.items.map((i) => i.itemId)).toEqual(['andon']);
+describe('Version 6 (M6 Ausbau)', () => {
+  it('macht aus dem Zimmer ein Haus und legt die Dorfkasse an', () => {
+    const v5 = { ...freshSave(), version: 5 } as Record<string, unknown>;
+    delete v5.house;
+    delete v5.bank;
+    v5.home = { wallpaper: 'tapete-shoji', floor: 'boden-tatami', items: [{ uid: 'a', itemId: 'andon', x: 7, y: 0, rot: 0 }] };
+    const rules = { layouts: () => [{ id: 'haupt', name: 'Zimmer', w: 8, h: 6, exits: [] }], maxStage: 0, emptyRoom: (id: string) => ({ id, wallpaper: '', floor: '', items: [] }) };
+    const result = parseSave(JSON.stringify(v5), SPAWN, NOW, { houseRules: rules, furnitureInfo: () => ({ w: 1, d: 1 }) });
+    expect(result.ok && result.data.version).toBe(6);
+    if (!result.ok) return;
+    expect(result.data.house.rooms[0]).toMatchObject({ id: 'haupt', wallpaper: 'tapete-shoji', floor: 'boden-tatami' });
+    expect(result.data.house.rooms[0].items.map((i) => i.itemId)).toEqual(['andon']);
+    expect(result.data.bank).toEqual({ loan: 0 });
   });
 });
 

@@ -3,7 +3,7 @@ import { VILLAGE_LAYOUT, VILLAGE_OBJECTS, VILLAGE_SPAWN } from '../data/maps/vil
 import { INTERACTIONS } from '../data/interactions';
 import { NPCS } from '../data/npcs';
 import { findPath, nearestWalkable } from './grid';
-import { buildWorldMap, findInteraction, KNOWN_CHARS, OBJECT_KINDS, objectById, terrainAt } from './worldmap';
+import { applyMapFlags, buildWorldMap, findInteraction, isActive, KNOWN_CHARS, OBJECT_KINDS, objectById, terrainAt } from './worldmap';
 
 const map = buildWorldMap(VILLAGE_LAYOUT, VILLAGE_OBJECTS, VILLAGE_SPAWN);
 
@@ -27,8 +27,10 @@ describe('Dorfkarte', () => {
 
   it('stellt keine Objekte ins Wasser oder übereinander', () => {
     const occupied = new Map<string, string>();
+    // Objekte, die nur bis zu einem Einzug da sind (Bauplatz), überlappen das spätere Haus – das ist gewollt
     for (const obj of VILLAGE_OBJECTS) {
       if (obj.kind === 'bridge') continue;
+      if (obj.until) continue;
       const info = OBJECT_KINDS[obj.kind];
       for (let y = obj.y; y < obj.y + info.h; y++) {
         for (let x = obj.x; x < obj.x + info.w; x++) {
@@ -43,6 +45,17 @@ describe('Dorfkarte', () => {
         }
       }
     }
+  });
+
+  it('Story-Flags tauschen Bauplatz gegen Haus (mit Kollision)', () => {
+    const m = buildWorldMap(VILLAGE_LAYOUT, VILLAGE_OBJECTS, VILLAGE_SPAWN);
+    expect(isActive(m, 'bauplatz-1')).toBe(true);
+    expect(isActive(m, 'haus-olaf')).toBe(false);
+    expect(m.grid.isBlocked(17, 15)).toBe(false);
+    expect(applyMapFlags(m, { olafEingezogen: true }).sort()).toEqual(['bauplatz-1', 'haus-olaf']);
+    expect(isActive(m, 'haus-olaf')).toBe(true);
+    expect(m.grid.isBlocked(17, 15)).toBe(true);
+    expect(applyMapFlags(m, { olafEingezogen: true })).toEqual([]);
   });
 
   it('macht die Brücke begehbar und den Fluss daneben nicht', () => {

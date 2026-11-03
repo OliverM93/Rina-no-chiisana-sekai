@@ -31,6 +31,10 @@ export interface MapObjectDef {
   x: number;
   y: number;
   variant?: string;
+  /** erscheint erst, wenn dieses Story-Flag gesetzt ist (z. B. Einzug) */
+  requires?: string;
+  /** verschwindet, sobald dieses Flag gesetzt ist (z. B. Bauplatz) */
+  until?: string;
 }
 
 interface KindInfo {
@@ -89,6 +93,10 @@ export interface WorldMap {
   spawn: Tile;
   /** Kachel-Index → Objekt-ID, von wo aus interagiert werden kann */
   interactAt: Map<number, string[]>;
+  /** Objekte, die gerade (noch) nicht da sind */
+  inactive: Set<string>;
+  /** Blockiertes aus dem Gelände (Wasser) – Grundlage zum Neuberechnen */
+  baseBlocked: Uint8Array;
 }
 
 const CHAR_TERRAIN: Record<string, Terrain> = {
@@ -142,16 +150,9 @@ export function buildWorldMap(layout: readonly string[], defs: readonly MapObjec
     objects.push({ ...def, w: info.w, h: info.h });
   }
 
-  // Kollision für Objekte
-  for (const obj of objects) {
-    const info = OBJECT_KINDS[obj.kind];
-    if (obj.kind === 'bridge') {
-      grid.blockRect(obj.x, obj.y, obj.w, obj.h, false);
-      continue;
-    }
-    if (info.blocks === 'all') grid.blockRect(obj.x, obj.y, obj.w, obj.h);
-    else if (Array.isArray(info.blocks)) for (const [dx, dy] of info.blocks) grid.setBlocked(obj.x + dx, obj.y + dy);
-  }
+  const baseBlocked = grid.blocked.slice();
+  const inactive = new Set(objects.filter((o) => o.requires).map((o) => o.id));
+  applyObjectCollision(grid, objects, inactive);
 
   // Interaktionspunkte
   const interactAt = new Map<number, string[]>();
@@ -169,7 +170,45 @@ export function buildWorldMap(layout: readonly string[], defs: readonly MapObjec
     }
   }
 
-  return { width, height, terrain, flowers, objects, grid, spawn, interactAt };
+  return { width, height, terrain, flowers, objects, grid, spawn, interactAt, inactive, baseBlocked };
+}
+
+function applyObjectCollision(grid: CollisionGrid, objects: readonly MapObject[], inactive: ReadonlySet<string>) {
+  for (const obj of objects) {
+    if (inactive.has(obj.id)) continue;
+    const info = OBJECT_KINDS[obj.kind];
+    if (obj.kind === 'bridge') {
+      grid.blockRect(obj.x, obj.y, obj.w, obj.h, false);
+      continue;
+    }
+    if (info.blocks === 'all') grid.blockRect(obj.x, obj.y, obj.w, obj.h);
+    else if (Array.isArray(info.blocks)) for (const [dx, dy] of info.blocks) grid.setBlocked(obj.x + dx, obj.y + dy);
+  }
+}
+
+/**
+ * Story-Flags anwenden (z. B. „Olaf ist eingezogen“ → Haus statt Bauplatz).
+ * Gibt die IDs der Objekte zurück, die sich geändert haben.
+ */
+export function applyMapFlags(map: WorldMap, flags: Readonly<Record<string, boolean>>): string[] {
+  const changed: string[] = [];
+  for (const o of map.objects) {
+    if (!o.requires && !o.until) continue;
+    const active = (!o.requires || !!flags[o.requires]) && (!o.until || !flags[o.until]);
+    if (active === !map.inactive.has(o.id)) continue;
+    if (active) map.inactive.delete(o.id);
+    else map.inactive.add(o.id);
+    changed.push(o.id);
+  }
+  if (changed.length > 0) {
+    map.grid.blocked.set(map.baseBlocked);
+    applyObjectCollision(map.grid, map.objects, map.inactive);
+  }
+  return changed;
+}
+
+export function isActive(map: WorldMap, id: string): boolean {
+  return !map.inactive.has(id);
 }
 
 export function terrainAt(map: WorldMap, x: number, y: number): Terrain | null {
@@ -194,6 +233,7 @@ export function objectAtTile(map: WorldMap, tx: number, ty: number): MapObject |
   // Spätere Einträge (Gebäude) haben Vorrang vor Natur.
   for (let i = map.objects.length - 1; i >= 0; i--) {
     const o = map.objects[i];
+    if (map.inactive.has(o.id)) continue;
     if (tx >= o.x && ty >= o.y && tx < o.x + o.w && ty < o.y + o.h) return o;
   }
   return undefined;
@@ -210,9 +250,7 @@ export function findInteraction(
   interactiveIds: ReadonlySet<string>,
 ): string | null {
   const dir = { down: [0, 1], up: [0, -1], left: [-1, 0], right: [1, 0] }[facing];
-  const here = (map.interactAt.get(standing.y * map.width + standing.x) ?? []).filter((id) =>
-    interactiveIds.has(id),
-  );
+  const here = (map.interactAt.get(standing.y * map.width + standing.x) ?? []).filter((id) => interactiveIds.has(id) && !map.inactive.has(id));
   if (here.length === 0) return null;
 
   // 1. Objekt direkt in Blickrichtung

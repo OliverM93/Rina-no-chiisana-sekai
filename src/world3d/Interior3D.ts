@@ -3,7 +3,7 @@
  * Nebel versteckt das Dorf) – so bleiben Lina, Licht und Kamera dieselben.
  */
 import * as THREE from 'three';
-import { blockedCells, DESK_CELL, DOOR_CELLS, footprint, type Home, itemsAt, type PlacedItem, ROOM_H, ROOM_W, type Rotation } from '../core/room';
+import { blockedCells, footprint, itemsAt, type PlacedItem, type Room, type RoomLayout, type Rotation } from '../core/room';
 import { FURNITURE_BY_ITEM, furnitureInfo, SURFACE_BY_ID } from '../data/furniture';
 import { drawPattern } from '../gfx/interior';
 import { mesh, toon } from './materials';
@@ -35,60 +35,17 @@ export class Interior3D {
   readonly floor: THREE.Mesh;
   private lit = new Set<string>();
 
+  private shell = new THREE.Group();
+  private layoutKey = '';
+  /** aktueller Raum */
+  layout: RoomLayout = { id: 'haupt', name: '', w: 8, h: 6, exits: [] };
+
   constructor(scene: THREE.Scene) {
     this.group.position.set(ROOM_X, 0, ROOM_Y);
-    // Boden
-    this.floor = new THREE.Mesh(new THREE.PlaneGeometry(ROOM_W, ROOM_H).rotateX(-Math.PI / 2), this.floorMat);
-    this.floor.position.set(ROOM_W / 2, 0, ROOM_H / 2);
+    this.floor = new THREE.Mesh(new THREE.PlaneGeometry(1, 1).rotateX(-Math.PI / 2), this.floorMat);
     this.floor.receiveShadow = true;
-    this.group.add(this.floor);
-    // Wände: hinten, links, rechts (vorne offen, wie ein Puppenhaus)
-    const back = new THREE.Mesh(new THREE.BoxGeometry(ROOM_W + 0.3, WALL_H, 0.15), this.wallMat);
-    back.position.set(ROOM_W / 2, WALL_H / 2, -0.075);
-    const left = new THREE.Mesh(new THREE.BoxGeometry(0.15, WALL_H, ROOM_H), this.wallMat);
-    left.position.set(-0.075, WALL_H / 2, ROOM_H / 2);
-    const right = left.clone();
-    right.position.x = ROOM_W + 0.075;
-    for (const w of [back, left, right]) {
-      w.receiveShadow = true;
-      this.group.add(w);
-    }
-    // Fußleisten & Sockel
-    const trim = toon('#cfa175');
-    for (const [w, d, x, z] of [[ROOM_W, 0.06, ROOM_W / 2, 0.03], [0.06, ROOM_H, 0.03, ROOM_H / 2], [0.06, ROOM_H, ROOM_W - 0.03, ROOM_H / 2]] as const) {
-      const t = mesh(new THREE.BoxGeometry(w, 0.12, d), trim);
-      t.position.set(x, 0.06, z);
-      this.group.add(t);
-    }
-    // Sockel rundherum (Hausboden)
-    const base = mesh(new THREE.BoxGeometry(ROOM_W + 0.6, 0.3, ROOM_H + 0.4), toon('#e6d2b8'), false, true);
-    base.position.set(ROOM_W / 2, -0.151, ROOM_H / 2 - 0.1);
-    this.group.add(base);
-    // Fenster in der Rückwand
     this.windowGlass = new THREE.MeshToonMaterial({ color: '#9fd2ee', emissive: '#9fd2ee', emissiveIntensity: 0.2 });
-    for (const x of [2, 6]) {
-      const frame = mesh(new THREE.BoxGeometry(1.1, 0.9, 0.06), toon('#ffffff'));
-      frame.position.set(x, 1.35, 0.02);
-      const glass = mesh(new THREE.BoxGeometry(0.95, 0.75, 0.07), this.windowGlass, false, false);
-      glass.position.set(x, 1.35, 0.025);
-      const bar = mesh(new THREE.BoxGeometry(0.04, 0.75, 0.08), toon('#ffffff'));
-      bar.position.set(x, 1.35, 0.03);
-      const sill = mesh(new THREE.BoxGeometry(1.2, 0.05, 0.16), toon('#cfa175'));
-      sill.position.set(x, 0.88, 0.08);
-      this.group.add(frame, glass, bar, sill);
-    }
-    // Türmatte
-    const mat = mesh(new THREE.BoxGeometry(1.6, 0.02, 0.7), toon('#d98a7a'), false, true);
-    mat.position.set(DOOR_CELLS[0][0] + 1, 0.01, ROOM_H - 0.35);
-    this.group.add(mat);
-    // Katalog-Pult
-    const desk = makeCatalogDesk();
-    desk.position.set(DESK_CELL[0] + 0.5, 0, DESK_CELL[1] + 0.5);
-    this.group.add(desk);
-
-    this.group.add(this.furniture);
-    this.roomLight.position.set(ROOM_W / 2, 2.2, ROOM_H / 2 + 0.5);
-    this.group.add(this.roomLight);
+    this.group.add(this.floor, this.shell, this.furniture, this.roomLight);
     for (let i = 0; i < MAX_LAMPS; i++) {
       const l = new THREE.PointLight('#ffcf90', 0, 5, 1.6);
       this.lamps.push(l);
@@ -97,17 +54,125 @@ export class Interior3D {
     scene.add(this.group);
   }
 
+  /** Wände, Fenster, Türen & Treppe für einen Raum bauen */
+  private buildShell(layout: RoomLayout) {
+    const { w: W, h: H } = layout;
+    this.shell.clear();
+    this.floor.scale.set(W, 1, H);
+    this.floor.position.set(W / 2, 0, H / 2);
+    const attic = layout.id === 'dach';
+    // Wände: hinten, links, rechts (vorne offen, wie ein Puppenhaus)
+    const wallH = attic ? 1.6 : WALL_H;
+    const back = new THREE.Mesh(new THREE.BoxGeometry(W + 0.3, wallH, 0.15), this.wallMat);
+    back.position.set(W / 2, wallH / 2, -0.075);
+    const left = new THREE.Mesh(new THREE.BoxGeometry(0.15, wallH, H), this.wallMat);
+    left.position.set(-0.075, wallH / 2, H / 2);
+    const right = left.clone();
+    right.position.x = W + 0.075;
+    for (const wall of [back, left, right]) {
+      wall.receiveShadow = true;
+      this.shell.add(wall);
+    }
+    if (attic) {
+      const beam = mesh(new THREE.BoxGeometry(W, 0.14, 0.14), toon('#a97c56'));
+      beam.position.set(W / 2, wallH + 0.2, 0.2);
+      this.shell.add(beam);
+    }
+    // Fußleisten
+    const trim = toon('#cfa175');
+    for (const [tw, td, x, z] of [[W, 0.06, W / 2, 0.03], [0.06, H, 0.03, H / 2], [0.06, H, W - 0.03, H / 2]] as const) {
+      const t = mesh(new THREE.BoxGeometry(tw, 0.12, td), trim);
+      t.position.set(x, 0.06, z);
+      this.shell.add(t);
+    }
+    const base = mesh(new THREE.BoxGeometry(W + 0.6, 0.3, H + 0.4), toon('#e6d2b8'), false, true);
+    base.position.set(W / 2, -0.151, H / 2 - 0.1);
+    this.shell.add(base);
+    // Fenster in der Rückwand (nicht dort, wo ein Durchgang ist)
+    const backDoors = layout.exits.filter((e) => e.dir === 'up').flatMap((e) => e.cells.map(([x]) => x));
+    const windows = attic ? [W / 2] : W >= 10 ? [2, W - 2] : [2, W - 2];
+    for (const x of windows) {
+      if (backDoors.some((d) => Math.abs(d + 0.5 - x) < 1.2)) continue;
+      const y = attic ? 0.95 : 1.35;
+      const frame = mesh(new THREE.BoxGeometry(1.1, 0.9, 0.06), toon('#ffffff'));
+      frame.position.set(x, y, 0.02);
+      const glass = mesh(new THREE.BoxGeometry(0.95, 0.75, 0.07), this.windowGlass, false, false);
+      glass.position.set(x, y, 0.025);
+      const bar = mesh(new THREE.BoxGeometry(0.04, 0.75, 0.08), toon('#ffffff'));
+      bar.position.set(x, y, 0.03);
+      const sill = mesh(new THREE.BoxGeometry(1.2, 0.05, 0.16), toon('#cfa175'));
+      sill.position.set(x, y - 0.47, 0.08);
+      this.shell.add(frame, glass, bar, sill);
+    }
+    // Ausgänge
+    for (const e of layout.exits) {
+      const xs = e.cells.map(([x]) => x);
+      const x0 = Math.min(...xs);
+      const width = Math.max(...xs) - x0 + 1;
+      if (e.dir === 'down') {
+        const mat = mesh(new THREE.BoxGeometry(width - 0.4, 0.02, 0.7), toon(e.kind === 'haustuer' ? '#d98a7a' : '#c8b6e8'), false, true);
+        mat.position.set(x0 + width / 2, 0.01, H - 0.35);
+        this.shell.add(mat);
+        if (e.kind === 'treppe') {
+          // Treppengeländer: hier geht es nach unten
+          for (const sx of [x0 - 0.05, x0 + width + 0.05]) {
+            const post = mesh(new THREE.BoxGeometry(0.06, 0.7, 0.06), toon('#a97c56'));
+            post.position.set(sx, 0.35, H - 0.7);
+            this.shell.add(post);
+          }
+        }
+      } else if (e.kind === 'durchgang') {
+        // Tür in der Rückwand
+        const frame = mesh(new THREE.BoxGeometry(width + 0.2, 1.7, 0.1), toon('#a97c56'));
+        frame.position.set(x0 + width / 2, 0.85, 0.01);
+        const door = mesh(new THREE.BoxGeometry(width - 0.1, 1.55, 0.11), toon('#e6c59c'));
+        door.position.set(x0 + width / 2, 0.78, 0.02);
+        const knob = mesh(new THREE.SphereGeometry(0.05, 8, 6), toon('#c9a24a'));
+        knob.position.set(x0 + width - 0.3, 0.8, 0.09);
+        this.shell.add(frame, door, knob);
+      } else {
+        // Treppe nach oben an der Rückwand
+        const stairs = new THREE.Group();
+        for (let k = 0; k < 6; k++) {
+          const step = mesh(new THREE.BoxGeometry(0.9, 0.12, 0.16), toon(k % 2 ? '#cfa175' : '#b98a5e'));
+          step.position.set(0, 0.08 + k * 0.32, 0.85 - k * 0.15);
+          stairs.add(step);
+        }
+        const rail = mesh(new THREE.BoxGeometry(0.05, 0.05, 1.4), toon('#8a6448'));
+        rail.position.set(-0.45, 1.3, 0.45);
+        rail.rotation.x = 1.0;
+        stairs.add(rail);
+        stairs.position.set(x0 + 0.5, 0, 0);
+        this.shell.add(stairs);
+      }
+    }
+    if (layout.desk) {
+      const desk = makeCatalogDesk();
+      desk.position.set(layout.desk[0] + 0.5, 0, layout.desk[1] + 0.5);
+      this.shell.add(desk);
+    }
+    this.roomLight.position.set(W / 2, 2.2, H / 2 + 0.5);
+  }
+
   /** Zellen-Mitte (Zimmerkoordinaten) → 3D-Weltposition */
   cellCenter(x: number, y: number): THREE.Vector3 {
     return new THREE.Vector3(ROOM_X + x + 0.5, 0, ROOM_Y + y + 0.5);
   }
 
-  refresh(home: Home, force = false) {
+  refresh(home: Room, layout: RoomLayout, force = false) {
+    const lk = JSON.stringify(layout);
+    if (lk !== this.layoutKey) {
+      this.layoutKey = lk;
+      this.layout = layout;
+      this.buildShell(layout);
+      force = true;
+      this.floorMat.userData.surface = this.wallMat.userData.surface = '';
+    }
     const sig = JSON.stringify(home) + [...this.lit].join();
     if (!force && sig === this.signature) return;
     this.signature = sig;
-    this.applySurface(this.floorMat, home.floor, ROOM_W / 2, ROOM_H / 2);
-    this.applySurface(this.wallMat, home.wallpaper, ROOM_W / 2, 1);
+    this.applySurface(this.floorMat, home.floor, layout.w / 2, layout.h / 2);
+    this.applySurface(this.wallMat, home.wallpaper, layout.w / 2, 1);
     this.furniture.clear();
     this.placed.clear();
     const byUid = new Map(home.items.map((i) => [i.uid, i]));
@@ -177,14 +242,15 @@ export class Interior3D {
   }
 
   /** Begehbarkeit in Zimmerkoordinaten */
-  isBlocked(home: Home, x: number, y: number): boolean {
-    // vor der Tür geht's hinaus
-    if (y === ROOM_H && DOOR_CELLS.some(([dx]) => dx === x)) return false;
-    if (x < 0 || y < 0 || x >= ROOM_W || y >= ROOM_H) return true;
-    return blockedCells(home, furnitureInfo).has(`${x},${y}`);
+  isBlocked(home: Room, x: number, y: number): boolean {
+    const L = this.layout;
+    // hinter Türen/Treppen geht's hinaus
+    for (const e of L.exits) if (e.cells.some(([cx]) => cx === x) && ((e.dir === 'down' && y === L.h) || (e.dir === 'up' && y === -1))) return false;
+    if (x < 0 || y < 0 || x >= L.w || y >= L.h) return true;
+    return blockedCells(home, L, furnitureInfo).has(`${x},${y}`);
   }
 
-  topAt(home: Home, x: number, y: number): PlacedItem | null {
+  topAt(home: Room, x: number, y: number): PlacedItem | null {
     return itemsAt(home, x, y, furnitureInfo)[0] ?? null;
   }
 

@@ -87,17 +87,26 @@ Legende: ✅ erledigt · 🚧 in Arbeit · ⬜ geplant
 - ⬜ Weitere Stile (Cottagecore, französisches Bistro, modern, Retro-Oma-Chic) → nach und nach
 - ⬜ Wand-Deko (Bilder, Rollbilder, Regale an der Wand)
 
-## ⬜ M6 – Hausausbau, Außengestaltung, Crafting
+## 🚧 M6 – Hausausbau, Außengestaltung, Crafting
 
-- ⬜ Räume hinzufügen, Wände ziehen/entfernen, Raumaufteilung (Kredit bei Olafs Dorfkasse)
-- ⬜ Außenbereich: Zäune, Wege, Beete, Gartenmöbel, Lichterketten
-- ⬜ Crafting mit freischaltbaren Rezepten (Werkbank)
+**M6a ✅ Olaf & Christin, Dorfkasse, Hausausbau**
+- ✅ Olaf & Christin ziehen ein (Ankündigungsbrief, Einzug am nächsten Tag, Begrüßungsszene, eigenes Haus
+  auf dem Bauplatz), Tagesabläufe, Dialoge, Vorlieben, Briefe
+- ✅ Olafs Dorfkasse: Ausbau als zinsloser Kredit, zurückzahlen wann man will
+- ✅ Feste Ausbaustufen: großes Zimmer (10×7) → Schlafzimmer-Anbau → Dachzimmer; Durchgang & Treppe,
+  jeder Raum mit eigener Tapete/Boden/Möbeln; Haus wächst auch von außen
+- ✅ Spielstand Version 6 (Haus mit Räumen, Dorfkasse)
+
+**M6b ⬜ Werkbank, Außengestaltung, Tiere**
+- ⬜ Werkbank & Rezepte (per Brief, beim Sammeln, als Herz-Belohnung)
+- ⬜ Außenbereich: Zäune, Wege, Gartenmöbel, Deko, Lichterketten, mehr Beete
+- ⬜ Wachteln & Hühner halten (Stall, tägliche Eier)
 
 ## ⬜ M7 – Alle Bewohner, Shops & Events
 
-- ⬜ Story-Einzüge: Oli, Lars, Olaf & Christin, Jens, Thalia (jeweils mit eigener Szene)
+- ⬜ Story-Einzüge: Oli, Lars, Jens, Thalia (jeweils mit eigener Szene) – Olaf & Christin sind schon da (M6a)
 - ⬜ Lars: Praxis/Apotheke (Heiltränke, Pflaster), Gesundheitstipps
-- ⬜ Olaf: Dorfkasse/Bank (Sparen, Zinsen, Kredit)
+- ⬜ Olaf: Sparbuch mit kleinen Zinsen (Kredit gibt's schon seit M6a)
 - ⬜ Jens: Bistro/Kochstudio (Rezepte) & Galerie (Kunstwerke sammeln/ausstellen)
 - ⬜ Thalia: Abendevents (Partys/Tanzabende), Karten, Gesteine/Fossilien, Wetterstation, neue Gebiete
 - ⬜ Oli: romantische Szenen (Picknick, Sternschnuppen), gemeinsames Haus/Zimmer
@@ -120,6 +129,6 @@ Legende: ✅ erledigt · 🚧 in Arbeit · ⬜ geplant
 ## ❓ Offene Fragen (bei Gelegenheit klären)
 
 - Geburtstage der Bewohner
-- Christins Rolle im Dorf (z. B. etwas mit Ordnung/Sauberkeit – Aufräum-Aufgaben, Gartenpflege?)
+- Christins Rolle im Dorf ausbauen (z. B. kleine Aufräum-Aufgaben, Gartenpflege, Ordnungs-Tipps)?
 - Wer zieht als Erstes ein (nach Oma Gisela)? Welche Bauplätze für wen?
 - Lieblingsessen/-farben/-hobbys der Bewohner für Geschenke & Dialoge

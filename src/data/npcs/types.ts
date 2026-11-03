@@ -22,6 +22,8 @@ export interface NpcDef {
   appearance: Appearance;
   /** Objekt-ID des eigenen Hauses */
   home: string;
+  /** zieht erst ein, wenn dieses Story-Flag gesetzt ist */
+  movesIn?: string;
   schedule: readonly ScheduleEntry[];
   preferences: Preferences;
 

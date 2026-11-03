@@ -75,7 +75,9 @@ export const VILLAGE_OBJECTS: readonly MapObjectDef[] = [
   { id: 'bank-gisela', kind: 'bench', x: 45, y: 17 },
 
   // Bauplätze für zukünftige Bewohner
-  { id: 'bauplatz-1', kind: 'plot', x: 17, y: 15 },
+  { id: 'bauplatz-1', kind: 'plot', x: 17, y: 15, until: 'olafEingezogen' },
+  // Olaf & Christin (ziehen in M6 ein) – mit der Dorfkasse
+  { id: 'haus-olaf', kind: 'house', x: 17, y: 15, variant: 'mint', requires: 'olafEingezogen' },
   { id: 'bauplatz-3', kind: 'plot', x: 48, y: 14 },
 
   // Dorfplatz

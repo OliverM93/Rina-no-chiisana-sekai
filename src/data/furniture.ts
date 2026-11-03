@@ -104,16 +104,6 @@ export const SURFACE_BY_ID: Readonly<Record<string, SurfaceDef>> = Object.fromEn
 
 export const VARIANT_LABELS: Record<string, string> = { rosa: 'Rosa', indigo: 'Indigo', creme: 'Creme', rot: 'Rot', blau: 'Blau', gruen: 'Grün', senf: 'Senfgelb' };
 
-/** Start-Einrichtung: Futon, Tischchen, Laterne */
-export const STARTER_HOME = {
-  wallpaper: 'tapete-creme',
-  floor: 'boden-dielen',
-  items: [
-    { itemId: 'futon-rosa', x: 6, y: 1, rot: 0 },
-    { itemId: 'chabudai', x: 3, y: 2, rot: 0 },
-    { itemId: 'andon', x: 7, y: 0, rot: 0 },
-  ],
-} as const;
 
 /** Raum-Infos für die Raumlogik (`core/room.ts`) */
 export function furnitureInfo(itemId: string) {

@@ -147,6 +147,7 @@ function dialogueContext(session: Session, npcId: string, firstToday: boolean): 
   if (session.data && isSameDayMonth(now, session.data.player.birthday)) tags.push('geburtstag-lina');
   const w = weatherAt(now, session.weatherOverride);
   tags.push(`wetter-${w.kind}`);
+  if (session.data?.flags.olafEingezogen) tags.push('olaf-da');
   if (w.rainbow) tags.push('regenbogen');
   return {
     phase: getDayPhase(now),

@@ -1360,3 +1360,34 @@ body {
   gap: 6px;
   margin: 6px 0;
 }
+
+/* ---------------------------------------------------------------- M6: Dorfkasse */
+
+.card.bank {
+  width: min(520px, 94vw);
+}
+
+.bank-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 6px 4px;
+  border-bottom: 2px dashed var(--ui-border);
+}
+
+.bank-box {
+  margin: 12px 0;
+  padding: 12px;
+  border-radius: 18px;
+  background: var(--ui-bg);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  align-items: flex-start;
+}
+
+.bank-pay {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
