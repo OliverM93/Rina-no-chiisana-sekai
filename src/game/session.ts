@@ -17,8 +17,9 @@ import {
   type StorageLike,
 } from '../core/save';
 import { type Clock, formatIsoDay, getDayPhase, getSeason, type Season } from '../core/time';
+import { parseWeatherOverride, type WeatherKind } from '../core/weather';
 import { buildWorldMap, tileCenter, type WorldMap } from '../core/worldmap';
-import { isKnownItem } from '../data/items';
+import { isKnownItem, type ToolId } from '../data/items';
 import { VILLAGE_LAYOUT, VILLAGE_OBJECTS, VILLAGE_SPAWN } from '../data/maps/village';
 import { NPCS } from '../data/npcs';
 import type { InteractionContext } from '../data/interactions';
@@ -38,7 +39,13 @@ export interface DialogRequest {
   onClose?: () => void;
 }
 
-export type UiPanel = { kind: 'inventory' } | { kind: 'sell' } | { kind: 'mail' } | { kind: 'gift'; npcId: string; onPick: (itemId: string) => void; onCancel: () => void };
+export type UiPanel =
+  | { kind: 'inventory' }
+  | { kind: 'sell' }
+  | { kind: 'mail' }
+  | { kind: 'book' }
+  | { kind: 'gift'; npcId: string; onPick: (itemId: string) => void; onCancel: () => void }
+  | { kind: 'seeds'; onPick: (itemId: string) => void; onCancel: () => void };
 
 export interface Toast {
   text: string;
@@ -58,6 +65,8 @@ export type GameEvents = {
   'state:changed': undefined;
   /** Die Welt bittet die Oberfläche, ein Fenster zu öffnen */
   'ui:open': UiPanel;
+  /** Werkzeug in der Hand (null = keins) */
+  'tool:changed': ToolId | null;
 };
 
 export class Session {
@@ -72,6 +81,10 @@ export class Session {
   /** Jahreszeit beim Start (Texturen werden dafür erzeugt). */
   readonly season: Season;
   private playStart = 0;
+  /** Werkzeug in Linas Hand (wird nicht gespeichert) */
+  tool: ToolId | null = null;
+  /** Erzwungenes Wetter (`?wetter=regen`, zum Testen) */
+  readonly weatherOverride: WeatherKind | 'regenbogen' | null = typeof location !== 'undefined' ? parseWeatherOverride(location.search) : null;
 
   constructor(
     storage: StorageLike,
@@ -147,6 +160,7 @@ export class Session {
 
   private begin(data: SaveData) {
     this.data = data;
+    this.tool = null;
     this.playStart = performance.now();
     this.bus.emit('game:started', undefined);
   }

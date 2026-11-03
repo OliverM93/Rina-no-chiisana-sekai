@@ -34,7 +34,7 @@ export const VILLAGE_LAYOUT: readonly string[] = [
   '......................T....#...........~~~.....#.......P',
   'T..........................#..........~~~......#........',
   '.P................,.,.,....#...b......~~~......#.......P',
-  'T.......T.....#............#..........~~~......#........',
+  'T.............#............#..........~~~......#........',
   '..............#............#.........~~~.......#.......P',
   'P.............#........:::::::::.....~~~.......#......T.',
   '.....P........#........:::::::::.....~~~....#..#..#.....',
@@ -68,6 +68,7 @@ export const VILLAGE_OBJECTS: readonly MapObjectDef[] = [
   { id: 'briefkasten-lina', kind: 'mailbox', x: 16, y: 14 },
   { id: 'verkaufskiste', kind: 'sellbox', x: 12, y: 14 },
   { id: 'laterne-lina', kind: 'lantern', x: 11, y: 14 },
+  { id: 'beet-lina', kind: 'beet', x: 6, y: 11 },
 
   // Oma Giselas Häuschen mit ihrer Bank
   { id: 'haus-gisela', kind: 'house', x: 42, y: 14, variant: 'lilac' },

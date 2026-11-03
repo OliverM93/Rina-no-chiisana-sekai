@@ -126,6 +126,13 @@ export class Character {
     this.sync(0);
   }
 
+  /** Rechter Arm nach vorn (z. B. Angel halten); undefined = normal */
+  armForward: number | undefined = undefined;
+
+  hold(obj: THREE.Object3D | null) {
+    this.chibi.hold(obj);
+  }
+
   setVisible(on: boolean) {
     this.chibi.root.visible = on;
   }
@@ -225,7 +232,7 @@ export class Character {
     const ground = this.sitting ? 0 : Math.max(0, this.heightAt(px, pz));
     this.chibi.root.position.set(px, ground + this.seatHeight, pz);
     this.chibi.root.rotation.y = this.angle;
-    this.chibi.pose({ step: this.stepPhase, moving: this.moving, running: this.running, sitting: this.sitting, blink: this.blinkLeft > 0, t: this.time });
+    this.chibi.pose({ step: this.stepPhase, moving: this.moving, running: this.running, sitting: this.sitting, blink: this.blinkLeft > 0, t: this.time, armForward: this.armForward });
   }
 
   destroy() {

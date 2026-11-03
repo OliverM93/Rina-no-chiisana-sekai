@@ -10,11 +10,14 @@ import * as THREE from 'three';
 import { DPR, TILE, UNIT } from '../config';
 import { findPath, nearestWalkable, type Tile } from '../core/grid';
 import { getDaylight } from '../core/time';
-import { findInteraction, type MapObject, OBJECT_KINDS, objectById, tileOf } from '../core/worldmap';
-import { itemCountLabel } from '../data/items';
+import { isWatered, spotKey } from '../core/garden';
+import { WEATHER_LABELS } from '../core/weather';
+import { findInteraction, type MapObject, OBJECT_KINDS, objectById, terrainAt, tileOf } from '../core/worldmap';
+import { itemCountLabel, type ToolId, TOOLS } from '../data/items';
+import { FISH_BY_ID, type FishHabitat } from '../data/species';
 import { fillPlaceholders, INTERACTIONS } from '../data/interactions';
 import { NPCS } from '../data/npcs';
-import { GISELA_WELCOME, GISELA_WELCOME_2 } from '../data/npcs/gisela';
+import { GISELA_TOOLS, GISELA_WELCOME, GISELA_WELCOME_2 } from '../data/npcs/gisela';
 import { INTRO_LINES } from '../data/story';
 import { itemIconUrl } from '../gfx/items';
 import {
@@ -30,10 +33,30 @@ import {
   welcomeLetter,
 } from '../game/gameplay';
 import { KeyboardInput } from '../game/input';
+import {
+  biteFish,
+  catchFish,
+  catchInsect,
+  catchMessage,
+  currentWeather,
+  flowerName,
+  giveStarterTools,
+  pickGardenFlower,
+  plantAt,
+  seedsInBag,
+  toggleTool,
+  updateGarden,
+  waterAt,
+} from '../game/nature';
 import type { Session } from '../game/session';
 import { mixHex, palette } from '../style/palette';
 import { Character, FEET_OFFSET } from './Character3D';
 import { Collectibles } from './Collectibles3D';
+import { Fishing3D } from './Fishing3D';
+import { Garden3D } from './Garden3D';
+import { Insects3D } from './Insects3D';
+import { makeCan, makeNet, makeRod, type ToolModel } from './models/critters';
+import { Weather3D } from './Weather3D';
 import { lampGlass, windowGlass } from './models/buildings';
 import { buildMapView3D, footprintCenter, type MapView3D } from './MapView3D';
 import { Npc } from './Npc';
@@ -43,7 +66,8 @@ type Target =
   | { kind: 'pickup'; id: string }
   | { kind: 'npc'; npc: Npc }
   | { kind: 'object'; id: string }
-  | { kind: 'flowers'; tile: Tile };
+  | { kind: 'flowers'; tile: Tile }
+  | { kind: 'beet'; tile: Tile };
 
 const SPECIAL_OBJECTS = ['verkaufskiste', 'haus-gisela', 'briefkasten-lina'];
 const DIRS = { down: [0, 1], up: [0, -1], left: [-1, 0], right: [1, 0] } as const;
@@ -84,6 +108,13 @@ export class World3D {
   private pointerDown: { x: number; y: number } | null = null;
   private lastTime = performance.now();
   private unsubscribers: Array<() => void> = [];
+  private weather: Weather3D;
+  private fishing: Fishing3D;
+  private insects: Insects3D;
+  private garden: Garden3D;
+  private held: { tool: ToolId; model: ToolModel } | null = null;
+  private baseHemi = 1.3;
+  private patienceToast = 0;
 
   constructor(
     private readonly canvas: HTMLCanvasElement,
@@ -138,6 +169,11 @@ export class World3D {
     this.scene.add(this.marker);
 
     this.leaves = this.makeLeaves();
+    this.weather = new Weather3D(this.scene);
+    this.fishing = new Fishing3D(this.scene);
+    this.insects = new Insects3D(this.scene, session, this.view, this.tweens);
+    this.garden = new Garden3D(this.scene, session, this.tweens);
+    this.interactive.add('beet-lina');
 
     canvas.addEventListener('pointerdown', this.onPointerDown);
     canvas.addEventListener('pointerup', this.onPointerUp);
@@ -148,7 +184,12 @@ export class World3D {
       this.keys.onAction(() => this.tryInteract()),
       session.bus.on('game:started', () => this.startPlay()),
       session.bus.on('appearance:changed', (a) => this.player?.setAppearance(a)),
-      session.bus.on('state:changed', () => this.updateMailbox()),
+      session.bus.on('state:changed', () => {
+        this.updateMailbox();
+        this.garden.refresh();
+      }),
+      session.bus.on('tool:changed', (t) => this.equip(t)),
+      this.keys.onKey((code) => this.onKey(code)),
     );
 
     this.resize();
@@ -187,6 +228,9 @@ export class World3D {
     this.collectibles.update(dt);
     this.view.terrain.update(now / 1000);
     this.updateLeaves(dt);
+    this.weather.update(dt, this.camTarget);
+    this.hemi.intensity = this.baseHemi + this.weather.lightning * 1.4;
+    this.insects.update(dt, this.night);
 
     const player = this.player;
     const data = this.session.data;
@@ -200,7 +244,9 @@ export class World3D {
       const intent = blocked ? { dx: 0, dy: 0, run: false } : this.keys.direction();
       if (blocked && player.hasPath && !this.cutscene) player.cancelPath();
       const grid = this.session.map.grid;
+      if (this.fishing.active && (intent.dx !== 0 || intent.dy !== 0 || player.hasPath)) this.stopFishing();
       player.update(dtMs, intent, (tx, ty) => grid.isBlocked(tx, ty));
+      this.fishing.update(dt, this.rodTip());
       data.player.x = Math.round(player.x * 10) / 10;
       data.player.y = Math.round(player.y * 10) / 10;
       data.player.facing = player.facing;
@@ -245,15 +291,24 @@ export class World3D {
     this.night = light.night;
     const n = light.night;
     const tint = light.tint;
-    const sky = mixHex(mixHex('#bfe6f7', tint, 0.55), '#2a2e5c', n * 0.75);
+    const w = currentWeather(this.session);
+    this.weather.set(w);
+    const clouds = w.clouds;
+    const sky = mixHex(mixHex(mixHex('#bfe6f7', tint, 0.55), '#9aa6b4', clouds * 0.7), '#2a2e5c', n * 0.75);
     (this.scene.background as THREE.Color | null) ?? (this.scene.background = new THREE.Color());
     (this.scene.background as THREE.Color).set(sky);
     (this.scene.fog as THREE.Fog).color.set(sky);
     this.sun.color.set(mixHex('#fff4e0', tint, 0.6));
-    this.sun.intensity = 2.3 * (1 - n) + 0.45 * n;
-    this.hemi.color.set(mixHex('#ffffff', tint, 0.7));
+    this.sun.intensity = (2.3 * (1 - n) + 0.45 * n) * (1 - clouds * 0.75);
+    this.hemi.color.set(mixHex(mixHex('#ffffff', tint, 0.7), '#c4ccd8', clouds * 0.6));
     this.hemi.groundColor.set(mixHex('#a9d48e', '#2d3560', n));
-    this.hemi.intensity = 1.35 * (1 - n * 0.55);
+    this.baseHemi = 1.35 * (1 - n * 0.55) * (1 - clouds * 0.25);
+    this.hemi.intensity = this.baseHemi;
+    (this.scene.fog as THREE.Fog).near = 26 - clouds * 8;
+    if (this.session.data) {
+      this.insects.refresh();
+      if (updateGarden(this.session)) this.garden.refresh();
+    }
     windowGlass.emissiveIntensity = Math.max(0, n - 0.15) * 1.6;
     lampGlass.emissiveIntensity = 0.2 + Math.max(0, n - 0.1) * 2.2;
     this.placeLampLights();
@@ -334,6 +389,14 @@ export class World3D {
     this.collectibles.refresh();
     checkDailyMail(this.session);
     this.updateMailbox();
+    this.fishing.stop();
+    this.equip(this.session.tool);
+    updateGarden(this.session);
+    this.garden.refresh(true);
+    this.insects.refresh(true);
+    if (data.flags.giselaWelcomed && !data.flags.toolsGiven) {
+      window.setTimeout(() => this.session.bus.emit('toast', { text: 'Oma Gisela hat etwas für dich – sprich sie doch mal an! 🎁' }), 2500);
+    }
 
     if (!data.flags.introSeen) {
       window.setTimeout(() => {
@@ -379,8 +442,9 @@ export class World3D {
           giveItem(this.session, 'keks', 1);
           this.session.bus.emit('dialog:open', {
             title,
-            lines: GISELA_WELCOME_2.map((l) => fillPlaceholders(l, this.session.interactionContext())),
+            lines: [...GISELA_WELCOME_2, ...GISELA_TOOLS].map((l) => fillPlaceholders(l, this.session.interactionContext())),
             onClose: () => {
+              giveStarterTools(this.session);
               this.session.setFlag('giselaWelcomed');
               welcomeLetter(this.session);
               this.session.save();
@@ -468,6 +532,8 @@ export class World3D {
       const d = Math.hypot(dx, dy);
       if (d < TILE * 1.35 && dx * fx + dy * fy > d * 0.35) return { kind: 'npc', npc };
     }
+    const front = { x: tile.x + fx, y: tile.y + fy };
+    if (this.garden.isSpot(front)) return { kind: 'beet', tile: front };
     const id = findInteraction(this.session.map, tile, player.facing, this.interactive);
     if (id) return { kind: 'object', id };
     if (this.collectibles.canPickFlowers(tile)) return { kind: 'flowers', tile };
@@ -477,8 +543,179 @@ export class World3D {
   private tryInteract() {
     const player = this.player;
     if (!player || this.session.uiBlocking || this.cutscene) return;
+    if (this.fishing.active) {
+      this.reelIn();
+      return;
+    }
     const target = this.resolveTarget(player);
+    const tool = this.session.tool;
+    if (tool === 'netz' && target?.kind !== 'npc' && this.swingNet()) return;
+    if (tool === 'angel' && (!target || target.kind === 'flowers') && this.castRod()) return;
     if (target) this.act(target);
+    else if (tool === 'netz') this.swingNet(true);
+    else if (tool === 'angel') this.session.bus.emit('toast', { text: 'Stell dich ans Wasser und schau aufs Wasser, dann kannst du auswerfen. 🎣' });
+    else if (tool === 'giesskanne') this.session.bus.emit('toast', { text: 'Gießen kannst du die Pflanzen in deinem Beet. 🌱' });
+  }
+
+  // -------------------------------------------------------------------------
+  // Werkzeuge
+  // -------------------------------------------------------------------------
+
+  private onKey(code: string) {
+    if (!this.player || this.session.uiBlocking || this.cutscene) return;
+    const idx = ['Digit1', 'Digit2', 'Digit3'].indexOf(code);
+    if (idx >= 0) toggleTool(this.session, TOOLS[idx]);
+    if (code === 'KeyQ') toggleTool(this.session, null);
+  }
+
+  private equip(tool: ToolId | null) {
+    const player = this.player;
+    if (!player) return;
+    if (this.fishing.active) this.stopFishing();
+    this.held = null;
+    player.hold(null);
+    player.armForward = undefined;
+    if (!tool) return;
+    const model = tool === 'angel' ? makeRod() : tool === 'netz' ? makeNet() : makeCan();
+    model.group.rotation.x = tool === 'angel' ? 0.2 : tool === 'netz' ? 0.6 : 1.2;
+    player.hold(model.group);
+    player.armForward = -0.35;
+    this.held = { tool, model };
+  }
+
+  private rodTip(): THREE.Vector3 | null {
+    const h = this.held;
+    if (!h?.model.tip) return null;
+    return h.model.group.localToWorld(h.model.tip.clone());
+  }
+
+  /** Erstes Wasser vor Lina (bis 3 Kacheln) */
+  private waterAhead(): { point: THREE.Vector3; habitat: FishHabitat } | null {
+    const player = this.player;
+    if (!player) return null;
+    const [fx, fy] = DIRS[player.facing];
+    const t = player.tile;
+    for (let d = 1; d <= 3; d++) {
+      const x = t.x + fx * d;
+      const y = t.y + fy * d;
+      const terr = terrainAt(this.session.map, x, y);
+      if (terr === 'water' || terr === 'sea' || terr === 'deep') {
+        const px = player.x * UNIT + fx * (d + 0.6);
+        const pz = player.y * UNIT + fy * (d + 0.6);
+        return { point: new THREE.Vector3(px, 0, pz), habitat: terr === 'water' ? 'fluss' : 'meer' };
+      }
+      if (terr !== 'sand' && terr !== 'grass' && terr !== 'path' && d > 1) break;
+    }
+    return null;
+  }
+
+  private castRod(): boolean {
+    const player = this.player;
+    const water = this.waterAhead();
+    if (!player || !water) return false;
+    const fish = biteFish(this.session, water.habitat);
+    if (!fish) {
+      this.session.bus.emit('toast', { text: 'Hier beißt gerade nichts. Vielleicht später?' });
+      return true;
+    }
+    player.armForward = -1.0;
+    const tip = this.rodTip() ?? new THREE.Vector3(player.x * UNIT, 1, player.y * UNIT);
+    this.fishing.cast(tip, water.point, fish);
+    return true;
+  }
+
+  private reelIn() {
+    const fish = this.fishing.reel();
+    const player = this.player;
+    if (!fish) {
+      const now = performance.now();
+      if (now - this.patienceToast > 2500) {
+        this.patienceToast = now;
+        this.session.bus.emit('toast', { text: 'Geduld … warte, bis der Schwimmer richtig abtaucht. 🎣' });
+      }
+      return;
+    }
+    if (player) {
+      player.armForward = -1.6;
+      window.setTimeout(() => this.player && this.held && (this.player.armForward = -0.35), 400);
+    }
+    const result = catchFish(this.session, fish);
+    this.session.bus.emit('dialog:open', { title: fish.name, lines: [...catchMessage(fish.name, 'fisch', result), FISH_BY_ID[fish.id].description] });
+  }
+
+  private stopFishing() {
+    this.fishing.stop();
+    if (this.player && this.held) this.player.armForward = -0.35;
+  }
+
+  /** Kescher schwingen – fängt ein Insekt in Reichweite. */
+  private swingNet(force = false): boolean {
+    const player = this.player;
+    if (!player) return false;
+    const [fx, fy] = DIRS[player.facing];
+    const key = this.insects.near(player.x, player.y, fx, fy);
+    if (!key && !force) return false;
+    this.tweens.add(320, (k) => (player.armForward = -2.4 + k * 2.0), () => (player.armForward = this.held ? -0.35 : undefined));
+    if (!key) return true;
+    const to = new THREE.Vector3(player.x * UNIT + fx * 0.5, 0.6, player.y * UNIT + fy * 0.5);
+    const def = this.insects.take(key, to);
+    if (!def) return true;
+    window.setTimeout(() => {
+      const result = catchInsect(this.session, def);
+      this.session.bus.emit('dialog:open', { title: def.name, lines: [...catchMessage(def.name, 'insekt', result), def.description] });
+    }, 330);
+    return true;
+  }
+
+  // -------------------------------------------------------------------------
+  // Beet
+  // -------------------------------------------------------------------------
+
+  private useBeet(t: Tile) {
+    const data = this.session.data;
+    if (!data) return;
+    const plant = data.world.garden[spotKey(t.x, t.y)];
+    const day = this.session.today();
+    if (!plant) {
+      const seeds = seedsInBag(this.session);
+      if (seeds.length === 0) {
+        this.session.bus.emit('toast', { text: 'Hier könntest du etwas pflanzen – aber du hast keine Samen dabei. 🌱' });
+        return;
+      }
+      this.session.bus.emit('ui:open', {
+        kind: 'seeds',
+        onPick: (seedId) => {
+          if (plantAt(this.session, t.x, t.y, seedId)) {
+            this.garden.bounce(t);
+            this.session.bus.emit('toast', { text: 'Eingepflanzt! Jetzt noch gießen. 💧' });
+          }
+        },
+        onCancel: () => undefined,
+      });
+      return;
+    }
+    const name = flowerName(plant.flower);
+    if (plant.stage === 3) {
+      const got = pickGardenFlower(this.session, t.x, t.y);
+      if (got) {
+        this.garden.bounce(t);
+        this.session.bus.emit('toast', { text: got.seed ? `${name} gepflückt – und ein paar Samen gefunden! 🌱` : `${name} gepflückt! 💐`, icon: itemIconUrl(got.flower) });
+      }
+      return;
+    }
+    if (this.session.tool === 'giesskanne') {
+      this.tweens.add(600, (k) => this.player && (this.player.armForward = -0.6 - Math.sin(k * Math.PI) * 0.5), () => this.player && (this.player.armForward = -0.35));
+      if (waterAt(this.session, t.x, t.y)) {
+        this.garden.bounce(t);
+        this.session.bus.emit('toast', { text: `Gegossen! Morgen wächst die ${name} ein Stück. 💧` });
+      } else {
+        this.session.bus.emit('toast', { text: 'Die Erde ist noch schön feucht. Morgen wieder!' });
+      }
+      return;
+    }
+    const stage = ['ist frisch eingepflanzt', 'keimt', 'hat eine Knospe'][plant.stage];
+    const watered = isWatered(plant, day) ? 'Heute schon gegossen. 💧' : 'Mit der Gießkanne (Taste 3) gießen, dann wächst sie bis morgen. 💧';
+    this.session.bus.emit('dialog:open', { title: name, lines: [`Die ${name} ${stage}.`, watered] });
   }
 
   private act(target: Target) {
@@ -493,6 +730,9 @@ export class World3D {
         return;
       case 'flowers':
         this.collectibles.pickFlowers(target.tile);
+        return;
+      case 'beet':
+        this.useBeet(target.tile);
         return;
       case 'object':
         this.useObject(target.id);
@@ -531,6 +771,12 @@ export class World3D {
       this.session.bus.emit('ui:open', { kind: 'mail' });
       return;
     }
+    if (obj.kind === 'beet') {
+      const [fx, fy] = DIRS[player.facing];
+      const t = { x: player.tile.x + fx, y: player.tile.y + fy };
+      if (this.garden.isSpot(t)) this.useBeet(t);
+      return;
+    }
     if (id === 'haus-gisela') {
       this.knockAtHome('gisela');
       return;
@@ -565,6 +811,19 @@ export class World3D {
     if (!player) return;
     npc.startTalk(player.x, player.y);
     player.faceTowards(npc.x, npc.y);
+    const data = this.session.data;
+    if (npc.def.id === 'gisela' && data?.flags.giselaWelcomed && !data.flags.toolsGiven) {
+      this.session.bus.emit('dialog:open', {
+        title: npc.def.name,
+        lines: ['Lina! Gut, dass du kommst.', ...GISELA_TOOLS.slice(1)].map((l) => fillPlaceholders(l, this.session.interactionContext())),
+        onClose: () => {
+          giveStarterTools(this.session);
+          this.session.save();
+          npc.endTalk();
+        },
+      });
+      return;
+    }
     const out = talkToNpc(this.session, npc.def.id);
     this.npcDialog(npc, out.lines, out.hearts);
   }
@@ -747,7 +1006,7 @@ export class World3D {
 
   /** Für Tests & Fehlersuche */
   get debug() {
-    return { player: this.player, npcs: this.npcs, collectibles: this.collectibles, resolveTarget: () => (this.player ? this.resolveTarget(this.player) : null), tryInteract: () => this.tryInteract() };
+    return { player: this.player, npcs: this.npcs, collectibles: this.collectibles, insects: this.insects, fishing: this.fishing, weather: () => WEATHER_LABELS[currentWeather(this.session).kind], resolveTarget: () => (this.player ? this.resolveTarget(this.player) : null), tryInteract: () => this.tryInteract() };
   }
 
   dispose() {

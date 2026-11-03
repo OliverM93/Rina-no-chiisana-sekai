@@ -19,6 +19,7 @@ import {
   makePlotMarks,
   makeSellbox,
   makeSign,
+  makeBeet,
 } from './models/buildings';
 import { FLOWER_COLORS, makeBush, makeFlower, makePine, makeRock, makeTree, type TreeModel } from './models/nature';
 import { buildTerrain, type Terrain3D } from './terrain3d';
@@ -123,6 +124,9 @@ export function buildMapView3D(scene: THREE.Scene, map: WorldMap, season: Season
         break;
       case 'fountain':
         node = makeFountain();
+        break;
+      case 'beet':
+        node = makeBeet(o.w, o.h);
         break;
       case 'bridge':
         node = makeBridge();

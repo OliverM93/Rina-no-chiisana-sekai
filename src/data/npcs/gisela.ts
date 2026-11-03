@@ -29,9 +29,9 @@ export const GISELA: NpcDef = {
     { from: '22:00', label: 'schläft', activity: { kind: 'zuhause', sleeping: true } },
   ],
   preferences: {
-    loves: ['pfirsich', 'herzmuschel', 'wildblumen'],
-    likes: ['apfel', 'jakobsmuschel', 'schneckenhaus', 'seestern', 'glitzerstein'],
-    dislikes: ['birne', 'ast', 'stein'],
+    loves: ['pfirsich', 'herzmuschel', 'wildblumen', 'rose', 'vergissmeinnicht', 'hering'],
+    likes: ['apfel', 'jakobsmuschel', 'schneckenhaus', 'seestern', 'glitzerstein', 'tulpe', 'lavendel', 'sonnenblume', 'scholle', 'dorsch', 'marienkaefer', 'zitronenfalter'],
+    dislikes: ['birne', 'ast', 'stein', 'waldameise', 'weinbergschnecke', 'maikaefer', 'heupferd', 'grashuepfer', 'ohrenqualle', 'aal', 'wels', 'strandkrabbe'],
   },
 
   dialogue: {
@@ -45,6 +45,10 @@ export const GISELA: NpcDef = {
       { text: ['Sonntag! Da gibt\'s Kuchen. Das ist Gesetz.', 'Wer das Gesetz gemacht hat? Ich. Gerade eben.'], when: { weekdays: [0] }, weight: 2 },
       { text: ['Montag.', 'Ich hab beschlossen, dass Montage dieses Jahr ausfallen. Hat aber keiner auf mich gehört.'], when: { weekdays: [1] }, weight: 2 },
       { text: ['Alles Liebe zum Geburtstag, mein Schatz! 🎂', 'Wie alt bist du jetzt? … Nein, sag nichts. Für mich bleibst du sowieso mein kleines Mäuschen.', 'Ende der Diskussion.'], when: { tags: ['geburtstag-lina'] }, weight: 10 },
+      { text: ['Bei dem Regen gehst du raus?', 'Ohne Schirm?! Du holst dir noch was weg!', '… Na ja, wenigstens werden die Blumen gegossen.'], when: { tags: ['wetter-regen'] }, weight: 3 },
+      { text: ['Hörst du das Donnern? Da oben wird Möbel gerückt.', 'Hat meine Mutter immer gesagt. Und die hatte auch immer das letzte Wort.'], when: { tags: ['wetter-gewitter'] }, weight: 3 },
+      { text: ['Schnee! Wie früher.', 'Da sind wir mit dem Schlitten zur Schule. Bergauf. In beide Richtungen.'], when: { tags: ['wetter-schnee'] }, weight: 3 },
+      { text: ['Hast du den Regenbogen gesehen?', 'Am Ende liegt ein Topf voll Gold, sagt man.', 'Wenn du ihn findest: Halbe-halbe!'], when: { tags: ['regenbogen'] }, weight: 4 },
       { text: ['Kindchen! Mein Lieblingsbesuch.', '… Ja, ich weiß, du bist mein einziger Besuch. Trotzdem.'], when: { minHearts: 2 } },
     ],
     chat: [
@@ -73,6 +77,10 @@ export const GISELA: NpcDef = {
       { text: ['Weißt du, ich bin froh, dass du hier bist.', '…', 'So. Genug geschmust. Geh spielen.'], when: { minHearts: 3 } },
       { text: ['Du bist mein Lieblingsenkelkind.', 'Sag\'s bloß nicht weiter.'], when: { minHearts: 4 } },
       { text: ['Lina, du siehst blass aus.', '… Doch. Keine Widerrede.', 'Ich hab das letzte Wort. Das hab ich mir verdient.'] },
+      { text: ['Hast du schon was gefangen mit Opas Angel?', 'Der hat früher Hechte rausgezogen, so groß wie ich!', '… Na gut, wie mein Arm. Aber trotzdem.'] },
+      { text: ['Dein Beet! Gieß es ordentlich.', 'Aber nicht zu viel. Und nicht zu wenig. Genau richtig eben.', 'Wie viel genau richtig ist? Das weiß man einfach.'] },
+      { text: ['Ein Hering in Sahnesoße mit Pellkartoffeln.', 'Köstlich! Da kommen mir die Tränen.'] },
+      { text: ['Fass mir bloß keine Krabbeltiere an und bring die dann zu mir!', 'Außer Marienkäfer. Die bringen Glück.'] },
     ],
     gifts: {
       liebt: [
@@ -100,6 +108,12 @@ export const GISELA: NpcDef = {
       seestern: ['Ein Seestern! Sowas hab ich zuletzt gesehen, da war ich so klein wie du damals.', 'Den häng ich mir an die Tür. Damit alle sehen, was meine Enkelin findet.'],
       glitzerstein: ['Oh, der funkelt ja!', 'Den versteck ich gut. Hier gibt\'s bestimmt Diebe. … Möwen zum Beispiel.'],
       pfirsich: ['Ein Pfirsich! Köstlich! 😋', 'Die aus dem Laden sind alle gespritzt. Die hier sind ehrlich.'],
+      hering: ['Ein Hering! Wie früher an der Ostsee!', 'Köstlich! Den leg ich gleich ein. Mit Zwiebeln.'],
+      rose: ['Eine Rose … für mich?', 'Ach, Kindchen. Das hat schon lange keiner mehr gemacht.', '… Ich hab nur was im Auge. Gar nichts ist.'],
+      marienkaefer: ['Ein Marienkäfer! Der bringt Glück.', 'Den lass ich gleich im Garten fliegen. Flieg, Käferchen, flieg!'],
+      weinbergschnecke: ['Pfui! Eine Schnecke!', 'Die frisst mir doch den ganzen Salat weg! Bring die bloß weit weg!'],
+      ohrenqualle: ['Iiih! Das glibbert ja!', 'Pfui Teufel. Damit gehst du sofort zurück ins Meer!'],
+      aal: ['Ein Aal! Der zappelt ja noch!', 'Pfui! Der sieht aus wie eine Schlange. Nimm den weg!'],
     },
     giftRepeat: ['Schon wieder ein Geschenk? Du verwöhnst mich ja!', 'Aber jetzt ist Schluss, sonst werd ich noch eitel.'],
     heartUp: [
@@ -152,4 +166,15 @@ export const GISELA_WELCOME_2: readonly string[] = [
   'Was du nicht brauchst, steckst du in die Verkaufskiste vor deinem Haus. Dafür gibt\'s Sternchen.',
   'So. Ich geh jetzt Kaffee kochen. Besuch mich mal!',
   '… Und zwar bald. Ich hab das letzte Wort.',
+];
+
+/** Oma Gisela gibt Lina Werkzeuge (beim Einzug bzw. nach dem M4-Update beim nächsten Gespräch) */
+export const GISELA_TOOLS: readonly string[] = [
+  'Ach, und warte mal. Ich hab hier noch was für dich.',
+  'Opas alte Angel. Die hat er gehütet wie seinen Augapfel.',
+  'Dazu ein Kescher für Schmetterlinge – aber bring mir keine Krabbeltiere ins Haus!',
+  'Und eine Gießkanne. In Rosa. Rosa steht dir.',
+  'Und ein paar Blumensamen für das Beet neben deinem Haus. Gießen nicht vergessen!',
+  'Mit den Tasten 1, 2 und 3 nimmst du die Sachen in die Hand. Q steckt sie wieder weg.',
+  '… Woher ich das weiß? Ich weiß alles. Ende der Diskussion.',
 ];

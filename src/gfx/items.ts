@@ -4,6 +4,7 @@
  */
 import { darken, lighten } from '../style/palette';
 import { blob, type Ctx, ellipse, roundRect, shine } from './canvas';
+import { natureIcons } from './nature-icons';
 
 export const ICON = 32;
 
@@ -288,6 +289,8 @@ const DRAW: Record<string, Draw> = {
     ellipse(ctx, 21, 23, 4, 4, '#e9c08a', darken('#e9c08a', 0.3), 0.8);
   },
 };
+
+Object.assign(DRAW, natureIcons());
 
 /** Zeichnet das Symbol eines Gegenstands (32×32 Einheiten). */
 export function drawItemIcon(ctx: Ctx, itemId: string) {

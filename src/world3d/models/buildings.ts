@@ -157,6 +157,28 @@ export function makeMailbox(): { group: THREE.Group; flag: THREE.Object3D; lette
   return { group: g, flag, letter };
 }
 
+/** Gartenbeet: Holzrahmen mit Erde, Ursprung = Mitte */
+export function makeBeet(w: number, h: number): THREE.Group {
+  const g = new THREE.Group();
+  const wood = palette.wood.base;
+  const soil = b(w - 0.16, 0.12, h - 0.16, palette.soil.dry, 0, 0.06, 0);
+  soil.name = 'erde';
+  soil.receiveShadow = true;
+  g.add(soil);
+  for (const z of [-h / 2 + 0.06, h / 2 - 0.06]) g.add(b(w, 0.18, 0.12, wood, 0, 0.09, z));
+  for (const x of [-w / 2 + 0.06, w / 2 - 0.06]) g.add(b(0.12, 0.18, h - 0.1, wood, x, 0.09, 0));
+  // kleine Erdhügel je Pflanzplatz
+  for (let ix = 0; ix < w; ix++) {
+    for (let iz = 0; iz < h; iz++) {
+      const hill = mesh(new THREE.SphereGeometry(0.3, 10, 6, 0, Math.PI * 2, 0, Math.PI / 2), toon(darken(palette.soil.dry, 0.05)));
+      hill.scale.set(1, 0.25, 1);
+      hill.position.set(ix - w / 2 + 0.5, 0.11, iz - h / 2 + 0.5);
+      g.add(hill);
+    }
+  }
+  return g;
+}
+
 export function makeSellbox(): THREE.Group {
   const g = new THREE.Group();
   const wood = palette.wood.light;

@@ -21,6 +21,7 @@ export type ObjectKind =
   | 'fountain'
   | 'bridge'
   | 'sellbox'
+  | 'beet'
   | NatureKind;
 
 export interface MapObjectDef {
@@ -59,6 +60,13 @@ export const OBJECT_KINDS: Record<ObjectKind, KindInfo> = {
   fountain: { w: 3, h: 2, blocks: 'all', interactFrom: [[1, 2], [-1, 0], [3, 0], [1, -1], [-1, 1], [3, 1]] },
   bridge: { w: 3, h: 1, blocks: 'none' },
   sellbox: { w: 1, h: 1, blocks: 'all', interactFrom: [[0, 1], [1, 0]] },
+  // Beet 4×2: jede Kachel ist ein Pflanzplatz, erreichbar von allen Seiten
+  beet: {
+    w: 4,
+    h: 2,
+    blocks: 'all',
+    interactFrom: [[0, 2], [1, 2], [2, 2], [3, 2], [0, -1], [1, -1], [2, -1], [3, -1], [-1, 0], [-1, 1], [4, 0], [4, 1]],
+  },
   tree: { w: 1, h: 1, blocks: 'all', interactFrom: AROUND },
   pine: { w: 1, h: 1, blocks: 'all' },
   bush: { w: 1, h: 1, blocks: 'all' },
