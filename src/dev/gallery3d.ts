@@ -45,6 +45,8 @@ const people: Array<[string, Appearance]> = [
   ['Christin', LOOKS.christin],
   ['Lars', LOOKS.lars],
   ['Jens', LOOKS.jens],
+  ['Thalia', LOOKS.thalia],
+  ['Oli', LOOKS.oli],
 ];
 const chibis: Chibi3D[] = [];
 
@@ -55,7 +57,7 @@ function build() {
   if (view === 'figuren') {
     people.forEach(([, a], i) => {
       const c = new Chibi3D(a);
-      c.root.position.set((i - (people.length - 1) / 2) * 0.9, 0, 0);
+      c.root.position.set((i - (people.length - 1) / 2) * 0.8, 0, 0);
       content.add(c.root);
       chibis.push(c);
     });
@@ -66,7 +68,7 @@ function build() {
     content.add(bench, sitter.root);
     sitter.pose({ step: 0, moving: false, running: false, sitting: true, blink: false, t: 0 });
     const zoom = Number(params.get('zoom') ?? 1);
-    camera.position.set(Math.sin(angle) * 6.5 * zoom, 2.4 * zoom, Math.cos(angle) * 6.5 * zoom);
+    camera.position.set(Math.sin(angle) * 7.6 * zoom, 2.4 * zoom, Math.cos(angle) * 7.6 * zoom);
     camera.lookAt(Number(params.get('x') ?? 0), 0.5, -0.3);
   } else if (view === 'natur') {
     const items: THREE.Object3D[] = [];

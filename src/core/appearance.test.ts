@@ -11,6 +11,14 @@ describe('Aussehen', () => {
     expect(a.smile).toBe('laecheln');
     expect(a.beardColor).toBe('');
     expect(a.glassesShape).toBe('rund');
+    expect(a.scarf).toBe('');
+    expect(a.earrings).toBe(false);
+  });
+
+  it('übernimmt Halstuch, Ohrringe, Schnurrbart und neue Frisur', () => {
+    const a = normalizeAppearance({ scarf: '#3f7a62', earrings: true, beard: 'schnurrbart', hairStyle: 'glatt', outfit: 'troyer' });
+    expect(a).toMatchObject({ scarf: '#3f7a62', earrings: true, beard: 'schnurrbart', hairStyle: 'glatt', outfit: 'troyer' });
+    expect(normalizeAppearance({ scarf: 'grün' }).scarf).toBe('');
   });
 
   it('verwirft ungültige Werte', () => {

@@ -53,6 +53,8 @@ Legende: ✅ erledigt · 🚧 in Arbeit · ⬜ geplant
   Lächeln/Grinsen/Zahnlücke; neue Frisuren (kurz geschoren, zerzaust) und Outfits (Mantel & Schal, Weste,
   Streifenhemd, Hoodie); Aussehen aller Liebsten in `data/npcs/looks.ts`
 - ✅ Dächer mit Ziegelreihen, weichere Flussufer
+- ✅ Thalia & Oli nach Fotos (glatte Haare mit Mittelscheitel, Schnurrbart, Troyer-Pulli, Halstuch, Creolen);
+  Oma Gisela ohne Brille, Linas Locken länger; Halstuch & Ohrringe auch im Editor
 
 ## ⬜ M4 – Natur: Angeln, Insekten, Gärtnern, Wetter, Museum
 
@@ -103,7 +105,7 @@ Legende: ✅ erledigt · 🚧 in Arbeit · ⬜ geplant
 
 ## ❓ Offene Fragen (bei Gelegenheit klären)
 
-- Aussehen von Oli und Thalia (gern per Foto); Geburtstage der Bewohner
+- Geburtstage der Bewohner
 - Christins Rolle im Dorf (z. B. etwas mit Ordnung/Sauberkeit – Aufräum-Aufgaben, Gartenpflege?)
 - Wer zieht als Erstes ein (nach Oma Gisela)? Welche Bauplätze für wen?
 - Lieblingsessen/-farben/-hobbys der Bewohner für Geschenke & Dialoge
