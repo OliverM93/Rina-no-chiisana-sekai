@@ -33,6 +33,10 @@ oder für ein anderes Gerät), Vollbild, Hilfe.
 Die Uhrzeit im Dorf ist die **echte Uhrzeit**: Abends gehen die Laternen an, nachts leuchten die Fenster,
 und jede Jahreszeit sieht anders aus.
 
+**Linas Liebste** (Lina, Oma Gisela, Olaf, Christin, Lars, Jens):
+
+![Figuren](docs/screenshots/3d-familie.png)
+
 | Oma Gisela auf ihrer Bank | Dorfplatz am Abend | Nacht |
 |---|---|---|
 | ![Gisela](docs/screenshots/3d-gisela.png) | ![Abend](docs/screenshots/3d-abend.png) | ![Nacht](docs/screenshots/3d-nacht.png) |
