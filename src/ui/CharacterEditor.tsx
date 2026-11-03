@@ -2,7 +2,7 @@
  * Charakter-Editor: Frisur, Haarfarbe, Hautton, Outfit, Farben – mit
  * Live-Vorschau. Beim neuen Spiel zusätzlich: Name des Dorfes.
  */
-import { useEffect, useRef, useState } from 'preact/hooks';
+import { useState } from 'preact/hooks';
 import {
   type Appearance,
   HAIR_COLORS,
@@ -12,7 +12,7 @@ import {
   SKIN_TONES,
 } from '../core/appearance';
 import { DEFAULT_VILLAGE_NAME } from '../core/save';
-import { type ChibiDir, drawChibiPreview } from '../gfx/chibi';
+import { Preview3D } from './Preview3D';
 
 const VILLAGE_IDEAS = [
   'Wolkenwiese',
@@ -27,13 +27,6 @@ const VILLAGE_IDEAS = [
   'Glühwürmchenhain',
 ];
 
-const VIEWS: Array<{ dir: ChibiDir; flip: boolean }> = [
-  { dir: 'down', flip: false },
-  { dir: 'side', flip: true },
-  { dir: 'up', flip: false },
-  { dir: 'side', flip: false },
-];
-
 interface Props {
   mode: 'new' | 'edit';
   initial: Appearance;
@@ -45,34 +38,7 @@ interface Props {
 export function CharacterEditor({ mode, initial, initialVillage, onDone, onCancel }: Props) {
   const [a, setA] = useState<Appearance>(initial);
   const [village, setVillage] = useState(initialVillage ?? DEFAULT_VILLAGE_NAME);
-  const [view, setView] = useState(0);
-  const [blink, setBlink] = useState(false);
-  const canvasRef = useRef<HTMLCanvasElement | null>(null);
-
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const ratio = Math.min(2, window.devicePixelRatio || 1);
-    canvas.width = 220 * ratio;
-    canvas.height = 270 * ratio;
-    const v = VIEWS[view];
-    drawChibiPreview(canvas, a, v.dir, { leg: 0, blink });
-    canvas.style.transform = v.flip ? 'scaleX(-1)' : '';
-  }, [a, view, blink]);
-
-  // gelegentlich blinzeln
-  useEffect(() => {
-    let timeout = 0;
-    const loop = () => {
-      timeout = window.setTimeout(() => {
-        setBlink(true);
-        window.setTimeout(() => setBlink(false), 140);
-        loop();
-      }, 2200 + Math.random() * 2600);
-    };
-    loop();
-    return () => window.clearTimeout(timeout);
-  }, []);
+  const [angle, setAngle] = useState(0);
 
   const set = <K extends keyof Appearance>(key: K, value: Appearance[K]) => setA((prev) => ({ ...prev, [key]: value }));
 
@@ -83,9 +49,9 @@ export function CharacterEditor({ mode, initial, initialVillage, onDone, onCance
         <div class="editor-body">
           <div class="editor-preview">
             <div class="preview-stage">
-              <canvas ref={canvasRef} class="preview-canvas" />
+              <Preview3D appearance={a} angle={angle} />
             </div>
-            <button class="btn small" onClick={() => setView((v) => (v + 1) % VIEWS.length)}>
+            <button class="btn small" onClick={() => setAngle((v) => v + Math.PI / 2)}>
               ⟲ Drehen
             </button>
           </div>

@@ -35,28 +35,28 @@ Figuren sind **Chibi-Menschen** (keine Tiere) – erkennbar an Frisur, Bart, Bri
 
 ## Tech-Stack (Entscheidung)
 
-**TypeScript + Vite + Phaser 4 (WebGL) + Preact-Oberfläche**, Tests mit **Vitest**, Deployment über
-**GitHub Pages**.
+**TypeScript + Vite + Three.js (WebGL-3D) + Preact-Oberfläche**, Tests mit **Vitest**, Deployment über
+**GitHub Pages**. Zielplattform: **Laptop/PC im Browser** (kein Handy nötig).
 
 | Baustein | Wahl | Begründung |
 |---|---|---|
 | Sprache | TypeScript (strict) | Typsichere Daten (Items, NPCs, Dialoge), gut wartbar |
 | Build | Vite | schneller Dev-Server, statischer Build für GitHub Pages (`base: './'`) |
-| Engine | Phaser 4 | Szenen, Kamera, Input (Maus/Touch), Tweens, Tilemaps – stabiler Nachfolger von Phaser 3 |
-| Oberfläche | HTML/CSS-Overlay mit Preact | scharfer Text, scrollbare Listen, responsive, gut auf dem Handy |
-| Grafik | prozedural (Canvas 2D → Texturen) | keine externen Assets, Figuren aus Parametern → Editor & Animation |
-| Sound | Web Audio API (ab M7) | selbst generiert |
+| 3D | Three.js | verbreitet, schlank, flüssig; Toon-Shading, Schatten, Licht |
+| Oberfläche | HTML/CSS-Overlay mit Preact | scharfer Text, Listen, Fenster |
+| Grafik | prozedural: 3D-Modelle aus Grundformen, Gesichter/Gelände als Canvas-Texturen | keine externen Modelle/Assets, Figuren aus Parametern → Editor & Animation |
+| Sound | Web Audio API (später) | selbst generiert |
 | Speichern | localStorage, versioniert + Migrationen, Export/Import als JSON | kein Spielstand-Verlust |
 | Tests | Vitest | Kernlogik ohne Browser testbar |
 
-**Warum:** Lina startet das Spiel einfach per Link (später auch als installierbare PWA). Der Kawaii-Stil lässt
-sich in 2D mit Vektorzeichnungen und Tweens sehr gut selbst erzeugen. Ein quadratisches Grid in leicht
-schräger Draufsicht eignet sich gut für den Bau-/Einrichtungsmodus. Alles ist Text/Code → für Agenten gut
-umsetzbar, testbar (auch per Headless-Browser) und langfristig erweiterbar. 2D-WebGL läuft flüssig.
+**Stil-Ziel:** 3D im Geist von Animal Crossing, Grafik ungefähr „PS2-Level“: runde Low-Poly-Formen,
+weiches Toon-Licht, Schatten, Tag & Nacht. Kamera fest schräg von oben (Mausrad = Zoom).
 
-**Verworfene Alternativen:** Godot 4 (großer Web-Export, ohne visuellen Editor schwer testbar),
-PixiJS + Eigenbau (mehr Code ohne Mehrwert), Three.js (3D-Assets & Bau-Modus viel aufwendiger),
-Electron/Tauri (unnötig, da Web-App/PWA; später als Hülle möglich).
+**Historie:** M1/M2 entstanden in 2D mit Phaser 4. In M3 auf Wunsch auf 3D (Three.js) umgestiegen –
+Spiellogik, Daten, Spielstand und Oberfläche blieben erhalten.
+
+**Verworfene Alternativen:** Babylon.js (schwerer als nötig), Godot (großer Web-Export, schwer testbar),
+Phaser (nur 2D).
 
 ## Befehle
 
@@ -69,17 +69,17 @@ npm run build        # Produktions-Build nach dist/ (inkl. Typecheck)
 npm run preview      # Build lokal ansehen → http://localhost:4173
 ```
 
-- **Grafik-Galerie (nur Dev):** <http://localhost:5173/gallery.html> zeigt alle prozeduralen Grafiken
-  (Figuren in allen Frames, Bäume je Jahreszeit, Gebäude, Gelände-Tilesets). Ideal zum Gestalten.
+- **3D-Galerie (nur Dev):** <http://localhost:5173/gallery.html> zeigt Figuren, Natur und Gebäude in 3D
+  (`?ansicht=figuren|natur|gebaeude`, `&winkel=0..360`, Tasten 1–3, Maus ziehen = drehen).
 - **Zeit testen:** `?zeit=21:30` und/oder `?datum=2026-12-24` an die URL hängen. Die Uhr startet dort und
   läuft normal weiter.
-- **Debug im Dev-Modus:** `window.__rina` enthält `{ session, game, ui }`.
+- **Debug im Dev-Modus:** `window.__rina` enthält `{ session, game, ui }` (`game.debug` → Lina, Bewohner …).
 
 ## Architektur
 
 ```
 src/
-  core/        Reine Spiellogik – KEIN Phaser, KEIN DOM. Hier gehören Tests hin (*.test.ts).
+  core/        Reine Spiellogik – KEIN Three.js, KEIN DOM. Hier gehören Tests hin (*.test.ts).
     time.ts        Echtzeit-Uhr, Jahreszeiten, Tagesphasen, Tageslicht, URL-Zeit-Override
     save.ts        Spielstand-Format, Versionierung, Migrationen, Normalisierung, SaveManager
     appearance.ts  Aussehen von Figuren (Parameter für die Chibi-Zeichnung)
@@ -97,15 +97,17 @@ src/
   data/        Inhalte (leicht erweiterbar): Karten, Interaktionstexte, Story-Texte,
                items.ts (alle Gegenstände + Preise), npcs/ (je Bewohner eine Datei)
   style/       palette.ts – EINZIGE Quelle für Farben (auch CSS-Variablen der UI)
-  gfx/         Prozedurale Grafiken (Canvas 2D): chibi.ts, objects.ts, terrain.ts, effects.ts;
-               textures.ts überträgt sie in Phaser
-  game/        Phaser-Schicht
+  gfx/         2D-Zeichnungen für Texturen & Symbole: terrain.ts (Gelände-Textur), items.ts (Symbole),
+               canvas.ts (Hilfen)
+  game/        Sitzung & Spielregeln (ohne Darstellung)
     session.ts     laufende Sitzung: Spielstand, Uhr, Karte, Event-Bus Welt ↔ UI
     gameplay.ts    Spielregeln: Sammeln, Verkaufen, Plaudern, Schenken, Post
-    scenes/        BootScene (Texturen erzeugen), WorldScene (Welt, Kamera, Input, Interaktion)
-    world/         MapView, Character (Lina & Bewohner), Npc (Tagesablauf-KI),
-                   Collectibles (Boden, Obstbäume, Blumen), DayNight, Ambient
     input.ts       eigene Tastatursteuerung (blockiert keine Textfelder)
+  world3d/     Three.js-Schicht
+    World3D.ts     Renderer, Kamera, Licht/Tag-Nacht, Interaktion, Maus (Raycasting), Story-Szenen
+    MapView3D.ts   baut die Welt aus dem Kartenmodell; terrain3d.ts (Höhenraster + gemalte Textur)
+    Character3D.ts Figur (Bewegung, Wegfolgen, Sitzen); Npc.ts (Tagesablauf-KI); Collectibles3D.ts
+    models/        chibi3d.ts (Figuren), nature.ts, buildings.ts; materials.ts (Toon-Materialien)
   ui/          Preact-Overlay: App, TitleScreen, CharacterEditor, Hud, DialogBox (mit Auswahl & Herzen),
                InventoryPanel (Tasche/Verkaufen/Schenken), MailPanel, Menu, store.ts
   dev/         Entwickler-Galerie (wird nicht ins Spiel gebaut)
@@ -113,23 +115,24 @@ src/
 
 ### Wichtige Konzepte
 
-- **Schichten:** `core` (Logik) ← `data` (Inhalte) ← `gfx` (Zeichnen) ← `game` (Phaser) / `ui` (Preact).
+- **Schichten:** `core` (Logik) ← `data` (Inhalte) ← `gfx` (Zeichnen) ← `game` (Regeln) ← `world3d` (Three.js) / `ui` (Preact).
   `core` darf nie aus `game`/`ui`/`gfx` importieren.
 - **Event-Bus:** Welt und UI sprechen nur über `session.bus` (`dialog:open`, `game:started`,
   `appearance:changed`, …). Die UI setzt `session.uiBlocking`, wenn Fenster offen sind.
-- **Koordinaten:** 1 Kachel = `TILE` = 64 Welteinheiten. Texturen werden mit `RES` (2–3) Pixeln pro
-  Welteinheit gezeichnet und mit `setScale(1/RES)` platziert → scharf auf Retina.
-- **Leicht schräge Draufsicht:** Objekte werden nach ihrer Fuß-/Grundlinie sortiert (`depth = y`).
-  Kollision nur über eine kleine Fuß-Box. Bäume/Häuser werden halbtransparent, wenn Lina dahinter steht.
-- **Gelände:** „Dual-Grid“-Autotiling – pro Geländeebene 16 Eckmasken, prozedural mit runden Kanten gezeichnet
-  (`gfx/terrain.ts`). Karte = ASCII in `data/maps/village.ts` (Legende dort).
+- **Koordinaten:** Spiellogik & Spielstand rechnen in Welteinheiten (1 Kachel = `TILE` = 64). Three.js
+  rechnet in Kacheln (`UNIT = 1/64`): Logik-x → 3D-X, Logik-y → 3D-Z, Höhe = Y. Vorne/Kamera = +Z.
+- **Modelle:** Ursprung = Mitte der Grundfläche auf Bodenhöhe, Tür/Blick zeigt nach +Z.
+  Kollision nur über eine kleine Fuß-Box. Bäume/Häuser zwischen Kamera und Lina werden halbtransparent.
+- **Gelände:** Höhenraster (Fluss/Meer abgesenkt) + Textur, die per „Dual-Grid“-Autotiling mit runden Kanten
+  gemalt wird (`gfx/terrain.ts`, `world3d/terrain3d.ts`). Karte = ASCII in `data/maps/village.ts`.
 - **Objekte** (Häuser, Schilder, Laternen …) stehen in `VILLAGE_OBJECTS`; Größe, Kollision und
   Interaktionspunkte pro Art in `OBJECT_KINDS` (`core/worldmap.ts`).
 - **Interaktionen:** Texte in `data/interactions.ts`, abhängig von Tageszeit/Jahreszeit/Tag. `{dorf}` wird
   ersetzt. Ein Test prüft, dass jedes interaktive Objekt zu Fuß erreichbar ist.
-- **Figuren:** `gfx/chibi.ts` zeichnet jede Figur aus `Appearance` (Frisur, Farben, Größe, Statur, Bart,
-  Brille …) – 12 Frames (3 Richtungen × Stand/Blinzeln/2 Schritte); rechts = gespiegelt.
-- **Tag & Nacht:** Multiplikations-Overlay über der Welt + additive Lichtscheine (Laternen, Fenster).
+- **Figuren:** `world3d/models/chibi3d.ts` baut jede Figur aus `Appearance` (Frisur, Farben, Größe, Statur,
+  Bart, Brille …): Kopf mit gezeichneter Gesichtstextur (Blinzeln = Texturwechsel), Arme/Beine mit Gelenken.
+- **Tag & Nacht:** Sonne/Himmel/Nebel nach Uhrzeit, Fenster & Laternen leuchten (Emissive + Punktlichter
+  an den nächstgelegenen Laternen).
 - **Bewohner:** Daten in `src/data/npcs/<id>.ts` (Aussehen, Haus, Tagesablauf, Vorlieben, Dialog-Pools,
   Briefe). Ein neuer Bewohner braucht: Datei + Eintrag in `npcs/index.ts` + Haus/Bank in `VILLAGE_OBJECTS`.
   Dialogzeilen haben Bedingungen (`when`) und Gewichte; ausgewählt wird reproduzierbar pro Tag.
@@ -152,20 +155,17 @@ src/
 - **Spielstand-Format geändert?** → `SAVE_VERSION` erhöhen, Migration in `MIGRATIONS` ergänzen, Test schreiben.
 - **Nichts Verpflichtendes, kein Scheitern, kein Zeitdruck.** Alles Tägliche ist optional.
 - **Oma Giselas Likör/Zigarette:** dezent und humorvoll, niemals glorifizierend.
-- Story-Timer in echter Zeit (`window.setTimeout`), nicht in Phaser-Spielzeit (die wird bei fehlendem Fokus
-  gedrosselt).
-- Vor jedem PR: `npm run typecheck && npm test && npm run build`, dazu im Browser anspielen
-  (Desktop + Handy-Viewport).
+- Story-Timer in echter Zeit (`window.setTimeout`), nicht über Animationsframes (die werden in
+  Hintergrund-Tabs gedrosselt).
+- Vor jedem PR: `npm run typecheck && npm test && npm run build`, dazu im Browser anspielen (Desktop).
 
 ### Testen im Headless-Browser (für Agenten)
 
 - Playwright + Chromium sind vorinstalliert. WebGL über SwiftShader:
   `chromium.launch({ args: ['--use-gl=angle', '--use-angle=swiftshader', '--enable-unsafe-swiftshader'] })`.
-- Phaser drosselt die Bildzeit ohne Fensterfokus → im Headless-Test laufen Bewegungen langsamer. Das ist
-  normal.
-- Handy-Viewport (`devices['iPhone 13']`) ist nur 390 × 664 px hoch – Taps innerhalb halten.
-- Phaser 4 vergibt bei Touch für „down“/„up“ manchmal unterschiedliche Pointer-IDs → Tipp-Erkennung nutzt
-  `pointer.identifier`.
+- SwiftShader rendert langsam (wenige Bilder/s) – Bewegungen dauern im Test länger, Timeouts großzügig wählen.
+- Positionen über den Spielstand setzen: erst Seite laden (Titelbildschirm speichert nicht automatisch),
+  dann `localStorage` ändern, dann „Weiterspielen“.
 
 ## Git-Workflow
 

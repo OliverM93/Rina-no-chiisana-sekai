@@ -2,15 +2,15 @@
  * Ein Bewohner in der Welt: folgt seinem Tagesablauf (Bank, Spaziergang,
  * Zuhause), läuft per Wegfindung und bleibt stehen, wenn Lina mit ihm redet.
  */
-import type Phaser from 'phaser';
-import { TILE } from '../../config';
-import { findPath, nearestWalkable, type Tile } from '../../core/grid';
-import { mulberry32 } from '../../core/rng';
-import { type Activity, activityAt, type ScheduleEntry } from '../../core/schedule';
-import { OBJECT_KINDS, objectById, tileOf, type WorldMap } from '../../core/worldmap';
-import type { NpcDef } from '../../data/npcs/types';
-import type { Session } from '../session';
-import { Character, FEET_OFFSET } from './Character';
+import type * as THREE from 'three';
+import { TILE } from '../config';
+import { findPath, nearestWalkable, type Tile } from '../core/grid';
+import { mulberry32 } from '../core/rng';
+import { type Activity, activityAt, type ScheduleEntry } from '../core/schedule';
+import { OBJECT_KINDS, objectById, tileOf, type WorldMap } from '../core/worldmap';
+import type { NpcDef } from '../data/npcs/types';
+import type { Session } from '../game/session';
+import { Character, FEET_OFFSET } from './Character3D';
 
 type Mode = 'hidden' | 'walking' | 'sitting' | 'idle' | 'talking' | 'scripted';
 
@@ -26,13 +26,14 @@ export class Npc {
   private seatFront: Tile | null = null;
 
   constructor(
-    scene: Phaser.Scene,
+    parent: THREE.Object3D,
     readonly def: NpcDef,
     private readonly session: Session,
+    heightAt: (x: number, z: number) => number,
   ) {
     const door = this.doorTile();
     const start = door ? tileCenterFeet(door) : { x: 0, y: 0 };
-    this.char = new Character(scene, `npc-${def.id}`, def.appearance, start.x, start.y, 'down');
+    this.char = new Character(parent, def.appearance, start.x, start.y, 'down', heightAt);
     this.char.speedFactor = NPC_SPEED;
     // Gleich an die richtige Stelle setzen (ohne Laufen)
     this.applyEntry(activityAt(def.schedule, session.clock()), true);
@@ -59,9 +60,9 @@ export class Npc {
     return this.char.y;
   }
 
-  /** Mittelpunkt für Sprechblase/Antippen */
-  get headY() {
-    return this.char.y - (this.char.sitting ? 70 : 88);
+  /** Höhe über dem Boden für die Sprechblase (in Kacheln) */
+  get bubbleHeight() {
+    return this.char.sitting ? 1.35 : 1.15;
   }
 
   // -------------------------------------------------------------------------
@@ -161,10 +162,10 @@ export class Npc {
         this.seatFront = front;
         const sit = () => {
           this.mode = 'sitting';
-          this.char.depthBias = 22; // vor Lehne und Sitzfläche der Bank
-          // linke Bankhälfte – rechts ist Platz (und Lina verdeckt sie nicht)
-          this.char.teleport((bench.x + 0.72) * TILE, (bench.y + 1) * TILE - 19);
+          // linke Bankhälfte – rechts ist Platz für Lina
+          this.char.teleport((bench.x + 0.62) * TILE, (bench.y + 0.5) * TILE + 2);
           this.char.setSitting(true);
+          this.char.seatHeight = 0.37;
         };
         if (instant) {
           this.show();

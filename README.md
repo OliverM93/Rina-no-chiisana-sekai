@@ -2,24 +2,24 @@
 
 **りなの ちいさな せかい – Linas kleine Welt**
 
-Ein gemütliches Life-Sim-Spiel im Browser, gemacht mit Liebe für Lina. 💕
+Ein gemütliches 3D-Life-Sim-Spiel im Browser, gemacht mit Liebe für Lina. 💕
 Lina zieht in ein kleines, verschlafenes Dorf und macht es nach und nach zu ihrem Zuhause – und mit der
 Zeit ziehen ihre Liebsten dazu.
 
-![Linas Häuschen am Tag](docs/screenshots/tag.png)
+![Linas Häuschen am Tag](docs/screenshots/3d-tag.png)
 
 ## Spielen
 
 👉 **<https://oliverm93.github.io/Rina-no-chiisana-sekai/>**
 
-Läuft in jedem modernen Browser auf Laptop, PC, Tablet und Handy. Der Spielstand wird automatisch im
-Browser gespeichert.
+Läuft in jedem modernen Browser auf Laptop oder PC. Der Spielstand wird automatisch im Browser gespeichert.
 
-| | Tastatur | Maus / Touch |
+| | Tastatur | Maus |
 |---|---|---|
-| Laufen | WASD oder Pfeiltasten | irgendwohin klicken/tippen |
+| Laufen | WASD oder Pfeiltasten | irgendwohin klicken |
 | Rennen | Umschalttaste halten | (lange Wege rennt Lina von allein) |
-| Anschauen / Reden / Aufheben | Leertaste, E oder Enter | auf Dinge tippen |
+| Anschauen / Reden / Aufheben | Leertaste, E oder Enter | auf Dinge klicken |
+| Zoomen | – | Mausrad |
 | Tasche | I oder Tab | 🎒 unten rechts |
 | Menü | Esc | ☰ oben rechts |
 
@@ -33,13 +33,13 @@ oder für ein anderes Gerät), Vollbild, Hilfe.
 Die Uhrzeit im Dorf ist die **echte Uhrzeit**: Abends gehen die Laternen an, nachts leuchten die Fenster,
 und jede Jahreszeit sieht anders aus.
 
-| Oma Gisela | Tasche & Verkaufskiste | Post (Handy) |
+| Oma Gisela auf ihrer Bank | Dorfplatz am Abend | Nacht |
 |---|---|---|
-| ![Gespräch](docs/screenshots/m2-gespraech.png) | ![Verkaufskiste](docs/screenshots/m2-verkaufskiste.png) | ![Briefkasten](docs/screenshots/m2-briefkasten-handy.png) |
+| ![Gisela](docs/screenshots/3d-gisela.png) | ![Abend](docs/screenshots/3d-abend.png) | ![Nacht](docs/screenshots/3d-nacht.png) |
 
-| Abenddämmerung | Nacht | Handy |
+| Brücke | Strand | Charakter-Editor |
 |---|---|---|
-| ![Abend](docs/screenshots/abend.png) | ![Nacht](docs/screenshots/nacht.png) | ![Handy](docs/screenshots/handy.png) |
+| ![Brücke](docs/screenshots/3d-bruecke.png) | ![Strand](docs/screenshots/3d-strand.png) | ![Editor](docs/screenshots/3d-editor.png) |
 
 ## Lokal starten
 
@@ -64,8 +64,7 @@ npm run preview     # Build ansehen
 **Andere Uhrzeit ausprobieren:** `?zeit=21:30` oder `?datum=2026-12-24&zeit=18:00` an die Adresse hängen,
 z. B. <http://localhost:5173/?zeit=21:30>.
 
-**Grafik-Galerie (Entwicklung):** <http://localhost:5173/gallery.html> zeigt alle selbst gezeichneten
-Grafiken.
+**3D-Galerie (Entwicklung):** <http://localhost:5173/gallery.html> zeigt Figuren, Natur und Gebäude in 3D.
 
 ## Veröffentlichung (GitHub Pages)
 
@@ -77,6 +76,6 @@ Pull Requests werden automatisch geprüft (Typecheck, Tests, Build – `.github/
 
 ## Technik
 
-TypeScript · Vite · Phaser 4 · Preact · Vitest. Alle Grafiken werden im Code gezeichnet (keine externen
-Bilder). Details zu Architektur und Konventionen stehen in [`CLAUDE.md`](CLAUDE.md), die Meilensteine in
+TypeScript · Vite · Three.js · Preact · Vitest. Alle 3D-Modelle und Texturen entstehen im Code (keine
+externen Modelle oder Bilder). Details zu Architektur und Konventionen stehen in [`CLAUDE.md`](CLAUDE.md), die Meilensteine in
 [`ROADMAP.md`](ROADMAP.md).
