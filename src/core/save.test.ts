@@ -189,6 +189,30 @@ describe('Version 2 (M2)', () => {
   });
 });
 
+describe('Version 4 (M4 Natur)', () => {
+  it('ergänzt Sammelbuch und Beet, behält alles andere', () => {
+    const v3 = { ...freshSave(), version: 3, money: 123 } as Record<string, unknown>;
+    delete v3.collection;
+    delete (v3.world as Record<string, unknown>).garden;
+    const result = parseSave(JSON.stringify(v3), SPAWN, NOW);
+    expect(result.ok).toBe(true);
+    if (!result.ok) return;
+    expect(result.data.version).toBe(4);
+    expect(result.data.money).toBe(123);
+    expect(result.data.collection).toEqual({});
+    expect(result.data.world.garden).toEqual({});
+  });
+
+  it('speichert Fänge und Pflanzen', () => {
+    const s = freshSave();
+    s.collection.barsch = { count: 3, firstDay: '2026-05-01' };
+    s.world.garden['7,11'] = { flower: 'tulpe', stage: 2, wateredDay: '2026-05-01', grewDay: '2026-05-01' };
+    const result = parseSave(serializeSave(s), SPAWN, NOW);
+    expect(result.ok && result.data.collection.barsch.count).toBe(3);
+    expect(result.ok && result.data.world.garden['7,11'].stage).toBe(2);
+  });
+});
+
 describe('Export', () => {
   it('erzeugt einen Dateinamen mit Datum', () => {
     expect(exportFileName(NOW)).toBe('rina-spielstand-2026-11-02.json');
