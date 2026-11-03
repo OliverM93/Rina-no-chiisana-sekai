@@ -3,6 +3,7 @@
  * Aufruf: http://localhost:5173/gallery.html  (?ansicht=figuren|natur|gebaeude, ?winkel=0..360)
  */
 import * as THREE from 'three';
+import type { Season } from '../core/time';
 import { DEFAULT_LINA, type Appearance } from '../core/appearance';
 import { GISELA } from '../data/npcs/gisela';
 import { LOOKS } from '../data/npcs/looks';
@@ -56,7 +57,7 @@ function build() {
   (document.getElementById('label') as HTMLElement).textContent = view;
   if (view === 'figuren') {
     people.forEach(([, a], i) => {
-      const c = new Chibi3D(a);
+      const c = new Chibi3D(a, (params.get('jahreszeit') as Season | null) ?? 'sommer');
       c.root.position.set((i - (people.length - 1) / 2) * 0.8, 0, 0);
       content.add(c.root);
       chibis.push(c);

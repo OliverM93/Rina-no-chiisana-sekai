@@ -69,6 +69,7 @@ export function App({ session }: { session: Session }) {
           mode={state.editorMode}
           initial={state.editorMode === 'edit' && session.data ? session.data.player.appearance : DEFAULT_LINA}
           initialVillage={state.editorMode === 'edit' ? session.data?.villageName : undefined}
+          season={session.season}
           onCancel={() => ui.set({ screen: state.editorMode === 'edit' ? 'playing' : session.playing ? 'playing' : 'title' })}
           onDone={(appearance, village) => {
             if (state.editorMode === 'new') session.startNewGame(appearance, village);

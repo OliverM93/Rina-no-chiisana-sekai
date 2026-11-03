@@ -6,12 +6,15 @@
  * Animationen und später die NPCs mit demselben Code.
  */
 import { palette } from '../style/palette';
+import type { Season } from './time';
 
 export type HairStyle = 'locken' | 'schulterlang' | 'bob' | 'zopf' | 'dutt' | 'kurz' | 'wuschel' | 'zerzaust' | 'kurzgeschoren' | 'glatt';
 export type Outfit = 'kleid' | 'pulli' | 'latzhose' | 'hemd' | 'strickjacke' | 'mantel' | 'weste' | 'streifenhemd' | 'hoodie' | 'troyer';
 export type Beard = 'keiner' | 'kurz' | 'voll' | 'schnurrbart';
 export type Smile = 'laecheln' | 'grinsen' | 'zahnluecke';
 export type GlassesShape = 'rund' | 'eckig';
+/** „saison“ = Schnürstiefel im Herbst/Winter, weiße Sneaker im Frühling/Sommer */
+export type Shoes = 'standard' | 'stiefel' | 'sneaker' | 'saison';
 
 export interface Appearance {
   hairStyle: HairStyle;
@@ -37,6 +40,7 @@ export interface Appearance {
   scarf: string;
   /** kleine Creolen */
   earrings: boolean;
+  shoes: Shoes;
 }
 
 export interface Option<T> {
@@ -99,6 +103,19 @@ export const HAIR_COLORS: Option<string>[] = [
   { id: palette.hair.mint, label: 'Minze' },
 ];
 
+export const SHOES: Option<Shoes>[] = [
+  { id: 'saison', label: 'Je nach Jahreszeit' },
+  { id: 'stiefel', label: 'Schnürstiefel' },
+  { id: 'sneaker', label: 'Weiße Sneaker' },
+  { id: 'standard', label: 'Halbschuhe' },
+];
+
+/** Welche Schuhe eine Figur in der Jahreszeit tatsächlich trägt. */
+export function shoesFor(a: Appearance, season: Season): Exclude<Shoes, 'saison'> {
+  if (a.shoes !== 'saison') return a.shoes;
+  return season === 'herbst' || season === 'winter' ? 'stiefel' : 'sneaker';
+}
+
 export const SKIN_TONES: Option<string>[] = palette.skin.map((c, i) => ({
   id: c,
   label: `Hautton ${i + 1}`,
@@ -106,14 +123,17 @@ export const SKIN_TONES: Option<string>[] = palette.skin.map((c, i) => ({
 
 export const OUTFIT_COLORS: Option<string>[] = palette.outfit.map((c) => ({ id: c, label: c }));
 
-/** Lina: kastanienbraune Locken, braune Augen, Sommersprossen – im Editor anpassbar. */
+/**
+ * Lina: kastanienbraune Locken, braune Augen, Sommersprossen, trägt am liebsten Schwarz –
+ * im Winter mit Schnürstiefeln, im Sommer mit weißen Sneakern. Im Editor anpassbar.
+ */
 export const DEFAULT_LINA: Appearance = {
   hairStyle: 'locken',
   hairColor: palette.hair.kastanie,
   skinTone: palette.skin[0],
-  outfit: 'kleid',
-  outfitColor: palette.outfit[0],
-  accentColor: palette.outfit[7],
+  outfit: 'pulli',
+  outfitColor: palette.outfit[10],
+  accentColor: palette.outfit[10],
   height: 1,
   build: 1,
   beard: 'keiner',
@@ -126,6 +146,7 @@ export const DEFAULT_LINA: Appearance = {
   smile: 'laecheln',
   scarf: '',
   earrings: false,
+  shoes: 'saison',
 };
 
 const HEX = /^#[0-9a-fA-F]{6}$/;
@@ -172,6 +193,7 @@ export function normalizeAppearance(raw: unknown, fallback: Appearance = DEFAULT
     smile: pick(r.smile, SMILES, fallback.smile),
     scarf: r.scarf === '' ? '' : color(r.scarf, fallback.scarf),
     earrings: typeof r.earrings === 'boolean' ? r.earrings : fallback.earrings,
+    shoes: pick(r.shoes, SHOES, fallback.shoes),
   };
 }
 
@@ -195,5 +217,6 @@ export function appearanceKey(a: Appearance): string {
     a.smile,
     a.scarf,
     a.earrings ? 1 : 0,
+    a.shoes,
   ].join('|');
 }
