@@ -21,11 +21,25 @@ Läuft in jedem modernen Browser auf Laptop oder PC. Der Spielstand wird automat
 | Anschauen / Reden / Aufheben | Leertaste, E oder Enter | auf Dinge klicken |
 | Zoomen | – | Mausrad |
 | Tasche | I oder Tab | 🎒 unten rechts |
+| Sammelbuch | B | 📖 unten rechts |
+| Werkzeug nehmen / wegstecken | 1 Angel · 2 Kescher · 3 Gießkanne · Q weg | Werkzeugleiste unten |
 | Menü | Esc | ☰ oben rechts |
 
 **Was es zu tun gibt:** Oma Gisela besuchen (sie sitzt gern auf ihrer Bank), plaudern und ihr etwas
 schenken, Bäume schütteln, Muscheln sammeln, Blumen pflücken, an Felsen klopfen, Gesammeltes in der
 Verkaufskiste gegen Sternchen ⭐ tauschen und Briefe im Briefkasten lesen.
+
+**Natur (M4):** Von Oma Gisela gibt's Opas alte Angel, einen Kescher, eine Gießkanne und Blumensamen.
+- **Angeln** im Fluss und im Meer – ganz entspannt: auswerfen, warten, bis der Schwimmer abtaucht, Leertaste.
+  Zu früh oder zu spät? Macht nichts, der Fisch knabbert einfach nochmal.
+- **Insekten** mit dem Kescher fangen – Schmetterlinge an Blumen, Käfer an Bäumen, Libellen am Wasser,
+  Glühwürmchen in Sommernächten …
+- 17 Fische und 24 Insekten, alles **echte heimische Arten**, je nach Monat, Uhrzeit und Wetter.
+  Alles landet im **Sammelbuch**.
+- **Gärtnern** im Beet neben Linas Haus: Samen pflanzen, gießen (Regen gießt mit), am nächsten Tag
+  wächst es weiter, bis Tulpen, Rosen, Sonnenblumen, Lavendel oder Vergissmeinnicht blühen. Nichts vertrocknet.
+- **Wetter** jeden Tag anders: Sonne, Wolken, Regen, Gewitter (Sommer), Schnee (Winter) und manchmal ein
+  Regenbogen. An Linas Geburtstag scheint immer die Sonne.
 
 Im Menü: Aussehen ändern, speichern, **Spielstand exportieren/laden** (als Datei – praktisch zum Sichern
 oder für ein anderes Gerät), Vollbild, Hilfe.
@@ -40,6 +54,14 @@ und jede Jahreszeit sieht anders aus.
 | Oma Gisela auf ihrer Bank | Dorfplatz am Abend | Nacht |
 |---|---|---|
 | ![Gisela](docs/screenshots/3d-gisela.png) | ![Abend](docs/screenshots/3d-abend.png) | ![Nacht](docs/screenshots/3d-nacht.png) |
+
+| Angeln | Kescher | Linas Beet |
+|---|---|---|
+| ![Angeln](docs/screenshots/3d-angeln.png) | ![Kescher](docs/screenshots/3d-kescher.png) | ![Beet](docs/screenshots/3d-beet.png) |
+
+| Sammelbuch | Regen |
+|---|---|
+| ![Sammelbuch](docs/screenshots/3d-sammelbuch.png) | ![Regen](docs/screenshots/3d-regen.png) |
 
 | Brücke | Strand | Charakter-Editor |
 |---|---|---|
@@ -66,7 +88,8 @@ npm run preview     # Build ansehen
 ```
 
 **Andere Uhrzeit ausprobieren:** `?zeit=21:30` oder `?datum=2026-12-24&zeit=18:00` an die Adresse hängen,
-z. B. <http://localhost:5173/?zeit=21:30>.
+z. B. <http://localhost:5173/?zeit=21:30>. **Wetter erzwingen:** `?wetter=regen` (auch `sonnig`, `wolkig`,
+`gewitter`, `schnee`, `regenbogen`).
 
 **3D-Galerie (Entwicklung):** <http://localhost:5173/gallery.html> zeigt Figuren, Natur und Gebäude in 3D.
 

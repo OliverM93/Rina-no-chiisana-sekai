@@ -12,6 +12,7 @@ import { addItem as invAdd, removeItem as invRemove, takeSlot } from '../core/in
 import { deliver, mailDue, unreadCount } from '../core/mail';
 import { hashString, mulberry32 } from '../core/rng';
 import { formatIsoDay, getDayPhase, getSeason, isSameDayMonth } from '../core/time';
+import { weatherAt } from '../core/weather';
 import { terrainAt } from '../core/worldmap';
 import { BEACH_FINDS, BEACH_FINDS_PER_DAY, CURRENCY, itemCountLabel, itemDef, maxStackOf, ROCK_FINDS } from '../data/items';
 import { fillPlaceholders } from '../data/interactions';
@@ -144,6 +145,9 @@ function dialogueContext(session: Session, npcId: string, firstToday: boolean): 
   const st = npcState(session, npcId);
   const tags: string[] = [];
   if (session.data && isSameDayMonth(now, session.data.player.birthday)) tags.push('geburtstag-lina');
+  const w = weatherAt(now, session.weatherOverride);
+  tags.push(`wetter-${w.kind}`);
+  if (w.rainbow) tags.push('regenbogen');
   return {
     phase: getDayPhase(now),
     season: getSeason(now),

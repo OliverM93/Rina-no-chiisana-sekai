@@ -3,9 +3,10 @@
  */
 import { useEffect, useMemo, useState } from 'preact/hooks';
 import { sortInventory } from '../core/inventory';
-import { CURRENCY, ITEM_ORDER, itemDef, maxStackOf } from '../data/items';
+import { CURRENCY, FLOWER_BY_SEED, ITEM_ORDER, itemDef, maxStackOf, type ToolId, TOOLS } from '../data/items';
 import { NPC_BY_ID } from '../data/npcs';
 import { formatMoney, sellSlots } from '../game/gameplay';
+import { toggleTool } from '../game/nature';
 import type { Session, UiPanel } from '../game/session';
 import { itemIconUrl } from '../gfx/items';
 import { showToast, ui, useSessionVersion } from './store';
@@ -18,18 +19,26 @@ const CATEGORY_LABEL: Record<string, string> = {
   fund: 'Schatz',
   essen: 'Leckerei',
   geschenk: 'Erinnerungsstück',
+  werkzeug: 'Werkzeug',
+  samen: 'Samen',
+  fisch: 'Fisch',
+  insekt: 'Insekt',
 };
 
 export function InventoryPanel({ session, panel }: { session: Session; panel: UiPanel }) {
   useSessionVersion(session);
   const data = session.data;
-  const [selected, setSelected] = useState<number | null>(null);
+  const [selected, setSelected] = useState<number | null>(() => {
+    if (panel.kind !== 'seeds') return null;
+    const i = (data?.inventory.slots ?? []).findIndex((s) => !!s && !!FLOWER_BY_SEED[s.itemId]);
+    return i >= 0 ? i : null;
+  });
   const [sellSet, setSellSet] = useState<Set<number>>(new Set());
   const mode = panel.kind;
 
   const close = () => {
     ui.set({ panel: null });
-    if (panel.kind === 'gift') panel.onCancel();
+    if (panel.kind === 'gift' || panel.kind === 'seeds') panel.onCancel();
   };
 
   useEffect(() => {
@@ -37,6 +46,10 @@ export function InventoryPanel({ session, panel }: { session: Session; panel: Ui
       if (e.code === 'Escape' || (mode === 'inventory' && (e.code === 'KeyI' || e.code === 'Tab'))) {
         e.preventDefault();
         close();
+      }
+      if (mode === 'seeds' && (e.code === 'Enter' || e.code === 'Space')) {
+        e.preventDefault();
+        plant();
       }
     };
     window.addEventListener('keydown', onKey);
@@ -60,6 +73,10 @@ export function InventoryPanel({ session, panel }: { session: Session; panel: Ui
     const s = slots[i];
     if (!s) {
       setSelected(null);
+      return;
+    }
+    if (mode === 'seeds' && !FLOWER_BY_SEED[s.itemId]) {
+      showToast('Das kann man nicht einpflanzen. 🌱');
       return;
     }
     if (mode === 'sell') {
@@ -90,12 +107,27 @@ export function InventoryPanel({ session, panel }: { session: Session; panel: Ui
     panel.onPick(s.itemId);
   };
 
+  const plant = () => {
+    if (panel.kind !== 'seeds' || selected === null) return;
+    const s = slots[selected];
+    if (!s) return;
+    ui.set({ panel: null });
+    panel.onPick(s.itemId);
+  };
+
   const sel = selected !== null ? slots[selected] : null;
   const selDef = sel ? itemDef(sel.itemId) : null;
   const empty = slots.every((s) => s === null);
 
   const title =
-    mode === 'sell' ? 'Verkaufskiste' : mode === 'gift' && panel.kind === 'gift' ? `Was schenkst du ${NPC_BY_ID[panel.npcId]?.name ?? ''}?` : 'Deine Tasche';
+    mode === 'sell'
+      ? 'Verkaufskiste'
+      : mode === 'gift' && panel.kind === 'gift'
+        ? `Was schenkst du ${NPC_BY_ID[panel.npcId]?.name ?? ''}?`
+        : mode === 'seeds'
+          ? 'Was möchtest du pflanzen?'
+          : 'Deine Tasche';
+  const selTool = sel && (TOOLS as readonly string[]).includes(sel.itemId) ? (sel.itemId as ToolId) : null;
 
   return (
     <div class="modal-layer" onPointerUp={(e) => e.target === e.currentTarget && close()}>
@@ -168,6 +200,22 @@ export function InventoryPanel({ session, panel }: { session: Session; panel: Ui
           {mode === 'gift' && (
             <button class="btn primary" disabled={!sel} onClick={gift}>
               🎁 Schenken
+            </button>
+          )}
+          {mode === 'seeds' && (
+            <button class="btn primary" disabled={!sel} onClick={plant}>
+              🌱 Pflanzen
+            </button>
+          )}
+          {mode === 'inventory' && selTool && (
+            <button
+              class="btn primary"
+              onClick={() => {
+                toggleTool(session, session.tool === selTool ? null : selTool);
+                ui.set({ panel: null });
+              }}
+            >
+              {session.tool === selTool ? 'Wegstecken' : 'In die Hand nehmen'}
             </button>
           )}
         </div>

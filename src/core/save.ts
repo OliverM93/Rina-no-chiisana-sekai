@@ -11,11 +11,13 @@
  */
 import { type Appearance, DEFAULT_LINA, normalizeAppearance } from './appearance';
 import { createNpcState, type NpcState, normalizeNpcState } from './friendship';
+import { type Collection, normalizeCollection } from './catching';
+import { type Garden, normalizeGarden } from './garden';
 import { createInventory, type Inventory, normalizeInventory } from './inventory';
 import { createMailbox, type Mailbox, normalizeMailbox } from './mail';
 import { type DayMonth, DEFAULT_LINA_BIRTHDAY, formatIsoDay } from './time';
 
-export const SAVE_VERSION = 3;
+export const SAVE_VERSION = 4;
 export const SAVE_KEY = 'rina-no-chiisana-sekai.save';
 export const BACKUP_KEY = 'rina-no-chiisana-sekai.save.backup';
 
@@ -58,10 +60,12 @@ export interface WorldState {
   picked: { day: string; ids: string[] };
   /** Herumliegende Gegenstände (z. B. heruntergefallenes Obst) */
   ground: GroundItem[];
+  /** Linas Beet: Platz „x,y“ → Pflanze */
+  garden: Garden;
 }
 
 export function createWorldState(): WorldState {
-  return { fruitHarvest: {}, branchDay: {}, rockDay: {}, flowerDay: {}, picked: { day: '', ids: [] }, ground: [] };
+  return { fruitHarvest: {}, branchDay: {}, rockDay: {}, flowerDay: {}, picked: { day: '', ids: [] }, ground: [], garden: {} };
 }
 
 export interface SaveData {
@@ -81,6 +85,8 @@ export interface SaveData {
   npcs: Record<string, NpcState>;
   mail: Mailbox;
   world: WorldState;
+  /** Sammelbuch: gefangene Fische & Insekten */
+  collection: Collection;
 }
 
 export interface SaveOptions {
@@ -123,6 +129,7 @@ export function createNewSave(opts: NewGameOptions): SaveData {
     npcs: {},
     mail: createMailbox(),
     world: createWorldState(),
+    collection: {},
   };
 }
 
@@ -146,6 +153,9 @@ export const MIGRATIONS: Record<number, (old: RawSave) => RawSave> = {
   // v2 → v3 (Charakter-Feinschliff): neue Aussehen-Felder (Augenfarbe, Sommersprossen, Lächeln …)
   // ergänzt `normalizeAppearance` mit Standardwerten.
   2: (old) => ({ ...old }),
+  // v3 → v4 (M4 Natur): Sammelbuch und Beet. Startwerte ergänzt `normalizeSave`;
+  // die Werkzeuge bekommt Lina beim nächsten Gespräch von Oma Gisela.
+  3: (old) => ({ ...old }),
 };
 
 export function migrate(raw: RawSave, migrations = MIGRATIONS, target = SAVE_VERSION): RawSave {
@@ -215,6 +225,7 @@ export function normalizeWorld(raw: unknown, isKnownItem: (id: string) => boolea
       }
     }
   }
+  w.garden = normalizeGarden(raw.garden, isKnownItem);
   return w;
 }
 
@@ -254,6 +265,7 @@ export function normalizeSave(raw: RawSave, spawn: { x: number; y: number }, now
     npcs,
     mail: normalizeMailbox(raw.mail),
     world: normalizeWorld(raw.world, isKnownItem),
+    collection: normalizeCollection(raw.collection, isKnownItem),
   };
 }
 

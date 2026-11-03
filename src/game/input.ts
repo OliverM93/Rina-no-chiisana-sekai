@@ -25,6 +25,7 @@ function isTyping(): boolean {
 export class KeyboardInput {
   private down = new Set<string>();
   private actionListeners = new Set<() => void>();
+  private keyListeners = new Set<(code: string) => void>();
 
   constructor() {
     window.addEventListener('keydown', this.onDown);
@@ -41,6 +42,12 @@ export class KeyboardInput {
   onAction(fn: () => void): () => void {
     this.actionListeners.add(fn);
     return () => this.actionListeners.delete(fn);
+  }
+
+  /** Jede neu gedrückte Taste (z. B. 1–3 für Werkzeuge) */
+  onKey(fn: (code: string) => void): () => void {
+    this.keyListeners.add(fn);
+    return () => this.keyListeners.delete(fn);
   }
 
   /** Bewegungsrichtung aus gedrückten Tasten (nicht normalisiert). */
@@ -64,6 +71,7 @@ export class KeyboardInput {
     if (fresh && !e.repeat && ACTION_KEYS.includes(e.code)) {
       for (const fn of this.actionListeners) fn();
     }
+    if (fresh && !e.repeat) for (const fn of this.keyListeners) fn(e.code);
   };
 
   private onUp = (e: KeyboardEvent) => {

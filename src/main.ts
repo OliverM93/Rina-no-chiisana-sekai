@@ -24,6 +24,12 @@ const cssVars: Record<string, string> = {
   '--ui-mint': palette.ui.mint,
   '--ui-butter': palette.ui.butter,
   '--ui-sky': palette.ui.sky,
+  '--rb-red': palette.rainbow.red,
+  '--rb-orange': palette.rainbow.orange,
+  '--rb-yellow': palette.rainbow.yellow,
+  '--rb-green': palette.rainbow.green,
+  '--rb-blue': palette.rainbow.blue,
+  '--rb-violet': palette.rainbow.violet,
 };
 for (const [k, v] of Object.entries(cssVars)) root.style.setProperty(k, v);
 

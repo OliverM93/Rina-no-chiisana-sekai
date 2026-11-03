@@ -377,6 +377,8 @@ export interface ChibiPose {
   sitting: boolean;
   blink: boolean;
   t: number;
+  /** Rechten Arm nach vorn halten (Winkel), z. B. beim Angeln */
+  armForward?: number;
 }
 
 export class Chibi3D {
@@ -390,6 +392,8 @@ export class Chibi3D {
   private legs: THREE.Group[] = [];
   private arms: THREE.Group[] = [];
   private hipY = 0;
+  private handY = 0;
+  private held: THREE.Object3D | null = null;
 
   /** Jahreszeit bestimmt bei `shoes: 'saison'` die Schuhe. */
   constructor(
@@ -401,12 +405,25 @@ export class Chibi3D {
   }
 
   setAppearance(a: Appearance) {
+    const held = this.held;
+    this.hold(null);
     this.body.clear();
     this.head = new THREE.Group();
     this.legs = [];
     this.arms = [];
     this.disposeTextures();
     this.build(a);
+    this.hold(held);
+  }
+
+  /** Etwas in die (rechte) Hand nehmen – null = Hand leer */
+  hold(obj: THREE.Object3D | null) {
+    this.held?.removeFromParent();
+    this.held = obj;
+    if (obj) {
+      obj.position.set(0, this.handY, 0.01);
+      this.arms[0].add(obj);
+    }
   }
 
   private disposeTextures() {
@@ -594,6 +611,7 @@ export class Chibi3D {
       arm.rotation.z = side * 0.25;
       arm.add(part(capsule, sleeveMat, 0.035 * Math.min(1.15, bw), 0.1 * Math.min(1.1, h), 0.035, 0, -0.08, 0));
       arm.add(part(sphere, skin, 0.038, 0.038, 0.038, 0, -0.17 * Math.min(1.1, h), 0));
+      this.handY = -0.17 * Math.min(1.1, h);
       this.body.add(arm);
       this.arms.push(arm);
     }
@@ -728,6 +746,10 @@ export class Chibi3D {
     }
     this.arms[0].rotation.z = -0.25;
     this.arms[1].rotation.z = 0.25;
+    if (p.armForward !== undefined) {
+      this.arms[0].rotation.x = p.armForward;
+      this.arms[0].rotation.z = -0.12;
+    }
   }
 
   dispose() {
