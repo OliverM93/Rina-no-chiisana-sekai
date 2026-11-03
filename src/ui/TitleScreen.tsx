@@ -51,7 +51,6 @@ export function TitleScreen({ session }: { session: Session }) {
           <br />
           Chiisana Sekai
         </h1>
-        <div class="title-sub">Linas kleine Welt</div>
       </div>
       <div class="title-buttons pop-in delay">
         {hasSave && (
@@ -66,7 +65,6 @@ export function TitleScreen({ session }: { session: Session }) {
           Spielstand aus Datei laden
         </button>
       </div>
-      <div class="title-footer">Mit Liebe gemacht für Lina 💕</div>
     </div>
   );
 }
