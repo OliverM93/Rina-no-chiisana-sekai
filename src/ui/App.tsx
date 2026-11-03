@@ -12,6 +12,7 @@ import { Menu } from './Menu';
 import { TitleScreen } from './TitleScreen';
 import { InventoryPanel } from './InventoryPanel';
 import { MailPanel } from './MailPanel';
+import { CollectionBook } from './CollectionBook';
 import { type ConfirmRequest, showToast, ui, useUI } from './store';
 
 export function App({ session }: { session: Session }) {
@@ -42,6 +43,7 @@ export function App({ session }: { session: Session }) {
         e.preventDefault();
         ui.set({ panel: { kind: 'inventory' } });
       }
+      if (e.code === 'KeyB' && free && !typing) ui.set({ panel: { kind: 'book' } });
     };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
@@ -81,7 +83,8 @@ export function App({ session }: { session: Session }) {
       {state.screen === 'playing' && <Hud session={session} />}
       {state.menuOpen && <Menu session={session} />}
       {state.panel?.kind === 'mail' && <MailPanel session={session} />}
-      {state.panel && state.panel.kind !== 'mail' && <InventoryPanel session={session} panel={state.panel} />}
+      {state.panel?.kind === 'book' && <CollectionBook session={session} />}
+      {state.panel && state.panel.kind !== 'mail' && state.panel.kind !== 'book' && <InventoryPanel session={session} panel={state.panel} />}
       {state.dialog && <DialogBox dialog={state.dialog} onClose={closeDialog} onChoose={chooseInDialog} />}
       {state.confirm && <Confirm request={state.confirm} />}
       {state.toast && <Toast key={state.toast.id} text={state.toast.text} icon={state.toast.icon} />}
