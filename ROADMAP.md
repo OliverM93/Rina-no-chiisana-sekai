@@ -49,7 +49,10 @@ Legende: ✅ erledigt · 🚧 in Arbeit · ⬜ geplant
 - ✅ Fallende Blätter/Blüten/Schnee, Maus: Klick zum Laufen/Anschauen, Zeiger über Interaktivem
 - ✅ Charakter-Editor mit drehbarer 3D-Vorschau
 - ✅ Alle Funktionen aus M1/M2 übernommen, Spielstände bleiben gültig
-- ⬜ Charakter-Feinschliff (Locken, Gesichter, Proportionen) → nächster Schritt
+- ✅ Charakter-Feinschliff nach Fotos: volle Locken (Lina), Gesichter mit Augenfarbe, Brauen, Sommersprossen,
+  Lächeln/Grinsen/Zahnlücke; neue Frisuren (kurz geschoren, zerzaust) und Outfits (Mantel & Schal, Weste,
+  Streifenhemd, Hoodie); Aussehen aller Liebsten in `data/npcs/looks.ts`
+- ✅ Dächer mit Ziegelreihen, weichere Flussufer
 
 ## ⬜ M4 – Natur: Angeln, Insekten, Gärtnern, Wetter, Museum
 
@@ -76,7 +79,7 @@ Legende: ✅ erledigt · 🚧 in Arbeit · ⬜ geplant
 
 ## ⬜ M7 – Alle Bewohner, Shops & Events
 
-- ⬜ Story-Einzüge: Oli, Lars, Olaf, Jens, Thalia (jeweils mit eigener Szene)
+- ⬜ Story-Einzüge: Oli, Lars, Olaf & Christin, Jens, Thalia (jeweils mit eigener Szene)
 - ⬜ Lars: Praxis/Apotheke (Heiltränke, Pflaster), Gesundheitstipps
 - ⬜ Olaf: Dorfkasse/Bank (Sparen, Zinsen, Kredit)
 - ⬜ Jens: Bistro/Kochstudio (Rezepte) & Galerie (Kunstwerke sammeln/ausstellen)
@@ -100,6 +103,7 @@ Legende: ✅ erledigt · 🚧 in Arbeit · ⬜ geplant
 
 ## ❓ Offene Fragen (bei Gelegenheit klären)
 
-- Aussehen von Oli und Thalia; Geburtstage der Bewohner
+- Aussehen von Oli und Thalia (gern per Foto); Geburtstage der Bewohner
+- Christins Rolle im Dorf (z. B. etwas mit Ordnung/Sauberkeit – Aufräum-Aufgaben, Gartenpflege?)
 - Wer zieht als Erstes ein (nach Oma Gisela)? Welche Bauplätze für wen?
 - Lieblingsessen/-farben/-hobbys der Bewohner für Geschenke & Dialoge

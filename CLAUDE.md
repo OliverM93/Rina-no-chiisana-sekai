@@ -23,15 +23,18 @@ Meilensteine und Fortschritt: siehe [`ROADMAP.md`](ROADMAP.md).
 
 | Figur | Rolle | Aussehen (für die Chibi-Figuren) |
 |---|---|---|
-| **Lina** | Spielerin | braune Locken, etwas länger als schulterlang, Mittelscheitel, kein Pony (im Editor anpassbar), Geburtstag **16.06.** |
+| **Lina** | Spielerin | kastanienbraune Locken, etwas länger als schulterlang, Mittelscheitel, kein Pony, braune Augen, Sommersprossen (im Editor anpassbar), Geburtstag **16.06.** |
 | **Oliver („Oli“)** | Linas Freund – höchste Bindung, romantische Szenen, gemeinsames Haus/Zimmer | noch offen |
-| **Lars** | großer Bruder, Arzt – Praxis/Apotheke | groß, Bart |
-| **Olaf** | Papa, Finanzamt – Dorfkasse/Bank | eher klein, Bart, dunkle, etwas angegraute Haare (keine grauen) |
-| **Jens** | Onkel, Coach, Dandy – Bistro/Kochstudio & Galerie, Französisch + Sächsisch | untersetzter, kein Bart, sieht Olaf ähnlich |
+| **Lars** | großer Bruder, Arzt – Praxis/Apotheke | groß & kräftig, kurz geschorene rotblonde Haare, rotblonder Vollbart, blaue Augen, dunkles Streifenhemd |
+| **Olaf** | Papa, Finanzamt – Dorfkasse/Bank | eher klein, dunkle angegraute Haare, grauer kurzer Bart, eckige Brille, weißes Hemd mit dunkler Weste |
+| **Christin** | Olafs Freundin – sehr ordentlich, achtet auf Ordnung & Sauberkeit | schlank, dunkelbrauner Bob mit Seitenscheitel, braune Augen, korallrotes Oberteil |
+| **Jens** | Onkel, Coach, Dandy – Bistro/Kochstudio & Galerie, Französisch + Sächsisch | untersetzt, rundes Gesicht, dunkle zerzauste Haare, kein Bart, blaue Augen, Zahnlücken-Grinsen, dunkler Hoodie |
 | **Thalia** | beste Freundin, Geografie – Partys, Karten, Gesteine/Fossilien | noch offen |
-| **Oma Gisela** | Oma – Bank vorm Haus, Weisheiten, Kekse, Strickrezepte; hat **immer das letzte Wort**, misstrauisch („Die Ärzte wollen nur dein Geld …“), starke Meinung zu allem („köstlich!“ – „pfui!“); Likörchen/Zigarette dezent & humorvoll, nie glorifizierend | klein, zierlich, offene schulterlange Haare (kein Dutt), Brille |
+| **Oma Gisela** | Oma – Bank vorm Haus, Weisheiten, Kekse, Strickrezepte; hat **immer das letzte Wort**, misstrauisch („Die Ärzte wollen nur dein Geld …“), starke Meinung zu allem („köstlich!“ – „pfui!“); Likörchen/Zigarette dezent & humorvoll, nie glorifizierend | klein, zierlich, offene silbergraue Haare (kein Dutt), Brille, königsblauer Mantel mit rotem Tuch |
 
 Figuren sind **Chibi-Menschen** (keine Tiere) – erkennbar an Frisur, Bart, Brille, Größe, Statur, Kleidung.
+Das Aussehen aller Bewohner steht in `src/data/npcs/looks.ts` (nach Fotos nachempfunden).
+**Fotos der echten Personen gehören NIE ins Repository** – sie dienen nur als Vorlage.
 
 ## Tech-Stack (Entscheidung)
 
