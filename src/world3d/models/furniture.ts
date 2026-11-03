@@ -75,15 +75,11 @@ export function makeFurniture(itemId: string): FurnitureModel {
       break;
     }
     case 'kotatsu': {
-      // Decke bis zum Boden, Tischplatte oben
-      const quilt = mesh(new THREE.CylinderGeometry(1, 1.12, 1, 4, 1), toon(col));
-      quilt.rotation.y = Math.PI / 4;
-      quilt.scale.set(1.0, 0.34, 1.0);
-      quilt.position.y = 0.17;
-      g.add(quilt);
-      g.add(b(1.6, 0.05, 1.6, WOOD, 0, 0.4, 0));
-      g.add(b(1.5, 0.012, 1.5, lighten(WOOD, 0.12), 0, 0.43, 0));
-      for (const z of [-0.5, 0, 0.5]) g.add(b(1.62, 0.02, 0.06, lighten(col, 0.3), 0, 0.25, z * 1.42));
+      // Decke: etwas größer als die Tischplatte, fällt bis zum Boden
+      g.add(b(1.78, 0.34, 1.78, col, 0, 0.17, 0));
+      g.add(b(1.84, 0.06, 1.84, lighten(col, 0.15), 0, 0.03, 0));
+      g.add(b(1.9, 0.05, 1.9, WOOD, 0, 0.4, 0));
+      g.add(b(1.8, 0.012, 1.8, lighten(WOOD, 0.12), 0, 0.43, 0));
       break;
     }
     case 'zabuton': {

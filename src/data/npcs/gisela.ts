@@ -81,6 +81,8 @@ export const GISELA: NpcDef = {
       { text: ['Dein Beet! Gieß es ordentlich.', 'Aber nicht zu viel. Und nicht zu wenig. Genau richtig eben.', 'Wie viel genau richtig ist? Das weiß man einfach.'] },
       { text: ['Ein Hering in Sahnesoße mit Pellkartoffeln.', 'Köstlich! Da kommen mir die Tränen.'] },
       { text: ['Fass mir bloß keine Krabbeltiere an und bring die dann zu mir!', 'Außer Marienkäfer. Die bringen Glück.'] },
+      { text: ['Hast du dein Häuschen schon schön eingerichtet?', 'Ein Kotatsu? Ein Tisch mit Decke drunter? Was es nicht alles gibt …', '… Na gut. Klingt eigentlich ganz gemütlich. Aber erzähl\'s keinem.'] },
+      { text: ['Diese Winkekatze in den Katalogen …', 'Die guckt einen so an. Ein bisschen unheimlich, wenn du mich fragst.', 'Ich hab das letzte Wort: unheimlich.'] },
     ],
     gifts: {
       liebt: [

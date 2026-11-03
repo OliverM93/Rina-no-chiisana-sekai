@@ -41,6 +41,13 @@ Verkaufskiste gegen Sternchen ⭐ tauschen und Briefe im Briefkasten lesen.
 - **Wetter** jeden Tag anders: Sonne, Wolken, Regen, Gewitter (Sommer), Schnee (Winter) und manchmal ein
   Regenbogen. An Linas Geburtstag scheint immer die Sonne.
 
+**Zu Hause (M5):** Durch die Tür geht's in Linas Zimmer. Am Pult in der Ecke liegt der **Möbelkatalog** –
+Möbel, Tapeten und Böden (zuerst im **japanischen Stil**: Futon, Kotatsu, Tansu, Byōbu, Bonsai, Winkekatze …)
+kosten Sternchen und landen sofort in der Tasche. Mit **🛋️ Einrichten** stellt Lina sie auf: anklicken zum
+Hochheben, **R** oder Mausrad zum Drehen, Klick zum Abstellen. Deko passt auf Tische und Kommoden, Teppiche
+liegen unter Möbeln. Auf Kissen und Futon kann sie sich setzen, Laternen leuchten abends (und lassen sich
+an- und ausknipsen).
+
 Im Menü: Aussehen ändern, speichern, **Spielstand exportieren/laden** (als Datei – praktisch zum Sichern
 oder für ein anderes Gerät), Vollbild, Hilfe.
 
@@ -58,6 +65,10 @@ und jede Jahreszeit sieht anders aus.
 | Angeln | Kescher | Linas Beet |
 |---|---|---|
 | ![Angeln](docs/screenshots/3d-angeln.png) | ![Kescher](docs/screenshots/3d-kescher.png) | ![Beet](docs/screenshots/3d-beet.png) |
+
+| Linas Zimmer | … am Abend | Einrichten | Katalog |
+|---|---|---|---|
+| ![Zimmer](docs/screenshots/3d-zimmer.png) | ![Abends](docs/screenshots/3d-zimmer-nacht.png) | ![Einrichten](docs/screenshots/3d-einrichten.png) | ![Katalog](docs/screenshots/3d-katalog.png) |
 
 | Sammelbuch | Regen |
 |---|---|
