@@ -15,7 +15,7 @@ import { createInventory, type Inventory, normalizeInventory } from './inventory
 import { createMailbox, type Mailbox, normalizeMailbox } from './mail';
 import { type DayMonth, DEFAULT_LINA_BIRTHDAY, formatIsoDay } from './time';
 
-export const SAVE_VERSION = 2;
+export const SAVE_VERSION = 3;
 export const SAVE_KEY = 'rina-no-chiisana-sekai.save';
 export const BACKUP_KEY = 'rina-no-chiisana-sekai.save.backup';
 
@@ -143,6 +143,9 @@ export const MIGRATIONS: Record<number, (old: RawSave) => RawSave> = {
   // Die neuen Felder füllt `normalizeSave` mit Startwerten; Oma Gisela begrüßt
   // Lina beim nächsten Laden (Flag `giselaWelcomed` fehlt noch).
   1: (old) => ({ ...old, money: 0 }),
+  // v2 → v3 (Charakter-Feinschliff): neue Aussehen-Felder (Augenfarbe, Sommersprossen, Lächeln …)
+  // ergänzt `normalizeAppearance` mit Standardwerten.
+  2: (old) => ({ ...old }),
 };
 
 export function migrate(raw: RawSave, migrations = MIGRATIONS, target = SAVE_VERSION): RawSave {

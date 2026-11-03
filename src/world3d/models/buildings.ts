@@ -76,16 +76,19 @@ export function makeHouse(roofColor: string): HouseModel {
   ridge.rotation.z = Math.PI / 2;
   ridge.position.set(0, 0.22 + wallH + roofH + 0.02, 0);
   g.add(ridge);
-  // Schindel-Streifen auf der Vorderseite
+  // Ziegelreihen auf beiden Dachseiten (Rundziegel-Optik)
   const slope = Math.atan2(roofH, D / 2 + over);
-  for (let i = 1; i < 4; i++) {
-    const t = i / 4;
-    const s = b(W + over * 2, 0.04, 0.06, darken(roofColor, 0.1));
-    s.position.set(0, 0.22 + wallH + roofH * t + 0.03, (D / 2 + over) * (1 - t) + 0.02);
-    s.rotation.x = -slope;
-    g.add(s);
+  const tileMat = toon(darken(roofColor, 0.06));
+  for (const side of [1, -1]) {
+    for (let i = 0; i < 6; i++) {
+      const t = (i + 0.5) / 6.3;
+      const row = mesh(cyl, tileMat);
+      row.scale.set(0.075, W + over * 2 - 0.05, 0.075);
+      row.rotation.z = Math.PI / 2;
+      row.position.set(0, 0.22 + wallH + roofH * t + 0.035, side * ((D / 2 + over) * (1 - t) + 0.01));
+      g.add(row);
+    }
   }
-
   // Schornstein
   g.add(b(0.36, 0.8, 0.36, '#e9a28f', 1.3, 0.22 + wallH + roofH * 0.7, -0.35));
   g.add(b(0.46, 0.12, 0.46, '#f2b8a6', 1.3, 0.22 + wallH + roofH * 0.7 + 0.45, -0.35));

@@ -14,7 +14,7 @@ import { palette } from '../style/palette';
 /** Texturpixel pro Kachel */
 const PX = 48;
 /** Unterteilungen des Höhenrasters pro Kachel */
-const SUB = 4;
+const SUB = 6;
 
 export const WATER_LEVEL = -0.14;
 
@@ -46,7 +46,7 @@ export function heightField(map: WorldMap): (x: number, z: number) => number {
     return a * (1 - fx) * (1 - fz) + b * fx * (1 - fz) + c * (1 - fx) * fz + d * fx * fz;
   };
   return (x, z) => {
-    const w = smooth(0.28, 0.62, bilinear(x, z, water));
+    const w = smooth(0.22, 0.7, bilinear(x, z, water));
     const dp = bilinear(x, z, deep);
     return -0.42 * w - 0.35 * dp * w;
   };

@@ -4,3 +4,9 @@ coverage/
 *.log
 .DS_Store
 .vite/
+
+# Fotos echter Personen nie einchecken (nur Vorlage zum Modellieren)
+fotos/
+*.jpg
+*.jpeg
+*.heic

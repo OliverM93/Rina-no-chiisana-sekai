@@ -42,19 +42,29 @@ export const palette = {
   // --- Figuren ---------------------------------------------------------------
   skin: ['#ffe3cf', '#f9d2b6', '#ecbd99', '#cf9776', '#966a52'],
   hair: {
+    kastanie: '#74402b',
     braun: '#7b4a33',
     dunkelbraun: '#4f3227',
     haselnuss: '#a8714b',
     blond: '#e9c47c',
-    rotblond: '#d9875a',
+    kupfer: '#d9875a',
     schwarz: '#352a2d',
     grau: '#c8c2c8',
     angegraut: '#5f5654',
+    silber: '#d3cfd3',
+    rotblond: '#c08654',
     weiss: '#f3efec',
     rosa: '#f5a9c4',
     mint: '#9fd8c8',
   },
   eyes: '#3d2d33',
+  eyeColors: {
+    braun: '#5b3a26',
+    haselnuss: '#8a6238',
+    blau: '#5d8ac2',
+    graublau: '#728ea6',
+    gruen: '#5f9a6e',
+  },
   blush: 'rgba(255, 140, 160, 0.45)',
   outfit: [
     '#f7a8be', // Rosa

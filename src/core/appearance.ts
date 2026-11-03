@@ -2,14 +2,16 @@
  * Aussehen von Figuren (Spielerin & Bewohner).
  *
  * Alle Figuren werden aus diesen Parametern prozedural gezeichnet
- * (siehe `src/gfx/chibi.ts`). Dadurch funktionieren Charakter-Editor,
+ * (siehe `src/world3d/models/chibi3d.ts`). Dadurch funktionieren Charakter-Editor,
  * Animationen und später die NPCs mit demselben Code.
  */
 import { palette } from '../style/palette';
 
-export type HairStyle = 'locken' | 'schulterlang' | 'bob' | 'zopf' | 'dutt' | 'kurz' | 'wuschel';
-export type Outfit = 'kleid' | 'pulli' | 'latzhose' | 'hemd' | 'strickjacke';
+export type HairStyle = 'locken' | 'schulterlang' | 'bob' | 'zopf' | 'dutt' | 'kurz' | 'wuschel' | 'zerzaust' | 'kurzgeschoren';
+export type Outfit = 'kleid' | 'pulli' | 'latzhose' | 'hemd' | 'strickjacke' | 'mantel' | 'weste' | 'streifenhemd' | 'hoodie';
 export type Beard = 'keiner' | 'kurz' | 'voll';
+export type Smile = 'laecheln' | 'grinsen' | 'zahnluecke';
+export type GlassesShape = 'rund' | 'eckig';
 
 export interface Appearance {
   hairStyle: HairStyle;
@@ -23,8 +25,14 @@ export interface Appearance {
   /** Statur relativ (0.9 = zierlich, 1.2 = kräftig). */
   build: number;
   beard: Beard;
+  /** Bartfarbe; leer = wie die Haare */
+  beardColor: string;
   glasses: boolean;
+  glassesShape: GlassesShape;
   blush: boolean;
+  eyeColor: string;
+  freckles: boolean;
+  smile: Smile;
 }
 
 export interface Option<T> {
@@ -40,6 +48,8 @@ export const HAIR_STYLES: Option<HairStyle>[] = [
   { id: 'dutt', label: 'Dutt' },
   { id: 'kurz', label: 'Kurz' },
   { id: 'wuschel', label: 'Wuschelkopf' },
+  { id: 'zerzaust', label: 'Zerzaust' },
+  { id: 'kurzgeschoren', label: 'Kurz geschoren' },
 ];
 
 export const OUTFITS: Option<Outfit>[] = [
@@ -48,14 +58,36 @@ export const OUTFITS: Option<Outfit>[] = [
   { id: 'latzhose', label: 'Latzhose' },
   { id: 'strickjacke', label: 'Strickjacke' },
   { id: 'hemd', label: 'Hemd' },
+  { id: 'streifenhemd', label: 'Streifenhemd' },
+  { id: 'weste', label: 'Hemd & Weste' },
+  { id: 'hoodie', label: 'Hoodie' },
+  { id: 'mantel', label: 'Mantel & Schal' },
+];
+
+export const SMILES: Option<Smile>[] = [
+  { id: 'laecheln', label: 'Lächeln' },
+  { id: 'grinsen', label: 'Grinsen' },
+  { id: 'zahnluecke', label: 'Zahnlücken-Grinsen' },
+];
+
+export const EYE_COLORS: Option<string>[] = [
+  { id: palette.eyeColors.braun, label: 'Braun' },
+  { id: palette.eyeColors.haselnuss, label: 'Haselnuss' },
+  { id: palette.eyeColors.blau, label: 'Blau' },
+  { id: palette.eyeColors.graublau, label: 'Graublau' },
+  { id: palette.eyeColors.gruen, label: 'Grün' },
 ];
 
 export const HAIR_COLORS: Option<string>[] = [
+  { id: palette.hair.kastanie, label: 'Kastanie' },
   { id: palette.hair.braun, label: 'Schokobraun' },
   { id: palette.hair.dunkelbraun, label: 'Espresso' },
   { id: palette.hair.haselnuss, label: 'Haselnuss' },
   { id: palette.hair.blond, label: 'Honigblond' },
-  { id: palette.hair.rotblond, label: 'Kupfer' },
+  { id: palette.hair.kupfer, label: 'Kupfer' },
+  { id: palette.hair.rotblond, label: 'Rotblond' },
+  { id: palette.hair.silber, label: 'Silber' },
+  { id: palette.hair.angegraut, label: 'Angegraut' },
   { id: palette.hair.schwarz, label: 'Schwarz' },
   { id: palette.hair.rosa, label: 'Zuckerwatte' },
   { id: palette.hair.mint, label: 'Minze' },
@@ -68,10 +100,10 @@ export const SKIN_TONES: Option<string>[] = palette.skin.map((c, i) => ({
 
 export const OUTFIT_COLORS: Option<string>[] = palette.outfit.map((c) => ({ id: c, label: c }));
 
-/** Lina: braune Locken, rosa Kleid – im Editor anpassbar. */
+/** Lina: kastanienbraune Locken, braune Augen, Sommersprossen – im Editor anpassbar. */
 export const DEFAULT_LINA: Appearance = {
   hairStyle: 'locken',
-  hairColor: palette.hair.braun,
+  hairColor: palette.hair.kastanie,
   skinTone: palette.skin[0],
   outfit: 'kleid',
   outfitColor: palette.outfit[0],
@@ -79,8 +111,13 @@ export const DEFAULT_LINA: Appearance = {
   height: 1,
   build: 1,
   beard: 'keiner',
+  beardColor: '',
   glasses: false,
+  glassesShape: 'rund',
   blush: true,
+  eyeColor: palette.eyeColors.braun,
+  freckles: true,
+  smile: 'laecheln',
 };
 
 const HEX = /^#[0-9a-fA-F]{6}$/;
@@ -117,8 +154,13 @@ export function normalizeAppearance(raw: unknown, fallback: Appearance = DEFAULT
     height: num(r.height, 0.8, 1.25, fallback.height),
     build: num(r.build, 0.85, 1.3, fallback.build),
     beard: pick(r.beard, beards, fallback.beard),
+    beardColor: r.beardColor === '' ? '' : color(r.beardColor, fallback.beardColor),
     glasses: typeof r.glasses === 'boolean' ? r.glasses : fallback.glasses,
+    glassesShape: r.glassesShape === 'eckig' || r.glassesShape === 'rund' ? r.glassesShape : fallback.glassesShape,
     blush: typeof r.blush === 'boolean' ? r.blush : fallback.blush,
+    eyeColor: color(r.eyeColor, fallback.eyeColor),
+    freckles: typeof r.freckles === 'boolean' ? r.freckles : fallback.freckles,
+    smile: pick(r.smile, SMILES, fallback.smile),
   };
 }
 
@@ -134,7 +176,11 @@ export function appearanceKey(a: Appearance): string {
     a.height.toFixed(2),
     a.build.toFixed(2),
     a.beard,
-    a.glasses ? 1 : 0,
+    a.beardColor,
+    a.glasses ? a.glassesShape : 0,
     a.blush ? 1 : 0,
+    a.eyeColor,
+    a.freckles ? 1 : 0,
+    a.smile,
   ].join('|');
 }

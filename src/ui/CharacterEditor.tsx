@@ -5,7 +5,9 @@
 import { useState } from 'preact/hooks';
 import {
   type Appearance,
+  EYE_COLORS,
   HAIR_COLORS,
+  SMILES,
   HAIR_STYLES,
   OUTFIT_COLORS,
   OUTFITS,
@@ -73,6 +75,18 @@ export function CharacterEditor({ mode, initial, initialVillage, onDone, onCance
                 <Swatch key={o.id} color={o.id} title={o.label} active={a.skinTone === o.id} onClick={() => set('skinTone', o.id)} />
               ))}
             </OptionRow>
+            <OptionRow label="Augenfarbe">
+              {EYE_COLORS.map((o) => (
+                <Swatch key={o.id} color={o.id} title={o.label} active={a.eyeColor === o.id} onClick={() => set('eyeColor', o.id)} />
+              ))}
+            </OptionRow>
+            <OptionRow label="Lächeln">
+              {SMILES.map((o) => (
+                <Chip key={o.id} active={a.smile === o.id} onClick={() => set('smile', o.id)}>
+                  {o.label}
+                </Chip>
+              ))}
+            </OptionRow>
             <OptionRow label="Kleidung">
               {OUTFITS.map((o) => (
                 <Chip key={o.id} active={a.outfit === o.id} onClick={() => set('outfit', o.id)}>
@@ -96,6 +110,9 @@ export function CharacterEditor({ mode, initial, initialVillage, onDone, onCance
               </Chip>
               <Chip active={a.blush} onClick={() => set('blush', !a.blush)}>
                 🌸 Bäckchen
+              </Chip>
+              <Chip active={a.freckles} onClick={() => set('freckles', !a.freckles)}>
+                ✨ Sommersprossen
               </Chip>
             </OptionRow>
             {mode === 'new' && (
