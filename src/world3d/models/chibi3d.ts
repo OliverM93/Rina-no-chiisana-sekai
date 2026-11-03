@@ -260,7 +260,7 @@ function addHair(head: THREE.Group, a: Appearance, R: number) {
       for (let k = 0; k < 22; k++) {
         const phi = FRONT + 1.05 + (k / 21) * (Math.PI * 2 - 2.1);
         const side = fromFront(phi) < 1.4;
-        const len = side ? 4 : 5;
+        const len = side ? 5 : 6;
         for (let j = 0; j < len; j++) {
           const r = R * (1.1 + j * 0.03);
           const p = new THREE.Vector3(-Math.cos(phi) * r * 0.98, -R * (0.35 + j * 0.27), Math.sin(phi) * r * 0.98);
@@ -288,6 +288,28 @@ function addHair(head: THREE.Group, a: Appearance, R: number) {
       const fall = mesh(new THREE.CylinderGeometry(R * 1.02, R * 1.12, R * 0.6, 22, 1, true, openFace + 0.2, Math.PI * 2 - (openFace + 0.2) * 2), toon(col, { side: THREE.DoubleSide }));
       fall.position.y = -R * 0.68;
       head.add(fall);
+      break;
+    }
+    case 'glatt': {
+      // glatte Haare mit Mittelscheitel, hinter die Ohren gestrichen, fallen bis auf die Schultern
+      topCap(1.0, 1.07);
+      backCap(2.3, 1.065);
+      // zwei Haarhälften vom Mittelscheitel aus, rahmen die Stirn ein
+      for (const s of [-1, 1]) {
+        const half = shell(R * 1.085, col, s > 0 ? FRONT + 0.06 : FRONT - 1.36, 1.3, 0.12, 0.85);
+        head.add(half);
+      }
+      // glatter Fall hinten (Ohren bleiben frei)
+      const open = 1.75;
+      const fall = mesh(new THREE.CylinderGeometry(R * 1.03, R * 1.1, R * 0.95, 24, 1, true, open, Math.PI * 2 - open * 2), toon(col, { side: THREE.DoubleSide }));
+      fall.position.y = -R * 0.82;
+      head.add(fall);
+      // Strähnen hinter den Ohren, fallen auf die Schultern
+      for (const s of [-1, 1]) {
+        const strand = part(capsule, col, R * 0.2, R * 0.42, R * 0.24, s * R * 0.88, -R * 0.78, -R * 0.42);
+        strand.rotation.z = s * 0.12;
+        head.add(strand);
+      }
       break;
     }
     case 'bob': {
@@ -432,8 +454,11 @@ export class Chibi3D {
         pants = jeans;
         break;
       case 'streifenhemd':
-      case 'hoodie':
         pants = darkPants;
+        break;
+      case 'hoodie':
+      case 'troyer':
+        pants = a.accentColor;
         break;
     }
     const legColor = skirtColor && o !== 'mantel' ? (o === 'kleid' ? '#3a3440' : skin) : pants;
@@ -504,21 +529,41 @@ export class Chibi3D {
       for (const s of [-1, 1]) this.body.add(part(cylinder, '#1e1e24', 0.006, 0.09, 0.006, s * 0.03, neckY - 0.06, topR * 1.02));
       this.body.add(part(box, '#1e1e24', 0.008, torso * 0.65, 0.006, 0, torsoY + 0.02, topR * 1.05));
     }
+    if (o === 'troyer') {
+      // Troyer: Stehkragen mit kurzem Reißverschluss
+      const collar = mesh(new THREE.CylinderGeometry(topR * 0.62, topR * 0.72, 0.05, 18, 1, true), toon(darken(a.outfitColor, 0.05), { side: THREE.DoubleSide }));
+      collar.position.y = neckY + 0.012;
+      this.body.add(collar);
+      this.body.add(part(box, '#8d8a93', 0.007, 0.09, 0.006, 0, neckY - 0.03, topR * 0.98));
+      this.body.add(part(sphereLow, '#b9b6c0', 0.01, 0.014, 0.008, 0, neckY - 0.07, topR * 1.0));
+    }
     if (o === 'mantel') {
-      // Knöpfe & Schal
+      // Knöpfe
       for (let i = 0; i < 4; i++) this.body.add(part(sphereLow, darken(a.outfitColor, 0.35), 0.014, 0.014, 0.014, 0.028, torsoY + 0.09 - i * 0.07, topR * 1.08 - i * 0.003));
-      const scarf = mesh(new THREE.TorusGeometry(topR * 0.78, 0.032, 8, 18), toon(a.accentColor));
+    }
+    const scarfColor = a.scarf || (o === 'mantel' ? a.accentColor : '');
+    if (scarfColor) {
+      // Schal (Mantel) bzw. Halstuch mit Knoten
+      const thick = o === 'mantel' ? 0.032 : 0.022;
+      const scarf = mesh(new THREE.TorusGeometry(topR * 0.74, thick, 8, 18), toon(scarfColor));
       scarf.rotation.x = Math.PI / 2;
       scarf.position.y = neckY + 0.005;
       this.body.add(scarf);
-      const end = part(box, a.accentColor, 0.045, 0.12, 0.02, -0.035, neckY - 0.07, topR * 1.02);
-      end.rotation.z = 0.15;
-      this.body.add(end);
+      if (o === 'mantel') {
+        const end = part(box, scarfColor, 0.045, 0.12, 0.02, -0.035, neckY - 0.07, topR * 1.02);
+        end.rotation.z = 0.15;
+        this.body.add(end);
+      } else {
+        this.body.add(part(sphereLow, scarfColor, 0.034, 0.028, 0.026, 0.014, neckY - 0.004, topR * 0.9));
+        const tip = part(cone, scarfColor, 0.065, 0.075, 0.014, 0.014, neckY - 0.05, topR * 0.98);
+        tip.rotation.z = Math.PI;
+        this.body.add(tip);
+      }
     }
 
     // Arme (Drehpunkt an der Schulter)
     const shoulderY = this.hipY + torso * 0.92;
-    const sleeve = o === 'weste' ? a.accentColor : o === 'mantel' || o === 'hoodie' ? a.outfitColor : top;
+    const sleeve = o === 'weste' ? a.accentColor : o === 'mantel' || o === 'hoodie' || o === 'troyer' ? a.outfitColor : top;
     const sleeveMat: THREE.Material = o === 'streifenhemd' ? shirtMat : toon(sleeve);
     for (const side of [-1, 1]) {
       const arm = new THREE.Group();
@@ -547,7 +592,14 @@ export class Chibi3D {
     this.head.add(this.face);
 
     // Bart
-    if (a.beard !== 'keiner') {
+    if (a.beard === 'schnurrbart') {
+      const bc = a.beardColor || lighten(a.hairColor, 0.05);
+      for (const s of [-1, 1]) {
+        const m = part(sphereLow, bc, R * 0.16, R * 0.06, R * 0.06, s * R * 0.13, -R * 0.3, R * 0.9);
+        m.rotation.z = s * -0.18;
+        this.head.add(m);
+      }
+    } else if (a.beard !== 'keiner') {
       const bc = a.beardColor || lighten(a.hairColor, 0.05);
       const full = a.beard === 'voll';
       const beard = shell(R * 1.03, bc, FRONT - 1.1, 2.2, full ? 1.9 : 2.05, full ? 0.85 : 0.65);
@@ -564,6 +616,17 @@ export class Chibi3D {
     }
 
     addHair(this.head, a, R);
+
+    // Creolen
+    if (a.earrings) {
+      const gold = toon('#e3c15c');
+      for (const s of [-1, 1]) {
+        const ring = new THREE.Mesh(new THREE.TorusGeometry(R * 0.085, R * 0.02, 6, 14), gold);
+        ring.position.set(s * R * 1.0 * wide, -R * 0.3, R * 0.05);
+        ring.rotation.y = Math.PI / 2;
+        this.head.add(ring);
+      }
+    }
 
     // Brille
     if (a.glasses) {

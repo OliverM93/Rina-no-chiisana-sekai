@@ -24,13 +24,13 @@ Meilensteine und Fortschritt: siehe [`ROADMAP.md`](ROADMAP.md).
 | Figur | Rolle | Aussehen (für die Chibi-Figuren) |
 |---|---|---|
 | **Lina** | Spielerin | kastanienbraune Locken, etwas länger als schulterlang, Mittelscheitel, kein Pony, braune Augen, Sommersprossen (im Editor anpassbar), Geburtstag **16.06.** |
-| **Oliver („Oli“)** | Linas Freund – höchste Bindung, romantische Szenen, gemeinsames Haus/Zimmer | noch offen |
-| **Lars** | großer Bruder, Arzt – Praxis/Apotheke | groß & kräftig, kurz geschorene rotblonde Haare, rotblonder Vollbart, blaue Augen, dunkles Streifenhemd |
+| **Oliver („Oli“)** | Linas Freund – höchste Bindung, romantische Szenen, gemeinsames Haus/Zimmer | schlank, kurze dunkelblonde Haare, Schnurrbart, blaugraue Augen, schwarzer Troyer-Pulli, strahlendes Lächeln |
+| **Lars** | großer Bruder, Arzt – Praxis/Apotheke; guter Humor, hat immer einen Spruch auf Lager (z. B. „So, und nicht mit e, sonst ist es ein See.“) | groß & kräftig, kurz geschorene rotblonde Haare, rotblonder Vollbart, blaue Augen, dunkles Streifenhemd |
 | **Olaf** | Papa, Finanzamt – Dorfkasse/Bank | eher klein, dunkle angegraute Haare, grauer kurzer Bart, eckige Brille, weißes Hemd mit dunkler Weste |
 | **Christin** | Olafs Freundin – sehr ordentlich, achtet auf Ordnung & Sauberkeit | schlank, dunkelbrauner Bob mit Seitenscheitel, braune Augen, korallrotes Oberteil |
 | **Jens** | Onkel, Coach, Dandy – Bistro/Kochstudio & Galerie, Französisch + Sächsisch | untersetzt, rundes Gesicht, dunkle zerzauste Haare, kein Bart, blaue Augen, Zahnlücken-Grinsen, dunkler Hoodie |
-| **Thalia** | beste Freundin, Geografie – Partys, Karten, Gesteine/Fossilien | noch offen |
-| **Oma Gisela** | Oma – Bank vorm Haus, Weisheiten, Kekse, Strickrezepte; hat **immer das letzte Wort**, misstrauisch („Die Ärzte wollen nur dein Geld …“), starke Meinung zu allem („köstlich!“ – „pfui!“); Likörchen/Zigarette dezent & humorvoll, nie glorifizierend | klein, zierlich, offene silbergraue Haare (kein Dutt), Brille, königsblauer Mantel mit rotem Tuch |
+| **Thalia** | beste Freundin, Geografie – Partys, Karten, Gesteine/Fossilien | schlank, glatte dunkelbraune schulterlange Haare mit Mittelscheitel, braune Augen, kleine Creolen, grünes Halstuch, schwarze Jacke, weite Jeans |
+| **Oma Gisela** | Oma – Bank vorm Haus, Weisheiten, Kekse, Strickrezepte; hat **immer das letzte Wort**, misstrauisch („Die Ärzte wollen nur dein Geld …“), starke Meinung zu allem („köstlich!“ – „pfui!“); Likörchen/Zigarette dezent & humorvoll, nie glorifizierend | klein, zierlich, offene silbergraue Haare (kein Dutt), **keine Brille**, königsblauer Mantel mit rotem Tuch |
 
 Figuren sind **Chibi-Menschen** (keine Tiere) – erkennbar an Frisur, Bart, Brille, Größe, Statur, Kleidung.
 Das Aussehen aller Bewohner steht in `src/data/npcs/looks.ts` (nach Fotos nachempfunden).

@@ -22,10 +22,12 @@ const base: Appearance = {
   eyeColor: palette.eyeColors.blau,
   freckles: false,
   smile: 'laecheln',
+  scarf: '',
+  earrings: false,
 };
 
 export const LOOKS: Readonly<Record<string, Appearance>> = {
-  /** Oma Gisela: klein & zierlich, silbergraue, offene Haare, königsblauer Mantel mit rotem Tuch, Brille */
+  /** Oma Gisela: klein & zierlich, silbergraue, offene Haare, königsblauer Mantel mit rotem Tuch (keine Brille) */
   gisela: {
     ...base,
     hairStyle: 'schulterlang',
@@ -36,10 +38,10 @@ export const LOOKS: Readonly<Record<string, Appearance>> = {
     accentColor: '#b8324a',
     height: 0.86,
     build: 0.9,
-    glasses: true,
-    glassesShape: 'rund',
+    glasses: false,
     eyeColor: palette.eyeColors.graublau,
     smile: 'grinsen',
+    scarf: '#b8324a',
   },
   /** Olaf (Papa): kurze dunkle, angegraute Haare, grauer Bart, eckige Brille, weißes Hemd mit dunkler Weste */
   olaf: {
@@ -101,5 +103,38 @@ export const LOOKS: Readonly<Record<string, Appearance>> = {
     build: 1.2,
     eyeColor: palette.eyeColors.blau,
     smile: 'zahnluecke',
+  },
+  /** Thalia (beste Freundin): glatte, dunkelbraune Haare mit Mittelscheitel, Creolen, grünes Halstuch, schwarze Jacke, weite Jeans */
+  thalia: {
+    ...base,
+    hairStyle: 'glatt',
+    hairColor: '#4b3328',
+    skinTone: palette.skin[1],
+    outfit: 'hoodie',
+    outfitColor: '#26252b',
+    accentColor: '#5b6f99',
+    height: 0.97,
+    build: 0.92,
+    eyeColor: palette.eyeColors.braun,
+    smile: 'laecheln',
+    scarf: '#3f7a62',
+    earrings: true,
+  },
+  /** Oli (Linas Freund): kurze dunkelblonde Haare, Schnurrbart, schwarzer Troyer-Pulli, strahlendes Lächeln */
+  oli: {
+    ...base,
+    hairStyle: 'kurz',
+    hairColor: '#8c6a48',
+    beard: 'schnurrbart',
+    beardColor: '#7a5a3c',
+    skinTone: palette.skin[1],
+    outfit: 'troyer',
+    outfitColor: '#23232a',
+    accentColor: '#2f3340',
+    height: 1.08,
+    build: 1.0,
+    blush: false,
+    eyeColor: palette.eyeColors.graublau,
+    smile: 'grinsen',
   },
 };

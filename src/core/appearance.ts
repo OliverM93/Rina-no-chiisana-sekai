@@ -7,9 +7,9 @@
  */
 import { palette } from '../style/palette';
 
-export type HairStyle = 'locken' | 'schulterlang' | 'bob' | 'zopf' | 'dutt' | 'kurz' | 'wuschel' | 'zerzaust' | 'kurzgeschoren';
-export type Outfit = 'kleid' | 'pulli' | 'latzhose' | 'hemd' | 'strickjacke' | 'mantel' | 'weste' | 'streifenhemd' | 'hoodie';
-export type Beard = 'keiner' | 'kurz' | 'voll';
+export type HairStyle = 'locken' | 'schulterlang' | 'bob' | 'zopf' | 'dutt' | 'kurz' | 'wuschel' | 'zerzaust' | 'kurzgeschoren' | 'glatt';
+export type Outfit = 'kleid' | 'pulli' | 'latzhose' | 'hemd' | 'strickjacke' | 'mantel' | 'weste' | 'streifenhemd' | 'hoodie' | 'troyer';
+export type Beard = 'keiner' | 'kurz' | 'voll' | 'schnurrbart';
 export type Smile = 'laecheln' | 'grinsen' | 'zahnluecke';
 export type GlassesShape = 'rund' | 'eckig';
 
@@ -33,6 +33,10 @@ export interface Appearance {
   eyeColor: string;
   freckles: boolean;
   smile: Smile;
+  /** Halstuch/Schal-Farbe; leer = keins */
+  scarf: string;
+  /** kleine Creolen */
+  earrings: boolean;
 }
 
 export interface Option<T> {
@@ -50,6 +54,7 @@ export const HAIR_STYLES: Option<HairStyle>[] = [
   { id: 'wuschel', label: 'Wuschelkopf' },
   { id: 'zerzaust', label: 'Zerzaust' },
   { id: 'kurzgeschoren', label: 'Kurz geschoren' },
+  { id: 'glatt', label: 'Glatt mit Mittelscheitel' },
 ];
 
 export const OUTFITS: Option<Outfit>[] = [
@@ -61,6 +66,7 @@ export const OUTFITS: Option<Outfit>[] = [
   { id: 'streifenhemd', label: 'Streifenhemd' },
   { id: 'weste', label: 'Hemd & Weste' },
   { id: 'hoodie', label: 'Hoodie' },
+  { id: 'troyer', label: 'Troyer-Pulli' },
   { id: 'mantel', label: 'Mantel & Schal' },
 ];
 
@@ -118,6 +124,8 @@ export const DEFAULT_LINA: Appearance = {
   eyeColor: palette.eyeColors.braun,
   freckles: true,
   smile: 'laecheln',
+  scarf: '',
+  earrings: false,
 };
 
 const HEX = /^#[0-9a-fA-F]{6}$/;
@@ -143,6 +151,7 @@ export function normalizeAppearance(raw: unknown, fallback: Appearance = DEFAULT
     { id: 'keiner', label: '' },
     { id: 'kurz', label: '' },
     { id: 'voll', label: '' },
+    { id: 'schnurrbart', label: '' },
   ];
   return {
     hairStyle: pick(r.hairStyle, HAIR_STYLES, fallback.hairStyle),
@@ -161,6 +170,8 @@ export function normalizeAppearance(raw: unknown, fallback: Appearance = DEFAULT
     eyeColor: color(r.eyeColor, fallback.eyeColor),
     freckles: typeof r.freckles === 'boolean' ? r.freckles : fallback.freckles,
     smile: pick(r.smile, SMILES, fallback.smile),
+    scarf: r.scarf === '' ? '' : color(r.scarf, fallback.scarf),
+    earrings: typeof r.earrings === 'boolean' ? r.earrings : fallback.earrings,
   };
 }
 
@@ -182,5 +193,7 @@ export function appearanceKey(a: Appearance): string {
     a.eyeColor,
     a.freckles ? 1 : 0,
     a.smile,
+    a.scarf,
+    a.earrings ? 1 : 0,
   ].join('|');
 }

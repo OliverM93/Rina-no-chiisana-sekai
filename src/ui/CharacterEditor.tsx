@@ -114,6 +114,12 @@ export function CharacterEditor({ mode, initial, initialVillage, onDone, onCance
               <Chip active={a.freckles} onClick={() => set('freckles', !a.freckles)}>
                 ✨ Sommersprossen
               </Chip>
+              <Chip active={a.earrings} onClick={() => set('earrings', !a.earrings)}>
+                💫 Ohrringe
+              </Chip>
+              <Chip active={a.scarf !== ''} onClick={() => set('scarf', a.scarf ? '' : a.accentColor)}>
+                🧣 Halstuch
+              </Chip>
             </OptionRow>
             {mode === 'new' && (
               <div class="option-row">
