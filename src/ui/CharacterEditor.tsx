@@ -11,8 +11,10 @@ import {
   HAIR_STYLES,
   OUTFIT_COLORS,
   OUTFITS,
+  SHOES,
   SKIN_TONES,
 } from '../core/appearance';
+import type { Season } from '../core/time';
 import { DEFAULT_VILLAGE_NAME } from '../core/save';
 import { Preview3D } from './Preview3D';
 
@@ -33,11 +35,12 @@ interface Props {
   mode: 'new' | 'edit';
   initial: Appearance;
   initialVillage?: string;
+  season: Season;
   onDone: (appearance: Appearance, villageName: string) => void;
   onCancel: () => void;
 }
 
-export function CharacterEditor({ mode, initial, initialVillage, onDone, onCancel }: Props) {
+export function CharacterEditor({ mode, initial, initialVillage, season, onDone, onCancel }: Props) {
   const [a, setA] = useState<Appearance>(initial);
   const [village, setVillage] = useState(initialVillage ?? DEFAULT_VILLAGE_NAME);
   const [angle, setAngle] = useState(0);
@@ -51,7 +54,7 @@ export function CharacterEditor({ mode, initial, initialVillage, onDone, onCance
         <div class="editor-body">
           <div class="editor-preview">
             <div class="preview-stage">
-              <Preview3D appearance={a} angle={angle} />
+              <Preview3D appearance={a} angle={angle} season={season} />
             </div>
             <button class="btn small" onClick={() => setAngle((v) => v + Math.PI / 2)}>
               ⟲ Drehen
@@ -90,6 +93,13 @@ export function CharacterEditor({ mode, initial, initialVillage, onDone, onCance
             <OptionRow label="Kleidung">
               {OUTFITS.map((o) => (
                 <Chip key={o.id} active={a.outfit === o.id} onClick={() => set('outfit', o.id)}>
+                  {o.label}
+                </Chip>
+              ))}
+            </OptionRow>
+            <OptionRow label="Schuhe">
+              {SHOES.map((o) => (
+                <Chip key={o.id} active={a.shoes === o.id} onClick={() => set('shoes', o.id)}>
                   {o.label}
                 </Chip>
               ))}

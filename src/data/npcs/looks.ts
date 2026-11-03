@@ -24,6 +24,7 @@ const base: Appearance = {
   smile: 'laecheln',
   scarf: '',
   earrings: false,
+  shoes: 'standard',
 };
 
 export const LOOKS: Readonly<Record<string, Appearance>> = {

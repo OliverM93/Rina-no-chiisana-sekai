@@ -55,6 +55,8 @@ Legende: ✅ erledigt · 🚧 in Arbeit · ⬜ geplant
 - ✅ Dächer mit Ziegelreihen, weichere Flussufer
 - ✅ Thalia & Oli nach Fotos (glatte Haare mit Mittelscheitel, Schnurrbart, Troyer-Pulli, Halstuch, Creolen);
   Oma Gisela ohne Brille, Linas Locken länger; Halstuch & Ohrringe auch im Editor
+- ✅ Linas Standard-Outfit ganz in Schwarz; Schuhe je nach Jahreszeit (Herbst/Winter Schnürstiefel,
+  Frühling/Sommer weiße Sneaker) – im Editor wählbar
 
 ## ⬜ M4 – Natur: Angeln, Insekten, Gärtnern, Wetter, Museum
 

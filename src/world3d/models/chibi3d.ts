@@ -7,7 +7,8 @@
  * Ursprung = zwischen den Füßen, Blickrichtung = +Z.
  */
 import * as THREE from 'three';
-import type { Appearance } from '../../core/appearance';
+import { shoesFor, type Appearance } from '../../core/appearance';
+import type { Season } from '../../core/time';
 import { mulberry32 } from '../../core/rng';
 import { darken, lighten, mixHex } from '../../style/palette';
 import { mesh, toon } from '../materials';
@@ -390,7 +391,11 @@ export class Chibi3D {
   private arms: THREE.Group[] = [];
   private hipY = 0;
 
-  constructor(appearance: Appearance) {
+  /** Jahreszeit bestimmt bei `shoes: 'saison'` die Schuhe. */
+  constructor(
+    appearance: Appearance,
+    private readonly season: Season = 'sommer',
+  ) {
     this.root.add(this.body);
     this.build(appearance);
   }
@@ -461,14 +466,32 @@ export class Chibi3D {
         pants = a.accentColor;
         break;
     }
-    const legColor = skirtColor && o !== 'mantel' ? (o === 'kleid' ? '#3a3440' : skin) : pants;
+    const shoes = shoesFor(a, this.season);
+    let legColor = skirtColor && o !== 'mantel' ? (o === 'kleid' ? '#3a3440' : skin) : pants;
+    // zu Stiefeln im Winter: blickdichte Strumpfhose statt nackter Beine
+    if (shoes === 'stiefel' && legColor === skin) legColor = '#2a2730';
 
     // Beine (Drehpunkt an der Hüfte)
     for (const side of [-1, 1]) {
       const leg = new THREE.Group();
       leg.position.set(side * 0.066 * bw, this.hipY, 0);
       leg.add(part(cylinder, legColor, 0.044 * Math.min(1.15, bw), legLen, 0.044, 0, -legLen / 2, 0));
-      leg.add(part(sphere, o === 'mantel' || o === 'kleid' ? '#3b2f36' : '#5a4038', 0.06, 0.042, 0.078, 0, -legLen - 0.005, 0.02));
+      const footY = -legLen - 0.005;
+      if (shoes === 'stiefel') {
+        // Schnürstiefel: schwarzer Schaft, klobige Sohle mit gelber Naht
+        const leather = '#1f1d22';
+        leg.add(part(cylinder, leather, 0.05, legLen * 0.5, 0.05, 0, -legLen * 0.75, 0));
+        leg.add(part(sphere, leather, 0.064, 0.046, 0.084, 0, footY + 0.004, 0.022));
+        leg.add(part(cylinder, '#e3c04f', 0.067, 0.006, 0.088, 0, footY - 0.02, 0.022));
+        leg.add(part(cylinder, '#3a3439', 0.066, 0.02, 0.087, 0, footY - 0.032, 0.022));
+        for (let i = 0; i < 3; i++) leg.add(part(box, '#4a454c', 0.03, 0.005, 0.006, 0, -legLen * (0.62 + i * 0.12), 0.05));
+      } else if (shoes === 'sneaker') {
+        // weiße Sneaker mit heller Sohle
+        leg.add(part(sphere, '#f7f5f1', 0.058, 0.04, 0.08, 0, footY, 0.022));
+        leg.add(part(cylinder, '#e4e0da', 0.06, 0.016, 0.083, 0, footY - 0.026, 0.022));
+      } else {
+        leg.add(part(sphere, o === 'mantel' || o === 'kleid' ? '#3b2f36' : '#5a4038', 0.06, 0.042, 0.078, 0, footY, 0.02));
+      }
       this.body.add(leg);
       this.legs.push(leg);
     }

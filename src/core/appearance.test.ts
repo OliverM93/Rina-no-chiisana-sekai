@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { LOOKS } from '../data/npcs/looks';
-import { DEFAULT_LINA, normalizeAppearance } from './appearance';
+import { DEFAULT_LINA, normalizeAppearance, shoesFor } from './appearance';
 
 describe('Aussehen', () => {
   it('ergänzt neue Felder für alte Spielstände', () => {
@@ -31,5 +31,16 @@ describe('Aussehen', () => {
 
   it('alle Bewohner-Looks sind gültig', () => {
     for (const [id, look] of Object.entries(LOOKS)) expect(normalizeAppearance(look, look), id).toEqual(look);
+  });
+
+  it('Lina trägt Schwarz – Stiefel im Winter, weiße Sneaker im Sommer', () => {
+    expect(DEFAULT_LINA.outfitColor).toBe(DEFAULT_LINA.accentColor);
+    expect(shoesFor(DEFAULT_LINA, 'winter')).toBe('stiefel');
+    expect(shoesFor(DEFAULT_LINA, 'herbst')).toBe('stiefel');
+    expect(shoesFor(DEFAULT_LINA, 'sommer')).toBe('sneaker');
+    expect(shoesFor(DEFAULT_LINA, 'fruehling')).toBe('sneaker');
+    expect(shoesFor({ ...DEFAULT_LINA, shoes: 'stiefel' }, 'sommer')).toBe('stiefel');
+    expect(normalizeAppearance({}).shoes).toBe('saison');
+    expect(normalizeAppearance({ shoes: 'flipflops' }).shoes).toBe('saison');
   });
 });

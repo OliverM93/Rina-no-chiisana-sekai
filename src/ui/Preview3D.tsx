@@ -4,15 +4,18 @@
 import { useEffect, useRef } from 'preact/hooks';
 import * as THREE from 'three';
 import type { Appearance } from '../core/appearance';
+import type { Season } from '../core/time';
 import { Chibi3D } from '../world3d/models/chibi3d';
 
 interface Props {
   appearance: Appearance;
   /** Drehwinkel in Radiant */
   angle: number;
+  /** Jahreszeit im Dorf (für Schuhe „je nach Jahreszeit“) */
+  season?: Season;
 }
 
-export function Preview3D({ appearance, angle }: Props) {
+export function Preview3D({ appearance, angle, season = 'sommer' }: Props) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const state = useRef<{ chibi: Chibi3D; renderer: THREE.WebGLRenderer; angle: number } | null>(null);
 
@@ -31,7 +34,7 @@ export function Preview3D({ appearance, angle }: Props) {
     const camera = new THREE.PerspectiveCamera(26, canvas.clientWidth / canvas.clientHeight, 0.1, 20);
     camera.position.set(0, 0.95, 3.1);
     camera.lookAt(0, 0.5, 0);
-    const chibi = new Chibi3D(appearance);
+    const chibi = new Chibi3D(appearance, season);
     scene.add(chibi.root);
     state.current = { chibi, renderer, angle };
     let t = 0;

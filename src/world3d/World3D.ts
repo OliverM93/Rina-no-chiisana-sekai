@@ -328,7 +328,7 @@ export class World3D {
     if (!data) return;
     this.player?.destroy();
     const p = data.player;
-    this.player = new Character(this.scene, p.appearance, p.x, p.y, p.facing, this.view.terrain.heightAt);
+    this.player = new Character(this.scene, p.appearance, p.x, p.y, p.facing, this.view.terrain.heightAt, this.session.season);
     this.camTarget.set(p.x * UNIT, 0, p.y * UNIT);
 
     this.collectibles.refresh();

@@ -77,6 +77,7 @@ export const palette = {
     '#ffffff', // Weiß
     '#8a9bc4', // Jeansblau
     '#7d6a73', // Mokka
+    '#2b2a31', // Schwarz
   ],
 
   // --- Licht & Effekte -------------------------------------------------------

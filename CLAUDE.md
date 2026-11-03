@@ -23,7 +23,7 @@ Meilensteine und Fortschritt: siehe [`ROADMAP.md`](ROADMAP.md).
 
 | Figur | Rolle | Aussehen (für die Chibi-Figuren) |
 |---|---|---|
-| **Lina** | Spielerin | kastanienbraune Locken, etwas länger als schulterlang, Mittelscheitel, kein Pony, braune Augen, Sommersprossen (im Editor anpassbar), Geburtstag **16.06.** |
+| **Lina** | Spielerin | kastanienbraune Locken, etwas länger als schulterlang, Mittelscheitel, kein Pony, braune Augen, Sommersprossen, trägt am liebsten **Schwarz** – im Winter mit Doc-Martens-artigen Schnürstiefeln, im Sommer mit weißen Sneakern (alles im Editor anpassbar), Geburtstag **16.06.** |
 | **Oliver („Oli“)** | Linas Freund – höchste Bindung, romantische Szenen, gemeinsames Haus/Zimmer | schlank, kurze dunkelblonde Haare, Schnurrbart, blaugraue Augen, schwarzer Troyer-Pulli, strahlendes Lächeln |
 | **Lars** | großer Bruder, Arzt – Praxis/Apotheke; guter Humor, hat immer einen Spruch auf Lager (z. B. „So, und nicht mit e, sonst ist es ein See.“) | groß & kräftig, kurz geschorene rotblonde Haare, rotblonder Vollbart, blaue Augen, dunkles Streifenhemd |
 | **Olaf** | Papa, Finanzamt – Dorfkasse/Bank | eher klein, dunkle angegraute Haare, grauer kurzer Bart, eckige Brille, weißes Hemd mit dunkler Weste |

@@ -33,7 +33,7 @@ export class Npc {
   ) {
     const door = this.doorTile();
     const start = door ? tileCenterFeet(door) : { x: 0, y: 0 };
-    this.char = new Character(parent, def.appearance, start.x, start.y, 'down', heightAt);
+    this.char = new Character(parent, def.appearance, start.x, start.y, 'down', heightAt, session.season);
     this.char.speedFactor = NPC_SPEED;
     // Gleich an die richtige Stelle setzen (ohne Laufen)
     this.applyEntry(activityAt(def.schedule, session.clock()), true);

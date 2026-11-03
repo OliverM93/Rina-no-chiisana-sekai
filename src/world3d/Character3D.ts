@@ -7,6 +7,7 @@ import * as THREE from 'three';
 import { RUN_SPEED, TILE, UNIT, WALK_SPEED } from '../config';
 import type { Appearance } from '../core/appearance';
 import type { Tile } from '../core/grid';
+import type { Season } from '../core/time';
 import { facingFromVector, type FootBox, moveWithCollision, type SolidFn } from '../core/movement';
 import type { Facing } from '../core/save';
 import { Chibi3D } from './models/chibi3d';
@@ -55,8 +56,9 @@ export class Character {
     y: number,
     facing: Facing,
     private readonly heightAt: (x: number, z: number) => number,
+    season: Season = 'sommer',
   ) {
-    this.chibi = new Chibi3D(appearance);
+    this.chibi = new Chibi3D(appearance, season);
     parent.add(this.chibi.root);
     this.x = x;
     this.y = y;
