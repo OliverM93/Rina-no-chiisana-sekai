@@ -1518,3 +1518,52 @@ body {
   border: 3px solid var(--ui-border);
   image-rendering: auto;
 }
+
+/* ---------------------------------------------------------------- M7e: Feuerwerk */
+
+.fireworks .firework {
+  position: absolute;
+  width: 0;
+  height: 0;
+  animation: fw-pop 6.3s ease-out infinite;
+  opacity: 0;
+}
+
+.fireworks .firework i {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 3px;
+  height: 46px;
+  margin-left: -1.5px;
+  transform-origin: 50% 0;
+  border-radius: 3px;
+  background: linear-gradient(to bottom, transparent, currentColor);
+}
+
+.fireworks .fw-0 { color: var(--rb-red); }
+.fireworks .fw-1 { color: var(--rb-yellow); }
+.fireworks .fw-2 { color: var(--rb-blue); }
+.fireworks .fw-3 { color: var(--rb-violet); }
+
+@keyframes fw-pop {
+  0% {
+    opacity: 0;
+    transform: scale(0.1);
+  }
+  3% {
+    opacity: 1;
+  }
+  16% {
+    opacity: 0.9;
+    transform: scale(1);
+  }
+  26% {
+    opacity: 0;
+    transform: scale(1.15) translateY(12px);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.15) translateY(12px);
+  }
+}

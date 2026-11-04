@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { FURNITURE_ITEMS } from './furniture';
 import { NPCS } from './npcs';
 import { TRAVELS } from './npcs/jens';
+import { FEST_GIFTS } from './festivals';
 
 // Diese bringt Oli beim Einzug mit (siehe World3D.oliArrival)
 const MOVE_IN_GIFTS = ['schreibtisch-pc', 'hantelbank'];
@@ -9,7 +10,7 @@ const MOVE_IN_GIFTS = ['schreibtisch-pc', 'hantelbank'];
 describe('Geschenk-Möbel', () => {
   it('jedes Möbel „nur als Geschenk“ kommt irgendwoher', () => {
     const fromLetters = new Set(NPCS.flatMap((n) => [...n.letters, ...Object.values(n.heartLetters)]).map((l) => l.gift?.itemId));
-    for (const f of FURNITURE_ITEMS.filter((x) => x.def.gift)) expect(fromLetters.has(f.itemId) || MOVE_IN_GIFTS.includes(f.itemId) || TRAVELS.some((t) => t.souvenir === f.itemId), f.itemId).toBe(true);
+    for (const f of FURNITURE_ITEMS.filter((x) => x.def.gift)) expect(fromLetters.has(f.itemId) || MOVE_IN_GIFTS.includes(f.itemId) || TRAVELS.some((t) => t.souvenir === f.itemId) || Object.values(FEST_GIFTS).some((g) => Object.values(g ?? {}).some((x) => x.itemId === f.itemId)), f.itemId).toBe(true);
   });
 
   it('Oli wohnt bei Lina und nennt sie Lini', () => {
@@ -65,5 +66,18 @@ describe('Thalia', () => {
     expect(isPartyTime(fake(true), new Date('2026-11-07T18:59:00'))).toBe(false);
     expect(isPartyTime(fake(true), new Date('2026-11-06T20:00:00'))).toBe(false);
     expect(isPartyTime(fake(false), new Date('2026-11-07T20:00:00'))).toBe(false);
+  });
+});
+
+describe('Feste', () => {
+  it('alle Fest-Geschenke sind echte Gegenstände von echten Bewohnern', async () => {
+    const { isKnownItem } = await import('./items');
+    const ids = new Set(NPCS.map((n) => n.id));
+    for (const [f, byNpc] of Object.entries(FEST_GIFTS)) {
+      for (const [npc, g] of Object.entries(byNpc ?? {})) {
+        expect(ids.has(npc), `${f}:${npc}`).toBe(true);
+        expect(isKnownItem(g.itemId), `${f}:${g.itemId}`).toBe(true);
+      }
+    }
   });
 });

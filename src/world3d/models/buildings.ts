@@ -635,3 +635,98 @@ export function makePartyLights(x0: number, z0: number, x1: number, z1: number):
   });
   return { group: g, bulbs };
 }
+
+/** Weihnachtsbaum mit Kugeln, Lichtern und Stern. Gibt Leucht-Material für Tag/Nacht mit */
+export function makeChristmasTree(): { group: THREE.Group; glow: THREE.MeshToonMaterial } {
+  const g = new THREE.Group();
+  g.add(c(0.12, 0.4, palette.wood.bark, 0, 0.2, 0));
+  g.add(c(0.3, 0.25, '#c9302c', 0, 0.12, 0));
+  const green = ['#2f7a4a', '#3a8a56', '#4a9a62'];
+  const cone = new THREE.ConeGeometry(1, 1, 10);
+  [[1.0, 0.9, 0.85], [0.8, 0.85, 1.45], [0.58, 0.75, 1.98], [0.36, 0.6, 2.45]].forEach(([r, h, y], i) => {
+    const m = mesh(cone, toon(green[i % 3]));
+    m.scale.set(r, h, r);
+    m.position.y = y;
+    g.add(m);
+  });
+  const balls = ['#e8484f', '#f2c94c', '#5b7fc2', '#e85a8a', '#ffffff'];
+  for (let i = 0; i < 22; i++) {
+    const t = i / 22;
+    const y = 0.6 + t * 2.0;
+    const r = (1 - t) * 0.9 + 0.12;
+    const a = i * 2.4;
+    g.add(s(0.07, 0.07, 0.07, balls[i % balls.length], Math.cos(a) * r, y, Math.sin(a) * r));
+  }
+  const glow = new THREE.MeshToonMaterial({ color: '#fff3b0', emissive: '#ffd36b', emissiveIntensity: 0.4 });
+  for (let i = 0; i < 30; i++) {
+    const t = i / 30;
+    const y = 0.55 + t * 2.1;
+    const r = (1 - t) * 0.92 + 0.1;
+    const a = i * 1.1;
+    const bulb = new THREE.Mesh(sphere, glow);
+    bulb.scale.setScalar(0.035);
+    bulb.position.set(Math.cos(a) * r, y, Math.sin(a) * r);
+    g.add(bulb);
+  }
+  // Stern
+  const star = new THREE.Shape();
+  for (let i = 0; i < 10; i++) {
+    const a = (i / 10) * Math.PI * 2 + Math.PI / 2;
+    const r = i % 2 === 0 ? 0.24 : 0.1;
+    if (i === 0) star.moveTo(Math.cos(a) * r, Math.sin(a) * r);
+    else star.lineTo(Math.cos(a) * r, Math.sin(a) * r);
+  }
+  const st = mesh(new THREE.ExtrudeGeometry(star, { depth: 0.05, bevelEnabled: false }), glow);
+  st.position.set(0, 2.85, -0.025);
+  g.add(st);
+  // Geschenke unterm Baum
+  for (const [x, z, col] of [[0.55, 0.35, '#e85a8a'], [-0.5, 0.4, '#5b7fc2'], [0.1, 0.6, '#f2c94c']] as const) {
+    g.add(b(0.28, 0.22, 0.28, col, x, 0.11, z));
+    g.add(b(0.3, 0.05, 0.06, '#ffffff', x, 0.2, z));
+    g.add(b(0.06, 0.05, 0.3, '#ffffff', x, 0.2, z));
+  }
+  g.traverse((o) => {
+    if ((o as THREE.Mesh).isMesh) o.castShadow = true;
+  });
+  return { group: g, glow };
+}
+
+/** Geschnitzter Kürbis mit Licht (Halloween) */
+export function makePumpkin(glow: THREE.Material): THREE.Group {
+  const g = new THREE.Group();
+  for (let i = 0; i < 6; i++) {
+    const a = (i / 6) * Math.PI * 2;
+    g.add(s(0.12, 0.17, 0.12, '#e8873a', Math.cos(a) * 0.08, 0.16, Math.sin(a) * 0.08));
+  }
+  g.add(c(0.025, 0.08, '#5f8a4a', 0, 0.34, 0));
+  // Gesicht (leuchtet)
+  for (const x of [-0.07, 0.07]) {
+    const eye = new THREE.Mesh(new THREE.ConeGeometry(0.035, 0.05, 3), glow);
+    eye.position.set(x, 0.2, 0.19);
+    eye.rotation.x = Math.PI / 2;
+    g.add(eye);
+  }
+  const mouth = new THREE.Mesh(new THREE.BoxGeometry(0.14, 0.035, 0.02), glow);
+  mouth.position.set(0, 0.11, 0.2);
+  g.add(mouth);
+  return g;
+}
+
+/** Bunte Luftballons an einer Schnur (Linas Geburtstag) */
+export function makeBalloons(): THREE.Group {
+  const g = new THREE.Group();
+  const cols = ['#e85a8a', '#f7d26a', '#8ac8ff', '#b8f0a0', '#c3a8e8'];
+  cols.forEach((col, i) => {
+    const a = (i / cols.length) * Math.PI * 2;
+    const x = Math.cos(a) * 0.22;
+    const z = Math.sin(a) * 0.12;
+    const y = 1.5 + (i % 2) * 0.22;
+    g.add(s(0.15, 0.19, 0.15, col, x, y, z));
+    const string = new THREE.Mesh(cyl, toon('#ffffff'));
+    string.scale.set(0.006, y - 0.2, 0.006);
+    string.position.set(x / 2, (y - 0.2) / 2 + 0.1, z / 2);
+    g.add(string);
+  });
+  g.add(c(0.06, 0.1, '#8a5a3a', 0, 0.05, 0));
+  return g;
+}

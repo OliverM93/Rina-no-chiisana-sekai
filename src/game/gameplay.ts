@@ -12,6 +12,7 @@ import { addItem as invAdd, removeItem as invRemove, takeSlot } from '../core/in
 import { deliver, mailDue, unreadCount } from '../core/mail';
 import { hashString, mulberry32 } from '../core/rng';
 import { formatIsoDay, getDayPhase, getSeason, isSameDayMonth } from '../core/time';
+import { festivalsOn } from '../core/festivals';
 import { weatherAt } from '../core/weather';
 import { terrainAt } from '../core/worldmap';
 import { BEACH_FINDS, BEACH_FINDS_PER_DAY, CURRENCY, itemCountLabel, itemDef, maxStackOf, ROCK_FINDS } from '../data/items';
@@ -22,6 +23,7 @@ import type { LetterTemplate, NpcDef } from '../data/npcs/types';
 import type { Session } from './session';
 import { itemIconUrl } from '../gfx/items';
 import { onItemObtained } from './crafting';
+import { festTalk } from './festivals';
 import { isPartyTime } from './party';
 
 // ---------------------------------------------------------------------------
@@ -157,6 +159,7 @@ function dialogueContext(session: Session, npcId: string, firstToday: boolean): 
   if (session.data?.flags.larsEingezogen) tags.push('lars-da');
   if (session.data?.flags.thaliaEingezogen) tags.push('thalia-da');
   if (isPartyTime(session)) tags.push('party');
+  for (const f of festivalsOn(now, session.data?.player.birthday)) tags.push(`fest-${f}`);
   if (session.data?.yard.items.some((i) => FURNITURE_BY_ITEM[i.itemId]?.def.coop === 'huhn')) tags.push('huehner');
   if (session.data?.yard.items.some((i) => FURNITURE_BY_ITEM[i.itemId]?.def.coop === 'wachtel')) tags.push('wachteln');
   if (w.rainbow) tags.push('regenbogen');
@@ -214,7 +217,9 @@ export function talkToNpc(session: Session, npcId: string): TalkOutcome {
   const ctx = dialogueContext(session, npcId, result.firstToday);
   const lines: string[] = [];
   if (result.firstToday) {
-    lines.push(...pickLine(npc.dialogue.greetings, ctx));
+    const fest = festTalk(session, npcId);
+    if (fest.length > 0) lines.push(...fest);
+    else lines.push(...pickLine(npc.dialogue.greetings, ctx));
     const treat = npc.dailyTreat;
     if (treat && dayRandom(session, `${npcId}:treat`)() < treat.chance) {
       lines.push(...treat.lines);

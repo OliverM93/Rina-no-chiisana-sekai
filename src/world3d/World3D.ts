@@ -75,6 +75,10 @@ import { Insects3D } from './Insects3D';
 import { Interior3D, ROOM_X, ROOM_Y } from './Interior3D';
 import { Yard3D } from './Yard3D';
 import { DigSpots3D } from './DigSpots3D';
+import { Festivals3D } from './Festivals3D';
+import { todaysFestivals } from '../game/festivals';
+import { FESTIVAL_INFO } from '../data/festivals';
+import { isFireworkTime } from '../core/festivals';
 import { digSpot } from '../game/digging';
 import { THALIA_WELCOME, PARTY_LINES } from '../data/npcs/thalia';
 import { FIND_BY_ID } from '../data/fossils';
@@ -159,6 +163,9 @@ export class World3D {
   private yard: Yard3D;
   private animals: Animals3D;
   private digSpots: DigSpots3D;
+  private festivals: Festivals3D;
+  private festToastDay = '';
+  private fireworks = false;
   private digging = false;
   private partyLights: { group: THREE.Group; bulbs: THREE.MeshToonMaterial[] };
   private partyLight = new THREE.PointLight('#ffb8d8', 0, 9, 1.4);
@@ -231,6 +238,7 @@ export class World3D {
     this.interior = new Interior3D(this.scene);
     this.yard = new Yard3D(this.scene, this.view.terrain.heightAt);
     this.digSpots = new DigSpots3D(this.scene, session, this.view);
+    this.festivals = new Festivals3D(this.scene, session.map, this.view.terrain.heightAt);
     session.livePositions = () => {
       const out: Record<string, { x: number; y: number }> = {};
       const p = this.player;
@@ -307,6 +315,7 @@ export class World3D {
     this.hemi.intensity = this.baseHemi + this.weather.lightning * 1.4;
     this.insects.update(dt, this.night);
     this.digSpots.update(dt, !this.session.inside);
+    this.festivals.update(dt, this.night, !this.session.inside);
     {
       const h = this.session.clock().getHours();
       this.animals.update(dt, this.session.data?.yard, h >= 21 || h < 6, !this.session.inside);
@@ -412,6 +421,11 @@ export class World3D {
     const sky = this.session.inside ? mixHex('#f3e3cf', '#3a3450', n * 0.7) : outside;
     this.interior.updateLight(n, clouds);
     this.yard.updateLight(n);
+    const fw = isFireworkTime(now) && !this.session.inside;
+    if (fw !== this.fireworks) {
+      this.fireworks = fw;
+      this.session.bus.emit('overlay:fireworks', fw);
+    }
     const party = isPartyTime(this.session) && !this.session.inside;
     if (party && !this.partyLights.group.visible) this.session.bus.emit('toast', { text: '🎉 Party auf dem Dorfplatz! Thalia hat Musik mitgebracht.' });
     this.partyLights.group.visible = party;
@@ -568,6 +582,7 @@ export class World3D {
     }
     this.syncMapObjects();
     this.refreshYard();
+    this.refreshFestivals();
     if ((events.includes('thalia-eingezogen') || (data.flags.thaliaEingezogen && !data.flags.thaliaBegruesst)) && data.flags.larsBegruesst) {
       window.setTimeout(() => this.npcArrival('thalia', THALIA_WELCOME, -1, () => {
         giveItem(this.session, 'schaufel', 1);
@@ -586,6 +601,17 @@ export class World3D {
     }
     if ((events.includes('olaf-eingezogen') || (data.flags.olafEingezogen && !data.flags.olafBegruesst)) && data.flags.giselaWelcomed) {
       window.setTimeout(() => this.arrivalScene(), 2500);
+    }
+  }
+
+  /** Festschmuck & Begrüßung zum Fest */
+  private refreshFestivals() {
+    const fests = todaysFestivals(this.session);
+    this.festivals.refresh(fests);
+    const day = this.session.today();
+    if (fests.length > 0 && this.festToastDay !== day) {
+      this.festToastDay = day;
+      window.setTimeout(() => this.session.bus.emit('toast', { text: FESTIVAL_INFO[fests[0]].toast }), 3500);
     }
   }
 

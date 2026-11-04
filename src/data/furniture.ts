@@ -93,6 +93,10 @@ export const FURNITURE: readonly FurnitureDef[] = [
   { id: 'erste-hilfe', name: 'Erste-Hilfe-Schränkchen', style: 'basis', gift: true, small: true, price: 500, w: 1, d: 1, description: 'Weiß, mit grünem Kreuz und rosa Herzchen-Pflastern drin. Von Lars – „für alle Fälle“.' },
   { id: 'vitrine', name: 'Fossilien-Vitrine', style: 'basis', gift: true, price: 1500, w: 1, d: 1, description: 'Eine Glasvitrine mit Ammonit, Kristall und Bernstein. Von Thalia – „für deine Schätze“.' },
   { id: 'globus', name: 'Globus', style: 'basis', gift: true, price: 1200, w: 1, d: 1, description: 'Ein großer Globus mit lauter kleinen Herzchen drauf – überall dort, wo Thalia mit dir hinreisen will.' },
+  // Fest-Geschenke
+  { id: 'sparschwein', name: 'Sparschwein mit Mütze', style: 'basis', gift: true, small: true, price: 400, w: 1, d: 1, description: 'Von Papa Olaf. Rosa, rund und mit Weihnachtsmütze. „Kleinvieh macht auch Mist!“' },
+  { id: 'weihnachtsstern', name: 'Weihnachtsstern', style: 'basis', gift: true, price: 400, w: 1, d: 1, description: 'Von Christin – rote Blätter im goldenen Topf. Bitte gerade hinstellen.' },
+  { id: 'kuscheldecke', name: 'Kuscheldecke', style: 'basis', gift: true, rug: true, price: 600, w: 2, d: 1, description: 'Von Oli – flauschig, kariert und groß genug für zwei. Und einen Dackel.' },
   // Garten (draußen, M6c)
   { id: 'zaun-holz', name: 'Astzaun', style: 'garten', crafted: true, outdoor: true, fence: true, price: 60, w: 1, d: 1, description: 'Ein Zaun aus Ästen, mit Bast zusammengebunden. Rustikal und gemütlich.' },
   { id: 'zaun-weiss', name: 'Weißer Lattenzaun', style: 'garten', outdoor: true, fence: true, price: 150, w: 1, d: 1, description: 'Ein weißer Gartenzaun wie aus dem Bilderbuch.' },
