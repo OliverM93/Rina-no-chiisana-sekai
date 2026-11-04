@@ -8,6 +8,7 @@ import { natureIcons } from './nature-icons';
 import { drawPattern } from './interior';
 import { FURNITURE_ITEMS, FLOORS, WALLPAPERS } from '../data/furniture';
 import { RECIPE_ITEM_PREFIX, RECIPES } from '../data/recipes';
+import { FINDS } from '../data/fossils';
 
 export const ICON = 32;
 
@@ -425,6 +426,156 @@ for (const [id, tea, leaf] of [['kamillentee', '#f2d36a', '#ffffff'], ['pfefferm
     }
   };
 }
+
+// Fossilien & Kristalle
+const FIND_DRAW: Record<string, (ctx: Ctx, c: string, a: string) => void> = {
+  ammonit: (ctx, c, a) => {
+    ellipse(ctx, 16, 17, 11, 11, c, darken(c, 0.35), 1.4);
+    ctx.strokeStyle = a;
+    ctx.lineWidth = 1.6;
+    ctx.beginPath();
+    for (let t = 0; t < 14; t += 0.2) {
+      const r = 10 - t * 0.68;
+      const x = 16 + Math.cos(t) * r;
+      const y = 17 + Math.sin(t) * r;
+      if (t === 0) ctx.moveTo(x, y);
+      else ctx.lineTo(x, y);
+    }
+    ctx.stroke();
+  },
+  trilobit: (ctx, c, a) => {
+    ellipse(ctx, 16, 17, 9, 12, c, darken(c, 0.35), 1.4);
+    ellipse(ctx, 16, 8, 7, 4, lighten(c, 0.1), darken(c, 0.35), 1.2);
+    ctx.strokeStyle = a;
+    ctx.lineWidth = 1.2;
+    for (let y = 12; y < 28; y += 2.6) {
+      ctx.beginPath();
+      ctx.moveTo(8, y);
+      ctx.lineTo(24, y);
+      ctx.stroke();
+    }
+    roundRect(ctx, 13.5, 10, 5, 17, 2.5, a, null);
+  },
+  haizahn: (ctx, c, a) => {
+    ctx.fillStyle = c;
+    ctx.beginPath();
+    ctx.moveTo(8, 24);
+    ctx.quadraticCurveTo(16, 2, 24, 24);
+    ctx.closePath();
+    ctx.fill();
+    ctx.strokeStyle = a;
+    ctx.lineWidth = 1.4;
+    ctx.stroke();
+    roundRect(ctx, 7, 23, 18, 5, 2, '#b8a48a', '#8a7658', 1);
+    shine(ctx, 13, 15, 1.6);
+  },
+  'versteinertes-holz': (ctx, c, a) => {
+    ellipse(ctx, 16, 17, 12, 9, c, darken(c, 0.35), 1.4);
+    for (const r of [7, 4.5, 2]) {
+      ctx.strokeStyle = a;
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.ellipse(16, 17, r * 1.3, r, 0, 0, Math.PI * 2);
+      ctx.stroke();
+    }
+  },
+  bernstein: (ctx, c, a) => {
+    blob(ctx, [{ x: 13, y: 16, r: 8 }, { x: 19, y: 18, r: 7 }, { x: 16, y: 12, r: 6 }], c, a, 1.4);
+    ellipse(ctx, 16, 16, 2, 1.2, '#5a3a1a');
+    ctx.strokeStyle = '#5a3a1a';
+    ctx.lineWidth = 0.6;
+    for (const dx of [-2, 2]) {
+      ctx.beginPath();
+      ctx.moveTo(16, 16);
+      ctx.lineTo(16 + dx, 13.5);
+      ctx.stroke();
+    }
+    shine(ctx, 12, 12, 2.2);
+  },
+  'seeigel-fossil': (ctx, c, a) => {
+    ellipse(ctx, 16, 17, 11, 9, c, darken(c, 0.35), 1.4);
+    for (let k = 0; k < 5; k++) {
+      const ang = (k / 5) * Math.PI * 2 - Math.PI / 2;
+      ctx.strokeStyle = a;
+      ctx.lineWidth = 1.6;
+      ctx.beginPath();
+      ctx.moveTo(16, 16);
+      ctx.lineTo(16 + Math.cos(ang) * 8, 16 + Math.sin(ang) * 6.5);
+      ctx.stroke();
+    }
+  },
+  'farn-abdruck': (ctx, c, a) => {
+    roundRect(ctx, 5, 6, 22, 21, 6, c, darken(c, 0.35), 1.4);
+    ctx.strokeStyle = a;
+    ctx.lineWidth = 1.2;
+    ctx.beginPath();
+    ctx.moveTo(10, 24);
+    ctx.lineTo(22, 9);
+    ctx.stroke();
+    for (let k = 1; k < 7; k++) {
+      const x = 10 + k * 1.8;
+      const y = 24 - k * 2.2;
+      ctx.beginPath();
+      ctx.moveTo(x, y);
+      ctx.lineTo(x - 3.5, y - 2.5);
+      ctx.moveTo(x, y);
+      ctx.lineTo(x + 2.5, y + 2.5);
+      ctx.stroke();
+    }
+  },
+};
+function crystal(ctx: Ctx, c: string, a: string) {
+  ellipse(ctx, 16, 25, 11, 4, '#9a9aa4', '#6a6a74', 1);
+  for (const [x, h, w] of [[11, 14, 4], [16, 19, 5], [21, 12, 4]] as const) {
+    ctx.fillStyle = c;
+    ctx.beginPath();
+    ctx.moveTo(x - w, 25);
+    ctx.lineTo(x - w, 25 - h * 0.7);
+    ctx.lineTo(x, 25 - h);
+    ctx.lineTo(x + w, 25 - h * 0.7);
+    ctx.lineTo(x + w, 25);
+    ctx.closePath();
+    ctx.fill();
+    ctx.strokeStyle = a;
+    ctx.lineWidth = 1.1;
+    ctx.stroke();
+  }
+  shine(ctx, 15, 11, 1.4);
+}
+for (const f of FINDS) {
+  DRAW[f.id] = (ctx) => {
+    if (f.id === 'achat') {
+      ellipse(ctx, 16, 17, 12, 10, f.color, darken(f.color, 0.35), 1.4);
+      for (const [r, c] of [[8, f.accent], [5, '#c97a4a'], [2.5, f.accent]] as const) ellipse(ctx, 16, 17, r * 1.2, r, c);
+      return;
+    }
+    if (f.id === 'rosenquarz') {
+      blob(ctx, [{ x: 13, y: 18, r: 8 }, { x: 20, y: 17, r: 7 }], f.color, f.accent, 1.4);
+      shine(ctx, 12, 14, 2.4);
+      return;
+    }
+    (FIND_DRAW[f.id] ?? crystal)(ctx, f.color, f.accent);
+  };
+}
+// Schaufel
+DRAW.schaufel = (ctx) => {
+  ctx.save();
+  ctx.translate(16, 16);
+  ctx.rotate(-0.7);
+  roundRect(ctx, -1.6, -14, 3.2, 16, 1.4, '#b98a5e', '#7a5038', 1);
+  roundRect(ctx, -4, -15, 8, 3, 1.4, '#3f7a62', '#2a5a44', 0.8);
+  ctx.fillStyle = '#a9acb8';
+  ctx.beginPath();
+  ctx.moveTo(-6, 2);
+  ctx.lineTo(6, 2);
+  ctx.quadraticCurveTo(6, 13, 0, 15);
+  ctx.quadraticCurveTo(-6, 13, -6, 2);
+  ctx.fill();
+  ctx.strokeStyle = '#6a6c78';
+  ctx.lineWidth = 1.2;
+  ctx.stroke();
+  ctx.restore();
+};
 
 const imageOverrides = new Map<string, string>();
 

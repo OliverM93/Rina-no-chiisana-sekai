@@ -33,6 +33,7 @@ export const OLAF: NpcDef = {
   },
   dialogue: {
     greetings: [
+      { text: ['Eine Party! Ich hab ein Budget für Konfetti aufgestellt.', 'Wir liegen voll im Plan. Christin tanzt schon.'], when: { tags: ['party'] }, weight: 8 },
       { text: ['Guten Morgen, mein Schatz!', 'Ich hab schon die Zeitung gelesen. Die Zinsen sind stabil. Herrlich.'], when: { phases: ['morgendaemmerung', 'morgen'] } },
       { text: ['Lina! Schön, dass du vorbeikommst.', 'Brauchst du was? Ein Ohr, einen Rat, eine Quittung?'] },
       { text: ['Na, mein Mädchen?', 'Alles im grünen Bereich? Bei mir schon. Ich hab heute die Kasse dreimal gezählt. Stimmt alles.'] },
@@ -42,6 +43,7 @@ export const OLAF: NpcDef = {
       { text: ['Bei dem Regen arbeiten selbst die Enten im Homeoffice.', '… War ein Witz. Ein guter, finde ich.'], when: { tags: ['wetter-regen'] }, weight: 3 },
     ],
     chat: [
+      { text: ['Eine Party! Ich hab ein Budget für Konfetti aufgestellt.', 'Wir liegen voll im Plan. Christin tanzt schon.'], when: { tags: ['party'] }, weight: 8 },
       { text: ['Eigene Hühner – sehr vernünftig!', 'Ein Ei am Tag spart im Jahr … warte … ziemlich viele Sternchen. Ich rechne das nachher aus.'], when: { tags: ['huehner'] }, weight: 3 },
       { text: ['Winston ist der Einzige im Dorf, der nie nach Belegen fragt.', 'Ein sehr angenehmer Zeitgenosse.'] },
       { text: ['Hast du schon was an Opas Werkbank gebaut?', 'Selbermachen spart Geld. Und Geld sparen macht glücklich. Mich jedenfalls.'] },

@@ -55,6 +55,7 @@ export type UiPanel =
   | { kind: 'werkbank' }
   | { kind: 'kochstudio' }
   | { kind: 'apotheke' }
+  | { kind: 'karte' }
   | { kind: 'bank'; onClose?: () => void }
   | { kind: 'gift'; npcId: string; onPick: (itemId: string) => void; onCancel: () => void }
   | { kind: 'seeds'; onPick: (itemId: string) => void; onCancel: () => void };
@@ -114,6 +115,8 @@ export class Session {
   readonly map: WorldMap;
   /** Form von Linas Garten (aus der Karte berechnet) */
   readonly yardLayout: RoomLayout;
+  /** Wo sind Lina & die Bewohner gerade (Welteinheiten)? Setzt die 3D-Welt – für Thalias Karte */
+  livePositions: () => Record<string, { x: number; y: number }> = () => ({});
   /** Steht Lina gerade in ihrem Garten? */
   inYard = false;
   readonly saves: SaveManager;

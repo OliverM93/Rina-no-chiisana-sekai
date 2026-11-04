@@ -22,6 +22,7 @@ import type { LetterTemplate, NpcDef } from '../data/npcs/types';
 import type { Session } from './session';
 import { itemIconUrl } from '../gfx/items';
 import { onItemObtained } from './crafting';
+import { isPartyTime } from './party';
 
 // ---------------------------------------------------------------------------
 // Tasche & Sternchen
@@ -154,6 +155,8 @@ function dialogueContext(session: Session, npcId: string, firstToday: boolean): 
   if (session.data?.flags.oliEingezogen) tags.push('oli-da');
   if (session.data?.flags.jensEingezogen) tags.push('jens-da');
   if (session.data?.flags.larsEingezogen) tags.push('lars-da');
+  if (session.data?.flags.thaliaEingezogen) tags.push('thalia-da');
+  if (isPartyTime(session)) tags.push('party');
   if (session.data?.yard.items.some((i) => FURNITURE_BY_ITEM[i.itemId]?.def.coop === 'huhn')) tags.push('huehner');
   if (session.data?.yard.items.some((i) => FURNITURE_BY_ITEM[i.itemId]?.def.coop === 'wachtel')) tags.push('wachteln');
   if (w.rainbow) tags.push('regenbogen');

@@ -345,3 +345,13 @@ export function makeQuail(color: string): BirdModel {
   }
   return { group: g, head, legs };
 }
+
+/** Thalias Schaufel (in der Hand) */
+export function makeShovel(): ToolModel {
+  const g = new THREE.Group();
+  g.add(p(cyl, '#b98a5e', 0.012, 0.32, 0.012, 0, 0, 0.12).rotateX(Math.PI / 2));
+  g.add(p(cyl, '#3f7a62', 0.02, 0.05, 0.02, 0, 0, -0.04).rotateX(Math.PI / 2));
+  const blade = p(sphere, '#a9acb8', 0.06, 0.012, 0.08, 0, 0, 0.32);
+  g.add(blade);
+  return { group: g };
+}

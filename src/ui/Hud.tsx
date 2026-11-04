@@ -62,6 +62,11 @@ export function Hud({ session }: { session: Session }) {
         <div class="hud-money" aria-label="Sternchen">
           {formatMoney(session.data?.money ?? 0)}
         </div>
+        {session.data?.flags.thaliaBegruesst && (
+          <button class="hud-bag hud-book" aria-label="Dorfkarte öffnen (M)" title="Dorfkarte (M)" onClick={() => ui.set({ panel: { kind: 'karte' } })}>
+            🗺️
+          </button>
+        )}
         <button class="hud-bag hud-book" aria-label="Sammelbuch öffnen (B)" title="Sammelbuch (B)" onClick={() => ui.set({ panel: { kind: 'book' } })}>
           📖
         </button>

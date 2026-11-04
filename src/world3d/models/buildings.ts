@@ -605,3 +605,33 @@ export function makePraxis(): HouseModel {
   });
   return h;
 }
+
+/** Lichterketten & Wimpel über dem Dorfplatz (für Thalias Party). Liefert Gruppe + Glühbirnen-Material */
+export function makePartyLights(x0: number, z0: number, x1: number, z1: number): { group: THREE.Group; bulbs: THREE.MeshToonMaterial[] } {
+  const g = new THREE.Group();
+  const cols = ['#ffd36b', '#f4a3b8', '#9ad8ff', '#b8f0a0', '#c3a8e8'];
+  const bulbs = cols.map((c) => new THREE.MeshToonMaterial({ color: c, emissive: c, emissiveIntensity: 1.2 }));
+  const poles: Array<[number, number]> = [[x0, z0], [x1, z0], [x1, z1], [x0, z1]];
+  for (const [x, z] of poles) g.add(c(0.05, 2.2, '#8a5a3a', x, 1.1, z));
+  const lines: Array<[[number, number], [number, number]]> = [[poles[0], poles[2]], [poles[1], poles[3]], [poles[0], poles[1]], [poles[3], poles[2]]];
+  lines.forEach(([[ax, az], [bx, bz]], li) => {
+    const curve = new THREE.QuadraticBezierCurve3(new THREE.Vector3(ax, 2.15, az), new THREE.Vector3((ax + bx) / 2, 1.6, (az + bz) / 2), new THREE.Vector3(bx, 2.15, bz));
+    g.add(mesh(new THREE.TubeGeometry(curve, 20, 0.012, 4), toon('#3a3a44')));
+    const n = 14;
+    for (let i = 1; i < n; i++) {
+      const pt = curve.getPoint(i / n);
+      if (li < 2) {
+        const b2 = new THREE.Mesh(sphere, bulbs[i % bulbs.length]);
+        b2.scale.setScalar(0.06);
+        b2.position.set(pt.x, pt.y - 0.06, pt.z);
+        g.add(b2);
+      } else {
+        const flag = new THREE.Mesh(new THREE.ConeGeometry(0.1, 0.22, 3), toon(cols[i % cols.length]));
+        flag.rotation.x = Math.PI;
+        flag.position.set(pt.x, pt.y - 0.12, pt.z);
+        g.add(flag);
+      }
+    }
+  });
+  return { group: g, bulbs };
+}

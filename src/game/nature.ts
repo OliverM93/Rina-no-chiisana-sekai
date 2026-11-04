@@ -6,7 +6,7 @@ import { isAvailable, pickSpecies, registerCatch } from '../core/catching';
 import { growGarden, pickBloom, plantSeed, spotKey, water } from '../core/garden';
 import { hashString, mulberry32 } from '../core/rng';
 import { isPrecipitation, weatherAt, type WeatherNow } from '../core/weather';
-import { FLOWER_BY_SEED, GARDEN_FLOWER, itemDef, type ToolId, TOOLS } from '../data/items';
+import { FLOWER_BY_SEED, GARDEN_FLOWER, itemDef, STARTER_TOOLS, type ToolId, TOOLS } from '../data/items';
 import { type FishDef, type FishHabitat, FISH, type InsectDef, INSECTS } from '../data/species';
 import { countItem } from '../core/inventory';
 import { itemIconUrl } from '../gfx/items';
@@ -49,7 +49,7 @@ export function toggleTool(session: Session, tool: ToolId | null) {
 export function giveStarterTools(session: Session) {
   const data = session.data;
   if (!data || data.flags.toolsGiven) return;
-  for (const t of TOOLS) if (!hasTool(session, t)) giveItem(session, t, 1, false);
+  for (const t of STARTER_TOOLS) if (!hasTool(session, t)) giveItem(session, t, 1, false);
   giveItem(session, 'samen-tulpe', 3, false);
   giveItem(session, 'samen-vergissmeinnicht', 2, false);
   data.flags.toolsGiven = true;

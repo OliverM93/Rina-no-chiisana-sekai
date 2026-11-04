@@ -10,6 +10,7 @@ import { type Activity, activityAt, type ScheduleEntry } from '../core/schedule'
 import { OBJECT_KINDS, objectById, tileOf, type WorldMap } from '../core/worldmap';
 import type { NpcDef } from '../data/npcs/types';
 import type { Session } from '../game/session';
+import { isPartyTime, PARTY_ENTRY } from '../game/party';
 import { Character, FEET_OFFSET } from './Character3D';
 
 type Mode = 'hidden' | 'walking' | 'sitting' | 'idle' | 'talking' | 'scripted';
@@ -100,7 +101,7 @@ export class Npc {
       this.char.update(dtMs, { dx: 0, dy: 0, run: false }, (x, y) => grid.isBlocked(x, y));
       return;
     }
-    const entry = activityAt(this.def.schedule, this.session.clock());
+    const entry = isPartyTime(this.session) ? PARTY_ENTRY : activityAt(this.def.schedule, this.session.clock());
     if (entry !== this.entry) this.applyEntry(entry, false);
 
     if (this.mode === 'idle' && this.entry?.activity.kind === 'spazieren') {

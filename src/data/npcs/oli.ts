@@ -38,6 +38,7 @@ export const OLI: NpcDef = {
   },
   dialogue: {
     greetings: [
+      { text: ['Lini! Tanzen wir? 💃', 'Ich hab Thalia gefragt, ob sie Hardcore spielt. Sie hat Nein gesagt. Dann eben Disco.'], when: { tags: ['party'] }, weight: 8 },
       { text: ['Guten Morgen, Lini! ☕', 'Kaffee ist schon fertig. Frisch gemahlen, natürlich. Alles andere wäre ein Verbrechen.'], when: { phases: ['morgendaemmerung', 'morgen'] } },
       { text: ['Hey Lini! 😊', 'Na, wie geht\'s meiner Lieblingsperson?'] },
       { text: ['Lini! Da bist du ja.', 'Ich hab dich vermisst. Ja, ich weiß, es waren nur zwei Stunden. Trotzdem.'] },
@@ -49,6 +50,7 @@ export const OLI: NpcDef = {
       { text: ['Schnee, Lini! ❄️', 'Wer zuerst einen Schneemann baut, kriegt einen Kakao. Ich verlier auch absichtlich.'], when: { tags: ['wetter-schnee'] }, weight: 3 },
     ],
     chat: [
+      { text: ['Lini! Tanzen wir? 💃', 'Ich hab Thalia gefragt, ob sie Hardcore spielt. Sie hat Nein gesagt. Dann eben Disco.'], when: { tags: ['party'] }, weight: 8 },
       { text: ['Heute war Beintag im Training.', 'Morgen komm ich die Treppe nicht mehr hoch. Hat sich aber gelohnt! 💪'] },
       { text: ['Weißt du, was das Beste nach dem Training ist?', 'Eier. Ganz viele Eier. Und danach: du.'] },
       { text: ['Gestern hab ich auf einem Hardcore-Konzert einen Song gehört, der 47 Sekunden lang war.', 'Das war der längste des Abends. 🤘'] },

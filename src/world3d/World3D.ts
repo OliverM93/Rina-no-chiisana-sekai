@@ -46,7 +46,8 @@ import { JENS_WELCOME } from '../data/npcs/jens';
 import { CHECKUP_GIFTS, CHECKUP_LINES, LARS_WELCOME } from '../data/npcs/lars';
 import { hashString } from '../core/rng';
 import { canDate, type DateKind, haveDate } from '../game/romance';
-import { makePicnic } from './models/buildings';
+import { isPartyTime } from '../game/party';
+import { makePartyLights, makePicnic } from './models/buildings';
 import { addFriendship } from '../game/gameplay';
 import type { DecorCommand } from '../game/session';
 import {
@@ -73,11 +74,15 @@ import { Garden3D } from './Garden3D';
 import { Insects3D } from './Insects3D';
 import { Interior3D, ROOM_X, ROOM_Y } from './Interior3D';
 import { Yard3D } from './Yard3D';
+import { DigSpots3D } from './DigSpots3D';
+import { digSpot } from '../game/digging';
+import { THALIA_WELCOME, PARTY_LINES } from '../data/npcs/thalia';
+import { FIND_BY_ID } from '../data/fossils';
 import { Animals3D } from './Animals3D';
 import { coopHasEggs, coopKindOf, collectCoop } from '../game/animals';
 import { COOPS } from '../data/animals';
 import { YARD_AREA } from '../data/yard';
-import { makeCan, makeNet, makeRod, type ToolModel } from './models/critters';
+import { makeCan, makeNet, makeRod, makeShovel, type ToolModel } from './models/critters';
 import { Weather3D } from './Weather3D';
 import { Winston } from './Winston';
 import { petWinston, winstonDig, winstonMayDig } from '../game/pet';
@@ -98,7 +103,7 @@ type Target =
   | { kind: 'winston' }
   | { kind: 'tier'; index: number };
 
-const SPECIAL_OBJECTS = ['verkaufskiste', 'haus-gisela', 'haus-olaf', 'briefkasten-lina', 'werkbank-lina', 'bistro-jens', 'praxis-lars'];
+const SPECIAL_OBJECTS = ['verkaufskiste', 'haus-gisela', 'haus-olaf', 'briefkasten-lina', 'werkbank-lina', 'bistro-jens', 'praxis-lars', 'haus-thalia'];
 const DIRS = { down: [0, 1], up: [0, -1], left: [-1, 0], right: [1, 0] } as const;
 
 /** Kamera-Versatz zum Blickziel (schräg von oben, wie im Vorbild) */
@@ -153,6 +158,10 @@ export class World3D {
   private winston: Winston | null = null;
   private yard: Yard3D;
   private animals: Animals3D;
+  private digSpots: DigSpots3D;
+  private digging = false;
+  private partyLights: { group: THREE.Group; bulbs: THREE.MeshToonMaterial[] };
+  private partyLight = new THREE.PointLight('#ffb8d8', 0, 9, 1.4);
   /** Oli drinnen (wenn er zu Hause ist und Lina auch) */
   private homeOli: Character | null = null;
   private homeOliKey = '';
@@ -221,6 +230,19 @@ export class World3D {
     this.interactive.add('beet-lina');
     this.interior = new Interior3D(this.scene);
     this.yard = new Yard3D(this.scene, this.view.terrain.heightAt);
+    this.digSpots = new DigSpots3D(this.scene, session, this.view);
+    session.livePositions = () => {
+      const out: Record<string, { x: number; y: number }> = {};
+      const p = this.player;
+      if (p && !session.inside) out.lina = { x: p.x, y: p.y };
+      else if (p) out.lina = session.spawnPoint();
+      for (const [id, n] of this.npcs) if (n.present) out[id] = { x: n.x, y: n.y };
+      return out;
+    };
+    this.partyLights = makePartyLights(24.2, 18.6, 31, 23.4);
+    this.partyLights.group.visible = false;
+    this.partyLight.position.set(27.6, 2.4, 21);
+    this.scene.add(this.partyLights.group, this.partyLight);
     this.animals = new Animals3D(this.scene, session.map.grid, this.view.terrain.heightAt);
     this.garden.extraSpots = () => this.yardBedSpots();
 
@@ -238,6 +260,7 @@ export class World3D {
         this.garden.refresh();
         this.refreshRoom();
         this.refreshYard();
+        this.digSpots.refresh();
       }),
       session.bus.on('tool:changed', (t) => this.equip(t)),
       session.bus.on('decor:command', (c) => this.decorCommand(c)),
@@ -283,6 +306,7 @@ export class World3D {
     this.weather.update(dt, this.camTarget);
     this.hemi.intensity = this.baseHemi + this.weather.lightning * 1.4;
     this.insects.update(dt, this.night);
+    this.digSpots.update(dt, !this.session.inside);
     {
       const h = this.session.clock().getHours();
       this.animals.update(dt, this.session.data?.yard, h >= 21 || h < 6, !this.session.inside);
@@ -388,6 +412,10 @@ export class World3D {
     const sky = this.session.inside ? mixHex('#f3e3cf', '#3a3450', n * 0.7) : outside;
     this.interior.updateLight(n, clouds);
     this.yard.updateLight(n);
+    const party = isPartyTime(this.session) && !this.session.inside;
+    if (party && !this.partyLights.group.visible) this.session.bus.emit('toast', { text: '🎉 Party auf dem Dorfplatz! Thalia hat Musik mitgebracht.' });
+    this.partyLights.group.visible = party;
+    this.partyLight.intensity = party ? 2.5 : 0;
     this.weather.setEnabled(!this.session.inside);
     this.leaves.visible = !this.session.inside;
     (this.scene.background as THREE.Color | null) ?? (this.scene.background = new THREE.Color());
@@ -524,6 +552,7 @@ export class World3D {
     this.rebuildLinaHouse();
     this.refreshYard(true);
     this.setInYard(false);
+    this.digSpots.refresh();
   }
 
   /** Neuer Tag (oder Spielstart): Story, Ausbau, Karte */
@@ -539,6 +568,13 @@ export class World3D {
     }
     this.syncMapObjects();
     this.refreshYard();
+    if ((events.includes('thalia-eingezogen') || (data.flags.thaliaEingezogen && !data.flags.thaliaBegruesst)) && data.flags.larsBegruesst) {
+      window.setTimeout(() => this.npcArrival('thalia', THALIA_WELCOME, -1, () => {
+        giveItem(this.session, 'schaufel', 1);
+        this.session.bus.emit('toast', { text: 'Schaufel eingesteckt! (Taste 4) – und die Dorfkarte gibt\'s mit M. 🗺️' });
+        window.setTimeout(() => this.digSpots.refresh(), 50);
+      }), 5000);
+    }
     if ((events.includes('lars-eingezogen') || (data.flags.larsEingezogen && !data.flags.larsBegruesst)) && data.flags.jensBegruesst) {
       window.setTimeout(() => this.larsArrival(), 4500);
     }
@@ -799,12 +835,49 @@ export class World3D {
       return;
     }
     const tool = this.session.tool;
+    if (tool === 'schaufel' && target?.kind !== 'npc' && target?.kind !== 'winston' && this.dig()) return;
     if (tool === 'netz' && target?.kind !== 'npc' && this.swingNet()) return;
     if (tool === 'angel' && (!target || target.kind === 'flowers') && this.castRod()) return;
     if (target) this.act(target);
     else if (tool === 'netz') this.swingNet(true);
     else if (tool === 'angel') this.session.bus.emit('toast', { text: 'Stell dich ans Wasser und schau aufs Wasser, dann kannst du auswerfen. 🎣' });
     else if (tool === 'giesskanne') this.session.bus.emit('toast', { text: 'Gießen kannst du die Pflanzen in deinem Beet. 🌱' });
+    else if (tool === 'schaufel') this.session.bus.emit('toast', { text: 'Hier ist nichts. Such nach kleinen Rissen im Boden, die funkeln! ✨' });
+  }
+
+  /** Mit der Schaufel an einer Grabstelle graben (vor Lina oder unter ihr) */
+  private dig(): boolean {
+    const player = this.player;
+    if (!player || this.digging) return this.digging;
+    const t = player.tile;
+    const [fx, fy] = DIRS[player.facing];
+    const spot = this.digSpots.spotAt(t.x + fx, t.y + fy) ?? this.digSpots.spotAt(t.x, t.y);
+    if (!spot) return false;
+    this.digging = true;
+    player.faceTowards((spot.x + 0.5) * TILE, (spot.y + 0.5) * TILE);
+    const tool = this.held?.model.group;
+    this.tweens.add(700, (k) => {
+      if (tool) tool.rotation.x = 0.9 + Math.sin(k * Math.PI * 3) * 0.6;
+      player.armForward = -0.35 - Math.abs(Math.sin(k * Math.PI * 3)) * 0.5;
+    }, () => {
+      if (tool) tool.rotation.x = 0.9;
+      player.armForward = -0.35;
+      this.digging = false;
+      const res = digSpot(this.session, spot);
+      if (!res) return;
+      if (res.full) {
+        this.session.bus.emit('toast', { text: 'Deine Tasche ist voll! 🎒' });
+        return;
+      }
+      const f = FIND_BY_ID[res.itemId];
+      this.digSpots.refresh();
+      this.winston?.burst('note');
+      this.session.bus.emit('toast', {
+        text: `${f?.kind === 'fossil' ? '🦴 Ein Fossil!' : '💎 Ein Kristall!'} ${f?.name ?? res.itemId} ausgegraben${res.isNew ? ' – neu im Sammelbuch!' : '!'}`,
+        icon: itemIconUrl(res.itemId),
+      });
+    });
+    return true;
   }
 
   // -------------------------------------------------------------------------
@@ -813,7 +886,7 @@ export class World3D {
 
   private onKey(code: string) {
     if (!this.player || this.session.uiBlocking || this.cutscene) return;
-    const idx = ['Digit1', 'Digit2', 'Digit3'].indexOf(code);
+    const idx = ['Digit1', 'Digit2', 'Digit3', 'Digit4'].indexOf(code);
     if (idx >= 0) toggleTool(this.session, TOOLS[idx]);
     if (code === 'KeyQ') toggleTool(this.session, null);
   }
@@ -826,8 +899,8 @@ export class World3D {
     player.hold(null);
     player.armForward = undefined;
     if (!tool) return;
-    const model = tool === 'angel' ? makeRod() : tool === 'netz' ? makeNet() : makeCan();
-    model.group.rotation.x = tool === 'angel' ? 0.2 : tool === 'netz' ? 0.6 : 1.2;
+    const model = tool === 'angel' ? makeRod() : tool === 'netz' ? makeNet() : tool === 'schaufel' ? makeShovel() : makeCan();
+    model.group.rotation.x = tool === 'angel' ? 0.2 : tool === 'netz' ? 0.6 : tool === 'schaufel' ? 0.9 : 1.2;
     player.hold(model.group);
     player.armForward = -0.35;
     this.held = { tool, model };
@@ -1036,6 +1109,10 @@ export class World3D {
       this.enterHome();
       return;
     }
+    if (id === 'haus-thalia') {
+      this.knockAtHome('thalia');
+      return;
+    }
     if (id === 'praxis-lars') {
       this.visitPraxis();
       return;
@@ -1161,6 +1238,9 @@ export class World3D {
                   this.dateScene(k);
                 },
               }))
+          : []),
+        ...(id === 'thalia' && isPartyTime(this.session) && this.session.data?.world.dates.party !== this.session.today()
+          ? [{ label: '💃 Tanzen!', onSelect: () => this.dance(npc) }]
           : []),
         ...(id === 'lars'
           ? [
@@ -1594,6 +1674,29 @@ export class World3D {
       return;
     }
     this.session.bus.emit('ui:open', { kind: 'apotheke' });
+  }
+
+  /** Party: Lina tanzt mit Thalia (einmal pro Partyabend), alle Gäste freuen sich */
+  private dance(npc: Npc) {
+    const player = this.player;
+    const data = this.session.data;
+    if (!player || !data) return;
+    data.world.dates.party = this.session.today();
+    const lines = [...PARTY_LINES[hashString(this.session.today()) % PARTY_LINES.length]];
+    for (const other of this.npcs.values()) if (other.present && other.def.id !== 'thalia') addFriendship(this.session, other.def.id, 6);
+    lines.push(...addFriendship(this.session, 'thalia', 20));
+    // kleine Tanzeinlage: Lina dreht sich & hüpft
+    const start = player.facing;
+    this.tweens.add(1600, (k) => {
+      player.seatHeight = Math.abs(Math.sin(k * Math.PI * 4)) * 0.12;
+      player.face((['down', 'right', 'up', 'left'] as const)[Math.floor(k * 8) % 4]);
+    }, () => {
+      player.seatHeight = 0;
+      player.face(start);
+      this.winston?.burst('herz');
+      this.session.bus.emit('dialog:open', { title: npc.def.name, hearts: npcHearts(this.session, 'thalia'), lines, onClose: () => npc.endTalk() });
+    });
+    this.session.save();
   }
 
   /** Einmal am Tag: Gesundheits-Check bei Lars */

@@ -33,6 +33,7 @@ export const CHRISTIN: NpcDef = {
   },
   dialogue: {
     greetings: [
+      { text: ['Ich tanze!', 'Aber nach der Party wird aufgeräumt. Jedes Konfetti einzeln.'], when: { tags: ['party'] }, weight: 8 },
       { text: ['Guten Morgen, Lina!', 'Ich hab schon den Dorfplatz gefegt. Da lagen drei Blätter. DREI!'], when: { phases: ['morgendaemmerung', 'morgen'] } },
       { text: ['Hallo Lina!', 'Hast du dir die Schuhe abgeputzt? … Ach, wir sind ja draußen. Trotzdem.'] },
       { text: ['Oh, Lina! Schön dich zu sehen.', 'Du hast da einen kleinen Fleck. Moment … So. Viel besser.'] },
@@ -41,6 +42,7 @@ export const CHRISTIN: NpcDef = {
       { text: ['Dieser Regen!', 'Jetzt tragen alle Matsch auf den Dorfplatz. Ich seh schon, was ich morgen mache.'], when: { tags: ['wetter-regen'] }, weight: 3 },
     ],
     chat: [
+      { text: ['Ich tanze!', 'Aber nach der Party wird aufgeräumt. Jedes Konfetti einzeln.'], when: { tags: ['party'] }, weight: 8 },
       { text: ['Deine Hühner scharren das ganze Gras auf.', 'Aber sie machen das in so schönen ordentlichen Kreisen. Das muss ich zugeben.'], when: { tags: ['huehner'] }, weight: 3 },
       { text: ['Die Wachteln sind so niedlich!', 'Und so sauber. Die putzen sich ständig. Sehr sympathisch.'], when: { tags: ['wachteln'] }, weight: 3 },
       { text: ['Winston ist über meinen frisch gefegten Platz gelaufen.', 'Die Pfotenabdrücke waren aber sehr ordentlich in einer Reihe. Das rechne ich ihm hoch an.'] },
