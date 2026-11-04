@@ -55,6 +55,9 @@ export const OLI: NpcDef = {
       { text: ['Schnee, Lini! ❄️', 'Wer zuerst einen Schneemann baut, kriegt einen Kakao. Ich verlier auch absichtlich.'], when: { tags: ['wetter-schnee'] }, weight: 3 },
     ],
     chat: [
+      { text: ['Lini, heute Abend True Crime?', 'Aber diesmal nicht wieder bis drei Uhr nachts. … Okay, bis zwei.'] },
+      { text: ['Du kochst einfach am besten, Lini.', 'Ich koch ja auch gern – aber bei dir schmeckt’s irgendwie nach Zuhause.'] },
+      { text: ['Ich hab gestern heimlich die Datingshow weitergeschaut.', 'Ohne dich! Ich weiß, das war Verrat. Bernd und Bärbel sind übrigens zusammen. Sorry.'] },
       { text: ['Lini! Tanzen wir? 💃', 'Ich hab Thalia gefragt, ob sie Hardcore spielt. Sie hat Nein gesagt. Dann eben Disco.'], when: { tags: ['party'] }, weight: 8 },
       { text: ['Heute war Beintag im Training.', 'Morgen komm ich die Treppe nicht mehr hoch. Hat sich aber gelohnt! 💪'] },
       { text: ['Weißt du, was das Beste nach dem Training ist?', 'Eier. Ganz viele Eier. Und danach: du.'] },

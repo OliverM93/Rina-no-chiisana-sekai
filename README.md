@@ -109,6 +109,10 @@ Oli und Lars sind immer dabei, Olaf, Christin und Oma manchmal. Einfach an Jens'
 & Jens). Lina kann sich dazugesellen und mithören. Und Lina trägt jetzt am liebsten **Streetwear**:
 Oversize-Sweatshirt, im Sommer mit kurzer Hose, im Winter mit dicker Fleece-Jacke.
 
+**Fernsehabend & Küche (M7h):** Mit **Fernseher**, **Sofa** und **Küchenzeile** aus dem Katalog wird Linas
+Zimmer zum Wohnzimmer: Datingshow, True Crime, Doku und Kochshow – jeden Tag neue Folgen, und Oli schaut mit,
+wenn er zu Hause ist. Aus der Kochshow lernt Lina neue Rezepte und kocht sie am eigenen Herd nach.
+
 Im Menü: Aussehen ändern, speichern, **Spielstand exportieren/laden** (als Datei – praktisch zum Sichern
 oder für ein anderes Gerät), Vollbild, Hilfe.
 
@@ -174,6 +178,10 @@ und jede Jahreszeit sieht anders aus.
 | Angeln mit Olaf & Christin | Training mit Oli & Lars | Linas Streetwear (Sommer/Herbst/Winter) |
 |---|---|---|
 | ![Angeln](docs/screenshots/3d-angeln-olaf-christin.png) | ![Training](docs/screenshots/3d-training.png) | ![Streetwear](docs/screenshots/3d-lina-streetwear.png) |
+
+| Wohnzimmer mit Küche | Fernsehabend mit Oli |
+|---|---|
+| ![Wohnzimmer](docs/screenshots/3d-wohnzimmer.png) | ![Fernsehabend](docs/screenshots/3d-fernsehabend.png) |
 
 | Sammelbuch | Regen |
 |---|---|

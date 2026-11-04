@@ -53,6 +53,8 @@ export const GISELA: NpcDef = {
       { text: ['Kindchen! Mein Lieblingsbesuch.', '… Ja, ich weiß, du bist mein einziger Besuch. Trotzdem.'], when: { minHearts: 2 } },
     ],
     chat: [
+      { text: ['Du guckst immer diese Sendungen, wo sich fremde Leute zum Essen treffen.', 'Zu meiner Zeit hat man sich beim Tanztee kennengelernt. Ganz ohne Kamera. … Na gut, der Ludwig hatte eine dabei.'] },
+      { text: ['Kindchen, du kochst so gern – das hast du von mir.', 'Nicht von deinem Vater. Der verbrennt sogar Wasser.'] },
       { text: ['Oli hat bald Geburtstag, am 29. Juli.', 'Ich back ihm einen Kuchen. Der Junge ist zu dünn. … Doch, ist er.'], when: { tags: ['bald-geburtstag-oli'] }, weight: 4 },
       { text: ['Was für ein Krach! … Ich meine: Was für eine schöne Musik.', 'Ich tanz nicht. … Na gut, einen. Ludwig hätte getanzt.'], when: { tags: ['party'] }, weight: 8 },
       { text: ['Mein Enkel ist jetzt Arzt im Dorf.', 'Ich trau ihm trotzdem nicht. Ärzte wollen nur dein Geld!', '… Er nimmt aber gar keins von mir. Verdächtig, oder?'], when: { tags: ['lars-da'] }, weight: 3 },

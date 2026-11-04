@@ -23,7 +23,7 @@ Meilensteine und Fortschritt: siehe [`ROADMAP.md`](ROADMAP.md).
 
 | Figur | Rolle | Aussehen (für die Chibi-Figuren) |
 |---|---|---|
-| **Lina** | Spielerin | kastanienbraune Locken, etwas länger als schulterlang, Mittelscheitel, kein Pony, braune Augen, Sommersprossen, trägt am liebsten **Schwarz** und gern **Oversize-Streetwear-Sweatshirts** (keine echten Markenlogos im Spiel!) – im Sommer mit kurzer Hose & weißen Sneakern, im Winter dicke Fleece-Jacke & Doc-Martens-artige Schnürstiefel (`outfit: 'saison'`, alles im Editor anpassbar), Geburtstag **16.06.** |
+| **Lina** | Spielerin | kastanienbraune Locken, etwas länger als schulterlang, Mittelscheitel, kein Pony, braune Augen, Sommersprossen, trägt am liebsten **Schwarz** und gern **Oversize-Streetwear-Sweatshirts** (keine echten Markenlogos im Spiel!) – im Sommer kurzes schwarzes Oberteil mit kurzer Hose & weißen Sneakern, im Winter dicke Fleece-Jacke & Doc-Martens-artige Schnürstiefel (`outfit: 'saison'`, alles im Editor anpassbar), Geburtstag **16.06.**; **kocht leidenschaftlich gern**, schaut gern Datingshows (à la First Dates), True Crime und Dokus über stark übergewichtige Menschen (im Spiel immer respektvoll & warmherzig, nie spöttisch) |
 | **Oliver („Oli“)** | Linas Freund – höchste Bindung, romantische Szenen, gemeinsames Haus/Zimmer; nennt Lina „Lini“, Geburtstag **29.07.** | schlank, kurze dunkelblonde Haare, Schnurrbart, blaugraue Augen, schwarzer Troyer-Pulli, strahlendes Lächeln |
 | **Lars** | großer Bruder, Arzt – Praxis/Apotheke; guter Humor, hat immer einen Spruch auf Lager (z. B. „So, und nicht mit e, sonst ist es ein See.“) | groß & kräftig, kurz geschorene rotblonde Haare, rotblonder Vollbart, blaue Augen, dunkles Streifenhemd |
 | **Olaf** | Papa, Finanzamt – Dorfkasse/Bank; **Zwillingsbruder von Jens** | eher klein, dunkle angegraute Haare, grauer kurzer Bart, eckige Brille, weißes Hemd mit dunkler Weste |
@@ -206,6 +206,9 @@ src/
 - **Treffen der Bewohner:** `data/meetups.ts` (Wochentage, Uhrzeit, Plätze, Gespräche), Regeln in
   `game/meetups.ts`; `Npc` ersetzt den Tagesablauf (Reihenfolge: Party → Sonntagsessen → Treffen → Plan).
   `Npc.snap()` setzt alle beim Laden sofort an den richtigen Platz.
+- **Fernseher & Küche:** Sendungen in `data/tv.ts` (ausgedachte Formate, keine echten Sendungsnamen), Regeln
+  in `game/tv.ts` (Folge pro Tag, Oli schaut mit, Kochshow lehrt Rezepte mit `tv: true`). Linas Herd =
+  `CraftPanel` mit `station="herd"` (Küchen-Rezepte zu Hause).
 - **Galerie:** Kunstwerke in `data/art.ts` (werden Möbel im Stil „kunst“, Bild auf Staffelei, gemalt in
   `gfx/art.ts`), Regeln in `game/gallery.ts`, gestiftete Bilder in `SaveData.gallery`.
 - **Sonntagsessen:** `game/dinner.ts` – Gäste gehen per `{ kind: 'zuhause', at: 'bistro-jens' }` zu Jens

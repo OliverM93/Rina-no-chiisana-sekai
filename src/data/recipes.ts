@@ -16,6 +16,8 @@ export interface RecipeDef extends Recipe {
   start?: boolean;
   /** Gelernt beim ersten Fund dieses Gegenstands */
   fund?: string;
+  /** Gelernt in der Kochshow im Fernsehen */
+  tv?: boolean;
 }
 
 export const RECIPES: readonly RecipeDef[] = [
@@ -26,6 +28,10 @@ export const RECIPES: readonly RecipeDef[] = [
   { id: 'pfefferminztee', station: 'apotheke', result: 'pfefferminztee', ingredients: [{ itemId: 'pfefferminze', count: 2 }], start: true, hint: '' },
   { id: 'lavendeltee', station: 'apotheke', result: 'lavendeltee', ingredients: [{ itemId: 'lavendel', count: 2 }], start: true, hint: '' },
   { id: 'kraeutermischung', station: 'apotheke', result: 'kraeutermischung', count: 2, ingredients: [{ itemId: 'kamille', count: 1 }, { itemId: 'pfefferminze', count: 1 }, { itemId: 'lavendel', count: 1 }], hint: 'Freunde dich mit Lars an – oder frag Oma.' },
+  // Aus der Kochshow im Fernsehen („Kochen mit Herz“)
+  { id: 'apfelpfannkuchen', station: 'kueche', result: 'apfelpfannkuchen', count: 2, ingredients: [{ itemId: 'ei', count: 2 }, { itemId: 'apfel', count: 1 }], tv: true, hint: 'Läuft bestimmt mal in der Kochshow im Fernsehen …' },
+  { id: 'fischsuppe', station: 'kueche', result: 'fischsuppe', ingredients: [{ itemId: 'barsch', count: 1 }, { itemId: 'pfefferminze', count: 1 }], tv: true, hint: 'Läuft bestimmt mal in der Kochshow im Fernsehen …' },
+  { id: 'blumensalat', station: 'kueche', result: 'blumensalat', ingredients: [{ itemId: 'sonnenblume', count: 1 }, { itemId: 'vergissmeinnicht', count: 1 }, { itemId: 'apfel', count: 1 }], tv: true, hint: 'Läuft bestimmt mal in der Kochshow im Fernsehen …' },
   // Jens' Kochstudio
   { id: 'ruehrei', station: 'kueche', result: 'ruehrei', ingredients: [{ itemId: 'ei', count: 2 }], start: true, hint: '' },
   { id: 'wachtel-spiegelei', station: 'kueche', result: 'wachtel-spiegelei', ingredients: [{ itemId: 'wachtelei', count: 3 }], start: true, hint: '' },

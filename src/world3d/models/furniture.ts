@@ -384,6 +384,54 @@ export function makeFurniture(itemId: string, links: FenceLinks = { n: false, e:
       lightAt = new THREE.Vector3(0, 0.15, 0);
       break;
     }
+    // ---- Wohnzimmer & Küche ----
+    case 'fernseher': {
+      g.add(b(1.7, 0.36, 0.45, '#e6c59c', 0, 0.18, 0));
+      for (const x of [-0.42, 0.42]) g.add(b(0.78, 0.26, 0.02, darken('#e6c59c', 0.1), x, 0.18, 0.23));
+      g.add(b(0.3, 0.04, 0.16, '#2b2a31', 0, 0.38, -0.05));
+      g.add(b(0.06, 0.12, 0.04, '#2b2a31', 0, 0.45, -0.05));
+      g.add(b(1.35, 0.78, 0.05, '#2b2a31', 0, 0.9, -0.05));
+      glow = new THREE.MeshToonMaterial({ color: '#5a6a9a', emissive: '#8ab8ff', emissiveIntensity: 0.35 });
+      g.add(b(1.25, 0.68, 0.01, glow, 0, 0.9, -0.022));
+      // Bild auf dem Schirm: Herzchen (Datingshow läuft!)
+      g.add(s(0.08, 0.07, 0.01, '#f4a3b8', -0.06, 0.92, -0.012));
+      g.add(s(0.08, 0.07, 0.01, '#f4a3b8', 0.06, 0.92, -0.012));
+      g.add(c(0.1, 0.08, '#f4a3b8', 0, 0.84, -0.012, cone).rotateX(Math.PI).rotateY(Math.PI / 4));
+      // Fernbedienung & Schüssel Popcorn
+      g.add(b(0.06, 0.02, 0.16, '#3a3a44', 0.55, 0.37, 0.08));
+      g.add(c(0.1, 0.06, '#e85a6a', -0.55, 0.39, 0.06));
+      for (let i = 0; i < 6; i++) g.add(s(0.025, 0.02, 0.025, '#fff6d8', -0.55 + Math.cos(i) * 0.05, 0.43, 0.06 + Math.sin(i) * 0.05));
+      lightAt = new THREE.Vector3(0, 0.9, 0.2);
+      break;
+    }
+    case 'sofa': {
+      g.add(b(1.8, 0.3, 0.75, col, 0, 0.22, 0));
+      g.add(b(1.8, 0.45, 0.2, darken(col, 0.08), 0, 0.55, -0.28));
+      for (const x of [-0.84, 0.84]) g.add(b(0.16, 0.38, 0.75, darken(col, 0.05), x, 0.35, 0));
+      for (const x of [-0.4, 0.4]) g.add(b(0.78, 0.1, 0.6, lighten(col, 0.1), x, 0.42, 0.04));
+      g.add(b(0.3, 0.26, 0.1, '#fbf6ec', -0.55, 0.6, -0.12).rotateZ(0.2));
+      for (const [x, z] of [[-0.8, -0.3], [0.8, -0.3], [-0.8, 0.3], [0.8, 0.3]]) g.add(c(0.03, 0.08, '#8a5a3a', x, 0.04, z));
+      seatY = 0.46;
+      break;
+    }
+    case 'herd': {
+      g.add(b(1.8, 0.58, 0.6, '#f7f5ec', 0, 0.29, 0));
+      g.add(b(1.84, 0.05, 0.64, '#b98a5e', 0, 0.6, 0));
+      // Herdplatten (rechts) & Ofen
+      for (const [x, z] of [[0.35, -0.12], [0.62, -0.12], [0.35, 0.14], [0.62, 0.14]]) g.add(c(0.09, 0.012, '#2b2a31', x, 0.63, z));
+      g.add(b(0.7, 0.32, 0.02, '#3a3a44', 0.48, 0.3, 0.31));
+      g.add(b(0.5, 0.04, 0.03, '#c9cbd3', 0.48, 0.5, 0.33));
+      // Schubladen (links)
+      for (const y of [0.15, 0.43]) g.add(b(0.75, 0.22, 0.02, '#fbe0e8', -0.45, y, 0.31));
+      // Topf & Pfanne, Schneidebrett mit Gemüse
+      g.add(c(0.11, 0.12, '#e85a6a', 0.35, 0.7, -0.12));
+      g.add(c(0.12, 0.02, '#3a3a44', 0.62, 0.65, 0.14));
+      g.add(b(0.14, 0.02, 0.03, '#3a3a44', 0.82, 0.65, 0.14));
+      g.add(b(0.4, 0.02, 0.26, '#d9b77a', -0.4, 0.64, 0.02));
+      g.add(s(0.04, 0.03, 0.06, '#e8873a', -0.45, 0.67, 0.02));
+      g.add(s(0.035, 0.035, 0.035, '#e8484f', -0.3, 0.67, 0.04));
+      break;
+    }
     // ---- Andenken von Jens ----
     case 'eiffelturm': {
       const iron = '#7a6a5a';

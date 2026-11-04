@@ -57,6 +57,8 @@ export type UiPanel =
   | { kind: 'apotheke' }
   | { kind: 'karte' }
   | { kind: 'galerie' }
+  | { kind: 'tv'; withOli: boolean }
+  | { kind: 'herd' }
   | { kind: 'bank'; onClose?: () => void }
   | { kind: 'gift'; npcId: string; onPick: (itemId: string) => void; onCancel: () => void }
   | { kind: 'seeds'; onPick: (itemId: string) => void; onCancel: () => void };
@@ -105,6 +107,8 @@ export type GameEvents = {
   'home:yard': boolean;
   /** Sternenhimmel mit Sternschnuppen einblenden (Sterne gucken mit Oli) */
   'overlay:stars': boolean;
+  /** Weiches Abblenden (Tür-Animation): true = dunkel */
+  'overlay:fade': boolean;
   /** Einrichtungsmodus: an/aus, was gerade gehalten wird */
   'decor:state': DecorState;
   /** Oberfläche → Welt: Einrichten steuern */

@@ -509,6 +509,7 @@ export class Chibi3D {
         break;
       case 'sweatshirt':
       case 'shorts':
+      case 'sommer':
       case 'fleece':
         pants = a.accentColor === a.outfitColor ? (o === 'fleece' ? jeans : '#3a3a44') : a.accentColor;
         break;
@@ -522,7 +523,7 @@ export class Chibi3D {
     for (const side of [-1, 1]) {
       const leg = new THREE.Group();
       leg.position.set(side * 0.066 * bw, this.hipY, 0);
-      if (o === 'shorts') {
+      if (o === 'shorts' || o === 'sommer') {
         // kurze Hose: oben Stoff, darunter Beine
         leg.add(part(cylinder, skin, 0.04 * Math.min(1.15, bw), legLen, 0.04, 0, -legLen / 2, 0));
         leg.add(part(cylinder, pants, 0.054 * Math.min(1.15, bw), legLen * 0.42, 0.054, 0, -legLen * 0.21, 0));
@@ -565,10 +566,13 @@ export class Chibi3D {
       shirtMat = new THREE.MeshToonMaterial({ map: tex });
     }
     const street = o === 'sweatshirt' || o === 'shorts' || o === 'fleece';
+    const summer = o === 'sommer';
     // Oversize: weiter & länger (reicht über die Hüfte)
     const shirt = street
       ? part(new THREE.CylinderGeometry(0.9, 1, 1, 20), shirtMat, topR * (o === 'fleece' ? 1.38 : 1.3), torso * 0.98, topR * (o === 'fleece' ? 1.28 : 1.2), 0, torsoY + torso * 0.02, 0)
-      : part(new THREE.CylinderGeometry(0.82, 1, 1, 20), shirtMat, topR * 1.15, torso * 0.78, topR * 1.05, 0, torsoY + torso * 0.11, 0);
+      : summer
+        ? part(new THREE.CylinderGeometry(0.86, 1, 1, 20), shirtMat, topR * 1.18, torso * 0.7, topR * 1.08, 0, torsoY + torso * 0.15, 0)
+        : part(new THREE.CylinderGeometry(0.82, 1, 1, 20), shirtMat, topR * 1.15, torso * 0.78, topR * 1.05, 0, torsoY + torso * 0.11, 0);
     this.body.add(shirt);
     const neckY = this.hipY + torso * 0.98;
 
@@ -606,6 +610,14 @@ export class Chibi3D {
       this.body.add(hood);
       for (const s of [-1, 1]) this.body.add(part(cylinder, '#1e1e24', 0.006, 0.09, 0.006, s * 0.03, neckY - 0.06, topR * 1.02));
       this.body.add(part(box, '#1e1e24', 0.008, torso * 0.65, 0.006, 0, torsoY + 0.02, topR * 1.05));
+    }
+    if (summer) {
+      // kurzes Shirt: runder Halsausschnitt, kleines eigenes Emblem
+      const neck = mesh(new THREE.TorusGeometry(topR * 0.5, 0.01, 6, 18), toon(darken(a.outfitColor, 0.1)));
+      neck.rotation.x = Math.PI / 2;
+      neck.position.y = neckY - 0.01;
+      this.body.add(neck);
+      this.body.add(part(sphereLow, lighten(a.outfitColor, 0.75), 0.018, 0.018, 0.006, 0.04, torsoY + 0.08, topR * 1.1));
     }
     if (o === 'sweatshirt' || o === 'shorts') {
       // Rippbündchen unten & am Hals, kleines Emblem auf der Brust (eigenes Design, keine Marke)
@@ -670,7 +682,11 @@ export class Chibi3D {
       arm.position.set(side * (topR + 0.035), shoulderY, 0);
       arm.rotation.z = side * 0.25;
       const thick = street ? (o === 'fleece' ? 1.4 : 1.28) : 1;
-      arm.add(part(capsule, sleeveMat, 0.035 * Math.min(1.15, bw) * thick, (street ? 0.075 : 0.1) * Math.min(1.1, h), 0.035 * thick, 0, street ? -0.065 : -0.08, 0));
+      if (summer) {
+        // kurze Ärmel, darunter nackter Arm
+        arm.add(part(capsule, skin, 0.03 * Math.min(1.15, bw), 0.07 * Math.min(1.1, h), 0.03, 0, -0.105, 0));
+        arm.add(part(sphere, sleeveMat, 0.045 * Math.min(1.15, bw), 0.05, 0.045, 0, -0.025, 0));
+      } else arm.add(part(capsule, sleeveMat, 0.035 * Math.min(1.15, bw) * thick, (street ? 0.075 : 0.1) * Math.min(1.1, h), 0.035 * thick, 0, street ? -0.065 : -0.08, 0));
       arm.add(part(sphere, skin, 0.038, 0.038, 0.038, 0, -0.17 * Math.min(1.1, h), 0));
       this.handY = -0.17 * Math.min(1.1, h);
       this.body.add(arm);
