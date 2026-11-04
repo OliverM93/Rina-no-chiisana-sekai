@@ -68,6 +68,14 @@ const list: ItemDef[] = [
   // Essen & Geschenke
   { id: 'ei', name: 'Ei', plural: 'Eier', category: 'essen', price: 20, description: 'Noch ganz warm. Von Linas eigenen Hühnern! 🥚' },
   { id: 'wachtelei', name: 'Wachtelei', plural: 'Wachteleier', category: 'essen', price: 14, description: 'Winzig, gesprenkelt und sehr niedlich.' },
+  // Gerichte aus Jens' Kochstudio
+  { id: 'ruehrei', name: 'Rührei', plural: 'Portionen Rührei', category: 'essen', price: 70, description: 'Fluffig, goldgelb, mit einer Prise Schnittlauch. Olis Lieblingsfrühstück.' },
+  { id: 'wachtel-spiegelei', name: 'Wachtel-Spiegeleier', plural: 'Portionen Wachtel-Spiegeleier', category: 'essen', price: 75, description: 'Winzige Spiegeleier – so niedlich, dass man sie fast nicht essen mag. Fast.' },
+  { id: 'obstsalat', name: 'Obstsalat', plural: 'Schüsseln Obstsalat', category: 'essen', price: 60, description: 'Apfel, Birne und Pfirsich – frisch geschnippelt und bunt wie ein Gemälde.' },
+  { id: 'fischbroetchen', name: 'Fischbrötchen', plural: 'Fischbrötchen', category: 'essen', price: 130, description: 'Nach Jens\' Geheimrezept: „In Hamburg gelernt, in Paris verfeinert, in Sachsen perfektioniert.“' },
+  { id: 'apfelkuchen', name: 'Apfelkuchen', plural: 'Apfelkuchen', category: 'essen', price: 180, description: 'Mit Zimt und Liebe. Oma sagt, ihrer ist besser. Oma sagt das immer.' },
+  { id: 'crepes', name: 'Crêpes', plural: 'Crêpes', category: 'essen', price: 150, description: 'Hauchdünn und mit Pfirsich gefüllt – wie am Montmartre. Oh là là!' },
+  { id: 'lavendelkekse', name: 'Lavendelkekse', plural: 'Lavendelkekse', category: 'essen', price: 90, description: 'Kekse mit einem Hauch Provence. Duften himmlisch.' },
   { id: 'mixtape', name: 'Olis Mixtape', plural: 'Olis Mixtapes', category: 'geschenk', price: null, maxStack: 1, description: 'Eine Kassette mit Herzchen drauf. Seite A: Punk. Seite B: auch Punk. Aber mit Liebe.' },
   { id: 'foto-lina-oli', name: 'Foto von Lina & Oli', plural: 'Fotos von Lina & Oli', category: 'geschenk', price: null, maxStack: 1, description: 'Ihr zwei, lachend, mit Winston dazwischen. Auf der Rückseite: „Für immer. Dein Oli.“' },
   { id: 'keks', name: 'Omas Keks', plural: 'Omas Kekse', category: 'essen', price: 5, description: 'Butterkeks nach Oma Giselas Geheimrezept. Keine Widerrede!' },
@@ -89,7 +97,7 @@ for (const w of [...WALLPAPERS, ...FLOORS]) list.push({ id: w.id, name: w.name, 
 
 // Rezeptkarten (Brief-Geschenke) – werden beim Annehmen sofort gelernt
 for (const r of RECIPES) {
-  const name = FURNITURE_BY_ITEM[r.result]?.def.name ?? r.result;
+  const name = FURNITURE_BY_ITEM[r.result]?.def.name ?? list.find((i) => i.id === r.result)?.name ?? r.result;
   list.push({ id: `${RECIPE_ITEM_PREFIX}${r.id}`, name: `Rezept: ${name}`, plural: `Rezepte: ${name}`, category: 'rezept', price: null, maxStack: 1, description: `Eine Bauanleitung für die Werkbank: ${name}.` });
 }
 

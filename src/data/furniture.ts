@@ -82,6 +82,14 @@ export const FURNITURE: readonly FurnitureDef[] = [
   { id: 'kaffeemaschine', name: 'Kaffeemaschine', style: 'basis', gift: true, small: true, price: 700, w: 1, d: 1, description: 'Eine glänzende Siebträgermaschine. Oli behandelt sie wie ein Familienmitglied.' },
   { id: 'plattenspieler', name: 'Plattenspieler', style: 'basis', gift: true, small: true, price: 800, w: 1, d: 1, description: 'Ein Plattenspieler mit Olis Lieblingsplatten. Laut aufdrehen erlaubt – meistens.' },
   { id: 'sternenlampe', name: 'Sternenlampe', style: 'basis', gift: true, small: true, light: true, price: 600, w: 1, d: 1, description: 'Eine kleine Lampe, die Sterne an die Wände malt. Von Oli, für gemütliche Abende.' },
+  // Von Onkel Jens: Andenken von seinen Reisen & sein Gemälde
+  { id: 'eiffelturm', name: 'Mini-Eiffelturm', style: 'basis', gift: true, small: true, price: 400, w: 1, d: 1, description: 'Ein kleiner Eiffelturm aus Paris. „Für die große weite Welt auf deinem Regal!“' },
+  { id: 'venedig-maske', name: 'Venezianische Maske', style: 'basis', gift: true, small: true, price: 400, w: 1, d: 1, description: 'Eine goldene Karnevalsmaske aus Venedig, mit Federn. Sehr dramatisch. Sehr Jens.' },
+  { id: 'holzschuhe', name: 'Holzschuhe', style: 'basis', gift: true, small: true, price: 400, w: 1, d: 1, description: 'Ein Paar bemalte Holzschuhe aus Amsterdam. Zum Anschauen, nicht zum Anziehen.' },
+  { id: 'faecher', name: 'Flamenco-Fächer', style: 'basis', gift: true, small: true, price: 400, w: 1, d: 1, description: 'Ein roter Fächer aus Sevilla. Olé!' },
+  { id: 'schneekugel', name: 'New-York-Schneekugel', style: 'basis', gift: true, small: true, price: 400, w: 1, d: 1, description: 'Schütteln, und es schneit über den Wolkenkratzern.' },
+  { id: 'daruma', name: 'Daruma', style: 'japanisch', gift: true, small: true, price: 400, w: 1, d: 1, description: 'Ein roter Glücksbringer aus Kyoto. Wenn ein Wunsch in Erfüllung geht, malt man ihm das zweite Auge.' },
+  { id: 'gemaelde-jens', name: 'Gemälde von Jens', style: 'basis', gift: true, price: 2000, w: 1, d: 1, description: 'Ein echter Jens! Ein Dackel unter einem rosa Himmel. Signiert mit Herzchen.' },
   // Garten (draußen, M6c)
   { id: 'zaun-holz', name: 'Astzaun', style: 'garten', crafted: true, outdoor: true, fence: true, price: 60, w: 1, d: 1, description: 'Ein Zaun aus Ästen, mit Bast zusammengebunden. Rustikal und gemütlich.' },
   { id: 'zaun-weiss', name: 'Weißer Lattenzaun', style: 'garten', outdoor: true, fence: true, price: 150, w: 1, d: 1, description: 'Ein weißer Gartenzaun wie aus dem Bilderbuch.' },

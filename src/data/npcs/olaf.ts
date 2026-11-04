@@ -27,7 +27,7 @@ export const OLAF: NpcDef = {
     { from: '22:30', label: 'schläft', activity: { kind: 'zuhause', sleeping: true } },
   ],
   preferences: {
-    loves: ['hering', 'dorsch', 'glitzerstein', 'teeservice'],
+    loves: ['hering', 'dorsch', 'glitzerstein', 'teeservice', 'fischbroetchen'],
     likes: ['ei', 'wachtelei', 'apfel', 'birne', 'scholle', 'barsch', 'stein', 'tulpe', 'keks'],
     dislikes: ['waldameise', 'ohrenqualle', 'weinbergschnecke'],
   },

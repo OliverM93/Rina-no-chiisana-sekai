@@ -16,6 +16,7 @@ export type ObjectKind =
   | 'plot'
   | 'mailbox'
   | 'workbench'
+  | 'bistro'
   | 'board'
   | 'lantern'
   | 'bench'
@@ -56,6 +57,7 @@ const AROUND: Array<[number, number]> = [
 
 export const OBJECT_KINDS: Record<ObjectKind, KindInfo> = {
   house: { w: 5, h: 3, blocks: 'all', interactFrom: [[2, 3]] },
+  bistro: { w: 5, h: 3, blocks: 'all', interactFrom: [[2, 3], [1, 3], [3, 3]] },
   // Bauplatz: Grundfläche frei, nur das Schild vorne mittig blockiert.
   plot: { w: 5, h: 3, blocks: [[2, 2]], interactFrom: [[2, 3], [1, 2], [3, 2]] },
   mailbox: { w: 1, h: 1, blocks: 'all', interactFrom: [[0, 1], [-1, 0], [1, 0]] },

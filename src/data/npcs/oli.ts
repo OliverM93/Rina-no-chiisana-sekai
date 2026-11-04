@@ -32,7 +32,7 @@ export const OLI: NpcDef = {
     { from: '23:30', label: 'schläft', activity: { kind: 'zuhause', sleeping: true } },
   ],
   preferences: {
-    loves: ['ei', 'hering', 'dorsch', 'keks', 'glitzerstein'],
+    loves: ['ruehrei', 'fischbroetchen', 'ei', 'hering', 'dorsch', 'keks', 'glitzerstein'],
     likes: ['wachtelei', 'apfel', 'birne', 'pfirsich', 'barsch', 'scholle', 'bachforelle', 'makrele', 'sonnenblume', 'rose', 'hirschkaefer', 'stein'],
     dislikes: ['weinbergschnecke', 'ohrenqualle'],
   },

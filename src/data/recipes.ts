@@ -9,6 +9,8 @@
 import type { Recipe } from '../core/crafting';
 
 export interface RecipeDef extends Recipe {
+  /** Wo gebaut/gekocht wird (Standard: Werkbank) */
+  station?: 'werkbank' | 'kueche';
   /** Kurzer Hinweis, wie man es bekommt (für noch unbekannte Rezepte) */
   hint: string;
   start?: boolean;
@@ -19,6 +21,14 @@ export interface RecipeDef extends Recipe {
 export const RECIPES: readonly RecipeDef[] = [
   { id: 'ast-hocker', result: 'ast-hocker', ingredients: [{ itemId: 'ast', count: 5 }], start: true, hint: '' },
   { id: 'blumenvase', result: 'blumenvase', ingredients: [{ itemId: 'wildblumen', count: 3 }, { itemId: 'stein', count: 1 }], start: true, hint: '' },
+  // Jens' Kochstudio
+  { id: 'ruehrei', station: 'kueche', result: 'ruehrei', ingredients: [{ itemId: 'ei', count: 2 }], start: true, hint: '' },
+  { id: 'wachtel-spiegelei', station: 'kueche', result: 'wachtel-spiegelei', ingredients: [{ itemId: 'wachtelei', count: 3 }], start: true, hint: '' },
+  { id: 'obstsalat', station: 'kueche', result: 'obstsalat', ingredients: [{ itemId: 'apfel', count: 1 }, { itemId: 'birne', count: 1 }, { itemId: 'pfirsich', count: 1 }], start: true, hint: '' },
+  { id: 'lavendelkekse', station: 'kueche', result: 'lavendelkekse', count: 2, ingredients: [{ itemId: 'lavendel', count: 1 }, { itemId: 'keks', count: 2 }], fund: 'lavendel', hint: 'Pflanz doch mal Lavendel im Beet …' },
+  { id: 'fischbroetchen', station: 'kueche', result: 'fischbroetchen', ingredients: [{ itemId: 'hering', count: 1 }, { itemId: 'ei', count: 1 }], hint: 'Freunde dich mit Jens an.' },
+  { id: 'apfelkuchen', station: 'kueche', result: 'apfelkuchen', ingredients: [{ itemId: 'apfel', count: 3 }, { itemId: 'ei', count: 2 }], hint: 'Jens verrät es bestimmt, wenn ihr euch näherkommt.' },
+  { id: 'crepes', station: 'kueche', result: 'crepes', count: 2, ingredients: [{ itemId: 'ei', count: 2 }, { itemId: 'pfirsich', count: 1 }], hint: 'Ein Rezept aus Paris – von Jens.' },
   { id: 'zaun-holz', result: 'zaun-holz', count: 2, ingredients: [{ itemId: 'ast', count: 3 }], start: true, hint: '' },
   { id: 'weg-stein', result: 'weg-stein', count: 2, ingredients: [{ itemId: 'stein', count: 3 }], start: true, hint: '' },
   { id: 'vogelhaus', result: 'vogelhaus', ingredients: [{ itemId: 'ast', count: 5 }, { itemId: 'stein', count: 1 }], hint: 'Oma Gisela beobachtet gern Vögel …' },

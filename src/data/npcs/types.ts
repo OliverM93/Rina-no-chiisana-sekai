@@ -24,6 +24,8 @@ export interface NpcDef {
   home: string;
   /** zieht erst ein, wenn dieses Story-Flag gesetzt ist */
   movesIn?: string;
+  /** An diesen Tagen ist sie/er verreist (nicht im Dorf) */
+  away?: (day: string) => boolean;
   schedule: readonly ScheduleEntry[];
   preferences: Preferences;
 

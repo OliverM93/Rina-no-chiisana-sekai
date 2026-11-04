@@ -77,6 +77,12 @@ programmiert, kocht und hört am Strand Punk. Ist er zu Hause, sieht man ihn dri
 Kaffeemaschine oder an der Hantelbank. Mit ihm kann Lina tagsüber ein **🧺 Picknick** machen und abends
 **🌠 Sterne gucken** – mit Sternschnuppen.
 
+**Onkel Jens (M7b):** Ein paar Tage nach Oli eröffnet Jens sein Bistro **„Chez Jens“** neben Omas Haus. Im
+**Kochstudio** kocht Lina mit ihm aus Eiern, Obst, Fisch & Co. Rührei, Obstsalat, Fischbrötchen, Apfelkuchen
+oder Crêpes – die Bewohner lieben Selbstgekochtes. Jens liebt Kunst, spricht Französisch und Sächsisch
+(„Ei verbibbsch, c'est magnifique!“) und reist gern um die Welt: Dann ist sein Bistro zu, und im Briefkasten
+liegt eine Postkarte mit einem Andenken.
+
 Im Menü: Aussehen ändern, speichern, **Spielstand exportieren/laden** (als Datei – praktisch zum Sichern
 oder für ein anderes Gerät), Vollbild, Hilfe.
 
@@ -118,6 +124,10 @@ und jede Jahreszeit sieht anders aus.
 | Oli zieht ein | Oli zu Hause | Picknick | Sterne gucken |
 |---|---|---|---|
 | ![Einzug](docs/screenshots/3d-oli-einzug.png) | ![Zuhause](docs/screenshots/3d-oli-zuhause.png) | ![Picknick](docs/screenshots/3d-picknick.png) | ![Sterne](docs/screenshots/3d-sterne.png) |
+
+| Bistro „Chez Jens“ | Kochstudio | Postkarte von Jens |
+|---|---|---|
+| ![Bistro](docs/screenshots/3d-bistro.png) | ![Kochstudio](docs/screenshots/3d-kochstudio.png) | ![Postkarte](docs/screenshots/3d-postkarte.png) |
 
 | Sammelbuch | Regen |
 |---|---|

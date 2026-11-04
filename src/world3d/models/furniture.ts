@@ -355,6 +355,80 @@ export function makeFurniture(itemId: string, links: FenceLinks = { n: false, e:
       lightAt = new THREE.Vector3(0, 0.15, 0);
       break;
     }
+    // ---- Andenken von Jens ----
+    case 'eiffelturm': {
+      const iron = '#7a6a5a';
+      for (const [x, z] of [[-0.08, -0.08], [0.08, -0.08], [-0.08, 0.08], [0.08, 0.08]] as const) {
+        const leg = b(0.03, 0.2, 0.03, iron, x, 0.1, z);
+        leg.rotation.set(z * 2.4, 0, -x * 2.4);
+        g.add(leg);
+      }
+      g.add(b(0.16, 0.02, 0.16, iron, 0, 0.19, 0));
+      g.add(c(0.04, 0.22, iron, 0, 0.31, 0, cone));
+      g.add(b(0.08, 0.015, 0.08, iron, 0, 0.3, 0));
+      g.add(c(0.006, 0.07, iron, 0, 0.45, 0));
+      break;
+    }
+    case 'venedig-maske': {
+      g.add(b(0.08, 0.02, 0.08, '#3a3a44', 0, 0.01, 0));
+      g.add(c(0.008, 0.12, '#3a3a44', 0, 0.07, 0));
+      const mask = s(0.12, 0.07, 0.04, '#f2c94c', 0, 0.17, 0);
+      g.add(mask);
+      for (const x of [-0.05, 0.05]) g.add(s(0.025, 0.018, 0.01, '#2b2a31', x, 0.18, 0.035));
+      for (let i = 0; i < 3; i++) g.add(s(0.012, 0.08, 0.008, ['#e85a8a', '#5b7fc2', '#ffffff'][i], 0.08 + i * 0.02, 0.27, -0.01).rotateZ(-0.3 - i * 0.2));
+      break;
+    }
+    case 'holzschuhe': {
+      for (const x of [-0.06, 0.06]) {
+        g.add(s(0.05, 0.04, 0.12, '#f7d26a', x, 0.04, 0));
+        g.add(s(0.03, 0.01, 0.03, '#e8484f', x, 0.075, 0.04));
+      }
+      break;
+    }
+    case 'faecher': {
+      g.add(b(0.1, 0.02, 0.06, '#8a5a3a', 0, 0.01, 0));
+      const fan = mesh(new THREE.CircleGeometry(0.15, 16, 0, Math.PI), toon('#d9534f', { side: THREE.DoubleSide }));
+      fan.position.set(0, 0.04, 0);
+      g.add(fan);
+      for (let i = 0; i < 7; i++) {
+        const rib = b(0.006, 0.15, 0.004, '#2b2a31', Math.cos((i / 6) * Math.PI) * 0.07, 0.04 + Math.sin((i / 6) * Math.PI) * 0.07, 0.003);
+        rib.rotation.z = (i / 6) * Math.PI - Math.PI / 2;
+        g.add(rib);
+      }
+      break;
+    }
+    case 'schneekugel': {
+      g.add(c(0.09, 0.05, '#8a5a3a', 0, 0.025, 0));
+      g.add(s(0.09, 0.09, 0.09, new THREE.MeshToonMaterial({ color: '#dff0ff', transparent: true, opacity: 0.45 }), 0, 0.13, 0));
+      for (const [x, h] of [[-0.03, 0.08], [0.01, 0.12], [0.04, 0.06]] as const) g.add(b(0.025, h, 0.025, '#7a8a96', x, 0.06 + h / 2, 0));
+      break;
+    }
+    case 'daruma': {
+      g.add(s(0.1, 0.11, 0.09, '#d9534f', 0, 0.11, 0));
+      g.add(s(0.06, 0.055, 0.03, '#fbf6ec', 0, 0.14, 0.065));
+      g.add(s(0.012, 0.012, 0.006, '#2b2a31', -0.02, 0.15, 0.09));
+      g.add(s(0.012, 0.012, 0.006, '#fbf6ec', 0.02, 0.15, 0.09));
+      g.add(s(0.035, 0.012, 0.01, '#e8c547', 0, 0.06, 0.085));
+      break;
+    }
+    case 'gemaelde-jens': {
+      for (const dx of [-0.18, 0.18]) {
+        const leg = b(0.04, 1.3, 0.04, '#8a5a3a', dx, 0.62, -0.05);
+        leg.rotation.z = dx * 0.5;
+        g.add(leg);
+      }
+      g.add(b(0.04, 1.1, 0.04, '#8a5a3a', 0, 0.55, -0.25).rotateX(-0.3));
+      g.add(b(0.62, 0.04, 0.08, '#8a5a3a', 0, 0.62, 0));
+      g.add(b(0.62, 0.52, 0.04, '#c9955f', 0, 0.92, 0));
+      g.add(b(0.56, 0.46, 0.02, '#f7c6d4', 0, 0.92, 0.025));
+      // Dackel unter rosa Himmel
+      g.add(b(0.56, 0.12, 0.01, '#8fd08a', 0, 0.75, 0.037));
+      g.add(s(0.11, 0.035, 0.01, '#b8642e', 0, 0.83, 0.04));
+      g.add(s(0.04, 0.035, 0.01, '#b8642e', 0.11, 0.86, 0.04));
+      g.add(s(0.05, 0.05, 0.01, '#fff3b0', -0.17, 1.06, 0.035));
+      g.add(s(0.03, 0.03, 0.01, '#e85a8a', 0.15, 1.05, 0.04));
+      break;
+    }
     // ---- Garten (draußen) ----
     case 'zaun-holz':
     case 'zaun-weiss':
