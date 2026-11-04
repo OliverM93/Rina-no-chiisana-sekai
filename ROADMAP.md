@@ -198,6 +198,9 @@ Legende: ✅ erledigt · 🚧 in Arbeit · ⬜ geplant
   - Geräusche: Schritte (Holz drinnen), Aufheben, Tür, Angeln (Platsch, Biss, Fang), Kescher, Münzen, Bauen,
     Bellen, Gackern, Graben, Herz, Post, Dialog-Blubb
   - Lautstärkeregler für Musik & Geräusche im Menü (wird gespeichert)
+- ✅ **M8b Kleidung & Gruselkanal:** Linas Lieblings-Sweatshirts (Hawaii, Sport, Radierkopf) mit weiter Anzughose,
+  im Herbst/Frühling täglich wechselnd · Oli zieht sich um (alles in Schwarz: Bandshirts, Polo, Überjacke; Hosen schwarz/beige/Jeans; Chunky-Sneaker) ·
+  Gruselkanal im Fernseher („Gänsehaut um Mitternacht“), Sprüche der Bewohner zu Linas Horror-Liebe
 - 🔶 **M8c Animationen & Partikel** (erster Schwung ✅): Staubwölkchen beim Rennen, Spritzer beim Angeln,
   Funkeln beim Aufheben & Fangen, Herzchen (Herz-Aufstieg, Lieblingsgeschenk, Winston streicheln), Erdklumpen
   beim Graben, Konfetti beim Bauen & Kochen, Glühwürmchen in Sommernächten · Lina macht Freudensprünge,

@@ -9,12 +9,12 @@ import { palette } from '../style/palette';
 import type { Season } from './time';
 
 export type HairStyle = 'locken' | 'schulterlang' | 'bob' | 'zopf' | 'dutt' | 'kurz' | 'wuschel' | 'zerzaust' | 'kurzgeschoren' | 'glatt';
-export type Outfit = 'kleid' | 'pulli' | 'latzhose' | 'hemd' | 'strickjacke' | 'mantel' | 'weste' | 'streifenhemd' | 'hoodie' | 'troyer' | 'sweatshirt' | 'shorts' | 'sommer' | 'fleece' | 'saison';
+export type Outfit = 'kleid' | 'pulli' | 'latzhose' | 'hemd' | 'strickjacke' | 'mantel' | 'weste' | 'streifenhemd' | 'hoodie' | 'troyer' | 'sweatshirt' | 'shorts' | 'sommer' | 'fleece' | 'hawaii' | 'sport' | 'radierkopf' | 'bandshirt' | 'polo' | 'jacke' | 'saison';
 export type Beard = 'keiner' | 'kurz' | 'voll' | 'schnurrbart';
 export type Smile = 'laecheln' | 'grinsen' | 'zahnluecke';
 export type GlassesShape = 'rund' | 'eckig';
 /** „saison“ = Schnürstiefel im Herbst/Winter, weiße Sneaker im Frühling/Sommer */
-export type Shoes = 'standard' | 'stiefel' | 'sneaker' | 'saison';
+export type Shoes = 'standard' | 'stiefel' | 'sneaker' | 'chunky' | 'chunky-schwarz' | 'saison';
 /** „oval“ = schmaleres Kinn, „rund“ = klassisch kugelrund */
 export type FaceShape = 'rund' | 'oval';
 
@@ -79,13 +79,43 @@ export const OUTFITS: Option<Outfit>[] = [
   { id: 'shorts', label: 'Sweatshirt & kurze Hose' },
   { id: 'sommer', label: 'Kurzes Oberteil & kurze Hose' },
   { id: 'fleece', label: 'Dicke Fleece-Jacke' },
-  { id: 'saison', label: 'Streetwear je nach Jahreszeit' },
+  { id: 'hawaii', label: 'Oversize „Hawaii“-Sweatshirt & weite Anzughose' },
+  { id: 'sport', label: 'Oversize „Sport“-Sweatshirt & weite Anzughose' },
+  { id: 'radierkopf', label: 'Schwarzer Oversize-Sweater mit Filmdruck & weite Anzughose' },
+  { id: 'bandshirt', label: 'Bandshirt & Cargohose' },
+  { id: 'polo', label: 'Polo mit Ärmel-Abzeichen & Cargohose' },
+  { id: 'jacke', label: 'Überjacke mit Ärmel-Abzeichen & Cargohose' },
+  { id: 'saison', label: 'Streetwear je nach Jahreszeit (wechselt täglich)' },
 ];
 
-/** Was eine Figur in der Jahreszeit tatsächlich trägt („saison“ = Streetwear: Sommer kurz, Winter Fleece) */
-export function outfitFor(a: Appearance, season: Season): Exclude<Outfit, 'saison'> {
+/** Streetwear für Frühling & Herbst – bei „saison“ jeden Tag ein anderes Teil */
+export const STREETWEAR_ROTATION: readonly Exclude<Outfit, 'saison'>[] = ['sweatshirt', 'hawaii', 'sport', 'radierkopf'];
+
+/** kleiner, stabiler Hash für Tageswechsel (ohne Abhängigkeit von rng.ts' Seeds) */
+export function dayPick(day: string, salt: string, n: number): number {
+  let h = 2166136261;
+  for (const ch of salt + day) h = Math.imul(h ^ ch.charCodeAt(0), 16777619);
+  return (h >>> 0) % n;
+}
+
+/**
+ * Was eine Figur in der Jahreszeit tatsächlich trägt („saison“ = Streetwear: Sommer kurz, Winter Fleece,
+ * Frühling & Herbst jeden Tag ein anderes Oversize-Sweatshirt).
+ */
+export function outfitFor(a: Appearance, season: Season, day = ''): Exclude<Outfit, 'saison'> {
   if (a.outfit !== 'saison') return a.outfit;
-  return season === 'sommer' ? 'sommer' : season === 'winter' ? 'fleece' : 'sweatshirt';
+  if (season === 'sommer') return 'sommer';
+  if (season === 'winter') return 'fleece';
+  return day ? STREETWEAR_ROTATION[dayPick(day, 'lina', STREETWEAR_ROTATION.length)] : 'sweatshirt';
+}
+
+/** Ein Kleiderschrank-Eintrag: Outfit + Farben (der Rest des Aussehens bleibt) */
+export type WardrobeItem = Pick<Appearance, 'outfit' | 'outfitColor' | 'accentColor'> & Partial<Pick<Appearance, 'shoes'>>;
+
+/** Aussehen für einen Tag: wählt reproduzierbar ein Teil aus dem Kleiderschrank (falls vorhanden) */
+export function dressFor(a: Appearance, wardrobe: readonly WardrobeItem[] | undefined, day: string, salt: string): Appearance {
+  if (!wardrobe?.length || !day) return a;
+  return { ...a, ...wardrobe[dayPick(day, salt, wardrobe.length)] };
 }
 
 export const SMILES: Option<Smile>[] = [
@@ -126,6 +156,8 @@ export const SHOES: Option<Shoes>[] = [
   { id: 'saison', label: 'Je nach Jahreszeit' },
   { id: 'stiefel', label: 'Schnürstiefel' },
   { id: 'sneaker', label: 'Weiße Sneaker' },
+  { id: 'chunky', label: 'Weiße Chunky-Sneaker' },
+  { id: 'chunky-schwarz', label: 'Schwarze Chunky-Sneaker' },
   { id: 'standard', label: 'Halbschuhe' },
 ];
 

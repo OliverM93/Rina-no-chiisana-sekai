@@ -2,6 +2,7 @@
  * Ein Bewohner in der Welt: folgt seinem Tagesablauf (Bank, Spaziergang,
  * Zuhause), läuft per Wegfindung und bleibt stehen, wenn Lina mit ihm redet.
  */
+import { dressFor } from '../core/appearance';
 import type * as THREE from 'three';
 import { TILE } from '../config';
 import { findPath, nearestWalkable, type Tile } from '../core/grid';
@@ -36,7 +37,8 @@ export class Npc {
   ) {
     const door = this.doorTile();
     const start = door ? tileCenterFeet(door) : { x: 0, y: 0 };
-    this.char = new Character(parent, def.appearance, start.x, start.y, 'down', heightAt, session.season);
+    const day = session.today();
+    this.char = new Character(parent, dressFor(def.appearance, def.wardrobe, day, def.id), start.x, start.y, 'down', heightAt, session.season, day);
     this.char.speedFactor = NPC_SPEED;
     // Gleich an die richtige Stelle setzen (ohne Laufen)
     this.applyEntry(this.wantedEntry(), true);

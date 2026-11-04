@@ -6,6 +6,7 @@
  *  - Titel: Die Kamera schwebt langsam über das Dorf.
  *  - Spiel: Lina ist da und lässt sich steuern.
  */
+import { dressFor } from '../core/appearance';
 import * as THREE from 'three';
 import { DPR, TILE, UNIT } from '../config';
 import { CollisionGrid, findPath, nearestWalkable, type Tile } from '../core/grid';
@@ -549,7 +550,7 @@ export class World3D {
     this.session.inside = false;
     this.session.decorActive = false;
     const p = data.player;
-    this.player = new Character(this.scene, p.appearance, p.x, p.y, p.facing, this.view.terrain.heightAt, this.session.season);
+    this.player = new Character(this.scene, p.appearance, p.x, p.y, p.facing, this.view.terrain.heightAt, this.session.season, this.session.today());
     if (!this.winston) this.winston = new Winston(this.scene, this.tweens, this.view.terrain.heightAt);
     this.winston.heightAt = this.view.terrain.heightAt;
     this.dogFollow();
@@ -1586,7 +1587,8 @@ export class World3D {
       return;
     }
     if (!this.homeOli) {
-      this.homeOli = new Character(this.scene, oli.def.appearance, 0, 0, 'down', () => 0, this.session.season);
+      const day = this.session.today();
+      this.homeOli = new Character(this.scene, dressFor(oli.def.appearance, oli.def.wardrobe, day, oli.def.id), 0, 0, 'down', () => 0, this.session.season, day);
       this.homeOli.speedFactor = 0.7;
     }
     const c = this.homeOli;

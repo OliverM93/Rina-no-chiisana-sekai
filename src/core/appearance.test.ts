@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { LOOKS } from '../data/npcs/looks';
-import { DEFAULT_LINA, normalizeAppearance, outfitFor, shoesFor } from './appearance';
+import { DEFAULT_LINA, STREETWEAR_ROTATION, dressFor, normalizeAppearance, outfitFor, shoesFor } from './appearance';
+import { OLI_WARDROBE } from '../data/npcs/looks';
 
 describe('Aussehen', () => {
   it('ergänzt neue Felder für alte Spielstände', () => {
@@ -59,5 +60,39 @@ describe('Aussehen', () => {
     expect(outfitFor(a, 'herbst')).toBe('sweatshirt');
     expect(outfitFor({ ...a, outfit: 'kleid' }, 'winter')).toBe('kleid');
     expect(DEFAULT_LINA.outfit).toBe('saison');
+  });
+
+  it('Frühling & Herbst: jeden Tag ein anderes Lieblings-Sweatshirt (reproduzierbar)', () => {
+    const a = { ...DEFAULT_LINA, outfit: 'saison' as const };
+    const seen = new Set<string>();
+    for (let d = 1; d <= 28; d++) {
+      const day = `2026-10-${String(d).padStart(2, '0')}`;
+      const o = outfitFor(a, 'herbst', day);
+      expect(STREETWEAR_ROTATION).toContain(o);
+      expect(outfitFor(a, 'herbst', day)).toBe(o);
+      seen.add(o);
+    }
+    expect(seen.size).toBe(STREETWEAR_ROTATION.length);
+    expect(outfitFor(a, 'sommer', '2026-07-01')).toBe('sommer');
+    expect(outfitFor({ ...a, outfit: 'hawaii' }, 'winter', '2026-12-01')).toBe('hawaii');
+  });
+
+  it('Kleiderschrank: Oli wechselt ab und zu die Klamotten, sonst bleibt alles gleich', () => {
+    const outfits = new Set<string>();
+    for (let d = 1; d <= 30; d++) {
+      const day = `2026-04-${String(d).padStart(2, '0')}`;
+      const dressed = dressFor(LOOKS.oli, OLI_WARDROBE, day, 'oli');
+      expect(dressed.beard).toBe('schnurrbart');
+      expect(dressed).toEqual(dressFor(LOOKS.oli, OLI_WARDROBE, day, 'oli'));
+      outfits.add(dressed.outfit);
+    }
+    expect([...outfits].sort()).toEqual(['bandshirt', 'jacke', 'polo', 'troyer']);
+    expect(dressFor(LOOKS.oli, undefined, '2026-04-01', 'oli')).toBe(LOOKS.oli);
+  });
+
+  it('neue Outfits überstehen das Normalisieren', () => {
+    for (const o of ['hawaii', 'sport', 'radierkopf', 'bandshirt', 'polo', 'jacke'] as const) {
+      expect(normalizeAppearance({ ...DEFAULT_LINA, outfit: o }).outfit).toBe(o);
+    }
   });
 });
