@@ -226,6 +226,150 @@ export function makeFurniture(itemId: string): FurnitureModel {
       }
       break;
     }
+    // ---- Handgemacht (Werkbank) ----
+    case 'ast-hocker': {
+      g.add(c(0.2, 0.05, '#c9955f', 0, 0.36, 0));
+      g.add(c(0.21, 0.012, '#a87448', 0, 0.385, 0));
+      for (let i = 0; i < 3; i++) {
+        const a2 = (i / 3) * Math.PI * 2;
+        const leg = c(0.025, 0.38, '#8a5a3a', Math.cos(a2) * 0.12, 0.18, Math.sin(a2) * 0.12);
+        leg.rotation.set(Math.sin(a2) * 0.18, 0, -Math.cos(a2) * 0.18);
+        g.add(leg);
+      }
+      const brace = c(0.015, 0.26, '#8a5a3a', 0, 0.14, 0);
+      brace.rotation.z = Math.PI / 2;
+      g.add(brace);
+      seatY = 0.38;
+      break;
+    }
+    case 'blumenvase': {
+      g.add(s(0.09, 0.09, 0.09, '#a9a9b2', 0, 0.08, 0));
+      g.add(c(0.06, 0.04, '#8f8f99', 0, 0.16, 0));
+      for (const [x, z, h, cc] of [[0, 0, 0.32, '#f4a3b8'], [0.05, 0.03, 0.27, '#f7e26a'], [-0.05, 0.02, 0.29, '#a98ad8'], [0.02, -0.05, 0.25, '#ffffff'], [-0.03, -0.04, 0.3, '#7ab8f0']] as const) {
+        const st = c(0.006, h - 0.15, '#5f9a4a', x * 0.6, 0.16 + (h - 0.15) / 2, z * 0.6);
+        st.rotation.set(z * 2, 0, -x * 2);
+        g.add(st);
+        g.add(s(0.03, 0.022, 0.03, cc, x, h, z));
+      }
+      break;
+    }
+    case 'hundekoerbchen': {
+      const basket = mesh(new THREE.CylinderGeometry(0.4, 0.34, 0.16, 20, 1, true), toon('#c9955f', { side: THREE.DoubleSide }));
+      basket.scale.set(1, 1, 0.82);
+      basket.position.y = 0.08;
+      g.add(basket);
+      const floor = c(0.36, 0.02, '#b07a4a', 0, 0.01, 0);
+      floor.scale.z = 0.3;
+      g.add(floor);
+      const rim = mesh(new THREE.TorusGeometry(0.4, 0.035, 8, 24), toon('#a87448'));
+      rim.rotation.x = Math.PI / 2;
+      rim.scale.set(1, 0.82, 1);
+      rim.position.y = 0.16;
+      g.add(rim);
+      for (let i = 0; i < 3; i++) {
+        const band = mesh(new THREE.TorusGeometry(0.38, 0.012, 6, 24), toon('#8a5a3a'));
+        band.rotation.x = Math.PI / 2;
+        band.scale.set(1 - i * 0.04, 0.82 - i * 0.03, 1);
+        band.position.y = 0.04 + i * 0.045;
+        g.add(band);
+      }
+      g.add(s(0.3, 0.05, 0.24, '#f7c6d4', 0, 0.06, 0));
+      // ein Knochen-Spielzeug
+      g.add(c(0.012, 0.12, '#fbf6ec', 0.18, 0.1, 0.12).rotateZ(Math.PI / 2));
+      for (const x of [0.12, 0.24]) g.add(s(0.022, 0.022, 0.022, '#fbf6ec', x, 0.1, 0.12));
+      seatY = 0.07;
+      break;
+    }
+    case 'steinlaterne': {
+      g.add(b(0.36, 0.1, 0.36, '#9a9aa4', 0, 0.05, 0));
+      g.add(c(0.09, 0.32, '#a9a9b2', 0, 0.26, 0));
+      g.add(b(0.3, 0.06, 0.3, '#9a9aa4', 0, 0.45, 0));
+      glow = glowMat('#ffd58a');
+      g.add(b(0.18, 0.16, 0.18, glow, 0, 0.56, 0));
+      for (const [x, z] of [[-0.1, -0.1], [0.1, -0.1], [-0.1, 0.1], [0.1, 0.1]]) g.add(b(0.04, 0.17, 0.04, '#a9a9b2', x, 0.56, z));
+      const roof = c(0.26, 0.14, '#8f8f99', 0, 0.71, 0, cone);
+      roof.rotation.y = Math.PI / 4;
+      g.add(roof);
+      g.add(s(0.04, 0.04, 0.04, '#8f8f99', 0, 0.8, 0));
+      lightAt = new THREE.Vector3(0, 0.56, 0);
+      break;
+    }
+    case 'muschellampe': {
+      g.add(c(0.07, 0.03, '#e6c59c', 0, 0.015, 0));
+      g.add(c(0.012, 0.2, '#b98a5e', 0, 0.12, 0));
+      glow = glowMat('#ffe0e8');
+      const shell = mesh(new THREE.SphereGeometry(0.13, 16, 8, 0, Math.PI * 2, 0, Math.PI / 2), glow);
+      shell.position.y = 0.2;
+      shell.scale.set(1, 0.75, 1);
+      g.add(shell);
+      for (let i = 0; i < 8; i++) {
+        const rib = b(0.008, 0.005, 0.12, '#f4a3b8', 0, 0.255, 0);
+        rib.rotation.set(0.5, (i / 8) * Math.PI * 2, 0);
+        g.add(rib);
+      }
+      g.add(s(0.03, 0.02, 0.025, '#f7d3dc', 0.05, 0.02, 0.05));
+      lightAt = new THREE.Vector3(0, 0.25, 0);
+      break;
+    }
+    case 'treibholzregal': {
+      for (const x of [-0.82, 0.82]) {
+        const post = c(0.04, 0.95, '#9a6a44', x, 0.475, 0);
+        post.rotation.z = x > 0 ? 0.03 : -0.03;
+        g.add(post);
+      }
+      for (const [y, w] of [[0.06, 1.7], [0.42, 1.72], [0.8, 1.68]] as const) {
+        g.add(b(w, 0.05, 0.36, '#b98a5e', 0, y, 0));
+        for (const z of [-0.12, 0, 0.12]) {
+          const ast = c(0.02, w, '#8a5a3a', 0, y + 0.03, z);
+          ast.rotation.z = Math.PI / 2;
+          g.add(ast);
+        }
+      }
+      g.add(s(0.06, 0.05, 0.06, '#a9a9b2', -0.5, 0.49, 0));
+      g.add(s(0.05, 0.035, 0.04, '#f7d3dc', -0.35, 0.47, 0.05));
+      break;
+    }
+    case 'seestern-deko': {
+      g.add(c(0.14, 0.03, '#f3ead8', 0, 0.015, 0));
+      for (const [x, z, cc] of [[-0.07, 0.06, '#f7d3dc'], [0.08, 0.05, '#fbf6ec'], [0.03, -0.08, '#f2e2c8']] as const) g.add(s(0.035, 0.018, 0.03, cc, x, 0.04, z));
+      const star = new THREE.Shape();
+      for (let i = 0; i < 10; i++) {
+        const a2 = (i / 10) * Math.PI * 2 + Math.PI / 2;
+        const r = i % 2 === 0 ? 0.11 : 0.045;
+        if (i === 0) star.moveTo(Math.cos(a2) * r, Math.sin(a2) * r);
+        else star.lineTo(Math.cos(a2) * r, Math.sin(a2) * r);
+      }
+      const st = mesh(new THREE.ExtrudeGeometry(star, { depth: 0.025, bevelEnabled: true, bevelSize: 0.01, bevelThickness: 0.01, bevelSegments: 2 }), toon('#f29a6a'));
+      st.rotation.x = -Math.PI / 2 + 0.5;
+      st.position.set(0, 0.1, -0.02);
+      g.add(st);
+      break;
+    }
+    case 'glitzerlampe': {
+      g.add(c(0.09, 0.06, '#9a9aa4', 0, 0.03, 0));
+      g.add(c(0.07, 0.05, '#a9a9b2', 0, 0.085, 0));
+      glow = new THREE.MeshToonMaterial({ color: '#bde8ff', emissive: '#c8a8ff', emissiveIntensity: 0.2 });
+      const gem = mesh(new THREE.OctahedronGeometry(0.09, 0), glow);
+      gem.scale.set(1, 1.35, 1);
+      gem.position.y = 0.21;
+      gem.rotation.y = 0.4;
+      g.add(gem);
+      lightAt = new THREE.Vector3(0, 0.22, 0);
+      break;
+    }
+    case 'kieselmosaik': {
+      g.add(c(0.95, 0.015, '#d8d2c6', 0, 0.008, 0));
+      const stones = ['#a9a9b2', '#c9c3b8', '#8f8f99', '#e0d8cc', '#b8a898'];
+      let k = 0;
+      for (const [r, n] of [[0, 1], [0.2, 7], [0.42, 12], [0.66, 18], [0.86, 22]] as const) {
+        for (let i = 0; i < n; i++) {
+          const a2 = (i / n) * Math.PI * 2 + r;
+          const col2 = r === 0.42 ? '#f4a3b8' : stones[k++ % stones.length];
+          g.add(s(0.07, 0.025, 0.06, col2, Math.cos(a2) * r, 0.02, Math.sin(a2) * r));
+        }
+      }
+      break;
+    }
     default:
       g.add(b(0.6, 0.6, 0.6, col, 0, 0.3, 0));
   }

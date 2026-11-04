@@ -20,6 +20,7 @@ import { NPC_BY_ID, NPCS } from '../data/npcs';
 import type { LetterTemplate, NpcDef } from '../data/npcs/types';
 import type { Session } from './session';
 import { itemIconUrl } from '../gfx/items';
+import { onItemObtained } from './crafting';
 
 // ---------------------------------------------------------------------------
 // Tasche & Sternchen
@@ -29,6 +30,7 @@ import { itemIconUrl } from '../gfx/items';
 export function giveItem(session: Session, itemId: string, count = 1, announce = true): number {
   const data = session.data;
   if (!data) return count;
+  if (onItemObtained(session, itemId)) return 0;
   const left = invAdd(data.inventory, itemId, count, maxStackOf);
   const got = count - left;
   if (got > 0) {

@@ -2,6 +2,7 @@
  * Die laufende Spielsitzung: Spielstand, Uhr, Karte und der Event-Bus
  * zwischen Spielwelt (Phaser) und Oberfläche (Preact).
  */
+import { RECIPE_BY_ID, START_RECIPES } from '../data/recipes';
 import type { Appearance } from '../core/appearance';
 import { Emitter } from '../core/events';
 import { createNpcState } from '../core/friendship';
@@ -47,6 +48,7 @@ export type UiPanel =
   | { kind: 'mail' }
   | { kind: 'book' }
   | { kind: 'catalog' }
+  | { kind: 'werkbank' }
   | { kind: 'bank'; onClose?: () => void }
   | { kind: 'gift'; npcId: string; onPick: (itemId: string) => void; onCancel: () => void }
   | { kind: 'seeds'; onPick: (itemId: string) => void; onCancel: () => void };
@@ -129,7 +131,7 @@ export class Session {
     this.season = getSeason(clock());
   }
 
-  readonly saveOptions = { isKnownItem, npcIds: NPCS.map((n) => n.id), defaultHouse: STARTER_HOUSE, houseRules: HOUSE_RULES, furnitureInfo };
+  readonly saveOptions = { isKnownItem, npcIds: NPCS.map((n) => n.id), defaultHouse: STARTER_HOUSE, houseRules: HOUSE_RULES, furnitureInfo, isKnownRecipe: (id: string) => id in RECIPE_BY_ID, startRecipes: START_RECIPES };
 
   /** Heutiger Tag als JJJJ-MM-TT */
   today(): string {
@@ -181,7 +183,7 @@ export class Session {
   }
 
   startNewGame(appearance: Appearance, villageName: string) {
-    const data = createNewSave({ appearance, villageName, spawn: this.spawnPoint(), now: this.clock(), house: STARTER_HOUSE });
+    const data = createNewSave({ appearance, villageName, spawn: this.spawnPoint(), now: this.clock(), house: STARTER_HOUSE, recipes: START_RECIPES });
     for (const npc of NPCS) data.npcs[npc.id] = createNpcState();
     this.begin(data);
     this.save();

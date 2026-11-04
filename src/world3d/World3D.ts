@@ -67,6 +67,9 @@ import { Insects3D } from './Insects3D';
 import { Interior3D, ROOM_X, ROOM_Y } from './Interior3D';
 import { makeCan, makeNet, makeRod, type ToolModel } from './models/critters';
 import { Weather3D } from './Weather3D';
+import { Winston } from './Winston';
+import { petWinston, winstonDig, winstonMayDig } from '../game/pet';
+import { DIG_LINES } from '../data/winston';
 import { lampGlass, makeHouse, windowGlass } from './models/buildings';
 import { buildMapView3D, footprintCenter, type MapView3D } from './MapView3D';
 import { Npc } from './Npc';
@@ -79,9 +82,10 @@ type Target =
   | { kind: 'flowers'; tile: Tile }
   | { kind: 'beet'; tile: Tile }
   | { kind: 'moebel'; uid: string }
-  | { kind: 'katalog' };
+  | { kind: 'katalog' }
+  | { kind: 'winston' };
 
-const SPECIAL_OBJECTS = ['verkaufskiste', 'haus-gisela', 'haus-olaf', 'briefkasten-lina'];
+const SPECIAL_OBJECTS = ['verkaufskiste', 'haus-gisela', 'haus-olaf', 'briefkasten-lina', 'werkbank-lina'];
 const DIRS = { down: [0, 1], up: [0, -1], left: [-1, 0], right: [1, 0] } as const;
 
 /** Kamera-Versatz zum Blickziel (schräg von oben, wie im Vorbild) */
@@ -133,6 +137,9 @@ export class World3D {
   private hoverCell: { x: number; y: number } | null = null;
   /** erst nach dem Verlassen eines Ausgangs-Feldes darf er wieder auslösen */
   private exitArmed = true;
+  private winston: Winston | null = null;
+  /** Wie lange Lina schon stillsteht (für Winstons Buddeln & Körbchen) */
+  private linaIdle = 0;
 
   constructor(
     private readonly canvas: HTMLCanvasElement,
@@ -277,6 +284,7 @@ export class World3D {
         : (tx: number, ty: number) => grid.isBlocked(tx, ty);
       if (this.session.decorActive) intent.dx = intent.dy = 0;
       player.update(dtMs, intent, solid);
+      this.updateWinston(dtMs, player, blocked, solid);
       if (this.session.inside && !this.session.decorActive) {
         const t = player.tile;
         const lay = this.lay;
@@ -445,6 +453,9 @@ export class World3D {
     this.session.decorActive = false;
     const p = data.player;
     this.player = new Character(this.scene, p.appearance, p.x, p.y, p.facing, this.view.terrain.heightAt, this.session.season);
+    if (!this.winston) this.winston = new Winston(this.scene, this.tweens, this.view.terrain.heightAt);
+    this.winston.heightAt = this.view.terrain.heightAt;
+    this.dogFollow();
     this.camTarget.set(p.x * UNIT, 0, p.y * UNIT);
 
     this.collectibles.refresh();
@@ -644,7 +655,10 @@ export class World3D {
     const target = blocked ? null : this.resolveTarget(player);
     let key: string | null = null;
     let pos: THREE.Vector3 | null = null;
-    if (target?.kind === 'npc') {
+    if (target?.kind === 'winston' && this.winston) {
+      key = 'winston';
+      pos = this.winston.dog.root.position.clone().add(new THREE.Vector3(0, 0.62, 0));
+    } else if (target?.kind === 'npc') {
       key = `npc:${target.npc.def.id}`;
       pos = target.npc.char.root.position.clone().add(new THREE.Vector3(0, target.npc.bubbleHeight, 0));
     } else if (target?.kind === 'object') {
@@ -652,7 +666,7 @@ export class World3D {
       if (obj && obj.kind !== 'tree' && obj.kind !== 'rock') {
         key = `obj:${target.id}`;
         const c = footprintCenter(obj);
-        const h = obj.kind === 'house' ? 1.9 : obj.kind === 'board' ? 1.9 : obj.kind === 'fountain' ? 1.7 : obj.kind === 'plot' ? 1.3 : 1.25;
+        const h = obj.kind === 'house' ? 1.9 : obj.kind === 'board' ? 1.9 : obj.kind === 'workbench' ? 1.7 : obj.kind === 'fountain' ? 1.7 : obj.kind === 'plot' ? 1.3 : 1.25;
         pos = new THREE.Vector3(c.x, h, obj.kind === 'house' || obj.kind === 'plot' ? c.z + obj.h / 2 - 0.3 : c.z);
       }
     }
@@ -678,6 +692,7 @@ export class World3D {
 
   private resolveTarget(player: Character): Target | null {
     const tile = player.tile;
+    if (this.winstonInFront(player)) return { kind: 'winston' };
     if (this.session.inside) return this.homeTarget(player);
     const pickup = this.collectibles.pickupNear(tile, player.facing, player.x, player.y);
     if (pickup) return { kind: 'pickup', id: pickup };
@@ -906,6 +921,9 @@ export class World3D {
       case 'katalog':
         this.session.bus.emit('ui:open', { kind: 'catalog' });
         return;
+      case 'winston':
+        this.petDog();
+        return;
       case 'moebel':
         this.useFurniture(target.uid);
         return;
@@ -940,6 +958,10 @@ export class World3D {
     }
     if (id === 'haus-lina') {
       this.enterHome();
+      return;
+    }
+    if (id === 'werkbank-lina') {
+      this.session.bus.emit('ui:open', { kind: 'werkbank' });
       return;
     }
     if (id === 'verkaufskiste') {
@@ -1074,10 +1096,11 @@ export class World3D {
   }
 
   /** Was liegt unter dem Mauszeiger? */
-  private pick(e: PointerEvent): { npc?: Npc; objectId?: string; ground?: THREE.Vector3 } {
+  private pick(e: PointerEvent): { npc?: Npc; objectId?: string; ground?: THREE.Vector3; winston?: boolean } {
     this.raycaster.setFromCamera(this.ndc(e), this.camera);
     const candidates: THREE.Object3D[] = [];
     for (const npc of this.npcs.values()) if (npc.present) candidates.push(npc.char.root);
+    if (this.winston) candidates.push(this.winston.dog.root);
     for (const id of this.interactive) {
       if (!isActive(this.session.map, id)) continue;
       const node = this.view.nodes.get(id);
@@ -1088,6 +1111,7 @@ export class World3D {
       let o: THREE.Object3D | null = h.object;
       while (o) {
         if (o.userData.npcId) return { npc: this.npcs.get(o.userData.npcId as string) };
+        if (o.userData.winston) return { winston: true };
         if (o.userData.objectId) {
           // Bei Bäumen nur den Stamm-Bereich (unten) als Ziel – sonst schüttelt man beim Laufen ständig
           const obj = objectById(this.session.map, o.userData.objectId as string);
@@ -1120,7 +1144,7 @@ export class World3D {
       return;
     }
     const hit = this.pick(e);
-    this.canvas.style.cursor = hit.npc || hit.objectId ? 'pointer' : '';
+    this.canvas.style.cursor = hit.npc || hit.objectId || hit.winston ? 'pointer' : '';
   };
 
   private onPointerUp = (e: PointerEvent) => {
@@ -1151,6 +1175,20 @@ export class World3D {
         });
         return;
       }
+    }
+    if (hit.winston && this.winston) {
+      const w = this.winston;
+      if (Math.hypot(w.x - player.x, w.y - player.y) < TILE * 2.2) {
+        player.cancelPath();
+        player.faceTowards(w.x, w.y);
+        this.petDog();
+      } else {
+        this.walkTo([w.tile, ...neighbours(w.tile)], () => {
+          player.faceTowards(w.x, w.y);
+          this.petDog();
+        });
+      }
+      return;
     }
     if (hit.npc) {
       const npc = hit.npc;
@@ -1214,6 +1252,92 @@ export class World3D {
   }
 
   // -------------------------------------------------------------------------
+  // Winston
+  // -------------------------------------------------------------------------
+
+  /** Winston direkt hinter Lina absetzen (nach Start/Raumwechsel) */
+  private dogFollow() {
+    const player = this.player;
+    if (!player || !this.winston) return;
+    const [fx, fy] = DIRS[player.facing];
+    this.winston.placeNear(player.x, player.y, fx, fy);
+    this.linaIdle = 0;
+  }
+
+  private winstonInFront(player: Character): boolean {
+    const w = this.winston;
+    if (!w || !w.dog.root.visible) return false;
+    const [fx, fy] = DIRS[player.facing];
+    const dx = w.x - player.x;
+    const dy = w.y - player.y;
+    const d = Math.hypot(dx, dy);
+    return d < TILE * 1.25 && dx * fx + dy * fy > d * 0.3;
+  }
+
+  private petDog() {
+    const w = this.winston;
+    const player = this.player;
+    if (!w || !player) return;
+    player.faceTowards(w.x, w.y);
+    const sleeping = w.sleeping;
+    const lines = petWinston(this.session, sleeping);
+    w.pet(sleeping);
+    this.session.bus.emit('toast', { text: lines.join(' ') });
+  }
+
+  private updateWinston(dtMs: number, player: Character, blocked: boolean, solid: (tx: number, ty: number) => boolean) {
+    const w = this.winston;
+    if (!w) return;
+    const dt = dtMs / 1000;
+    this.linaIdle = player.moving ? 0 : this.linaIdle + dt;
+    const hour = this.session.clock().getHours();
+    const night = hour >= 22 || hour < 6;
+
+    // Drinnen: ins Körbchen, wenn Lina sich hinsetzt oder eine Weile stillsteht
+    if (this.session.inside && !w.inBasket && !player.moving && (player.sitting || this.linaIdle > 8 || night)) this.sendToBasket();
+
+    w.update(dtMs, { x: player.x, y: player.y, moving: player.moving }, night, solid);
+
+    // Draußen buddelt er einmal am Tag, wenn Lina kurz stehen bleibt
+    if (!this.session.inside && !blocked && !night && this.linaIdle > 3 && w.resting && winstonMayDig(this.session)) {
+      const t = w.tile;
+      if (terrainAt(this.session.map, t.x, t.y) === 'grass' && !this.session.map.grid.isBlocked(t.x, t.y)) {
+        w.dig(player.x, player.y, () => {
+          const found = winstonDig(this.session);
+          if (!found) return;
+          const n = w.nosePoint;
+          const nt = tileOf(n.x, n.y);
+          const spot = this.session.map.grid.isBlocked(nt.x, nt.y) ? { x: w.x, y: w.y } : n;
+          this.collectibles.drop(found, new THREE.Vector3(spot.x * UNIT, 0.35, spot.y * UNIT), spot);
+          const line = DIG_LINES[this.session.today().length % DIG_LINES.length];
+          this.session.bus.emit('toast', { text: `${line} (${itemDef(found)?.name ?? found})`, icon: itemIconUrl(found) });
+          this.session.save();
+        });
+      }
+    }
+  }
+
+  /** Läuft zum Hundekörbchen im aktuellen Raum (falls eins steht) */
+  private sendToBasket() {
+    const w = this.winston;
+    const home = this.room;
+    if (!w || !home) return;
+    const basket = home.items.find((i) => FURNITURE_BY_ITEM[i.itemId]?.def.id === 'hundekoerbchen');
+    if (!basket) return;
+    const grid = this.roomGrid();
+    const from = { x: w.tile.x - ROOM_X, y: w.tile.y - ROOM_Y };
+    let best: Tile[] | null = null;
+    for (const n of neighbours({ x: basket.x, y: basket.y })) {
+      if (n.x < 0 || n.y < 0 || n.x >= this.lay.w || n.y >= this.lay.h || grid.isBlocked(n.x, n.y)) continue;
+      const path = findPath(grid, from, n);
+      if (path && (!best || path.length < best.length)) best = path;
+    }
+    if (!best) return;
+    const toWorld = (t: Tile) => ({ x: (ROOM_X + t.x + 0.5) * TILE, y: (ROOM_Y + t.y + 0.5) * TILE });
+    w.setBasket(toWorld(basket), best.map(toWorld));
+  }
+
+  // -------------------------------------------------------------------------
   // Zu Hause
   // -------------------------------------------------------------------------
 
@@ -1257,6 +1381,7 @@ export class World3D {
     player.teleport((ROOM_X + cx) * TILE + (back && back.cells.length > 1 ? 64 : 32), (ROOM_Y + cy + inward) * TILE + 40);
     player.face(back?.dir === 'up' ? 'down' : 'up');
     this.camTarget.copy(this.roomCenter());
+    this.dogFollow();
     this.exitArmed = false;
     this.marker.visible = false;
   }
@@ -1273,6 +1398,7 @@ export class World3D {
     this.stopFishing();
     this.session.inside = true;
     player.heightAt = () => 0;
+    if (this.winston) this.winston.heightAt = () => 0;
     this.placeInRoom('haupt', 'draussen');
     this.applyLight();
     this.session.bus.emit('home:inside', true);
@@ -1285,9 +1411,11 @@ export class World3D {
     this.session.inside = false;
     this.session.roomId = 'haupt';
     player.heightAt = this.view.terrain.heightAt;
+    if (this.winston) this.winston.heightAt = this.view.terrain.heightAt;
     const sp = this.session.spawnPoint();
     player.teleport(sp.x, sp.y);
     player.face('down');
+    this.dogFollow();
     this.camTarget.set(sp.x * UNIT, 0, sp.y * UNIT);
     this.applyLight();
     this.session.save();
@@ -1548,7 +1676,7 @@ export class World3D {
         this.hoverCell = { x, y };
         this.updateGhost();
       },
-      interior: this.interior, player: this.player, npcs: this.npcs, collectibles: this.collectibles, insects: this.insects, fishing: this.fishing, weather: () => WEATHER_LABELS[currentWeather(this.session).kind], resolveTarget: () => (this.player ? this.resolveTarget(this.player) : null), tryInteract: () => this.tryInteract() };
+      interior: this.interior, player: this.player, winston: this.winston, npcs: this.npcs, collectibles: this.collectibles, insects: this.insects, fishing: this.fishing, weather: () => WEATHER_LABELS[currentWeather(this.session).kind], resolveTarget: () => (this.player ? this.resolveTarget(this.player) : null), tryInteract: () => this.tryInteract() };
   }
 
   dispose() {

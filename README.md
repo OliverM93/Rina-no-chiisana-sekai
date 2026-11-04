@@ -54,6 +54,13 @@ Lina den **Hausausbau** (großes Zimmer → Schlafzimmer-Anbau → Dachzimmer) a
 zurück, wann sie möchte. Am nächsten Tag ist der Ausbau fertig – auch von außen sieht man Erker, Anbau und
 Dachgaube. Christin achtet auf Ordnung und Sauberkeit („Schuhe abputzen!“).
 
+**Winston & Opas Werkbank (M6b):** Linas kleiner Dackel **Winston** trippelt ihr überallhin nach – auch ins
+Haus. Bleibt sie stehen, setzt er sich neben sie; nachts schläft er (gern im selbstgebauten Hundekörbchen).
+Mit Leertaste oder Klick wird er gestreichelt, und einmal am Tag buddelt er etwas aus (Äste, Steine, Samen,
+manchmal sogar einen Glitzerstein). Neben dem Haus steht **Opas alte Werkbank**: Aus Ästen, Steinen, Muscheln
+und Blumen baut Lina handgemachte Möbel (Ast-Hocker, Steinlaterne, Muschellampe, Kieselmosaik …). Neue
+Rezepte gibt's beim ersten Fund besonderer Dinge und als Herz-Briefe von Oma, Olaf und Christin.
+
 Im Menü: Aussehen ändern, speichern, **Spielstand exportieren/laden** (als Datei – praktisch zum Sichern
 oder für ein anderes Gerät), Vollbild, Hilfe.
 

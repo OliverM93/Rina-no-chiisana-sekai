@@ -221,11 +221,30 @@ describe('Version 6 (M6 Ausbau)', () => {
     v5.home = { wallpaper: 'tapete-shoji', floor: 'boden-tatami', items: [{ uid: 'a', itemId: 'andon', x: 7, y: 0, rot: 0 }] };
     const rules = { layouts: () => [{ id: 'haupt', name: 'Zimmer', w: 8, h: 6, exits: [] }], maxStage: 0, emptyRoom: (id: string) => ({ id, wallpaper: '', floor: '', items: [] }) };
     const result = parseSave(JSON.stringify(v5), SPAWN, NOW, { houseRules: rules, furnitureInfo: () => ({ w: 1, d: 1 }) });
-    expect(result.ok && result.data.version).toBe(6);
+    expect(result.ok && result.data.version).toBe(SAVE_VERSION);
     if (!result.ok) return;
     expect(result.data.house.rooms[0]).toMatchObject({ id: 'haupt', wallpaper: 'tapete-shoji', floor: 'boden-tatami' });
     expect(result.data.house.rooms[0].items.map((i) => i.itemId)).toEqual(['andon']);
     expect(result.data.bank).toEqual({ loan: 0 });
+  });
+});
+
+describe('Version 7 (M6b Werkbank & Winston)', () => {
+  it('ergänzt Start-Rezepte und Winston', () => {
+    const v6 = { ...freshSave(), version: 6 } as Record<string, unknown>;
+    delete v6.recipes;
+    delete v6.pet;
+    const result = parseSave(JSON.stringify(v6), SPAWN, NOW, { startRecipes: ['ast-hocker'] });
+    expect(result.ok && result.data.version).toBe(7);
+    if (!result.ok) return;
+    expect(result.data.recipes).toEqual(['ast-hocker']);
+    expect(result.data.pet).toEqual({ pettedDay: '', pets: 0, digDay: '' });
+  });
+
+  it('behält gelernte Rezepte und entfernt unbekannte', () => {
+    const s = { ...freshSave(), recipes: ['steinlaterne', 'gibtsnicht'] };
+    const result = parseSave(JSON.stringify(s), SPAWN, NOW, { startRecipes: ['ast-hocker'], isKnownRecipe: (id) => id !== 'gibtsnicht' });
+    expect(result.ok && result.data.recipes).toEqual(['steinlaterne', 'ast-hocker']);
   });
 });
 

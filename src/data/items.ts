@@ -1,4 +1,6 @@
 import { FLOORS, FURNITURE_ITEMS, VARIANT_LABELS, WALLPAPERS } from './furniture';
+import { FURNITURE_BY_ITEM } from './furniture';
+import { RECIPE_ITEM_PREFIX, RECIPES } from './recipes';
 import { FISH, INSECTS } from './species';
 
 /**
@@ -8,7 +10,7 @@ import { FISH, INSECTS } from './species';
  * zeichnen (sonst erscheint ein Platzhalter). Preise in „Sternchen“ ⭐.
  */
 
-export type ItemCategory = 'obst' | 'muschel' | 'blume' | 'material' | 'fund' | 'essen' | 'geschenk' | 'werkzeug' | 'samen' | 'fisch' | 'insekt' | 'moebel' | 'tapete' | 'boden';
+export type ItemCategory = 'obst' | 'muschel' | 'blume' | 'material' | 'fund' | 'essen' | 'geschenk' | 'werkzeug' | 'samen' | 'fisch' | 'insekt' | 'moebel' | 'tapete' | 'boden' | 'rezept';
 
 export interface ItemDef {
   id: string;
@@ -80,6 +82,12 @@ for (const f of FURNITURE_ITEMS) {
   list.push({ id: f.itemId, name, plural: name, category: 'moebel', price: Math.round(f.def.price / 4), maxStack: 1, description: f.def.description });
 }
 for (const w of [...WALLPAPERS, ...FLOORS]) list.push({ id: w.id, name: w.name, plural: w.name, category: w.kind, price: Math.round(w.price / 4), maxStack: 1, description: w.description });
+
+// Rezeptkarten (Brief-Geschenke) – werden beim Annehmen sofort gelernt
+for (const r of RECIPES) {
+  const name = FURNITURE_BY_ITEM[r.result]?.def.name ?? r.result;
+  list.push({ id: `${RECIPE_ITEM_PREFIX}${r.id}`, name: `Rezept: ${name}`, plural: `Rezepte: ${name}`, category: 'rezept', price: null, maxStack: 1, description: `Eine Bauanleitung für die Werkbank: ${name}.` });
+}
 
 export const ITEMS: Readonly<Record<string, ItemDef>> = Object.fromEntries(list.map((i) => [i.id, i]));
 
