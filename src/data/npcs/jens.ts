@@ -47,6 +47,12 @@ export const JENS: NpcDef = {
       { text: ['Ein Regenbogen! 🌈', 'Na, wenn das mal kein Zeichen ist. Für uns Fabelhaften ist das ja quasi die Hausfahne.'], when: { tags: ['regenbogen'] }, weight: 5 },
     ],
     chat: [
+      { text: ['Nu, mei Gudste, haste heute schon was Schönes erlebt?', 'Nee? Dann wird\'s aber Zeit! Gugge, die Sonne scheint – oder sie scheint bald. Irgendwann.'] },
+      { text: ['Kaffee? Mir sagen dazu „Gaffee“. Mit weichem G.', 'Und wenn er gut is: „Scheener Gaffee!“ Na los, sag\'s mal nach! … Fast. Üben wir noch.'] },
+      { text: ['Ei verbibbsch, Lina, wie siehst\'n du heute wieder aus!', '… Großartig natürlich. Was dachtest du denn?'] },
+      { text: ['Weißte, was ein echter Sachse zum Abschied sagt?', '„Tschüssi!“ – mit drei S. Mindestens. Tschüssssi!'] },
+      { text: ['Sonntag is Familienessen bei mir, gell?', 'Um sechse bei mir zu Hause. Lina, Oli, Lars – und wer sonst noch Hunger hat. Ich koch für zehn!'], weight: 2 },
+      { text: ['Heute Abend is Sonntagsessen! 🍽️', 'Ab um sechse bei mir zu Hause. Vergess es nich, sonst ess ich alles allein. Und das wäre … eigentlich auch okay.'], when: { weekdays: [0] }, weight: 5 },
       { text: ['Mein Zwillingsbruder Olaf, chérie …', 'Gleicher Tag, gleiche Mama – und trotzdem trägt er Westen und ich Glitzer. Die Natur ist eine Künstlerin!'], weight: 2 },
       { text: ['Olaf sagt, er ist fünf Minuten älter.', 'Ich sag: Er hat fünf Minuten länger gebraucht, um sich zu trauen. Ich kam mit Stil.'] },
       { text: ['Enfin, eine Party! 🪩', 'Ich hab mir extra mein glitzerndstes Hemd angezogen. Fabelhaft, n\'est-ce pas?'], when: { tags: ['party'] }, weight: 8 },
@@ -131,3 +137,28 @@ export function travelPostcard(day: string, index: number): LetterTemplate {
     gift: { itemId: t.souvenir, count: 1 },
   };
 }
+
+/** Sonntagsessen: Jens begrüßt die Runde (mit viel Gesächsel) */
+export const DINNER_OPENERS: readonly (readonly string[])[] = [
+  ['Nu, da seid ihr ja alle! Hock eich hin, das Essen is glei fertsch!', 'Heute gibt\'s Coq au Vin. Oder wie mir in Leipzsch sagen: Gieggerle in Rotwein. 🍷'],
+  ['Bonsoir, mes chéris! Sonntagsessen bei Onkel Jens!', 'Ich hab Klöße gemacht. Französische Klöße. … Okay, es sind sächsische Klöße mit Petersilie. Aber mit Stil!'],
+  ['Kommt rein, kommt rein! Ei verbibbsch, is des gemütlich, wenn alle da sind!', 'Lina, du sitzt neben mir. Wie immer. Du bist mei Lieblingsnichte. … Du bist auch mei einzige. Trotzdem!'],
+];
+
+/** Wer was am Tisch sagt (wenn dabei) */
+export const DINNER_LINES: Readonly<Record<string, readonly string[]>> = {
+  oli: ['Oli: „Jens, das ist das beste Essen der Woche!“', 'Oli: „Ich hab schon dreimal nachgenommen. Proteine, Lini!“'],
+  lars: ['Lars: „Ärztlich gesehen ist das hier sehr gesund.“ – Jens: „Nu sicher, da is Butter drin!“', 'Lars: „Wie nennt man einen Koch, der Witze erzählt? … Jens.“'],
+  olaf: ['Olaf: „Ich hab ausgerechnet: Pro Person 1,2 Klöße. Das geht nicht auf.“ – Jens: „Dann nimmste halt zwee, Brüderchen!“'],
+  christin: ['Christin hat die Servietten zu kleinen Schwänen gefaltet. Alle exakt gleich groß.'],
+  gisela: ['Oma: „Zu wenig Salz.“ … *isst drei Portionen* … „Köstlich. Aber zu wenig Salz.“'],
+};
+
+/** Jens sächselt gern mit Lina – zusätzliche Plauder-Zeilen */
+export const SAXON_LINES: readonly (readonly string[])[] = [
+  ['Nu, mei Gudste, haste heute schon was Schönes erlebt?', 'Nee? Dann wird\'s aber Zeit! Gugge, die Sonne scheint – oder sie scheint bald. Irgendwann.'],
+  ['Weeßte, Lina, was ich an dir mag?', 'Du lachst immer über meine Witze. Och über die schlechten. Besonders über die schlechten!'],
+  ['Kaffee? Mir sagen dazu „Gaffee“. Mit weichem G.', 'Und wenn er gut is: „Scheener Gaffee!“ Na los, sag\'s mal nach! … Fast. Üben wir noch.'],
+  ['Ei verbibbsch, Lina, wie siehst\'n du heute wieder aus!', '… Großartig natürlich. Was dachtest du denn?'],
+  ['Weißte, was ein echter Sachse zum Abschied sagt?', '„Tschüssi!“ – mit drei S. Mindestens. Tschüssssi!'],
+];

@@ -42,7 +42,8 @@ import { HOUSE_STAGES } from '../data/house';
 import { CHRISTIN_WELCOME } from '../data/npcs/christin';
 import { OLAF_WELCOME } from '../data/npcs/olaf';
 import { OLI_WELCOME } from '../data/npcs/oli';
-import { JENS_WELCOME } from '../data/npcs/jens';
+import { DINNER_LINES, DINNER_OPENERS, JENS_WELCOME } from '../data/npcs/jens';
+import { dinnerGuests, isDinnerTime } from '../game/dinner';
 import { CHECKUP_GIFTS, CHECKUP_LINES, LARS_WELCOME } from '../data/npcs/lars';
 import { hashString } from '../core/rng';
 import { canDate, type DateKind, haveDate } from '../game/romance';
@@ -818,7 +819,6 @@ export class World3D {
       const d = Math.hypot(dx, dy);
       if (d < TILE * 1.35 && dx * fx + dy * fy > d * 0.35) return { kind: 'npc', npc };
     }
-    if (this.winstonInFront(player)) return { kind: 'winston' };
     const front = { x: tile.x + fx, y: tile.y + fy };
     // Stall direkt davor geht vor (Eier abholen), sonst Tiere streicheln
     const coop = this.yardItemAt(front.x, front.y);
@@ -830,6 +830,10 @@ export class World3D {
     const yardItem = this.yardItemAt(front.x, front.y);
     if (yardItem) return { kind: 'moebel', uid: yardItem };
     const id = findInteraction(this.session.map, tile, player.facing, this.interactive);
+    // Türen, Briefkasten & Co. gehen vor – Winston wird gestreichelt, wenn sonst nichts davor ist
+    const obj = id ? objectById(this.session.map, id) : undefined;
+    if (id && obj && obj.kind !== 'tree' && obj.kind !== 'rock') return { kind: 'object', id };
+    if (this.winstonInFront(player)) return { kind: 'winston' };
     if (id) return { kind: 'object', id };
     if (this.collectibles.canPickFlowers(tile)) return { kind: 'flowers', tile };
     return null;
@@ -1284,6 +1288,13 @@ export class World3D {
                   this.session.bus.emit('ui:open', { kind: 'kochstudio' });
                 },
               },
+              {
+                label: '🖼️ Galerie',
+                onSelect: () => {
+                  npc.endTalk();
+                  this.session.bus.emit('ui:open', { kind: 'galerie' });
+                },
+              },
             ]
           : []),
         ...(id === 'olaf'
@@ -1616,10 +1627,30 @@ export class World3D {
       this.session.bus.emit('dialog:open', { title, lines: [...jens.def.dialogue.atHomeSleeping[0]] });
       return;
     }
+    // Sonntagsessen bei Jens zu Hause
+    if (isDinnerTime(this.session)) {
+      if (this.session.data?.world.dates.essen === this.session.today()) {
+        this.session.bus.emit('dialog:open', { title, lines: ['Drinnen wird gelacht und mit Gläsern geklirrt.', '„Lina, chérie, du warst doch grad schon da! Nächsten Sonntag wieder, gell?“'] });
+        return;
+      }
+      this.session.bus.emit('dialog:open', {
+        title,
+        lines: ['Aus dem Haus duftet es herrlich, drinnen wird gelacht.', '„Lina! Komm rein, komm rein – mir sitzen schon alle am Tisch!“'],
+        choices: [
+          { label: '🍽️ Reingehen & mitessen', onSelect: () => this.sundayDinner(jens) },
+          { label: '👋 Später', onSelect: () => undefined },
+        ],
+      });
+      return;
+    }
     this.session.bus.emit('dialog:open', {
       title,
-      lines: jens.atHome ? ['„Komm rein, chérie! Die Schürze hängt am Haken.“'] : ['„Bonjour! Das Kochstudio ist offen – nimm dir eine Schürze!“'],
-      onClose: () => this.session.bus.emit('ui:open', { kind: 'kochstudio' }),
+      lines: jens.atHome ? ['„Komm rein, chérie! Kochen oder Kunst gucken?“'] : ['„Bonjour! Das Kochstudio ist offen – und die Galerie auch!“'],
+      choices: [
+        { label: '🍳 Kochstudio', onSelect: () => this.session.bus.emit('ui:open', { kind: 'kochstudio' }) },
+        { label: '🖼️ Galerie', onSelect: () => this.session.bus.emit('ui:open', { kind: 'galerie' }) },
+        { label: '👋 Tschüss', onSelect: () => undefined },
+      ],
     });
   }
 
@@ -1717,6 +1748,27 @@ export class World3D {
       this.winston?.burst('herz');
       this.session.bus.emit('dialog:open', { title: npc.def.name, hearts: npcHearts(this.session, 'thalia'), lines, onClose: () => npc.endTalk() });
     });
+    this.session.save();
+  }
+
+  /** Sonntagsessen bei Jens: Lina setzt sich dazu, alle Gäste reden mit – Freundschaft für alle */
+  private sundayDinner(npc: Npc) {
+    const data = this.session.data;
+    if (!data) return;
+    data.world.dates.essen = this.session.today();
+    const day = this.session.today();
+    const guests = dinnerGuests(this.session);
+    const lines = [...DINNER_OPENERS[hashString(day) % DINNER_OPENERS.length]];
+    for (const id of guests) {
+      const pool = DINNER_LINES[id];
+      if (pool) lines.push(pool[hashString(`${day}:${id}`) % pool.length]);
+      addFriendship(this.session, id, id === 'jens' ? 16 : 10);
+    }
+    lines.push('Nu, war\'s lecker? Nächsten Sonntag wieder, gell? Bisous! 💋');
+    this.winston?.burst('herz');
+    const who = guests.filter((g) => g !== 'jens').map((g) => this.npcs.get(g)?.def.name).filter(Boolean);
+    lines.unshift(`Am großen Tisch bei Jens sitzen schon: ${who.join(', ')}. 🍽️`);
+    this.session.bus.emit('dialog:open', { title: 'Sonntagsessen bei Jens', hearts: npcHearts(this.session, 'jens'), lines, onClose: () => npc.endTalk() });
     this.session.save();
   }
 

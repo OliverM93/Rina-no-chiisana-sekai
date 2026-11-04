@@ -11,6 +11,7 @@ import { OBJECT_KINDS, objectById, tileOf, type WorldMap } from '../core/worldma
 import type { NpcDef } from '../data/npcs/types';
 import type { Session } from '../game/session';
 import { isPartyTime, PARTY_ENTRY } from '../game/party';
+import { dinnerEntry } from '../game/dinner';
 import { Character, FEET_OFFSET } from './Character3D';
 
 type Mode = 'hidden' | 'walking' | 'sitting' | 'idle' | 'talking' | 'scripted';
@@ -57,7 +58,7 @@ export class Npc {
   /** Ist zu Hause (und damit drinnen, nicht in der Welt) */
   get atHome(): boolean {
     const hidden = this.mode === 'hidden' || (this.mode === 'talking' && this.afterTalk === 'hidden');
-    return hidden && this.entry?.activity.kind === 'zuhause';
+    return hidden && this.entry?.activity.kind === 'zuhause' && !this.entry.activity.at;
   }
 
   get isSleeping(): boolean {
@@ -101,7 +102,7 @@ export class Npc {
       this.char.update(dtMs, { dx: 0, dy: 0, run: false }, (x, y) => grid.isBlocked(x, y));
       return;
     }
-    const entry = isPartyTime(this.session) ? PARTY_ENTRY : activityAt(this.def.schedule, this.session.clock());
+    const entry = isPartyTime(this.session) ? PARTY_ENTRY : dinnerEntry(this.session, this.def.id) ?? activityAt(this.def.schedule, this.session.clock());
     if (entry !== this.entry) this.applyEntry(entry, false);
 
     if (this.mode === 'idle' && this.entry?.activity.kind === 'spazieren') {
@@ -175,11 +176,16 @@ export class Npc {
     this.char.depthBias = 0;
     switch (a.kind) {
       case 'zuhause': {
-        const door = this.doorTile();
-        if (instant || !door || !this.char.visible) {
+        const door = this.doorTile(a.at);
+        const enter = () => {
+          this.insideAt = a.at ?? null;
           this.hide();
+        };
+        if (instant || !door || !this.char.visible) {
+          if (instant && door && a.at) this.char.teleport(tileCenterFeet(door).x, tileCenterFeet(door).y);
+          enter();
         } else {
-          this.goTo(door, () => this.hide());
+          this.goTo(door, enter);
         }
         break;
       }
@@ -251,8 +257,9 @@ export class Npc {
 
   private goTo(tile: Tile, onArrive: () => void) {
     if (!this.char.visible) {
-      // aus dem Haus kommen
-      const door = this.doorTile();
+      // aus dem Haus kommen (eigenes oder das, in dem sie/er zu Besuch war)
+      const door = this.doorTile(this.insideAt);
+      this.insideAt = null;
       if (door) {
         const p = tileCenterFeet(door);
         this.char.teleport(p.x, p.y);
@@ -285,8 +292,11 @@ export class Npc {
     this.char.setVisible(true);
   }
 
-  private doorTile(): Tile | null {
-    const house = objectById(this.map, this.def.home);
+  /** In welchem Haus sie/er gerade drin ist (eigenes oder zu Besuch) */
+  private insideAt: string | null = null;
+
+  private doorTile(at?: string | null): Tile | null {
+    const house = objectById(this.map, at ?? this.def.home);
     if (!house) return null;
     const [dx, dy] = OBJECT_KINDS.house.interactFrom?.[0] ?? [2, 3];
     return { x: house.x + dx, y: house.y + dy };

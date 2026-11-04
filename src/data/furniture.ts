@@ -5,8 +5,9 @@
  * (`model`) bauen. Möbel mit Farbvarianten werden automatisch zu mehreren
  * Gegenständen (`zabuton-rosa`, `zabuton-indigo` …).
  */
+import { ARTWORKS } from './art';
 
-export type FurnitureStyle = 'japanisch' | 'basis' | 'handgemacht' | 'garten';
+export type FurnitureStyle = 'japanisch' | 'basis' | 'handgemacht' | 'garten' | 'kunst';
 
 export interface FurnitureDef {
   /** Basis-ID (ohne Variante) */
@@ -150,7 +151,10 @@ export const FLOORS: readonly SurfaceDef[] = [
   { id: 'boden-teppich', name: 'Rosa Teppichboden', style: 'basis', price: 500, kind: 'boden', pattern: 'teppich', color: '#f7c6d4', accent: '#f4b3c6', description: 'Flauschig und weich unter den Füßen.' },
 ];
 
-export const STYLE_LABELS: Record<FurnitureStyle, string> = { japanisch: 'Japanisch', basis: 'Basis', handgemacht: 'Handgemacht', garten: 'Garten' };
+// Kunstwerke (Bild auf Staffelei) aus `art.ts` – nur über Jens erhältlich
+for (const a of ARTWORKS) (FURNITURE as FurnitureDef[]).push({ id: a.id, name: a.name, style: 'kunst', gift: true, price: a.price, w: 1, d: 1, description: `${a.description} – ${a.artist}` });
+
+export const STYLE_LABELS: Record<FurnitureStyle, string> = { japanisch: 'Japanisch', basis: 'Basis', handgemacht: 'Handgemacht', garten: 'Garten', kunst: 'Kunst' };
 
 /** Möbel-Gegenstand (mit Variante) → Basis + Farbe */
 export interface FurnitureItem {

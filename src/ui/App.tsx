@@ -17,6 +17,7 @@ import { CatalogPanel } from './CatalogPanel';
 import { BankPanel } from './BankPanel';
 import { CraftPanel } from './CraftPanel';
 import { MapPanel } from './MapPanel';
+import { GalleryPanel } from './GalleryPanel';
 import { type ConfirmRequest, showToast, ui, useUI } from './store';
 
 export function App({ session }: { session: Session }) {
@@ -96,7 +97,8 @@ export function App({ session }: { session: Session }) {
       {state.panel?.kind === 'kochstudio' && <CraftPanel session={session} station="kueche" />}
       {state.panel?.kind === 'apotheke' && <CraftPanel session={session} station="apotheke" />}
       {state.panel?.kind === 'karte' && <MapPanel session={session} />}
-      {state.panel && !['mail', 'book', 'catalog', 'bank', 'werkbank', 'kochstudio', 'apotheke', 'karte'].includes(state.panel.kind) && <InventoryPanel session={session} panel={state.panel} />}
+      {state.panel?.kind === 'galerie' && <GalleryPanel session={session} />}
+      {state.panel && !['mail', 'book', 'catalog', 'bank', 'werkbank', 'kochstudio', 'apotheke', 'karte', 'galerie'].includes(state.panel.kind) && <InventoryPanel session={session} panel={state.panel} />}
       {state.dialog && <DialogBox dialog={state.dialog} onClose={closeDialog} onChoose={chooseInDialog} />}
       {state.confirm && <Confirm request={state.confirm} />}
       {state.toast && <Toast key={state.toast.id} text={state.toast.text} icon={state.toast.icon} />}

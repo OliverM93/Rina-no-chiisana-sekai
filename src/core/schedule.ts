@@ -10,7 +10,8 @@ export type Activity =
   /** spaziert zufällig in einem Bereich (Kacheln) */
   | { kind: 'spazieren'; area: { x: number; y: number; w: number; h: number } }
   /** ist im Haus (unsichtbar) */
-  | { kind: 'zuhause'; sleeping?: boolean };
+  /** ist im Haus (unsichtbar) – `at` = bei jemand anderem zu Besuch (Objekt-ID des Hauses) */
+  | { kind: 'zuhause'; sleeping?: boolean; at?: string };
 
 export interface ScheduleEntry {
   /** „HH:MM“ – gilt ab dieser Uhrzeit bis zum nächsten Eintrag */
