@@ -286,7 +286,7 @@ export function makeFurniture(itemId: string, links: FenceLinks = { n: false, e:
       for (const sx of [-1, 1]) {
         const door = new THREE.Group();
         door.position.x = sx * 0.4;
-        door.rotation.y = sx * 0.9;
+        door.rotation.y = sx * 0.12;
         for (let i = 0; i < 3; i++) door.add(b(0.06, 0.42, 0.03, '#f7f5ec', -sx * (0.08 + i * 0.13), 0.3, 0));
         door.add(b(0.4, 0.05, 0.03, '#f7f5ec', -sx * 0.2, 0.22, 0));
         door.add(b(0.4, 0.05, 0.03, '#f7f5ec', -sx * 0.2, 0.42, 0));

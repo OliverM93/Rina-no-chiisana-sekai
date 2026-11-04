@@ -61,6 +61,12 @@ manchmal sogar einen Glitzerstein). Neben dem Haus steht **Opas alte Werkbank**:
 und Blumen baut Lina handgemachte Möbel (Ast-Hocker, Steinlaterne, Muschellampe, Kieselmosaik …). Neue
 Rezepte gibt's beim ersten Fund besonderer Dinge und als Herz-Briefe von Oma, Olaf und Christin.
 
+**Linas Garten (M6c):** Auf ihrem Grundstück kann Lina mit **🌷 Garten gestalten** Zäune ziehen (sie verbinden
+sich von selbst), ein Gartentor einsetzen, Wege legen und Gartenbank, Tisch, Stühle, Sonnenschirm,
+Lichterkette, Laternen, Kübel, Vogeltränke, Vogelhäuschen und einen Gartenwichtel aufstellen. **Hochbeete**
+sind zusätzliche Pflanzplätze. Gartensachen gibt's im Katalog (Stil „Garten“), Astzaun und Trittsteine
+baut Lina an der Werkbank. Keine Sorge: Haustür, Briefkasten, Beet und Wege bleiben immer erreichbar.
+
 Im Menü: Aussehen ändern, speichern, **Spielstand exportieren/laden** (als Datei – praktisch zum Sichern
 oder für ein anderes Gerät), Vollbild, Hilfe.
 
@@ -90,6 +96,10 @@ und jede Jahreszeit sieht anders aus.
 | Winston & Opas Werkbank | Winston buddelt | Werkbank | Handgemachtes (Winston schläft im Körbchen) |
 |---|---|---|---|
 | ![Winston](docs/screenshots/3d-winston.png) | ![Buddeln](docs/screenshots/3d-buddeln.png) | ![Werkbank](docs/screenshots/3d-werkbank.png) | ![Handgemacht](docs/screenshots/3d-handgemacht.png) |
+
+| Linas Garten | … am Abend | Garten gestalten |
+|---|---|---|
+| ![Garten](docs/screenshots/3d-garten.png) | ![Abend](docs/screenshots/3d-garten-abend.png) | ![Gestalten](docs/screenshots/3d-garten-gestalten.png) |
 
 | Sammelbuch | Regen |
 |---|---|

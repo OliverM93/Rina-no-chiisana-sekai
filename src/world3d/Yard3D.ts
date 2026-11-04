@@ -9,6 +9,31 @@ import { FURNITURE_BY_ITEM, furnitureInfo } from '../data/furniture';
 import { YARD_AREA } from '../data/yard';
 import { type FenceLinks, makeFurniture, type FurnitureModel, makeGhost } from './models/furniture';
 
+let haloTex: THREE.CanvasTexture | null = null;
+/** Weicher Lichtschein (radialer Verlauf) */
+function haloTexture(): THREE.CanvasTexture {
+  if (haloTex) return haloTex;
+  const c = document.createElement('canvas');
+  c.width = c.height = 64;
+  const ctx = c.getContext('2d') as CanvasRenderingContext2D;
+  const g = ctx.createRadialGradient(32, 32, 0, 32, 32, 32);
+  g.addColorStop(0, 'rgba(255,240,200,0.9)');
+  g.addColorStop(0.35, 'rgba(255,220,150,0.35)');
+  g.addColorStop(1, 'rgba(255,210,140,0)');
+  ctx.fillStyle = g;
+  ctx.fillRect(0, 0, 64, 64);
+  haloTex = new THREE.CanvasTexture(c);
+  return haloTex;
+}
+
+function halo(size: number): THREE.Sprite {
+  const sp = new THREE.Sprite(new THREE.SpriteMaterial({ map: haloTexture(), transparent: true, depthWrite: false, blending: THREE.AdditiveBlending }));
+  sp.scale.setScalar(size);
+  sp.userData.halo = true;
+  sp.visible = false;
+  return sp;
+}
+
 export class Yard3D {
   readonly group = new THREE.Group();
   private items = new THREE.Group();
@@ -17,6 +42,7 @@ export class Yard3D {
   private ghostKey = '';
   private signature = '';
   private lit = new Set<string>();
+  private night = 0;
   /** Zellenrahmen beim Gestalten */
   private grid: THREE.LineSegments;
 
@@ -70,9 +96,21 @@ export class Yard3D {
       const base = item.on ? byUid.get(item.on) : undefined;
       if (base) model.group.position.y += FURNITURE_BY_ITEM[base.itemId]?.def.surfaceHeight ?? 0;
       if (f.def.rug) model.group.position.y += 0.004;
+      // Lichtschein für Lampen & Lämpchen (nur abends sichtbar)
+      if (model.lightAt && !model.group.children.some((o) => o.userData.bulb)) {
+        const h = halo(f.def.small ? 0.5 : 0.9);
+        h.position.copy(model.lightAt);
+        model.group.add(h);
+      }
+      for (const b of model.group.children.filter((o) => o.userData.bulb)) {
+        const h = halo(0.28);
+        h.position.copy(b.position);
+        model.group.add(h);
+      }
       this.items.add(model.group);
       this.placed.set(item.uid, { item, model });
     }
+    this.updateLight(this.night);
   }
 
   topAt(yard: Room, x: number, y: number): PlacedItem | null {
@@ -85,11 +123,14 @@ export class Yard3D {
 
   /** Lampen & Lichterketten leuchten abends (anklicken = an/aus) */
   updateLight(night: number) {
-    const auto = night > 0.25;
+    this.night = night;
+    // wie die Dorflaternen: gehen in der Dämmerung an
+    const auto = night > 0.12;
     for (const [uid, p] of this.placed) {
       const on = this.lit.has(uid) ? !auto : auto;
       if (p.model.glow) p.model.glow.emissiveIntensity = on ? 1.1 : 0.12;
       p.model.group.traverse((o) => {
+        if (o.userData.halo) o.visible = on;
         if (!o.userData.bulb) return;
         ((o as THREE.Mesh).material as THREE.MeshToonMaterial).emissiveIntensity = on ? 1.2 : 0.15;
       });
