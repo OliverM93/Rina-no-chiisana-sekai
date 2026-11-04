@@ -7,16 +7,24 @@ import { countItem } from '../core/inventory';
 import { FURNITURE_BY_ITEM, STYLE_LABELS } from '../data/furniture';
 import { itemDef } from '../data/items';
 import { RECIPES } from '../data/recipes';
+
 import { craftRecipe, recipeName } from '../game/crafting';
 import type { Session } from '../game/session';
 import { itemIconUrl } from '../gfx/items';
 import { showToast, ui, useSessionVersion } from './store';
 
-export function CraftPanel({ session }: { session: Session }) {
+const TEXT = {
+  werkbank: { title: '🔨 Opas Werkbank', intro: 'Aus Ästen, Steinen, Muscheln & Blumen wird etwas Schönes.', button: '🔨 Bauen', done: 'gebaut! Ab in die Tasche – aufstellen mit „Einrichten“.' },
+  kueche: { title: '👨‍🍳 Kochstudio „Chez Jens“', intro: '„Kochen ist wie Malen, chérie – ein Klecks hiervon, ein Klecks davon!“', button: '🍳 Kochen', done: 'gekocht! Magnifique! Ab in die Tasche.' },
+};
+
+export function CraftPanel({ session, station = 'werkbank' }: { session: Session; station?: 'werkbank' | 'kueche' }) {
+  const WORKBENCH = RECIPES.filter((r) => (r.station ?? 'werkbank') === station);
+  const T = TEXT[station];
   useSessionVersion(session);
   const data = session.data;
   const known = new Set(data?.recipes ?? []);
-  const [selected, setSelected] = useState<string | null>(RECIPES.find((r) => known.has(r.id))?.id ?? null);
+  const [selected, setSelected] = useState<string | null>(WORKBENCH.find((r) => known.has(r.id))?.id ?? null);
   const [built, setBuilt] = useState<string | null>(null);
   const close = () => ui.set({ panel: null });
 
@@ -32,7 +40,7 @@ export function CraftPanel({ session }: { session: Session }) {
   }, []);
 
   if (!data) return null;
-  const sel = RECIPES.find((r) => r.id === selected) ?? null;
+  const sel = WORKBENCH.find((r) => r.id === selected) ?? null;
   const isKnown = !!sel && known.has(sel.id);
   const have = (id: string) => countItem(data.inventory, id);
   const ready = !!sel && isKnown && sel.ingredients.every((i) => have(i.itemId) >= i.count);
@@ -42,7 +50,7 @@ export function CraftPanel({ session }: { session: Session }) {
     if (!sel) return;
     const r = craftRecipe(session, sel.id);
     if (r === 'ok') {
-      showToast(`✨ ${recipeName(sel)} gebaut! Ab in die Tasche – aufstellen mit „Einrichten“.`);
+      showToast(`✨ ${recipeName(sel)} ${T.done}`);
       setBuilt(sel.id);
       window.setTimeout(() => setBuilt(null), 900);
     } else if (r === 'voll') showToast('Deine Tasche ist zu voll für das fertige Stück. 🎒');
@@ -52,15 +60,15 @@ export function CraftPanel({ session }: { session: Session }) {
   return (
     <div class="modal-layer" onPointerUp={(e) => e.target === e.currentTarget && close()}>
       <div class="card book craft pop-in">
-        <h2 class="card-title">🔨 Opas Werkbank</h2>
+        <h2 class="card-title">{T.title}</h2>
         <div class="book-tabs">
-          <span class="soft small-text">Aus Ästen, Steinen, Muscheln & Blumen wird etwas Schönes.</span>
+          <span class="soft small-text">{T.intro}</span>
           <span class="book-progress">
-            {known.size}/{RECIPES.length} Rezepte
+            {WORKBENCH.filter((r) => known.has(r.id)).length}/{WORKBENCH.length} Rezepte
           </span>
         </div>
         <div class="book-grid catalog-grid">
-          {RECIPES.map((r) => {
+          {WORKBENCH.map((r) => {
             const k = known.has(r.id);
             const can = k && r.ingredients.every((i) => have(i.itemId) >= i.count);
             return (
@@ -86,7 +94,7 @@ export function CraftPanel({ session }: { session: Session }) {
                   {furn ? STYLE_LABELS[furn.style] : ''}
                   {furn ? ` · ${furn.small ? 'klein (passt auf Tische)' : furn.rug ? `Teppich ${furn.w}×${furn.d}` : `${furn.w}×${furn.d} Felder`}` : ''}
                 </div>
-                <div class="item-desc">{furn?.description}</div>
+                <div class="item-desc">{furn?.description ?? itemDef(sel.result)?.description}</div>
                 <div class="craft-needs">
                   {sel.ingredients.map((i) => {
                     const n = have(i.itemId);
@@ -115,7 +123,7 @@ export function CraftPanel({ session }: { session: Session }) {
             Schließen
           </button>
           <button class="btn primary" disabled={!ready} onClick={build}>
-            🔨 Bauen
+            {T.button}
           </button>
         </div>
       </div>

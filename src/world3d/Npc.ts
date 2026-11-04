@@ -78,6 +78,12 @@ export class Npc {
 
   // -------------------------------------------------------------------------
 
+  /** Heute verreist? (erst nach der Begrüßung) */
+  get away(): boolean {
+    const data = this.session.data;
+    return !!this.def.away && !!data?.flags[`${this.def.id}Begruesst`] && this.def.away(this.session.today());
+  }
+
   /** Wohnt sie/er schon im Dorf? */
   get movedIn(): boolean {
     return !this.def.movesIn || !!this.session.data?.flags[this.def.movesIn];
@@ -85,7 +91,7 @@ export class Npc {
 
   update(dtMs: number) {
     const grid = this.map.grid;
-    if (!this.movedIn) {
+    if (!this.movedIn || this.away) {
       if (this.mode !== 'hidden') this.hide();
       this.entry = null;
       return;

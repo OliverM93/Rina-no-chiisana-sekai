@@ -228,6 +228,64 @@ const DRAW: Record<string, Draw> = {
     ellipse(ctx, 25, 6, 1.5, 1.5, '#ffffff');
   },
 
+  ruehrei: (ctx) => {
+    ellipse(ctx, 16, 19, 13, 8, '#ffffff', '#c9c4cf', 1.4);
+    blob(ctx, [{ x: 12, y: 18, r: 4.5 }, { x: 17, y: 16.5, r: 5 }, { x: 21, y: 19, r: 4 }, { x: 15, y: 21, r: 4 }], '#f7d26a', '#d9a83a', 1.2);
+    for (const [x, y] of [[13, 16], [19, 20], [16, 19]] as const) ellipse(ctx, x, y, 1.1, 0.7, '#6fa86a');
+  },
+  'wachtel-spiegelei': (ctx) => {
+    ellipse(ctx, 16, 19, 13, 8, '#ffffff', '#c9c4cf', 1.4);
+    for (const [x, y] of [[11, 18], [17, 17], [21, 21], [14, 22]] as const) {
+      ellipse(ctx, x, y, 3.4, 2.6, '#fbf6ec', '#e6ddd0', 0.8);
+      ellipse(ctx, x, y - 0.3, 1.4, 1.2, '#f2b134');
+    }
+  },
+  obstsalat: (ctx) => {
+    ellipse(ctx, 16, 20, 12, 7, '#8ac8ff', darken('#8ac8ff', 0.3), 1.4);
+    for (const [x, y, c] of [[11, 15, '#e8484f'], [16, 13, '#b8d86a'], [21, 15, '#f7b27a'], [14, 17, '#f7d26a'], [19, 17, '#e85a8a']] as const) ellipse(ctx, x, y, 3, 2.6, c, darken(c, 0.25), 0.8);
+    roundRect(ctx, 4, 19, 24, 6, 3, '#8ac8ff', darken('#8ac8ff', 0.3), 1.2);
+  },
+  fischbroetchen: (ctx) => {
+    ellipse(ctx, 16, 20, 12, 5, '#e6b06a', darken('#e6b06a', 0.3), 1.3);
+    ellipse(ctx, 16, 16, 11, 3, '#b9c6cf', '#7a8a96', 1);
+    roundRect(ctx, 6, 15, 20, 2.5, 1.2, '#8fd08a');
+    ellipse(ctx, 16, 12.5, 11.5, 4.5, '#f2c27a', darken('#f2c27a', 0.3), 1.3);
+    for (const x of [11, 16, 21]) ellipse(ctx, x, 11.5, 0.8, 0.5, '#fff6d8');
+  },
+  apfelkuchen: (ctx) => {
+    ctx.fillStyle = '#e6b06a';
+    ctx.beginPath();
+    ctx.moveTo(6, 24);
+    ctx.lineTo(26, 24);
+    ctx.lineTo(20, 9);
+    ctx.closePath();
+    ctx.fill();
+    ctx.strokeStyle = darken('#e6b06a', 0.35);
+    ctx.lineWidth = 1.4;
+    ctx.stroke();
+    roundRect(ctx, 6, 21, 20, 4, 1.5, '#f7d9a8', darken('#e6b06a', 0.35), 1);
+    for (const [x, y] of [[16, 17], [19, 14], [13, 20]] as const) ellipse(ctx, x, y, 1.6, 1.1, '#f7f2c8');
+  },
+  crepes: (ctx) => {
+    ellipse(ctx, 16, 22, 12, 5, '#ffffff', '#c9c4cf', 1.2);
+    ctx.fillStyle = '#f2d39a';
+    ctx.beginPath();
+    ctx.moveTo(6, 21);
+    ctx.quadraticCurveTo(16, 6, 26, 21);
+    ctx.closePath();
+    ctx.fill();
+    ctx.strokeStyle = '#c9955f';
+    ctx.lineWidth = 1.3;
+    ctx.stroke();
+    ellipse(ctx, 16, 18, 3, 2, '#f7b27a', '#d9845a', 0.8);
+    ellipse(ctx, 20, 12, 1.4, 1.4, '#e8484f');
+  },
+  lavendelkekse: (ctx) => {
+    for (const [x, y] of [[12, 18], [20, 15]] as const) {
+      ellipse(ctx, x, y, 7, 7, '#f2d39a', darken('#f2d39a', 0.3), 1.3);
+      for (const [dx, dy] of [[-2, -1], [1, 1], [2, -2], [-1, 2]] as const) ellipse(ctx, x + dx, y + dy, 0.9, 0.9, '#a98ad8');
+    }
+  },
   ei: (ctx) => {
     ellipse(ctx, 16, 17, 8.5, 10.5, '#f7ead6', '#c9a77a', 1.4);
     shine(ctx, 13, 12, 2.4);

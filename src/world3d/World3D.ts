@@ -42,6 +42,7 @@ import { HOUSE_STAGES } from '../data/house';
 import { CHRISTIN_WELCOME } from '../data/npcs/christin';
 import { OLAF_WELCOME } from '../data/npcs/olaf';
 import { OLI_WELCOME } from '../data/npcs/oli';
+import { JENS_WELCOME } from '../data/npcs/jens';
 import { canDate, type DateKind, haveDate } from '../game/romance';
 import { makePicnic } from './models/buildings';
 import { addFriendship } from '../game/gameplay';
@@ -95,7 +96,7 @@ type Target =
   | { kind: 'winston' }
   | { kind: 'tier'; index: number };
 
-const SPECIAL_OBJECTS = ['verkaufskiste', 'haus-gisela', 'haus-olaf', 'briefkasten-lina', 'werkbank-lina'];
+const SPECIAL_OBJECTS = ['verkaufskiste', 'haus-gisela', 'haus-olaf', 'briefkasten-lina', 'werkbank-lina', 'bistro-jens'];
 const DIRS = { down: [0, 1], up: [0, -1], left: [-1, 0], right: [1, 0] } as const;
 
 /** Kamera-Versatz zum Blickziel (schräg von oben, wie im Vorbild) */
@@ -536,6 +537,9 @@ export class World3D {
     }
     this.syncMapObjects();
     this.refreshYard();
+    if ((events.includes('jens-eingezogen') || (data.flags.jensEingezogen && !data.flags.jensBegruesst)) && data.flags.oliBegruesst) {
+      window.setTimeout(() => this.jensArrival(), 3500);
+    }
     if ((events.includes('oli-eingezogen') || (data.flags.oliEingezogen && !data.flags.oliBegruesst)) && data.flags.olafBegruesst) {
       window.setTimeout(() => this.oliArrival(), 2500);
     }
@@ -706,8 +710,8 @@ export class World3D {
       if (obj && obj.kind !== 'tree' && obj.kind !== 'rock') {
         key = `obj:${target.id}`;
         const c = footprintCenter(obj);
-        const h = obj.kind === 'house' ? 1.9 : obj.kind === 'board' ? 1.9 : obj.kind === 'workbench' ? 1.7 : obj.kind === 'fountain' ? 1.7 : obj.kind === 'plot' ? 1.3 : 1.25;
-        pos = new THREE.Vector3(c.x, h, obj.kind === 'house' || obj.kind === 'plot' ? c.z + obj.h / 2 - 0.3 : c.z);
+        const h = obj.kind === 'house' || obj.kind === 'bistro' ? 1.9 : obj.kind === 'board' ? 1.9 : obj.kind === 'workbench' ? 1.7 : obj.kind === 'fountain' ? 1.7 : obj.kind === 'plot' ? 1.3 : 1.25;
+        pos = new THREE.Vector3(c.x, h, obj.kind === 'house' || obj.kind === 'bistro' || obj.kind === 'plot' ? c.z + obj.h / 2 - 0.3 : c.z);
       }
     }
     this.bubble.visible = !!pos;
@@ -1026,6 +1030,10 @@ export class World3D {
       this.enterHome();
       return;
     }
+    if (id === 'bistro-jens') {
+      this.visitBistro();
+      return;
+    }
     if (id === 'werkbank-lina') {
       this.session.bus.emit('ui:open', { kind: 'werkbank' });
       return;
@@ -1143,6 +1151,17 @@ export class World3D {
                   this.dateScene(k);
                 },
               }))
+          : []),
+        ...(id === 'jens'
+          ? [
+              {
+                label: '🍳 Zusammen kochen',
+                onSelect: () => {
+                  npc.endTalk();
+                  this.session.bus.emit('ui:open', { kind: 'kochstudio' });
+                },
+              },
+            ]
           : []),
         ...(id === 'olaf'
           ? [
@@ -1457,6 +1476,68 @@ export class World3D {
     window.setTimeout(() => {
       if (arrived) return;
       oli.scriptPlace(meet);
+      done();
+    }, 12000);
+  }
+
+  /** Am Bistro: drinnen kochen, wenn Jens da ist – sonst ein Schild */
+  private visitBistro() {
+    const jens = this.npcs.get('jens');
+    if (!jens) return;
+    const title = 'Chez Jens';
+    if (jens.away) {
+      this.session.bus.emit('dialog:open', { title, lines: ['An der Tür hängt ein Schild:', '„Bin auf Reisen! ✈️ Postkarte kommt. Bisous, Jens“'] });
+      return;
+    }
+    if (jens.isSleeping) {
+      this.session.bus.emit('dialog:open', { title, lines: [...jens.def.dialogue.atHomeSleeping[0]] });
+      return;
+    }
+    this.session.bus.emit('dialog:open', {
+      title,
+      lines: jens.atHome ? ['„Komm rein, chérie! Die Schürze hängt am Haken.“'] : ['„Bonjour! Das Kochstudio ist offen – nimm dir eine Schürze!“'],
+      onClose: () => this.session.bus.emit('ui:open', { kind: 'kochstudio' }),
+    });
+  }
+
+  /** Jens eröffnet sein Bistro und begrüßt Lina */
+  private jensArrival() {
+    const player = this.player;
+    const jens = this.npcs.get('jens');
+    const data = this.session.data;
+    if (!player || !jens || !data || data.flags.jensBegruesst) return;
+    if (this.cutscene || this.session.inside || this.session.uiBlocking) {
+      window.setTimeout(() => this.jensArrival(), 4000);
+      return;
+    }
+    this.cutscene = true;
+    player.cancelPath();
+    const grid = this.session.map.grid;
+    const lt = player.tile;
+    const meet = nearestWalkable(grid, { x: lt.x - 1, y: lt.y }, lt) ?? lt;
+    jens.scriptPlace(nearestWalkable(grid, { x: lt.x - 3, y: lt.y + 4 }, lt) ?? lt);
+    let arrived = false;
+    const done = () => {
+      if (arrived) return;
+      arrived = true;
+      jens.char.faceTowards(player.x, player.y);
+      player.faceTowards(jens.x, jens.y);
+      const ctx = this.session.interactionContext();
+      this.session.bus.emit('dialog:open', {
+        title: jens.def.name,
+        lines: JENS_WELCOME.map((l) => fillPlaceholders(l, ctx)),
+        onClose: () => {
+          this.session.setFlag('jensBegruesst');
+          this.session.save();
+          jens.scriptDone();
+          this.cutscene = false;
+        },
+      });
+    };
+    jens.scriptWalkTo(meet, done);
+    window.setTimeout(() => {
+      if (arrived) return;
+      jens.scriptPlace(meet);
       done();
     }, 12000);
   }

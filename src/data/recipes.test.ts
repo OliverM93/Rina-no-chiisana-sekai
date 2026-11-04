@@ -1,13 +1,14 @@
 import { describe, expect, it } from 'vitest';
 import { FURNITURE_BY_ITEM } from './furniture';
-import { isKnownItem } from './items';
+import { isKnownItem, itemDef } from './items';
 import { NPCS } from './npcs';
 import { RECIPE_ITEM_PREFIX, RECIPES } from './recipes';
 
 describe('Rezepte', () => {
   it('ergeben Möbel und brauchen echte Zutaten', () => {
     for (const r of RECIPES) {
-      expect(FURNITURE_BY_ITEM[r.result], r.id).toBeTruthy();
+      if ((r.station ?? 'werkbank') === 'werkbank') expect(FURNITURE_BY_ITEM[r.result], r.id).toBeTruthy();
+      else expect(itemDef(r.result)?.category, r.id).toBe('essen');
       for (const i of r.ingredients) expect(isKnownItem(i.itemId), `${r.id}: ${i.itemId}`).toBe(true);
       expect(isKnownItem(`${RECIPE_ITEM_PREFIX}${r.id}`)).toBe(true);
     }

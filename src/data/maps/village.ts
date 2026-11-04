@@ -79,7 +79,9 @@ export const VILLAGE_OBJECTS: readonly MapObjectDef[] = [
   { id: 'bauplatz-1', kind: 'plot', x: 17, y: 15, until: 'olafEingezogen' },
   // Olaf & Christin (ziehen in M6 ein) – mit der Dorfkasse
   { id: 'haus-olaf', kind: 'house', x: 17, y: 15, variant: 'mint', requires: 'olafEingezogen' },
-  { id: 'bauplatz-3', kind: 'plot', x: 48, y: 14 },
+  { id: 'bauplatz-3', kind: 'plot', x: 48, y: 14, until: 'jensEingezogen' },
+  // Onkel Jens' Bistro „Chez Jens“ mit Kochstudio (M7b)
+  { id: 'bistro-jens', kind: 'bistro', x: 48, y: 14, requires: 'jensEingezogen' },
 
   // Dorfplatz
   { id: 'brunnen', kind: 'fountain', x: 26, y: 18 },

@@ -474,3 +474,68 @@ export function makePicnic(): THREE.Group {
   });
   return g;
 }
+
+function s(rx: number, ry: number, rz: number, color: string, x = 0, y = 0, z = 0): THREE.Mesh {
+  const m = mesh(sphere, toon(color));
+  m.scale.set(rx, ry, rz);
+  m.position.set(x, y, z);
+  return m;
+}
+
+/** Onkel Jens' Bistro „Chez Jens“: Häuschen mit gestreifter Markise, Schild, Café-Tischchen & Regenbogenfähnchen */
+export function makeBistro(): HouseModel {
+  const h = makeHouse(palette.roof.sky);
+  const g = h.group;
+  const zf = 1.2;
+  // Markise (rosa-weiß gestreift) über der Front
+  for (let i = 0; i < 9; i++) {
+    const stripe = b(0.5, 0.04, 0.7, i % 2 ? '#ffffff' : '#f4a3b8', -2 + i * 0.5, 1.55, zf + 0.32);
+    stripe.rotation.x = 0.35;
+    g.add(stripe);
+  }
+  for (let i = 0; i < 9; i++) g.add(s(0.07, 0.05, 0.05, i % 2 ? '#ffffff' : '#f4a3b8', -2 + i * 0.5, 1.4, zf + 0.64));
+  // Schild über der Tür
+  const sign = document.createElement('canvas');
+  sign.width = 256;
+  sign.height = 80;
+  const ctx = sign.getContext('2d') as CanvasRenderingContext2D;
+  ctx.fillStyle = '#2b2a31';
+  ctx.fillRect(0, 0, 256, 80);
+  ctx.fillStyle = '#f7d26a';
+  ctx.font = 'italic 800 44px "Nunito Variable", Nunito, serif';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText('Chez Jens', 128, 42);
+  const tex = new THREE.CanvasTexture(sign);
+  tex.colorSpace = THREE.SRGBColorSpace;
+  const board = new THREE.Mesh(new THREE.PlaneGeometry(1.3, 0.4), new THREE.MeshLambertMaterial({ map: tex }));
+  board.position.set(0, 1.82, zf + 0.06);
+  g.add(board);
+  // Café-Tischchen mit Stühlen links und rechts
+  for (const x of [-1.6, 1.6]) {
+    g.add(c(0.28, 0.03, '#f7f5ec', x, 0.62, zf + 0.9));
+    g.add(c(0.03, 0.6, '#3a3a44', x, 0.31, zf + 0.9));
+    g.add(c(0.04, 0.05, '#f4a3b8', x + 0.08, 0.66, zf + 0.85));
+    for (const dx of [-0.38, 0.38]) {
+      g.add(c(0.14, 0.03, '#3a3a44', x + dx, 0.4, zf + 0.9));
+      for (const ddx of [-0.08, 0.08]) g.add(c(0.012, 0.4, '#3a3a44', x + dx + ddx, 0.2, zf + 0.9));
+    }
+  }
+  // Regenbogen-Fähnchen am Fensterbrett 🌈
+  g.add(c(0.012, 0.5, '#8a5a3a', 2.1, 1.25, zf + 0.15));
+  const flag = ['#ff8a8a', '#ffc27a', '#fff08a', '#9ce59a', '#8ac8ff', '#b79af0'];
+  flag.forEach((col, i) => g.add(b(0.34, 0.04, 0.01, col, 2.28, 1.47 - i * 0.04, zf + 0.15)));
+  // Staffelei mit Bild neben der Tür (Jens ist Künstler)
+  for (const dx of [-0.12, 0.12]) {
+    const leg = b(0.03, 0.9, 0.03, '#8a5a3a', -0.75 + dx, 0.45, zf + 0.25);
+    leg.rotation.z = dx;
+    g.add(leg);
+  }
+  g.add(b(0.42, 0.34, 0.03, '#fbf6ec', -0.75, 0.72, zf + 0.28));
+  g.add(s(0.09, 0.07, 0.01, '#f4a3b8', -0.82, 0.76, zf + 0.3));
+  g.add(s(0.06, 0.05, 0.01, '#8ac8ff', -0.66, 0.68, zf + 0.3));
+  g.traverse((o) => {
+    if ((o as THREE.Mesh).isMesh) o.castShadow = true;
+  });
+  return h;
+}
