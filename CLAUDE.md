@@ -121,6 +121,7 @@ src/
     nature.ts      Werkzeuge, Angeln, Insekten, Beet, aktuelles Wetter
     crafting.ts    Rezepte lernen (Rezeptkarten aus Briefen, Ideen beim ersten Fund), an der Werkbank bauen
     pet.ts         Winston streicheln & buddeln lassen
+    romance.ts     Gemeinsame Momente mit Oli (Picknick, Sterne gucken): wann möglich, Freundschaft
     home.ts        Katalog kaufen, Möbel aufstellen/verschieben/wegräumen, Tapete & Boden, Ausbau & Kredit
     story.ts       Rahmenhandlung: Einzüge (Ankündigungsbrief → Einzug am nächsten Tag)
     input.ts       eigene Tastatursteuerung (blockiert keine Textfelder)
@@ -187,6 +188,9 @@ src/
   `outdoor: true` (Stil „garten“) und nutzen dieselbe Raumlogik wie drinnen (`currentRoom` = Garten, wenn
   Lina draußen ist). Sie blockieren die Karte über `WorldMap.extra` (`session.syncYardCollision()`); Wege und
   Tore nicht. `keepsAccess` verhindert, dass etwas Wichtiges unerreichbar wird. Hochbeete sind Pflanzplätze.
+- **Oli:** wohnt in Linas Haus (`home: 'haus-lina'`). Ist er „zu Hause“ und Lina drinnen, zeigt World3D ihn im
+  Zimmer (`updateHomeOli`: Platz je nach Tagesablauf-Label an Schreibtisch/Kaffeemaschine/Hantelbank, nachts
+  auf dem Futon). Gemeinsame Momente in `game/romance.ts`, Tage in `world.dates`.
 - **Tiere:** Ställe sind Gartenmöbel mit `coop: 'huhn' | 'wachtel'`, die Tiere kommen mit (`data/animals.ts`).
   Abholtage in `world.coopDay`; Logik in `core/coop.ts` & `game/animals.ts`.
 - **Spielstand:** `SAVE_VERSION` + `MIGRATIONS` in `core/save.ts`. Nach jeder Migration wird normalisiert

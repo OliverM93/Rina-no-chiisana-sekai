@@ -14,6 +14,6 @@ describe('Geschenk-Möbel', () => {
   it('Oli wohnt bei Lina und nennt sie Lini', () => {
     const oli = NPCS.find((n) => n.id === 'oli');
     expect(oli?.home).toBe('haus-lina');
-    expect(oli?.dialogue.greetings.some((g) => g.text.join(' ').includes('Lini'))).toBe(true);
+    expect(oli?.dialogue.greetings.some((g) => [g.text].flat().join(' ').includes('Lini'))).toBe(true);
   });
 });

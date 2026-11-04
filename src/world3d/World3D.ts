@@ -1470,7 +1470,7 @@ export class World3D {
     this.stopFishing();
     this.cutscene = true;
     const grid = this.session.map.grid;
-    const want = kind === 'picknick' ? { x: 9, y: 22 } : { x: 27, y: 29 };
+    const want = kind === 'picknick' ? { x: 9, y: 22 } : { x: 33, y: 31 };
     let a = nearestWalkable(grid, want) ?? player.tile;
     let b = { x: a.x + 1, y: a.y };
     if (grid.isBlocked(b.x, b.y)) {
