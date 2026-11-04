@@ -47,6 +47,8 @@ export const JENS: NpcDef = {
       { text: ['Ein Regenbogen! 🌈', 'Na, wenn das mal kein Zeichen ist. Für uns Fabelhaften ist das ja quasi die Hausfahne.'], when: { tags: ['regenbogen'] }, weight: 5 },
     ],
     chat: [
+      { text: ['Mein Zwillingsbruder Olaf, chérie …', 'Gleicher Tag, gleiche Mama – und trotzdem trägt er Westen und ich Glitzer. Die Natur ist eine Künstlerin!'], weight: 2 },
+      { text: ['Olaf sagt, er ist fünf Minuten älter.', 'Ich sag: Er hat fünf Minuten länger gebraucht, um sich zu trauen. Ich kam mit Stil.'] },
       { text: ['Enfin, eine Party! 🪩', 'Ich hab mir extra mein glitzerndstes Hemd angezogen. Fabelhaft, n\'est-ce pas?'], when: { tags: ['party'] }, weight: 8 },
       { text: ['Kunst, chérie, ist überall.', 'In einem Sonnenuntergang. In einer Muschel. In einem perfekt gefalteten Croissant.'] },
       { text: ['Ich war letztes Jahr in Lissabon.', 'Die Fliesen! Die Musik! Der Fischer, der mir sein Boot gezeigt hat! … Das Boot war auch schön.'] },

@@ -3,6 +3,7 @@
  * + Eintrag in `index.ts`.
  */
 import type { Appearance } from '../../core/appearance';
+import type { DayMonth } from '../../core/time';
 import type { DialogueLine } from '../../core/dialogue';
 import type { GiftReaction, Preferences } from '../../core/friendship';
 import type { ScheduleEntry } from '../../core/schedule';
@@ -24,6 +25,10 @@ export interface NpcDef {
   home: string;
   /** zieht erst ein, wenn dieses Story-Flag gesetzt ist */
   movesIn?: string;
+  /** Geburtstag (falls bekannt) */
+  birthday?: DayMonth;
+  /** Sprüche am eigenen Geburtstag (erstes Gespräch) und wenn Lina etwas schenkt */
+  birthdayLines?: { greeting: readonly string[]; thanks: readonly string[] };
   /** An diesen Tagen ist sie/er verreist (nicht im Dorf) */
   away?: (day: string) => boolean;
   schedule: readonly ScheduleEntry[];

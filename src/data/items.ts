@@ -88,6 +88,12 @@ const list: ItemDef[] = [
   { id: 'pfefferminztee', name: 'Pfefferminztee', plural: 'Tassen Pfefferminztee', category: 'essen', price: 80, description: 'Frisch und belebend. Lars trinkt ihn literweise.' },
   { id: 'lavendeltee', name: 'Lavendeltee', plural: 'Tassen Lavendeltee', category: 'essen', price: 90, description: 'Duftet nach Sommer in der Provence. Jens nennt ihn „Urlaub in der Tasse“.' },
   { id: 'kraeutermischung', name: 'Omas Kräutermischung', plural: 'Tassen Kräutermischung', category: 'essen', price: 160, description: 'Kamille, Minze und Lavendel. Omas Rezept. Lars gibt es zu.' },
+  // Feste
+  { id: 'plaetzchen', name: 'Omas Plätzchen', plural: 'Omas Plätzchen', category: 'essen', price: 15, description: 'Zimtsterne, Vanillekipferl, Butterplätzchen. Weihnachten in Keksform.' },
+  { id: 'lebkuchenherz', name: 'Lebkuchenherz', plural: 'Lebkuchenherzen', category: 'geschenk', price: null, maxStack: 1, description: 'Von Jens, mit Zuckerguss: „Ma chérie“. Und ein Hauch Glitzer. Natürlich.' },
+  { id: 'geburtstagstorte', name: 'Olis Geburtstagstorte', plural: 'Olis Geburtstagstorten', category: 'essen', price: 300, description: 'Drei Stockwerke geplant, zwei geschafft. Mit ganz viel Liebe und schiefer Kerze.' },
+  { id: 'gluecksklee', name: 'Glücksklee', plural: 'Glücksklee', category: 'fund', price: 50, description: 'Ein vierblättriges Kleeblatt für das neue Jahr. Von Oma – „bringt Glück, keine Widerrede“.' },
+  { id: 'osterei', name: 'Osterei', plural: 'Ostereier', category: 'fund', price: 30, description: 'Ein bunt bemaltes Ei. Irgendwer hat es im Gras versteckt …' },
   { id: 'mixtape', name: 'Olis Mixtape', plural: 'Olis Mixtapes', category: 'geschenk', price: null, maxStack: 1, description: 'Eine Kassette mit Herzchen drauf. Seite A: Punk. Seite B: auch Punk. Aber mit Liebe.' },
   { id: 'foto-lina-oli', name: 'Foto von Lina & Oli', plural: 'Fotos von Lina & Oli', category: 'geschenk', price: null, maxStack: 1, description: 'Ihr zwei, lachend, mit Winston dazwischen. Auf der Rückseite: „Für immer. Dein Oli.“' },
   { id: 'keks', name: 'Omas Keks', plural: 'Omas Kekse', category: 'essen', price: 5, description: 'Butterkeks nach Oma Giselas Geheimrezept. Keine Widerrede!' },

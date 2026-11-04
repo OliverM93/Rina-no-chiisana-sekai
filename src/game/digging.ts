@@ -13,7 +13,7 @@ import type { Session } from './session';
 let grassCache: Array<{ x: number; y: number }> | null = null;
 
 /** Freie Wiesenkacheln außerhalb von Linas Garten */
-function grassTiles(session: Session) {
+export function grassTiles(session: Session) {
   if (grassCache) return grassCache;
   const map = session.map;
   const out: Array<{ x: number; y: number }> = [];

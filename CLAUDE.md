@@ -24,9 +24,9 @@ Meilensteine und Fortschritt: siehe [`ROADMAP.md`](ROADMAP.md).
 | Figur | Rolle | Aussehen (für die Chibi-Figuren) |
 |---|---|---|
 | **Lina** | Spielerin | kastanienbraune Locken, etwas länger als schulterlang, Mittelscheitel, kein Pony, braune Augen, Sommersprossen, trägt am liebsten **Schwarz** – im Winter mit Doc-Martens-artigen Schnürstiefeln, im Sommer mit weißen Sneakern (alles im Editor anpassbar), Geburtstag **16.06.** |
-| **Oliver („Oli“)** | Linas Freund – höchste Bindung, romantische Szenen, gemeinsames Haus/Zimmer | schlank, kurze dunkelblonde Haare, Schnurrbart, blaugraue Augen, schwarzer Troyer-Pulli, strahlendes Lächeln |
+| **Oliver („Oli“)** | Linas Freund – höchste Bindung, romantische Szenen, gemeinsames Haus/Zimmer; nennt Lina „Lini“, Geburtstag **29.07.** | schlank, kurze dunkelblonde Haare, Schnurrbart, blaugraue Augen, schwarzer Troyer-Pulli, strahlendes Lächeln |
 | **Lars** | großer Bruder, Arzt – Praxis/Apotheke; guter Humor, hat immer einen Spruch auf Lager (z. B. „So, und nicht mit e, sonst ist es ein See.“) | groß & kräftig, kurz geschorene rotblonde Haare, rotblonder Vollbart, blaue Augen, dunkles Streifenhemd |
-| **Olaf** | Papa, Finanzamt – Dorfkasse/Bank | eher klein, dunkle angegraute Haare, grauer kurzer Bart, eckige Brille, weißes Hemd mit dunkler Weste |
+| **Olaf** | Papa, Finanzamt – Dorfkasse/Bank; **Zwillingsbruder von Jens** | eher klein, dunkle angegraute Haare, grauer kurzer Bart, eckige Brille, weißes Hemd mit dunkler Weste |
 | **Christin** | Olafs Freundin – sehr ordentlich, achtet auf Ordnung & Sauberkeit | schlank, dunkelbrauner Bob mit Seitenscheitel, braune Augen, korallrotes Oberteil |
 | **Jens** | Onkel, Coach, Dandy – Bistro/Kochstudio & Galerie, Französisch + Sächsisch; liebt Kunst, reist leidenschaftlich gern um die Welt, ein bisschen fabelhaft 🌈 (liebevoll & selbstverständlich, nie klischeehaft) | untersetzt, rundes Gesicht, dunkle zerzauste Haare, kein Bart, blaue Augen, Zahnlücken-Grinsen, dunkler Hoodie |
 | **Thalia** | beste Freundin, Geografie – Partys, Karten, Gesteine/Fossilien | schlank, glatte dunkelbraune schulterlange Haare mit Mittelscheitel, braune Augen, kleine Creolen, grünes Halstuch, schwarze Jacke, weite Jeans |
@@ -201,6 +201,11 @@ src/
   `data/fossils.ts`, Sammelbuch-Reiter „Funde“). Party samstags 19–22 Uhr (`game/party.ts`): `Npc` ersetzt dann
   den Tagesablauf durch `PARTY_ENTRY`, Lichterketten in World3D. Dorfkarte = `ui/MapPanel.tsx` (Taste M),
   Positionen über `session.livePositions()`.
+- **Geburtstage der Bewohner:** `NpcDef.birthday` + `birthdayLines`; Geschenke am Geburtstag zählen doppelt,
+  Tags `geburtstag-<id>` / `bald-geburtstag-<id>` (7 Tage vorher).
+- **Feste:** `core/festivals.ts` (welches Fest an welchem Datum, Ostern berechnet), Inhalte in
+  `data/festivals.ts` (Geschenke & Sprüche je Bewohner), Regeln in `game/festivals.ts` (`festTalk` beim ersten
+  Gespräch, Geschenk 1× pro Fest & Jahr über `world.dates`), Schmuck in `world3d/Festivals3D.ts`.
 - **Tiere:** Ställe sind Gartenmöbel mit `coop: 'huhn' | 'wachtel'`, die Tiere kommen mit (`data/animals.ts`).
   Abholtage in `world.coopDay`; Logik in `core/coop.ts` & `game/animals.ts`.
 - **Spielstand:** `SAVE_VERSION` + `MIGRATIONS` in `core/save.ts`. Nach jeder Migration wird normalisiert

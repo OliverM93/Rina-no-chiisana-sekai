@@ -11,7 +11,7 @@ import { DPR, TILE, UNIT } from '../config';
 import { CollisionGrid, findPath, nearestWalkable, type Tile } from '../core/grid';
 import { checkPlacement, type Exit, exitAt, footprint, type Room, type RoomLayout, type Rotation } from '../core/room';
 import { FURNITURE_BY_ITEM, furnitureInfo } from '../data/furniture';
-import { getDaylight } from '../core/time';
+import { getDaylight, isSameDayMonth } from '../core/time';
 import { isWatered, spotKey } from '../core/garden';
 import { WEATHER_LABELS } from '../core/weather';
 import { applyMapFlags, findInteraction, isActive, type MapObject, OBJECT_KINDS, objectById, terrainAt, tileOf } from '../core/worldmap';
@@ -75,6 +75,9 @@ import { Insects3D } from './Insects3D';
 import { Interior3D, ROOM_X, ROOM_Y } from './Interior3D';
 import { Yard3D } from './Yard3D';
 import { DigSpots3D } from './DigSpots3D';
+import { Festivals3D } from './Festivals3D';
+import { todaysFestivals } from '../game/festivals';
+import { FESTIVAL_INFO } from '../data/festivals';
 import { digSpot } from '../game/digging';
 import { THALIA_WELCOME, PARTY_LINES } from '../data/npcs/thalia';
 import { FIND_BY_ID } from '../data/fossils';
@@ -159,6 +162,8 @@ export class World3D {
   private yard: Yard3D;
   private animals: Animals3D;
   private digSpots: DigSpots3D;
+  private festivals: Festivals3D;
+  private festToastDay = '';
   private digging = false;
   private partyLights: { group: THREE.Group; bulbs: THREE.MeshToonMaterial[] };
   private partyLight = new THREE.PointLight('#ffb8d8', 0, 9, 1.4);
@@ -231,6 +236,7 @@ export class World3D {
     this.interior = new Interior3D(this.scene);
     this.yard = new Yard3D(this.scene, this.view.terrain.heightAt);
     this.digSpots = new DigSpots3D(this.scene, session, this.view);
+    this.festivals = new Festivals3D(this.scene, session.map, this.view.terrain.heightAt);
     session.livePositions = () => {
       const out: Record<string, { x: number; y: number }> = {};
       const p = this.player;
@@ -307,6 +313,7 @@ export class World3D {
     this.hemi.intensity = this.baseHemi + this.weather.lightning * 1.4;
     this.insects.update(dt, this.night);
     this.digSpots.update(dt, !this.session.inside);
+    this.festivals.update(dt, this.night, !this.session.inside);
     {
       const h = this.session.clock().getHours();
       this.animals.update(dt, this.session.data?.yard, h >= 21 || h < 6, !this.session.inside);
@@ -568,6 +575,7 @@ export class World3D {
     }
     this.syncMapObjects();
     this.refreshYard();
+    this.refreshFestivals();
     if ((events.includes('thalia-eingezogen') || (data.flags.thaliaEingezogen && !data.flags.thaliaBegruesst)) && data.flags.larsBegruesst) {
       window.setTimeout(() => this.npcArrival('thalia', THALIA_WELCOME, -1, () => {
         giveItem(this.session, 'schaufel', 1);
@@ -586,6 +594,19 @@ export class World3D {
     }
     if ((events.includes('olaf-eingezogen') || (data.flags.olafEingezogen && !data.flags.olafBegruesst)) && data.flags.giselaWelcomed) {
       window.setTimeout(() => this.arrivalScene(), 2500);
+    }
+  }
+
+  /** Festschmuck & Begrüßung zum Fest */
+  private refreshFestivals() {
+    const fests = todaysFestivals(this.session);
+    this.festivals.refresh(fests);
+    const day = this.session.today();
+    const bday = NPCS.find((n) => n.birthday && (!n.movesIn || this.session.data?.flags[n.movesIn]) && isSameDayMonth(this.session.clock(), n.birthday));
+    if ((fests.length > 0 || bday) && this.festToastDay !== day) {
+      this.festToastDay = day;
+      const text = fests.length > 0 ? FESTIVAL_INFO[fests[0]].toast : `🎂 Heute hat ${bday?.name} Geburtstag! Vielleicht ein kleines Geschenk? 🎁`;
+      window.setTimeout(() => this.session.bus.emit('toast', { text }), 3500);
     }
   }
 

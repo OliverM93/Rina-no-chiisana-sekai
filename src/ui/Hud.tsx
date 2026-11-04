@@ -4,6 +4,7 @@
 import { useEffect, useState } from 'preact/hooks';
 import { formatDate, formatTime, getDayPhase, getSeason, SEASON_ICONS, SEASON_LABELS } from '../core/time';
 import { WEATHER_ICONS, WEATHER_LABELS } from '../core/weather';
+import { isFireworkTime } from '../core/festivals';
 import { itemDef } from '../data/items';
 import { currentWeather, ownedTools, toggleTool } from '../game/nature';
 import { itemIconUrl } from '../gfx/items';
@@ -40,6 +41,7 @@ export function Hud({ session }: { session: Session }) {
     <>
       {weather.rainbow && <div class="rainbow-overlay" aria-hidden="true" />}
       {stars && <StarsOverlay />}
+      {isFireworkTime(now) && !inside && <FireworksOverlay />}
       <div class="hud-clock pop-in">
         <div class="hud-time">
           <span class="hud-phase">{PHASE_ICON[getDayPhase(now)]}</span>
@@ -104,6 +106,22 @@ function StarsOverlay() {
       ))}
       {[0, 1, 2].map((i) => (
         <span key={`s${i}`} class="shooting-star" style={{ top: `${8 + i * 9}%`, left: `${20 + i * 25}%`, animationDelay: `${1 + i * 2.3}s` }} />
+      ))}
+    </div>
+  );
+}
+
+/** Silvester-Feuerwerk oben im Bild */
+function FireworksOverlay() {
+  const bursts = Array.from({ length: 7 }, (_, i) => ({ x: 8 + ((i * 41) % 84), y: 6 + ((i * 23) % 26), d: i * 0.9, c: i % 4 }));
+  return (
+    <div class="stars-overlay fireworks" aria-hidden="true">
+      {bursts.map((b, i) => (
+        <span key={i} class={`firework fw-${b.c}`} style={{ left: `${b.x}%`, top: `${b.y}%`, animationDelay: `${b.d}s` }}>
+          {Array.from({ length: 12 }, (_, k) => (
+            <i key={k} style={{ transform: `rotate(${k * 30}deg)` }} />
+          ))}
+        </span>
       ))}
     </div>
   );

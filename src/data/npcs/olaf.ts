@@ -43,6 +43,8 @@ export const OLAF: NpcDef = {
       { text: ['Bei dem Regen arbeiten selbst die Enten im Homeoffice.', '… War ein Witz. Ein guter, finde ich.'], when: { tags: ['wetter-regen'] }, weight: 3 },
     ],
     chat: [
+      { text: ['Wusstest du, dass Jens und ich Zwillinge sind?', 'Er sagt immer, er ist der Hübschere. Ich sage: Ich bin der Pünktlichere. Fünf Minuten älter, nämlich.'], when: { tags: ['jens-da'] }, weight: 2 },
+      { text: ['Als Kinder haben Jens und ich uns manchmal ausgetauscht.', 'Ich bin für ihn in den Kunstunterricht, er für mich in Mathe.', 'Er hatte eine Eins. Ich eine Vier. Wir haben nie wieder getauscht.'], when: { tags: ['jens-da'] } },
       { text: ['Eine Party! Ich hab ein Budget für Konfetti aufgestellt.', 'Wir liegen voll im Plan. Christin tanzt schon.'], when: { tags: ['party'] }, weight: 8 },
       { text: ['Eigene Hühner – sehr vernünftig!', 'Ein Ei am Tag spart im Jahr … warte … ziemlich viele Sternchen. Ich rechne das nachher aus.'], when: { tags: ['huehner'] }, weight: 3 },
       { text: ['Winston ist der Einzige im Dorf, der nie nach Belegen fragt.', 'Ein sehr angenehmer Zeitgenosse.'] },
