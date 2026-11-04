@@ -54,6 +54,7 @@ export type UiPanel =
   | { kind: 'catalog' }
   | { kind: 'werkbank' }
   | { kind: 'kochstudio' }
+  | { kind: 'apotheke' }
   | { kind: 'bank'; onClose?: () => void }
   | { kind: 'gift'; npcId: string; onPick: (itemId: string) => void; onCancel: () => void }
   | { kind: 'seeds'; onPick: (itemId: string) => void; onCancel: () => void };

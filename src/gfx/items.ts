@@ -403,6 +403,29 @@ for (const r of RECIPES) {
   };
 }
 
+// Tees aus Lars' Apotheke: Tasse in der Farbe des Tees
+for (const [id, tea, leaf] of [['kamillentee', '#f2d36a', '#ffffff'], ['pfefferminztee', '#8fcf7a', '#4f9a5a'], ['lavendeltee', '#c3a8e8', '#8a6ad8'], ['kraeutermischung', '#d9b86a', '#6fbf73']] as const) {
+  DRAW[id] = (ctx) => {
+    ellipse(ctx, 16, 26, 11, 3, '#f7f5ec', '#c9c4cf', 1);
+    roundRect(ctx, 7, 12, 16, 13, [2, 2, 6, 6], '#ffffff', '#c9c4cf', 1.3);
+    ellipse(ctx, 15, 13, 7.4, 2.2, tea, darken(tea, 0.25), 0.8);
+    ctx.strokeStyle = '#c9c4cf';
+    ctx.lineWidth = 1.6;
+    ctx.beginPath();
+    ctx.arc(24, 18, 3.2, -Math.PI / 2, Math.PI / 2);
+    ctx.stroke();
+    ellipse(ctx, 13, 19, 2, 2.6, leaf, darken(leaf, 0.3), 0.7);
+    ctx.strokeStyle = 'rgba(180,180,190,0.7)';
+    ctx.lineWidth = 1.2;
+    for (const x of [12, 17]) {
+      ctx.beginPath();
+      ctx.moveTo(x, 9);
+      ctx.quadraticCurveTo(x + 2, 6, x, 3);
+      ctx.stroke();
+    }
+  };
+}
+
 const imageOverrides = new Map<string, string>();
 
 /** Fertiges Bild (z. B. 3D-Vorschau eines Möbels) als Symbol verwenden */

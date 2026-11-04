@@ -557,3 +557,51 @@ export function makeBistro(): HouseModel {
   });
   return h;
 }
+
+/** Lars' Praxis mit kleiner Apotheke: weißes Haus mit grünem Kreuz, Schild, Kräuterkübeln & Bank */
+export function makePraxis(): HouseModel {
+  const h = makeHouse(palette.roof.mint);
+  const g = h.group;
+  const zf = 1.2;
+  // grünes Apothekenkreuz an der Wand (mit Lichtschein abends über das Fensterglas-Material)
+  const cross = new THREE.Group();
+  cross.position.set(1.25, 1.35, zf + 0.06);
+  const glow = new THREE.MeshToonMaterial({ color: '#4fbf6a', emissive: '#4fbf6a', emissiveIntensity: 0.35 });
+  cross.add(b(0.36, 0.12, 0.05, glow), b(0.12, 0.36, 0.05, glow));
+  g.add(cross);
+  // Schild
+  const sign = document.createElement('canvas');
+  sign.width = 256;
+  sign.height = 96;
+  const ctx = sign.getContext('2d') as CanvasRenderingContext2D;
+  ctx.fillStyle = '#ffffff';
+  ctx.fillRect(0, 0, 256, 96);
+  ctx.strokeStyle = '#4fbf6a';
+  ctx.lineWidth = 8;
+  ctx.strokeRect(4, 4, 248, 88);
+  ctx.fillStyle = '#2f5a3a';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.font = '800 34px "Nunito Variable", Nunito, sans-serif';
+  ctx.fillText('Praxis Dr. Lars', 128, 36);
+  ctx.font = '700 22px "Nunito Variable", Nunito, sans-serif';
+  ctx.fillStyle = '#e85a8a';
+  ctx.fillText('♥ Apotheke & Kräuter ♥', 128, 70);
+  const tex = new THREE.CanvasTexture(sign);
+  tex.colorSpace = THREE.SRGBColorSpace;
+  const board = new THREE.Mesh(new THREE.PlaneGeometry(1.1, 0.42), new THREE.MeshLambertMaterial({ map: tex }));
+  board.position.set(-1.3, 1.27, zf + 0.12);
+  g.add(board);
+  // Kräuterkübel neben der Tür
+  for (const x of [-0.6, 0.6]) {
+    g.add(c(0.18, 0.28, '#d98a5f', x, 0.14, zf + 0.35));
+    for (let i = 0; i < 5; i++) g.add(s(0.06, 0.08, 0.06, i % 2 ? '#6fbf73' : '#5aa964', x + Math.cos(i * 1.3) * 0.08, 0.34 + (i % 2) * 0.04, zf + 0.35 + Math.sin(i * 1.3) * 0.08));
+  }
+  // kleines Skelett-Modell im Fenster (Lars' Witz-Partner)
+  g.add(s(0.06, 0.07, 0.06, '#f7f5ec', -1.25, 0.95, zf + 0.02));
+  g.add(b(0.08, 0.18, 0.03, '#f7f5ec', -1.25, 0.78, zf + 0.02));
+  g.traverse((o) => {
+    if ((o as THREE.Mesh).isMesh) o.castShadow = true;
+  });
+  return h;
+}

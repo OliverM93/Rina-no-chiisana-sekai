@@ -429,6 +429,14 @@ export function makeFurniture(itemId: string, links: FenceLinks = { n: false, e:
       g.add(s(0.03, 0.03, 0.01, '#e85a8a', 0.15, 1.05, 0.04));
       break;
     }
+    case 'erste-hilfe': {
+      g.add(b(0.26, 0.24, 0.12, '#f7f5ec', 0, 0.12, 0));
+      g.add(b(0.12, 0.035, 0.01, '#4fbf6a', 0, 0.14, 0.062));
+      g.add(b(0.035, 0.12, 0.01, '#4fbf6a', 0, 0.14, 0.062));
+      g.add(b(0.07, 0.02, 0.02, '#c9cbd3', 0.08, 0.06, 0.065));
+      g.add(s(0.02, 0.012, 0.005, '#f4a3b8', -0.08, 0.04, 0.062));
+      break;
+    }
     // ---- Garten (draußen) ----
     case 'zaun-holz':
     case 'zaun-weiss':

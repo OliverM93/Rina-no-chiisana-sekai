@@ -20,6 +20,7 @@ import {
   makeSellbox,
   makeWorkbench,
   makeBistro,
+  makePraxis,
   makeSign,
   makeBeet,
 } from './models/buildings';
@@ -97,8 +98,9 @@ export function buildMapView3D(scene: THREE.Scene, map: WorldMap, season: Season
         occluders.push({ id: o.id, node, x: c.x, z: c.z, w: o.w, h: o.h });
         break;
       }
+      case 'praxis':
       case 'bistro': {
-        const h: HouseModel = makeBistro();
+        const h: HouseModel = o.kind === 'praxis' ? makePraxis() : makeBistro();
         node = h.group;
         for (const w of h.windows) windows.push(w.clone().add(new THREE.Vector3(c.x, 0, c.z)));
         occluders.push({ id: o.id, node, x: c.x, z: c.z, w: o.w, h: o.h });

@@ -29,7 +29,7 @@ export const GISELA: NpcDef = {
     { from: '22:00', label: 'schläft', activity: { kind: 'zuhause', sleeping: true } },
   ],
   preferences: {
-    loves: ['pfirsich', 'herzmuschel', 'wildblumen', 'rose', 'vergissmeinnicht', 'hering', 'ei', 'apfelkuchen', 'lavendelkekse'],
+    loves: ['pfirsich', 'herzmuschel', 'wildblumen', 'rose', 'vergissmeinnicht', 'hering', 'ei', 'apfelkuchen', 'lavendelkekse', 'kamillentee', 'kraeutermischung'],
     likes: ['wachtelei', 'apfel', 'jakobsmuschel', 'schneckenhaus', 'seestern', 'glitzerstein', 'tulpe', 'lavendel', 'sonnenblume', 'scholle', 'dorsch', 'marienkaefer', 'zitronenfalter'],
     dislikes: ['birne', 'ast', 'stein', 'waldameise', 'weinbergschnecke', 'maikaefer', 'heupferd', 'grashuepfer', 'ohrenqualle', 'aal', 'wels', 'strandkrabbe'],
   },
@@ -52,6 +52,9 @@ export const GISELA: NpcDef = {
       { text: ['Kindchen! Mein Lieblingsbesuch.', '… Ja, ich weiß, du bist mein einziger Besuch. Trotzdem.'], when: { minHearts: 2 } },
     ],
     chat: [
+      { text: ['Mein Enkel ist jetzt Arzt im Dorf.', 'Ich trau ihm trotzdem nicht. Ärzte wollen nur dein Geld!', '… Er nimmt aber gar keins von mir. Verdächtig, oder?'], when: { tags: ['lars-da'] }, weight: 3 },
+      { text: ['Lars hat mir Tabletten verschrieben.', 'Ich hab ihm Kamillentee verschrieben. Wir werden sehen, wer recht hat.', '… Ich. Natürlich.'], when: { tags: ['lars-da'] }, weight: 3 },
+      { text: ['Der Jens mit seinem Bistro …', 'Seine Croissants sind köstlich. Seine Hemden: pfui!', 'Aber sag ihm nichts. Er ist ja ein Guter.'], when: { tags: ['jens-da'] }, weight: 2 },
       { text: ['Du hast Hühner? Wie Opa Ludwig damals!', 'Der hatte eins, das hieß Frieda. Frieda hat jeden Morgen um fünf gekräht. Obwohl sie ein Huhn war.'], when: { tags: ['huehner'] }, weight: 3 },
       { text: ['Wachteln! Die sind ja winzig.', 'Für ein Spiegelei brauchst du davon ungefähr zwölf. Sag ich nur.'], when: { tags: ['wachteln'] }, weight: 3 },
       { text: ['Neben deinem Haus steht noch Opas alte Werkbank.', 'Ludwig hat da früher alles Mögliche gebaut. Aus Ästen! Aus Steinen! Einmal sogar einen Stuhl, der gehalten hat.'], weight: 2 },

@@ -10,7 +10,7 @@ import type { Recipe } from '../core/crafting';
 
 export interface RecipeDef extends Recipe {
   /** Wo gebaut/gekocht wird (Standard: Werkbank) */
-  station?: 'werkbank' | 'kueche';
+  station?: 'werkbank' | 'kueche' | 'apotheke';
   /** Kurzer Hinweis, wie man es bekommt (für noch unbekannte Rezepte) */
   hint: string;
   start?: boolean;
@@ -21,6 +21,11 @@ export interface RecipeDef extends Recipe {
 export const RECIPES: readonly RecipeDef[] = [
   { id: 'ast-hocker', result: 'ast-hocker', ingredients: [{ itemId: 'ast', count: 5 }], start: true, hint: '' },
   { id: 'blumenvase', result: 'blumenvase', ingredients: [{ itemId: 'wildblumen', count: 3 }, { itemId: 'stein', count: 1 }], start: true, hint: '' },
+  // Lars' Apotheke
+  { id: 'kamillentee', station: 'apotheke', result: 'kamillentee', ingredients: [{ itemId: 'kamille', count: 2 }], start: true, hint: '' },
+  { id: 'pfefferminztee', station: 'apotheke', result: 'pfefferminztee', ingredients: [{ itemId: 'pfefferminze', count: 2 }], start: true, hint: '' },
+  { id: 'lavendeltee', station: 'apotheke', result: 'lavendeltee', ingredients: [{ itemId: 'lavendel', count: 2 }], start: true, hint: '' },
+  { id: 'kraeutermischung', station: 'apotheke', result: 'kraeutermischung', count: 2, ingredients: [{ itemId: 'kamille', count: 1 }, { itemId: 'pfefferminze', count: 1 }, { itemId: 'lavendel', count: 1 }], hint: 'Freunde dich mit Lars an – oder frag Oma.' },
   // Jens' Kochstudio
   { id: 'ruehrei', station: 'kueche', result: 'ruehrei', ingredients: [{ itemId: 'ei', count: 2 }], start: true, hint: '' },
   { id: 'wachtel-spiegelei', station: 'kueche', result: 'wachtel-spiegelei', ingredients: [{ itemId: 'wachtelei', count: 3 }], start: true, hint: '' },

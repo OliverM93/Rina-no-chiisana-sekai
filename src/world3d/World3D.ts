@@ -43,6 +43,8 @@ import { CHRISTIN_WELCOME } from '../data/npcs/christin';
 import { OLAF_WELCOME } from '../data/npcs/olaf';
 import { OLI_WELCOME } from '../data/npcs/oli';
 import { JENS_WELCOME } from '../data/npcs/jens';
+import { CHECKUP_GIFTS, CHECKUP_LINES, LARS_WELCOME } from '../data/npcs/lars';
+import { hashString } from '../core/rng';
 import { canDate, type DateKind, haveDate } from '../game/romance';
 import { makePicnic } from './models/buildings';
 import { addFriendship } from '../game/gameplay';
@@ -96,7 +98,7 @@ type Target =
   | { kind: 'winston' }
   | { kind: 'tier'; index: number };
 
-const SPECIAL_OBJECTS = ['verkaufskiste', 'haus-gisela', 'haus-olaf', 'briefkasten-lina', 'werkbank-lina', 'bistro-jens'];
+const SPECIAL_OBJECTS = ['verkaufskiste', 'haus-gisela', 'haus-olaf', 'briefkasten-lina', 'werkbank-lina', 'bistro-jens', 'praxis-lars'];
 const DIRS = { down: [0, 1], up: [0, -1], left: [-1, 0], right: [1, 0] } as const;
 
 /** Kamera-Versatz zum Blickziel (schräg von oben, wie im Vorbild) */
@@ -537,6 +539,9 @@ export class World3D {
     }
     this.syncMapObjects();
     this.refreshYard();
+    if ((events.includes('lars-eingezogen') || (data.flags.larsEingezogen && !data.flags.larsBegruesst)) && data.flags.jensBegruesst) {
+      window.setTimeout(() => this.larsArrival(), 4500);
+    }
     if ((events.includes('jens-eingezogen') || (data.flags.jensEingezogen && !data.flags.jensBegruesst)) && data.flags.oliBegruesst) {
       window.setTimeout(() => this.jensArrival(), 3500);
     }
@@ -710,8 +715,8 @@ export class World3D {
       if (obj && obj.kind !== 'tree' && obj.kind !== 'rock') {
         key = `obj:${target.id}`;
         const c = footprintCenter(obj);
-        const h = obj.kind === 'house' || obj.kind === 'bistro' ? 1.9 : obj.kind === 'board' ? 1.9 : obj.kind === 'workbench' ? 1.7 : obj.kind === 'fountain' ? 1.7 : obj.kind === 'plot' ? 1.3 : 1.25;
-        pos = new THREE.Vector3(c.x, h, obj.kind === 'house' || obj.kind === 'bistro' || obj.kind === 'plot' ? c.z + obj.h / 2 - 0.3 : c.z);
+        const h = obj.kind === 'house' || obj.kind === 'bistro' || obj.kind === 'praxis' ? 1.9 : obj.kind === 'board' ? 1.9 : obj.kind === 'workbench' ? 1.7 : obj.kind === 'fountain' ? 1.7 : obj.kind === 'plot' ? 1.3 : 1.25;
+        pos = new THREE.Vector3(c.x, h, obj.kind === 'house' || obj.kind === 'bistro' || obj.kind === 'praxis' || obj.kind === 'plot' ? c.z + obj.h / 2 - 0.3 : c.z);
       }
     }
     this.bubble.visible = !!pos;
@@ -736,7 +741,6 @@ export class World3D {
 
   private resolveTarget(player: Character): Target | null {
     const tile = player.tile;
-    if (this.winstonInFront(player)) return { kind: 'winston' };
     if (this.session.inside && this.homeOli?.visible) {
       const [hx, hy] = DIRS[player.facing];
       const dx = this.homeOli.x - player.x;
@@ -745,7 +749,8 @@ export class World3D {
       const oli = this.npcs.get('oli');
       if (oli && d < TILE * 1.4 && dx * hx + dy * hy > d * 0.3) return { kind: 'npc', npc: oli };
     }
-    if (this.session.inside) return this.homeTarget(player);
+    // Bewohner gehen vor – Winston wird gestreichelt, wenn sonst niemand vor Lina steht
+    if (this.session.inside) return this.winstonInFront(player) ? { kind: 'winston' } : this.homeTarget(player);
     const pickup = this.collectibles.pickupNear(tile, player.facing, player.x, player.y);
     if (pickup) return { kind: 'pickup', id: pickup };
     const [fx, fy] = DIRS[player.facing];
@@ -756,6 +761,7 @@ export class World3D {
       const d = Math.hypot(dx, dy);
       if (d < TILE * 1.35 && dx * fx + dy * fy > d * 0.35) return { kind: 'npc', npc };
     }
+    if (this.winstonInFront(player)) return { kind: 'winston' };
     const front = { x: tile.x + fx, y: tile.y + fy };
     // Stall direkt davor geht vor (Eier abholen), sonst Tiere streicheln
     const coop = this.yardItemAt(front.x, front.y);
@@ -1030,6 +1036,10 @@ export class World3D {
       this.enterHome();
       return;
     }
+    if (id === 'praxis-lars') {
+      this.visitPraxis();
+      return;
+    }
     if (id === 'bistro-jens') {
       this.visitBistro();
       return;
@@ -1151,6 +1161,18 @@ export class World3D {
                   this.dateScene(k);
                 },
               }))
+          : []),
+        ...(id === 'lars'
+          ? [
+              ...(this.session.data?.world.dates.checkup !== this.session.today() ? [{ label: '🩺 Durchchecken lassen', onSelect: () => this.checkup(npc) }] : []),
+              {
+                label: '🌿 Apotheke',
+                onSelect: () => {
+                  npc.endTalk();
+                  this.session.bus.emit('ui:open', { kind: 'apotheke' });
+                },
+              },
+            ]
           : []),
         ...(id === 'jens'
           ? [
@@ -1502,44 +1524,96 @@ export class World3D {
 
   /** Jens eröffnet sein Bistro und begrüßt Lina */
   private jensArrival() {
+    this.npcArrival('jens', JENS_WELCOME, -1);
+  }
+
+  /** Lars eröffnet seine Praxis und begrüßt Lina (und schenkt ihr Kräutersamen) */
+  private larsArrival() {
+    this.npcArrival('lars', LARS_WELCOME, 1, () => {
+      giveItem(this.session, 'samen-kamille', 2);
+      giveItem(this.session, 'samen-pfefferminze', 2);
+    });
+  }
+
+  /** Einzugsszene: Bewohner kommt zu Lina, sagt Hallo; `side` = von links (-1) oder rechts (1) */
+  private npcArrival(id: string, welcome: readonly string[], side: number, after?: () => void) {
     const player = this.player;
-    const jens = this.npcs.get('jens');
+    const npc = this.npcs.get(id);
     const data = this.session.data;
-    if (!player || !jens || !data || data.flags.jensBegruesst) return;
+    const flag = `${id}Begruesst`;
+    if (!player || !npc || !data || data.flags[flag]) return;
     if (this.cutscene || this.session.inside || this.session.uiBlocking) {
-      window.setTimeout(() => this.jensArrival(), 4000);
+      window.setTimeout(() => this.npcArrival(id, welcome, side, after), 4000);
       return;
     }
     this.cutscene = true;
     player.cancelPath();
     const grid = this.session.map.grid;
     const lt = player.tile;
-    const meet = nearestWalkable(grid, { x: lt.x - 1, y: lt.y }, lt) ?? lt;
-    jens.scriptPlace(nearestWalkable(grid, { x: lt.x - 3, y: lt.y + 4 }, lt) ?? lt);
+    const meet = nearestWalkable(grid, { x: lt.x + side, y: lt.y }, lt) ?? lt;
+    npc.scriptPlace(nearestWalkable(grid, { x: lt.x + side * 3, y: lt.y + 4 }, lt) ?? lt);
     let arrived = false;
     const done = () => {
       if (arrived) return;
       arrived = true;
-      jens.char.faceTowards(player.x, player.y);
-      player.faceTowards(jens.x, jens.y);
+      npc.char.faceTowards(player.x, player.y);
+      player.faceTowards(npc.x, npc.y);
       const ctx = this.session.interactionContext();
       this.session.bus.emit('dialog:open', {
-        title: jens.def.name,
-        lines: JENS_WELCOME.map((l) => fillPlaceholders(l, ctx)),
+        title: npc.def.name,
+        lines: welcome.map((l) => fillPlaceholders(l, ctx)),
         onClose: () => {
-          this.session.setFlag('jensBegruesst');
+          after?.();
+          this.session.setFlag(flag);
           this.session.save();
-          jens.scriptDone();
+          npc.scriptDone();
           this.cutscene = false;
         },
       });
     };
-    jens.scriptWalkTo(meet, done);
+    npc.scriptWalkTo(meet, done);
     window.setTimeout(() => {
       if (arrived) return;
-      jens.scriptPlace(meet);
+      npc.scriptPlace(meet);
       done();
     }, 12000);
+  }
+
+  /** An der Praxis: Apotheke, wenn Lars da ist – sonst ein Schild */
+  private visitPraxis() {
+    const lars = this.npcs.get('lars');
+    if (!lars) return;
+    const title = 'Praxis Dr. Lars';
+    if (lars.isSleeping) {
+      this.session.bus.emit('dialog:open', { title, lines: [...lars.def.dialogue.atHomeSleeping[0]] });
+      return;
+    }
+    const open = lars.atHome || lars.currentEntry?.label === 'Praxis geöffnet';
+    if (!open) {
+      this.session.bus.emit('dialog:open', { title, lines: ['An der Tür: „Bin gleich zurück! Selbstbedienung in der Apotheke – Kräuter bitte selbst mitbringen. 🌿“'], onClose: () => this.session.bus.emit('ui:open', { kind: 'apotheke' }) });
+      return;
+    }
+    this.session.bus.emit('ui:open', { kind: 'apotheke' });
+  }
+
+  /** Einmal am Tag: Gesundheits-Check bei Lars */
+  private checkup(npc: Npc) {
+    const data = this.session.data;
+    if (!data) return;
+    data.world.dates.checkup = this.session.today();
+    const lines = [...CHECKUP_LINES[hashString(this.session.today()) % CHECKUP_LINES.length]];
+    const gift = CHECKUP_GIFTS[hashString(`${this.session.today()}:check`) % CHECKUP_GIFTS.length];
+    lines.push(...addFriendship(this.session, 'lars', 12));
+    this.session.bus.emit('dialog:open', {
+      title: npc.def.name,
+      hearts: npcHearts(this.session, 'lars'),
+      lines: [...lines, `Hier, zur Belohnung fürs Tapfersein: ${itemDef(gift)?.name ?? gift}! 🍭`],
+      onClose: () => {
+        giveItem(this.session, gift, 1);
+        this.session.save();
+        npc.endTalk();
+      },
+    });
   }
 
   /** Picknick oder Sterne gucken mit Oli */

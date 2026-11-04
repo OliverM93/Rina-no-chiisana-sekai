@@ -247,6 +247,11 @@ export function makePlant(stage: number, color: string, center: string, flower: 
     if (flower === 'tulpe') {
       top.add(p(sphere, color, 0.06, 0.08, 0.06, 0, 0.03, 0));
       top.add(p(cone, lighten(color, 0.1), 0.03, 0.04, 0.03, 0, 0.11, 0));
+    } else if (flower === 'pfefferminze') {
+      for (let i = 0; i < 7; i++) {
+        const a = (i / 7) * Math.PI * 2;
+        top.add(p(sphere, i % 2 ? color : darken(color, 0.12), 0.05, 0.025, 0.035, Math.cos(a) * 0.04, (i % 3) * 0.03, Math.sin(a) * 0.04).rotateY(-a));
+      }
     } else if (flower === 'lavendel') {
       for (let i = 0; i < 5; i++) top.add(p(sphere, color, 0.03 - i * 0.003, 0.025, 0.03 - i * 0.003, 0, i * 0.035, 0));
     } else {

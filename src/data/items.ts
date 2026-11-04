@@ -53,11 +53,16 @@ const list: ItemDef[] = [
   { id: 'lavendel', name: 'Lavendel', plural: 'Lavendelzweige', category: 'blume', price: 30, description: 'Riecht nach Sommer in der Provence. Jens würde sagen: „Magnifique!“' },
   { id: 'vergissmeinnicht', name: 'Vergissmeinnicht', plural: 'Vergissmeinnicht', category: 'blume', price: 35, description: 'Winzige himmelblaue Blüten. Damit man sich immer erinnert. 💙' },
 
+  { id: 'kamille', name: 'Kamille', plural: 'Kamillenblüten', category: 'blume', price: 22, description: 'Kleine weiße Blüten mit gelbem Herz. Oma schwört drauf. Gegen alles.' },
+  { id: 'pfefferminze', name: 'Pfefferminze', plural: 'Pfefferminzzweige', category: 'blume', price: 22, description: 'Frisch, grün und duftet herrlich. Lars\' Lieblingskraut.' },
+
   // Samen
   { id: 'samen-tulpe', name: 'Tulpenzwiebel', plural: 'Tulpenzwiebeln', category: 'samen', price: 5, description: 'Ab ins Beet damit! Gießen nicht vergessen.' },
   { id: 'samen-rose', name: 'Rosensamen', plural: 'Rosensamen', category: 'samen', price: 8, description: 'Ein Tütchen Rosensamen. Braucht ein bisschen Geduld.' },
   { id: 'samen-sonnenblume', name: 'Sonnenblumenkerne', plural: 'Sonnenblumenkerne', category: 'samen', price: 5, description: 'Zum Pflanzen – nicht zum Knabbern! (Na gut, einer.)' },
   { id: 'samen-lavendel', name: 'Lavendelsamen', plural: 'Lavendelsamen', category: 'samen', price: 6, description: 'Winzige Samen für duftenden Lavendel.' },
+  { id: 'samen-kamille', name: 'Kamillensamen', plural: 'Kamillensamen', category: 'samen', price: 5, description: 'Von Lars. „Ärztlich empfohlen – und von Oma.“' },
+  { id: 'samen-pfefferminze', name: 'Pfefferminzsamen', plural: 'Pfefferminzsamen', category: 'samen', price: 5, description: 'Daraus wächst Pfefferminze für Tee.' },
   { id: 'samen-vergissmeinnicht', name: 'Vergissmeinnicht-Samen', plural: 'Vergissmeinnicht-Samen', category: 'samen', price: 6, description: 'Für ein kleines Meer aus Blau.' },
 
   // Werkzeuge
@@ -76,6 +81,11 @@ const list: ItemDef[] = [
   { id: 'apfelkuchen', name: 'Apfelkuchen', plural: 'Apfelkuchen', category: 'essen', price: 180, description: 'Mit Zimt und Liebe. Oma sagt, ihrer ist besser. Oma sagt das immer.' },
   { id: 'crepes', name: 'Crêpes', plural: 'Crêpes', category: 'essen', price: 150, description: 'Hauchdünn und mit Pfirsich gefüllt – wie am Montmartre. Oh là là!' },
   { id: 'lavendelkekse', name: 'Lavendelkekse', plural: 'Lavendelkekse', category: 'essen', price: 90, description: 'Kekse mit einem Hauch Provence. Duften himmlisch.' },
+  // Tees aus Lars' Apotheke
+  { id: 'kamillentee', name: 'Kamillentee', plural: 'Tassen Kamillentee', category: 'essen', price: 80, description: 'Beruhigend und warm. Laut Oma hilft er gegen alles. Laut Lars gegen fast alles.' },
+  { id: 'pfefferminztee', name: 'Pfefferminztee', plural: 'Tassen Pfefferminztee', category: 'essen', price: 80, description: 'Frisch und belebend. Lars trinkt ihn literweise.' },
+  { id: 'lavendeltee', name: 'Lavendeltee', plural: 'Tassen Lavendeltee', category: 'essen', price: 90, description: 'Duftet nach Sommer in der Provence. Jens nennt ihn „Urlaub in der Tasse“.' },
+  { id: 'kraeutermischung', name: 'Omas Kräutermischung', plural: 'Tassen Kräutermischung', category: 'essen', price: 160, description: 'Kamille, Minze und Lavendel. Omas Rezept. Lars gibt es zu.' },
   { id: 'mixtape', name: 'Olis Mixtape', plural: 'Olis Mixtapes', category: 'geschenk', price: null, maxStack: 1, description: 'Eine Kassette mit Herzchen drauf. Seite A: Punk. Seite B: auch Punk. Aber mit Liebe.' },
   { id: 'foto-lina-oli', name: 'Foto von Lina & Oli', plural: 'Fotos von Lina & Oli', category: 'geschenk', price: null, maxStack: 1, description: 'Ihr zwei, lachend, mit Winston dazwischen. Auf der Rückseite: „Für immer. Dein Oli.“' },
   { id: 'keks', name: 'Omas Keks', plural: 'Omas Kekse', category: 'essen', price: 5, description: 'Butterkeks nach Oma Giselas Geheimrezept. Keine Widerrede!' },
@@ -157,6 +167,8 @@ export const GARDEN_FLOWERS: readonly GardenFlower[] = [
   { flower: 'sonnenblume', seed: 'samen-sonnenblume', color: '#f7c832', center: '#6a4a2a' },
   { flower: 'lavendel', seed: 'samen-lavendel', color: '#a98ad8', center: '#7a5ab8' },
   { flower: 'vergissmeinnicht', seed: 'samen-vergissmeinnicht', color: '#7ab8f0', center: '#f7e26a' },
+  { flower: 'kamille', seed: 'samen-kamille', color: '#ffffff', center: '#f7d26a' },
+  { flower: 'pfefferminze', seed: 'samen-pfefferminze', color: '#6fbf73', center: '#4f9a5a' },
 ];
 export const FLOWER_BY_SEED: Readonly<Record<string, GardenFlower>> = Object.fromEntries(GARDEN_FLOWERS.map((g) => [g.seed, g]));
 export const GARDEN_FLOWER: Readonly<Record<string, GardenFlower>> = Object.fromEntries(GARDEN_FLOWERS.map((g) => [g.flower, g]));

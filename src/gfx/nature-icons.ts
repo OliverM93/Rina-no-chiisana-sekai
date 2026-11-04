@@ -242,6 +242,14 @@ function flowerIcon(color: string, center: string, kind: string): Draw {
     if (kind === 'tulpe') {
       blob(ctx, [{ x: 13, y: 11, r: 5 }, { x: 19, y: 11, r: 5 }, { x: 16, y: 9, r: 5 }], color, darken(color, 0.3), 1.3);
       shine(ctx, 13, 9, 1.6, 0.6);
+    } else if (kind === 'pfefferminze') {
+      for (const [x, y, r] of [[12, 12, 0.5], [20, 12, -0.5], [13, 7, 0.4], [19, 7, -0.4], [16, 4, 0]] as const) {
+        ctx.save();
+        ctx.translate(x, y);
+        ctx.rotate(r);
+        ellipse(ctx, 0, 0, 3.2, 4.6, color, darken(color, 0.3), 0.9);
+        ctx.restore();
+      }
     } else if (kind === 'lavendel') {
       for (let k = 0; k < 6; k++) ellipse(ctx, 16 + (k % 2 ? 1.5 : -1.5), 4 + k * 2.4, 2.6, 2, color, darken(color, 0.25), 0.8);
     } else {

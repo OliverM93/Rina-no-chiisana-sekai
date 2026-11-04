@@ -139,8 +139,15 @@ Legende: ✅ erledigt · 🚧 in Arbeit · ⬜ geplant
   jeweils mit Andenken für Linas Regal; sein eigenes Gemälde als Herz-Geschenk
 - ✅ Französisch + Sächsisch, Kunst, Coaching, ein bisschen fabelhaft 🌈
 
+**M7c ✅ Lars & seine Praxis**
+- ✅ Ankündigungsbrief, Praxis mit Apotheke am Dorfplatz (grünes Kreuz, Kräuterkübel), Begrüßungsszene
+- ✅ Wortwitze („… und nicht mit e, sonst ist es ein See“), liebevolle Wortgefechte mit Oma
+- ✅ Neue Beet-Kräuter Kamille & Pfefferminze; Apotheke: Kamillen-, Pfefferminz-, Lavendeltee, Omas Kräutermischung
+- ✅ Täglicher Gesundheits-Check („🩺 Durchchecken lassen“) mit kleiner Belohnung
+- ✅ Bewohner gehen beim Ansprechen vor Winston
+
 - ⬜ Galerie (Kunstwerke sammeln & ausstellen)
-- ⬜ Story-Einzüge: Lars, Thalia (jeweils mit eigener Szene)
+- ⬜ Story-Einzug: Thalia (mit eigener Szene)
 - ⬜ Lars: Praxis/Apotheke (Heiltränke, Pflaster), Gesundheitstipps
 - ⬜ Olaf: Sparbuch mit kleinen Zinsen (Kredit gibt's schon seit M6a)
 - ⬜ Jens: Bistro/Kochstudio (Rezepte) & Galerie (Kunstwerke sammeln/ausstellen)

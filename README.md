@@ -83,6 +83,11 @@ oder Crêpes – die Bewohner lieben Selbstgekochtes. Jens liebt Kunst, spricht 
 („Ei verbibbsch, c'est magnifique!“) und reist gern um die Welt: Dann ist sein Bistro zu, und im Briefkasten
 liegt eine Postkarte mit einem Andenken.
 
+**Lars (M7c):** Linas großer Bruder eröffnet seine **Praxis mit Apotheke** am Dorfplatz – und hat immer einen
+Spruch auf Lager („So, und nicht mit e, sonst ist es ein See.“). Einmal am Tag lässt sich Lina von ihm
+**durchchecken** (mit kleiner Belohnung). Aus **Kamille** und **Pfefferminze** (neue Kräuter fürs Beet) und
+Lavendel braut sie in der Apotheke Tee. Oma findet natürlich, dass Ärzte nur dein Geld wollen.
+
 Im Menü: Aussehen ändern, speichern, **Spielstand exportieren/laden** (als Datei – praktisch zum Sichern
 oder für ein anderes Gerät), Vollbild, Hilfe.
 
@@ -128,6 +133,10 @@ und jede Jahreszeit sieht anders aus.
 | Bistro „Chez Jens“ | Kochstudio | Postkarte von Jens |
 |---|---|---|
 | ![Bistro](docs/screenshots/3d-bistro.png) | ![Kochstudio](docs/screenshots/3d-kochstudio.png) | ![Postkarte](docs/screenshots/3d-postkarte.png) |
+
+| Praxis Dr. Lars | Gesundheits-Check | Apotheke |
+|---|---|---|
+| ![Praxis](docs/screenshots/3d-praxis.png) | ![Check](docs/screenshots/3d-checkup.png) | ![Apotheke](docs/screenshots/3d-apotheke.png) |
 
 | Sammelbuch | Regen |
 |---|---|

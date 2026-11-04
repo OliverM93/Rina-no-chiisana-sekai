@@ -92,7 +92,8 @@ export function App({ session }: { session: Session }) {
       {state.panel?.kind === 'bank' && <BankPanel session={session} panel={state.panel} />}
       {state.panel?.kind === 'werkbank' && <CraftPanel session={session} />}
       {state.panel?.kind === 'kochstudio' && <CraftPanel session={session} station="kueche" />}
-      {state.panel && !['mail', 'book', 'catalog', 'bank', 'werkbank', 'kochstudio'].includes(state.panel.kind) && <InventoryPanel session={session} panel={state.panel} />}
+      {state.panel?.kind === 'apotheke' && <CraftPanel session={session} station="apotheke" />}
+      {state.panel && !['mail', 'book', 'catalog', 'bank', 'werkbank', 'kochstudio', 'apotheke'].includes(state.panel.kind) && <InventoryPanel session={session} panel={state.panel} />}
       {state.dialog && <DialogBox dialog={state.dialog} onClose={closeDialog} onChoose={chooseInDialog} />}
       {state.confirm && <Confirm request={state.confirm} />}
       {state.toast && <Toast key={state.toast.id} text={state.toast.text} icon={state.toast.icon} />}
