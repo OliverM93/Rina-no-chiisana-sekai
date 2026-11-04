@@ -590,7 +590,7 @@ export function makePraxis(): HouseModel {
   const tex = new THREE.CanvasTexture(sign);
   tex.colorSpace = THREE.SRGBColorSpace;
   const board = new THREE.Mesh(new THREE.PlaneGeometry(1.1, 0.42), new THREE.MeshLambertMaterial({ map: tex }));
-  board.position.set(-1.3, 1.25, zf + 0.06);
+  board.position.set(-1.3, 1.27, zf + 0.12);
   g.add(board);
   // Kräuterkübel neben der Tür
   for (const x of [-0.6, 0.6]) {

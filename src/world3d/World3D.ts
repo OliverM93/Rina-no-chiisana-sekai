@@ -741,7 +741,6 @@ export class World3D {
 
   private resolveTarget(player: Character): Target | null {
     const tile = player.tile;
-    if (this.winstonInFront(player)) return { kind: 'winston' };
     if (this.session.inside && this.homeOli?.visible) {
       const [hx, hy] = DIRS[player.facing];
       const dx = this.homeOli.x - player.x;
@@ -750,7 +749,8 @@ export class World3D {
       const oli = this.npcs.get('oli');
       if (oli && d < TILE * 1.4 && dx * hx + dy * hy > d * 0.3) return { kind: 'npc', npc: oli };
     }
-    if (this.session.inside) return this.homeTarget(player);
+    // Bewohner gehen vor – Winston wird gestreichelt, wenn sonst niemand vor Lina steht
+    if (this.session.inside) return this.winstonInFront(player) ? { kind: 'winston' } : this.homeTarget(player);
     const pickup = this.collectibles.pickupNear(tile, player.facing, player.x, player.y);
     if (pickup) return { kind: 'pickup', id: pickup };
     const [fx, fy] = DIRS[player.facing];
@@ -761,6 +761,7 @@ export class World3D {
       const d = Math.hypot(dx, dy);
       if (d < TILE * 1.35 && dx * fx + dy * fy > d * 0.35) return { kind: 'npc', npc };
     }
+    if (this.winstonInFront(player)) return { kind: 'winston' };
     const front = { x: tile.x + fx, y: tile.y + fy };
     // Stall direkt davor geht vor (Eier abholen), sonst Tiere streicheln
     const coop = this.yardItemAt(front.x, front.y);

@@ -89,7 +89,7 @@ export const VILLAGE_OBJECTS: readonly MapObjectDef[] = [
   // Dorfplatz
   { id: 'brunnen', kind: 'fountain', x: 26, y: 18 },
   { id: 'schwarzes-brett', kind: 'board', x: 25, y: 16 },
-  { id: 'laterne-platz-1', kind: 'lantern', x: 23, y: 16 },
+  { id: 'laterne-platz-1', kind: 'lantern', x: 22, y: 16 },
   { id: 'laterne-platz-2', kind: 'lantern', x: 31, y: 16 },
   { id: 'laterne-platz-3', kind: 'lantern', x: 23, y: 22 },
   { id: 'laterne-platz-4', kind: 'lantern', x: 31, y: 22 },
