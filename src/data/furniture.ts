@@ -90,6 +90,7 @@ export const FURNITURE: readonly FurnitureDef[] = [
   { id: 'schneekugel', name: 'New-York-Schneekugel', style: 'basis', gift: true, small: true, price: 400, w: 1, d: 1, description: 'Schütteln, und es schneit über den Wolkenkratzern.' },
   { id: 'daruma', name: 'Daruma', style: 'japanisch', gift: true, small: true, price: 400, w: 1, d: 1, description: 'Ein roter Glücksbringer aus Kyoto. Wenn ein Wunsch in Erfüllung geht, malt man ihm das zweite Auge.' },
   { id: 'gemaelde-jens', name: 'Gemälde von Jens', style: 'basis', gift: true, price: 2000, w: 1, d: 1, description: 'Ein echter Jens! Ein Dackel unter einem rosa Himmel. Signiert mit Herzchen.' },
+  { id: 'erste-hilfe', name: 'Erste-Hilfe-Schränkchen', style: 'basis', gift: true, small: true, price: 500, w: 1, d: 1, description: 'Weiß, mit grünem Kreuz und rosa Herzchen-Pflastern drin. Von Lars – „für alle Fälle“.' },
   // Garten (draußen, M6c)
   { id: 'zaun-holz', name: 'Astzaun', style: 'garten', crafted: true, outdoor: true, fence: true, price: 60, w: 1, d: 1, description: 'Ein Zaun aus Ästen, mit Bast zusammengebunden. Rustikal und gemütlich.' },
   { id: 'zaun-weiss', name: 'Weißer Lattenzaun', style: 'garten', outdoor: true, fence: true, price: 150, w: 1, d: 1, description: 'Ein weißer Gartenzaun wie aus dem Bilderbuch.' },

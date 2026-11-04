@@ -1,0 +1,113 @@
+/**
+ * Lars – Linas großer Bruder. Arzt mit Praxis & kleiner Apotheke am Dorfplatz.
+ * Groß, kräftig, rotblonder Vollbart – und immer einen (Wort-)Witz auf Lager.
+ * Mit Oma Gisela liefert er sich liebevolle Wortgefechte („Die Ärzte wollen nur dein Geld!“).
+ */
+import { LOOKS } from './looks';
+import type { NpcDef } from './types';
+
+const STRAND = { x: 20, y: 30, w: 14, h: 3 };
+const PLATZ = { x: 23, y: 16, w: 9, h: 7 };
+
+export const LARS: NpcDef = {
+  id: 'lars',
+  name: 'Lars',
+  personality: 'großer Bruder, Arzt mit Praxis & Apotheke, herzlich, beschützend, immer einen Wortwitz auf Lager',
+  appearance: LOOKS.lars,
+  home: 'praxis-lars',
+  movesIn: 'larsEingezogen',
+  schedule: [
+    { from: '00:00', label: 'schläft', activity: { kind: 'zuhause', sleeping: true } },
+    { from: '07:30', label: 'Joggen am Strand', activity: { kind: 'spazieren', area: STRAND } },
+    { from: '09:00', label: 'Praxis geöffnet', activity: { kind: 'stehen', x: 24, y: 16, facing: 'down' } },
+    { from: '12:30', label: 'Mittagspause auf dem Dorfplatz', activity: { kind: 'spazieren', area: PLATZ } },
+    { from: '14:00', label: 'Praxis geöffnet', activity: { kind: 'stehen', x: 24, y: 16, facing: 'down' } },
+    { from: '17:30', label: 'Feierabend-Runde am Strand', activity: { kind: 'spazieren', area: STRAND } },
+    { from: '19:00', label: 'Feierabend', activity: { kind: 'zuhause' } },
+    { from: '23:00', label: 'schläft', activity: { kind: 'zuhause', sleeping: true } },
+  ],
+  preferences: {
+    loves: ['pfefferminztee', 'fischbroetchen', 'apfelkuchen', 'dorsch', 'hecht'],
+    likes: ['apfel', 'birne', 'ei', 'ruehrei', 'obstsalat', 'kamillentee', 'barsch', 'hering', 'pfefferminze', 'kamille', 'hirschkaefer', 'glitzerstein'],
+    dislikes: ['weinbergschnecke', 'ohrenqualle', 'aal'],
+  },
+  dialogue: {
+    greetings: [
+      { text: ['Moin, Schwesterherz!', 'Gut geschlafen? Ich frag aus medizinischen Gründen. Und weil ich dein Bruder bin.'], when: { phases: ['morgendaemmerung', 'morgen'] } },
+      { text: ['Na, Kleine?', 'Weißt du, was ein Arzt im Garten macht? Er pflanzt Rezepte. 🌱'] },
+      { text: ['Hey Lina!', 'Ich hab heute schon drei Leute behandelt. Zwei davon waren Oma. Sie kam zweimal, um mir zu sagen, dass sie nicht krank ist.'] },
+      { text: ['Lina! Gut siehst du aus.', 'Diagnose: kerngesund. Nebenwirkungen: gute Laune.'] },
+      { text: ['Na, Feierabend?', 'Ich auch. Ab jetzt bin ich nur noch Bruder. Ohne Kittel. Mit Witzen.'], when: { phases: ['abend', 'abenddaemmerung'] } },
+      { text: ['Alles Gute zum Geburtstag, Schwesterherz! 🎂', 'Ich hab dich gründlich untersucht: Du bist ein Jahr älter. Aber kein bisschen weniger toll.'], when: { tags: ['geburtstag-lina'] }, weight: 10 },
+      { text: ['Bei dem Regen: Schirm nicht vergessen!', 'Sonst bist du nachher nicht nur nass, sondern auch noch erkältet. Und dann musst du zu mir. Und ich bin teuer. … Spaß.'], when: { tags: ['wetter-regen'] }, weight: 3 },
+      { text: ['Schnee! Schal an, Mütze auf!', 'Ärztliche Anordnung. Und brüderliche auch.'], when: { tags: ['wetter-schnee'] }, weight: 3 },
+    ],
+    chat: [
+      { text: ['Wie schreibt man eigentlich „Praxis Lars“ richtig?', 'Mit Lars und Praxis.', '… So, und nicht mit e, sonst ist es ein See.'], weight: 2 },
+      { text: ['Ich hab einen Witz über Chemie.', 'Aber da kommt eh keine Reaktion.'] },
+      { text: ['Was ist grün und klopft an die Tür?', 'Ein Klopfsalat. 🥬'] },
+      { text: ['Wie nennt man einen Bumerang, der nicht zurückkommt?', 'Stock.'] },
+      { text: ['Warum können Seeräuber keinen Kreis zeichnen?', 'Weil sie Pi raten. 🏴‍☠️'] },
+      { text: ['Was liegt unter einem Baum und duftet nach Keks?', 'Ein schattiges Plätzchen.'] },
+      { text: ['Mein Lieblingsinstrument?', 'Das Stethoskop. Da hör ich immer die besten Herztöne. ❤️'] },
+      { text: ['Ich hab Oma heute den Blutdruck gemessen.', 'Sie hat mir dabei erklärt, dass Ärzte nur dein Geld wollen.', 'Ihr Blutdruck war super. Meiner danach nicht mehr.'] },
+      { text: ['Oma sagt, gegen alles hilft Kamillentee.', 'Das Schlimme ist: Manchmal hat sie recht. Sag ihr das bloß nicht.'] },
+      { text: ['Ich hab Winston untersucht.', 'Diagnose: zu kurze Beine, zu langer Körper, zu viel Niedlichkeit. Unheilbar.'] },
+      { text: ['Jens hat mir einen Smoothie gemixt.', 'Grün. Mit Glitzer. Ich hab nicht gefragt, was drin war. Medizinisch gesehen ein Fehler.'], when: { tags: ['jens-da'] } },
+      { text: ['Oli hat mich gefragt, ob ich mit ins Gym komme.', 'Ich hab Ja gesagt. Ich bin Arzt – ich weiß, wo die Muskelkater wohnen.'], when: { tags: ['oli-da'] } },
+      { text: ['Weißt du noch, wie ich dir früher Pflaster auf jedes Knie geklebt hab?', 'Auch wenn gar nichts war. Hauptsache, du hast gelacht.', 'Mach ich heute noch so. Nur mit mehr Ahnung.'], when: { minHearts: 2 } },
+      { text: ['Ich bin froh, dass ich hier bin, Schwesterherz.', 'Ein Dorf mit dir drin – das ist das beste Rezept, das ich kenne.'], when: { minHearts: 3 } },
+    ],
+    gifts: {
+      liebt: [['Oh, Lina! Das ist ja großartig!', 'Das verschreib ich mir ab sofort selbst. Dreimal täglich.']],
+      mag: [['Danke, Kleine!', 'Das ist richtig lieb von dir.']],
+      neutral: [['Für mich? Danke!', 'Ich leg das mal ins Wartezimmer. Da freut sich bestimmt jemand.']],
+      'mag-nicht': [['Hm. Danke …', 'Ich hab das untersucht. Diagnose: nicht so meins. Aber die Geste war gesund!']],
+    },
+    giftsByItem: {
+      pfefferminztee: ['Pfefferminztee! Mein Lieblingstee.', 'Gut für den Magen, gut für die Nerven – und gut für Brüder, die Wortwitze machen.'],
+      kamillentee: ['Kamillentee …', 'Hat Oma dich geschickt? … Danke trotzdem. Er ist ja wirklich gut. Pssst.'],
+    },
+    giftRepeat: ['Noch was? Du verwöhnst mich, Schwesterherz!', 'Das notier ich in deiner Akte. Unter „lieb“.'],
+    heartUp: [['Weißt du was, Lina?', 'Als großer Bruder ist es mein Job, auf dich aufzupassen.', 'Aber ehrlich gesagt passt du mindestens genauso gut auf mich auf.']],
+    atHome: [['Aus der Praxis kommt leises Gelächter.', '„Bin gleich da! Ich erzähl gerade dem Skelett einen Witz. Es lacht sich schon krumm!“']],
+    atHomeSleeping: [['Die Praxis ist dunkel.', 'An der Tür: „Sprechstunde morgen ab 9. Bei Notfällen: Oma fragen. Die weiß eh alles besser.“']],
+    goodbye: ['Bis dann, Schwesterherz!', 'Pass auf dich auf – ärztliche Anordnung!', 'Tschüss, Kleine! Und viel Wasser trinken!'],
+  },
+  dailyTreat: { itemId: 'samen-kamille', chance: 0.35, lines: ['Ach, hier – Kamillensamen.', 'Für dein Beet. Und wenn Oma fragt: Die sind von mir. Ich bin nämlich auch für Kräuter.'] },
+  letters: [
+    { id: 'tipp', subject: 'Gesundheitstipp vom Bruder', body: 'Schwesterherz,\n\nheute schon Wasser getrunken? Nein? Dann jetzt!\n\nUnd danach einen Apfel. An apple a day keeps the doctor away.\n\n… Wobei ich ja der Doctor bin. Dann lieber zwei Äpfel und mich trotzdem besuchen.\n\nDein Lars', gift: { itemId: 'apfel', count: 2 } },
+    { id: 'witz', subject: 'Witz des Tages', body: 'Lina,\n\nkommt ein Pferd in die Praxis. Sagt der Arzt: „Warum so ein langes Gesicht?“\n\nSo. Jetzt hast du gelacht. Das ist gesund.\n\nDein Lars 😄' },
+    { id: 'kraeuter', subject: 'Kräuter für dein Beet', body: 'Schwesterherz,\n\nhier sind Pfefferminzsamen. Daraus kannst du in meiner Apotheke Tee machen.\n\nOma behauptet, sie hätte mir das beigebracht. Hat sie nicht. … Okay, ein bisschen.\n\nLars', gift: { itemId: 'samen-pfefferminze', count: 2 } },
+  ],
+  heartLetters: {
+    1: { id: 'herz-1', subject: 'Omas Lieblingstee', body: 'Lina,\n\nich hab dir aufgeschrieben, wie man eine richtig gute Kräutermischung macht. Kamille, Minze und Lavendel.\n\nOma sagt, das wäre ihr Rezept. Es ist ihr Rezept. Ich geb\'s zu.\n\nDein Lars', gift: { itemId: 'rezept-kraeutermischung', count: 1 } },
+    3: { id: 'herz-3', subject: 'Für dein Badezimmer', body: 'Schwesterherz,\n\nein kleiner Erste-Hilfe-Schrank. Mit Pflastern in Rosa. Mit Herzchen drauf.\n\nNicht, weil du sie brauchst. Sondern weil sie hübsch sind.\n\nDein großer Bruder', gift: { itemId: 'erste-hilfe', count: 1 } },
+  },
+};
+
+export const LARS_ANNOUNCEMENT = {
+  id: 'einzug',
+  subject: 'Doktor kommt!',
+  body: 'Schwesterherz,\n\nich hab eine Praxis gefunden – in eurem Dorf! Mit kleiner Apotheke.\n\nMorgen zieh ich ein. Bring gute Laune mit, die ist ansteckend. Und ich bin Arzt, ich muss das wissen.\n\nDein Lars 🩺',
+};
+
+export const LARS_WELCOME: readonly string[] = [
+  'Lina! Schwesterherz! 🤗',
+  'Lass dich drücken. … Okay, du bist kleiner geworden. Oder ich größer.',
+  'Meine Praxis steht jetzt am Dorfplatz – mit einer kleinen Apotheke drin.',
+  'Da kannst du aus Kräutern Tee machen. Kamille, Pfefferminze … Samen schenk ich dir.',
+  'Und einmal am Tag check ich dich durch. Ärztliche Anordnung!',
+  'So. Und jetzt muss ich zu Oma. Die hat schon dreimal angerufen, dass sie gesund ist.',
+];
+
+/** Gesundheits-Check (einmal am Tag) */
+export const CHECKUP_LINES: readonly (readonly string[])[] = [
+  ['Mund auf, Zunge raus, „Aaah“ sagen.', '… Sehr schön. Und jetzt „Bäääh“. Rein aus Spaß.', 'Diagnose: kerngesund! 💚'],
+  ['Ich hör mal dein Herz ab.', '… Bumm-bumm. Bumm-bumm. Ganz regelmäßig.', 'Und ganz schön groß, dieses Herz. Für alle im Dorf.'],
+  ['Reflexe testen!', '*klopft aufs Knie* … Ah, das Bein zuckt. Und du hast gekichert.', 'Beides völlig normal. Bestens!'],
+  ['Augen auf! Folge meinem Finger.', 'Links … rechts … oben … Winston.', 'Ah, beim Dackel bist du hängen geblieben. Verständlich. Alles prima!'],
+];
+
+/** Kleine Belohnung nach dem Check */
+export const CHECKUP_GIFTS = ['apfel', 'samen-kamille', 'samen-pfefferminze', 'keks'] as const;

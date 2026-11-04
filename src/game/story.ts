@@ -7,10 +7,11 @@ import { NPC_BY_ID } from '../data/npcs';
 import { OLAF_ANNOUNCEMENT } from '../data/npcs/olaf';
 import { OLI_ANNOUNCEMENT } from '../data/npcs/oli';
 import { JENS_ANNOUNCEMENT, jensTravels, travelPostcard } from '../data/npcs/jens';
+import { LARS_ANNOUNCEMENT } from '../data/npcs/lars';
 import { sendLetter } from './gameplay';
 import type { Session } from './session';
 
-export type StoryEvent = 'olaf-angekuendigt' | 'olaf-eingezogen' | 'oli-angekuendigt' | 'oli-eingezogen' | 'jens-angekuendigt' | 'jens-eingezogen' | 'jens-reist';
+export type StoryEvent = 'olaf-angekuendigt' | 'olaf-eingezogen' | 'oli-angekuendigt' | 'oli-eingezogen' | 'jens-angekuendigt' | 'jens-eingezogen' | 'jens-reist' | 'lars-angekuendigt' | 'lars-eingezogen';
 
 /** Einmal beim Laden und bei jedem neuen Tag aufrufen. Gibt neue Ereignisse zurück. */
 export function checkStory(session: Session): StoryEvent[] {
@@ -65,6 +66,23 @@ export function checkStory(session: Session): StoryEvent[] {
     if (!letter || daysBetween(letter.day, today) >= 1) {
       f.jensEingezogen = true;
       out.push('jens-eingezogen');
+    }
+  }
+  // Lars: vier Tage nach Jens kommt sein Brief, am Tag darauf eröffnet er seine Praxis
+  if (f.jensBegruesst && !f.larsAngekuendigt) {
+    const jensLetter = data.mail.letters.find((l) => l.id === 'jens-einzug');
+    if (!jensLetter || daysBetween(jensLetter.day, today) >= 4) {
+      const lars = NPC_BY_ID.lars;
+      if (lars) sendLetter(session, lars, LARS_ANNOUNCEMENT, 'lars-einzug');
+      f.larsAngekuendigt = true;
+      out.push('lars-angekuendigt');
+    }
+  }
+  if (f.larsAngekuendigt && !f.larsEingezogen) {
+    const letter = data.mail.letters.find((l) => l.id === 'lars-einzug');
+    if (!letter || daysBetween(letter.day, today) >= 1) {
+      f.larsEingezogen = true;
+      out.push('lars-eingezogen');
     }
   }
   // Jens auf Reisen: Postkarte mit Andenken (einmal pro Reisetag)

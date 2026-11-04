@@ -38,3 +38,13 @@ describe('Onkel Jens', () => {
     });
   });
 });
+
+describe('Lars', () => {
+  it('hat seinen Lieblingsspruch und Kräuter fürs Beet', async () => {
+    const { LARS } = await import('./npcs/lars');
+    const { GARDEN_FLOWER } = await import('./items');
+    expect(LARS.dialogue.chat.some((c) => [c.text].flat().join(' ').includes('nicht mit e, sonst ist es ein See'))).toBe(true);
+    expect(GARDEN_FLOWER.kamille?.seed).toBe('samen-kamille');
+    expect(GARDEN_FLOWER.pfefferminze?.seed).toBe('samen-pfefferminze');
+  });
+});

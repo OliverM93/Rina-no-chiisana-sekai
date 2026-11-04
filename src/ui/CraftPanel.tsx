@@ -15,10 +15,11 @@ import { showToast, ui, useSessionVersion } from './store';
 
 const TEXT = {
   werkbank: { title: '🔨 Opas Werkbank', intro: 'Aus Ästen, Steinen, Muscheln & Blumen wird etwas Schönes.', button: '🔨 Bauen', done: 'gebaut! Ab in die Tasche – aufstellen mit „Einrichten“.' },
+  apotheke: { title: '🌿 Apotheke von Dr. Lars', intro: '„Tee hilft immer. Sagt Oma. Und ausnahmsweise geb ich ihr recht.“', button: '🫖 Aufbrühen', done: 'aufgebrüht! Wohl bekomm\'s!' },
   kueche: { title: '👨‍🍳 Kochstudio „Chez Jens“', intro: '„Kochen ist wie Malen, chérie – ein Klecks hiervon, ein Klecks davon!“', button: '🍳 Kochen', done: 'gekocht! Magnifique! Ab in die Tasche.' },
 };
 
-export function CraftPanel({ session, station = 'werkbank' }: { session: Session; station?: 'werkbank' | 'kueche' }) {
+export function CraftPanel({ session, station = 'werkbank' }: { session: Session; station?: 'werkbank' | 'kueche' | 'apotheke' }) {
   const WORKBENCH = RECIPES.filter((r) => (r.station ?? 'werkbank') === station);
   const T = TEXT[station];
   useSessionVersion(session);
