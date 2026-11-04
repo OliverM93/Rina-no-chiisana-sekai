@@ -18,6 +18,11 @@ export const OLI: NpcDef = {
   appearance: LOOKS.oli,
   home: 'haus-lina',
   movesIn: 'oliEingezogen',
+  birthday: { day: 29, month: 7 },
+  birthdayLines: {
+    greeting: ['Lini! Heute ist mein Geburtstag! 🎂', 'Ich wollte eigentlich keine große Sache draus machen …', '… aber wenn du mir einen Kuss gibst, ist es der beste Geburtstag aller Zeiten. 💕'],
+    thanks: ['Ein Geschenk für mich?! An meinem Geburtstag? 🥹', 'Lini, du bist das allerbeste Geschenk. Aber das hier nehm ich trotzdem. Danke!'],
+  },
   schedule: [
     { from: '00:00', label: 'schläft', activity: { kind: 'zuhause', sleeping: true } },
     { from: '07:00', label: 'macht Kaffee', activity: { kind: 'zuhause' } },

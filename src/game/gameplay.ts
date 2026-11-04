@@ -12,7 +12,7 @@ import { addItem as invAdd, removeItem as invRemove, takeSlot } from '../core/in
 import { deliver, mailDue, unreadCount } from '../core/mail';
 import { hashString, mulberry32 } from '../core/rng';
 import { formatIsoDay, getDayPhase, getSeason, isSameDayMonth } from '../core/time';
-import { festivalsOn } from '../core/festivals';
+import { daysUntilBirthday, festivalsOn } from '../core/festivals';
 import { weatherAt } from '../core/weather';
 import { terrainAt } from '../core/worldmap';
 import { BEACH_FINDS, BEACH_FINDS_PER_DAY, CURRENCY, itemCountLabel, itemDef, maxStackOf, ROCK_FINDS } from '../data/items';
@@ -160,6 +160,12 @@ function dialogueContext(session: Session, npcId: string, firstToday: boolean): 
   if (session.data?.flags.thaliaEingezogen) tags.push('thalia-da');
   if (isPartyTime(session)) tags.push('party');
   for (const f of festivalsOn(now, session.data?.player.birthday)) tags.push(`fest-${f}`);
+  for (const n of NPCS) {
+    if (!n.birthday) continue;
+    const d = daysUntilBirthday(now, n.birthday);
+    if (d === 0) tags.push(`geburtstag-${n.id}`);
+    else if (d <= 7) tags.push(`bald-geburtstag-${n.id}`);
+  }
   if (session.data?.yard.items.some((i) => FURNITURE_BY_ITEM[i.itemId]?.def.coop === 'huhn')) tags.push('huehner');
   if (session.data?.yard.items.some((i) => FURNITURE_BY_ITEM[i.itemId]?.def.coop === 'wachtel')) tags.push('wachteln');
   if (w.rainbow) tags.push('regenbogen');
@@ -218,7 +224,8 @@ export function talkToNpc(session: Session, npcId: string): TalkOutcome {
   const lines: string[] = [];
   if (result.firstToday) {
     const fest = festTalk(session, npcId);
-    if (fest.length > 0) lines.push(...fest);
+    if (npc.birthday && npc.birthdayLines && isSameDayMonth(session.clock(), npc.birthday)) lines.push(...npc.birthdayLines.greeting);
+    else if (fest.length > 0) lines.push(...fest);
     else lines.push(...pickLine(npc.dialogue.greetings, ctx));
     const treat = npc.dailyTreat;
     if (treat && dayRandom(session, `${npcId}:treat`)() < treat.chance) {
@@ -257,6 +264,13 @@ export function giftToNpc(session: Session, npcId: string, itemId: string): Gift
   } else {
     const special = npc.dialogue.giftsByItem[itemId];
     lines.push(...(special ?? pickByDay(session, `${npcId}:gift:${itemId}`, npc.dialogue.gifts[r.reaction])));
+  }
+  // Geburtstagsgeschenk: doppelte Freude
+  if (!r.repeatToday && npc.birthday && isSameDayMonth(session.clock(), npc.birthday)) {
+    const before = heartsFor(st.points);
+    st.points += r.gained;
+    if (npc.birthdayLines) lines.push(...npc.birthdayLines.thanks);
+    if (!r.heartUp && heartsFor(st.points) > before) handleHeartUp(session, npc, st, lines);
   }
   if (r.heartUp) handleHeartUp(session, npc, st, lines);
   session.changed();

@@ -162,7 +162,8 @@ Legende: ✅ erledigt · 🚧 in Arbeit · ⬜ geplant
 - ✅ Jeder Bewohner hat eigene Fest-Sprüche; Geschenke einmal pro Fest und Jahr
 
 - ⬜ Galerie (Kunstwerke sammeln & ausstellen)
-- ⬜ Geburtstage der Bewohner
+- ✅ Olis Geburtstag (29.07.): eigene Sprüche, Geschenke freuen doppelt, Oma erinnert vorher daran
+- ⬜ Weitere Geburtstage der Bewohner (Daten noch offen) – Olaf & Jens sind Zwillinge
 - ⬜ Lars: Praxis/Apotheke (Heiltränke, Pflaster), Gesundheitstipps
 - ⬜ Olaf: Sparbuch mit kleinen Zinsen (Kredit gibt's schon seit M6a)
 - ⬜ Jens: Bistro/Kochstudio (Rezepte) & Galerie (Kunstwerke sammeln/ausstellen)

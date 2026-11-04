@@ -46,6 +46,14 @@ export function festivalsOn(date: Date, birthday?: DayMonth): FestivalId[] {
   return out;
 }
 
+/** Tage bis zum nächsten Geburtstag (0 = heute) */
+export function daysUntilBirthday(date: Date, b: DayMonth): number {
+  const today = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+  let next = new Date(date.getFullYear(), b.month - 1, b.day);
+  if (next < today) next = new Date(date.getFullYear() + 1, b.month - 1, b.day);
+  return Math.round((next.getTime() - today.getTime()) / 86400000);
+}
+
 /** Feuerwerk? (Silvester ab 20 Uhr bis Neujahr 1 Uhr) */
 export function isFireworkTime(date: Date): boolean {
   const m = date.getMonth() + 1;

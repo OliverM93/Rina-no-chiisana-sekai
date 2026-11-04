@@ -11,7 +11,7 @@ import { DPR, TILE, UNIT } from '../config';
 import { CollisionGrid, findPath, nearestWalkable, type Tile } from '../core/grid';
 import { checkPlacement, type Exit, exitAt, footprint, type Room, type RoomLayout, type Rotation } from '../core/room';
 import { FURNITURE_BY_ITEM, furnitureInfo } from '../data/furniture';
-import { getDaylight } from '../core/time';
+import { getDaylight, isSameDayMonth } from '../core/time';
 import { isWatered, spotKey } from '../core/garden';
 import { WEATHER_LABELS } from '../core/weather';
 import { applyMapFlags, findInteraction, isActive, type MapObject, OBJECT_KINDS, objectById, terrainAt, tileOf } from '../core/worldmap';
@@ -602,9 +602,11 @@ export class World3D {
     const fests = todaysFestivals(this.session);
     this.festivals.refresh(fests);
     const day = this.session.today();
-    if (fests.length > 0 && this.festToastDay !== day) {
+    const bday = NPCS.find((n) => n.birthday && (!n.movesIn || this.session.data?.flags[n.movesIn]) && isSameDayMonth(this.session.clock(), n.birthday));
+    if ((fests.length > 0 || bday) && this.festToastDay !== day) {
       this.festToastDay = day;
-      window.setTimeout(() => this.session.bus.emit('toast', { text: FESTIVAL_INFO[fests[0]].toast }), 3500);
+      const text = fests.length > 0 ? FESTIVAL_INFO[fests[0]].toast : `🎂 Heute hat ${bday?.name} Geburtstag! Vielleicht ein kleines Geschenk? 🎁`;
+      window.setTimeout(() => this.session.bus.emit('toast', { text }), 3500);
     }
   }
 
