@@ -496,21 +496,39 @@ export function makeBistro(): HouseModel {
   for (let i = 0; i < 9; i++) g.add(s(0.07, 0.05, 0.05, i % 2 ? '#ffffff' : '#f4a3b8', -2 + i * 0.5, 1.4, zf + 0.64));
   // Schild über der Tür
   const sign = document.createElement('canvas');
-  sign.width = 256;
-  sign.height = 80;
+  sign.width = 200;
+  sign.height = 230;
   const ctx = sign.getContext('2d') as CanvasRenderingContext2D;
   ctx.fillStyle = '#2b2a31';
-  ctx.fillRect(0, 0, 256, 80);
-  ctx.fillStyle = '#f7d26a';
-  ctx.font = 'italic 800 44px "Nunito Variable", Nunito, serif';
+  ctx.fillRect(0, 0, 200, 230);
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
-  ctx.fillText('Chez Jens', 128, 42);
+  ctx.fillStyle = '#f7d26a';
+  ctx.font = 'italic 800 40px "Nunito Variable", Nunito, serif';
+  ctx.fillText('Chez', 100, 50);
+  ctx.fillText('Jens', 100, 95);
+  ctx.fillStyle = '#ffffff';
+  ctx.font = '700 22px "Nunito Variable", Nunito, sans-serif';
+  ctx.fillText('Bistro & Kochstudio', 100, 145);
+  ctx.fillStyle = '#f4a3b8';
+  ctx.fillText('♥ Croissants ♥', 100, 185);
   const tex = new THREE.CanvasTexture(sign);
   tex.colorSpace = THREE.SRGBColorSpace;
-  const board = new THREE.Mesh(new THREE.PlaneGeometry(1.3, 0.4), new THREE.MeshLambertMaterial({ map: tex }));
-  board.position.set(0, 1.82, zf + 0.06);
-  g.add(board);
+  // Kreide-Aufsteller vor der Tür (rechts)
+  const stand = new THREE.Group();
+  stand.position.set(0.85, 0, zf + 0.55);
+  for (const side of [1, -1]) {
+    const leaf = new THREE.Group();
+    leaf.rotation.x = side * 0.22;
+    leaf.add(b(0.5, 0.62, 0.03, '#8a5a3a', 0, 0.31, 0));
+    if (side === 1) {
+      const face = new THREE.Mesh(new THREE.PlaneGeometry(0.44, 0.5), new THREE.MeshLambertMaterial({ map: tex }));
+      face.position.set(0, 0.33, 0.017);
+      leaf.add(face);
+    }
+    stand.add(leaf);
+  }
+  g.add(stand);
   // Café-Tischchen mit Stühlen links und rechts
   for (const x of [-1.6, 1.6]) {
     g.add(c(0.28, 0.03, '#f7f5ec', x, 0.62, zf + 0.9));

@@ -130,9 +130,17 @@ Legende: ✅ erledigt · 🚧 in Arbeit · ⬜ geplant
 - ✅ Gemeinsame Momente: 🧺 Picknick (tagsüber) und 🌠 Sterne gucken mit Sternschnuppen (abends)
 - ✅ Spielstand Version 10
 
-**M7b ⬜** Jens zieht ein: Bistro & Kochstudio (aus Eiern, Obst, Fisch … kochen), Galerie
+**M7b ✅ Onkel Jens & sein Bistro**
+- ✅ Ankündigungsbrief, Bistro „Chez Jens“ auf dem Bauplatz neben Oma (Markise, Café-Tischchen, Staffelei,
+  Kreide-Aufsteller, Regenbogenfähnchen), Begrüßungsszene
+- ✅ Kochstudio: 7 Gerichte aus Eiern, Obst, Fisch, Lavendel & Keksen (Rührei, Obstsalat, Fischbrötchen,
+  Apfelkuchen, Crêpes …) – Rezepte von Anfang an, beim ersten Lavendel und als Herz-Briefe
+- ✅ Jens reist (ungefähr jeden 7. Tag): Postkarte aus Paris, Venedig, Amsterdam, Sevilla, New York, Kyoto –
+  jeweils mit Andenken für Linas Regal; sein eigenes Gemälde als Herz-Geschenk
+- ✅ Französisch + Sächsisch, Kunst, Coaching, ein bisschen fabelhaft 🌈
 
-- ⬜ Story-Einzüge: Lars, Jens, Thalia (jeweils mit eigener Szene)
+- ⬜ Galerie (Kunstwerke sammeln & ausstellen)
+- ⬜ Story-Einzüge: Lars, Thalia (jeweils mit eigener Szene)
 - ⬜ Lars: Praxis/Apotheke (Heiltränke, Pflaster), Gesundheitstipps
 - ⬜ Olaf: Sparbuch mit kleinen Zinsen (Kredit gibt's schon seit M6a)
 - ⬜ Jens: Bistro/Kochstudio (Rezepte) & Galerie (Kunstwerke sammeln/ausstellen)
