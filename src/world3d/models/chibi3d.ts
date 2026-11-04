@@ -11,7 +11,9 @@ import { outfitFor, shoesFor, type Appearance } from '../../core/appearance';
 import type { Season } from '../../core/time';
 import { mulberry32 } from '../../core/rng';
 import { darken, lighten, mixHex } from '../../style/palette';
-import { mesh, toon } from '../materials';
+import { mesh, toon, toonUnique } from '../materials';
+import { drawPrint } from '../../gfx/prints';
+import { BAND_NAMES, PRINTED, type PrintKind } from '../../data/wardrobe';
 
 const sphere = new THREE.SphereGeometry(1, 20, 16);
 const sphereLow = new THREE.SphereGeometry(1, 12, 9);
@@ -19,6 +21,8 @@ const cylinder = new THREE.CylinderGeometry(1, 1, 1, 16);
 const capsule = new THREE.CapsuleGeometry(1, 1, 4, 10);
 const cone = new THREE.ConeGeometry(1, 1, 7);
 const box = new THREE.BoxGeometry(1, 1, 1);
+/** weites Hosenbein (unten breiter) */
+const flare = new THREE.CylinderGeometry(0.72, 1, 1, 14);
 
 const FRONT = Math.PI / 2;
 
@@ -230,6 +234,32 @@ function taperChin<G extends THREE.BufferGeometry>(geo: G, r: number, amount = C
   return geo;
 }
 
+/** stabiler Tages-Hash (für wechselnde Bandshirts) */
+function hashDay(day: string): number {
+  let h = 2166136261;
+  for (const ch of day) h = Math.imul(h ^ ch.charCodeAt(0), 16777619);
+  return h >>> 0;
+}
+
+/**
+ * Brust-Aufdruck: ein Streifen eines Kegelmantels knapp über dem Oberteil.
+ * `band` = Höhenbereich als Anteil der Oberteil-Höhe (-0.5 … 0.5), `arc` = Breite im Bogenmaß.
+ */
+function printDecal(tex: THREE.Texture, taper: number, sx: number, sy: number, sz: number, y: number, band: [number, number], arc: number): THREE.Mesh {
+  const r = (f: number) => ((1 + taper) / 2 - (1 - taper) * f) * 1.018;
+  const [f0, f1] = band;
+  const geo = new THREE.CylinderGeometry(r(f1), r(f0), f1 - f0, 18, 1, true, -arc / 2, arc);
+  const mat = toonUnique('#ffffff');
+  mat.map = tex;
+  mat.transparent = true;
+  mat.alphaTest = 0.35;
+  const m = new THREE.Mesh(geo, mat);
+  m.scale.set(sx, sy, sz);
+  m.position.y = y + ((f0 + f1) / 2) * sy;
+  m.receiveShadow = true;
+  return m;
+}
+
 const sphereOval = taperChin(new THREE.SphereGeometry(1, 24, 18), 1);
 
 /** Punkt auf einer Kugel: theta von oben (0) nach unten (π), phi = π/2 ist vorne (+Z) */
@@ -420,10 +450,11 @@ export class Chibi3D {
   private handY = 0;
   private held: THREE.Object3D | null = null;
 
-  /** Jahreszeit bestimmt bei `shoes: 'saison'` die Schuhe. */
+  /** Jahreszeit bestimmt bei `shoes: 'saison'` die Schuhe; `day` (JJJJ-MM-TT) wählt wechselnde Kleidung. */
   constructor(
     appearance: Appearance,
     private readonly season: Season = 'sommer',
+    private readonly day = '',
   ) {
     this.root.add(this.body);
     this.build(appearance);
@@ -466,7 +497,9 @@ export class Chibi3D {
     const R = 0.27 * (0.95 + 0.05 * h);
     this.hipY = legLen + 0.04;
     const skin = a.skinTone;
-    const o = outfitFor(a, this.season);
+    const o = outfitFor(a, this.season, this.day);
+    const printed = o === 'hawaii' || o === 'sport' || o === 'radierkopf' ? PRINTED[o] : null;
+    const cargo = o === 'bandshirt' || o === 'polo' || o === 'jacke';
 
     // Farben je Outfit
     const jeans = '#5b6f99';
@@ -513,6 +546,17 @@ export class Chibi3D {
       case 'fleece':
         pants = a.accentColor === a.outfitColor ? (o === 'fleece' ? jeans : '#3a3a44') : a.accentColor;
         break;
+      case 'hawaii':
+      case 'sport':
+      case 'radierkopf':
+        top = PRINTED[o].cloth;
+        pants = PRINTED[o].pants;
+        break;
+      case 'bandshirt':
+      case 'polo':
+      case 'jacke':
+        pants = a.accentColor;
+        break;
     }
     const shoes = shoesFor(a, this.season);
     let legColor = skirtColor && o !== 'mantel' ? (o === 'kleid' ? '#3a3440' : skin) : pants;
@@ -527,7 +571,18 @@ export class Chibi3D {
         // kurze Hose: oben Stoff, darunter Beine
         leg.add(part(cylinder, skin, 0.04 * Math.min(1.15, bw), legLen, 0.04, 0, -legLen / 2, 0));
         leg.add(part(cylinder, pants, 0.054 * Math.min(1.15, bw), legLen * 0.42, 0.054, 0, -legLen * 0.21, 0));
-      } else leg.add(part(cylinder, legColor, 0.044 * Math.min(1.15, bw), legLen, 0.044, 0, -legLen / 2, 0));
+      } else if (printed) {
+        // weite Anzughose: unten ausgestellt, mit Bügelfalte
+        leg.add(part(flare, legColor, 0.066 * Math.min(1.15, bw), legLen, 0.064, 0, -legLen / 2, 0));
+        leg.add(part(box, lighten(legColor, 0.12), 0.004, legLen * 0.9, 0.004, 0, -legLen / 2, 0.056));
+      } else {
+        leg.add(part(cylinder, legColor, 0.044 * Math.min(1.15, bw), legLen, 0.044, 0, -legLen / 2, 0));
+        if (cargo) {
+          // Cargohose: aufgesetzte Seitentasche mit Klappe
+          leg.add(part(box, darken(legColor, 0.12), 0.014, legLen * 0.3, 0.05, side * 0.044, -legLen * 0.45, 0));
+          leg.add(part(box, darken(legColor, 0.2), 0.016, legLen * 0.06, 0.052, side * 0.045, -legLen * 0.31, 0));
+        }
+      }
       const footY = -legLen - 0.005;
       if (shoes === 'stiefel') {
         // Schnürstiefel: schwarzer Schaft, klobige Sohle mit gelber Naht
@@ -537,6 +592,14 @@ export class Chibi3D {
         leg.add(part(cylinder, '#e3c04f', 0.067, 0.006, 0.088, 0, footY - 0.02, 0.022));
         leg.add(part(cylinder, '#3a3439', 0.066, 0.02, 0.087, 0, footY - 0.032, 0.022));
         for (let i = 0; i < 3; i++) leg.add(part(box, '#4a454c', 0.03, 0.005, 0.006, 0, -legLen * (0.62 + i * 0.12), 0.05));
+      } else if (shoes === 'chunky' || shoes === 'chunky-schwarz') {
+        // Chunky-Sneaker: klobig, dicke gestufte Sohle
+        const black = shoes === 'chunky-schwarz';
+        const upper = black ? '#1e1e22' : '#f7f5f1';
+        leg.add(part(sphere, upper, 0.066, 0.048, 0.09, 0, footY + 0.006, 0.024));
+        leg.add(part(cylinder, black ? '#2c2c31' : '#e9e5df', 0.07, 0.024, 0.094, 0, footY - 0.024, 0.024));
+        leg.add(part(cylinder, black ? '#3a3a40' : '#d9d4cc', 0.071, 0.01, 0.095, 0, footY - 0.04, 0.024));
+        leg.add(part(box, black ? '#4a4a52' : '#c9c4bc', 0.03, 0.012, 0.006, side * 0.025, footY + 0.012, 0.1));
       } else if (shoes === 'sneaker') {
         // weiße Sneaker mit heller Sohle
         leg.add(part(sphere, '#f7f5f1', 0.058, 0.04, 0.08, 0, footY, 0.022));
@@ -565,15 +628,32 @@ export class Chibi3D {
       this.extraTextures.push(tex);
       shirtMat = new THREE.MeshToonMaterial({ map: tex });
     }
-    const street = o === 'sweatshirt' || o === 'shorts' || o === 'fleece';
+    const street = o === 'sweatshirt' || o === 'shorts' || o === 'fleece' || !!printed;
     const summer = o === 'sommer';
-    // Oversize: weiter & länger (reicht über die Hüfte)
-    const shirt = street
-      ? part(new THREE.CylinderGeometry(0.9, 1, 1, 20), shirtMat, topR * (o === 'fleece' ? 1.38 : 1.3), torso * 0.98, topR * (o === 'fleece' ? 1.28 : 1.2), 0, torsoY + torso * 0.02, 0)
+    /** kurze Ärmel */
+    const shortSleeves = summer || o === 'bandshirt' || o === 'polo';
+    // Oversize: weiter & länger (reicht über die Hüfte); „very oversized“ bei den Druck-Sweatshirts
+    const big = printed ? 1.4 : o === 'fleece' ? 1.38 : 1.3;
+    const shirtShape: [number, number, number, number, number] = street
+      ? [0.9, topR * big, torso * (printed ? 1.04 : 0.98), topR * (big - 0.1), torsoY + torso * (printed ? -0.01 : 0.02)]
       : summer
-        ? part(new THREE.CylinderGeometry(0.86, 1, 1, 20), shirtMat, topR * 1.18, torso * 0.7, topR * 1.08, 0, torsoY + torso * 0.15, 0)
-        : part(new THREE.CylinderGeometry(0.82, 1, 1, 20), shirtMat, topR * 1.15, torso * 0.78, topR * 1.05, 0, torsoY + torso * 0.11, 0);
-    this.body.add(shirt);
+        ? [0.86, topR * 1.18, torso * 0.7, topR * 1.08, torsoY + torso * 0.15]
+        : o === 'jacke'
+          ? [0.84, topR * 1.24, torso * 0.92, topR * 1.14, torsoY + torso * 0.04]
+          : o === 'bandshirt' || o === 'polo'
+            ? [0.84, topR * 1.2, torso * 0.84, topR * 1.12, torsoY + torso * 0.08]
+            : [0.82, topR * 1.15, torso * 0.78, topR * 1.05, torsoY + torso * 0.11];
+    const [taper, ssx, ssy, ssz, sy] = shirtShape;
+    this.body.add(part(new THREE.CylinderGeometry(taper, 1, 1, 20), shirtMat, ssx, ssy, ssz, 0, sy, 0));
+    const printKind: PrintKind | null = printed ? printed.print : o === 'bandshirt' ? 'band' : null;
+    if (printKind) {
+      const variant = this.day ? hashDay(this.day) % BAND_NAMES.length : 0;
+      const tex = new THREE.CanvasTexture(drawPrint(printKind, variant));
+      tex.colorSpace = THREE.SRGBColorSpace;
+      tex.anisotropy = 4;
+      this.extraTextures.push(tex);
+      this.body.add(printDecal(tex, taper, ssx, ssy, ssz, sy, printed ? [-0.3, 0.32] : [-0.24, 0.38], printed ? 1.6 : 1.55));
+    }
     const neckY = this.hipY + torso * 0.98;
 
     // Outfit-Details
@@ -619,16 +699,43 @@ export class Chibi3D {
       this.body.add(neck);
       this.body.add(part(sphereLow, lighten(a.outfitColor, 0.75), 0.018, 0.018, 0.006, 0.04, torsoY + 0.08, topR * 1.1));
     }
-    if (o === 'sweatshirt' || o === 'shorts') {
-      // Rippbündchen unten & am Hals, kleines Emblem auf der Brust (eigenes Design, keine Marke)
-      this.body.add(part(cylinder, darken(a.outfitColor, 0.12), topR * 1.3, 0.03, topR * 1.2, 0, torsoY - torso * 0.47, 0));
-      const neck = mesh(new THREE.TorusGeometry(topR * 0.58, 0.014, 6, 18), toon(darken(a.outfitColor, 0.12)));
+    if (o === 'sweatshirt' || o === 'shorts' || printed) {
+      // Rippbündchen unten & am Hals (Druck-Sweatshirts: großes Motiv statt kleinem Emblem)
+      this.body.add(part(cylinder, darken(top, 0.12), ssx, 0.03, ssz, 0, sy - ssy / 2 + 0.012, 0));
+      const neck = mesh(new THREE.TorusGeometry(topR * 0.58, 0.014, 6, 18), toon(darken(top, 0.12)));
       neck.rotation.x = Math.PI / 2;
       neck.position.y = neckY - 0.005;
       this.body.add(neck);
-      const emblem = lighten(a.outfitColor, 0.75);
-      this.body.add(part(box, emblem, 0.07, 0.022, 0.006, 0.0, torsoY + 0.07, topR * 1.2));
-      this.body.add(part(sphereLow, emblem, 0.016, 0.016, 0.006, 0.0, torsoY + 0.035, topR * 1.2));
+      if (!printed) {
+        // kleines Emblem auf der Brust (eigenes Design, keine Marke)
+        const emblem = lighten(a.outfitColor, 0.75);
+        this.body.add(part(box, emblem, 0.07, 0.022, 0.006, 0.0, torsoY + 0.07, topR * 1.2));
+        this.body.add(part(sphereLow, emblem, 0.016, 0.016, 0.006, 0.0, torsoY + 0.035, topR * 1.2));
+      }
+    }
+    if (o === 'bandshirt') {
+      const neck = mesh(new THREE.TorusGeometry(topR * 0.5, 0.01, 6, 18), toon(lighten(top, 0.12)));
+      neck.rotation.x = Math.PI / 2;
+      neck.position.y = neckY - 0.012;
+      this.body.add(neck);
+    }
+    if (o === 'polo' || o === 'jacke') {
+      // Polokragen bzw. Jackenkragen + Knopfleiste
+      const collarColor = o === 'polo' ? darken(top, 0.06) : darken(top, 0.12);
+      for (const s2 of [-1, 1]) {
+        const col = part(box, collarColor, 0.07, 0.04, 0.016, s2 * 0.036, neckY - 0.01, topR * (o === 'jacke' ? 0.98 : 0.92));
+        col.rotation.z = s2 * 0.45;
+        this.body.add(col);
+      }
+      const n = o === 'polo' ? 2 : 4;
+      for (let i = 0; i < n; i++) this.body.add(part(sphereLow, o === 'polo' ? lighten(top, 0.5) : '#2a2a2e', 0.009, 0.009, 0.008, 0, neckY - 0.04 - i * (o === 'polo' ? 0.03 : 0.055), topR * (o === 'jacke' ? 1.25 : 1.09)));
+      if (o === 'jacke') {
+        // Brusttaschen mit Klappe
+        for (const s2 of [-1, 1]) {
+          this.body.add(part(box, darken(top, 0.06), 0.05, 0.05, 0.008, s2 * 0.055, torsoY + 0.05, topR * 1.22));
+          this.body.add(part(box, darken(top, 0.16), 0.054, 0.016, 0.01, s2 * 0.055, torsoY + 0.077, topR * 1.23));
+        }
+      }
     }
     if (o === 'fleece') {
       // Fleece-Jacke: Stehkragen, Reißverschluss, flauschige Flecken, Bündchen
@@ -675,18 +782,27 @@ export class Chibi3D {
 
     // Arme (Drehpunkt an der Schulter)
     const shoulderY = this.hipY + torso * 0.92;
-    const sleeve = o === 'weste' ? a.accentColor : o === 'mantel' || o === 'hoodie' || o === 'troyer' || street ? a.outfitColor : top;
+    const sleeve = o === 'weste' ? a.accentColor : top;
     const sleeveMat: THREE.Material = o === 'streifenhemd' ? shirtMat : toon(sleeve);
     for (const side of [-1, 1]) {
       const arm = new THREE.Group();
       arm.position.set(side * (topR + 0.035), shoulderY, 0);
       arm.rotation.z = side * 0.25;
-      const thick = street ? (o === 'fleece' ? 1.4 : 1.28) : 1;
-      if (summer) {
+      const thick = street ? (printed ? 1.42 : o === 'fleece' ? 1.4 : 1.28) : o === 'jacke' ? 1.12 : 1;
+      if (shortSleeves) {
         // kurze Ärmel, darunter nackter Arm
         arm.add(part(capsule, skin, 0.03 * Math.min(1.15, bw), 0.07 * Math.min(1.1, h), 0.03, 0, -0.105, 0));
         arm.add(part(sphere, sleeveMat, 0.045 * Math.min(1.15, bw), 0.05, 0.045, 0, -0.025, 0));
       } else arm.add(part(capsule, sleeveMat, 0.035 * Math.min(1.15, bw) * thick, (street ? 0.075 : 0.1) * Math.min(1.1, h), 0.035 * thick, 0, street ? -0.065 : -0.08, 0));
+      if ((o === 'polo' || o === 'jacke') && side === 1) {
+        // Abzeichen am linken Oberarm (eigenes Design: Knopf-Patch, keine echte Marke)
+        const r = (shortSleeves ? 0.047 : 0.035 * thick) * Math.min(1.15, bw);
+        const patch = part(box, '#d9d2b6', 0.028, 0.03, 0.006, r * 0.55, -0.045, r * 0.82);
+        patch.rotation.y = 0.6;
+        arm.add(patch);
+        arm.add(part(box, '#3e4a3c', 0.02, 0.006, 0.007, r * 0.55, -0.034, r * 0.84));
+        for (const dx of [-0.008, 0.008]) arm.add(part(sphereLow, '#2a2a2e', 0.003, 0.003, 0.003, r * 0.55 + dx * 0.8, -0.054, r * 0.86));
+      }
       arm.add(part(sphere, skin, 0.038, 0.038, 0.038, 0, -0.17 * Math.min(1.1, h), 0));
       this.handY = -0.17 * Math.min(1.1, h);
       this.body.add(arm);
@@ -720,7 +836,8 @@ export class Chibi3D {
     if (a.beard === 'schnurrbart') {
       const bc = a.beardColor || lighten(a.hairColor, 0.05);
       for (const s of [-1, 1]) {
-        const m = part(sphereLow, bc, R * 0.16, R * 0.06, R * 0.06, s * R * 0.13, -R * 0.3, R * 0.9);
+        // zwischen Nase und Mund (der Mund liegt bei etwa -0.15 R)
+        const m = part(sphereLow, bc, R * 0.16, R * 0.055, R * 0.06, s * R * 0.13, -R * 0.085, R * 0.92);
         m.rotation.z = s * -0.18;
         this.head.add(m);
       }

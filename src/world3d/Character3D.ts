@@ -57,8 +57,9 @@ export class Character {
     facing: Facing,
     public heightAt: (x: number, z: number) => number,
     season: Season = 'sommer',
+    day = '',
   ) {
-    this.chibi = new Chibi3D(appearance, season);
+    this.chibi = new Chibi3D(appearance, season, day);
     parent.add(this.chibi.root);
     this.x = x;
     this.y = y;

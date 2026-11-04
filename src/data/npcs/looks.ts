@@ -2,7 +2,7 @@
  * Aussehen von Linas Liebsten – nach Fotos nachempfunden (Chibi-Stil).
  * Die Fotos selbst sind NICHT Teil des Projekts.
  */
-import type { Appearance } from '../../core/appearance';
+import type { Appearance, WardrobeItem } from '../../core/appearance';
 import { palette } from '../../style/palette';
 
 const base: Appearance = {
@@ -132,7 +132,8 @@ export const LOOKS: Readonly<Record<string, Appearance>> = {
     skinTone: palette.skin[1],
     outfit: 'troyer',
     outfitColor: '#23232a',
-    accentColor: '#2f3340',
+    accentColor: '#202026',
+    shoes: 'chunky',
     height: 1.08,
     build: 1.0,
     blush: false,
@@ -140,3 +141,22 @@ export const LOOKS: Readonly<Record<string, Appearance>> = {
     smile: 'grinsen',
   },
 };
+
+/**
+ * Olis Kleiderschrank – er wechselt ab und zu einfach die Klamotten. Oben immer Schwarz:
+ * Troyer, Bandshirts (ausgedachte Metal-/Hardcore-Bands), Polo und Überjacke mit Ärmel-Abzeichen
+ * (eigenes Design, keine echte Marke). Unten schwarze Hose, beige Hose oder Jeans,
+ * dazu weiße oder schwarze Chunky-Sneaker.
+ */
+const OLI_PANTS = { schwarz: '#202026', beige: '#cbb894', jeans: '#4f6690' } as const;
+const OLI_BLACK = '#1d1d22';
+export const OLI_WARDROBE: readonly WardrobeItem[] = [
+  { outfit: 'troyer', outfitColor: '#23232a', accentColor: OLI_PANTS.schwarz, shoes: 'chunky-schwarz' },
+  { outfit: 'troyer', outfitColor: '#23232a', accentColor: OLI_PANTS.jeans, shoes: 'chunky' },
+  { outfit: 'bandshirt', outfitColor: OLI_BLACK, accentColor: OLI_PANTS.schwarz, shoes: 'chunky-schwarz' },
+  { outfit: 'bandshirt', outfitColor: OLI_BLACK, accentColor: OLI_PANTS.beige, shoes: 'chunky' },
+  { outfit: 'polo', outfitColor: OLI_BLACK, accentColor: OLI_PANTS.beige, shoes: 'chunky' },
+  { outfit: 'polo', outfitColor: OLI_BLACK, accentColor: OLI_PANTS.jeans, shoes: 'chunky-schwarz' },
+  { outfit: 'jacke', outfitColor: '#222228', accentColor: OLI_PANTS.schwarz, shoes: 'chunky' },
+  { outfit: 'jacke', outfitColor: '#222228', accentColor: OLI_PANTS.jeans, shoes: 'chunky-schwarz' },
+];

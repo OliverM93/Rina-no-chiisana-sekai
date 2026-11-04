@@ -1,12 +1,12 @@
 /**
  * Entwickler-Galerie in 3D: Figuren und Modelle nebeneinander.
- * Aufruf: http://localhost:5173/gallery.html  (?ansicht=figuren|natur|gebaeude, ?winkel=0..360)
+ * Aufruf: http://localhost:5173/gallery.html  (?ansicht=figuren|natur|gebaeude|kleidung, ?winkel=0..360)
  */
 import * as THREE from 'three';
 import type { Season } from '../core/time';
 import { DEFAULT_LINA, type Appearance } from '../core/appearance';
 import { GISELA } from '../data/npcs/gisela';
-import { LOOKS } from '../data/npcs/looks';
+import { LOOKS, OLI_WARDROBE } from '../data/npcs/looks';
 import { palette } from '../style/palette';
 import { makeBench, makeBoard, makeBridge, makeFountain, makeHouse, makeLantern, makeMailbox, makePlotMarks, makeSellbox, makeSign, makeWorkbench } from '../world3d/models/buildings';
 import { Chibi3D } from '../world3d/models/chibi3d';
@@ -34,7 +34,7 @@ ground.receiveShadow = true;
 scene.add(ground);
 
 const params = new URLSearchParams(location.search);
-const views = ['figuren', 'natur', 'gebaeude'];
+const views = ['figuren', 'natur', 'gebaeude', 'kleidung'];
 let view = params.get('ansicht') ?? 'figuren';
 let angle = Number(params.get('winkel') ?? 0) * (Math.PI / 180);
 const content = new THREE.Group();
@@ -58,7 +58,22 @@ function build() {
   chibis.length = 0;
   dogs.length = 0;
   (document.getElementById('label') as HTMLElement).textContent = view;
-  if (view === 'figuren') {
+  if (view === 'kleidung') {
+    // Linas Lieblingsteile und Olis Kleiderschrank
+    const outfits: Array<[Appearance, string]> = [
+      ...(['hawaii', 'sport', 'radierkopf', 'sweatshirt'] as const).map((o): [Appearance, string] => [{ ...DEFAULT_LINA, outfit: o }, '']),
+      ...OLI_WARDROBE.filter((_, i) => i % 2 === 0 || i === 5).map((w, i): [Appearance, string] => [{ ...LOOKS.oli, ...w }, `2026-03-0${i + 1}`]),
+    ];
+    outfits.forEach(([a, day], i) => {
+      const c = new Chibi3D(a, 'herbst', day);
+      c.root.position.set((i - (outfits.length - 1) / 2) * 0.7, 0, 0);
+      content.add(c.root);
+      chibis.push(c);
+    });
+    const zoom = Number(params.get('zoom') ?? 1);
+    camera.position.set(Math.sin(angle) * 5 * zoom, 0.9 + 0.6 * zoom, Math.cos(angle) * 5 * zoom);
+    camera.lookAt(0, 0.45, 0);
+  } else if (view === 'figuren') {
     people.forEach(([, a], i) => {
       const c = new Chibi3D(a, (params.get('jahreszeit') as Season | null) ?? 'sommer');
       c.root.position.set((i - (people.length - 1) / 2) * 0.8, 0, 0);
