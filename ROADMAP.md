@@ -198,6 +198,9 @@ Legende: ✅ erledigt · 🚧 in Arbeit · ⬜ geplant
   - Geräusche: Schritte (Holz drinnen), Aufheben, Tür, Angeln (Platsch, Biss, Fang), Kescher, Münzen, Bauen,
     Bellen, Gackern, Graben, Herz, Post, Dialog-Blubb
   - Lautstärkeregler für Musik & Geräusche im Menü (wird gespeichert)
+- ✅ **M8b Kleidung & Gruselkanal:** Linas Lieblings-Sweatshirts (Hawaii, Sport, Radierkopf) mit weiter Anzughose,
+  im Herbst/Frühling täglich wechselnd · Oli zieht sich um (Bandshirts, Cargohose, Polo, Überjacke) ·
+  Gruselkanal im Fernseher („Gänsehaut um Mitternacht“), Sprüche der Bewohner zu Linas Horror-Liebe
 - ⬜ Mehr Animationen & Partikel, Balancing
 - ⬜ PWA (installierbar, offline)
 - ⬜ Barrierefreiheit (Textgröße, reduzierte Bewegung)

@@ -23,8 +23,8 @@ Meilensteine und Fortschritt: siehe [`ROADMAP.md`](ROADMAP.md).
 
 | Figur | Rolle | Aussehen (für die Chibi-Figuren) |
 |---|---|---|
-| **Lina** | Spielerin | kastanienbraune Locken, etwas länger als schulterlang, Mittelscheitel, kein Pony, braune Augen, Sommersprossen, trägt am liebsten **Schwarz** und gern **Oversize-Streetwear-Sweatshirts** (keine echten Markenlogos im Spiel!) – im Sommer kurzes schwarzes Oberteil mit kurzer Hose & weißen Sneakern, im Winter dicke Fleece-Jacke & Doc-Martens-artige Schnürstiefel (`outfit: 'saison'`, alles im Editor anpassbar), Geburtstag **16.06.**; **kocht leidenschaftlich gern**, schaut gern Datingshows (à la First Dates), True Crime und Dokus über stark übergewichtige Menschen (im Spiel immer respektvoll & warmherzig, nie spöttisch) |
-| **Oliver („Oli“)** | Linas Freund – höchste Bindung, romantische Szenen, gemeinsames Haus/Zimmer; nennt Lina „Lini“, Geburtstag **29.07.** | schlank, kurze dunkelblonde Haare, Schnurrbart, blaugraue Augen, schwarzer Troyer-Pulli, strahlendes Lächeln |
+| **Lina** | Spielerin | kastanienbraune Locken, etwas länger als schulterlang, Mittelscheitel, kein Pony, braune Augen, Sommersprossen, trägt am liebsten **Schwarz** und gern **Oversize-Streetwear-Sweatshirts** (keine echten Markenlogos im Spiel!) – im Sommer kurzes schwarzes Oberteil mit kurzer Hose & weißen Sneakern, im Winter dicke Fleece-Jacke & Doc-Martens-artige Schnürstiefel, im Frühling/Herbst täglich wechselnd ein Lieblings-Sweatshirt (very oversized: dunkelgrün mit gelbem „Hawaii“, grau mit „Sport“, schwarz mit Kultfilm-Porträt „Radierkopf“ – dazu weite schwarze Anzughose) (`outfit: 'saison'`, alles im Editor anpassbar), Geburtstag **16.06.**; **kocht leidenschaftlich gern**, schaut gern Datingshows (à la First Dates), True Crime, **Horrorfilme & -serien** und Dokus über stark übergewichtige Menschen (im Spiel immer respektvoll & warmherzig, nie spöttisch) |
+| **Oliver („Oli“)** | Linas Freund – höchste Bindung, romantische Szenen, gemeinsames Haus/Zimmer; nennt Lina „Lini“, Geburtstag **29.07.** | schlank, kurze dunkelblonde Haare, Schnurrbart, blaugraue Augen, schwarzer Troyer-Pulli, strahlendes Lächeln; wechselt ab und zu die Klamotten (`OLI_WARDROBE`): Bandshirts (ausgedachte Bands) & Cargohose, Polo/Überjacke mit Ärmel-Abzeichen (eigenes Design statt echter Marke) |
 | **Lars** | großer Bruder, Arzt – Praxis/Apotheke; guter Humor, hat immer einen Spruch auf Lager (z. B. „So, und nicht mit e, sonst ist es ein See.“) | groß & kräftig, kurz geschorene rotblonde Haare, rotblonder Vollbart, blaue Augen, dunkles Streifenhemd |
 | **Olaf** | Papa, Finanzamt – Dorfkasse/Bank; **Zwillingsbruder von Jens** | eher klein, dunkle angegraute Haare, grauer kurzer Bart, eckige Brille, weißes Hemd mit dunkler Weste |
 | **Christin** | Olafs Freundin – sehr ordentlich, achtet auf Ordnung & Sauberkeit | schlank, dunkelbrauner Bob mit Seitenscheitel, braune Augen, korallrotes Oberteil |
@@ -114,8 +114,9 @@ src/
                echte heimische Arten), furniture.ts (Möbel, Tapeten, Böden, Varianten),
                house.ts (Ausbaustufen, Räume, Preise, Start-Haus),
                npcs/ (je Bewohner eine Datei)
+               wardrobe.ts (Aufdruck-Kleidung, Bandnamen)
   style/       palette.ts – EINZIGE Quelle für Farben (auch CSS-Variablen der UI)
-  gfx/         2D-Zeichnungen für Texturen & Symbole: terrain.ts (Gelände-Textur), items.ts (Symbole),
+  gfx/         2D-Zeichnungen für Texturen & Symbole: terrain.ts (Gelände-Textur), items.ts (Symbole), prints.ts (Kleidungs-Aufdrucke),
                canvas.ts (Hilfen)
   game/        Sitzung & Spielregeln (ohne Darstellung)
     session.ts     laufende Sitzung: Spielstand, Uhr, Karte, Event-Bus Welt ↔ UI
@@ -208,6 +209,10 @@ src/
 - **Treffen der Bewohner:** `data/meetups.ts` (Wochentage, Uhrzeit, Plätze, Gespräche), Regeln in
   `game/meetups.ts`; `Npc` ersetzt den Tagesablauf (Reihenfolge: Party → Sonntagsessen → Treffen → Plan).
   `Npc.snap()` setzt alle beim Laden sofort an den richtigen Platz.
+- **Kleidung:** `outfitFor(a, season, day)` – bei `'saison'` im Frühling/Herbst täglich ein anderes Teil aus
+  `STREETWEAR_ROTATION`. Bewohner mit `NpcDef.wardrobe` ziehen sich per `dressFor` jeden Tag reproduzierbar um.
+  `Chibi3D(appearance, season, day)`; Aufdrucke als gebogene Fläche vor dem Oberteil (`printDecal`), Galerie
+  `?ansicht=kleidung`. Keine echten Marken-/Filmnamen auf Kleidung – eigene Designs.
 - **Fernseher & Küche:** Sendungen in `data/tv.ts` (ausgedachte Formate, keine echten Sendungsnamen), Regeln
   in `game/tv.ts` (Folge pro Tag, Oli schaut mit, Kochshow lehrt Rezepte mit `tv: true`). Linas Herd =
   `CraftPanel` mit `station="herd"` (Küchen-Rezepte zu Hause).

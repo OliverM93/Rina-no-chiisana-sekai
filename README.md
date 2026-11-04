@@ -118,6 +118,11 @@ an: morgens Spieluhr, tagsüber Marimba, abends Flöte, nachts ganz leise, bei R
 Beat. Dazu Vogelgezwitscher, Grillen, Regen und Meeresrauschen, Schritte, Türen, Platsch beim Angeln, Münzen,
 Winstons Bellen … Lautstärke für Musik und Geräusche im Menü.
 
+**Kleidung & Gruselkanal (M8b):** Lina hat neue Lieblingsteile – very oversized Sweatshirts mit „Hawaii“,
+„Sport“ und einem Kultfilm-Porträt, dazu eine weite schwarze Anzughose. Im Frühling und Herbst zieht sie jeden
+Tag ein anderes an. Oli wechselt auch mal die Klamotten: Bandshirt und Cargohose, Polo oder Überjacke. Im
+Fernseher läuft jetzt auch der **Gruselkanal** – Oli schaut tapfer mit (hinter einem Kissen).
+
 Im Menü: Aussehen ändern, Lautstärke, speichern, **Spielstand exportieren/laden** (als Datei – praktisch zum Sichern
 oder für ein anderes Gerät), Vollbild, Hilfe.
 

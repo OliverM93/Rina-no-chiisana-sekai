@@ -4,7 +4,7 @@
  * Hardcore-Punk-Konzerte, Informatik, Kochen & guten Kaffee.
  * Nennt Lina „Lini“.
  */
-import { LOOKS } from './looks';
+import { LOOKS, OLI_WARDROBE } from './looks';
 import type { NpcDef } from './types';
 
 const WIESE = { x: 4, y: 19, w: 12, h: 8 };
@@ -16,6 +16,7 @@ export const OLI: NpcDef = {
   name: 'Oli',
   personality: 'Linas Freund, strahlendes Lächeln, herzlich & verspielt; Kraftsport, Hardcore-Punk, Informatik, Kochen & Kaffee; nennt Lina „Lini“',
   appearance: LOOKS.oli,
+  wardrobe: OLI_WARDROBE,
   home: 'haus-lina',
   movesIn: 'oliEingezogen',
   birthday: { day: 29, month: 7 },
@@ -55,6 +56,8 @@ export const OLI: NpcDef = {
       { text: ['Schnee, Lini! ❄️', 'Wer zuerst einen Schneemann baut, kriegt einen Kakao. Ich verlier auch absichtlich.'], when: { tags: ['wetter-schnee'] }, weight: 3 },
     ],
     chat: [
+      { text: ['Lini, heute Abend Horrorfilm?', 'Ich such einen aus. Einen nicht ganz so gruseligen. … Okay, du suchst aus. Aber ich halte das Kissen.'], weight: 2 },
+      { text: ['Ich hab die ganze Nacht an die Puppe aus der Serie gedacht.', 'Wie kannst du sowas gucken und danach seelenruhig einschlafen? Du bist unglaublich.'], when: { phases: ['morgen', 'morgendaemmerung'] } },
       { text: ['Lini, heute Abend True Crime?', 'Aber diesmal nicht wieder bis drei Uhr nachts. … Okay, bis zwei.'] },
       { text: ['Du kochst einfach am besten, Lini.', 'Ich koch ja auch gern – aber bei dir schmeckt’s irgendwie nach Zuhause.'] },
       { text: ['Ich hab gestern heimlich die Datingshow weitergeschaut.', 'Ohne dich! Ich weiß, das war Verrat. Bernd und Bärbel sind übrigens zusammen. Sorry.'] },

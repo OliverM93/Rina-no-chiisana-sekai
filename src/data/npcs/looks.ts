@@ -2,7 +2,7 @@
  * Aussehen von Linas Liebsten – nach Fotos nachempfunden (Chibi-Stil).
  * Die Fotos selbst sind NICHT Teil des Projekts.
  */
-import type { Appearance } from '../../core/appearance';
+import type { Appearance, WardrobeItem } from '../../core/appearance';
 import { palette } from '../../style/palette';
 
 const base: Appearance = {
@@ -140,3 +140,19 @@ export const LOOKS: Readonly<Record<string, Appearance>> = {
     smile: 'grinsen',
   },
 };
+
+/**
+ * Olis Kleiderschrank – er wechselt ab und zu einfach die Klamotten:
+ * schwarzer Troyer, Bandshirts (ausgedachte Metal-/Hardcore-Bands) mit Cargohose,
+ * Polo und Überjacke mit Ärmel-Abzeichen (eigenes Design, keine echte Marke).
+ */
+export const OLI_WARDROBE: readonly WardrobeItem[] = [
+  { outfit: 'troyer', outfitColor: '#23232a', accentColor: '#2f3340' },
+  { outfit: 'troyer', outfitColor: '#23232a', accentColor: '#3d4234' },
+  { outfit: 'bandshirt', outfitColor: '#1d1d22', accentColor: '#4d5240' },
+  { outfit: 'bandshirt', outfitColor: '#1d1d22', accentColor: '#26262c' },
+  { outfit: 'polo', outfitColor: '#2c3a52', accentColor: '#4d5240' },
+  { outfit: 'polo', outfitColor: '#e9e6dc', accentColor: '#26262c' },
+  { outfit: 'jacke', outfitColor: '#6b6a4a', accentColor: '#26262c' },
+  { outfit: 'jacke', outfitColor: '#2b2d33', accentColor: '#8a7d62' },
+];

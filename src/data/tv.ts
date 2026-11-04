@@ -81,6 +81,21 @@ export const TV_CHANNELS: readonly TvChannel[] = [
     ],
     oli: ['Oli: „Lini, das kochen wir am Wochenende. Ich schneide, du würzt. Teamwork!“', 'Oli: „Ich hab jetzt Hunger. Kannst du bitte das Kochen ausschalten und uns was kochen?“', 'Oli: „Deins schmeckt bestimmt besser als das im Fernsehen.“'],
   },
+  {
+    id: 'grusel',
+    name: 'Gruselkanal',
+    show: 'Gänsehaut um Mitternacht',
+    colors: ['#2a2238', '#9a3a4a'],
+    icon: '🕯️',
+    episodes: [
+      { title: 'Das Haus am Ende des Feldwegs', lines: ['Ein altes Bauernhaus. Jede Nacht um 3:07 Uhr klopft es dreimal an der Kellertür.', 'Die Musik wird leiser … leiser … Lina rückt ganz nah an den Bildschirm. Sie liebt diesen Moment.', 'Hinter der Tür: ein Waschbär mit einer Vorliebe für Einmachgläser. Oder?! Der Abspann lässt es offen. 😱'] },
+      { title: 'Die Puppe im Dachboden (Teil 1)', lines: ['Eine Porzellanpuppe, die jeden Morgen woanders sitzt. Die Familie stellt sie zurück. Sie sitzt wieder woanders.', 'Die Kamera zoomt auf das Puppengesicht. Hat sie gerade geblinzelt? Lina: „Sie hat geblinzelt. Hundertpro.“', 'Fortsetzung folgt. Lina ist empört, weil sie sofort wissen will, wie es weitergeht. 🪆'] },
+      { title: 'Nebel über dem Moor', lines: ['Eine Wandergruppe verirrt sich im Nebel. Irgendwo pfeift jemand eine Melodie. Immer dieselbe.', 'Einer sagt: „Wir sollten uns trennen.“ Lina ruft: „NEIN! Niemals trennen!“', 'Natürlich trennen sie sich. Lina schüttelt den Kopf und isst noch eine Handvoll Popcorn. 🍿'] },
+      { title: 'Der Fahrstuhl in den 13. Stock', lines: ['Ein Hotel ohne 13. Stock. Aber der Fahrstuhl hat einen Knopf dafür. Und er leuchtet.', 'Die Hauptfigur drückt ihn. Natürlich drückt sie ihn. Die Türen schließen sich. Stille.', 'Bing. Die Türen öffnen sich … Schnitt! Abspann! Lina wirft ein Kissen nach dem Fernseher. 😤'] },
+      { title: 'Die Puppe im Dachboden (Teil 2)', lines: ['Endlich! Die Familie stellt eine Kamera auf. Nachts, 2:14 Uhr: Die Puppe … bleibt sitzen.', 'Dann kommt die kleine Tochter, gähnt und trägt die Puppe in ihr Bett. Jede Nacht. Schlafwandelnd.', 'Lina: „Okay, das ist eigentlich voll süß.“ Ein kleines bisschen enttäuscht ist sie trotzdem. 😅'] },
+    ],
+    oli: ['Oli hält sich ein Kissen vor die Augen: „Sag Bescheid, wenn’s vorbei ist, Lini.“', 'Oli: „Ich hab überhaupt keine Angst. Ich halte nur deine Hand, damit DU keine Angst hast.“', 'Oli: „Warum gehen die IMMER in den Keller? Warum?!“', 'Oli: „Heute schlafen wir mit Licht. Nur so. Aus … Gemütlichkeit.“'],
+  },
 ];
 
 export const TV_BY_ID: Readonly<Record<string, TvChannel>> = Object.fromEntries(TV_CHANNELS.map((c) => [c.id, c]));

@@ -2,7 +2,7 @@
  * Datenformat für Bewohner. Neue Bewohner = neue Datei in diesem Ordner
  * + Eintrag in `index.ts`.
  */
-import type { Appearance } from '../../core/appearance';
+import type { Appearance, WardrobeItem } from '../../core/appearance';
 import type { DayMonth } from '../../core/time';
 import type { DialogueLine } from '../../core/dialogue';
 import type { GiftReaction, Preferences } from '../../core/friendship';
@@ -21,6 +21,8 @@ export interface NpcDef {
   /** Kurzbeschreibung (Doku/Fehlersuche) */
   personality: string;
   appearance: Appearance;
+  /** Kleiderschrank: jeden Tag (reproduzierbar) ein Teil daraus – ohne = immer `appearance` */
+  wardrobe?: readonly WardrobeItem[];
   /** Objekt-ID des eigenen Hauses */
   home: string;
   /** zieht erst ein, wenn dieses Story-Flag gesetzt ist */
