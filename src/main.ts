@@ -1,6 +1,12 @@
 /**
  * Einstiegspunkt: Schrift laden, Sitzung anlegen, Oberfläche & Spielwelt starten.
  */
+import { GameAudio } from './audio/Audio';
+import { moodFor } from './core/music';
+import { isPrecipitation } from './core/weather';
+import { getSeason } from './core/time';
+import { currentWeather } from './game/nature';
+import { isPartyTime } from './game/party';
 import '@fontsource-variable/nunito';
 import './ui/ui.css';
 import { h, render } from 'preact';
@@ -62,6 +68,38 @@ async function start() {
     for (const [id, url] of Object.entries(thumbs)) setIconImage(id, url);
     session.changed();
   }, 300);
+  // Klang: startet nach der ersten Taste/dem ersten Klick (Browser-Regel)
+  const audio = new GameAudio();
+  const wake = () => {
+    audio.start();
+    const s = session.data?.settings;
+    if (s) audio.setVolumes(s.musicVolume, s.sfxVolume);
+  };
+  window.addEventListener('pointerdown', wake);
+  window.addEventListener('keydown', wake);
+  session.bus.on('sfx', (s) => audio.play(s));
+  session.bus.on('dialog:open', () => audio.play('dialog'));
+  session.bus.on('settings:changed', (s) => audio.setVolumes(s.musicVolume, s.sfxVolume));
+  // Stimmung & Umgebung alle 2 Sekunden (echte Zeit)
+  window.setInterval(() => {
+    const now = session.clock();
+    const h = now.getHours();
+    const w = currentWeather(session);
+    const raining = isPrecipitation(w.kind) && w.kind !== 'schnee';
+    const inside = session.inside;
+    const title = !session.playing || ui.state.screen !== 'playing';
+    audio.setMood(title ? 'morgen' : moodFor(h, { raining, snowing: w.kind === 'schnee', inside, party: isPartyTime(session) }));
+    const pos = session.data?.player;
+    const nearSea = !!pos && pos.y / 64 > 27;
+    const season = getSeason(now);
+    audio.setAmbience({
+      birds: inside || raining || h < 5 || h >= 20 ? 0 : season === 'winter' ? 0.3 : 1,
+      crickets: inside || raining || (h >= 6 && h < 20) || season === 'winter' ? 0 : 1,
+      rain: raining ? (inside ? 0.35 : 1) : 0,
+      waves: !inside && nearSea ? 1 : 0,
+    });
+  }, 2000);
+
   // Für Tests & Fehlersuche im Entwicklungsmodus
   if (import.meta.env.DEV) Object.assign(window, { __rina: { session, game, ui } });
 

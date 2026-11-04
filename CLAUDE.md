@@ -49,7 +49,7 @@ Das Aussehen aller Bewohner steht in `src/data/npcs/looks.ts` (nach Fotos nachem
 | 3D | Three.js | verbreitet, schlank, flüssig; Toon-Shading, Schatten, Licht |
 | Oberfläche | HTML/CSS-Overlay mit Preact | scharfer Text, Listen, Fenster |
 | Grafik | prozedural: 3D-Modelle aus Grundformen, Gesichter/Gelände als Canvas-Texturen | keine externen Modelle/Assets, Figuren aus Parametern → Editor & Animation |
-| Sound | Web Audio API (später) | selbst generiert |
+| Sound | Web Audio API | selbst generiert (Musik & Geräusche, keine Audiodateien) |
 | Speichern | localStorage, versioniert + Migrationen, Export/Import als JSON | kein Spielstand-Verlust |
 | Tests | Vitest | Kernlogik ohne Browser testbar |
 
@@ -107,6 +107,8 @@ src/
     movement.ts    Bewegung mit Kollision (Fuß-Box), Um-Ecken-Gleiten
     events.ts      typisierter Event-Emitter
     rng.ts         reproduzierbarer Zufall
+    music.ts       Musik-Stimmungen (Tempo, Tonart, Akkorde) + Phrasen komponieren, Stimmung nach Zeit/Wetter
+  audio/       Audio.ts – Web-Audio-Klang: Sequenzer, Instrumente, Umgebung (Vögel, Grillen, Regen, Wellen), Geräusche
   data/        Inhalte (leicht erweiterbar): Karten, Interaktionstexte, Story-Texte,
                items.ts (alle Gegenstände + Preise, Gartenblumen, Werkzeuge), species.ts (Fische & Insekten –
                echte heimische Arten), furniture.ts (Möbel, Tapeten, Böden, Varianten),
@@ -218,6 +220,10 @@ src/
   Gespräch, Geschenk 1× pro Fest & Jahr über `world.dates`), Schmuck in `world3d/Festivals3D.ts`.
 - **Tiere:** Ställe sind Gartenmöbel mit `coop: 'huhn' | 'wachtel'`, die Tiere kommen mit (`data/animals.ts`).
   Abholtage in `world.coopDay`; Logik in `core/coop.ts` & `game/animals.ts`.
+- **Klang:** `GameAudio` (`audio/Audio.ts`) startet nach der ersten Taste/Klick (Browser-Regel). Geräusche
+  laufen über das Bus-Event `sfx` (`session.bus.emit('sfx', 'muenzen')`), Lautstärke über `settings:changed`.
+  `main.ts` setzt alle 2 s Stimmung (`moodFor`) und Umgebung. Hörprobe ohne Lautsprecher:
+  `GameAudio.preview(mood)` rendert offline in einen AudioBuffer.
 - **Spielstand:** `SAVE_VERSION` + `MIGRATIONS` in `core/save.ts`. Nach jeder Migration wird normalisiert
   (fehlende Felder → Standardwerte). Vor jedem Speichern bleibt der alte Stand als Backup erhalten.
 

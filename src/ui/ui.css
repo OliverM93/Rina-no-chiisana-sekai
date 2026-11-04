@@ -1695,3 +1695,25 @@ body {
 .door-fade.on {
   opacity: 1;
 }
+
+/* ---------------------------------------------------------------- M8a: Lautstärke */
+
+.menu-volume {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin: 6px 0 12px;
+}
+
+.menu-volume label {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-weight: 800;
+  font-size: 14px;
+}
+
+.menu-volume input[type='range'] {
+  accent-color: var(--ui-accent);
+  width: 100%;
+}

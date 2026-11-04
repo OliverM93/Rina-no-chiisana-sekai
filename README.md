@@ -113,7 +113,12 @@ Oversize-Sweatshirt, im Sommer mit kurzer Hose, im Winter mit dicker Fleece-Jack
 Zimmer zum Wohnzimmer: Datingshow, True Crime, Doku und Kochshow – jeden Tag neue Folgen, und Oli schaut mit,
 wenn er zu Hause ist. Aus der Kochshow lernt Lina neue Rezepte und kocht sie am eigenen Herd nach.
 
-Im Menü: Aussehen ändern, speichern, **Spielstand exportieren/laden** (als Datei – praktisch zum Sichern
+**Klang (M8a):** Musik und Geräusche sind komplett selbst erzeugt, ohne Audiodateien. Die Musik passt sich
+an: morgens Spieluhr, tagsüber Marimba, abends Flöte, nachts ganz leise, bei Regen gedämpft, auf der Party mit
+Beat. Dazu Vogelgezwitscher, Grillen, Regen und Meeresrauschen, Schritte, Türen, Platsch beim Angeln, Münzen,
+Winstons Bellen … Lautstärke für Musik und Geräusche im Menü.
+
+Im Menü: Aussehen ändern, Lautstärke, speichern, **Spielstand exportieren/laden** (als Datei – praktisch zum Sichern
 oder für ein anderes Gerät), Vollbild, Hilfe.
 
 Die Uhrzeit im Dorf ist die **echte Uhrzeit**: Abends gehen die Laternen an, nachts leuchten die Fenster,

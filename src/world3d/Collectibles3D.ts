@@ -144,6 +144,7 @@ export class Collectibles {
     const data = this.session.data;
     if (!p || !data) return false;
     if (giveItem(this.session, p.itemId, 1) > 0) return false;
+    this.session.bus.emit('sfx', 'aufheben');
     this.pickups.delete(id);
     if (p.daily) markPicked(this.session, id);
     else data.world.ground = data.world.ground.filter((g) => g.id !== id);

@@ -33,6 +33,7 @@ export function buyFromCatalog(session: Session, itemId: string): BuyResult {
   if (data.money < price) return 'zu-teuer';
   if (spaceFor(data.inventory, itemId, maxStackOf) < 1) return 'tasche-voll';
   data.money -= price;
+  session.bus.emit('sfx', 'muenzen');
   giveItem(session, itemId, 1, false);
   session.changed();
   session.save();

@@ -191,7 +191,13 @@ Legende: ✅ erledigt · 🚧 in Arbeit · ⬜ geplant
 
 ## ⬜ M8 – Feinschliff
 
-- ⬜ Musik & Soundeffekte (Web Audio, selbst generiert) mit Lautstärkeregler
+- ✅ **M8a Klang:** Musik & Geräusche komplett selbst erzeugt (Web Audio, keine Audiodateien)
+  - Musik komponiert sich laufend aus kleinen Phrasen (`core/music.ts`), Stimmung nach Tageszeit, Wetter,
+    drinnen und Party (Spieluhr morgens, Marimba tags, Flöte abends, leise Nacht, Party mit Beat)
+  - Umgebung: Vögel tagsüber, Grillen nachts (nicht im Winter), Regen, Meeresrauschen am Strand
+  - Geräusche: Schritte (Holz drinnen), Aufheben, Tür, Angeln (Platsch, Biss, Fang), Kescher, Münzen, Bauen,
+    Bellen, Gackern, Graben, Herz, Post, Dialog-Blubb
+  - Lautstärkeregler für Musik & Geräusche im Menü (wird gespeichert)
 - ⬜ Mehr Animationen & Partikel, Balancing
 - ⬜ PWA (installierbar, offline)
 - ⬜ Barrierefreiheit (Textgröße, reduzierte Bewegung)

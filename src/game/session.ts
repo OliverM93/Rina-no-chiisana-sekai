@@ -107,6 +107,10 @@ export type GameEvents = {
   'home:yard': boolean;
   /** Sternenhimmel mit Sternschnuppen einblenden (Sterne gucken mit Oli) */
   'overlay:stars': boolean;
+  /** Lautstärke geändert */
+  'settings:changed': { musicVolume: number; sfxVolume: number };
+  /** Ein Geräusch abspielen (siehe audio/Audio.ts) */
+  sfx: 'schritt' | 'schritt-holz' | 'aufheben' | 'tuer' | 'platsch' | 'biss' | 'fang' | 'kescher' | 'dialog' | 'klick' | 'muenzen' | 'bauen' | 'bellen' | 'gackern' | 'graben' | 'herz' | 'post';
   /** Weiches Abblenden (Tür-Animation): true = dunkel */
   'overlay:fade': boolean;
   /** Einrichtungsmodus: an/aus, was gerade gehalten wird */
