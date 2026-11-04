@@ -1620,3 +1620,62 @@ body {
   gap: 6px;
   align-items: center;
 }
+
+/* ---------------------------------------------------------------- M7h: Fernseher */
+
+.card.tv {
+  width: min(620px, 94vw);
+}
+
+.tv-screen {
+  position: relative;
+  min-height: 210px;
+  border-radius: 18px;
+  border: 10px solid var(--ui-text);
+  background: var(--ui-text-soft);
+  color: #fff;
+  padding: 16px 18px 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.35);
+}
+
+.tv-logo {
+  font-weight: 900;
+  font-size: 15px;
+  opacity: 0.9;
+}
+
+.tv-title {
+  font-weight: 900;
+  font-size: 20px;
+}
+
+.tv-line {
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.45;
+  animation: fade-in 0.5s ease-out;
+}
+
+.tv-progress {
+  position: absolute;
+  right: 12px;
+  bottom: 6px;
+  font-size: 12px;
+  opacity: 0.8;
+}
+
+.tv-off {
+  margin: auto;
+  text-align: center;
+  font-weight: 800;
+}
+
+.tv-channels {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 10px;
+}

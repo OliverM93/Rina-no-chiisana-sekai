@@ -18,6 +18,7 @@ import { BankPanel } from './BankPanel';
 import { CraftPanel } from './CraftPanel';
 import { MapPanel } from './MapPanel';
 import { GalleryPanel } from './GalleryPanel';
+import { TvPanel } from './TvPanel';
 import { type ConfirmRequest, showToast, ui, useUI } from './store';
 
 export function App({ session }: { session: Session }) {
@@ -98,7 +99,9 @@ export function App({ session }: { session: Session }) {
       {state.panel?.kind === 'apotheke' && <CraftPanel session={session} station="apotheke" />}
       {state.panel?.kind === 'karte' && <MapPanel session={session} />}
       {state.panel?.kind === 'galerie' && <GalleryPanel session={session} />}
-      {state.panel && !['mail', 'book', 'catalog', 'bank', 'werkbank', 'kochstudio', 'apotheke', 'karte', 'galerie'].includes(state.panel.kind) && <InventoryPanel session={session} panel={state.panel} />}
+      {state.panel?.kind === 'tv' && <TvPanel session={session} withOli={state.panel.withOli} />}
+      {state.panel?.kind === 'herd' && <CraftPanel session={session} station="herd" />}
+      {state.panel && !['mail', 'book', 'catalog', 'bank', 'werkbank', 'kochstudio', 'apotheke', 'karte', 'galerie', 'tv', 'herd'].includes(state.panel.kind) && <InventoryPanel session={session} panel={state.panel} />}
       {state.dialog && <DialogBox dialog={state.dialog} onClose={closeDialog} onChoose={chooseInDialog} />}
       {state.confirm && <Confirm request={state.confirm} />}
       {state.toast && <Toast key={state.toast.id} text={state.toast.text} icon={state.toast.icon} />}

@@ -1566,7 +1566,7 @@ export class World3D {
       const fp = footprint(FURNITURE_BY_ITEM[futon.itemId].def, futon.rot);
       return { x: futon.x + fp.w / 2, y: futon.y + fp.d / 2 + 0.15, facing: 'down', lie: (this.interior.model(futon.uid)?.seatY ?? 0.1) + 0.02 };
     }
-    const anchorIds = /Kaffee|kocht/.test(label) ? ['kaffeemaschine', 'kotatsu', 'chabudai'] : /programmiert/.test(label) ? ['schreibtisch-pc'] : /trainiert/.test(label) ? ['hantelbank'] : [];
+    const anchorIds = /Kaffee|kocht/.test(label) ? ['herd', 'kaffeemaschine', 'kotatsu', 'chabudai'] : /programmiert/.test(label) ? ['schreibtisch-pc'] : /trainiert/.test(label) ? ['hantelbank'] : [];
     const grid = this.roomGrid();
     const free = (x: number, y: number) => x >= 0 && y >= 0 && x < this.lay.w && y < this.lay.h && !grid.isBlocked(x, y) && !exitAt(this.lay, x, y);
     for (const id of anchorIds) {
@@ -2165,6 +2165,14 @@ export class World3D {
     const item = home?.items.find((i) => i.uid === uid);
     const f = item ? FURNITURE_BY_ITEM[item.itemId] : undefined;
     if (!item || !f || !player || !home) return;
+    if (f.def.id === 'fernseher') {
+      this.session.bus.emit('ui:open', { kind: 'tv', withOli: !!this.homeOli?.visible });
+      return;
+    }
+    if (f.def.id === 'herd') {
+      this.session.bus.emit('ui:open', { kind: 'herd' });
+      return;
+    }
     if (f.def.coop) {
       collectCoop(this.session, uid);
       this.refreshYard();

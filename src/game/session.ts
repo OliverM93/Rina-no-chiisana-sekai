@@ -57,6 +57,8 @@ export type UiPanel =
   | { kind: 'apotheke' }
   | { kind: 'karte' }
   | { kind: 'galerie' }
+  | { kind: 'tv'; withOli: boolean }
+  | { kind: 'herd' }
   | { kind: 'bank'; onClose?: () => void }
   | { kind: 'gift'; npcId: string; onPick: (itemId: string) => void; onCancel: () => void }
   | { kind: 'seeds'; onPick: (itemId: string) => void; onCancel: () => void };

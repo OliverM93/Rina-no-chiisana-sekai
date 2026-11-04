@@ -174,6 +174,12 @@ Legende: ✅ erledigt · 🚧 in Arbeit · ⬜ geplant
 - ⬜ Jens: Bistro/Kochstudio (Rezepte) & Galerie (Kunstwerke sammeln/ausstellen)
 - ⬜ Thalia: Abendevents (Partys/Tanzabende), Karten, Gesteine/Fossilien, Wetterstation, neue Gebiete
 - ⬜ Oli: romantische Szenen (Picknick, Sternschnuppen), gemeinsames Haus/Zimmer
+**M7h ✅ Fernsehabend & Linas Küche**
+- ✅ Fernseher (Katalog): Datingshow „Blind Date am Leuchtturm“, Doku „Großer Weg – Mein neues Leben“
+  (respektvoll), True Crime „Wahre Fälle vom Land“, Kochshow „Kochen mit Herz“ – jeden Tag neue Folgen
+- ✅ Oli schaut mit, wenn er zu Hause ist (Kommentare, Freundschaft); Kochshow bringt 3 neue Rezepte bei
+- ✅ Küchenzeile mit Herd & Sofa im Katalog – Lina kocht zu Hause
+
 **M7g ✅ Treffen der Bewohner & Linas Streetwear**
 - ✅ Kaffeeklatsch an Omas Bank (Mo/Mi/Fr 15–17), Angeln am Fluss (Olaf & Christin, Di/Do/Sa 16–18),
   Training auf der Wiese (Oli & Lars, Mi/Sa 8–10), Steine & Skizzen am Strand (Thalia & Jens, Di/Fr 13–15)

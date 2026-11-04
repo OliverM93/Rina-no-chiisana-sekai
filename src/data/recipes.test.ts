@@ -21,7 +21,7 @@ describe('Rezepte', () => {
         .filter((id) => id.startsWith(RECIPE_ITEM_PREFIX))
         .map((id) => id.slice(RECIPE_ITEM_PREFIX.length)),
     );
-    for (const r of RECIPES) expect(r.start || !!r.fund || fromLetters.has(r.id), r.id).toBe(true);
+    for (const r of RECIPES) expect(r.start || !!r.fund || !!r.tv || fromLetters.has(r.id), r.id).toBe(true);
   });
 
   it('Handgemachtes gibt es nur an der Werkbank', () => {
