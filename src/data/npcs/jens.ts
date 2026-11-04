@@ -36,6 +36,7 @@ export const JENS: NpcDef = {
   },
   dialogue: {
     greetings: [
+      { text: ['Enfin, eine Party! 🪩', 'Ich hab mir extra mein glitzerndstes Hemd angezogen. Fabelhaft, n\'est-ce pas?'], when: { tags: ['party'] }, weight: 8 },
       { text: ['Bonjour, ma chérie! ☕', 'Nu gugge ma, wer da kommt! Mei Liebsche Nichte!'], when: { phases: ['morgendaemmerung', 'morgen'] } },
       { text: ['Lina, Darling! 💋', 'Du siehst heute ganz fabelhaft aus. Fast so fabelhaft wie ich.'] },
       { text: ['Salut, Lina!', 'Ei verbibbsch, ich hab heut schon drei Gemälde angefangen und keins fertig. C\'est l\'art!'] },
@@ -46,6 +47,7 @@ export const JENS: NpcDef = {
       { text: ['Ein Regenbogen! 🌈', 'Na, wenn das mal kein Zeichen ist. Für uns Fabelhaften ist das ja quasi die Hausfahne.'], when: { tags: ['regenbogen'] }, weight: 5 },
     ],
     chat: [
+      { text: ['Enfin, eine Party! 🪩', 'Ich hab mir extra mein glitzerndstes Hemd angezogen. Fabelhaft, n\'est-ce pas?'], when: { tags: ['party'] }, weight: 8 },
       { text: ['Kunst, chérie, ist überall.', 'In einem Sonnenuntergang. In einer Muschel. In einem perfekt gefalteten Croissant.'] },
       { text: ['Ich war letztes Jahr in Lissabon.', 'Die Fliesen! Die Musik! Der Fischer, der mir sein Boot gezeigt hat! … Das Boot war auch schön.'] },
       { text: ['Weißt du, was ich als Coach immer sag?', '„Sei die Hauptfigur in deinem eigenen Film!“', '… Und trag dabei gute Schuhe.'] },

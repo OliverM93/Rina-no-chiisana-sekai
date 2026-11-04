@@ -2,6 +2,7 @@ import { FLOORS, FURNITURE_ITEMS, VARIANT_LABELS, WALLPAPERS } from './furniture
 import { FURNITURE_BY_ITEM } from './furniture';
 import { RECIPE_ITEM_PREFIX, RECIPES } from './recipes';
 import { FISH, INSECTS } from './species';
+import { FINDS } from './fossils';
 
 /**
  * Alle Gegenstände im Spiel.
@@ -10,7 +11,7 @@ import { FISH, INSECTS } from './species';
  * zeichnen (sonst erscheint ein Platzhalter). Preise in „Sternchen“ ⭐.
  */
 
-export type ItemCategory = 'obst' | 'muschel' | 'blume' | 'material' | 'fund' | 'essen' | 'geschenk' | 'werkzeug' | 'samen' | 'fisch' | 'insekt' | 'moebel' | 'tapete' | 'boden' | 'rezept';
+export type ItemCategory = 'obst' | 'muschel' | 'blume' | 'material' | 'fund' | 'essen' | 'geschenk' | 'werkzeug' | 'samen' | 'fisch' | 'insekt' | 'moebel' | 'tapete' | 'boden' | 'rezept' | 'fossil';
 
 export interface ItemDef {
   id: string;
@@ -68,6 +69,7 @@ const list: ItemDef[] = [
   // Werkzeuge
   { id: 'angel', name: 'Angel', plural: 'Angeln', category: 'werkzeug', price: null, maxStack: 1, description: 'Opa Ludwigs alte Angel. Am Wasser die Leertaste drücken – und dann ganz entspannt abwarten.' },
   { id: 'netz', name: 'Kescher', plural: 'Kescher', category: 'werkzeug', price: null, maxStack: 1, description: 'Ein Netz für Schmetterlinge, Käfer und andere Krabbler.' },
+  { id: 'schaufel', name: 'Schaufel', plural: 'Schaufeln', category: 'werkzeug', price: null, maxStack: 1, description: 'Von Thalia. An kleinen Rissen im Boden graben – da stecken Fossilien und Kristalle!' },
   { id: 'giesskanne', name: 'Gießkanne', plural: 'Gießkannen', category: 'werkzeug', price: null, maxStack: 1, description: 'Eine rosa Gießkanne für Linas Beet. Gießen = Wachsen!' },
 
   // Essen & Geschenke
@@ -97,6 +99,8 @@ const list: ItemDef[] = [
 // Fische & Insekten (aus `species.ts`)
 for (const f of FISH) list.push({ id: f.id, name: f.name, plural: f.plural, category: 'fisch', price: f.price, maxStack: 10, description: f.description });
 for (const i of INSECTS) list.push({ id: i.id, name: i.name, plural: i.plural, category: 'insekt', price: i.price, maxStack: 10, description: i.description });
+
+for (const f of FINDS) list.push({ id: f.id, name: f.name, plural: f.plural, category: 'fossil', price: f.price, maxStack: 10, description: f.description });
 
 // Möbel, Tapeten & Böden (aus `furniture.ts`). Verkaufswert = ein Viertel des Katalogpreises.
 for (const f of FURNITURE_ITEMS) {
@@ -174,5 +178,7 @@ export const FLOWER_BY_SEED: Readonly<Record<string, GardenFlower>> = Object.fro
 export const GARDEN_FLOWER: Readonly<Record<string, GardenFlower>> = Object.fromEntries(GARDEN_FLOWERS.map((g) => [g.flower, g]));
 
 /** Werkzeuge in der Reihenfolge der Werkzeugleiste (Tasten 1–3) */
-export const TOOLS = ['angel', 'netz', 'giesskanne'] as const;
+export const TOOLS = ['angel', 'netz', 'giesskanne', 'schaufel'] as const;
+/** Die ersten drei gibt es von Oma, die Schaufel von Thalia */
+export const STARTER_TOOLS = ['angel', 'netz', 'giesskanne'] as const;
 export type ToolId = (typeof TOOLS)[number];

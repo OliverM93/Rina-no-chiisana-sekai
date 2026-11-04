@@ -33,6 +33,7 @@ export const LARS: NpcDef = {
   },
   dialogue: {
     greetings: [
+      { text: ['Tanzen ist gesund!', 'Ärztliche Empfehlung. Ich zeig dir gleich meinen Robot. Patentiert.'], when: { tags: ['party'] }, weight: 8 },
       { text: ['Moin, Schwesterherz!', 'Gut geschlafen? Ich frag aus medizinischen Gründen. Und weil ich dein Bruder bin.'], when: { phases: ['morgendaemmerung', 'morgen'] } },
       { text: ['Na, Kleine?', 'Weißt du, was ein Arzt im Garten macht? Er pflanzt Rezepte. 🌱'] },
       { text: ['Hey Lina!', 'Ich hab heute schon drei Leute behandelt. Zwei davon waren Oma. Sie kam zweimal, um mir zu sagen, dass sie nicht krank ist.'] },
@@ -43,6 +44,7 @@ export const LARS: NpcDef = {
       { text: ['Schnee! Schal an, Mütze auf!', 'Ärztliche Anordnung. Und brüderliche auch.'], when: { tags: ['wetter-schnee'] }, weight: 3 },
     ],
     chat: [
+      { text: ['Tanzen ist gesund!', 'Ärztliche Empfehlung. Ich zeig dir gleich meinen Robot. Patentiert.'], when: { tags: ['party'] }, weight: 8 },
       { text: ['Wie schreibt man eigentlich „Praxis Lars“ richtig?', 'Mit Lars und Praxis.', '… So, und nicht mit e, sonst ist es ein See.'], weight: 2 },
       { text: ['Ich hab einen Witz über Chemie.', 'Aber da kommt eh keine Reaktion.'] },
       { text: ['Was ist grün und klopft an die Tür?', 'Ein Klopfsalat. 🥬'] },

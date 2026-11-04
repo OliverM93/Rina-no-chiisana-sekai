@@ -36,6 +36,7 @@ export const GISELA: NpcDef = {
 
   dialogue: {
     greetings: [
+      { text: ['Was für ein Krach! … Ich meine: Was für eine schöne Musik.', 'Ich tanz nicht. … Na gut, einen. Ludwig hätte getanzt.'], when: { tags: ['party'] }, weight: 8 },
       { text: ['Morgen, Kindchen!', 'Vor meinem ersten Kaffee red ich eigentlich mit niemandem.', '… Mit dir mach ich mal eine Ausnahme.'], when: { phases: ['morgendaemmerung', 'morgen'] } },
       { text: ['Na, Lina? Schon was Ordentliches gegessen?', 'Du siehst so dünn aus. … Doch, tust du.'], when: { phases: ['morgen', 'mittag'] } },
       { text: ['Da bist du ja! Ich hab dich schon von Weitem gesehen.', 'Ich seh alles. Merk dir das.'] },
@@ -52,6 +53,7 @@ export const GISELA: NpcDef = {
       { text: ['Kindchen! Mein Lieblingsbesuch.', '… Ja, ich weiß, du bist mein einziger Besuch. Trotzdem.'], when: { minHearts: 2 } },
     ],
     chat: [
+      { text: ['Was für ein Krach! … Ich meine: Was für eine schöne Musik.', 'Ich tanz nicht. … Na gut, einen. Ludwig hätte getanzt.'], when: { tags: ['party'] }, weight: 8 },
       { text: ['Mein Enkel ist jetzt Arzt im Dorf.', 'Ich trau ihm trotzdem nicht. Ärzte wollen nur dein Geld!', '… Er nimmt aber gar keins von mir. Verdächtig, oder?'], when: { tags: ['lars-da'] }, weight: 3 },
       { text: ['Lars hat mir Tabletten verschrieben.', 'Ich hab ihm Kamillentee verschrieben. Wir werden sehen, wer recht hat.', '… Ich. Natürlich.'], when: { tags: ['lars-da'] }, weight: 3 },
       { text: ['Der Jens mit seinem Bistro …', 'Seine Croissants sind köstlich. Seine Hemden: pfui!', 'Aber sag ihm nichts. Er ist ja ein Guter.'], when: { tags: ['jens-da'] }, weight: 2 },

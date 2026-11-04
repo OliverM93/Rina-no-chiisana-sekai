@@ -8,10 +8,11 @@ import { OLAF_ANNOUNCEMENT } from '../data/npcs/olaf';
 import { OLI_ANNOUNCEMENT } from '../data/npcs/oli';
 import { JENS_ANNOUNCEMENT, jensTravels, travelPostcard } from '../data/npcs/jens';
 import { LARS_ANNOUNCEMENT } from '../data/npcs/lars';
+import { THALIA_ANNOUNCEMENT } from '../data/npcs/thalia';
 import { sendLetter } from './gameplay';
 import type { Session } from './session';
 
-export type StoryEvent = 'olaf-angekuendigt' | 'olaf-eingezogen' | 'oli-angekuendigt' | 'oli-eingezogen' | 'jens-angekuendigt' | 'jens-eingezogen' | 'jens-reist' | 'lars-angekuendigt' | 'lars-eingezogen';
+export type StoryEvent = 'olaf-angekuendigt' | 'olaf-eingezogen' | 'oli-angekuendigt' | 'oli-eingezogen' | 'jens-angekuendigt' | 'jens-eingezogen' | 'jens-reist' | 'lars-angekuendigt' | 'lars-eingezogen' | 'thalia-angekuendigt' | 'thalia-eingezogen';
 
 /** Einmal beim Laden und bei jedem neuen Tag aufrufen. Gibt neue Ereignisse zurück. */
 export function checkStory(session: Session): StoryEvent[] {
@@ -83,6 +84,23 @@ export function checkStory(session: Session): StoryEvent[] {
     if (!letter || daysBetween(letter.day, today) >= 1) {
       f.larsEingezogen = true;
       out.push('lars-eingezogen');
+    }
+  }
+  // Thalia: vier Tage nach Lars kommt ihr Brief, am Tag darauf zieht sie ein
+  if (f.larsBegruesst && !f.thaliaAngekuendigt) {
+    const larsLetter = data.mail.letters.find((l) => l.id === 'lars-einzug');
+    if (!larsLetter || daysBetween(larsLetter.day, today) >= 4) {
+      const thalia = NPC_BY_ID.thalia;
+      if (thalia) sendLetter(session, thalia, THALIA_ANNOUNCEMENT, 'thalia-einzug');
+      f.thaliaAngekuendigt = true;
+      out.push('thalia-angekuendigt');
+    }
+  }
+  if (f.thaliaAngekuendigt && !f.thaliaEingezogen) {
+    const letter = data.mail.letters.find((l) => l.id === 'thalia-einzug');
+    if (!letter || daysBetween(letter.day, today) >= 1) {
+      f.thaliaEingezogen = true;
+      out.push('thalia-eingezogen');
     }
   }
   // Jens auf Reisen: Postkarte mit Andenken (einmal pro Reisetag)

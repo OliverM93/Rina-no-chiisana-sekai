@@ -83,6 +83,9 @@ export const VILLAGE_OBJECTS: readonly MapObjectDef[] = [
   // Lars' Praxis mit Apotheke am Dorfplatz (M7c)
   { id: 'bauplatz-2', kind: 'plot', x: 22, y: 12, until: 'larsEingezogen' },
   { id: 'praxis-lars', kind: 'praxis', x: 22, y: 12, requires: 'larsEingezogen' },
+  // Thalias gelbes Häuschen hinter der Brücke (M7d)
+  { id: 'bauplatz-4', kind: 'plot', x: 42, y: 21, until: 'thaliaEingezogen' },
+  { id: 'haus-thalia', kind: 'house', x: 42, y: 21, variant: 'butter', requires: 'thaliaEingezogen' },
   // Onkel Jens' Bistro „Chez Jens“ mit Kochstudio (M7b)
   { id: 'bistro-jens', kind: 'bistro', x: 48, y: 14, requires: 'jensEingezogen' },
 

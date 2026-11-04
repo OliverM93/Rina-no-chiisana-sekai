@@ -48,3 +48,22 @@ describe('Lars', () => {
     expect(GARDEN_FLOWER.pfefferminze?.seed).toBe('samen-pfefferminze');
   });
 });
+
+describe('Thalia', () => {
+  it('Funde sind Gegenstände, Schaufel ist kein Start-Werkzeug', async () => {
+    const { FINDS } = await import('./fossils');
+    const { isKnownItem, STARTER_TOOLS, TOOLS } = await import('./items');
+    for (const f of FINDS) expect(isKnownItem(f.id), f.id).toBe(true);
+    expect(TOOLS).toContain('schaufel');
+    expect(STARTER_TOOLS).not.toContain('schaufel');
+  });
+
+  it('Party ist samstags 19–22 Uhr, erst wenn Thalia da ist', async () => {
+    const { isPartyTime } = await import('../game/party');
+    const fake = (flag: boolean) => ({ data: { flags: { thaliaBegruesst: flag } }, clock: () => new Date() }) as never;
+    expect(isPartyTime(fake(true), new Date('2026-11-07T20:00:00'))).toBe(true);
+    expect(isPartyTime(fake(true), new Date('2026-11-07T18:59:00'))).toBe(false);
+    expect(isPartyTime(fake(true), new Date('2026-11-06T20:00:00'))).toBe(false);
+    expect(isPartyTime(fake(false), new Date('2026-11-07T20:00:00'))).toBe(false);
+  });
+});

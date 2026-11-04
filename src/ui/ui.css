@@ -1503,3 +1503,18 @@ body {
     transform: translate(260px, 85px) rotate(-18deg);
   }
 }
+
+/* ---------------------------------------------------------------- M7d: Thalias Karte */
+
+.card.map-card {
+  width: min(760px, 96vw);
+}
+
+.village-map {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 14px;
+  border: 3px solid var(--ui-border);
+  image-rendering: auto;
+}

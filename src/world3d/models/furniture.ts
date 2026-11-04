@@ -437,6 +437,36 @@ export function makeFurniture(itemId: string, links: FenceLinks = { n: false, e:
       g.add(s(0.02, 0.012, 0.005, '#f4a3b8', -0.08, 0.04, 0.062));
       break;
     }
+    case 'vitrine': {
+      g.add(b(0.7, 0.12, 0.5, DARK_WOOD, 0, 0.06, 0));
+      g.add(b(0.7, 0.05, 0.5, DARK_WOOD, 0, 1.12, 0));
+      const glass = new THREE.MeshToonMaterial({ color: '#dff0ff', transparent: true, opacity: 0.28 });
+      g.add(b(0.66, 1.0, 0.46, glass, 0, 0.62, 0));
+      for (const y of [0.42, 0.78]) g.add(b(0.62, 0.02, 0.42, '#e6c59c', 0, y, 0));
+      // Funde in der Vitrine
+      const amm = c(0.08, 0.04, '#c9a77a', -0.15, 0.47, 0.05);
+      amm.rotation.x = Math.PI / 2;
+      g.add(amm);
+      g.add(c(0.04, 0.12, '#a98ad8', 0.15, 0.49, 0, cone));
+      g.add(s(0.05, 0.04, 0.04, '#f2a83a', 0.05, 0.82, 0.05));
+      g.add(c(0.03, 0.1, '#e6f4ff', -0.15, 0.84, 0, cone));
+      break;
+    }
+    case 'globus': {
+      g.add(c(0.2, 0.04, DARK_WOOD, 0, 0.02, 0));
+      g.add(c(0.025, 0.55, DARK_WOOD, 0, 0.3, 0));
+      const globe = new THREE.Group();
+      globe.position.y = 0.78;
+      globe.rotation.z = 0.4;
+      globe.add(s(0.22, 0.22, 0.22, '#7ab8f0'));
+      for (const [x, y, z, r] of [[0.12, 0.08, 0.14, 0.09], [-0.1, -0.05, 0.17, 0.07], [0.05, 0.15, -0.15, 0.08], [-0.16, 0.1, -0.08, 0.06]] as const) globe.add(s(r, r * 0.8, r * 0.6, '#8fd08a', x, y, z));
+      for (const [x, y, z] of [[0.15, 0.12, 0.14], [-0.12, -0.02, 0.18], [0.04, 0.2, -0.12]] as const) globe.add(s(0.018, 0.018, 0.018, '#e85a8a', x, y, z));
+      const ring = mesh(new THREE.TorusGeometry(0.25, 0.012, 6, 24, Math.PI * 1.4), toon('#c9a24a'));
+      ring.rotation.y = Math.PI / 2;
+      globe.add(ring);
+      g.add(globe);
+      break;
+    }
     // ---- Garten (draußen) ----
     case 'zaun-holz':
     case 'zaun-weiss':

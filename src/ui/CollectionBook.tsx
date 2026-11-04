@@ -5,12 +5,13 @@
 import { useEffect, useState } from 'preact/hooks';
 import { MONTHS } from '../core/time';
 import { CURRENCY } from '../data/items';
+import { FINDS } from '../data/fossils';
 import { FISH, FISH_HABITAT_LABELS, type FishDef, INSECT_HABITAT_LABELS, INSECTS, type InsectDef } from '../data/species';
 import type { Session } from '../game/session';
 import { itemIconUrl } from '../gfx/items';
 import { ui, useSessionVersion } from './store';
 
-type Tab = 'fische' | 'insekten';
+type Tab = 'fische' | 'insekten' | 'funde';
 type Species = FishDef | InsectDef;
 
 function monthsLabel(months: readonly number[]): string {
@@ -33,6 +34,72 @@ function hoursLabel(h: readonly [number, number]): string {
   return `${h[0]}–${h[1] % 24} Uhr`;
 }
 
+const TABS = ['fische', 'insekten', 'funde'] as const;
+const TAB_LABELS: Record<Tab, string> = { fische: '🐟 Fische', insekten: '🦋 Insekten', funde: '🦴 Funde' };
+
+/** Reiter „Funde“: Fossilien & Kristalle aus dem Boden */
+function FindsBook({ session, tab, setTab, close }: { session: Session; tab: Tab; setTab: (t: Tab) => void; close: () => void }) {
+  const [selected, setSelected] = useState<string | null>(null);
+  const collection = session.data?.collection ?? {};
+  const found = FINDS.filter((f) => collection[f.id]).length;
+  const sel = FINDS.find((f) => f.id === selected) ?? null;
+  const entry = sel ? collection[sel.id] : undefined;
+  return (
+    <div class="modal-layer" onPointerUp={(e) => e.target === e.currentTarget && close()}>
+      <div class="card book pop-in">
+        <h2 class="card-title">📖 Sammelbuch</h2>
+        <div class="book-tabs">
+          {TABS.map((t) => (
+            <button key={t} class={`chip ${tab === t ? 'active' : ''}`} onClick={() => setTab(t)}>
+              {TAB_LABELS[t]}
+            </button>
+          ))}
+          <span class="soft book-progress">
+            {found} / {FINDS.length} entdeckt
+          </span>
+        </div>
+        <div class="book-grid">
+          {FINDS.map((f) => {
+            const known = !!collection[f.id];
+            return (
+              <button key={f.id} class={`book-cell ${known ? '' : 'unknown'} ${selected === f.id ? 'selected' : ''}`} onClick={() => setSelected(f.id)} aria-label={known ? f.name : 'unbekannt'}>
+                <img src={itemIconUrl(f.id)} alt="" draggable={false} />
+              </button>
+            );
+          })}
+        </div>
+        <div class="item-detail">
+          {sel && entry ? (
+            <>
+              <img src={itemIconUrl(sel.id, 96)} alt="" />
+              <div>
+                <div class="item-name">
+                  {sel.name} <span class="soft">× {entry.count}</span>
+                </div>
+                <div class="item-cat">{sel.kind === 'fossil' ? 'Fossil' : 'Mineral'}</div>
+                <div class="item-desc">{sel.description}</div>
+                <div class="item-price">
+                  Wert: {sel.price} {CURRENCY.icon}
+                  {entry.firstDay ? ` · zuerst gefunden am ${entry.firstDay.split('-').reverse().join('.')}` : ''}
+                </div>
+              </div>
+            </>
+          ) : sel ? (
+            <p class="soft center">??? – noch nicht ausgegraben.</p>
+          ) : (
+            <p class="soft center">Nimm Thalias Schaufel (Taste 4) und grab an kleinen, funkelnden Rissen im Boden.</p>
+          )}
+        </div>
+        <div class="card-actions">
+          <button class="btn ghost" onClick={close}>
+            Schließen
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export function CollectionBook({ session }: { session: Session }) {
   useSessionVersion(session);
   const [tab, setTab] = useState<Tab>('fische');
@@ -51,6 +118,7 @@ export function CollectionBook({ session }: { session: Session }) {
   });
 
   const collection = session.data?.collection ?? {};
+  if (tab === 'funde') return <FindsBook session={session} tab={tab} setTab={setTab} close={close} />;
   const list: readonly Species[] = tab === 'fische' ? FISH : INSECTS;
   const caught = list.filter((s) => collection[s.id]).length;
   const sel = list.find((s) => s.id === selected) ?? null;
@@ -62,7 +130,7 @@ export function CollectionBook({ session }: { session: Session }) {
       <div class="card book pop-in">
         <h2 class="card-title">📖 Sammelbuch</h2>
         <div class="book-tabs">
-          {(['fische', 'insekten'] as const).map((t) => (
+          {TABS.map((t) => (
             <button
               key={t}
               class={`chip ${tab === t ? 'active' : ''}`}
@@ -71,7 +139,7 @@ export function CollectionBook({ session }: { session: Session }) {
                 setSelected(null);
               }}
             >
-              {t === 'fische' ? '🐟 Fische' : '🦋 Insekten'}
+              {TAB_LABELS[t]}
             </button>
           ))}
           <span class="soft book-progress">
