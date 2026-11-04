@@ -99,6 +99,11 @@ Lichterketten, allen Bewohnern und einem Tanz mit Thalia. 💃
 Silvester gibt's Feuerwerk, an Ostern sind bunte Eier im Gras versteckt, an Halloween leuchten Kürbisse
 vor allen Häusern.
 
+**Galerie & Sonntagsessen (M7f):** In Jens' **Galerie** gibt es jeden Tag ein Kunstwerk zu kaufen – von Jens,
+Oma (Kreuzstich!), Thalia oder Oli. Lina kann die Bilder der Galerie stiften oder zu Hause auf einer
+Staffelei aufstellen. Und jeden **Sonntag ab 18 Uhr** lädt Jens zum Abendessen zu sich nach Hause ein –
+Oli und Lars sind immer dabei, Olaf, Christin und Oma manchmal. Einfach an Jens' Tür klopfen.
+
 Im Menü: Aussehen ändern, speichern, **Spielstand exportieren/laden** (als Datei – praktisch zum Sichern
 oder für ein anderes Gerät), Vollbild, Hilfe.
 
@@ -156,6 +161,10 @@ und jede Jahreszeit sieht anders aus.
 | Weihnachten | Linas Geburtstag | Ostern | Halloween |
 |---|---|---|---|
 | ![Weihnachten](docs/screenshots/3d-weihnachten.png) | ![Geburtstag](docs/screenshots/3d-geburtstag.png) | ![Ostern](docs/screenshots/3d-ostern.png) | ![Halloween](docs/screenshots/3d-halloween.png) |
+
+| Galerie | Kunst zu Hause | Sonntagsessen |
+|---|---|---|
+| ![Galerie](docs/screenshots/3d-galerie.png) | ![Kunst](docs/screenshots/3d-kunst-zuhause.png) | ![Essen](docs/screenshots/3d-sonntagsessen.png) |
 
 | Sammelbuch | Regen |
 |---|---|

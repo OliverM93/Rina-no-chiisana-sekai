@@ -285,6 +285,18 @@ describe('Version 10 (M7a Oli)', () => {
   });
 });
 
+describe('Version 11 (M7f Galerie)', () => {
+  it('ergänzt die Galerie und entfernt Doppelte & Unbekannte', () => {
+    const v10 = { ...freshSave(), version: 10 } as Record<string, unknown>;
+    delete v10.gallery;
+    const r1 = parseSave(JSON.stringify(v10), SPAWN, NOW);
+    expect(r1.ok && r1.data.gallery).toEqual([]);
+    const s = { ...freshSave(), gallery: ['a', 'a', 'weg', 3] };
+    const r2 = parseSave(JSON.stringify(s), SPAWN, NOW, { isKnownItem: (id) => id !== 'weg' });
+    expect(r2.ok && r2.data.gallery).toEqual(['a']);
+  });
+});
+
 describe('Export', () => {
   it('erzeugt einen Dateinamen mit Datum', () => {
     expect(exportFileName(NOW)).toBe('rina-spielstand-2026-11-02.json');

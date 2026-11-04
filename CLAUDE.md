@@ -28,7 +28,7 @@ Meilensteine und Fortschritt: siehe [`ROADMAP.md`](ROADMAP.md).
 | **Lars** | großer Bruder, Arzt – Praxis/Apotheke; guter Humor, hat immer einen Spruch auf Lager (z. B. „So, und nicht mit e, sonst ist es ein See.“) | groß & kräftig, kurz geschorene rotblonde Haare, rotblonder Vollbart, blaue Augen, dunkles Streifenhemd |
 | **Olaf** | Papa, Finanzamt – Dorfkasse/Bank; **Zwillingsbruder von Jens** | eher klein, dunkle angegraute Haare, grauer kurzer Bart, eckige Brille, weißes Hemd mit dunkler Weste |
 | **Christin** | Olafs Freundin – sehr ordentlich, achtet auf Ordnung & Sauberkeit | schlank, dunkelbrauner Bob mit Seitenscheitel, braune Augen, korallrotes Oberteil |
-| **Jens** | Onkel, Coach, Dandy – Bistro/Kochstudio & Galerie, Französisch + Sächsisch; liebt Kunst, reist leidenschaftlich gern um die Welt, ein bisschen fabelhaft 🌈 (liebevoll & selbstverständlich, nie klischeehaft) | untersetzt, rundes Gesicht, dunkle zerzauste Haare, kein Bart, blaue Augen, Zahnlücken-Grinsen, dunkler Hoodie |
+| **Jens** | Onkel, Coach, Dandy – Bistro/Kochstudio & Galerie, Französisch + Sächsisch; liebt Kunst, reist leidenschaftlich gern um die Welt, ein bisschen fabelhaft 🌈 (liebevoll & selbstverständlich, nie klischeehaft); **Zwillingsbruder von Olaf**; sächselt gern aus Spaß mit Lina; lädt sonntags zum Abendessen zu sich nach Hause ein (Lina, Oli, Lars – manchmal Olaf, Christin, Gisela) | untersetzt, rundes Gesicht, dunkle zerzauste Haare, kein Bart, blaue Augen, Zahnlücken-Grinsen, dunkler Hoodie |
 | **Thalia** | beste Freundin, Geografie – Partys, Karten, Gesteine/Fossilien | schlank, glatte dunkelbraune schulterlange Haare mit Mittelscheitel, braune Augen, kleine Creolen, grünes Halstuch, schwarze Jacke, weite Jeans |
 | **Oma Gisela** | Oma – Bank vorm Haus, Weisheiten, Kekse, Strickrezepte; hat **immer das letzte Wort**, misstrauisch („Die Ärzte wollen nur dein Geld …“), starke Meinung zu allem („köstlich!“ – „pfui!“); Likörchen/Zigarette dezent & humorvoll, nie glorifizierend; Witwe von **Opa Ludwig** (verstorben; Sportlehrer & leidenschaftlicher Sportfan), an den sie liebevoll zurückdenkt – warm, nie traurig-schwer | klein, zierlich, offene silbergraue Haare (kein Dutt), **keine Brille**, königsblauer Mantel mit rotem Tuch |
 | **Winston** | Linas treuer kleiner Dackel – läuft ihr überallhin nach | rotbrauner Kurzhaardackel mit Schlappohren und rosa Halsband (`data/winston.ts`) |
@@ -203,6 +203,10 @@ src/
   Positionen über `session.livePositions()`.
 - **Geburtstage der Bewohner:** `NpcDef.birthday` + `birthdayLines`; Geschenke am Geburtstag zählen doppelt,
   Tags `geburtstag-<id>` / `bald-geburtstag-<id>` (7 Tage vorher).
+- **Galerie:** Kunstwerke in `data/art.ts` (werden Möbel im Stil „kunst“, Bild auf Staffelei, gemalt in
+  `gfx/art.ts`), Regeln in `game/gallery.ts`, gestiftete Bilder in `SaveData.gallery`.
+- **Sonntagsessen:** `game/dinner.ts` – Gäste gehen per `{ kind: 'zuhause', at: 'bistro-jens' }` zu Jens
+  ins Haus; Lina klopft an seine Tür (`visitBistro`).
 - **Feste:** `core/festivals.ts` (welches Fest an welchem Datum, Ostern berechnet), Inhalte in
   `data/festivals.ts` (Geschenke & Sprüche je Bewohner), Regeln in `game/festivals.ts` (`festTalk` beim ersten
   Gespräch, Geschenk 1× pro Fest & Jahr über `world.dates`), Schmuck in `world3d/Festivals3D.ts`.

@@ -161,7 +161,12 @@ Legende: ✅ erledigt · 🚧 in Arbeit · ⬜ geplant
   Häusern), Linas Geburtstag (Luftballons am Haus, Geschenke von allen)
 - ✅ Jeder Bewohner hat eigene Fest-Sprüche; Geschenke einmal pro Fest und Jahr
 
-- ⬜ Galerie (Kunstwerke sammeln & ausstellen)
+**M7f ✅ Jens' Galerie & Sonntagsessen**
+- ✅ 12 Kunstwerke (von Jens, Oma, Thalia, Oli), jeden Tag eins zum Kaufen; der Galerie stiften oder zu Hause
+  auf einer Staffelei aufstellen
+- ✅ Sonntagsessen bei Jens zu Hause (18–20 Uhr): Oli & Lars immer, Olaf, Christin & Oma manchmal – an Jens'
+  Tür klopfen und mitessen
+- ✅ Jens sächselt gern mit Lina
 - ✅ Olis Geburtstag (29.07.): eigene Sprüche, Geschenke freuen doppelt, Oma erinnert vorher daran
 - ⬜ Weitere Geburtstage der Bewohner (Daten noch offen) – Olaf & Jens sind Zwillinge
 - ⬜ Lars: Praxis/Apotheke (Heiltränke, Pflaster), Gesundheitstipps
@@ -169,7 +174,7 @@ Legende: ✅ erledigt · 🚧 in Arbeit · ⬜ geplant
 - ⬜ Jens: Bistro/Kochstudio (Rezepte) & Galerie (Kunstwerke sammeln/ausstellen)
 - ⬜ Thalia: Abendevents (Partys/Tanzabende), Karten, Gesteine/Fossilien, Wetterstation, neue Gebiete
 - ⬜ Oli: romantische Szenen (Picknick, Sternschnuppen), gemeinsames Haus/Zimmer
-- ⬜ NPCs interagieren untereinander (Kaffeeklatsch, gemeinsames Angeln)
+- ⬜ NPCs interagieren untereinander (Kaffeeklatsch, gemeinsames Angeln) – Sonntagsessen gibt's schon
 - ⬜ Feste: Weihnachten, Silvester, Linas Geburtstag (16.06.), Geburtstage der Bewohner
 
 ## ⬜ M8 – Feinschliff

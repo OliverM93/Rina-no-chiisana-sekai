@@ -3,6 +3,7 @@ import { FURNITURE_ITEMS } from './furniture';
 import { NPCS } from './npcs';
 import { TRAVELS } from './npcs/jens';
 import { FEST_GIFTS } from './festivals';
+import { ART_BY_ID } from './art';
 
 // Diese bringt Oli beim Einzug mit (siehe World3D.oliArrival)
 const MOVE_IN_GIFTS = ['schreibtisch-pc', 'hantelbank'];
@@ -10,7 +11,7 @@ const MOVE_IN_GIFTS = ['schreibtisch-pc', 'hantelbank'];
 describe('Geschenk-Möbel', () => {
   it('jedes Möbel „nur als Geschenk“ kommt irgendwoher', () => {
     const fromLetters = new Set(NPCS.flatMap((n) => [...n.letters, ...Object.values(n.heartLetters)]).map((l) => l.gift?.itemId));
-    for (const f of FURNITURE_ITEMS.filter((x) => x.def.gift)) expect(fromLetters.has(f.itemId) || MOVE_IN_GIFTS.includes(f.itemId) || TRAVELS.some((t) => t.souvenir === f.itemId) || Object.values(FEST_GIFTS).some((g) => Object.values(g ?? {}).some((x) => x.itemId === f.itemId)), f.itemId).toBe(true);
+    for (const f of FURNITURE_ITEMS.filter((x) => x.def.gift)) expect(fromLetters.has(f.itemId) || MOVE_IN_GIFTS.includes(f.itemId) || TRAVELS.some((t) => t.souvenir === f.itemId) || !!ART_BY_ID[f.itemId] || Object.values(FEST_GIFTS).some((g) => Object.values(g ?? {}).some((x) => x.itemId === f.itemId)), f.itemId).toBe(true);
   });
 
   it('Oli wohnt bei Lina und nennt sie Lini', () => {
@@ -79,5 +80,32 @@ describe('Feste', () => {
         expect(isKnownItem(g.itemId), `${f}:${g.itemId}`).toBe(true);
       }
     }
+  });
+});
+
+describe('Galerie & Sonntagsessen', () => {
+  it('jedes Kunstwerk ist ein Möbel-Gegenstand mit Kunst-Stil', async () => {
+    const { ARTWORKS } = await import('./art');
+    const { FURNITURE_BY_ITEM } = await import('./furniture');
+    for (const a of ARTWORKS) {
+      expect(FURNITURE_BY_ITEM[a.id]?.def.style, a.id).toBe('kunst');
+      expect(a.id).toMatch(/^[a-z-]+$/);
+    }
+  });
+
+  it('Sonntagsessen: Lina, Oli, Lars immer – andere manchmal', async () => {
+    const { dinnerGuests, isDinnerTime } = await import('../game/dinner');
+    const flags = { jensBegruesst: true, jensEingezogen: true, oliEingezogen: true, larsEingezogen: true, olafEingezogen: true };
+    const fake = (day: string) => ({ data: { flags }, today: () => day, clock: () => new Date(`${day}T18:30:00`) }) as never;
+    let olaf = 0;
+    for (const d of ['2026-11-01', '2026-11-08', '2026-11-15', '2026-11-22', '2026-11-29', '2026-12-06', '2026-12-13', '2026-12-20']) {
+      const g = dinnerGuests(fake(d));
+      expect(g).toEqual(expect.arrayContaining(['jens', 'oli', 'lars']));
+      if (g.includes('olaf')) olaf++;
+    }
+    expect(olaf).toBeGreaterThan(0);
+    expect(olaf).toBeLessThan(8);
+    expect(isDinnerTime(fake('2026-11-01'), new Date('2026-11-01T18:30:00'))).toBe(true);
+    expect(isDinnerTime(fake('2026-11-02'), new Date('2026-11-02T18:30:00'))).toBe(false);
   });
 });

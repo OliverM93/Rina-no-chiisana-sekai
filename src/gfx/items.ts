@@ -9,6 +9,8 @@ import { drawPattern } from './interior';
 import { FURNITURE_ITEMS, FLOORS, WALLPAPERS } from '../data/furniture';
 import { RECIPE_ITEM_PREFIX, RECIPES } from '../data/recipes';
 import { FINDS } from '../data/fossils';
+import { ARTWORKS } from '../data/art';
+import { artCanvas } from './art';
 
 export const ICON = 32;
 
@@ -645,6 +647,17 @@ DRAW.schaufel = (ctx) => {
   ctx.stroke();
   ctx.restore();
 };
+
+// Kunstwerke: das Bild im Goldrahmen
+for (const art of ARTWORKS) {
+  DRAW[art.id] = (ctx) => {
+    roundRect(ctx, 3, 5, 26, 22, 2, '#d9b45a', '#a8842a', 1.4);
+    ctx.save();
+    ctx.translate(6, 8);
+    ctx.drawImage(artCanvas(art, 80, 64), 0, 0, 20, 16);
+    ctx.restore();
+  };
+}
 
 const imageOverrides = new Map<string, string>();
 

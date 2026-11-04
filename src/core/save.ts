@@ -21,7 +21,7 @@ import { createInventory, type Inventory, normalizeInventory } from './inventory
 import { createMailbox, type Mailbox, normalizeMailbox } from './mail';
 import { type DayMonth, DEFAULT_LINA_BIRTHDAY, formatIsoDay } from './time';
 
-export const SAVE_VERSION = 10;
+export const SAVE_VERSION = 11;
 export const SAVE_KEY = 'rina-no-chiisana-sekai.save';
 export const BACKUP_KEY = 'rina-no-chiisana-sekai.save.backup';
 
@@ -105,6 +105,8 @@ export interface SaveData {
   pet: PetState;
   /** Linas Garten: Zäune, Wege, Gartenmöbel … */
   yard: Room;
+  /** Kunstwerke, die Lina der Galerie von Jens gestiftet hat */
+  gallery: string[];
 }
 
 export interface SaveOptions {
@@ -174,6 +176,7 @@ export function createNewSave(opts: NewGameOptions): SaveData {
     recipes: [...(opts.recipes ?? [])],
     pet: createPet(),
     yard: emptyYard(),
+    gallery: [],
   };
 }
 
@@ -215,6 +218,8 @@ export const MIGRATIONS: Record<number, (old: RawSave) => RawSave> = {
   8: (old) => ({ ...old }),
   // v9 → v10 (M7a Oli): gemeinsame Momente (Picknick, Sterne gucken). `normalizeWorld` ergänzt sie leer.
   9: (old) => ({ ...old }),
+  // v10 → v11 (M7f Galerie): gestiftete Kunstwerke. `normalizeSave` legt die Liste leer an.
+  10: (old) => ({ ...old }),
 };
 
 export function migrate(raw: RawSave, migrations = MIGRATIONS, target = SAVE_VERSION): RawSave {
@@ -340,6 +345,7 @@ export function normalizeSave(raw: RawSave, spawn: { x: number; y: number }, now
     bank: normalizeBank(raw.bank),
     recipes: withStart(normalizeRecipeBook(raw.recipes, opts.isKnownRecipe ?? (() => true)), opts.startRecipes ?? []),
     pet: normalizePet(raw.pet),
+    gallery: Array.isArray(raw.gallery) ? [...new Set(raw.gallery.filter((g): g is string => typeof g === 'string' && isKnownItem(g)))] : [],
     yard: normalizeRoom(raw.yard, emptyYard(), opts.yardLayout ?? { id: 'garten', name: 'Garten', w: 0, h: 0, exits: [] }, isKnownItem, opts.furnitureInfo ?? (() => undefined)),
   };
 }

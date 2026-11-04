@@ -57,7 +57,8 @@ async function start() {
   const game = new World3D(canvas, session);
   // 3D-Vorschaubilder der Möbel für Katalog & Tasche (kurz nach dem Start)
   window.setTimeout(() => {
-    const thumbs = renderFurnitureThumbnails(FURNITURE_ITEMS.map((f) => f.itemId));
+    // Kunstwerke behalten ihr gemaltes Symbol (Bild im Rahmen)
+    const thumbs = renderFurnitureThumbnails(FURNITURE_ITEMS.filter((f) => f.def.style !== 'kunst').map((f) => f.itemId));
     for (const [id, url] of Object.entries(thumbs)) setIconImage(id, url);
     session.changed();
   }, 300);

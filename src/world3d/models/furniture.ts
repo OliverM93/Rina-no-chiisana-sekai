@@ -5,6 +5,8 @@
  */
 import * as THREE from 'three';
 import { FURNITURE_BY_ITEM } from '../../data/furniture';
+import { ART_BY_ID } from '../../data/art';
+import { artCanvas } from '../../gfx/art';
 import { darken, lighten } from '../../style/palette';
 import { mesh, toon } from '../materials';
 
@@ -100,6 +102,33 @@ export function makeFurniture(itemId: string, links: FenceLinks = { n: false, e:
   let lightAt: THREE.Vector3 | null = null;
   let seatY = 0;
   const col = f?.color ?? '#f7c6d4';
+  const art = f ? ART_BY_ID[f.def.id] : undefined;
+  if (art) {
+    // Bild auf Staffelei
+    for (const dx of [-0.18, 0.18]) {
+      const leg = b(0.04, 1.15, 0.04, '#8a5a3a', dx, 0.56, -0.04);
+      leg.rotation.z = -dx * 0.35;
+      g.add(leg);
+    }
+    const back = b(0.04, 1.05, 0.04, '#8a5a3a', 0, 0.5, -0.2);
+    back.rotation.x = -0.35;
+    g.add(back);
+    g.add(b(0.6, 0.04, 0.12, '#8a5a3a', 0, 0.52, 0.08));
+    const frame = new THREE.Group();
+    frame.position.set(0, 0.8, 0.08);
+    frame.rotation.x = -0.12;
+    frame.add(b(0.64, 0.52, 0.04, '#d9b45a'));
+    const tex = new THREE.CanvasTexture(artCanvas(art, 160, 128));
+    tex.colorSpace = THREE.SRGBColorSpace;
+    const canvasMesh = new THREE.Mesh(new THREE.PlaneGeometry(0.56, 0.44), new THREE.MeshToonMaterial({ map: tex }));
+    canvasMesh.position.z = 0.022;
+    frame.add(canvasMesh);
+    g.add(frame);
+    g.traverse((o) => {
+      if ((o as THREE.Mesh).isMesh) o.castShadow = true;
+    });
+    return { group: g, glow, lightAt, seatY };
+  }
   switch (f?.def.id) {
     case 'futon': {
       // 1 breit × 2 tief
