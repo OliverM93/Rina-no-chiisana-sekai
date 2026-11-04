@@ -262,6 +262,19 @@ describe('Version 8 (M6c Garten)', () => {
   });
 });
 
+describe('Version 9 (M6d Tiere)', () => {
+  it('ergänzt die Abholtage der Ställe und behält sie', () => {
+    const v8 = { ...freshSave(), version: 8 } as Record<string, unknown>;
+    delete (v8.world as Record<string, unknown>).coopDay;
+    const r1 = parseSave(JSON.stringify(v8), SPAWN, NOW);
+    expect(r1.ok && r1.data.world.coopDay).toEqual({});
+    const s = freshSave();
+    s.world.coopDay = { 'stall-1': '2026-11-04' };
+    const r2 = parseSave(JSON.stringify(s), SPAWN, NOW);
+    expect(r2.ok && r2.data.world.coopDay).toEqual({ 'stall-1': '2026-11-04' });
+  });
+});
+
 describe('Export', () => {
   it('erzeugt einen Dateinamen mit Datum', () => {
     expect(exportFileName(NOW)).toBe('rina-spielstand-2026-11-02.json');

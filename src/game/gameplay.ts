@@ -16,6 +16,7 @@ import { weatherAt } from '../core/weather';
 import { terrainAt } from '../core/worldmap';
 import { BEACH_FINDS, BEACH_FINDS_PER_DAY, CURRENCY, itemCountLabel, itemDef, maxStackOf, ROCK_FINDS } from '../data/items';
 import { fillPlaceholders } from '../data/interactions';
+import { FURNITURE_BY_ITEM } from '../data/furniture';
 import { NPC_BY_ID, NPCS } from '../data/npcs';
 import type { LetterTemplate, NpcDef } from '../data/npcs/types';
 import type { Session } from './session';
@@ -150,6 +151,8 @@ function dialogueContext(session: Session, npcId: string, firstToday: boolean): 
   const w = weatherAt(now, session.weatherOverride);
   tags.push(`wetter-${w.kind}`);
   if (session.data?.flags.olafEingezogen) tags.push('olaf-da');
+  if (session.data?.yard.items.some((i) => FURNITURE_BY_ITEM[i.itemId]?.def.coop === 'huhn')) tags.push('huehner');
+  if (session.data?.yard.items.some((i) => FURNITURE_BY_ITEM[i.itemId]?.def.coop === 'wachtel')) tags.push('wachteln');
   if (w.rainbow) tags.push('regenbogen');
   return {
     phase: getDayPhase(now),

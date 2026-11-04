@@ -228,6 +228,17 @@ const DRAW: Record<string, Draw> = {
     ellipse(ctx, 25, 6, 1.5, 1.5, '#ffffff');
   },
 
+  ei: (ctx) => {
+    ellipse(ctx, 16, 17, 8.5, 10.5, '#f7ead6', '#c9a77a', 1.4);
+    shine(ctx, 13, 12, 2.4);
+  },
+  wachtelei: (ctx) => {
+    for (const [x, y] of [[12, 18], [20, 16]] as const) {
+      ellipse(ctx, x, y, 5.5, 7, '#efe2cc', '#a98a66', 1.2);
+      for (const [dx, dy, r] of [[-1.5, -2, 1.3], [1.8, 0.5, 1.1], [-0.5, 2.5, 1.4], [1, -3.5, 0.8]] as const) ellipse(ctx, x + dx, y + dy, r, r * 0.8, '#6e5236');
+      shine(ctx, x - 2, y - 3, 1.2);
+    }
+  },
   keks: (ctx) => {
     const c = '#e9c08a';
     ellipse(ctx, 16, 16, 11, 11, c, darken(c, 0.3), 1.5);

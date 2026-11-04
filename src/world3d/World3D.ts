@@ -66,6 +66,9 @@ import { Garden3D } from './Garden3D';
 import { Insects3D } from './Insects3D';
 import { Interior3D, ROOM_X, ROOM_Y } from './Interior3D';
 import { Yard3D } from './Yard3D';
+import { Animals3D } from './Animals3D';
+import { coopHasEggs, coopKindOf, collectCoop } from '../game/animals';
+import { COOPS } from '../data/animals';
 import { YARD_AREA } from '../data/yard';
 import { makeCan, makeNet, makeRod, type ToolModel } from './models/critters';
 import { Weather3D } from './Weather3D';
@@ -85,7 +88,8 @@ type Target =
   | { kind: 'beet'; tile: Tile }
   | { kind: 'moebel'; uid: string }
   | { kind: 'katalog' }
-  | { kind: 'winston' };
+  | { kind: 'winston' }
+  | { kind: 'tier'; index: number };
 
 const SPECIAL_OBJECTS = ['verkaufskiste', 'haus-gisela', 'haus-olaf', 'briefkasten-lina', 'werkbank-lina'];
 const DIRS = { down: [0, 1], up: [0, -1], left: [-1, 0], right: [1, 0] } as const;
@@ -141,6 +145,7 @@ export class World3D {
   private exitArmed = true;
   private winston: Winston | null = null;
   private yard: Yard3D;
+  private animals: Animals3D;
   /** Wie lange Lina schon stillsteht (für Winstons Buddeln & Körbchen) */
   private linaIdle = 0;
   private basketCheck = 0;
@@ -206,6 +211,7 @@ export class World3D {
     this.interactive.add('beet-lina');
     this.interior = new Interior3D(this.scene);
     this.yard = new Yard3D(this.scene, this.view.terrain.heightAt);
+    this.animals = new Animals3D(this.scene, session.map.grid, this.view.terrain.heightAt);
     this.garden.extraSpots = () => this.yardBedSpots();
 
     canvas.addEventListener('pointerdown', this.onPointerDown);
@@ -267,6 +273,10 @@ export class World3D {
     this.weather.update(dt, this.camTarget);
     this.hemi.intensity = this.baseHemi + this.weather.lightning * 1.4;
     this.insects.update(dt, this.night);
+    {
+      const h = this.session.clock().getHours();
+      this.animals.update(dt, this.session.data?.yard, h >= 21 || h < 6, !this.session.inside);
+    }
 
     const player = this.player;
     const data = this.session.data;
@@ -517,6 +527,7 @@ export class World3D {
       if (olaf) sendLetter(this.session, olaf, { id: `ausbau-${stage}`, subject: 'Dein Ausbau ist fertig!', body: `Liebe Lina,\n\ndein Haus ist fertig umgebaut: ${HOUSE_STAGES[stage].name}! Geh doch gleich mal rein und schau es dir an.\n\nDie Abrechnung liegt bei mir in der Dorfkasse. Ganz ohne Eile.\n\nDein Papa` }, `olaf-ausbau-${stage}`);
     }
     this.syncMapObjects();
+    this.refreshYard();
     if ((events.includes('olaf-eingezogen') || (data.flags.olafEingezogen && !data.flags.olafBegruesst)) && data.flags.giselaWelcomed) {
       window.setTimeout(() => this.arrivalScene(), 2500);
     }
@@ -720,6 +731,12 @@ export class World3D {
       if (d < TILE * 1.35 && dx * fx + dy * fy > d * 0.35) return { kind: 'npc', npc };
     }
     const front = { x: tile.x + fx, y: tile.y + fy };
+    // Stall direkt davor geht vor (Eier abholen), sonst Tiere streicheln
+    const coop = this.yardItemAt(front.x, front.y);
+    const coopItem = coop ? this.session.data?.yard.items.find((i) => i.uid === coop) : undefined;
+    if (coop && coopItem && coopKindOf(coopItem.itemId)) return { kind: 'moebel', uid: coop };
+    const bird = this.animals.nearest(player.x * UNIT, player.y * UNIT, fx, fy);
+    if (bird >= 0) return { kind: 'tier', index: bird };
     if (this.garden.isSpot(front)) return { kind: 'beet', tile: front };
     const yardItem = this.yardItemAt(front.x, front.y);
     if (yardItem) return { kind: 'moebel', uid: yardItem };
@@ -941,6 +958,16 @@ export class World3D {
       case 'winston':
         this.petDog();
         return;
+      case 'tier': {
+        const kind = this.animals.pet(target.index, player.x * UNIT, player.y * UNIT);
+        const pos = this.animals.birdPosition(target.index);
+        if (pos) player.faceTowards(pos.x / UNIT, pos.z / UNIT);
+        if (kind) {
+          const sounds = COOPS[kind].sounds;
+          this.session.bus.emit('toast', { text: sounds[Math.floor(Math.random() * sounds.length)] });
+        }
+        return;
+      }
       case 'moebel':
         this.useFurniture(target.uid);
         return;
@@ -1409,7 +1436,11 @@ export class World3D {
 
   private refreshYard(force = false) {
     const yard = this.session.data?.yard;
-    if (yard) this.yard.refresh(yard, force);
+    if (!yard) return;
+    this.yard.refresh(yard, force);
+    this.animals.refresh(yard);
+    // Eier im Nest zeigen, wenn es heute welche gibt
+    for (const i of yard.items) if (coopKindOf(i.itemId)) this.yard.setEggs(i.uid, coopHasEggs(this.session, i.uid));
   }
 
   /** Mauszeiger → Gartenzelle (über den Boden) */
@@ -1521,6 +1552,11 @@ export class World3D {
     const item = home?.items.find((i) => i.uid === uid);
     const f = item ? FURNITURE_BY_ITEM[item.itemId] : undefined;
     if (!item || !f || !player || !home) return;
+    if (f.def.coop) {
+      collectCoop(this.session, uid);
+      this.refreshYard();
+      return;
+    }
     if (f.def.light) {
       this.dv.toggleLamp(uid);
       this.interior.updateLight(this.night, currentWeather(this.session).clouds);

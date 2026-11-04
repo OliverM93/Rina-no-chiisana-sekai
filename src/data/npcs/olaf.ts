@@ -28,7 +28,7 @@ export const OLAF: NpcDef = {
   ],
   preferences: {
     loves: ['hering', 'dorsch', 'glitzerstein', 'teeservice'],
-    likes: ['apfel', 'birne', 'scholle', 'barsch', 'stein', 'tulpe', 'keks'],
+    likes: ['ei', 'wachtelei', 'apfel', 'birne', 'scholle', 'barsch', 'stein', 'tulpe', 'keks'],
     dislikes: ['waldameise', 'ohrenqualle', 'weinbergschnecke'],
   },
   dialogue: {
@@ -42,6 +42,7 @@ export const OLAF: NpcDef = {
       { text: ['Bei dem Regen arbeiten selbst die Enten im Homeoffice.', '… War ein Witz. Ein guter, finde ich.'], when: { tags: ['wetter-regen'] }, weight: 3 },
     ],
     chat: [
+      { text: ['Eigene Hühner – sehr vernünftig!', 'Ein Ei am Tag spart im Jahr … warte … ziemlich viele Sternchen. Ich rechne das nachher aus.'], when: { tags: ['huehner'] }, weight: 3 },
       { text: ['Winston ist der Einzige im Dorf, der nie nach Belegen fragt.', 'Ein sehr angenehmer Zeitgenosse.'] },
       { text: ['Hast du schon was an Opas Werkbank gebaut?', 'Selbermachen spart Geld. Und Geld sparen macht glücklich. Mich jedenfalls.'] },
       { text: ['Weißt du, was ein Steuerberater zum Frühstück isst?', 'Belege!', '… Christin lacht nie über den.'] },

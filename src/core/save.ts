@@ -21,7 +21,7 @@ import { createInventory, type Inventory, normalizeInventory } from './inventory
 import { createMailbox, type Mailbox, normalizeMailbox } from './mail';
 import { type DayMonth, DEFAULT_LINA_BIRTHDAY, formatIsoDay } from './time';
 
-export const SAVE_VERSION = 8;
+export const SAVE_VERSION = 9;
 export const SAVE_KEY = 'rina-no-chiisana-sekai.save';
 export const BACKUP_KEY = 'rina-no-chiisana-sekai.save.backup';
 
@@ -66,10 +66,12 @@ export interface WorldState {
   ground: GroundItem[];
   /** Linas Beet: Platz „x,y“ → Pflanze */
   garden: Garden;
+  /** Ställe: uid → Tag, an dem zuletzt Eier abgeholt wurden */
+  coopDay: Record<string, string>;
 }
 
 export function createWorldState(): WorldState {
-  return { fruitHarvest: {}, branchDay: {}, rockDay: {}, flowerDay: {}, picked: { day: '', ids: [] }, ground: [], garden: {} };
+  return { fruitHarvest: {}, branchDay: {}, rockDay: {}, flowerDay: {}, picked: { day: '', ids: [] }, ground: [], garden: {}, coopDay: {} };
 }
 
 export interface SaveData {
@@ -207,6 +209,8 @@ export const MIGRATIONS: Record<number, (old: RawSave) => RawSave> = {
   6: (old) => ({ ...old }),
   // v7 → v8 (M6c Garten): Linas Garten. `normalizeSave` legt ihn leer an.
   7: (old) => ({ ...old }),
+  // v8 → v9 (M6d Tiere): Eier-Abholtage der Ställe. `normalizeWorld` ergänzt sie leer.
+  8: (old) => ({ ...old }),
 };
 
 export function migrate(raw: RawSave, migrations = MIGRATIONS, target = SAVE_VERSION): RawSave {
@@ -277,6 +281,7 @@ export function normalizeWorld(raw: unknown, isKnownItem: (id: string) => boolea
     }
   }
   w.garden = normalizeGarden(raw.garden, isKnownItem);
+  w.coopDay = stringRecord(raw.coopDay);
   return w;
 }
 

@@ -28,7 +28,7 @@ export const CHRISTIN: NpcDef = {
   ],
   preferences: {
     loves: ['lavendel', 'vergissmeinnicht', 'rose', 'ikebana'],
-    likes: ['tulpe', 'sonnenblume', 'wildblumen', 'jakobsmuschel', 'herzmuschel', 'pfirsich', 'apfel'],
+    likes: ['ei', 'wachtelei', 'tulpe', 'sonnenblume', 'wildblumen', 'jakobsmuschel', 'herzmuschel', 'pfirsich', 'apfel'],
     dislikes: ['ast', 'stein', 'weinbergschnecke', 'waldameise', 'strandkrabbe', 'aal'],
   },
   dialogue: {
@@ -41,6 +41,8 @@ export const CHRISTIN: NpcDef = {
       { text: ['Dieser Regen!', 'Jetzt tragen alle Matsch auf den Dorfplatz. Ich seh schon, was ich morgen mache.'], when: { tags: ['wetter-regen'] }, weight: 3 },
     ],
     chat: [
+      { text: ['Deine Hühner scharren das ganze Gras auf.', 'Aber sie machen das in so schönen ordentlichen Kreisen. Das muss ich zugeben.'], when: { tags: ['huehner'] }, weight: 3 },
+      { text: ['Die Wachteln sind so niedlich!', 'Und so sauber. Die putzen sich ständig. Sehr sympathisch.'], when: { tags: ['wachteln'] }, weight: 3 },
       { text: ['Winston ist über meinen frisch gefegten Platz gelaufen.', 'Die Pfotenabdrücke waren aber sehr ordentlich in einer Reihe. Das rechne ich ihm hoch an.'] },
       { text: ['Ordnung ist das halbe Leben.', 'Die andere Hälfte ist … noch mehr Ordnung.'] },
       { text: ['Weißt du, was ich an deinem Dorf mag?', 'Die Wege sind schön gerade. Na ja – fast.'] },

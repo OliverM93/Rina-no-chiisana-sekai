@@ -113,8 +113,12 @@ Legende: ✅ erledigt · 🚧 in Arbeit · ⬜ geplant
 - ✅ Niemand wird eingesperrt: Haustür, Briefkasten, Beet, Werkbank & Wege bleiben immer erreichbar
 - ✅ Spielstand Version 8 (Garten)
 
-**M6d ⬜ Tiere**
-- ⬜ Wachteln & Hühner halten (Stall, tägliche Eier)
+**M6d ✅ Hühner & Wachteln**
+- ✅ Hühnerstall (3 Hühner) und Wachtelstall (4 Wachteln) im Garten-Katalog – die Tiere ziehen gleich mit ein
+- ✅ Tiere trippeln um ihren Stall, picken, hüpfen beim Streicheln, schlafen nachts im Stall
+- ✅ Jeden Tag frische Eier im Nest (Hühner 2–3, Wachteln 3–4) – kein Füttern, keine Pflicht
+- ✅ Oma, Olaf & Christin freuen sich über Eier und haben etwas zu den Tieren zu sagen
+- ✅ Spielstand Version 9 (Abholtage der Ställe)
 
 ## ⬜ M7 – Alle Bewohner, Shops & Events
 

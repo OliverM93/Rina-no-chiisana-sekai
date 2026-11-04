@@ -474,6 +474,68 @@ export function makeFurniture(itemId: string, links: FenceLinks = { n: false, e:
       for (const x of [-0.45, 0.45]) g.add(b(0.7, 0.025, 0.66, '#5e3e2a', x, 0.385, 0));
       break;
     }
+    case 'huehnerstall': {
+      // Haus auf Stelzen (hinten), Auslauf-Rampe vorne
+      for (const x of [-0.55, 0.55]) for (const z of [-0.75, -0.05]) g.add(b(0.07, 0.42, 0.07, '#8a5a3a', x, 0.21, z));
+      g.add(b(1.3, 0.62, 0.86, '#d9534f', 0, 0.73, -0.4));
+      for (const x of [-0.66, 0.66]) g.add(b(0.06, 0.64, 0.88, '#f7f5ec', x, 0.73, -0.4));
+      g.add(b(1.34, 0.06, 0.9, '#f7f5ec', 0, 0.42, -0.4));
+      for (const sx of [-1, 1]) {
+        const roof = b(0.78, 0.06, 1.0, '#7a5038', sx * 0.33, 1.2, -0.4);
+        roof.rotation.z = -sx * 0.55;
+        g.add(roof);
+      }
+      // Giebel vorne (Dreieck)
+      const gable = new THREE.Shape();
+      gable.moveTo(-0.65, 0);
+      gable.lineTo(0.65, 0);
+      gable.lineTo(0, 0.42);
+      gable.closePath();
+      const gm = mesh(new THREE.ShapeGeometry(gable), toon('#d9534f', { side: THREE.DoubleSide }));
+      gm.position.set(0, 1.04, 0.035);
+      g.add(gm);
+      // Tür & Fensterchen
+      g.add(b(0.3, 0.38, 0.03, '#8a3a34', -0.2, 0.62, 0.04));
+      g.add(c(0.09, 0.03, '#ffe9b8', 0.3, 0.85, 0.04).rotateX(Math.PI / 2));
+      g.add(c(0.1, 0.02, '#f7f5ec', 0.3, 0.85, 0.035).rotateX(Math.PI / 2));
+      // Rampe mit Querleisten
+      const ramp = b(0.3, 0.03, 0.85, '#b98a5e', -0.2, 0.22, 0.38);
+      ramp.rotation.x = 0.55;
+      g.add(ramp);
+      // Nest mit Eiern (sichtbar, wenn es heute Eier gibt)
+      g.add(c(0.2, 0.08, '#d9b77a', 0.45, 0.06, 0.55));
+      const eggs = new THREE.Group();
+      eggs.name = 'eggs';
+      for (const [x, z] of [[0.4, 0.52], [0.5, 0.58], [0.45, 0.62]] as const) eggs.add(s(0.045, 0.06, 0.045, '#f7ead6', x, 0.13, z));
+      g.add(eggs);
+      // Futternapf
+      g.add(c(0.12, 0.05, '#7a9ac8', 0.45, 0.025, 0.1));
+      g.add(c(0.1, 0.01, '#e8c547', 0.45, 0.05, 0.1));
+      break;
+    }
+    case 'wachtelstall': {
+      for (const x of [-0.8, 0.8]) for (const z of [-0.3, 0.3]) g.add(b(0.06, 0.18, 0.06, '#8a5a3a', x, 0.09, z));
+      g.add(b(1.7, 0.04, 0.7, '#b98a5e', 0, 0.18, 0));
+      g.add(b(1.7, 0.42, 0.04, '#c9955f', 0, 0.4, -0.33));
+      for (const x of [-0.84, 0.84]) g.add(b(0.04, 0.42, 0.7, '#c9955f', x, 0.4, 0));
+      // Häuschen links
+      g.add(b(0.6, 0.42, 0.66, '#9ad8c0', -0.54, 0.4, 0));
+      g.add(c(0.08, 0.02, '#3a3a44', -0.54, 0.36, 0.33).rotateX(Math.PI / 2));
+      // Drahtgitter vorne rechts
+      const wire = toon('#c9cbd3');
+      for (let i = 0; i <= 8; i++) g.add(b(0.012, 0.42, 0.012, wire, -0.22 + i * 0.13, 0.4, 0.34));
+      for (const y of [0.25, 0.4, 0.55]) g.add(b(1.06, 0.012, 0.012, wire, 0.3, y, 0.34));
+      const roof = b(1.8, 0.05, 0.82, '#7a5038', 0, 0.64, 0);
+      roof.rotation.x = 0.12;
+      g.add(roof);
+      // Eier in der Schale vorne
+      g.add(c(0.14, 0.04, '#d9b77a', 0.6, 0.02, 0.48));
+      const eggs = new THREE.Group();
+      eggs.name = 'eggs';
+      for (const [x, z] of [[0.56, 0.46], [0.64, 0.5], [0.6, 0.53], [0.66, 0.44]] as const) eggs.add(s(0.03, 0.038, 0.03, '#e6d6bc', x, 0.06, z));
+      g.add(eggs);
+      break;
+    }
     // ---- Handgemacht (Werkbank) ----
     case 'ast-hocker': {
       g.add(c(0.2, 0.05, '#c9955f', 0, 0.36, 0));

@@ -137,6 +137,12 @@ export class Yard3D {
     }
   }
 
+  /** Eier im Nest eines Stalls zeigen/verstecken */
+  setEggs(uid: string, on: boolean) {
+    const eggs = this.placed.get(uid)?.model.group.getObjectByName('eggs');
+    if (eggs) eggs.visible = on;
+  }
+
   toggleLamp(uid: string) {
     if (this.lit.has(uid)) this.lit.delete(uid);
     else this.lit.add(uid);
