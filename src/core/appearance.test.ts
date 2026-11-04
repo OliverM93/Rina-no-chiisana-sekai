@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { LOOKS } from '../data/npcs/looks';
-import { DEFAULT_LINA, normalizeAppearance, shoesFor } from './appearance';
+import { DEFAULT_LINA, normalizeAppearance, outfitFor, shoesFor } from './appearance';
 
 describe('Aussehen', () => {
   it('ergänzt neue Felder für alte Spielstände', () => {
@@ -50,5 +50,14 @@ describe('Aussehen', () => {
     expect(normalizeAppearance(old, DEFAULT_LINA).faceShape).toBe('oval');
     expect(normalizeAppearance({ ...DEFAULT_LINA, faceShape: 'eckig' }, DEFAULT_LINA).faceShape).toBe('oval');
     expect(normalizeAppearance({ ...DEFAULT_LINA, faceShape: 'rund' }, DEFAULT_LINA).faceShape).toBe('rund');
+  });
+
+  it('Streetwear je nach Jahreszeit: Sommer kurz, Winter Fleece', () => {
+    const a = { ...DEFAULT_LINA, outfit: 'saison' as const };
+    expect(outfitFor(a, 'sommer')).toBe('shorts');
+    expect(outfitFor(a, 'winter')).toBe('fleece');
+    expect(outfitFor(a, 'herbst')).toBe('sweatshirt');
+    expect(outfitFor({ ...a, outfit: 'kleid' }, 'winter')).toBe('kleid');
+    expect(DEFAULT_LINA.outfit).toBe('saison');
   });
 });

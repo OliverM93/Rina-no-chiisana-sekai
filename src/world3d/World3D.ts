@@ -44,6 +44,7 @@ import { OLAF_WELCOME } from '../data/npcs/olaf';
 import { OLI_WELCOME } from '../data/npcs/oli';
 import { DINNER_LINES, DINNER_OPENERS, JENS_WELCOME } from '../data/npcs/jens';
 import { dinnerGuests, isDinnerTime } from '../game/dinner';
+import { activeMeetups, joinMeetup, meetupOf } from '../game/meetups';
 import { CHECKUP_GIFTS, CHECKUP_LINES, LARS_WELCOME } from '../data/npcs/lars';
 import { hashString } from '../core/rng';
 import { canDate, type DateKind, haveDate } from '../game/romance';
@@ -165,6 +166,9 @@ export class World3D {
   private digSpots: DigSpots3D;
   private festivals: Festivals3D;
   private festToastDay = '';
+  private emoteTimer = 2;
+  private emoteTextures = new Map<string, THREE.CanvasTexture>();
+  private npcRods = new Map<string, boolean>();
   private digging = false;
   private partyLights: { group: THREE.Group; bulbs: THREE.MeshToonMaterial[] };
   private partyLight = new THREE.PointLight('#ffb8d8', 0, 9, 1.4);
@@ -307,6 +311,7 @@ export class World3D {
       this.applyLight();
     }
     for (const npc of this.npcs.values()) npc.update(dtMs);
+    this.updateMeetups(dt);
     this.collectibles.update(dt);
     this.view.terrain.update(now / 1000);
     this.updateLeaves(dt);
@@ -557,6 +562,7 @@ export class World3D {
       window.setTimeout(() => this.welcomeScene(), 1300);
     }
     this.onNewDay();
+    for (const npc of this.npcs.values()) npc.snap();
     this.rebuildLinaHouse();
     this.refreshYard(true);
     this.setInYard(false);
@@ -1220,6 +1226,21 @@ export class World3D {
       });
       return;
     }
+    // Bei einem Treffen: erst mal zuhören, was die anderen erzählen
+    const meet = meetupOf(this.session, npc.def.id);
+    if (meet && data?.world.dates[`treffen:${meet.id}`] !== this.session.today()) {
+      talkToNpc(this.session, npc.def.id);
+      this.session.bus.emit('dialog:open', {
+        title: meet.name,
+        hearts: npcHearts(this.session, npc.def.id),
+        lines: joinMeetup(this.session, meet),
+        choices: [
+          { label: `💬 Mit ${npc.def.name} reden`, onSelect: () => this.npcDialog(npc, [`Schön, dass du da bist, Lina!`], npcHearts(this.session, npc.def.id)) },
+          { label: '👋 Weiter', onSelect: () => npc.endTalk() },
+        ],
+      });
+      return;
+    }
     const out = talkToNpc(this.session, npc.def.id);
     this.npcDialog(npc, out.lines, out.hearts);
   }
@@ -1749,6 +1770,64 @@ export class World3D {
       this.session.bus.emit('dialog:open', { title: npc.def.name, hearts: npcHearts(this.session, 'thalia'), lines, onClose: () => npc.endTalk() });
     });
     this.session.save();
+  }
+
+  /** Treffen: Symbole über den Köpfen, Angeln in der Hand */
+  private updateMeetups(dt: number) {
+    const meets = activeMeetups(this.session);
+    for (const npc of this.npcs.values()) {
+      const m = meets.find((x) => x.members.includes(npc.def.id));
+      const want = !!m && m.hold === 'angel' && npc.present && !npc.char.hasPath;
+      if (want !== (this.npcRods.get(npc.def.id) ?? false)) {
+        this.npcRods.set(npc.def.id, want);
+        const rod = want ? makeRod() : null;
+        if (rod) rod.group.rotation.x = 0.2;
+        npc.char.hold(rod?.group ?? null);
+        npc.char.armForward = want ? -0.35 : undefined;
+      }
+    }
+    if (this.session.inside || meets.length === 0) return;
+    this.emoteTimer -= dt;
+    if (this.emoteTimer > 0) return;
+    this.emoteTimer = 1.6 + Math.random() * 1.6;
+    const m = meets[Math.floor(Math.random() * meets.length)];
+    const here = m.members.map((id) => this.npcs.get(id)).filter((n): n is Npc => !!n && n.present && !n.char.hasPath);
+    if (here.length === 0) return;
+    const who = here[Math.floor(Math.random() * here.length)];
+    this.popEmote(who.char.root.position.clone().add(new THREE.Vector3(0, who.bubbleHeight + 0.15, 0)), m.emotes[Math.floor(Math.random() * m.emotes.length)]);
+  }
+
+  /** Ein Emoji steigt kurz über einem Kopf auf */
+  private popEmote(at: THREE.Vector3, text: string) {
+    let tex = this.emoteTextures.get(text);
+    if (!tex) {
+      const c = document.createElement('canvas');
+      c.width = c.height = 64;
+      const ctx = c.getContext('2d') as CanvasRenderingContext2D;
+      ctx.fillStyle = '#ffffff';
+      ctx.beginPath();
+      ctx.arc(32, 30, 26, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.font = '34px sans-serif';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(text, 32, 32);
+      tex = new THREE.CanvasTexture(c);
+      tex.colorSpace = THREE.SRGBColorSpace;
+      this.emoteTextures.set(text, tex);
+    }
+    const sp = new THREE.Sprite(new THREE.SpriteMaterial({ map: tex, transparent: true, depthWrite: false }));
+    sp.position.copy(at);
+    sp.renderOrder = 9;
+    this.scene.add(sp);
+    this.tweens.add(1500, (k) => {
+      sp.position.y = at.y + k * 0.35;
+      sp.scale.setScalar(0.32 * Math.min(1, k * 5));
+      sp.material.opacity = k < 0.75 ? 1 : 1 - (k - 0.75) / 0.25;
+    }, () => {
+      sp.removeFromParent();
+      sp.material.dispose();
+    });
   }
 
   /** Sonntagsessen bei Jens: Lina setzt sich dazu, alle Gäste reden mit – Freundschaft für alle */
