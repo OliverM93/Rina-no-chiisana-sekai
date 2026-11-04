@@ -161,6 +161,7 @@ export class World3D {
   /** erst nach dem Verlassen eines Ausgangs-Feldes darf er wieder auslösen */
   private exitArmed = true;
   private winston: Winston | null = null;
+  private stepAcc = 0;
   /** Automatisches Gehen (Tür-Animation) */
   private autoWalk: { dx: number; dy: number; until: number } | null = null;
   private yard: Yard3D;
@@ -237,6 +238,7 @@ export class World3D {
     this.leaves = this.makeLeaves();
     this.weather = new Weather3D(this.scene);
     this.fishing = new Fishing3D(this.scene);
+    this.fishing.onBite = () => this.session.bus.emit('sfx', 'biss');
     this.insects = new Insects3D(this.scene, session, this.view, this.tweens);
     this.garden = new Garden3D(this.scene, session, this.tweens);
     this.interactive.add('beet-lina');
@@ -354,6 +356,14 @@ export class World3D {
       if (this.session.decorActive && this.session.inside) intent.dx = intent.dy = 0;
       // beim Durch-die-Tür-Gehen: keine Kollision (sonst stünde Lina vor der Hauswand)
       player.update(dtMs, intent, auto ? () => false : solid);
+      // Schritte: bei jedem zweiten halben Schritt ein leises Geräusch
+      if (player.moving) {
+        this.stepAcc += dtMs / 1000;
+        if (this.stepAcc > (player.running ? 0.22 : 0.3)) {
+          this.stepAcc = 0;
+          this.session.bus.emit('sfx', this.session.inside ? 'schritt-holz' : 'schritt');
+        }
+      } else this.stepAcc = 0.2;
       this.updateWinston(dtMs, player, blocked, solid);
       this.updateHomeOli(dtMs);
       if (this.session.inside && !this.session.decorActive) {
@@ -890,6 +900,7 @@ export class World3D {
     const spot = this.digSpots.spotAt(t.x + fx, t.y + fy) ?? this.digSpots.spotAt(t.x, t.y);
     if (!spot) return false;
     this.digging = true;
+    this.session.bus.emit('sfx', 'graben');
     player.faceTowards((spot.x + 0.5) * TILE, (spot.y + 0.5) * TILE);
     const tool = this.held?.model.group;
     this.tweens.add(700, (k) => {
@@ -980,6 +991,7 @@ export class World3D {
     player.armForward = -1.0;
     const tip = this.rodTip() ?? new THREE.Vector3(player.x * UNIT, 1, player.y * UNIT);
     this.fishing.cast(tip, water.point, fish);
+    window.setTimeout(() => this.session.bus.emit('sfx', 'platsch'), 450);
     return true;
   }
 
@@ -998,6 +1010,7 @@ export class World3D {
       player.armForward = -1.6;
       window.setTimeout(() => this.player && this.held && (this.player.armForward = -0.35), 400);
     }
+    this.session.bus.emit('sfx', 'fang');
     const result = catchFish(this.session, fish);
     this.session.bus.emit('dialog:open', { title: fish.name, lines: [...catchMessage(fish.name, 'fisch', result), FISH_BY_ID[fish.id].description] });
   }
@@ -1014,12 +1027,14 @@ export class World3D {
     const [fx, fy] = DIRS[player.facing];
     const key = this.insects.near(player.x, player.y, fx, fy);
     if (!key && !force) return false;
+    this.session.bus.emit('sfx', 'kescher');
     this.tweens.add(320, (k) => (player.armForward = -2.4 + k * 2.0), () => (player.armForward = this.held ? -0.35 : undefined));
     if (!key) return true;
     const to = new THREE.Vector3(player.x * UNIT + fx * 0.5, 0.6, player.y * UNIT + fy * 0.5);
     const def = this.insects.take(key, to);
     if (!def) return true;
     window.setTimeout(() => {
+      this.session.bus.emit('sfx', 'fang');
       const result = catchInsect(this.session, def);
       this.session.bus.emit('dialog:open', { title: def.name, lines: [...catchMessage(def.name, 'insekt', result), def.description] });
     }, 330);
@@ -1957,6 +1972,7 @@ export class World3D {
     const sleeping = w.sleeping;
     const lines = petWinston(this.session, sleeping);
     w.pet(sleeping);
+    if (!sleeping) this.session.bus.emit('sfx', 'bellen');
     this.session.bus.emit('toast', { text: lines.join(' ') });
   }
 
@@ -2126,6 +2142,7 @@ export class World3D {
     player.face(dirIn);
     this.autoWalk = { dx: 0, dy: dy(dirIn), until: performance.now() + 380 };
     this.session.bus.emit('overlay:fade', true);
+    this.session.bus.emit('sfx', 'tuer');
     window.setTimeout(() => {
       this.autoWalk = null;
       action();
@@ -2217,6 +2234,7 @@ export class World3D {
       return;
     }
     if (f.def.coop) {
+      this.session.bus.emit('sfx', 'gackern');
       collectCoop(this.session, uid);
       this.refreshYard();
       return;

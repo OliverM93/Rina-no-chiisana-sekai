@@ -76,6 +76,16 @@ export function Menu({ session }: { session: Session }) {
   };
 
   const data = session.data;
+  const [music, setMusic] = useState(data?.settings.musicVolume ?? 0.6);
+  const [sfx, setSfx] = useState(data?.settings.sfxVolume ?? 0.8);
+  const setVol = (k: 'musicVolume' | 'sfxVolume', v: number) => {
+    if (!session.data) return;
+    session.data.settings[k] = v;
+    if (k === 'musicVolume') setMusic(v);
+    else setSfx(v);
+    session.bus.emit('settings:changed', { ...session.data.settings });
+    session.save();
+  };
   return (
     <div class="modal-layer" onPointerUp={(e) => e.target === e.currentTarget && close()}>
       <div class="card menu pop-in">
@@ -84,6 +94,18 @@ export function Menu({ session }: { session: Session }) {
           <p class="menu-meta">
             🏡 {data.villageName} · ⏳ {formatPlayTime(data.playTimeSec)} gespielt
           </p>
+        )}
+        {data && (
+          <div class="menu-volume">
+            <label>
+              🎵 Musik
+              <input type="range" min="0" max="1" step="0.05" value={music} onInput={(e) => setVol('musicVolume', Number((e.target as HTMLInputElement).value))} />
+            </label>
+            <label>
+              🔔 Geräusche
+              <input type="range" min="0" max="1" step="0.05" value={sfx} onInput={(e) => setVol('sfxVolume', Number((e.target as HTMLInputElement).value))} />
+            </label>
+          </div>
         )}
         <div class="menu-grid">
           <button class="btn" onClick={() => ui.set({ menuOpen: false, screen: 'editor', editorMode: 'edit' })}>

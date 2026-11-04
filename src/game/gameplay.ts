@@ -67,6 +67,7 @@ export function sellSlots(session: Session, indices: readonly number[]): number 
     earned += price * stack.count;
   }
   if (earned > 0) {
+    session.bus.emit('sfx', 'muenzen');
     data.money += earned;
     session.changed();
     session.save();
@@ -192,6 +193,7 @@ function pickByDay<T>(session: Session, key: string, list: readonly T[]): T {
 
 /** Heart-Up: Zeilen + Brief mit Geschenk */
 function handleHeartUp(session: Session, npc: NpcDef, st: NpcState, out: string[]) {
+  session.bus.emit('sfx', 'herz');
   out.push(...pickByDay(session, `${npc.id}:herz:${st.points}`, npc.dialogue.heartUp));
   const due = claimHeartRewards(st, Object.keys(npc.heartLetters).map(Number));
   for (const h of due) sendLetter(session, npc, npc.heartLetters[h], `${npc.id}-${npc.heartLetters[h].id}`);
@@ -302,6 +304,7 @@ export function sendLetter(session: Session, npc: NpcDef, tmpl: LetterTemplate, 
   if (delivered) {
     session.changed();
     session.bus.emit('toast', { text: `📬 Neue Post von ${npc.name}!` });
+    session.bus.emit('sfx', 'post');
   }
 }
 

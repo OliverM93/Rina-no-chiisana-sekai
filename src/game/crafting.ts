@@ -53,6 +53,7 @@ export function craftRecipe(session: Session, id: string): CraftResult | 'unbeka
   if (!data || !r || !data.recipes.includes(id)) return 'unbekannt';
   const res = craft(data.inventory, r, maxStackOf);
   if (res === 'ok') {
+    session.bus.emit('sfx', 'bauen');
     session.changed();
     session.save();
   }
