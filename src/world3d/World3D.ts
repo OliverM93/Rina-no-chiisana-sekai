@@ -140,6 +140,7 @@ export class World3D {
   private winston: Winston | null = null;
   /** Wie lange Lina schon stillsteht (für Winstons Buddeln & Körbchen) */
   private linaIdle = 0;
+  private basketCheck = 0;
 
   constructor(
     private readonly canvas: HTMLCanvasElement,
@@ -1294,7 +1295,11 @@ export class World3D {
     const night = hour >= 22 || hour < 6;
 
     // Drinnen: ins Körbchen, wenn Lina sich hinsetzt oder eine Weile stillsteht
-    if (this.session.inside && !w.inBasket && !player.moving && (player.sitting || this.linaIdle > 8 || night)) this.sendToBasket();
+    this.basketCheck -= dt;
+    if (this.session.inside && !w.hasBasket && !player.moving && this.basketCheck <= 0 && (player.sitting || this.linaIdle > 8 || night)) {
+      this.basketCheck = 1;
+      this.sendToBasket();
+    }
 
     w.update(dtMs, { x: player.x, y: player.y, moving: player.moving }, night, solid);
 

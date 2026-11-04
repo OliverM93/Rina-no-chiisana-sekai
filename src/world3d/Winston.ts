@@ -129,6 +129,11 @@ export class Winston {
     this.trail = [...path, pos];
   }
 
+  /** Ist auf dem Weg ins Körbchen oder liegt schon drin */
+  get hasBasket() {
+    return !!this.basket;
+  }
+
   get inBasket() {
     return !!this.basket && Math.hypot(this.basket.x - this.x, this.basket.y - this.y) < 4;
   }
