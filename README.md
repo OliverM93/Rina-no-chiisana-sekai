@@ -87,6 +87,10 @@ und jede Jahreszeit sieht anders aus.
 |---|---|---|---|
 | ![Einzug](docs/screenshots/3d-einzug.png) | ![Dorfkasse](docs/screenshots/3d-dorfkasse.png) | ![Schlafzimmer](docs/screenshots/3d-schlafzimmer.png) | ![Dachzimmer](docs/screenshots/3d-dachzimmer.png) |
 
+| Winston & Opas Werkbank | Winston buddelt | Werkbank | Handgemachtes (Winston schläft im Körbchen) |
+|---|---|---|---|
+| ![Winston](docs/screenshots/3d-winston.png) | ![Buddeln](docs/screenshots/3d-buddeln.png) | ![Werkbank](docs/screenshots/3d-werkbank.png) | ![Handgemacht](docs/screenshots/3d-handgemacht.png) |
+
 | Sammelbuch | Regen |
 |---|---|
 | ![Sammelbuch](docs/screenshots/3d-sammelbuch.png) | ![Regen](docs/screenshots/3d-regen.png) |
