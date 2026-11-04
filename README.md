@@ -127,6 +127,9 @@ Fernseher läuft jetzt auch der **Gruselkanal** – Oli schaut tapfer mit (hinte
 Herzchen steigen auf, beim Bauen regnet es Konfetti – und in Sommernächten tanzen Glühwürmchen. Lina macht
 Freudensprünge, und die Bewohner winken, wenn sie sie anspricht.
 
+**Küsschen (M8e):** Lina und Oli smoochen gern und oft: im Gespräch „😘 Küsschen geben“ – so oft man möchte.
+Kommt Lina nach Hause, holt Oli sie mit einem Begrüßungsküsschen ab, und zwischendurch gibt's einfach so eins.
+
 Im Menü: Aussehen ändern, Lautstärke, speichern, **Spielstand exportieren/laden** (als Datei – praktisch zum Sichern
 oder für ein anderes Gerät), Vollbild, Hilfe.
 
