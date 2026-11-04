@@ -14,6 +14,7 @@ import { InventoryPanel } from './InventoryPanel';
 import { MailPanel } from './MailPanel';
 import { CollectionBook } from './CollectionBook';
 import { CatalogPanel } from './CatalogPanel';
+import { BankPanel } from './BankPanel';
 import { type ConfirmRequest, showToast, ui, useUI } from './store';
 
 export function App({ session }: { session: Session }) {
@@ -87,7 +88,8 @@ export function App({ session }: { session: Session }) {
       {state.panel?.kind === 'mail' && <MailPanel session={session} />}
       {state.panel?.kind === 'book' && <CollectionBook session={session} />}
       {state.panel?.kind === 'catalog' && <CatalogPanel session={session} />}
-      {state.panel && !['mail', 'book', 'catalog'].includes(state.panel.kind) && <InventoryPanel session={session} panel={state.panel} />}
+      {state.panel?.kind === 'bank' && <BankPanel session={session} panel={state.panel} />}
+      {state.panel && !['mail', 'book', 'catalog', 'bank'].includes(state.panel.kind) && <InventoryPanel session={session} panel={state.panel} />}
       {state.dialog && <DialogBox dialog={state.dialog} onClose={closeDialog} onChoose={chooseInDialog} />}
       {state.confirm && <Confirm request={state.confirm} />}
       {state.toast && <Toast key={state.toast.id} text={state.toast.text} icon={state.toast.icon} />}

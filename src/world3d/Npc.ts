@@ -67,8 +67,18 @@ export class Npc {
 
   // -------------------------------------------------------------------------
 
+  /** Wohnt sie/er schon im Dorf? */
+  get movedIn(): boolean {
+    return !this.def.movesIn || !!this.session.data?.flags[this.def.movesIn];
+  }
+
   update(dtMs: number) {
     const grid = this.map.grid;
+    if (!this.movedIn) {
+      if (this.mode !== 'hidden') this.hide();
+      this.entry = null;
+      return;
+    }
     if (this.mode === 'talking' || this.mode === 'scripted') {
       this.char.update(dtMs, { dx: 0, dy: 0, run: false }, (x, y) => grid.isBlocked(x, y));
       return;

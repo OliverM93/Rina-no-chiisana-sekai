@@ -1,17 +1,8 @@
 /**
- * Linas Zimmer als Raster: Möbel platzieren, drehen, verschieben, Deko auf
- * Tischen, Teppiche unter Möbeln. Reine Logik – Darstellung in `world3d/Interior3D.ts`.
+ * Linas Haus als Raster: Räume mit Größe und Ausgängen, Möbel platzieren,
+ * drehen, verschieben, Deko auf Tischen, Teppiche unter Möbeln.
+ * Reine Logik – Darstellung in `world3d/Interior3D.ts`, Ausbaustufen in `data/house.ts`.
  */
-
-export const ROOM_W = 8;
-export const ROOM_H = 6;
-
-/** Feste Felder: Tür (unten Mitte) und das Katalog-Pult (oben links) */
-export const DOOR_CELLS: ReadonlyArray<readonly [number, number]> = [
-  [3, 5],
-  [4, 5],
-];
-export const DESK_CELL: readonly [number, number] = [0, 0];
 
 export type Rotation = 0 | 1 | 2 | 3;
 
@@ -25,10 +16,42 @@ export interface PlacedItem {
   on?: string;
 }
 
-export interface Home {
+/** Ein Raum: Tapete, Boden, Möbel */
+export interface Room {
+  id: string;
   wallpaper: string;
   floor: string;
   items: PlacedItem[];
+}
+
+/** Das ganze Haus: Ausbaustufe und Räume */
+export interface House {
+  stage: number;
+  rooms: Room[];
+  /** bestellter Ausbau, fertig am Tag nach `day` */
+  pending?: { stage: number; day: string };
+}
+
+/** Ausgang eines Raums: Haustür, Durchgang, Treppe */
+export interface Exit {
+  /** Felder im Raum, auf denen man hinausgeht */
+  cells: ReadonlyArray<readonly [number, number]>;
+  /** Ziel: Raum-ID oder 'draussen' */
+  to: string;
+  /** Richtung, in die man laufen muss ('down' = Vorderseite, 'up' = Rückwand) */
+  dir: 'down' | 'up';
+  kind: 'haustuer' | 'durchgang' | 'treppe';
+}
+
+/** Form eines Raums in einer Ausbaustufe */
+export interface RoomLayout {
+  id: string;
+  name: string;
+  w: number;
+  h: number;
+  exits: readonly Exit[];
+  /** Katalog-Pult */
+  desk?: readonly [number, number];
 }
 
 /** Was die Raumlogik über ein Möbel wissen muss */
@@ -55,8 +78,12 @@ export function cellsOf(x: number, y: number, info: FootInfo, rot: Rotation): Ar
 
 const key = (x: number, y: number) => `${x},${y}`;
 
-function reserved(): Set<string> {
-  return new Set([...DOOR_CELLS, DESK_CELL].map(([x, y]) => key(x, y)));
+/** Felder, auf denen keine Möbel stehen dürfen (Ausgänge, Pult) */
+export function reservedCells(layout: RoomLayout): Set<string> {
+  const out = new Set<string>();
+  for (const e of layout.exits) for (const [x, y] of e.cells) out.add(key(x, y));
+  if (layout.desk) out.add(key(...layout.desk));
+  return out;
 }
 
 export interface Placement {
@@ -69,15 +96,15 @@ export interface Placement {
  * Darf `itemId` an (x, y) mit Drehung `rot` stehen? `ignore` = uid, die gerade
  * bewegt wird (zählt nicht als Hindernis).
  */
-export function checkPlacement(home: Home, itemId: string, x: number, y: number, rot: Rotation, infoOf: InfoFn, ignore?: string): Placement {
+export function checkPlacement(room: Room, layout: RoomLayout, itemId: string, x: number, y: number, rot: Rotation, infoOf: InfoFn, ignore?: string): Placement {
   const info = infoOf(itemId);
   if (!info) return { ok: false };
   const cells = cellsOf(x, y, info, rot);
-  if (cells.some(([cx, cy]) => cx < 0 || cy < 0 || cx >= ROOM_W || cy >= ROOM_H)) return { ok: false };
-  const res = reserved();
+  if (cells.some(([cx, cy]) => cx < 0 || cy < 0 || cx >= layout.w || cy >= layout.h)) return { ok: false };
+  const res = reservedCells(layout);
   if (cells.some(([cx, cy]) => res.has(key(cx, cy)))) return { ok: false };
 
-  const others = ignore ? home.items.filter((i) => i.uid !== ignore && i.on !== ignore) : home.items;
+  const others = ignore ? room.items.filter((i) => i.uid !== ignore && i.on !== ignore) : room.items;
   const occupied = (pred: (o: PlacedItem, oi: FootInfo) => boolean) => {
     const map = new Map<string, PlacedItem>();
     for (const o of others) {
@@ -111,23 +138,23 @@ export function newUid(): string {
   return `m-${Date.now().toString(36)}-${uidCounter.toString(36)}`;
 }
 
-export function placeItem(home: Home, itemId: string, x: number, y: number, rot: Rotation, infoOf: InfoFn, uid = newUid()): PlacedItem | null {
-  const p = checkPlacement(home, itemId, x, y, rot, infoOf);
+export function placeItem(room: Room, layout: RoomLayout, itemId: string, x: number, y: number, rot: Rotation, infoOf: InfoFn, uid = newUid()): PlacedItem | null {
+  const p = checkPlacement(room, layout, itemId, x, y, rot, infoOf);
   if (!p.ok) return null;
   const item: PlacedItem = { uid, itemId, x, y, rot, ...(p.on ? { on: p.on } : {}) };
-  home.items.push(item);
+  room.items.push(item);
   return item;
 }
 
 /** Verschieben/Drehen eines vorhandenen Möbels; Deko darauf wandert mit. */
-export function moveItem(home: Home, uid: string, x: number, y: number, rot: Rotation, infoOf: InfoFn): boolean {
-  const item = home.items.find((i) => i.uid === uid);
+export function moveItem(room: Room, layout: RoomLayout, uid: string, x: number, y: number, rot: Rotation, infoOf: InfoFn): boolean {
+  const item = room.items.find((i) => i.uid === uid);
   if (!item) return false;
-  const p = checkPlacement(home, item.itemId, x, y, rot, infoOf, uid);
+  const p = checkPlacement(room, layout, item.itemId, x, y, rot, infoOf, uid);
   if (!p.ok) return false;
   const dx = x - item.x;
   const dy = y - item.y;
-  const riders = home.items.filter((i) => i.on === uid);
+  const riders = room.items.filter((i) => i.on === uid);
   if (rot !== item.rot && riders.length > 0) return false; // Drehen nur ohne Deko darauf
   for (const r of riders) {
     r.x += dx;
@@ -142,16 +169,16 @@ export function moveItem(home: Home, uid: string, x: number, y: number, rot: Rot
 }
 
 /** Entfernt ein Möbel (und was darauf steht). Gibt alles Entfernte zurück. */
-export function removeItem(home: Home, uid: string): PlacedItem[] {
-  const removed = home.items.filter((i) => i.uid === uid || i.on === uid);
-  home.items = home.items.filter((i) => i.uid !== uid && i.on !== uid);
+export function removeItem(room: Room, uid: string): PlacedItem[] {
+  const removed = room.items.filter((i) => i.uid === uid || i.on === uid);
+  room.items = room.items.filter((i) => i.uid !== uid && i.on !== uid);
   return removed;
 }
 
 /** Was steht auf diesem Feld (oberstes zuerst: Deko, Möbel, Teppich)? */
-export function itemsAt(home: Home, x: number, y: number, infoOf: InfoFn): PlacedItem[] {
+export function itemsAt(room: Room, x: number, y: number, infoOf: InfoFn): PlacedItem[] {
   const hits: Array<{ item: PlacedItem; layer: number }> = [];
-  for (const i of home.items) {
+  for (const i of room.items) {
     const info = infoOf(i.itemId);
     if (!info) continue;
     if (cellsOf(i.x, i.y, info, i.rot).some(([cx, cy]) => cx === x && cy === y)) hits.push({ item: i, layer: i.on ? 2 : info.rug ? 0 : 1 });
@@ -160,9 +187,9 @@ export function itemsAt(home: Home, x: number, y: number, infoOf: InfoFn): Place
 }
 
 /** Felder, auf denen man nicht laufen kann */
-export function blockedCells(home: Home, infoOf: InfoFn): Set<string> {
-  const out = new Set<string>([key(...DESK_CELL)]);
-  for (const i of home.items) {
+export function blockedCells(room: Room, layout: RoomLayout, infoOf: InfoFn): Set<string> {
+  const out = new Set<string>(layout.desk ? [key(...layout.desk)] : []);
+  for (const i of room.items) {
     const info = infoOf(i.itemId);
     if (!info || info.rug || i.on) continue;
     for (const [cx, cy] of cellsOf(i.x, i.y, info, i.rot)) out.add(key(cx, cy));
@@ -170,10 +197,33 @@ export function blockedCells(home: Home, infoOf: InfoFn): Set<string> {
   return out;
 }
 
-export function normalizeHome(raw: unknown, fallback: Home, isKnown: (id: string) => boolean, infoOf: InfoFn): Home {
+/** Ausgang an diesem Feld? */
+export function exitAt(layout: RoomLayout, x: number, y: number): Exit | null {
+  return layout.exits.find((e) => e.cells.some(([cx, cy]) => cx === x && cy === y)) ?? null;
+}
+
+/** Möbel, die nach einem Umbau nicht mehr passen (aus dem Raum oder auf einem Ausgang) */
+export function misfits(room: Room, layout: RoomLayout, infoOf: InfoFn): PlacedItem[] {
+  const keep: Room = { ...room, items: [] };
+  const out: PlacedItem[] = [];
+  const sorted = [...room.items].sort((a, b) => Number(!!a.on) - Number(!!b.on));
+  for (const it of sorted) {
+    if (it.on && !keep.items.some((k) => k.uid === it.on)) {
+      out.push(it);
+      continue;
+    }
+    const p = checkPlacement(keep, layout, it.itemId, it.x, it.y, it.rot, infoOf);
+    if (p.ok) keep.items.push({ ...it, ...(p.on ? { on: p.on } : {}) });
+    else out.push(it);
+  }
+  return out;
+}
+
+export function normalizeRoom(raw: unknown, fallback: Room, layout: RoomLayout, isKnown: (id: string) => boolean, infoOf: InfoFn): Room {
   if (!raw || typeof raw !== 'object' || Array.isArray(raw)) return structuredClone(fallback);
   const r = raw as Record<string, unknown>;
-  const home: Home = {
+  const room: Room = {
+    id: layout.id,
     wallpaper: typeof r.wallpaper === 'string' && isKnown(r.wallpaper) ? r.wallpaper : fallback.wallpaper,
     floor: typeof r.floor === 'string' && isKnown(r.floor) ? r.floor : fallback.floor,
     items: [],
@@ -187,7 +237,33 @@ export function normalizeHome(raw: unknown, fallback: Home, isKnown: (id: string
     if (typeof p.itemId !== 'string' || !isKnown(p.itemId) || typeof p.x !== 'number' || typeof p.y !== 'number') continue;
     const rot = (typeof p.rot === 'number' ? ((Math.floor(p.rot) % 4) + 4) % 4 : 0) as Rotation;
     const uid = typeof p.uid === 'string' && p.uid ? p.uid : newUid();
-    placeItem(home, p.itemId, Math.floor(p.x), Math.floor(p.y), rot, infoOf, uid);
+    placeItem(room, layout, p.itemId, Math.floor(p.x), Math.floor(p.y), rot, infoOf, uid);
   }
-  return home;
+  return room;
+}
+
+export interface HouseRules {
+  /** Räume einer Ausbaustufe */
+  layouts: (stage: number) => readonly RoomLayout[];
+  maxStage: number;
+  /** Start-Einrichtung eines Raums */
+  emptyRoom: (id: string) => Room;
+}
+
+export function normalizeHouse(raw: unknown, fallback: House, rules: HouseRules, isKnown: (id: string) => boolean, infoOf: InfoFn): House {
+  if (!raw || typeof raw !== 'object' || Array.isArray(raw)) return structuredClone(fallback);
+  const r = raw as Record<string, unknown>;
+  const stage = typeof r.stage === 'number' ? Math.max(0, Math.min(rules.maxStage, Math.floor(r.stage))) : 0;
+  const rawRooms = Array.isArray(r.rooms) ? (r.rooms as Array<Record<string, unknown>>) : [];
+  const rooms = rules.layouts(stage).map((layout) => {
+    const rr = rawRooms.find((x) => x && x.id === layout.id);
+    const fb = fallback.rooms.find((x) => x.id === layout.id) ?? rules.emptyRoom(layout.id);
+    return rr ? normalizeRoom(rr, fb, layout, isKnown, infoOf) : structuredClone(fb);
+  });
+  const house: House = { stage, rooms };
+  const pend = r.pending as Record<string, unknown> | undefined;
+  if (pend && typeof pend.stage === 'number' && typeof pend.day === 'string' && pend.stage > stage && pend.stage <= rules.maxStage) {
+    house.pending = { stage: Math.floor(pend.stage), day: pend.day };
+  }
+  return house;
 }

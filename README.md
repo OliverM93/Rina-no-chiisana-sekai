@@ -48,6 +48,12 @@ Hochheben, **R** oder Mausrad zum Drehen, Klick zum Abstellen. Deko passt auf Ti
 liegen unter Möbeln. Auf Kissen und Futon kann sie sich setzen, Laternen leuchten abends (und lassen sich
 an- und ausknipsen).
 
+**Olaf & Christin (M6):** Am Tag nach Linas Einzug kündigt Papa Olaf per Brief an, dass er mit Christin ins
+Dorf zieht – am nächsten Tag stehen die beiden vor Linas Tür. Olaf führt die **Dorfkasse**: Dort beauftragt
+Lina den **Hausausbau** (großes Zimmer → Schlafzimmer-Anbau → Dachzimmer) als zinslosen Kredit und zahlt ihn
+zurück, wann sie möchte. Am nächsten Tag ist der Ausbau fertig – auch von außen sieht man Erker, Anbau und
+Dachgaube. Christin achtet auf Ordnung und Sauberkeit („Schuhe abputzen!“).
+
 Im Menü: Aussehen ändern, speichern, **Spielstand exportieren/laden** (als Datei – praktisch zum Sichern
 oder für ein anderes Gerät), Vollbild, Hilfe.
 
@@ -69,6 +75,10 @@ und jede Jahreszeit sieht anders aus.
 | Linas Zimmer | … am Abend | Einrichten | Katalog |
 |---|---|---|---|
 | ![Zimmer](docs/screenshots/3d-zimmer.png) | ![Abends](docs/screenshots/3d-zimmer-nacht.png) | ![Einrichten](docs/screenshots/3d-einrichten.png) | ![Katalog](docs/screenshots/3d-katalog.png) |
+
+| Olaf & Christin ziehen ein | Dorfkasse | Schlafzimmer | Dachzimmer |
+|---|---|---|---|
+| ![Einzug](docs/screenshots/3d-einzug.png) | ![Dorfkasse](docs/screenshots/3d-dorfkasse.png) | ![Schlafzimmer](docs/screenshots/3d-schlafzimmer.png) | ![Dachzimmer](docs/screenshots/3d-dachzimmer.png) |
 
 | Sammelbuch | Regen |
 |---|---|

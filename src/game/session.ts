@@ -20,8 +20,8 @@ import { type Clock, formatIsoDay, getDayPhase, getSeason, type Season } from '.
 import { parseWeatherOverride, type WeatherKind } from '../core/weather';
 import { buildWorldMap, tileCenter, type WorldMap } from '../core/worldmap';
 import { isKnownItem, type ToolId } from '../data/items';
-import { furnitureInfo, STARTER_HOME } from '../data/furniture';
-import { type Home, normalizeHome } from '../core/room';
+import { furnitureInfo } from '../data/furniture';
+import { HOUSE_RULES, STARTER_HOUSE } from '../data/house';
 import { VILLAGE_LAYOUT, VILLAGE_OBJECTS, VILLAGE_SPAWN } from '../data/maps/village';
 import { NPCS } from '../data/npcs';
 import type { InteractionContext } from '../data/interactions';
@@ -47,6 +47,7 @@ export type UiPanel =
   | { kind: 'mail' }
   | { kind: 'book' }
   | { kind: 'catalog' }
+  | { kind: 'bank'; onClose?: () => void }
   | { kind: 'gift'; npcId: string; onPick: (itemId: string) => void; onCancel: () => void }
   | { kind: 'seeds'; onPick: (itemId: string) => void; onCancel: () => void };
 
@@ -110,6 +111,8 @@ export class Session {
   private playStart = 0;
   /** Ist Lina gerade zu Hause? (wird nicht gespeichert – geladen wird immer draußen) */
   inside = false;
+  /** In welchem Raum (wenn drinnen) */
+  roomId = 'haupt';
   /** Einrichtungsmodus aktiv */
   decorActive = false;
   /** Werkzeug in Linas Hand (wird nicht gespeichert) */
@@ -126,7 +129,7 @@ export class Session {
     this.season = getSeason(clock());
   }
 
-  readonly saveOptions = { isKnownItem, npcIds: NPCS.map((n) => n.id), defaultHome: starterHome(), furnitureInfo };
+  readonly saveOptions = { isKnownItem, npcIds: NPCS.map((n) => n.id), defaultHouse: STARTER_HOUSE, houseRules: HOUSE_RULES, furnitureInfo };
 
   /** Heutiger Tag als JJJJ-MM-TT */
   today(): string {
@@ -178,7 +181,7 @@ export class Session {
   }
 
   startNewGame(appearance: Appearance, villageName: string) {
-    const data = createNewSave({ appearance, villageName, spawn: this.spawnPoint(), now: this.clock(), home: starterHome() });
+    const data = createNewSave({ appearance, villageName, spawn: this.spawnPoint(), now: this.clock(), house: STARTER_HOUSE });
     for (const npc of NPCS) data.npcs[npc.id] = createNpcState();
     this.begin(data);
     this.save();
@@ -249,11 +252,6 @@ export class Session {
       dayRandom: (hashString(day) % 1000) / 1000,
     };
   }
-}
-
-/** Start-Einrichtung von Linas Zimmer (mit eindeutigen IDs) */
-function starterHome(): Home {
-  return normalizeHome(structuredClone(STARTER_HOME), { wallpaper: STARTER_HOME.wallpaper, floor: STARTER_HOME.floor, items: [] }, isKnownItem, furnitureInfo);
 }
 
 /** localStorage, falls verfügbar – sonst ein flüchtiger Speicher. */

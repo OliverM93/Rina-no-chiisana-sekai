@@ -82,6 +82,8 @@ export const GISELA: NpcDef = {
       { text: ['Ein Hering in Sahnesoße mit Pellkartoffeln.', 'Köstlich! Da kommen mir die Tränen.'] },
       { text: ['Fass mir bloß keine Krabbeltiere an und bring die dann zu mir!', 'Außer Marienkäfer. Die bringen Glück.'] },
       { text: ['Hast du dein Häuschen schon schön eingerichtet?', 'Ein Kotatsu? Ein Tisch mit Decke drunter? Was es nicht alles gibt …', '… Na gut. Klingt eigentlich ganz gemütlich. Aber erzähl\'s keinem.'] },
+      { text: ['Dein Vater wohnt jetzt also auch hier.', 'Ich hab ihm gleich gesagt, dass seine Weste schief sitzt.', 'Christin hat sie dann gerade gezogen. Die gefällt mir. Ordentliches Mädchen.'], when: { tags: ['olaf-da'] }, weight: 2 },
+      { text: ['Olaf will mir ein Sparbuch einrichten.', 'Ich hab gesagt: Mein Geld ist unterm Kopfkissen am sichersten.', 'Ende der Diskussion.'], when: { tags: ['olaf-da'] } },
       { text: ['Diese Winkekatze in den Katalogen …', 'Die guckt einen so an. Ein bisschen unheimlich, wenn du mich fragst.', 'Ich hab das letzte Wort: unheimlich.'] },
     ],
     gifts: {

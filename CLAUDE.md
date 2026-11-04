@@ -96,14 +96,16 @@ src/
     weather.ts     Wetter pro Tag (reproduzierbar), Regen-Stunden, Regenbogen, `?wetter=` zum Testen
     catching.ts    Wann welche Art unterwegs ist (Monat/Uhrzeit/Regen), Sammelbuch
     garden.ts      Beet: pflanzen, gießen, wachsen (1 Stufe pro gegossenem Tag), pflücken – nie vertrocknen
-    room.ts        Linas Zimmer als Raster: platzieren, drehen, verschieben, Deko auf Tischen, Teppiche
+    room.ts        Haus mit Räumen (Größe, Ausgänge) als Raster: platzieren, drehen, verschieben, Deko, Teppiche
+    bank.ts        Olafs Dorfkasse: zinsloser Kredit, zurückzahlen wann man will
     grid.ts        Kollisionsraster, A*-Wegfindung, nächste freie Kachel
     movement.ts    Bewegung mit Kollision (Fuß-Box), Um-Ecken-Gleiten
     events.ts      typisierter Event-Emitter
     rng.ts         reproduzierbarer Zufall
   data/        Inhalte (leicht erweiterbar): Karten, Interaktionstexte, Story-Texte,
                items.ts (alle Gegenstände + Preise, Gartenblumen, Werkzeuge), species.ts (Fische & Insekten –
-               echte heimische Arten), furniture.ts (Möbel, Tapeten, Böden, Varianten, Start-Zimmer),
+               echte heimische Arten), furniture.ts (Möbel, Tapeten, Böden, Varianten),
+               house.ts (Ausbaustufen, Räume, Preise, Start-Haus),
                npcs/ (je Bewohner eine Datei)
   style/       palette.ts – EINZIGE Quelle für Farben (auch CSS-Variablen der UI)
   gfx/         2D-Zeichnungen für Texturen & Symbole: terrain.ts (Gelände-Textur), items.ts (Symbole),
@@ -112,7 +114,8 @@ src/
     session.ts     laufende Sitzung: Spielstand, Uhr, Karte, Event-Bus Welt ↔ UI
     gameplay.ts    Spielregeln: Sammeln, Verkaufen, Plaudern, Schenken, Post
     nature.ts      Werkzeuge, Angeln, Insekten, Beet, aktuelles Wetter
-    home.ts        Katalog kaufen, Möbel aufstellen/verschieben/wegräumen, Tapete & Boden
+    home.ts        Katalog kaufen, Möbel aufstellen/verschieben/wegräumen, Tapete & Boden, Ausbau & Kredit
+    story.ts       Rahmenhandlung: Einzüge (Ankündigungsbrief → Einzug am nächsten Tag)
     input.ts       eigene Tastatursteuerung (blockiert keine Textfelder)
   world3d/     Three.js-Schicht
     World3D.ts     Renderer, Kamera, Licht/Tag-Nacht, Interaktion, Maus (Raycasting), Story-Szenen
@@ -148,6 +151,8 @@ src/
   Bart, Brille …): Kopf mit gezeichneter Gesichtstextur (Blinzeln = Texturwechsel), Arme/Beine mit Gelenken.
 - **Tag & Nacht:** Sonne/Himmel/Nebel nach Uhrzeit, Fenster & Laternen leuchten (Emissive + Punktlichter
   an den nächstgelegenen Laternen).
+- **Einzüge:** `NpcDef.movesIn` = Story-Flag; Kartenobjekte mit `requires`/`until` erscheinen/verschwinden
+  per Flag (`applyMapFlags`, z. B. Bauplatz → Haus). Ablauf in `game/story.ts`.
 - **Bewohner:** Daten in `src/data/npcs/<id>.ts` (Aussehen, Haus, Tagesablauf, Vorlieben, Dialog-Pools,
   Briefe). Ein neuer Bewohner braucht: Datei + Eintrag in `npcs/index.ts` + Haus/Bank in `VILLAGE_OBJECTS`.
   Dialogzeilen haben Bedingungen (`when`) und Gewichte; ausgewählt wird reproduzierbar pro Tag.

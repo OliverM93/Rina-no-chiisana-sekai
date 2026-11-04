@@ -43,8 +43,11 @@ export interface HouseModel {
   windows: THREE.Vector3[];
 }
 
-/** Häuschen mit 5 × 3 Kacheln Grundfläche */
-export function makeHouse(roofColor: string): HouseModel {
+/**
+ * Häuschen mit 5 × 3 Kacheln Grundfläche. `stage` = Ausbaustufe:
+ * 1 = Erker an der Seite, 2 = Anbau hinten, 3 = Dachgaube mit Fenster.
+ */
+export function makeHouse(roofColor: string, stage = 0): HouseModel {
   const g = new THREE.Group();
   const W = 4.5;
   const D = 2.4;
@@ -132,6 +135,53 @@ export function makeHouse(roofColor: string): HouseModel {
     windows.push(new THREE.Vector3(x, y, zf + 0.1));
   }
   windows.push(new THREE.Vector3(0, 0.22 + wallH + roofH * 0.48, zf + over));
+
+  // Ausbau
+  if (stage >= 1) {
+    // Erker rechts mit kleinem Dach und Fenster
+    const ex = W / 2 + 0.2;
+    g.add(b(0.4, 1.0, 1.3, wall, ex, 0.22 + 0.6, 0.1));
+    g.add(b(0.06, 0.55, 0.8, windowGlass, ex + 0.2, 0.22 + 0.7, 0.1));
+    const cap = b(0.6, 0.12, 1.5, roofColor, ex, 0.22 + 1.15, 0.1);
+    cap.rotation.z = -0.35;
+    g.add(cap);
+  }
+  if (stage >= 2) {
+    // Anbau hinten (Schlafzimmer) mit eigenem Satteldach
+    const aw = 2.8;
+    const ad = 1.1;
+    const az = -D / 2 - ad / 2 + 0.05;
+    g.add(b(aw, wallH - 0.25, ad, darken(wall, 0.03), -0.6, 0.22 + (wallH - 0.25) / 2, az));
+    const atri = new THREE.Shape();
+    atri.moveTo(-(aw / 2 + 0.2), 0);
+    atri.lineTo(aw / 2 + 0.2, 0);
+    atri.lineTo(0, 0.8);
+    atri.closePath();
+    const ageo = new THREE.ExtrudeGeometry(atri, { depth: ad + 0.3, bevelEnabled: false });
+    ageo.translate(0, 0.22 + wallH - 0.25, -(ad + 0.3) / 2);
+    const aroof = mesh(ageo, toon(darken(roofColor, 0.04)));
+    aroof.position.set(-0.6, 0, az);
+    g.add(aroof);
+    for (const x of [-1.3, 0.1]) g.add(b(0.5, 0.45, 0.05, windowGlass, x, 0.22 + 0.75, az - ad / 2 - 0.02));
+  }
+  if (stage >= 3) {
+    // Dachgaube vorne links mit Fenster
+    const dz = (D / 2 + over) * 0.35;
+    const dy = 0.22 + wallH + roofH * 0.42;
+    g.add(b(0.9, 0.6, 0.6, wall, -1.4, dy + 0.15, dz));
+    g.add(b(0.55, 0.38, 0.05, windowGlass, -1.4, dy + 0.15, dz + 0.31));
+    const dtri = new THREE.Shape();
+    dtri.moveTo(-0.6, 0);
+    dtri.lineTo(0.6, 0);
+    dtri.lineTo(0, 0.45);
+    dtri.closePath();
+    const dgeo = new THREE.ExtrudeGeometry(dtri, { depth: 0.8, bevelEnabled: false });
+    dgeo.translate(0, 0, -0.4);
+    const droof = mesh(dgeo, toon(roofColor));
+    droof.position.set(-1.4, dy + 0.45, dz);
+    g.add(droof);
+    windows.push(new THREE.Vector3(-1.4, dy + 0.15, dz + 0.35));
+  }
   return { group: g, windows };
 }
 

@@ -13,12 +13,13 @@ import { type Appearance, DEFAULT_LINA, normalizeAppearance } from './appearance
 import { createNpcState, type NpcState, normalizeNpcState } from './friendship';
 import { type Collection, normalizeCollection } from './catching';
 import { type Garden, normalizeGarden } from './garden';
-import { type Home, type InfoFn, normalizeHome } from './room';
+import { createBank, type Bank, normalizeBank } from './bank';
+import { type House, type HouseRules, type InfoFn, normalizeHouse } from './room';
 import { createInventory, type Inventory, normalizeInventory } from './inventory';
 import { createMailbox, type Mailbox, normalizeMailbox } from './mail';
 import { type DayMonth, DEFAULT_LINA_BIRTHDAY, formatIsoDay } from './time';
 
-export const SAVE_VERSION = 5;
+export const SAVE_VERSION = 6;
 export const SAVE_KEY = 'rina-no-chiisana-sekai.save';
 export const BACKUP_KEY = 'rina-no-chiisana-sekai.save.backup';
 
@@ -88,8 +89,10 @@ export interface SaveData {
   world: WorldState;
   /** Sammelbuch: gefangene Fische & Insekten */
   collection: Collection;
-  /** Linas Zimmer: Tapete, Boden, Möbel */
-  home: Home;
+  /** Linas Haus: Ausbaustufe, Räume, Möbel */
+  house: House;
+  /** Olafs Dorfkasse */
+  bank: Bank;
 }
 
 export interface SaveOptions {
@@ -97,13 +100,20 @@ export interface SaveOptions {
   isKnownItem?: (id: string) => boolean;
   /** IDs aller Bewohner, für die ein Freundschaftszustand angelegt wird */
   npcIds?: readonly string[];
-  /** Einrichtung für neue/alte Spielstände ohne Zimmer */
-  defaultHome?: Home;
+  /** Einrichtung für neue/alte Spielstände ohne Haus */
+  defaultHouse?: House;
+  /** Ausbaustufen & Räume */
+  houseRules?: HouseRules;
   /** Größe & Art der Möbel (für die Raumlogik) */
   furnitureInfo?: InfoFn;
 }
 
-const EMPTY_HOME: Home = { wallpaper: '', floor: '', items: [] };
+const EMPTY_HOUSE: House = { stage: 0, rooms: [{ id: 'haupt', wallpaper: '', floor: '', items: [] }] };
+const FALLBACK_RULES: HouseRules = {
+  layouts: () => [{ id: 'haupt', name: 'Zimmer', w: 8, h: 6, exits: [] }],
+  maxStage: 0,
+  emptyRoom: (id) => ({ id, wallpaper: '', floor: '', items: [] }),
+};
 
 export const DEFAULT_SETTINGS: Settings = { musicVolume: 0.6, sfxVolume: 0.8 };
 export const DEFAULT_VILLAGE_NAME = 'Wolkenwiese';
@@ -113,7 +123,7 @@ export interface NewGameOptions {
   appearance: Appearance;
   spawn: { x: number; y: number };
   now: Date;
-  home?: Home;
+  house?: House;
 }
 
 export function createNewSave(opts: NewGameOptions): SaveData {
@@ -140,7 +150,8 @@ export function createNewSave(opts: NewGameOptions): SaveData {
     mail: createMailbox(),
     world: createWorldState(),
     collection: {},
-    home: structuredClone(opts.home ?? EMPTY_HOME),
+    house: structuredClone(opts.house ?? EMPTY_HOUSE),
+    bank: createBank(),
   };
 }
 
@@ -169,6 +180,11 @@ export const MIGRATIONS: Record<number, (old: RawSave) => RawSave> = {
   3: (old) => ({ ...old }),
   // v4 → v5 (M5 Einrichtung): Linas Zimmer. `normalizeSave` richtet es mit der Start-Einrichtung ein.
   4: (old) => ({ ...old }),
+  // v5 → v6 (M6 Ausbau): aus dem einen Zimmer wird ein Haus mit Räumen; dazu Olafs Dorfkasse.
+  5: (old) => {
+    const { home, ...rest } = old as Record<string, unknown> & { home?: Record<string, unknown> };
+    return home && typeof home === 'object' ? { ...rest, house: { stage: 0, rooms: [{ id: 'haupt', ...home }] } } : rest;
+  },
 };
 
 export function migrate(raw: RawSave, migrations = MIGRATIONS, target = SAVE_VERSION): RawSave {
@@ -279,7 +295,8 @@ export function normalizeSave(raw: RawSave, spawn: { x: number; y: number }, now
     mail: normalizeMailbox(raw.mail),
     world: normalizeWorld(raw.world, isKnownItem),
     collection: normalizeCollection(raw.collection, isKnownItem),
-    home: normalizeHome(raw.home, opts.defaultHome ?? EMPTY_HOME, isKnownItem, opts.furnitureInfo ?? (() => undefined)),
+    house: normalizeHouse(raw.house, opts.defaultHouse ?? EMPTY_HOUSE, opts.houseRules ?? FALLBACK_RULES, isKnownItem, opts.furnitureInfo ?? (() => undefined)),
+    bank: normalizeBank(raw.bank),
   };
 }
 

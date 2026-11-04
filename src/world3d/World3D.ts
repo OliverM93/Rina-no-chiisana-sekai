@@ -9,12 +9,12 @@
 import * as THREE from 'three';
 import { DPR, TILE, UNIT } from '../config';
 import { CollisionGrid, findPath, nearestWalkable, type Tile } from '../core/grid';
-import { checkPlacement, DESK_CELL, DOOR_CELLS, footprint, ROOM_H, ROOM_W, type Rotation } from '../core/room';
+import { checkPlacement, type Exit, exitAt, footprint, type Room, type RoomLayout, type Rotation } from '../core/room';
 import { FURNITURE_BY_ITEM, furnitureInfo } from '../data/furniture';
 import { getDaylight } from '../core/time';
 import { isWatered, spotKey } from '../core/garden';
 import { WEATHER_LABELS } from '../core/weather';
-import { findInteraction, type MapObject, OBJECT_KINDS, objectById, terrainAt, tileOf } from '../core/worldmap';
+import { applyMapFlags, findInteraction, isActive, type MapObject, OBJECT_KINDS, objectById, terrainAt, tileOf } from '../core/worldmap';
 import { itemCountLabel, itemDef, type ToolId, TOOLS } from '../data/items';
 import { FISH_BY_ID, type FishHabitat } from '../data/species';
 import { fillPlaceholders, INTERACTIONS } from '../data/interactions';
@@ -31,11 +31,16 @@ import {
   hasUnreadMail,
   knockRock,
   npcHearts,
+  sendLetter,
   talkToNpc,
   welcomeLetter,
 } from '../game/gameplay';
 import { KeyboardInput } from '../game/input';
-import { moveFurniture, pickUpFurniture, placeFromBag } from '../game/home';
+import { currentRoom, finishExpansion, moveFurniture, pickUpFurniture, placeFromBag } from '../game/home';
+import { checkStory } from '../game/story';
+import { HOUSE_STAGES } from '../data/house';
+import { CHRISTIN_WELCOME } from '../data/npcs/christin';
+import { OLAF_WELCOME } from '../data/npcs/olaf';
 import type { DecorCommand } from '../game/session';
 import {
   biteFish,
@@ -62,7 +67,7 @@ import { Insects3D } from './Insects3D';
 import { Interior3D, ROOM_X, ROOM_Y } from './Interior3D';
 import { makeCan, makeNet, makeRod, type ToolModel } from './models/critters';
 import { Weather3D } from './Weather3D';
-import { lampGlass, windowGlass } from './models/buildings';
+import { lampGlass, makeHouse, windowGlass } from './models/buildings';
 import { buildMapView3D, footprintCenter, type MapView3D } from './MapView3D';
 import { Npc } from './Npc';
 import { Tweens } from './tweens';
@@ -76,7 +81,7 @@ type Target =
   | { kind: 'moebel'; uid: string }
   | { kind: 'katalog' };
 
-const SPECIAL_OBJECTS = ['verkaufskiste', 'haus-gisela', 'briefkasten-lina'];
+const SPECIAL_OBJECTS = ['verkaufskiste', 'haus-gisela', 'haus-olaf', 'briefkasten-lina'];
 const DIRS = { down: [0, 1], up: [0, -1], left: [-1, 0], right: [1, 0] } as const;
 
 /** Kamera-Versatz zum Blickziel (schräg von oben, wie im Vorbild) */
@@ -126,6 +131,8 @@ export class World3D {
   /** Einrichten: was gerade gehalten wird (uid = schon im Zimmer, sonst aus der Tasche) */
   private decor: { itemId: string; uid: string | null; rot: Rotation } | null = null;
   private hoverCell: { x: number; y: number } | null = null;
+  /** erst nach dem Verlassen eines Ausgangs-Feldes darf er wieder auslösen */
+  private exitArmed = true;
 
   constructor(
     private readonly canvas: HTMLCanvasElement,
@@ -159,6 +166,7 @@ export class World3D {
     for (const id of SPECIAL_OBJECTS) this.interactive.add(id);
     for (const o of map.objects) if (o.kind === 'tree' || o.kind === 'rock') this.interactive.add(o.id);
     for (const [id, node] of this.view.nodes) node.userData.objectId = id;
+    this.syncMapObjects();
 
     for (const def of NPCS) {
       const npc = new Npc(this.scene, def, session, this.view.terrain.heightAt);
@@ -199,7 +207,7 @@ export class World3D {
       session.bus.on('state:changed', () => {
         this.updateMailbox();
         this.garden.refresh();
-        if (this.session.inside && this.session.data) this.interior.refresh(this.session.data.home);
+        this.refreshRoom();
       }),
       session.bus.on('tool:changed', (t) => this.equip(t)),
       session.bus.on('decor:command', (c) => this.decorCommand(c)),
@@ -252,7 +260,10 @@ export class World3D {
       this.dayCheck += dtMs;
       if (this.dayCheck > 3000) {
         this.dayCheck = 0;
-        if (this.collectibles.checkDay()) checkDailyMail(this.session);
+        if (this.collectibles.checkDay()) {
+          checkDailyMail(this.session);
+          this.onNewDay();
+        }
       }
       const blocked = this.session.uiBlocking || this.cutscene;
       const intent = blocked ? { dx: 0, dy: 0, run: false } : this.keys.direction();
@@ -260,17 +271,25 @@ export class World3D {
       const grid = this.session.map.grid;
       if (this.fishing.active && (intent.dx !== 0 || intent.dy !== 0 || player.hasPath)) this.stopFishing();
       if (player.sitting && (intent.dx !== 0 || intent.dy !== 0)) this.standUp();
-      const home = data.home;
-      const solid = this.session.inside
+      const home = this.room;
+      const solid = this.session.inside && home
         ? (tx: number, ty: number) => this.interior.isBlocked(home, tx - ROOM_X, ty - ROOM_Y)
         : (tx: number, ty: number) => grid.isBlocked(tx, ty);
       if (this.session.decorActive) intent.dx = intent.dy = 0;
       player.update(dtMs, intent, solid);
       if (this.session.inside && !this.session.decorActive) {
         const t = player.tile;
-        const onDoor = DOOR_CELLS.some(([dx]) => dx === t.x - ROOM_X);
-        // Auf der Türmatte nach unten laufen (oder hingeklickt) = hinausgehen
-        if (onDoor && (t.y - ROOM_Y >= ROOM_H || (t.y - ROOM_Y === ROOM_H - 1 && (intent.dy > 0 || !player.hasPath) && player.facing === 'down'))) this.exitHome();
+        const lay = this.lay;
+        const cx = t.x - ROOM_X;
+        const cy = t.y - ROOM_Y;
+        // Hinter einem Ausgang (oder auf dem Ausgang in seine Richtung gelaufen) → hindurchgehen
+        const beyond = lay.exits.find((e) => e.cells.some(([ex]) => ex === cx) && ((e.dir === 'down' && cy >= lay.h) || (e.dir === 'up' && cy < 0)));
+        const on = exitAt(lay, cx, cy);
+        const pushing = on && player.facing === on.dir && (on.dir === 'down' ? intent.dy > 0 : intent.dy < 0);
+        const arrived = on && !player.hasPath && this.exitArmed && player.facing === on.dir;
+        const ex = beyond ?? (pushing || arrived ? on : null);
+        if (ex) this.useExit(ex);
+        if (!on) this.exitArmed = true;
       }
       this.fishing.update(dt, this.rodTip());
       data.player.x = Math.round(player.x * 10) / 10;
@@ -279,7 +298,7 @@ export class World3D {
       if (!player.hasPath) this.marker.visible = false;
 
       // Kamera folgt Lina weich (zu Hause: fester Blick ins Zimmer)
-      const target = this.session.inside ? new THREE.Vector3(ROOM_X + ROOM_W / 2, 0, ROOM_Y + ROOM_H / 2 - 0.2) : new THREE.Vector3(player.x * UNIT, 0, player.y * UNIT);
+      const target = this.session.inside ? this.roomCenter() : new THREE.Vector3(player.x * UNIT, 0, player.y * UNIT);
       this.camTarget.lerp(target, 1 - Math.pow(0.002, dt));
       if (!this.session.inside) this.updateOccluders(player);
       this.updateBubble(player, blocked || this.session.decorActive);
@@ -456,6 +475,101 @@ export class World3D {
     } else if (!data.flags.giselaWelcomed) {
       window.setTimeout(() => this.welcomeScene(), 1300);
     }
+    this.onNewDay();
+    this.rebuildLinaHouse();
+  }
+
+  /** Neuer Tag (oder Spielstart): Story, Ausbau, Karte */
+  private onNewDay() {
+    const data = this.session.data;
+    if (!data) return;
+    const events = checkStory(this.session);
+    const stage = finishExpansion(this.session);
+    if (stage !== null) {
+      this.rebuildLinaHouse();
+      const olaf = NPCS.find((n) => n.id === 'olaf');
+      if (olaf) sendLetter(this.session, olaf, { id: `ausbau-${stage}`, subject: 'Dein Ausbau ist fertig!', body: `Liebe Lina,\n\ndein Haus ist fertig umgebaut: ${HOUSE_STAGES[stage].name}! Geh doch gleich mal rein und schau es dir an.\n\nDie Abrechnung liegt bei mir in der Dorfkasse. Ganz ohne Eile.\n\nDein Papa` }, `olaf-ausbau-${stage}`);
+    }
+    this.syncMapObjects();
+    if ((events.includes('olaf-eingezogen') || (data.flags.olafEingezogen && !data.flags.olafBegruesst)) && data.flags.giselaWelcomed) {
+      window.setTimeout(() => this.arrivalScene(), 2500);
+    }
+  }
+
+  /** Story-Flags auf die Karte anwenden (Bauplatz → Haus) */
+  private syncMapObjects() {
+    const data = this.session.data;
+    if (data) applyMapFlags(this.session.map, data.flags);
+    for (const [id, node] of this.view.nodes) node.visible = isActive(this.session.map, id);
+  }
+
+  /** Linas Haus von außen passend zur Ausbaustufe */
+  private rebuildLinaHouse() {
+    const stage = this.session.data?.house.stage ?? 0;
+    const old = this.view.nodes.get('haus-lina');
+    if (!old || old.userData.stage === stage) return;
+    const h = makeHouse(palette.roof.rose, stage);
+    h.group.position.copy(old.position);
+    h.group.userData = { ...old.userData, stage };
+    old.parent?.add(h.group);
+    old.removeFromParent();
+    this.view.nodes.set('haus-lina', h.group);
+    const occ = this.view.occluders.find((o) => o.id === 'haus-lina');
+    if (occ) occ.node = h.group;
+    this.faded.delete('haus-lina');
+  }
+
+  /** Olaf & Christin sind eingezogen: Sie kommen zu Lina und stellen sich vor */
+  private arrivalScene() {
+    const player = this.player;
+    const olaf = this.npcs.get('olaf');
+    const christin = this.npcs.get('christin');
+    const data = this.session.data;
+    if (!player || !olaf || !christin || !data || data.flags.olafBegruesst || this.cutscene || this.session.inside || this.session.uiBlocking) {
+      if (data && !data.flags.olafBegruesst) window.setTimeout(() => this.arrivalScene(), 4000);
+      return;
+    }
+    this.cutscene = true;
+    player.cancelPath();
+    const grid = this.session.map.grid;
+    const lt = player.tile;
+    const meetO = nearestWalkable(grid, { x: lt.x + 1, y: lt.y }, lt) ?? lt;
+    const meetC = nearestWalkable(grid, { x: lt.x + 1, y: lt.y + 1 }, lt) ?? lt;
+    olaf.scriptPlace(nearestWalkable(grid, { x: lt.x + 4, y: lt.y + 2 }, lt) ?? lt);
+    christin.scriptPlace(nearestWalkable(grid, { x: lt.x + 5, y: lt.y + 3 }, lt) ?? lt);
+    let arrived = false;
+    const done = () => {
+      if (arrived) return;
+      arrived = true;
+      olaf.char.faceTowards(player.x, player.y);
+      christin.char.faceTowards(player.x, player.y);
+      player.faceTowards(olaf.x, olaf.y);
+      const ctx = this.session.interactionContext();
+      this.session.bus.emit('dialog:open', {
+        title: olaf.def.name,
+        lines: OLAF_WELCOME.map((l) => fillPlaceholders(l, ctx)),
+        onClose: () =>
+          this.session.bus.emit('dialog:open', {
+            title: christin.def.name,
+            lines: CHRISTIN_WELCOME.map((l) => fillPlaceholders(l, ctx)),
+            onClose: () => {
+              this.session.setFlag('olafBegruesst');
+              this.session.save();
+              olaf.scriptDone();
+              christin.scriptDone();
+              this.cutscene = false;
+            },
+          }),
+      });
+    };
+    olaf.scriptWalkTo(meetO, done);
+    christin.scriptWalkTo(meetC, () => undefined);
+    window.setTimeout(() => {
+      if (arrived) return;
+      olaf.scriptPlace(meetO);
+      christin.scriptPlace(meetC);
+      done();
+    }, 12000);
   }
 
   private welcomeScene() {
@@ -846,6 +960,12 @@ export class World3D {
       this.knockAtHome('gisela');
       return;
     }
+    if (id === 'haus-olaf') {
+      const olaf = this.npcs.get('olaf');
+      const christin = this.npcs.get('christin');
+      this.knockAtHome(olaf?.present === false || !christin?.present ? 'olaf' : 'christin');
+      return;
+    }
     this.openInteraction(id);
   }
 
@@ -919,9 +1039,17 @@ export class World3D {
                 if (o) this.npcDialog(npc, o.lines, o.hearts);
                 else npc.endTalk();
               },
-              onCancel: () => this.npcDialog(npc, ['Na? Doch nichts? Macht nix, Kindchen.'], npcHearts(this.session, id)),
+              onCancel: () => this.npcDialog(npc, [id === 'gisela' ? 'Na? Doch nichts? Macht nix, Kindchen.' : 'Doch nichts? Kein Problem!'], npcHearts(this.session, id)),
             }),
         },
+        ...(id === 'olaf'
+          ? [
+              {
+                label: '🏦 Dorfkasse',
+                onSelect: () => this.session.bus.emit('ui:open', { kind: 'bank', onClose: () => this.npcDialog(npc, ['Gern geschehen, mein Schatz. Sonst noch was?'], npcHearts(this.session, id)) }),
+              },
+            ]
+          : []),
         {
           label: '👋 Tschüss',
           onSelect: () =>
@@ -951,6 +1079,7 @@ export class World3D {
     const candidates: THREE.Object3D[] = [];
     for (const npc of this.npcs.values()) if (npc.present) candidates.push(npc.char.root);
     for (const id of this.interactive) {
+      if (!isActive(this.session.map, id)) continue;
       const node = this.view.nodes.get(id);
       if (node) candidates.push(node);
     }
@@ -984,8 +1113,9 @@ export class World3D {
     if (this.session.inside) {
       this.hoverCell = this.roomCellAt(e);
       if (this.session.decorActive) this.updateGhost();
-      const t = this.hoverCell && this.data?.home ? this.interior.topAt(this.data.home, this.hoverCell.x, this.hoverCell.y) : null;
-      const desk = this.hoverCell && this.hoverCell.x === DESK_CELL[0] && this.hoverCell.y === DESK_CELL[1];
+      const room = this.room;
+      const t = this.hoverCell && room ? this.interior.topAt(room, this.hoverCell.x, this.hoverCell.y) : null;
+      const desk = this.hoverCell && this.isDesk(this.hoverCell.x, this.hoverCell.y);
       this.canvas.style.cursor = this.session.decorActive ? (this.decor ? 'grabbing' : t ? 'grab' : '') : t || desk ? 'pointer' : '';
       return;
     }
@@ -1091,18 +1221,59 @@ export class World3D {
     return this.session.data;
   }
 
+  private get room(): Room | undefined {
+    return currentRoom(this.session)?.room;
+  }
+
+  private get lay(): RoomLayout {
+    return currentRoom(this.session)?.layout ?? this.interior.layout;
+  }
+
+  private isDesk(x: number, y: number): boolean {
+    const d = this.lay.desk;
+    return !!d && d[0] === x && d[1] === y;
+  }
+
+  private roomCenter(): THREE.Vector3 {
+    const L = this.lay;
+    return new THREE.Vector3(ROOM_X + L.w / 2, 0, ROOM_Y + L.h / 2 - 0.2);
+  }
+
+  private refreshRoom(force = false) {
+    const c = currentRoom(this.session);
+    if (this.session.inside && c) this.interior.refresh(c.room, c.layout, force);
+  }
+
+  /** Lina betritt Raum `roomId` durch den Ausgang, der zu `from` führt */
+  private placeInRoom(roomId: string, from: string) {
+    const player = this.player;
+    if (!player) return;
+    this.session.roomId = roomId;
+    this.refreshRoom(true);
+    const L = this.lay;
+    const back = L.exits.find((e) => e.to === from) ?? L.exits[0];
+    const [cx, cy] = back ? back.cells[0] : [Math.floor(L.w / 2), L.h - 1];
+    const inward = back?.dir === 'up' ? 1 : -1;
+    player.teleport((ROOM_X + cx) * TILE + (back && back.cells.length > 1 ? 64 : 32), (ROOM_Y + cy + inward) * TILE + 40);
+    player.face(back?.dir === 'up' ? 'down' : 'up');
+    this.camTarget.copy(this.roomCenter());
+    this.exitArmed = false;
+    this.marker.visible = false;
+  }
+
+  private useExit(e: Exit) {
+    if (e.to === 'draussen') this.exitHome();
+    else this.placeInRoom(e.to, this.session.roomId);
+  }
+
   private enterHome() {
     const player = this.player;
     const data = this.data;
     if (!player || !data) return;
     this.stopFishing();
     this.session.inside = true;
-    this.interior.refresh(data.home, true);
     player.heightAt = () => 0;
-    player.teleport((ROOM_X + 4) * TILE + 2, (ROOM_Y + ROOM_H - 2) * TILE + 40);
-    player.face('up');
-    this.camTarget.set(ROOM_X + ROOM_W / 2, 0, ROOM_Y + ROOM_H / 2 - 0.2);
-    this.marker.visible = false;
+    this.placeInRoom('haupt', 'draussen');
     this.applyLight();
     this.session.bus.emit('home:inside', true);
   }
@@ -1112,6 +1283,7 @@ export class World3D {
     if (!player) return;
     this.stopDecor();
     this.session.inside = false;
+    this.session.roomId = 'haupt';
     player.heightAt = this.view.terrain.heightAt;
     const sp = this.session.spawnPoint();
     player.teleport(sp.x, sp.y);
@@ -1124,20 +1296,20 @@ export class World3D {
 
   /** Zimmerzelle vor Lina */
   private homeTarget(player: Character): Target | null {
-    const home = this.data?.home;
+    const home = this.room;
     if (!home) return null;
     const [fx, fy] = DIRS[player.facing];
     const t = player.tile;
     const cx = t.x - ROOM_X + fx;
     const cy = t.y - ROOM_Y + fy;
-    if (cx === DESK_CELL[0] && cy === DESK_CELL[1]) return { kind: 'katalog' };
+    if (this.isDesk(cx, cy)) return { kind: 'katalog' };
     // auch das Feld, auf dem Lina steht (Teppich), zählt nicht – nur davor
     const top = this.interior.topAt(home, cx, cy);
     return top ? { kind: 'moebel', uid: top.uid } : null;
   }
 
   private useFurniture(uid: string) {
-    const home = this.data?.home;
+    const home = this.room;
     const player = this.player;
     const item = home?.items.find((i) => i.uid === uid);
     const f = item ? FURNITURE_BY_ITEM[item.itemId] : undefined;
@@ -1165,7 +1337,7 @@ export class World3D {
     const player = this.player;
     if (!player?.sitting) return;
     player.setSitting(false);
-    const home = this.data?.home;
+    const home = this.room;
     if (!home || !this.session.inside) return;
     // aufs nächste freie Feld treten
     const grid = this.roomGrid();
@@ -1175,9 +1347,10 @@ export class World3D {
   }
 
   private roomGrid(): CollisionGrid {
-    const g = new CollisionGrid(ROOM_W, ROOM_H);
-    const home = this.data?.home;
-    if (home) for (let x = 0; x < ROOM_W; x++) for (let y = 0; y < ROOM_H; y++) if (this.interior.isBlocked(home, x, y)) g.setBlocked(x, y);
+    const L = this.lay;
+    const g = new CollisionGrid(L.w, L.h);
+    const home = this.room;
+    if (home) for (let x = 0; x < L.w; x++) for (let y = 0; y < L.h; y++) if (this.interior.isBlocked(home, x, y)) g.setBlocked(x, y);
     return g;
   }
 
@@ -1188,19 +1361,19 @@ export class World3D {
     // Bei Möbeln zählt das Feld unter dem Treffer; sonst Bodenpunkt
     const p = hits[0].point;
     const cell = this.interior.cellFromPoint(p);
-    return cell.x >= 0 && cell.y >= 0 && cell.x < ROOM_W && cell.y < ROOM_H ? cell : null;
+    return cell.x >= 0 && cell.y >= 0 && cell.x < this.lay.w && cell.y < this.lay.h ? cell : null;
   }
 
   /** Klick im Zimmer (ohne Einrichten): hinlaufen bzw. benutzen */
   private roomClick() {
     const player = this.player;
     const cell = this.hoverCell;
-    const home = this.data?.home;
+    const home = this.room;
     if (!player || !cell || !home) return;
     if (player.sitting) this.standUp();
     const grid = this.roomGrid();
     const from = { x: player.tile.x - ROOM_X, y: player.tile.y - ROOM_Y };
-    const isDesk = cell.x === DESK_CELL[0] && cell.y === DESK_CELL[1];
+    const isDesk = this.isDesk(cell.x, cell.y);
     const top = this.interior.topAt(home, cell.x, cell.y);
     const toWorld = (path: Tile[]) => path.map((t) => ({ x: t.x + ROOM_X, y: t.y + ROOM_Y }));
     if (isDesk || (top && grid.isBlocked(cell.x, cell.y))) {
@@ -1271,8 +1444,9 @@ export class World3D {
       player.setVisible(true);
       // Falls jetzt ein Möbel auf Linas Platz steht: zur Tür
       const t = player.tile;
-      if (this.data && this.interior.isBlocked(this.data.home, t.x - ROOM_X, t.y - ROOM_Y)) {
-        const free = nearestWalkable(this.roomGrid(), { x: t.x - ROOM_X, y: t.y - ROOM_Y }) ?? { x: DOOR_CELLS[0][0], y: ROOM_H - 1 };
+      const room = this.room;
+      if (room && this.interior.isBlocked(room, t.x - ROOM_X, t.y - ROOM_Y)) {
+        const free = nearestWalkable(this.roomGrid(), { x: t.x - ROOM_X, y: t.y - ROOM_Y }) ?? { x: Math.floor(this.lay.w / 2), y: this.lay.h - 1 };
         player.teleport((ROOM_X + free.x) * TILE + 32, (ROOM_Y + free.y) * TILE + 40);
       }
     }
@@ -1305,7 +1479,7 @@ export class World3D {
       }
     }
     this.cancelHold();
-    if (this.data) this.interior.refresh(this.data.home);
+    this.refreshRoom();
     this.emitDecor();
   }
 
@@ -1313,7 +1487,7 @@ export class World3D {
   private updateGhost() {
     const d = this.decor;
     const cell = this.hoverCell;
-    const home = this.data?.home;
+    const home = this.room;
     if (!d || !cell || !home) {
       this.interior.hideGhost();
       return;
@@ -1324,7 +1498,7 @@ export class World3D {
     const fp = footprint(info, d.rot);
     const x = cell.x - Math.floor((fp.w - 1) / 2);
     const y = cell.y - Math.floor((fp.d - 1) / 2);
-    const p = checkPlacement(home, d.itemId, x, y, d.rot, furnitureInfo, d.uid ?? undefined);
+    const p = checkPlacement(home, this.lay, d.itemId, x, y, d.rot, furnitureInfo, d.uid ?? undefined);
     const base = p.on ? home.items.find((i) => i.uid === p.on) : undefined;
     const h = base ? (FURNITURE_BY_ITEM[base.itemId]?.def.surfaceHeight ?? 0) : 0;
     this.interior.showGhost(d.itemId, x, y, d.rot, p.ok, h);
@@ -1333,7 +1507,7 @@ export class World3D {
 
   /** Klick beim Einrichten: hochheben oder abstellen */
   private decorClick() {
-    const home = this.data?.home;
+    const home = this.room;
     const cell = this.hoverCell;
     if (!home || !cell) return;
     const d = this.decor;
@@ -1356,7 +1530,7 @@ export class World3D {
       return;
     }
     this.cancelHold();
-    this.interior.refresh(home);
+    this.refreshRoom();
     this.emitDecor();
   }
 
@@ -1364,6 +1538,7 @@ export class World3D {
   get debug() {
     return {
       enterHome: () => this.enterHome(),
+      goRoom: (id: string, from = 'haupt') => this.placeInRoom(id, from),
       decorAt: (x: number, y: number) => {
         this.hoverCell = { x, y };
         this.updateGhost();
