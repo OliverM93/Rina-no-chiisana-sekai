@@ -592,6 +592,14 @@ export class Chibi3D {
         leg.add(part(cylinder, '#e3c04f', 0.067, 0.006, 0.088, 0, footY - 0.02, 0.022));
         leg.add(part(cylinder, '#3a3439', 0.066, 0.02, 0.087, 0, footY - 0.032, 0.022));
         for (let i = 0; i < 3; i++) leg.add(part(box, '#4a454c', 0.03, 0.005, 0.006, 0, -legLen * (0.62 + i * 0.12), 0.05));
+      } else if (shoes === 'chunky' || shoes === 'chunky-schwarz') {
+        // Chunky-Sneaker: klobig, dicke gestufte Sohle
+        const black = shoes === 'chunky-schwarz';
+        const upper = black ? '#1e1e22' : '#f7f5f1';
+        leg.add(part(sphere, upper, 0.066, 0.048, 0.09, 0, footY + 0.006, 0.024));
+        leg.add(part(cylinder, black ? '#2c2c31' : '#e9e5df', 0.07, 0.024, 0.094, 0, footY - 0.024, 0.024));
+        leg.add(part(cylinder, black ? '#3a3a40' : '#d9d4cc', 0.071, 0.01, 0.095, 0, footY - 0.04, 0.024));
+        leg.add(part(box, black ? '#4a4a52' : '#c9c4bc', 0.03, 0.012, 0.006, side * 0.025, footY + 0.012, 0.1));
       } else if (shoes === 'sneaker') {
         // weiße Sneaker mit heller Sohle
         leg.add(part(sphere, '#f7f5f1', 0.058, 0.04, 0.08, 0, footY, 0.022));
@@ -828,7 +836,8 @@ export class Chibi3D {
     if (a.beard === 'schnurrbart') {
       const bc = a.beardColor || lighten(a.hairColor, 0.05);
       for (const s of [-1, 1]) {
-        const m = part(sphereLow, bc, R * 0.16, R * 0.06, R * 0.06, s * R * 0.13, -R * 0.3, R * 0.9);
+        // zwischen Nase und Mund (der Mund liegt bei etwa -0.15 R)
+        const m = part(sphereLow, bc, R * 0.16, R * 0.055, R * 0.06, s * R * 0.13, -R * 0.085, R * 0.92);
         m.rotation.z = s * -0.18;
         this.head.add(m);
       }

@@ -14,7 +14,7 @@ export type Beard = 'keiner' | 'kurz' | 'voll' | 'schnurrbart';
 export type Smile = 'laecheln' | 'grinsen' | 'zahnluecke';
 export type GlassesShape = 'rund' | 'eckig';
 /** „saison“ = Schnürstiefel im Herbst/Winter, weiße Sneaker im Frühling/Sommer */
-export type Shoes = 'standard' | 'stiefel' | 'sneaker' | 'saison';
+export type Shoes = 'standard' | 'stiefel' | 'sneaker' | 'chunky' | 'chunky-schwarz' | 'saison';
 /** „oval“ = schmaleres Kinn, „rund“ = klassisch kugelrund */
 export type FaceShape = 'rund' | 'oval';
 
@@ -110,7 +110,7 @@ export function outfitFor(a: Appearance, season: Season, day = ''): Exclude<Outf
 }
 
 /** Ein Kleiderschrank-Eintrag: Outfit + Farben (der Rest des Aussehens bleibt) */
-export type WardrobeItem = Pick<Appearance, 'outfit' | 'outfitColor' | 'accentColor'>;
+export type WardrobeItem = Pick<Appearance, 'outfit' | 'outfitColor' | 'accentColor'> & Partial<Pick<Appearance, 'shoes'>>;
 
 /** Aussehen für einen Tag: wählt reproduzierbar ein Teil aus dem Kleiderschrank (falls vorhanden) */
 export function dressFor(a: Appearance, wardrobe: readonly WardrobeItem[] | undefined, day: string, salt: string): Appearance {
@@ -156,6 +156,8 @@ export const SHOES: Option<Shoes>[] = [
   { id: 'saison', label: 'Je nach Jahreszeit' },
   { id: 'stiefel', label: 'Schnürstiefel' },
   { id: 'sneaker', label: 'Weiße Sneaker' },
+  { id: 'chunky', label: 'Weiße Chunky-Sneaker' },
+  { id: 'chunky-schwarz', label: 'Schwarze Chunky-Sneaker' },
   { id: 'standard', label: 'Halbschuhe' },
 ];
 

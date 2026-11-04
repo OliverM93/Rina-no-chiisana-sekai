@@ -199,7 +199,7 @@ Legende: ✅ erledigt · 🚧 in Arbeit · ⬜ geplant
     Bellen, Gackern, Graben, Herz, Post, Dialog-Blubb
   - Lautstärkeregler für Musik & Geräusche im Menü (wird gespeichert)
 - ✅ **M8b Kleidung & Gruselkanal:** Linas Lieblings-Sweatshirts (Hawaii, Sport, Radierkopf) mit weiter Anzughose,
-  im Herbst/Frühling täglich wechselnd · Oli zieht sich um (Bandshirts, Cargohose, Polo, Überjacke) ·
+  im Herbst/Frühling täglich wechselnd · Oli zieht sich um (alles in Schwarz: Bandshirts, Polo, Überjacke; Hosen schwarz/beige/Jeans; Chunky-Sneaker) ·
   Gruselkanal im Fernseher („Gänsehaut um Mitternacht“), Sprüche der Bewohner zu Linas Horror-Liebe
 - ⬜ Mehr Animationen & Partikel, Balancing
 - ⬜ PWA (installierbar, offline)

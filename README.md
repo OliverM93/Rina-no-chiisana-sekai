@@ -120,7 +120,7 @@ Winstons Bellen … Lautstärke für Musik und Geräusche im Menü.
 
 **Kleidung & Gruselkanal (M8b):** Lina hat neue Lieblingsteile – very oversized Sweatshirts mit „Hawaii“,
 „Sport“ und einem Kultfilm-Porträt, dazu eine weite schwarze Anzughose. Im Frühling und Herbst zieht sie jeden
-Tag ein anderes an. Oli wechselt auch mal die Klamotten: Bandshirt und Cargohose, Polo oder Überjacke. Im
+Tag ein anderes an. Oli wechselt auch mal die Klamotten – immer in Schwarz: Troyer, Bandshirt, Polo oder Überjacke, dazu schwarze oder beige Hose oder Jeans und Chunky-Sneaker. Im
 Fernseher läuft jetzt auch der **Gruselkanal** – Oli schaut tapfer mit (hinter einem Kissen).
 
 Im Menü: Aussehen ändern, Lautstärke, speichern, **Spielstand exportieren/laden** (als Datei – praktisch zum Sichern
