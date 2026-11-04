@@ -57,7 +57,8 @@ export class Festivals3D {
           const x = h.x + dx;
           const z = h.y + h.h + 0.25;
           p.position.set(x, this.ground(x, z), z);
-          p.rotation.y = (dx - 2) * 0.2;
+          p.rotation.y = (dx - 2) * 0.12;
+          p.scale.setScalar(1.5);
           this.group.add(p);
         }
       }

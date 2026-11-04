@@ -1533,9 +1533,10 @@ body {
   position: absolute;
   left: 0;
   top: 0;
-  width: 3px;
-  height: 46px;
-  margin-left: -1.5px;
+  width: 4px;
+  height: 64px;
+  margin-left: -2px;
+  filter: drop-shadow(0 0 4px currentColor);
   transform-origin: 50% 0;
   border-radius: 3px;
   background: linear-gradient(to bottom, transparent, currentColor);

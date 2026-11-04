@@ -287,6 +287,75 @@ const DRAW: Record<string, Draw> = {
       for (const [dx, dy] of [[-2, -1], [1, 1], [2, -2], [-1, 2]] as const) ellipse(ctx, x + dx, y + dy, 0.9, 0.9, '#a98ad8');
     }
   },
+  osterei: (ctx) => {
+    ellipse(ctx, 16, 17, 9, 11.5, '#8ac8ff', darken('#8ac8ff', 0.3), 1.4);
+    ctx.save();
+    ctx.beginPath();
+    ctx.ellipse(16, 17, 9, 11.5, 0, 0, Math.PI * 2);
+    ctx.clip();
+    roundRect(ctx, 5, 13, 22, 3.5, 1, '#f7d26a');
+    roundRect(ctx, 5, 20, 22, 3.5, 1, '#e85a8a');
+    for (const x of [10, 16, 22]) ellipse(ctx, x, 9, 1.3, 1.3, '#ffffff');
+    ctx.restore();
+    shine(ctx, 12.5, 10, 2);
+  },
+  plaetzchen: (ctx) => {
+    const star = (x: number, y: number, r: number, c: string) => {
+      ctx.fillStyle = c;
+      ctx.beginPath();
+      for (let i = 0; i < 10; i++) {
+        const a = (i / 10) * Math.PI * 2 - Math.PI / 2;
+        const rr = i % 2 === 0 ? r : r * 0.5;
+        if (i === 0) ctx.moveTo(x + Math.cos(a) * rr, y + Math.sin(a) * rr);
+        else ctx.lineTo(x + Math.cos(a) * rr, y + Math.sin(a) * rr);
+      }
+      ctx.closePath();
+      ctx.fill();
+      ctx.strokeStyle = darken(c, 0.3);
+      ctx.lineWidth = 1;
+      ctx.stroke();
+    };
+    star(12, 18, 8, '#d9a86a');
+    ellipse(ctx, 21, 12, 6, 6, '#f2d39a', darken('#f2d39a', 0.3), 1.2);
+    ellipse(ctx, 21, 12, 2, 2, '#e8484f');
+    star(12, 18, 4, '#fbf6ec');
+  },
+  lebkuchenherz: (ctx) => {
+    ctx.fillStyle = '#b06a3a';
+    ctx.beginPath();
+    ctx.moveTo(16, 27);
+    ctx.bezierCurveTo(4, 19, 4, 7, 11, 7);
+    ctx.bezierCurveTo(14, 7, 16, 10, 16, 11);
+    ctx.bezierCurveTo(16, 10, 18, 7, 21, 7);
+    ctx.bezierCurveTo(28, 7, 28, 19, 16, 27);
+    ctx.fill();
+    ctx.strokeStyle = '#ffffff';
+    ctx.lineWidth = 1.4;
+    ctx.stroke();
+    ctx.font = '700 5px sans-serif';
+    ctx.fillStyle = '#f4a3b8';
+    ctx.textAlign = 'center';
+    ctx.fillText('chérie', 16, 17);
+  },
+  geburtstagstorte: (ctx) => {
+    roundRect(ctx, 5, 17, 22, 9, 3, '#f7c6d4', '#d98aa0', 1.3);
+    roundRect(ctx, 9, 10, 14, 8, 3, '#fbe8ef', '#d98aa0', 1.2);
+    ellipse(ctx, 16, 17.5, 11, 1.5, '#ffffff');
+    roundRect(ctx, 15, 4, 2, 6, 1, '#8ac8ff');
+    ellipse(ctx, 16, 3.2, 1.5, 2, '#f7d26a');
+    for (const x of [8, 13, 19, 24]) ellipse(ctx, x, 21, 1.3, 1.3, '#e8484f');
+  },
+  gluecksklee: (ctx) => {
+    ctx.strokeStyle = '#4f9a5a';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(16, 16);
+    ctx.quadraticCurveTo(18, 24, 14, 29);
+    ctx.stroke();
+    for (const [dx, dy] of [[-5, -5], [5, -5], [-5, 3], [5, 3]] as const) {
+      blob(ctx, [{ x: 16 + dx - 2, y: 14 + dy, r: 3.6 }, { x: 16 + dx + 2, y: 14 + dy, r: 3.6 }], '#6fbf73', '#3f7a42', 1);
+    }
+  },
   ei: (ctx) => {
     ellipse(ctx, 16, 17, 8.5, 10.5, '#f7ead6', '#c9a77a', 1.4);
     shine(ctx, 13, 12, 2.4);

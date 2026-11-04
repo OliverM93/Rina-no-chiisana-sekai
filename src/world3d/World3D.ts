@@ -78,7 +78,6 @@ import { DigSpots3D } from './DigSpots3D';
 import { Festivals3D } from './Festivals3D';
 import { todaysFestivals } from '../game/festivals';
 import { FESTIVAL_INFO } from '../data/festivals';
-import { isFireworkTime } from '../core/festivals';
 import { digSpot } from '../game/digging';
 import { THALIA_WELCOME, PARTY_LINES } from '../data/npcs/thalia';
 import { FIND_BY_ID } from '../data/fossils';
@@ -165,7 +164,6 @@ export class World3D {
   private digSpots: DigSpots3D;
   private festivals: Festivals3D;
   private festToastDay = '';
-  private fireworks = false;
   private digging = false;
   private partyLights: { group: THREE.Group; bulbs: THREE.MeshToonMaterial[] };
   private partyLight = new THREE.PointLight('#ffb8d8', 0, 9, 1.4);
@@ -421,11 +419,6 @@ export class World3D {
     const sky = this.session.inside ? mixHex('#f3e3cf', '#3a3450', n * 0.7) : outside;
     this.interior.updateLight(n, clouds);
     this.yard.updateLight(n);
-    const fw = isFireworkTime(now) && !this.session.inside;
-    if (fw !== this.fireworks) {
-      this.fireworks = fw;
-      this.session.bus.emit('overlay:fireworks', fw);
-    }
     const party = isPartyTime(this.session) && !this.session.inside;
     if (party && !this.partyLights.group.visible) this.session.bus.emit('toast', { text: '🎉 Party auf dem Dorfplatz! Thalia hat Musik mitgebracht.' });
     this.partyLights.group.visible = party;

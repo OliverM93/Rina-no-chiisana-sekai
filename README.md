@@ -94,6 +94,11 @@ Lavendel braut sie in der Apotheke Tee. Oma findet natürlich, dass Ärzte nur d
 öffnet sich Thalias **Dorfkarte**. Und **samstags ab 19 Uhr** ist Party auf dem Dorfplatz – mit
 Lichterketten, allen Bewohnern und einem Tanz mit Thalia. 💃
 
+**Feste (M7e):** Im Advent steht ein geschmückter Weihnachtsbaum auf dem Dorfplatz, an Weihnachten und an
+**Linas Geburtstag** (16.06.) hat jeder Bewohner ein Geschenk (Omas Plätzchen, Olis Geburtstagstorte …).
+Silvester gibt's Feuerwerk, an Ostern sind bunte Eier im Gras versteckt, an Halloween leuchten Kürbisse
+vor allen Häusern.
+
 Im Menü: Aussehen ändern, speichern, **Spielstand exportieren/laden** (als Datei – praktisch zum Sichern
 oder für ein anderes Gerät), Vollbild, Hilfe.
 
@@ -147,6 +152,10 @@ und jede Jahreszeit sieht anders aus.
 | Grabstelle | Dorfkarte | Samstags-Party |
 |---|---|---|
 | ![Grabstelle](docs/screenshots/3d-grabstelle.png) | ![Karte](docs/screenshots/3d-dorfkarte.png) | ![Party](docs/screenshots/3d-party.png) |
+
+| Weihnachten | Linas Geburtstag | Ostern | Halloween |
+|---|---|---|---|
+| ![Weihnachten](docs/screenshots/3d-weihnachten.png) | ![Geburtstag](docs/screenshots/3d-geburtstag.png) | ![Ostern](docs/screenshots/3d-ostern.png) | ![Halloween](docs/screenshots/3d-halloween.png) |
 
 | Sammelbuch | Regen |
 |---|---|

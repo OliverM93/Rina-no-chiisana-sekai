@@ -155,7 +155,14 @@ Legende: ✅ erledigt · 🚧 in Arbeit · ⬜ geplant
   „💃 Tanzen!“ mit Thalia (Freundschaft für alle)
 - ✅ Herz-Geschenke: Fossilien-Vitrine, Globus
 
+**M7e ✅ Feste**
+- ✅ Advent & Weihnachten (geschmückter Baum auf dem Dorfplatz, Geschenke von allen), Silvester (Feuerwerk
+  ab 20 Uhr, Glücksklee von Oma), Neujahr, Ostern (bunte Eier im Gras suchen), Halloween (Kürbisse vor allen
+  Häusern), Linas Geburtstag (Luftballons am Haus, Geschenke von allen)
+- ✅ Jeder Bewohner hat eigene Fest-Sprüche; Geschenke einmal pro Fest und Jahr
+
 - ⬜ Galerie (Kunstwerke sammeln & ausstellen)
+- ⬜ Geburtstage der Bewohner
 - ⬜ Lars: Praxis/Apotheke (Heiltränke, Pflaster), Gesundheitstipps
 - ⬜ Olaf: Sparbuch mit kleinen Zinsen (Kredit gibt's schon seit M6a)
 - ⬜ Jens: Bistro/Kochstudio (Rezepte) & Galerie (Kunstwerke sammeln/ausstellen)

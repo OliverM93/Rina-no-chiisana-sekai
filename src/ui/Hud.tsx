@@ -4,6 +4,7 @@
 import { useEffect, useState } from 'preact/hooks';
 import { formatDate, formatTime, getDayPhase, getSeason, SEASON_ICONS, SEASON_LABELS } from '../core/time';
 import { WEATHER_ICONS, WEATHER_LABELS } from '../core/weather';
+import { isFireworkTime } from '../core/festivals';
 import { itemDef } from '../data/items';
 import { currentWeather, ownedTools, toggleTool } from '../game/nature';
 import { itemIconUrl } from '../gfx/items';
@@ -36,13 +37,11 @@ export function Hud({ session }: { session: Session }) {
   const { inside, inYard, decor } = useHomeState(session);
   const [stars, setStars] = useState(false);
   useEffect(() => session.bus.on('overlay:stars', setStars), [session]);
-  const [fireworks, setFireworks] = useState(false);
-  useEffect(() => session.bus.on('overlay:fireworks', setFireworks), [session]);
   return (
     <>
       {weather.rainbow && <div class="rainbow-overlay" aria-hidden="true" />}
       {stars && <StarsOverlay />}
-      {fireworks && <FireworksOverlay />}
+      {isFireworkTime(now) && !inside && <FireworksOverlay />}
       <div class="hud-clock pop-in">
         <div class="hud-time">
           <span class="hud-phase">{PHASE_ICON[getDayPhase(now)]}</span>

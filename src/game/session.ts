@@ -104,8 +104,6 @@ export type GameEvents = {
   'home:yard': boolean;
   /** Sternenhimmel mit Sternschnuppen einblenden (Sterne gucken mit Oli) */
   'overlay:stars': boolean;
-  /** Silvester-Feuerwerk einblenden */
-  'overlay:fireworks': boolean;
   /** Einrichtungsmodus: an/aus, was gerade gehalten wird */
   'decor:state': DecorState;
   /** Oberfläche → Welt: Einrichten steuern */
