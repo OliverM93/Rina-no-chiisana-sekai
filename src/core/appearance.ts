@@ -9,7 +9,7 @@ import { palette } from '../style/palette';
 import type { Season } from './time';
 
 export type HairStyle = 'locken' | 'schulterlang' | 'bob' | 'zopf' | 'dutt' | 'kurz' | 'wuschel' | 'zerzaust' | 'kurzgeschoren' | 'glatt';
-export type Outfit = 'kleid' | 'pulli' | 'latzhose' | 'hemd' | 'strickjacke' | 'mantel' | 'weste' | 'streifenhemd' | 'hoodie' | 'troyer';
+export type Outfit = 'kleid' | 'pulli' | 'latzhose' | 'hemd' | 'strickjacke' | 'mantel' | 'weste' | 'streifenhemd' | 'hoodie' | 'troyer' | 'sweatshirt' | 'shorts' | 'fleece' | 'saison';
 export type Beard = 'keiner' | 'kurz' | 'voll' | 'schnurrbart';
 export type Smile = 'laecheln' | 'grinsen' | 'zahnluecke';
 export type GlassesShape = 'rund' | 'eckig';
@@ -75,7 +75,17 @@ export const OUTFITS: Option<Outfit>[] = [
   { id: 'hoodie', label: 'Hoodie' },
   { id: 'troyer', label: 'Troyer-Pulli' },
   { id: 'mantel', label: 'Mantel & Schal' },
+  { id: 'sweatshirt', label: 'Oversize-Sweatshirt' },
+  { id: 'shorts', label: 'Sweatshirt & kurze Hose' },
+  { id: 'fleece', label: 'Dicke Fleece-Jacke' },
+  { id: 'saison', label: 'Streetwear je nach Jahreszeit' },
 ];
+
+/** Was eine Figur in der Jahreszeit tatsächlich trägt („saison“ = Streetwear: Sommer kurz, Winter Fleece) */
+export function outfitFor(a: Appearance, season: Season): Exclude<Outfit, 'saison'> {
+  if (a.outfit !== 'saison') return a.outfit;
+  return season === 'sommer' ? 'shorts' : season === 'winter' ? 'fleece' : 'sweatshirt';
+}
 
 export const SMILES: Option<Smile>[] = [
   { id: 'laecheln', label: 'Lächeln' },
@@ -139,7 +149,7 @@ export const DEFAULT_LINA: Appearance = {
   hairStyle: 'locken',
   hairColor: palette.hair.kastanie,
   skinTone: palette.skin[0],
-  outfit: 'pulli',
+  outfit: 'saison',
   outfitColor: palette.outfit[10],
   accentColor: palette.outfit[10],
   height: 1,

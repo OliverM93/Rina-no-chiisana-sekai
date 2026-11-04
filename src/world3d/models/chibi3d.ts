@@ -7,7 +7,7 @@
  * Ursprung = zwischen den Füßen, Blickrichtung = +Z.
  */
 import * as THREE from 'three';
-import { shoesFor, type Appearance } from '../../core/appearance';
+import { outfitFor, shoesFor, type Appearance } from '../../core/appearance';
 import type { Season } from '../../core/time';
 import { mulberry32 } from '../../core/rng';
 import { darken, lighten, mixHex } from '../../style/palette';
@@ -466,7 +466,7 @@ export class Chibi3D {
     const R = 0.27 * (0.95 + 0.05 * h);
     this.hipY = legLen + 0.04;
     const skin = a.skinTone;
-    const o = a.outfit;
+    const o = outfitFor(a, this.season);
 
     // Farben je Outfit
     const jeans = '#5b6f99';
@@ -507,6 +507,11 @@ export class Chibi3D {
       case 'troyer':
         pants = a.accentColor;
         break;
+      case 'sweatshirt':
+      case 'shorts':
+      case 'fleece':
+        pants = a.accentColor === a.outfitColor ? (o === 'fleece' ? jeans : '#3a3a44') : a.accentColor;
+        break;
     }
     const shoes = shoesFor(a, this.season);
     let legColor = skirtColor && o !== 'mantel' ? (o === 'kleid' ? '#3a3440' : skin) : pants;
@@ -517,7 +522,11 @@ export class Chibi3D {
     for (const side of [-1, 1]) {
       const leg = new THREE.Group();
       leg.position.set(side * 0.066 * bw, this.hipY, 0);
-      leg.add(part(cylinder, legColor, 0.044 * Math.min(1.15, bw), legLen, 0.044, 0, -legLen / 2, 0));
+      if (o === 'shorts') {
+        // kurze Hose: oben Stoff, darunter Beine
+        leg.add(part(cylinder, skin, 0.04 * Math.min(1.15, bw), legLen, 0.04, 0, -legLen / 2, 0));
+        leg.add(part(cylinder, pants, 0.054 * Math.min(1.15, bw), legLen * 0.42, 0.054, 0, -legLen * 0.21, 0));
+      } else leg.add(part(cylinder, legColor, 0.044 * Math.min(1.15, bw), legLen, 0.044, 0, -legLen / 2, 0));
       const footY = -legLen - 0.005;
       if (shoes === 'stiefel') {
         // Schnürstiefel: schwarzer Schaft, klobige Sohle mit gelber Naht
@@ -555,7 +564,11 @@ export class Chibi3D {
       this.extraTextures.push(tex);
       shirtMat = new THREE.MeshToonMaterial({ map: tex });
     }
-    const shirt = part(new THREE.CylinderGeometry(0.82, 1, 1, 20), shirtMat, topR * 1.15, torso * 0.78, topR * 1.05, 0, torsoY + torso * 0.11, 0);
+    const street = o === 'sweatshirt' || o === 'shorts' || o === 'fleece';
+    // Oversize: weiter & länger (reicht über die Hüfte)
+    const shirt = street
+      ? part(new THREE.CylinderGeometry(0.9, 1, 1, 20), shirtMat, topR * (o === 'fleece' ? 1.38 : 1.3), torso * 0.98, topR * (o === 'fleece' ? 1.28 : 1.2), 0, torsoY + torso * 0.02, 0)
+      : part(new THREE.CylinderGeometry(0.82, 1, 1, 20), shirtMat, topR * 1.15, torso * 0.78, topR * 1.05, 0, torsoY + torso * 0.11, 0);
     this.body.add(shirt);
     const neckY = this.hipY + torso * 0.98;
 
@@ -594,6 +607,28 @@ export class Chibi3D {
       for (const s of [-1, 1]) this.body.add(part(cylinder, '#1e1e24', 0.006, 0.09, 0.006, s * 0.03, neckY - 0.06, topR * 1.02));
       this.body.add(part(box, '#1e1e24', 0.008, torso * 0.65, 0.006, 0, torsoY + 0.02, topR * 1.05));
     }
+    if (o === 'sweatshirt' || o === 'shorts') {
+      // Rippbündchen unten & am Hals, kleines Emblem auf der Brust (eigenes Design, keine Marke)
+      this.body.add(part(cylinder, darken(a.outfitColor, 0.12), topR * 1.3, 0.03, topR * 1.2, 0, torsoY - torso * 0.47, 0));
+      const neck = mesh(new THREE.TorusGeometry(topR * 0.58, 0.014, 6, 18), toon(darken(a.outfitColor, 0.12)));
+      neck.rotation.x = Math.PI / 2;
+      neck.position.y = neckY - 0.005;
+      this.body.add(neck);
+      const emblem = lighten(a.outfitColor, 0.75);
+      this.body.add(part(box, emblem, 0.07, 0.022, 0.006, 0.0, torsoY + 0.07, topR * 1.2));
+      this.body.add(part(sphereLow, emblem, 0.016, 0.016, 0.006, 0.0, torsoY + 0.035, topR * 1.2));
+    }
+    if (o === 'fleece') {
+      // Fleece-Jacke: Stehkragen, Reißverschluss, flauschige Flecken, Bündchen
+      const fluffy = lighten(a.outfitColor, 0.05);
+      const collar = mesh(new THREE.CylinderGeometry(topR * 0.68, topR * 0.8, 0.07, 18, 1, true), toon(fluffy, { side: THREE.DoubleSide }));
+      collar.position.y = neckY + 0.02;
+      this.body.add(collar);
+      this.body.add(part(box, '#8d8a93', 0.008, torso * 0.9, 0.006, 0, torsoY + 0.0, topR * 1.29));
+      this.body.add(part(cylinder, darken(a.outfitColor, 0.1), topR * 1.38, 0.035, topR * 1.28, 0, torsoY - torso * 0.47, 0));
+      for (const [x, y] of [[-0.06, 0.04], [0.07, -0.03], [-0.04, -0.08], [0.05, 0.09]] as const) this.body.add(part(sphereLow, fluffy, 0.022, 0.018, 0.008, x, torsoY + y, topR * 1.27));
+      for (const sx of [-1, 1]) this.body.add(part(box, darken(a.outfitColor, 0.15), 0.05, 0.004, 0.006, sx * 0.07, torsoY - 0.05, topR * 1.29));
+    }
     if (o === 'troyer') {
       // Troyer: Stehkragen mit kurzem Reißverschluss
       const collar = mesh(new THREE.CylinderGeometry(topR * 0.62, topR * 0.72, 0.05, 18, 1, true), toon(darken(a.outfitColor, 0.05), { side: THREE.DoubleSide }));
@@ -628,13 +663,14 @@ export class Chibi3D {
 
     // Arme (Drehpunkt an der Schulter)
     const shoulderY = this.hipY + torso * 0.92;
-    const sleeve = o === 'weste' ? a.accentColor : o === 'mantel' || o === 'hoodie' || o === 'troyer' ? a.outfitColor : top;
+    const sleeve = o === 'weste' ? a.accentColor : o === 'mantel' || o === 'hoodie' || o === 'troyer' || street ? a.outfitColor : top;
     const sleeveMat: THREE.Material = o === 'streifenhemd' ? shirtMat : toon(sleeve);
     for (const side of [-1, 1]) {
       const arm = new THREE.Group();
       arm.position.set(side * (topR + 0.035), shoulderY, 0);
       arm.rotation.z = side * 0.25;
-      arm.add(part(capsule, sleeveMat, 0.035 * Math.min(1.15, bw), 0.1 * Math.min(1.1, h), 0.035, 0, -0.08, 0));
+      const thick = street ? (o === 'fleece' ? 1.4 : 1.28) : 1;
+      arm.add(part(capsule, sleeveMat, 0.035 * Math.min(1.15, bw) * thick, (street ? 0.075 : 0.1) * Math.min(1.1, h), 0.035 * thick, 0, street ? -0.065 : -0.08, 0));
       arm.add(part(sphere, skin, 0.038, 0.038, 0.038, 0, -0.17 * Math.min(1.1, h), 0));
       this.handY = -0.17 * Math.min(1.1, h);
       this.body.add(arm);

@@ -174,7 +174,11 @@ Legende: ✅ erledigt · 🚧 in Arbeit · ⬜ geplant
 - ⬜ Jens: Bistro/Kochstudio (Rezepte) & Galerie (Kunstwerke sammeln/ausstellen)
 - ⬜ Thalia: Abendevents (Partys/Tanzabende), Karten, Gesteine/Fossilien, Wetterstation, neue Gebiete
 - ⬜ Oli: romantische Szenen (Picknick, Sternschnuppen), gemeinsames Haus/Zimmer
-- ⬜ NPCs interagieren untereinander (Kaffeeklatsch, gemeinsames Angeln) – Sonntagsessen gibt's schon
+**M7g ✅ Treffen der Bewohner & Linas Streetwear**
+- ✅ Kaffeeklatsch an Omas Bank (Mo/Mi/Fr 15–17), Angeln am Fluss (Olaf & Christin, Di/Do/Sa 16–18),
+  Training auf der Wiese (Oli & Lars, Mi/Sa 8–10), Steine & Skizzen am Strand (Thalia & Jens, Di/Fr 13–15)
+- ✅ Lina gesellt sich dazu und hört mit (Freundschaft für alle), Emojis über den Köpfen, Angeln in der Hand
+- ✅ Lina: Oversize-Sweatshirt, kurze Hose im Sommer, Fleece-Jacke im Winter („Streetwear je nach Jahreszeit“)
 - ⬜ Feste: Weihnachten, Silvester, Linas Geburtstag (16.06.), Geburtstage der Bewohner
 
 ## ⬜ M8 – Feinschliff

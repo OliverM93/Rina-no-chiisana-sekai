@@ -104,6 +104,11 @@ Oma (Kreuzstich!), Thalia oder Oli. Lina kann die Bilder der Galerie stiften ode
 Staffelei aufstellen. Und jeden **Sonntag ab 18 Uhr** lädt Jens zum Abendessen zu sich nach Hause ein –
 Oli und Lars sind immer dabei, Olaf, Christin und Oma manchmal. Einfach an Jens' Tür klopfen.
 
+**Treffen (M7g):** Die Bewohner treffen sich auch untereinander – zum **Kaffeeklatsch** an Omas Bank, zum
+**Angeln** am Fluss (Olaf & Christin), zum **Training** auf der Wiese (Oli & Lars) oder am **Strand** (Thalia
+& Jens). Lina kann sich dazugesellen und mithören. Und Lina trägt jetzt am liebsten **Streetwear**:
+Oversize-Sweatshirt, im Sommer mit kurzer Hose, im Winter mit dicker Fleece-Jacke.
+
 Im Menü: Aussehen ändern, speichern, **Spielstand exportieren/laden** (als Datei – praktisch zum Sichern
 oder für ein anderes Gerät), Vollbild, Hilfe.
 
@@ -165,6 +170,10 @@ und jede Jahreszeit sieht anders aus.
 | Galerie | Kunst zu Hause | Sonntagsessen |
 |---|---|---|
 | ![Galerie](docs/screenshots/3d-galerie.png) | ![Kunst](docs/screenshots/3d-kunst-zuhause.png) | ![Essen](docs/screenshots/3d-sonntagsessen.png) |
+
+| Angeln mit Olaf & Christin | Training mit Oli & Lars | Linas Streetwear (Sommer/Herbst/Winter) |
+|---|---|---|
+| ![Angeln](docs/screenshots/3d-angeln-olaf-christin.png) | ![Training](docs/screenshots/3d-training.png) | ![Streetwear](docs/screenshots/3d-lina-streetwear.png) |
 
 | Sammelbuch | Regen |
 |---|---|
