@@ -41,7 +41,7 @@ const content = new THREE.Group();
 scene.add(content);
 
 const people: Array<[string, Appearance]> = [
-  ['Lina', DEFAULT_LINA],
+  ['Lina', { ...DEFAULT_LINA, faceShape: (params.get('gesicht') as Appearance['faceShape'] | null) ?? DEFAULT_LINA.faceShape }],
   ['Gisela', LOOKS.gisela],
   ['Olaf', LOOKS.olaf],
   ['Christin', LOOKS.christin],
@@ -80,8 +80,10 @@ function build() {
     content.add(bench, sitter.root);
     sitter.pose({ step: 0, moving: false, running: false, sitting: true, blink: false, t: 0 });
     const zoom = Number(params.get('zoom') ?? 1);
-    camera.position.set(Math.sin(angle) * 7.6 * zoom, 2.4 * zoom, Math.cos(angle) * 7.6 * zoom);
-    camera.lookAt(Number(params.get('x') ?? 0), 0.5, -0.3);
+    const lookX = Number(params.get('x') ?? 0);
+    const lookY = Number(params.get('y') ?? 0.5);
+    camera.position.set(lookX + Math.sin(angle) * 7.6 * zoom, lookY - 0.5 + 2.4 * zoom, Math.cos(angle) * 7.6 * zoom);
+    camera.lookAt(lookX, lookY, -0.3);
   } else if (view === 'natur') {
     const items: THREE.Object3D[] = [];
     for (const s of ['fruehling', 'sommer', 'herbst', 'winter'] as const) items.push(makeTree(s, 3).group);

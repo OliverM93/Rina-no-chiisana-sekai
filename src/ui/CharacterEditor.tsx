@@ -8,6 +8,7 @@ import {
   EYE_COLORS,
   HAIR_COLORS,
   SMILES,
+  FACE_SHAPES,
   HAIR_STYLES,
   OUTFIT_COLORS,
   OUTFITS,
@@ -81,6 +82,13 @@ export function CharacterEditor({ mode, initial, initialVillage, season, onDone,
             <OptionRow label="Augenfarbe">
               {EYE_COLORS.map((o) => (
                 <Swatch key={o.id} color={o.id} title={o.label} active={a.eyeColor === o.id} onClick={() => set('eyeColor', o.id)} />
+              ))}
+            </OptionRow>
+            <OptionRow label="Gesicht">
+              {FACE_SHAPES.map((o) => (
+                <Chip key={o.id} active={a.faceShape === o.id} onClick={() => set('faceShape', o.id)}>
+                  {o.label}
+                </Chip>
               ))}
             </OptionRow>
             <OptionRow label="Lächeln">

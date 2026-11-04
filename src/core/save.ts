@@ -198,7 +198,7 @@ export const MIGRATIONS: Record<number, (old: RawSave) => RawSave> = {
     const { home, ...rest } = old as Record<string, unknown> & { home?: Record<string, unknown> };
     return home && typeof home === 'object' ? { ...rest, house: { stage: 0, rooms: [{ id: 'haupt', ...home }] } } : rest;
   },
-  // v6 → v7 (M6b): Werkbank-Rezepte und Winston. Startwerte ergänzt `normalizeSave`.
+  // v6 → v7 (M6b): Werkbank-Rezepte, Winston und Gesichtsform (Lina: schmal). Startwerte ergänzt `normalizeSave`.
   6: (old) => ({ ...old }),
 };
 

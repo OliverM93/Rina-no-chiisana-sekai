@@ -207,6 +207,31 @@ function shell(r: number, color: string, phiStart: number, phiLength: number, th
   return mesh(g, toon(color, { side: THREE.DoubleSide }));
 }
 
+/** Wie stark das Kinn bei der Gesichtsform „oval“ schmaler wird */
+const CHIN_TAPER = 0.36;
+
+/**
+ * Macht die untere Kopfhälfte schmaler (sanft zum Kinn hin), damit das Gesicht
+ * nicht so pausbäckig wirkt. `r` = Radius der Geometrie. Verändert `geo` direkt.
+ */
+function taperChin<G extends THREE.BufferGeometry>(geo: G, r: number, amount = CHIN_TAPER): G {
+  const pos = geo.attributes.position as THREE.BufferAttribute;
+  for (let i = 0; i < pos.count; i++) {
+    const y = pos.getY(i) / r;
+    if (y >= 0.1) continue;
+    const t = Math.min(1, (0.1 - y) / 1.1);
+    const k = t * t * (3 - 2 * t);
+    pos.setX(i, pos.getX(i) * (1 - amount * k));
+    pos.setZ(i, pos.getZ(i) * (1 - amount * 0.35 * k));
+    pos.setY(i, pos.getY(i) * (1 - amount * 0.5 * k));
+  }
+  pos.needsUpdate = true;
+  geo.computeVertexNormals();
+  return geo;
+}
+
+const sphereOval = taperChin(new THREE.SphereGeometry(1, 24, 18), 1);
+
 /** Punkt auf einer Kugel: theta von oben (0) nach unten (π), phi = π/2 ist vorne (+Z) */
 function onSphere(r: number, theta: number, phi: number): THREE.Vector3 {
   return new THREE.Vector3(-r * Math.cos(phi) * Math.sin(theta), r * Math.cos(theta), r * Math.sin(phi) * Math.sin(theta));
@@ -622,12 +647,19 @@ export class Chibi3D {
     this.head.position.y = headY;
     this.body.add(this.head);
     const wide = 1 + (bw - 1) * 0.35;
-    this.head.add(part(sphere, skin, R * wide, R * 0.93, R * 0.95));
+    const oval = a.faceShape === 'oval';
+    this.head.add(part(oval ? sphereOval : sphere, skin, R * wide, R * 0.93, R * 0.95));
+    if (oval) {
+      // schmales Kinn: Kopf etwas tiefer setzen und ein kleiner Hals, damit keine Lücke entsteht
+      this.head.position.y -= R * 0.08;
+      this.head.add(part(cylinder, skin, R * 0.2, R * 0.3, R * 0.18, 0, -R * 0.72, -R * 0.05));
+    }
     for (const s of [-1, 1]) this.head.add(part(sphere, skin, R * 0.17, R * 0.21, R * 0.12, s * R * 0.97 * wide, -R * 0.05, 0));
 
     this.faceOpen = faceTexture(a, false);
     this.faceBlink = faceTexture(a, true);
     const faceGeo = new THREE.SphereGeometry(R * 1.005, 28, 18, FRONT - FACE_PHI / 2, FACE_PHI, FACE_THETA_START, FACE_THETA);
+    if (oval) taperChin(faceGeo, R * 1.005);
     this.face = new THREE.Mesh(faceGeo, faceMaterial(this.faceOpen));
     this.face.scale.set(wide, 0.93, 0.95);
     this.head.add(this.face);
@@ -644,11 +676,13 @@ export class Chibi3D {
       const bc = a.beardColor || lighten(a.hairColor, 0.05);
       const full = a.beard === 'voll';
       const beard = shell(R * 1.03, bc, FRONT - 1.1, 2.2, full ? 1.9 : 2.05, full ? 0.85 : 0.65);
+      if (oval) taperChin(beard.geometry, R * 1.03);
       beard.scale.set(wide, 0.93, 0.95);
       this.head.add(beard);
       // Koteletten
       for (const s of [-1, 1]) {
         const sb = shell(R * 1.025, bc, FRONT + s * 1.05 - 0.18, 0.36, 1.35, 0.7);
+        if (oval) taperChin(sb.geometry, R * 1.025);
         sb.scale.set(wide, 0.93, 0.95);
         this.head.add(sb);
       }
