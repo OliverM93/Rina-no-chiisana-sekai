@@ -61,7 +61,7 @@ const list: ItemDef[] = [
   { id: 'samen-vergissmeinnicht', name: 'Vergissmeinnicht-Samen', plural: 'Vergissmeinnicht-Samen', category: 'samen', price: 6, description: 'Für ein kleines Meer aus Blau.' },
 
   // Werkzeuge
-  { id: 'angel', name: 'Angel', plural: 'Angeln', category: 'werkzeug', price: null, maxStack: 1, description: 'Opas alte Angel. Am Wasser die Leertaste drücken – und dann ganz entspannt abwarten.' },
+  { id: 'angel', name: 'Angel', plural: 'Angeln', category: 'werkzeug', price: null, maxStack: 1, description: 'Opa Ludwigs alte Angel. Am Wasser die Leertaste drücken – und dann ganz entspannt abwarten.' },
   { id: 'netz', name: 'Kescher', plural: 'Kescher', category: 'werkzeug', price: null, maxStack: 1, description: 'Ein Netz für Schmetterlinge, Käfer und andere Krabbler.' },
   { id: 'giesskanne', name: 'Gießkanne', plural: 'Gießkannen', category: 'werkzeug', price: null, maxStack: 1, description: 'Eine rosa Gießkanne für Linas Beet. Gießen = Wachsen!' },
 

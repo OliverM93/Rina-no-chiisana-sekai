@@ -15,7 +15,7 @@ const STRAND = { x: 18, y: 30, w: 16, h: 3 };
 export const GISELA: NpcDef = {
   id: 'gisela',
   name: 'Oma Gisela',
-  personality: 'herzlich, frech, misstrauisch, starke Meinungen, immer das letzte Wort',
+  personality: 'herzlich, frech, misstrauisch, starke Meinungen, immer das letzte Wort; Witwe von Ludwig (Sportlehrer, Sportfan), an den sie gern zurückdenkt',
   appearance: LOOKS.gisela,
   home: 'haus-gisela',
   schedule: [
@@ -52,9 +52,16 @@ export const GISELA: NpcDef = {
       { text: ['Kindchen! Mein Lieblingsbesuch.', '… Ja, ich weiß, du bist mein einziger Besuch. Trotzdem.'], when: { minHearts: 2 } },
     ],
     chat: [
-      { text: ['Du hast Hühner? Wie Opa damals!', 'Der hatte eins, das hieß Frieda. Frieda hat jeden Morgen um fünf gekräht. Obwohl sie ein Huhn war.'], when: { tags: ['huehner'] }, weight: 3 },
+      { text: ['Du hast Hühner? Wie Opa Ludwig damals!', 'Der hatte eins, das hieß Frieda. Frieda hat jeden Morgen um fünf gekräht. Obwohl sie ein Huhn war.'], when: { tags: ['huehner'] }, weight: 3 },
       { text: ['Wachteln! Die sind ja winzig.', 'Für ein Spiegelei brauchst du davon ungefähr zwölf. Sag ich nur.'], when: { tags: ['wachteln'] }, weight: 3 },
-      { text: ['Neben deinem Haus steht noch Opas alte Werkbank.', 'Der hat da früher alles Mögliche gebaut. Aus Ästen! Aus Steinen! Einmal sogar einen Stuhl, der gehalten hat.'], weight: 2 },
+      { text: ['Neben deinem Haus steht noch Opas alte Werkbank.', 'Ludwig hat da früher alles Mögliche gebaut. Aus Ästen! Aus Steinen! Einmal sogar einen Stuhl, der gehalten hat.'], weight: 2 },
+      { text: ['Weißt du, was dein Opa Ludwig immer gesagt hat?', '„Wer rastet, der rostet!“', 'Er war ja Sportlehrer. Mit Leib und Seele. … Und mit Trillerpfeife.'], weight: 2 },
+      { text: ['Ludwig hat jedes Fußballspiel im Radio gehört.', 'Und jedes Mal so laut mitgeschimpft, dass die Nachbarn dachten, wir streiten.', 'Ach, ich vermiss das. Sogar das Schimpfen.'], weight: 2 },
+      { text: ['Wenn ich auf meiner Bank sitze, denk ich oft an Ludwig.', 'Er saß immer links. Deshalb sitz ich rechts.', 'Der Platz bleibt frei. Ende der Diskussion.'], weight: 2 },
+      { text: ['Dein Opa hätte dich jetzt eine Runde um den Dorfplatz laufen lassen.', '„Knie hoch, Lina! Und lächeln!“', 'Er hat dich immer „meine kleine Sprinterin“ genannt.'], weight: 2 },
+      { text: ['Ludwig hat mir seinen Antrag gemacht – auf dem Sportplatz, in der Halbzeitpause.', 'Ich hab Ja gesagt. Und er hat sich so gefreut, dass er die zweite Halbzeit verpasst hat.', 'Das erste und einzige Mal.'], when: { minHearts: 2 }, weight: 2 },
+      { text: ['Bei so einem Wetter hat Ludwig trotzdem seine Runden gedreht.', 'Und ich hab ihm danach Tee gekocht. Mit einem Schuss Rum.', '… Für die Gesundheit natürlich.'], when: { tags: ['wetter-regen'] }, weight: 3 },
+      { text: ['Siehst du die Sterne?', 'Ludwig hat immer gesagt, der hellste da oben ist der, der beim Weitsprung geschummelt hat.', '… Ich glaube, er meinte sich selbst.'], when: { phases: ['abend', 'nacht'] }, weight: 2 },
       { text: ['Dein Winston ist ein feiner Hund.', 'Er hat mir heute zugehört. Ganz ohne Widerworte. Das kann hier sonst keiner.'] },
       { text: ['Winston hat mich vorhin angeguckt, als hätte er seit Wochen nichts gegessen.', 'Ich hab ihm ein Stückchen Leberwurstbrot gegeben. Sag\'s nicht weiter.'] },
       { text: ['Weißt du, was ich von Ärzten halte?', 'Die wollen nur dein Geld! Die Hälfte der Behandlungen ist gar nicht nötig.', 'Ein Löffel Honig und früh ins Bett – fertig. Kostet nix.'] },
@@ -82,7 +89,7 @@ export const GISELA: NpcDef = {
       { text: ['Weißt du, ich bin froh, dass du hier bist.', '…', 'So. Genug geschmust. Geh spielen.'], when: { minHearts: 3 } },
       { text: ['Du bist mein Lieblingsenkelkind.', 'Sag\'s bloß nicht weiter.'], when: { minHearts: 4 } },
       { text: ['Lina, du siehst blass aus.', '… Doch. Keine Widerrede.', 'Ich hab das letzte Wort. Das hab ich mir verdient.'] },
-      { text: ['Hast du schon was gefangen mit Opas Angel?', 'Der hat früher Hechte rausgezogen, so groß wie ich!', '… Na gut, wie mein Arm. Aber trotzdem.'] },
+      { text: ['Hast du schon was gefangen mit Opas Angel?', 'Ludwig hat früher Hechte rausgezogen, so groß wie ich!', '… Na gut, wie mein Arm. Aber trotzdem.'] },
       { text: ['Dein Beet! Gieß es ordentlich.', 'Aber nicht zu viel. Und nicht zu wenig. Genau richtig eben.', 'Wie viel genau richtig ist? Das weiß man einfach.'] },
       { text: ['Ein Hering in Sahnesoße mit Pellkartoffeln.', 'Köstlich! Da kommen mir die Tränen.'] },
       { text: ['Fass mir bloß keine Krabbeltiere an und bring die dann zu mir!', 'Außer Marienkäfer. Die bringen Glück.'] },
@@ -156,7 +163,7 @@ export const GISELA: NpcDef = {
   ],
   heartLetters: {
     1: { id: 'herz-1', subject: 'Streng geheim!', body: 'Liebe Lina,\n\ndu kommst mich so oft besuchen – das gefällt mir. Hier ist mein Keksrezept.\n\nStreng geheim! Wehe, du zeigst es jemandem.\n\nOma Gisela', gift: { itemId: 'keksrezept', count: 1 } },
-    2: { id: 'herz-2', subject: 'Für den kleinen Herrn', body: 'Liebe Lina,\n\ndein Winston schläft ja überall – auf der Wiese, auf dem Futon, auf meinen Füßen.\n\nHier ist eine Anleitung für ein ordentliches Körbchen. Opa hat damals so eins für unseren Waldi gebaut. Die Werkbank steht ja noch neben deinem Haus.\n\nDeine Oma', gift: { itemId: 'rezept-hundekoerbchen', count: 1 } },
+    2: { id: 'herz-2', subject: 'Für den kleinen Herrn', body: 'Liebe Lina,\n\ndein Winston schläft ja überall – auf der Wiese, auf dem Futon, auf meinen Füßen.\n\nHier ist eine Anleitung für ein ordentliches Körbchen. Dein Opa Ludwig hat damals so eins für unseren Waldi gebaut – zwischen zwei Fußballspielen. Die Werkbank steht ja noch neben deinem Haus.\n\nDeine Oma', gift: { itemId: 'rezept-hundekoerbchen', count: 1 } },
     3: { id: 'herz-3', subject: 'Für kalte Tage', body: 'Liebe Lina,\n\nich hab dir einen Schal gestrickt. Rosa.\n\nIch weiß, du wolltest vielleicht eine andere Farbe. Aber Rosa steht dir. Ende der Diskussion.\n\nDeine Oma', gift: { itemId: 'strickschal', count: 1 } },
     4: { id: 'herz-4', subject: 'Für die Piepmätze', body: 'Liebe Lina,\n\nich sitze so gern auf meiner Bank und schaue den Vögeln zu. Die Meisen sind die frechsten – die erinnern mich an dich.\n\nHier ist Opas Bauplan für ein Vogelhäuschen. Bau es ordentlich, sonst zieht keiner ein!\n\nDeine Oma', gift: { itemId: 'rezept-vogelhaus', count: 1 } },
     5: { id: 'herz-5', subject: 'Damit du mich nicht vergisst', body: 'Liebe Lina,\n\nich hab dir ein Foto von mir beigelegt. Damit du mich nicht vergisst.\n\nNicht, dass das ginge.\n\nDeine Oma, die dich sehr lieb hat.\n(Das bleibt unter uns!)', gift: { itemId: 'omas-foto', count: 1 } },
@@ -183,7 +190,7 @@ export const GISELA_WELCOME_2: readonly string[] = [
 /** Oma Gisela gibt Lina Werkzeuge (beim Einzug bzw. nach dem M4-Update beim nächsten Gespräch) */
 export const GISELA_TOOLS: readonly string[] = [
   'Ach, und warte mal. Ich hab hier noch was für dich.',
-  'Opas alte Angel. Die hat er gehütet wie seinen Augapfel.',
+  'Opa Ludwigs alte Angel. Die hat er gehütet wie seinen Augapfel. Gleich nach seiner Trillerpfeife.',
   'Dazu ein Kescher für Schmetterlinge – aber bring mir keine Krabbeltiere ins Haus!',
   'Und eine Gießkanne. In Rosa. Rosa steht dir.',
   'Und ein paar Blumensamen für das Beet neben deinem Haus. Gießen nicht vergessen!',
