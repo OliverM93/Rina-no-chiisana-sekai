@@ -131,6 +131,7 @@ src/
     World3D.ts     Renderer, Kamera, Licht/Tag-Nacht, Interaktion, Maus (Raycasting), Story-Szenen
     MapView3D.ts   baut die Welt aus dem Kartenmodell; terrain3d.ts (Höhenraster + gemalte Textur)
     Character3D.ts Figur (Bewegung, Wegfolgen, Sitzen, Werkzeug in der Hand); Npc.ts (Tagesablauf-KI); Collectibles3D.ts
+    Particles3D.ts Partikel (Staub, Spritzer, Funkeln, Herzchen, Erde, Konfetti) + Glühwürmchen
     Weather3D.ts   Regen, Schnee, Blitze · Fishing3D.ts Angeln · Insects3D.ts Insekten · Garden3D.ts Beet
     Animals3D.ts   Hühner & Wachteln (trippeln um den Stall, picken, schlafen nachts)
     Yard3D.ts      Linas Garten (Zäune verbinden sich, Lichter abends, Vorschau beim Gestalten)
@@ -224,6 +225,9 @@ src/
   laufen über das Bus-Event `sfx` (`session.bus.emit('sfx', 'muenzen')`), Lautstärke über `settings:changed`.
   `main.ts` setzt alle 2 s Stimmung (`moodFor`) und Umgebung. Hörprobe ohne Lautsprecher:
   `GameAudio.preview(mood)` rendert offline in einen AudioBuffer.
+- **Partikel & kleine Animationen:** Bus-Event `fx` (`{ kind, npc? , x?, y? }` – ohne Ort bei Lina) oder direkt
+  `particles.burst()` in World3D. Alles über wenige InstancedMeshes mit festem Vorrat. `Character.cheer()` =
+  Freudensprung, `wave()` = Winken; nach 4 s Stillstand schauen Figuren sich um.
 - **Spielstand:** `SAVE_VERSION` + `MIGRATIONS` in `core/save.ts`. Nach jeder Migration wird normalisiert
   (fehlende Felder → Standardwerte). Vor jedem Speichern bleibt der alte Stand als Backup erhalten.
 

@@ -25,6 +25,11 @@ export class Fishing3D {
   /** Wird beim Biss gemeldet (z. B. für Ton/Hinweis) */
   onBite: (() => void) | null = null;
 
+  /** Wo der Schwimmer zuletzt im Wasser lag (für Spritzer beim Fang) */
+  bobberPosition(): THREE.Vector3 | null {
+    return this.target.lengthSq() > 0 ? this.target.clone() : null;
+  }
+
   constructor(scene: THREE.Scene) {
     this.shadow = new THREE.Mesh(new THREE.CircleGeometry(1, 16).rotateX(-Math.PI / 2), new THREE.MeshBasicMaterial({ color: '#203040', transparent: true, opacity: 0.35, depthWrite: false }));
     this.ring = new THREE.Mesh(new THREE.RingGeometry(0.8, 1, 24).rotateX(-Math.PI / 2), new THREE.MeshBasicMaterial({ color: '#ffffff', transparent: true, opacity: 0, depthWrite: false }));

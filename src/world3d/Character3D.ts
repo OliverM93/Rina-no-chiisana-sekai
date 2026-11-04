@@ -25,6 +25,9 @@ export interface MoveIntent {
 
 const FACING_ANGLE: Record<Facing, number> = { down: 0, right: Math.PI / 2, up: Math.PI, left: -Math.PI / 2 };
 
+const CHEER = 0.75;
+const WAVE = 1.3;
+
 export class Character {
   readonly chibi: Chibi3D;
   x: number;
@@ -128,6 +131,21 @@ export class Character {
 
   /** Rechter Arm nach vorn (z. B. Angel halten); undefined = normal */
   armForward: number | undefined = undefined;
+  /** Freudensprung / Winken: verbleibende Zeit (s) */
+  private cheerLeft = 0;
+  private waveLeft = 0;
+  /** wie lange die Figur schon still steht (für Umschauen) */
+  private idleTime = 0;
+
+  /** Kleiner Freudensprung mit Armen in die Luft */
+  cheer() {
+    if (!this.sitting) this.cheerLeft = CHEER;
+  }
+
+  /** Mit der Hand winken (z. B. zur Begrüßung) */
+  wave() {
+    this.waveLeft = WAVE;
+  }
 
   hold(obj: THREE.Object3D | null) {
     this.chibi.hold(obj);
@@ -217,6 +235,9 @@ export class Character {
       this.blinkIn = 2.2 + Math.random() * 3.5;
     }
     if (this.blinkLeft > 0) this.blinkLeft -= dt;
+    if (this.cheerLeft > 0) this.cheerLeft = Math.max(0, this.cheerLeft - dt);
+    if (this.waveLeft > 0) this.waveLeft = Math.max(0, this.waveLeft - dt);
+    this.idleTime = this.moving || this.sitting ? 0 : this.idleTime + dt;
     this.time += dt;
     this.sync(dt);
   }
@@ -232,7 +253,7 @@ export class Character {
     const ground = this.sitting ? 0 : Math.max(0, this.heightAt(px, pz));
     this.chibi.root.position.set(px, ground + this.seatHeight, pz);
     this.chibi.root.rotation.y = this.angle;
-    this.chibi.pose({ step: this.stepPhase, moving: this.moving, running: this.running, sitting: this.sitting, blink: this.blinkLeft > 0, t: this.time, armForward: this.armForward });
+    this.chibi.pose({ step: this.stepPhase, moving: this.moving, running: this.running, sitting: this.sitting, blink: this.blinkLeft > 0, t: this.time, armForward: this.armForward, cheer: this.cheerLeft > 0 ? 1 - this.cheerLeft / CHEER : undefined, wave: this.waveLeft > 0 ? 1 - this.waveLeft / WAVE : undefined, idle: this.idleTime });
   }
 
   destroy() {

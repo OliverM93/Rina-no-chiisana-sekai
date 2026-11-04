@@ -51,7 +51,8 @@ import { canDate, type DateKind, haveDate } from '../game/romance';
 import { isPartyTime } from '../game/party';
 import { makePartyLights, makePicnic } from './models/buildings';
 import { addFriendship } from '../game/gameplay';
-import type { DecorCommand } from '../game/session';
+import type { DecorCommand, FxKind } from '../game/session';
+import { Particles3D } from './Particles3D';
 import {
   biteFish,
   catchFish,
@@ -148,6 +149,7 @@ export class World3D {
   private lastTime = performance.now();
   private unsubscribers: Array<() => void> = [];
   private weather: Weather3D;
+  private particles: Particles3D;
   private fishing: Fishing3D;
   private insects: Insects3D;
   private garden: Garden3D;
@@ -237,6 +239,7 @@ export class World3D {
 
     this.leaves = this.makeLeaves();
     this.weather = new Weather3D(this.scene);
+    this.particles = new Particles3D(this.scene);
     this.fishing = new Fishing3D(this.scene);
     this.fishing.onBite = () => this.session.bus.emit('sfx', 'biss');
     this.insects = new Insects3D(this.scene, session, this.view, this.tweens);
@@ -270,6 +273,7 @@ export class World3D {
       this.keys.onAction(() => this.tryInteract()),
       session.bus.on('game:started', () => this.startPlay()),
       session.bus.on('appearance:changed', (a) => this.player?.setAppearance(a)),
+      session.bus.on('fx', (f) => this.playFx(f.kind, f.npc, f.x, f.y)),
       session.bus.on('state:changed', () => {
         this.updateMailbox();
         this.garden.refresh();
@@ -320,6 +324,7 @@ export class World3D {
     this.view.terrain.update(now / 1000);
     this.updateLeaves(dt);
     this.weather.update(dt, this.camTarget);
+    this.particles.update(dt, this.camera, this.camTarget, this.fireflyLevel());
     this.hemi.intensity = this.baseHemi + this.weather.lightning * 1.4;
     this.insects.update(dt, this.night);
     this.digSpots.update(dt, !this.session.inside);
@@ -362,6 +367,8 @@ export class World3D {
         if (this.stepAcc > (player.running ? 0.22 : 0.3)) {
           this.stepAcc = 0;
           this.session.bus.emit('sfx', this.session.inside ? 'schritt-holz' : 'schritt');
+          // beim Rennen draußen kleine Staubwölkchen an den Füßen
+          if (player.running && !this.session.inside && this.weather.current.kind !== 'schnee') this.fxAt('staub', player.x, player.y);
         }
       } else this.stepAcc = 0.2;
       this.updateWinston(dtMs, player, blocked, solid);
@@ -901,6 +908,7 @@ export class World3D {
     if (!spot) return false;
     this.digging = true;
     this.session.bus.emit('sfx', 'graben');
+    this.fxAt('erde', (spot.x + 0.5) * TILE, (spot.y + 0.5) * TILE);
     player.faceTowards((spot.x + 0.5) * TILE, (spot.y + 0.5) * TILE);
     const tool = this.held?.model.group;
     this.tweens.add(700, (k) => {
@@ -917,6 +925,11 @@ export class World3D {
         return;
       }
       const f = FIND_BY_ID[res.itemId];
+      this.fxAt('erde', (spot.x + 0.5) * TILE, (spot.y + 0.5) * TILE);
+      window.setTimeout(() => {
+        this.fxAt('funkeln', (spot.x + 0.5) * TILE, (spot.y + 0.5) * TILE);
+        player.cheer();
+      }, 200);
       this.digSpots.refresh();
       this.winston?.burst('note');
       this.session.bus.emit('toast', {
@@ -991,7 +1004,11 @@ export class World3D {
     player.armForward = -1.0;
     const tip = this.rodTip() ?? new THREE.Vector3(player.x * UNIT, 1, player.y * UNIT);
     this.fishing.cast(tip, water.point, fish);
-    window.setTimeout(() => this.session.bus.emit('sfx', 'platsch'), 450);
+    const splashAt = water.point.clone();
+    window.setTimeout(() => {
+      this.session.bus.emit('sfx', 'platsch');
+      this.particles.burst('platsch', splashAt);
+    }, 450);
     return true;
   }
 
@@ -1011,6 +1028,14 @@ export class World3D {
       window.setTimeout(() => this.player && this.held && (this.player.armForward = -0.35), 400);
     }
     this.session.bus.emit('sfx', 'fang');
+    if (player) {
+      const bob = this.fishing.bobberPosition();
+      if (bob) this.particles.burst('platsch', bob);
+      window.setTimeout(() => {
+        player.cheer();
+        this.fxAt('funkeln', player.x, player.y);
+      }, 250);
+    }
     const result = catchFish(this.session, fish);
     this.session.bus.emit('dialog:open', { title: fish.name, lines: [...catchMessage(fish.name, 'fisch', result), FISH_BY_ID[fish.id].description] });
   }
@@ -1035,6 +1060,8 @@ export class World3D {
     if (!def) return true;
     window.setTimeout(() => {
       this.session.bus.emit('sfx', 'fang');
+      this.particles.burst('funkeln', to);
+      player.cheer();
       const result = catchInsect(this.session, def);
       this.session.bus.emit('dialog:open', { title: def.name, lines: [...catchMessage(def.name, 'insekt', result), def.description] });
     }, 330);
@@ -1231,8 +1258,14 @@ export class World3D {
     npc.startTalk(player.x, player.y);
     if (this.homeOli?.visible && npc.def.id === 'oli') {
       player.faceTowards(this.homeOli.x, this.homeOli.y);
-      if (!this.homeOli.sitting) this.homeOli.faceTowards(player.x, player.y);
-    } else player.faceTowards(npc.x, npc.y);
+      if (!this.homeOli.sitting) {
+        this.homeOli.faceTowards(player.x, player.y);
+        this.homeOli.wave();
+      }
+    } else {
+      player.faceTowards(npc.x, npc.y);
+      if (!npc.char.sitting) npc.char.wave();
+    }
     const data = this.session.data;
     if (npc.def.id === 'gisela' && data?.flags.giselaWelcomed && !data.flags.toolsGiven) {
       this.session.bus.emit('dialog:open', {
@@ -1972,7 +2005,10 @@ export class World3D {
     const sleeping = w.sleeping;
     const lines = petWinston(this.session, sleeping);
     w.pet(sleeping);
-    if (!sleeping) this.session.bus.emit('sfx', 'bellen');
+    if (!sleeping) {
+      this.session.bus.emit('sfx', 'bellen');
+      this.fxAt('herzen', w.x, w.y, -0.45);
+    }
     this.session.bus.emit('toast', { text: lines.join(' ') });
   }
 
@@ -2235,6 +2271,7 @@ export class World3D {
     }
     if (f.def.coop) {
       this.session.bus.emit('sfx', 'gackern');
+      if (this.player) this.fxAt('funkeln', this.player.x, this.player.y);
       collectCoop(this.session, uid);
       this.refreshYard();
       return;
@@ -2483,6 +2520,46 @@ export class World3D {
   }
 
   /** Für Tests & Fehlersuche */
+  // -------------------------------------------------------------------------
+  // Partikel
+  // -------------------------------------------------------------------------
+
+  /** Partikel an einer Stelle in Welteinheiten (Höhe = Gelände, drinnen Boden) */
+  private fxAt(kind: FxKind, x: number, y: number, lift = 0, towardsCamera = 0) {
+    const px = x * UNIT;
+    const pz = y * UNIT + towardsCamera;
+    const ground = this.session.inside ? 0 : Math.max(0, this.view.terrain.heightAt(px, pz));
+    this.particles.burst(kind, new THREE.Vector3(px, ground + lift, pz));
+  }
+
+  /** Bus-Event `fx`: über einem Bewohner, an einer Stelle oder bei Lina */
+  private playFx(kind: FxKind, npcId?: string, x?: number, y?: number) {
+    const player = this.player;
+    if (npcId) {
+      const home = npcId === 'oli' && this.homeOli?.visible ? this.homeOli : null;
+      const npc = home ?? this.npcs.get(npcId)?.char ?? null;
+      if (npc && npc.visible) {
+        this.fxAt(kind, npc.x, npc.y, 0, 0.15);
+        if (kind === 'herzen') player?.cheer();
+        return;
+      }
+    }
+    if (x !== undefined && y !== undefined) this.fxAt(kind, x, y);
+    else if (player) {
+      this.fxAt(kind, player.x, player.y, 0, 0.2);
+      if (kind === 'konfetti' || kind === 'herzen') player.cheer();
+    }
+  }
+
+  /** Glühwürmchen: Sommernächte draußen, nicht bei Regen */
+  private fireflyLevel(): number {
+    if (this.session.inside || this.session.season !== 'sommer') return 0;
+    const kind = this.weather.current.kind;
+    if (kind === 'regen' || kind === 'gewitter') return 0;
+    const h = this.session.clock().getHours();
+    return h >= 21 || h < 2 ? 1 : 0;
+  }
+
   get debug() {
     return {
       enterHome: () => this.enterHome(),
@@ -2496,7 +2573,7 @@ export class World3D {
         this.hoverCell = { x, y };
         this.updateGhost();
       },
-      interior: this.interior, player: this.player, winston: this.winston, npcs: this.npcs, collectibles: this.collectibles, insects: this.insects, fishing: this.fishing, weather: () => WEATHER_LABELS[currentWeather(this.session).kind], resolveTarget: () => (this.player ? this.resolveTarget(this.player) : null), tryInteract: () => this.tryInteract() };
+      interior: this.interior, particles: this.particles, fx: (k: FxKind) => this.playFx(k), player: this.player, winston: this.winston, npcs: this.npcs, collectibles: this.collectibles, insects: this.insects, fishing: this.fishing, weather: () => WEATHER_LABELS[currentWeather(this.session).kind], resolveTarget: () => (this.player ? this.resolveTarget(this.player) : null), tryInteract: () => this.tryInteract() };
   }
 
   dispose() {
