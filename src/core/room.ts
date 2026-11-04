@@ -52,6 +52,8 @@ export interface RoomLayout {
   exits: readonly Exit[];
   /** Katalog-Pult */
   desk?: readonly [number, number];
+  /** Weitere Felder, auf denen nichts stehen darf (z. B. Hauswände im Garten) */
+  reserved?: ReadonlyArray<readonly [number, number]>;
 }
 
 /** Was die Raumlogik über ein Möbel wissen muss */
@@ -61,6 +63,8 @@ export interface FootInfo {
   rug?: boolean;
   small?: boolean;
   surface?: boolean;
+  /** Man kann hindurchgehen (z. B. Gartentor), steht aber wie ein Möbel */
+  walk?: boolean;
 }
 
 export type InfoFn = (itemId: string) => FootInfo | undefined;
@@ -83,6 +87,7 @@ export function reservedCells(layout: RoomLayout): Set<string> {
   const out = new Set<string>();
   for (const e of layout.exits) for (const [x, y] of e.cells) out.add(key(x, y));
   if (layout.desk) out.add(key(...layout.desk));
+  for (const [x, y] of layout.reserved ?? []) out.add(key(x, y));
   return out;
 }
 
@@ -191,7 +196,7 @@ export function blockedCells(room: Room, layout: RoomLayout, infoOf: InfoFn): Se
   const out = new Set<string>(layout.desk ? [key(...layout.desk)] : []);
   for (const i of room.items) {
     const info = infoOf(i.itemId);
-    if (!info || info.rug || i.on) continue;
+    if (!info || info.rug || info.walk || i.on) continue;
     for (const [cx, cy] of cellsOf(i.x, i.y, info, i.rot)) out.add(key(cx, cy));
   }
   return out;

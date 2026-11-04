@@ -99,6 +99,10 @@ export interface WorldMap {
   inactive: Set<string>;
   /** Blockiertes aus dem Gelände (Wasser) – Grundlage zum Neuberechnen */
   baseBlocked: Uint8Array;
+  /** Gelände + Objekte, ohne Linas Gartenmöbel */
+  staticBlocked: Uint8Array;
+  /** Zusätzlich blockierte Kacheln (Linas Gartenmöbel), als Kachel-Index */
+  extra: Set<number>;
 }
 
 const CHAR_TERRAIN: Record<string, Terrain> = {
@@ -172,7 +176,7 @@ export function buildWorldMap(layout: readonly string[], defs: readonly MapObjec
     }
   }
 
-  return { width, height, terrain, flowers, objects, grid, spawn, interactAt, inactive, baseBlocked };
+  return { width, height, terrain, flowers, objects, grid, spawn, interactAt, inactive, baseBlocked, staticBlocked: grid.blocked.slice(), extra: new Set() };
 }
 
 function applyObjectCollision(grid: CollisionGrid, objects: readonly MapObject[], inactive: ReadonlySet<string>) {
@@ -202,11 +206,22 @@ export function applyMapFlags(map: WorldMap, flags: Readonly<Record<string, bool
     else map.inactive.add(o.id);
     changed.push(o.id);
   }
-  if (changed.length > 0) {
-    map.grid.blocked.set(map.baseBlocked);
-    applyObjectCollision(map.grid, map.objects, map.inactive);
-  }
+  if (changed.length > 0) rebuildCollision(map);
   return changed;
+}
+
+/** Kollision neu berechnen: Gelände, aktive Objekte, Gartenmöbel */
+function rebuildCollision(map: WorldMap) {
+  map.grid.blocked.set(map.baseBlocked);
+  applyObjectCollision(map.grid, map.objects, map.inactive);
+  map.staticBlocked = map.grid.blocked.slice();
+  for (const i of map.extra) map.grid.blocked[i] = 1;
+}
+
+/** Linas Gartenmöbel als zusätzliche Hindernisse setzen (Kachel-Indizes) */
+export function setExtraBlocked(map: WorldMap, tiles: Iterable<number>) {
+  map.extra = new Set(tiles);
+  rebuildCollision(map);
 }
 
 export function isActive(map: WorldMap, id: string): boolean {

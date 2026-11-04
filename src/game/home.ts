@@ -5,7 +5,11 @@
  */
 import { borrow, canBorrow, repay } from '../core/bank';
 import { freeSlots, spaceFor } from '../core/inventory';
-import { checkPlacement, misfits, moveItem, placeItem, type Room, type RoomLayout, type Rotation, removeItem } from '../core/room';
+import { keepsAccess, yardBlockedTiles } from '../core/yard';
+import { tileOf } from '../core/worldmap';
+import { YARD_AREA } from '../data/yard';
+import { spotKey } from '../core/garden';
+import { checkPlacement, footprint, misfits, moveItem, placeItem, type Room, type RoomLayout, type Rotation, removeItem } from '../core/room';
 import { daysBetween } from '../core/daily';
 import { FURNITURE_BY_ITEM, furnitureInfo, SURFACE_BY_ID } from '../data/furniture';
 import { emptyRoom, HOUSE_STAGES, layoutOf, MAX_STAGE, roomLayouts } from '../data/house';
@@ -43,17 +47,48 @@ export function isSurface(itemId: string): boolean {
   return !!SURFACE_BY_ID[itemId];
 }
 
-/** Der Raum, in dem Lina gerade ist */
+/** Der Raum, in dem Lina gerade ist – draußen ist das ihr Garten */
 export function currentRoom(session: Session): { room: Room; layout: RoomLayout } | null {
   const house = session.data?.house;
   if (!house) return null;
+  if (!session.inside) return session.data ? { room: session.data.yard, layout: session.yardLayout } : null;
   const room = house.rooms.find((r) => r.id === session.roomId) ?? house.rooms[0];
   return room ? { room, layout: layoutOf(house.stage, room.id) } : null;
 }
 
+/** Gehört dieses Möbel hierhin? (Gartensachen nach draußen, Möbel ins Haus) */
+export function fitsHere(session: Session, itemId: string): boolean {
+  const f = FURNITURE_BY_ITEM[itemId];
+  return !!f && !!f.def.outdoor === !session.inside;
+}
+
 export function canPlace(session: Session, itemId: string, x: number, y: number, rot: Rotation, moving?: string): boolean {
   const c = currentRoom(session);
-  return !!c && checkPlacement(c.room, c.layout, itemId, x, y, rot, furnitureInfo, moving).ok;
+  if (!c || !fitsHere(session, itemId) || !checkPlacement(c.room, c.layout, itemId, x, y, rot, furnitureInfo, moving).ok) return false;
+  if (session.inside) return true;
+  // Garten: Probe-Aufstellung → niemand wird eingesperrt, Lina steht nicht im Weg
+  const trial: Room = structuredClone(c.room);
+  if (moving) {
+    if (!moveItem(trial, c.layout, moving, x, y, rot, furnitureInfo)) return false;
+  } else if (!placeItem(trial, c.layout, itemId, x, y, rot, furnitureInfo, 'probe')) return false;
+  return yardOk(session, trial);
+}
+
+/** Bleibt im Garten alles erreichbar und steht nichts auf Lina? */
+function yardOk(session: Session, yard: Room): boolean {
+  const data = session.data;
+  if (!data) return false;
+  const tiles = yardBlockedTiles(session.map, YARD_AREA, yard, session.yardLayout, furnitureInfo);
+  const lina = tileOf(data.player.x, data.player.y);
+  if (tiles.includes(lina.y * session.map.width + lina.x)) return false;
+  return keepsAccess(session.map, YARD_AREA, tiles);
+}
+
+/** Nach Änderungen im Garten: Kollision & Speichern */
+function roomChanged(session: Session) {
+  if (!session.inside) session.syncYardCollision();
+  session.changed();
+  session.save();
 }
 
 /** Möbel aus der Tasche in den Raum stellen */
@@ -61,30 +96,45 @@ export function placeFromBag(session: Session, itemId: string, x: number, y: num
   const c = currentRoom(session);
   if (!c || !canPlace(session, itemId, x, y, rot) || !takeItem(session, itemId, 1)) return false;
   placeItem(c.room, c.layout, itemId, x, y, rot, furnitureInfo);
-  session.changed();
-  session.save();
+  roomChanged(session);
   return true;
 }
 
 export function moveFurniture(session: Session, uid: string, x: number, y: number, rot: Rotation): boolean {
   const c = currentRoom(session);
-  if (!c || !moveItem(c.room, c.layout, uid, x, y, rot, furnitureInfo)) return false;
-  session.changed();
-  session.save();
+  const item = c?.room.items.find((i) => i.uid === uid);
+  const data = session.data;
+  if (!session.inside && data && bedTiles(session, uid).some((t) => data.world.garden[spotKey(t.x, t.y)])) return false;
+  if (!c || !item || !canPlace(session, item.itemId, x, y, rot, uid) || !moveItem(c.room, c.layout, uid, x, y, rot, furnitureInfo)) return false;
+  roomChanged(session);
   return true;
 }
 
-/** Möbel zurück in die Tasche (mit allem, was darauf steht). false = Tasche zu voll. */
-export function pickUpFurniture(session: Session, uid: string): boolean {
+/** Felder eines Hochbeets im Garten als Weltkacheln */
+export function bedTiles(session: Session, uid: string): Array<{ x: number; y: number }> {
+  const item = session.data?.yard.items.find((i) => i.uid === uid);
+  const f = item ? FURNITURE_BY_ITEM[item.itemId] : undefined;
+  if (!item || !f?.def.bed) return [];
+  const { w, d } = footprint(f.def, item.rot);
+  const out: Array<{ x: number; y: number }> = [];
+  for (let dx = 0; dx < w; dx++) for (let dy = 0; dy < d; dy++) out.push({ x: YARD_AREA.x + item.x + dx, y: YARD_AREA.y + item.y + dy });
+  return out;
+}
+
+export type PickUpResult = 'ok' | 'voll' | 'pflanzen' | 'fehler';
+
+/** Möbel zurück in die Tasche (mit allem, was darauf steht). */
+export function pickUpFurniture(session: Session, uid: string): PickUpResult {
   const c = currentRoom(session);
   const data = session.data;
-  if (!c || !data) return false;
+  if (!c || !data) return 'fehler';
+  if (!session.inside && bedTiles(session, uid).some((t) => data.world.garden[spotKey(t.x, t.y)])) return 'pflanzen';
   const riders = c.room.items.filter((i) => i.uid === uid || i.on === uid);
-  if (riders.length === 0 || freeSlots(data.inventory) < riders.length) return false;
+  if (riders.length === 0) return 'fehler';
+  if (freeSlots(data.inventory) < riders.length) return 'voll';
   for (const r of removeItem(c.room, uid)) giveItem(session, r.itemId, 1, false);
-  session.changed();
-  session.save();
-  return true;
+  roomChanged(session);
+  return 'ok';
 }
 
 /** Tapete oder Boden im aktuellen Raum anbringen – die alte kommt in die Tasche. */

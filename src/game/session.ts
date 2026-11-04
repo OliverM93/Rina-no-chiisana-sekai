@@ -2,6 +2,10 @@
  * Die laufende Spielsitzung: Spielstand, Uhr, Karte und der Event-Bus
  * zwischen Spielwelt (Phaser) und Oberfläche (Preact).
  */
+import { buildYardLayout, yardBlockedTiles } from '../core/yard';
+import { setExtraBlocked } from '../core/worldmap';
+import type { RoomLayout } from '../core/room';
+import { YARD_AREA } from '../data/yard';
 import { RECIPE_BY_ID, START_RECIPES } from '../data/recipes';
 import type { Appearance } from '../core/appearance';
 import { Emitter } from '../core/events';
@@ -93,6 +97,8 @@ export type GameEvents = {
   'tool:changed': ToolId | null;
   /** Lina ist zu Hause (true) bzw. draußen */
   'home:inside': boolean;
+  /** Lina betritt/verlässt ihren Garten (draußen) */
+  'home:yard': boolean;
   /** Einrichtungsmodus: an/aus, was gerade gehalten wird */
   'decor:state': DecorState;
   /** Oberfläche → Welt: Einrichten steuern */
@@ -102,6 +108,10 @@ export type GameEvents = {
 export class Session {
   readonly bus = new Emitter<GameEvents>();
   readonly map: WorldMap;
+  /** Form von Linas Garten (aus der Karte berechnet) */
+  readonly yardLayout: RoomLayout;
+  /** Steht Lina gerade in ihrem Garten? */
+  inYard = false;
   readonly saves: SaveManager;
   data: SaveData | null = null;
   private blocking = true;
@@ -127,7 +137,8 @@ export class Session {
     readonly clock: Clock,
   ) {
     this.map = buildWorldMap(VILLAGE_LAYOUT, VILLAGE_OBJECTS, VILLAGE_SPAWN);
-    this.saves = new SaveManager(storage, this.spawnPoint(), clock, this.saveOptions);
+    this.yardLayout = buildYardLayout(this.map, YARD_AREA);
+    this.saves = new SaveManager(storage, this.spawnPoint(), clock, { ...this.saveOptions, yardLayout: this.yardLayout });
     this.season = getSeason(clock());
   }
 
@@ -198,7 +209,14 @@ export class Session {
     this.data = data;
     this.tool = null;
     this.playStart = performance.now();
+    this.syncYardCollision();
     this.bus.emit('game:started', undefined);
+  }
+
+  /** Gartenmöbel als Hindernisse in die Karte übernehmen */
+  syncYardCollision() {
+    const yard = this.data?.yard;
+    setExtraBlocked(this.map, yard ? yardBlockedTiles(this.map, YARD_AREA, yard, this.yardLayout, furnitureInfo) : []);
   }
 
   /** Speichert (inkl. Spielzeit). Gibt false zurück, wenn der Browser-Speicher nicht verfügbar ist. */

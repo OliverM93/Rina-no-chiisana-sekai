@@ -7,7 +7,7 @@ import { blockedCells, footprint, itemsAt, type PlacedItem, type Room, type Room
 import { FURNITURE_BY_ITEM, furnitureInfo, SURFACE_BY_ID } from '../data/furniture';
 import { drawPattern } from '../gfx/interior';
 import { mesh, toon } from './materials';
-import { type FurnitureModel, makeCatalogDesk, makeFurniture } from './models/furniture';
+import { type FurnitureModel, makeCatalogDesk, makeFurniture, makeGhost } from './models/furniture';
 
 /** Lage des Zimmers in Weltkacheln */
 export const ROOM_X = 200;
@@ -273,22 +273,7 @@ export class Interior3D {
     const k = `${itemId}:${valid}`;
     if (!this.ghost || this.ghostKey !== k) {
       this.hideGhost();
-      const m = makeFurniture(itemId);
-      m.group.traverse((o) => {
-        const mm = o as THREE.Mesh;
-        if (!mm.isMesh) return;
-        const mat = (mm.material as THREE.MeshToonMaterial).clone();
-        mat.transparent = true;
-        mat.opacity = 0.6;
-        mat.emissive = new THREE.Color(valid ? '#7fe08a' : '#ff7a7a');
-        mat.emissiveIntensity = 0.45;
-        mm.material = mat;
-        mm.castShadow = false;
-      });
-      const marker = new THREE.Mesh(new THREE.PlaneGeometry(1, 1).rotateX(-Math.PI / 2), new THREE.MeshBasicMaterial({ color: valid ? '#7fe08a' : '#ff7a7a', transparent: true, opacity: 0.35, depthWrite: false }));
-      marker.name = 'marker';
-      m.group.add(marker);
-      this.ghost = m.group;
+      this.ghost = makeGhost(itemId, valid);
       this.ghostKey = k;
       this.group.add(this.ghost);
     }

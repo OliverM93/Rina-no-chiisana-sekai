@@ -5,19 +5,23 @@
 import { useEffect, useState } from 'preact/hooks';
 import { FURNITURE_BY_ITEM, SURFACE_BY_ID } from '../data/furniture';
 import { itemDef } from '../data/items';
-import { applySurface } from '../game/home';
+import { applySurface, fitsHere } from '../game/home';
 import type { DecorCommand, DecorState, Session } from '../game/session';
 import { itemIconUrl } from '../gfx/items';
 import { showToast, useSessionVersion } from './store';
 
 export function useHomeState(session: Session) {
   const [inside, setInside] = useState(session.inside);
+  const [inYard, setInYard] = useState(session.inYard);
   const [decor, setDecor] = useState<DecorState>({ active: session.decorActive, holding: null, valid: true });
   useEffect(() => {
-    const offs = [session.bus.on('home:inside', setInside), session.bus.on('decor:state', setDecor)];
+    const offs = [session.bus.on('home:inside', setInside), session.bus.on('home:yard', setInYard), session.bus.on('decor:state', setDecor)];
+    // falls sich etwas geändert hat, bevor wir zugehört haben
+    setInside(session.inside);
+    setInYard(session.inYard);
     return () => offs.forEach((o) => o());
   }, [session]);
-  return { inside, decor };
+  return { inside, inYard: inYard && !inside, decor };
 }
 
 export function DecorBar({ session, decor }: { session: Session; decor: DecorState }) {
@@ -34,16 +38,17 @@ export function DecorBar({ session, decor }: { session: Session; decor: DecorSta
     return () => window.removeEventListener('keydown', onKey);
   }, [decor.active]);
 
+  const outside = !session.inside;
   if (!decor.active) {
     return (
       <button class="btn primary decor-start pop-in" onClick={() => send({ kind: 'start' })}>
-        🛋️ Einrichten
+        {outside ? '🌷 Garten gestalten' : '🛋️ Einrichten'}
       </button>
     );
   }
 
   const slots = session.data?.inventory.slots ?? [];
-  const items = [...new Set(slots.filter((s) => s && (FURNITURE_BY_ITEM[s.itemId] || SURFACE_BY_ID[s.itemId])).map((s) => s!.itemId))];
+  const items = [...new Set(slots.filter((s) => s && ((FURNITURE_BY_ITEM[s.itemId] && fitsHere(session, s.itemId)) || (!outside && SURFACE_BY_ID[s.itemId]))).map((s) => s!.itemId))];
   const holding = decor.holding ? itemDef(decor.holding)?.name : null;
 
   return (
@@ -51,7 +56,9 @@ export function DecorBar({ session, decor }: { session: Session; decor: DecorSta
       <div class="card decor-panel pop-in">
         <div class="decor-title">Aus der Tasche</div>
         {items.length === 0 ? (
-          <p class="soft small-text">Keine Möbel in der Tasche. Im Katalog (Pult links oben) gibt's mehr!</p>
+          <p class="soft small-text">
+            {outside ? 'Keine Gartensachen in der Tasche. Im Katalog (zu Hause) oder an der Werkbank gibt\'s Zäune, Wege & mehr!' : 'Keine Möbel in der Tasche. Im Katalog (Pult links oben) gibt\'s mehr!'}
+          </p>
         ) : (
           <div class="decor-grid">
             {items.map((id) => (
@@ -75,7 +82,9 @@ export function DecorBar({ session, decor }: { session: Session; decor: DecorSta
         <span class="decor-hint">
           {holding
             ? `${holding}: Klicken zum Abstellen${decor.valid ? '' : ' (hier passt es nicht)'}`
-            : 'Klick auf ein Möbel zum Verschieben – oder nimm etwas aus der Tasche.'}
+            : outside
+              ? 'Klick auf Gartensachen zum Verschieben – laufen geht mit WASD.'
+              : 'Klick auf ein Möbel zum Verschieben – oder nimm etwas aus der Tasche.'}
         </span>
         <button class="btn small" disabled={!decor.holding} onClick={() => send({ kind: 'rotate' })}>
           ↻ Drehen (R)

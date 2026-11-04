@@ -33,7 +33,7 @@ export function Hud({ session }: { session: Session }) {
   const season = getSeason(now);
   const weather = currentWeather(session);
   const tools = ownedTools(session);
-  const { inside, decor } = useHomeState(session);
+  const { inside, inYard, decor } = useHomeState(session);
   return (
     <>
       {weather.rainbow && <div class="rainbow-overlay" aria-hidden="true" />}
@@ -71,7 +71,7 @@ export function Hud({ session }: { session: Session }) {
           </div>
         )}
       </div>
-      {inside && <DecorBar session={session} decor={decor} />}
+      {(inside || inYard) && <DecorBar session={session} decor={decor} />}
       {tools.length > 0 && !decor.active && (
         <div class="hud-tools pop-in">
           {tools.map((t, i) => (

@@ -16,12 +16,12 @@ import { type Garden, normalizeGarden } from './garden';
 import { createBank, type Bank, normalizeBank } from './bank';
 import { normalizeRecipeBook, type RecipeBook } from './crafting';
 import { createPet, normalizePet, type PetState } from './pet';
-import { type House, type HouseRules, type InfoFn, normalizeHouse } from './room';
+import { type House, type HouseRules, type InfoFn, normalizeHouse, normalizeRoom, type Room, type RoomLayout } from './room';
 import { createInventory, type Inventory, normalizeInventory } from './inventory';
 import { createMailbox, type Mailbox, normalizeMailbox } from './mail';
 import { type DayMonth, DEFAULT_LINA_BIRTHDAY, formatIsoDay } from './time';
 
-export const SAVE_VERSION = 7;
+export const SAVE_VERSION = 8;
 export const SAVE_KEY = 'rina-no-chiisana-sekai.save';
 export const BACKUP_KEY = 'rina-no-chiisana-sekai.save.backup';
 
@@ -99,6 +99,8 @@ export interface SaveData {
   recipes: RecipeBook;
   /** Winston, Linas Dackel */
   pet: PetState;
+  /** Linas Garten: Zäune, Wege, Gartenmöbel … */
+  yard: Room;
 }
 
 export interface SaveOptions {
@@ -116,6 +118,8 @@ export interface SaveOptions {
   isKnownRecipe?: (id: string) => boolean;
   /** Rezepte, die Lina immer kennt */
   startRecipes?: readonly string[];
+  /** Form des Gartens (Größe, freizuhaltende Felder) */
+  yardLayout?: RoomLayout;
 }
 
 const EMPTY_HOUSE: House = { stage: 0, rooms: [{ id: 'haupt', wallpaper: '', floor: '', items: [] }] };
@@ -165,6 +169,7 @@ export function createNewSave(opts: NewGameOptions): SaveData {
     bank: createBank(),
     recipes: [...(opts.recipes ?? [])],
     pet: createPet(),
+    yard: emptyYard(),
   };
 }
 
@@ -200,6 +205,8 @@ export const MIGRATIONS: Record<number, (old: RawSave) => RawSave> = {
   },
   // v6 → v7 (M6b): Werkbank-Rezepte, Winston und Gesichtsform (Lina: schmal). Startwerte ergänzt `normalizeSave`.
   6: (old) => ({ ...old }),
+  // v7 → v8 (M6c Garten): Linas Garten. `normalizeSave` legt ihn leer an.
+  7: (old) => ({ ...old }),
 };
 
 export function migrate(raw: RawSave, migrations = MIGRATIONS, target = SAVE_VERSION): RawSave {
@@ -273,6 +280,10 @@ export function normalizeWorld(raw: unknown, isKnownItem: (id: string) => boolea
   return w;
 }
 
+export function emptyYard(): Room {
+  return { id: 'garten', wallpaper: '', floor: '', items: [] };
+}
+
 function withStart(book: RecipeBook, start: readonly string[]): RecipeBook {
   for (const id of start) if (!book.includes(id)) book.push(id);
   return book;
@@ -319,6 +330,7 @@ export function normalizeSave(raw: RawSave, spawn: { x: number; y: number }, now
     bank: normalizeBank(raw.bank),
     recipes: withStart(normalizeRecipeBook(raw.recipes, opts.isKnownRecipe ?? (() => true)), opts.startRecipes ?? []),
     pet: normalizePet(raw.pet),
+    yard: normalizeRoom(raw.yard, emptyYard(), opts.yardLayout ?? { id: 'garten', name: 'Garten', w: 0, h: 0, exits: [] }, isKnownItem, opts.furnitureInfo ?? (() => undefined)),
   };
 }
 

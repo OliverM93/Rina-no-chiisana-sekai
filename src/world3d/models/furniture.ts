@@ -51,7 +51,49 @@ function glowMat(color: string): THREE.MeshToonMaterial {
   return new THREE.MeshToonMaterial({ color, emissive: color, emissiveIntensity: 0.15 });
 }
 
-export function makeFurniture(itemId: string): FurnitureModel {
+/** Zaun-Verbindungen zu den Nachbarfeldern (Garten) */
+export interface FenceLinks {
+  n: boolean;
+  e: boolean;
+  s: boolean;
+  w: boolean;
+}
+
+/** Zaunfeld: Pfosten + Latten/Äste zu den verbundenen Nachbarn (je halbe Länge) */
+function addFence(g: THREE.Group, kind: string, links: FenceLinks) {
+  const white = kind === 'zaun-weiss' || kind === 'gartentor';
+  const col = white ? '#f7f5ec' : '#8a5a3a';
+  const dirs: Array<[boolean, number]> = [[links.e, 0], [links.s, Math.PI / 2], [links.w, Math.PI], [links.n, -Math.PI / 2]];
+  if (kind !== 'gartentor') {
+    if (white) {
+      g.add(b(0.1, 0.62, 0.1, col, 0, 0.31, 0));
+      const tip = c(0.072, 0.08, col, 0, 0.66, 0, cone);
+      tip.rotation.y = Math.PI / 4;
+      g.add(tip);
+    } else {
+      g.add(c(0.05, 0.62, col, 0, 0.31, 0));
+      g.add(c(0.055, 0.03, '#d9b77a', 0, 0.5, 0));
+    }
+  }
+  for (const [on, ang] of dirs) {
+    if (!on) continue;
+    const arm = new THREE.Group();
+    arm.rotation.y = -ang;
+    for (const y of [0.22, 0.46]) {
+      if (white) arm.add(b(0.5, 0.06, 0.035, col, 0.25, y, 0));
+      else {
+        const rail = c(0.025, 0.5, col, 0.25, y, 0);
+        rail.rotation.z = Math.PI / 2;
+        arm.add(rail);
+      }
+    }
+    // Zwischenlatte (weißer Zaun)
+    if (white) arm.add(b(0.07, 0.52, 0.03, col, 0.28, 0.28, 0.02));
+    g.add(arm);
+  }
+}
+
+export function makeFurniture(itemId: string, links: FenceLinks = { n: false, e: true, s: false, w: true }): FurnitureModel {
   const f = FURNITURE_BY_ITEM[itemId];
   const g = new THREE.Group();
   let glow: THREE.MeshToonMaterial | null = null;
@@ -226,6 +268,212 @@ export function makeFurniture(itemId: string): FurnitureModel {
       }
       break;
     }
+    // ---- Garten (draußen) ----
+    case 'zaun-holz':
+    case 'zaun-weiss':
+      addFence(g, f.def.id, links);
+      break;
+    case 'gartentor': {
+      addFence(g, 'gartentor', links);
+      const horiz = links.e || links.w || !(links.n || links.s);
+      const gate = new THREE.Group();
+      if (!horiz) gate.rotation.y = Math.PI / 2;
+      for (const x of [-0.45, 0.45]) gate.add(b(0.1, 0.78, 0.1, '#f7f5ec', x, 0.39, 0));
+      for (const x of [-0.45, 0.45]) gate.add(s(0.06, 0.06, 0.06, '#f4a3b8', x, 0.82, 0));
+      const arch = mesh(new THREE.TorusGeometry(0.45, 0.035, 6, 16, Math.PI), toon('#f7f5ec'));
+      arch.position.y = 0.78;
+      gate.add(arch);
+      for (const sx of [-1, 1]) {
+        const door = new THREE.Group();
+        door.position.x = sx * 0.4;
+        door.rotation.y = sx * 0.9;
+        for (let i = 0; i < 3; i++) door.add(b(0.06, 0.42, 0.03, '#f7f5ec', -sx * (0.08 + i * 0.13), 0.3, 0));
+        door.add(b(0.4, 0.05, 0.03, '#f7f5ec', -sx * 0.2, 0.22, 0));
+        door.add(b(0.4, 0.05, 0.03, '#f7f5ec', -sx * 0.2, 0.42, 0));
+        gate.add(door);
+      }
+      g.add(gate);
+      break;
+    }
+    case 'weg-stein': {
+      for (const [x, z, r2] of [[-0.2, -0.18, 0.2], [0.2, 0.15, 0.22], [-0.18, 0.28, 0.13], [0.25, -0.28, 0.12]] as const) {
+        g.add(c(r2, 0.04, '#b8b8c0', x, 0.02, z));
+        g.add(c(r2 * 0.8, 0.045, '#c9c9d0', x, 0.022, z));
+      }
+      break;
+    }
+    case 'weg-holz': {
+      for (let i = 0; i < 4; i++) g.add(b(0.96, 0.04, 0.22, i % 2 ? '#c9955f' : '#b98a5e', 0, 0.02, -0.36 + i * 0.24));
+      break;
+    }
+    case 'weg-kies': {
+      g.add(b(0.98, 0.02, 0.98, '#d8cfc0', 0, 0.01, 0));
+      for (let i = 0; i < 26; i++) {
+        const a2 = i * 2.39996;
+        const r2 = Math.sqrt((i + 0.5) / 26) * 0.44;
+        g.add(s(0.035, 0.015, 0.03, i % 3 ? '#bdb3a4' : '#e6ddd0', Math.cos(a2) * r2, 0.025, Math.sin(a2) * r2));
+      }
+      break;
+    }
+    case 'weg-pflaster': {
+      g.add(b(0.98, 0.025, 0.98, '#9a9aa4', 0, 0.012, 0));
+      for (let i = 0; i < 3; i++) for (let j = 0; j < 3; j++) g.add(b(0.29, 0.03, 0.29, (i + j) % 2 ? '#c9c3d4' : '#b8b2c4', -0.32 + i * 0.32, 0.018, -0.32 + j * 0.32));
+      break;
+    }
+    case 'gartenbank': {
+      for (const x of [-0.8, 0.8]) {
+        g.add(b(0.08, 0.4, 0.38, '#5a5a66', x, 0.2, 0));
+        g.add(b(0.08, 0.06, 0.4, '#5a5a66', x, 0.6, -0.02));
+      }
+      for (const z of [-0.12, 0.02, 0.16]) g.add(b(1.72, 0.05, 0.12, '#c9955f', 0, 0.42, z));
+      for (const y of [0.6, 0.75]) {
+        const back = b(1.72, 0.1, 0.04, '#c9955f', 0, y, -0.2);
+        back.rotation.x = -0.15;
+        g.add(back);
+      }
+      seatY = 0.42;
+      break;
+    }
+    case 'gartentisch': {
+      g.add(c(0.38, 0.04, '#f7f5ec', 0, 0.6, 0));
+      g.add(c(0.035, 0.58, '#5a5a66', 0, 0.3, 0));
+      for (let i = 0; i < 3; i++) {
+        const a2 = (i / 3) * Math.PI * 2;
+        const foot = b(0.3, 0.03, 0.05, '#5a5a66', Math.cos(a2) * 0.13, 0.02, Math.sin(a2) * 0.13);
+        foot.rotation.y = -a2;
+        g.add(foot);
+      }
+      break;
+    }
+    case 'gartenstuhl': {
+      g.add(c(0.2, 0.04, col, 0, 0.4, 0.02));
+      for (const [x, z] of [[-0.14, -0.12], [0.14, -0.12], [-0.14, 0.16], [0.14, 0.16]]) g.add(c(0.018, 0.4, darken(col, 0.15), x, 0.2, z));
+      const back = mesh(new THREE.TorusGeometry(0.17, 0.025, 6, 16, Math.PI), toon(col));
+      back.position.set(0, 0.55, -0.15);
+      back.rotation.x = -0.1;
+      g.add(back);
+      for (const x of [-0.08, 0, 0.08]) g.add(b(0.02, 0.2, 0.02, col, x, 0.55, -0.15));
+      seatY = 0.42;
+      break;
+    }
+    case 'sonnenschirm': {
+      g.add(c(0.16, 0.06, '#5a5a66', 0, 0.03, 0));
+      g.add(c(0.02, 1.5, '#f7f5ec', 0, 0.75, 0));
+      const top = mesh(new THREE.ConeGeometry(0.75, 0.32, 8, 1, true), toon(col, { side: THREE.DoubleSide }));
+      top.position.y = 1.45;
+      g.add(top);
+      for (let i = 0; i < 8; i += 2) {
+        const seg = mesh(new THREE.ConeGeometry(0.751, 0.321, 8, 1, true, (i / 8) * Math.PI * 2, Math.PI / 4), toon('#ffffff', { side: THREE.DoubleSide }));
+        seg.position.y = 1.45;
+        g.add(seg);
+      }
+      g.add(s(0.04, 0.04, 0.04, col, 0, 1.63, 0));
+      break;
+    }
+    case 'lichterkette': {
+      for (const x of [-0.9, 0.9]) {
+        g.add(c(0.04, 1.3, '#8a5a3a', x, 0.65, 0));
+        g.add(s(0.05, 0.05, 0.05, '#6e4630', x, 1.31, 0));
+      }
+      const curve = new THREE.QuadraticBezierCurve3(new THREE.Vector3(-0.9, 1.25, 0), new THREE.Vector3(0, 0.95, 0), new THREE.Vector3(0.9, 1.25, 0));
+      g.add(mesh(new THREE.TubeGeometry(curve, 16, 0.008, 4), toon('#3a3a44')));
+      glow = glowMat('#fff1b8');
+      const bulbCols = ['#ffd36b', '#f4a3b8', '#9ad8ff', '#b8f0a0'];
+      for (let i = 1; i < 10; i++) {
+        const p = curve.getPoint(i / 10);
+        const bulb = new THREE.Mesh(sphere, new THREE.MeshToonMaterial({ color: bulbCols[i % 4], emissive: bulbCols[i % 4], emissiveIntensity: 0.15 }));
+        bulb.scale.setScalar(0.035);
+        bulb.position.set(p.x, p.y - 0.04, p.z);
+        bulb.userData.bulb = true;
+        g.add(bulb);
+      }
+      lightAt = new THREE.Vector3(0, 1.05, 0);
+      break;
+    }
+    case 'gartenlaterne': {
+      g.add(c(0.03, 0.9, '#3a3a44', 0, 0.45, 0));
+      g.add(b(0.2, 0.03, 0.2, '#3a3a44', 0, 0.9, 0));
+      glow = glowMat('#ffe0a0');
+      g.add(b(0.15, 0.2, 0.15, glow, 0, 1.01, 0));
+      const roof = c(0.15, 0.1, '#3a3a44', 0, 1.16, 0, cone);
+      roof.rotation.y = Math.PI / 4;
+      g.add(roof);
+      lightAt = new THREE.Vector3(0, 1.0, 0);
+      break;
+    }
+    case 'windlicht': {
+      g.add(c(0.06, 0.12, new THREE.MeshToonMaterial({ color: '#e6f4ff', transparent: true, opacity: 0.55 }), 0, 0.06, 0));
+      glow = glowMat('#ffd58a');
+      g.add(c(0.025, 0.05, '#fbf6ec', 0, 0.035, 0));
+      g.add(s(0.012, 0.025, 0.012, glow, 0, 0.08, 0));
+      lightAt = new THREE.Vector3(0, 0.1, 0);
+      break;
+    }
+    case 'blumenkuebel': {
+      const pot = mesh(new THREE.CylinderGeometry(0.22, 0.16, 0.32, 14), toon('#d98a5f'));
+      pot.position.y = 0.16;
+      g.add(pot);
+      g.add(c(0.23, 0.04, '#c97a4f', 0, 0.32, 0));
+      g.add(s(0.2, 0.08, 0.2, '#5f9a4a', 0, 0.36, 0));
+      for (let i = 0; i < 9; i++) {
+        const a2 = i * 2.4;
+        const r2 = 0.05 + (i % 3) * 0.05;
+        const fx = Math.cos(a2) * r2;
+        const fz = Math.sin(a2) * r2;
+        g.add(s(0.045, 0.015, 0.045, '#ffffff', fx, 0.43 + (i % 2) * 0.03, fz));
+        g.add(s(0.018, 0.012, 0.018, '#f7d26a', fx, 0.445 + (i % 2) * 0.03, fz));
+      }
+      break;
+    }
+    case 'vogeltraenke': {
+      g.add(c(0.1, 0.45, '#a9a9b2', 0, 0.225, 0));
+      g.add(c(0.18, 0.04, '#9a9aa4', 0, 0.02, 0));
+      const bowl = mesh(new THREE.SphereGeometry(0.28, 16, 8, 0, Math.PI * 2, Math.PI / 2, Math.PI / 2), toon('#b8b8c0', { side: THREE.DoubleSide }));
+      bowl.position.y = 0.6;
+      bowl.scale.y = 0.45;
+      g.add(bowl);
+      g.add(c(0.25, 0.01, '#8ac8ff', 0, 0.58, 0));
+      // ein Spatz auf dem Rand
+      g.add(s(0.045, 0.04, 0.06, '#a87448', 0.22, 0.65, 0));
+      g.add(s(0.03, 0.03, 0.03, '#a87448', 0.22, 0.7, 0.04));
+      g.add(c(0.008, 0.02, '#e8a040', 0.22, 0.7, 0.075, cone).rotateX(Math.PI / 2));
+      break;
+    }
+    case 'vogelhaus': {
+      g.add(c(0.035, 1.0, '#8a5a3a', 0, 0.5, 0));
+      g.add(b(0.3, 0.26, 0.26, '#c9955f', 0, 1.13, 0));
+      for (const sx of [-1, 1]) {
+        const roof = b(0.22, 0.03, 0.34, '#d9534f', sx * 0.09, 1.31, 0);
+        roof.rotation.z = -sx * 0.6;
+        g.add(roof);
+      }
+      g.add(c(0.045, 0.01, '#3a2a22', 0, 1.15, 0.131).rotateX(Math.PI / 2));
+      g.add(c(0.01, 0.08, '#8a5a3a', 0, 1.06, 0.17).rotateX(Math.PI / 2));
+      break;
+    }
+    case 'gartenwichtel': {
+      g.add(s(0.12, 0.1, 0.1, '#5b7fc2', 0, 0.1, 0));
+      g.add(c(0.1, 0.16, '#5b7fc2', 0, 0.2, 0));
+      g.add(s(0.09, 0.09, 0.09, '#fbe0cc', 0, 0.36, 0));
+      g.add(s(0.08, 0.1, 0.06, '#ffffff', 0, 0.3, 0.05));
+      const hat = c(0.1, 0.24, '#d9534f', 0, 0.52, 0, cone);
+      hat.rotation.z = 0.15;
+      g.add(hat);
+      g.add(s(0.025, 0.02, 0.02, '#f0a0a0', 0, 0.36, 0.09));
+      for (const x of [-0.03, 0.03]) g.add(s(0.01, 0.014, 0.008, '#2b2a31', x, 0.39, 0.08));
+      for (const x of [-0.05, 0.05]) g.add(s(0.04, 0.025, 0.06, '#6e4630', x, 0.015, 0.03));
+      break;
+    }
+    case 'hochbeet': {
+      g.add(b(1.86, 0.36, 0.86, '#b98a5e', 0, 0.18, 0));
+      for (const y of [0.1, 0.22]) {
+        g.add(b(1.88, 0.02, 0.88, darken('#b98a5e', 0.12), 0, y, 0));
+      }
+      g.add(b(1.9, 0.05, 0.9, '#c9955f', 0, 0.37, 0));
+      g.add(b(1.72, 0.02, 0.72, '#6e4a32', 0, 0.38, 0));
+      for (const x of [-0.45, 0.45]) g.add(b(0.7, 0.025, 0.66, '#5e3e2a', x, 0.385, 0));
+      break;
+    }
     // ---- Handgemacht (Werkbank) ----
     case 'ast-hocker': {
       g.add(c(0.2, 0.05, '#c9955f', 0, 0.36, 0));
@@ -380,6 +628,26 @@ export function makeFurniture(itemId: string): FurnitureModel {
     }
   });
   return { group: g, glow, lightAt, seatY };
+}
+
+/** Halbdurchsichtige Vorschau beim Einrichten (grün = passt, rot = passt nicht) */
+export function makeGhost(itemId: string, valid: boolean): THREE.Group {
+  const m = makeFurniture(itemId);
+  m.group.traverse((o) => {
+    const mm = o as THREE.Mesh;
+    if (!mm.isMesh) return;
+    const mat = (mm.material as THREE.MeshToonMaterial).clone();
+    mat.transparent = true;
+    mat.opacity = 0.6;
+    mat.emissive = new THREE.Color(valid ? '#7fe08a' : '#ff7a7a');
+    mat.emissiveIntensity = 0.45;
+    mm.material = mat;
+    mm.castShadow = false;
+  });
+  const marker = new THREE.Mesh(new THREE.PlaneGeometry(1, 1).rotateX(-Math.PI / 2), new THREE.MeshBasicMaterial({ color: valid ? '#7fe08a' : '#ff7a7a', transparent: true, opacity: 0.35, depthWrite: false }));
+  marker.name = 'marker';
+  m.group.add(marker);
+  return m.group;
 }
 
 /** Das feste Katalog-Pult in der Zimmerecke */
