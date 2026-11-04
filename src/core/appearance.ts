@@ -15,6 +15,8 @@ export type Smile = 'laecheln' | 'grinsen' | 'zahnluecke';
 export type GlassesShape = 'rund' | 'eckig';
 /** „saison“ = Schnürstiefel im Herbst/Winter, weiße Sneaker im Frühling/Sommer */
 export type Shoes = 'standard' | 'stiefel' | 'sneaker' | 'saison';
+/** „oval“ = schmaleres Kinn, „rund“ = klassisch kugelrund */
+export type FaceShape = 'rund' | 'oval';
 
 export interface Appearance {
   hairStyle: HairStyle;
@@ -41,6 +43,7 @@ export interface Appearance {
   /** kleine Creolen */
   earrings: boolean;
   shoes: Shoes;
+  faceShape: FaceShape;
 }
 
 export interface Option<T> {
@@ -103,6 +106,11 @@ export const HAIR_COLORS: Option<string>[] = [
   { id: palette.hair.mint, label: 'Minze' },
 ];
 
+export const FACE_SHAPES: Option<FaceShape>[] = [
+  { id: 'oval', label: 'Schmal' },
+  { id: 'rund', label: 'Rund' },
+];
+
 export const SHOES: Option<Shoes>[] = [
   { id: 'saison', label: 'Je nach Jahreszeit' },
   { id: 'stiefel', label: 'Schnürstiefel' },
@@ -147,6 +155,7 @@ export const DEFAULT_LINA: Appearance = {
   scarf: '',
   earrings: false,
   shoes: 'saison',
+  faceShape: 'oval',
 };
 
 const HEX = /^#[0-9a-fA-F]{6}$/;
@@ -194,6 +203,7 @@ export function normalizeAppearance(raw: unknown, fallback: Appearance = DEFAULT
     scarf: r.scarf === '' ? '' : color(r.scarf, fallback.scarf),
     earrings: typeof r.earrings === 'boolean' ? r.earrings : fallback.earrings,
     shoes: pick(r.shoes, SHOES, fallback.shoes),
+    faceShape: pick(r.faceShape, FACE_SHAPES, fallback.faceShape),
   };
 }
 
@@ -218,5 +228,6 @@ export function appearanceKey(a: Appearance): string {
     a.scarf,
     a.earrings ? 1 : 0,
     a.shoes,
+    a.faceShape,
   ].join('|');
 }

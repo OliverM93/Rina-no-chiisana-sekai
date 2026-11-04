@@ -41,6 +41,7 @@ export const CHRISTIN: NpcDef = {
       { text: ['Dieser Regen!', 'Jetzt tragen alle Matsch auf den Dorfplatz. Ich seh schon, was ich morgen mache.'], when: { tags: ['wetter-regen'] }, weight: 3 },
     ],
     chat: [
+      { text: ['Winston ist über meinen frisch gefegten Platz gelaufen.', 'Die Pfotenabdrücke waren aber sehr ordentlich in einer Reihe. Das rechne ich ihm hoch an.'] },
       { text: ['Ordnung ist das halbe Leben.', 'Die andere Hälfte ist … noch mehr Ordnung.'] },
       { text: ['Weißt du, was ich an deinem Dorf mag?', 'Die Wege sind schön gerade. Na ja – fast.'] },
       { text: ['Wenn du Äste herumliegen siehst: aufheben!', 'Das sieht sonst so unordentlich aus. Und man stolpert.'] },
@@ -70,6 +71,7 @@ export const CHRISTIN: NpcDef = {
     { id: 'ordnung', subject: 'Kleiner Ordnungstipp', body: 'Liebe Lina,\n\nein Tipp von mir: Jeden Tag eine Sache aufräumen. Dann wird es nie unordentlich!\n\nLiebe Grüße\nChristin', gift: { itemId: 'samen-lavendel', count: 2 } },
   ],
   heartLetters: {
+    1: { id: 'herz-1', subject: 'Alles an seinen Platz!', body: 'Liebe Lina,\n\nwer viele Sachen hat, braucht ein Regal. So einfach ist das.\n\nIch hab dir aufgeschrieben, wie man eins aus Ästen baut. Und dann sammelst du gleich die Äste vom Weg auf – zwei Fliegen mit einer Klappe!\n\nChristin', gift: { itemId: 'rezept-treibholzregal', count: 1 } },
     2: { id: 'herz-2', subject: 'Für dein Zimmer', body: 'Liebe Lina,\n\ndamit es bei dir noch ein bisschen schöner aussieht: eine Ikebana-Vase. Schlicht und ordentlich – so mag ich das.\n\nChristin', gift: { itemId: 'ikebana', count: 1 } },
   },
 };

@@ -69,6 +69,7 @@ export const VILLAGE_OBJECTS: readonly MapObjectDef[] = [
   { id: 'verkaufskiste', kind: 'sellbox', x: 12, y: 14 },
   { id: 'laterne-lina', kind: 'lantern', x: 11, y: 14 },
   { id: 'beet-lina', kind: 'beet', x: 6, y: 11 },
+  { id: 'werkbank-lina', kind: 'workbench', x: 7, y: 14 },
 
   // Oma Giselas Häuschen mit ihrer Bank
   { id: 'haus-gisela', kind: 'house', x: 42, y: 14, variant: 'lilac' },

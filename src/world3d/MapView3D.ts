@@ -18,6 +18,7 @@ import {
   makeMailbox,
   makePlotMarks,
   makeSellbox,
+  makeWorkbench,
   makeSign,
   makeBeet,
 } from './models/buildings';
@@ -111,6 +112,9 @@ export function buildMapView3D(scene: THREE.Scene, map: WorldMap, season: Season
       }
       case 'sellbox':
         node = makeSellbox();
+        break;
+      case 'workbench':
+        node = makeWorkbench();
         break;
       case 'board':
         node = makeBoard();

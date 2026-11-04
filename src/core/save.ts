@@ -14,12 +14,14 @@ import { createNpcState, type NpcState, normalizeNpcState } from './friendship';
 import { type Collection, normalizeCollection } from './catching';
 import { type Garden, normalizeGarden } from './garden';
 import { createBank, type Bank, normalizeBank } from './bank';
+import { normalizeRecipeBook, type RecipeBook } from './crafting';
+import { createPet, normalizePet, type PetState } from './pet';
 import { type House, type HouseRules, type InfoFn, normalizeHouse } from './room';
 import { createInventory, type Inventory, normalizeInventory } from './inventory';
 import { createMailbox, type Mailbox, normalizeMailbox } from './mail';
 import { type DayMonth, DEFAULT_LINA_BIRTHDAY, formatIsoDay } from './time';
 
-export const SAVE_VERSION = 6;
+export const SAVE_VERSION = 7;
 export const SAVE_KEY = 'rina-no-chiisana-sekai.save';
 export const BACKUP_KEY = 'rina-no-chiisana-sekai.save.backup';
 
@@ -93,6 +95,10 @@ export interface SaveData {
   house: House;
   /** Olafs Dorfkasse */
   bank: Bank;
+  /** Gelernte Werkbank-Rezepte */
+  recipes: RecipeBook;
+  /** Winston, Linas Dackel */
+  pet: PetState;
 }
 
 export interface SaveOptions {
@@ -106,6 +112,10 @@ export interface SaveOptions {
   houseRules?: HouseRules;
   /** Größe & Art der Möbel (für die Raumlogik) */
   furnitureInfo?: InfoFn;
+  /** Gibt es dieses Rezept (noch)? */
+  isKnownRecipe?: (id: string) => boolean;
+  /** Rezepte, die Lina immer kennt */
+  startRecipes?: readonly string[];
 }
 
 const EMPTY_HOUSE: House = { stage: 0, rooms: [{ id: 'haupt', wallpaper: '', floor: '', items: [] }] };
@@ -124,6 +134,7 @@ export interface NewGameOptions {
   spawn: { x: number; y: number };
   now: Date;
   house?: House;
+  recipes?: readonly string[];
 }
 
 export function createNewSave(opts: NewGameOptions): SaveData {
@@ -152,6 +163,8 @@ export function createNewSave(opts: NewGameOptions): SaveData {
     collection: {},
     house: structuredClone(opts.house ?? EMPTY_HOUSE),
     bank: createBank(),
+    recipes: [...(opts.recipes ?? [])],
+    pet: createPet(),
   };
 }
 
@@ -185,6 +198,8 @@ export const MIGRATIONS: Record<number, (old: RawSave) => RawSave> = {
     const { home, ...rest } = old as Record<string, unknown> & { home?: Record<string, unknown> };
     return home && typeof home === 'object' ? { ...rest, house: { stage: 0, rooms: [{ id: 'haupt', ...home }] } } : rest;
   },
+  // v6 → v7 (M6b): Werkbank-Rezepte, Winston und Gesichtsform (Lina: schmal). Startwerte ergänzt `normalizeSave`.
+  6: (old) => ({ ...old }),
 };
 
 export function migrate(raw: RawSave, migrations = MIGRATIONS, target = SAVE_VERSION): RawSave {
@@ -258,6 +273,11 @@ export function normalizeWorld(raw: unknown, isKnownItem: (id: string) => boolea
   return w;
 }
 
+function withStart(book: RecipeBook, start: readonly string[]): RecipeBook {
+  for (const id of start) if (!book.includes(id)) book.push(id);
+  return book;
+}
+
 export function normalizeSave(raw: RawSave, spawn: { x: number; y: number }, now: Date, opts: SaveOptions = {}): SaveData {
   const isKnownItem = opts.isKnownItem ?? (() => true);
   const npcs: Record<string, NpcState> = {};
@@ -297,6 +317,8 @@ export function normalizeSave(raw: RawSave, spawn: { x: number; y: number }, now
     collection: normalizeCollection(raw.collection, isKnownItem),
     house: normalizeHouse(raw.house, opts.defaultHouse ?? EMPTY_HOUSE, opts.houseRules ?? FALLBACK_RULES, isKnownItem, opts.furnitureInfo ?? (() => undefined)),
     bank: normalizeBank(raw.bank),
+    recipes: withStart(normalizeRecipeBook(raw.recipes, opts.isKnownRecipe ?? (() => true)), opts.startRecipes ?? []),
+    pet: normalizePet(raw.pet),
   };
 }
 

@@ -42,6 +42,8 @@ export const OLAF: NpcDef = {
       { text: ['Bei dem Regen arbeiten selbst die Enten im Homeoffice.', '… War ein Witz. Ein guter, finde ich.'], when: { tags: ['wetter-regen'] }, weight: 3 },
     ],
     chat: [
+      { text: ['Winston ist der Einzige im Dorf, der nie nach Belegen fragt.', 'Ein sehr angenehmer Zeitgenosse.'] },
+      { text: ['Hast du schon was an Opas Werkbank gebaut?', 'Selbermachen spart Geld. Und Geld sparen macht glücklich. Mich jedenfalls.'] },
       { text: ['Weißt du, was ein Steuerberater zum Frühstück isst?', 'Belege!', '… Christin lacht nie über den.'] },
       { text: ['Ordnung in den Zahlen ist wie Ordnung im Herzen.', 'Wenn alles aufgeht, schläft man besser.'] },
       { text: ['Dein Haus wird langsam zu klein, oder?', 'Wenn du ausbauen möchtest: Die Dorfkasse hilft. Ohne Zinsen, ohne Eile. Für dich doch immer.'] },
@@ -73,7 +75,9 @@ export const OLAF: NpcDef = {
     { id: 'gruss', subject: 'Grüße von nebenan', body: 'Liebe Lina,\n\nChristin lässt fragen, ob du deine Fenster schon geputzt hast. Ich habe gesagt, das geht sie nichts an.\n\nSie hat trotzdem einen Lappen beigelegt. Dann eben Äpfel – den Lappen hab ich versteckt.\n\nDein Papa', gift: { itemId: 'apfel', count: 2 } },
   ],
   heartLetters: {
+    1: { id: 'herz-1', subject: 'Eine solide Investition', body: 'Liebe Lina,\n\nich hab dir eine Bauanleitung für eine Steinlaterne aufgeschrieben. Material: Steine. Kosten: null Sternchen. Rendite: Gemütlichkeit!\n\nDein Papa', gift: { itemId: 'rezept-steinlaterne', count: 1 } },
     2: { id: 'herz-2', subject: 'Für deine Teestunde', body: 'Liebe Lina,\n\nfür gemütliche Teestunden in deinem Häuschen. Christin hat es ausgesucht, ich hab bezahlt. Arbeitsteilung!\n\nDein Papa', gift: { itemId: 'teeservice', count: 1 } },
+    3: { id: 'herz-3', subject: 'Kieselsteine sortiert', body: 'Liebe Lina,\n\nich hab am Wochenende Kieselsteine nach Größe sortiert. Christin sagt, das sei „ein Hobby“. Ich sage: Ordnung!\n\nDabei ist mir ein Muster eingefallen. Die Anleitung liegt bei.\n\nDein Papa', gift: { itemId: 'rezept-kieselmosaik', count: 1 } },
   },
 };
 

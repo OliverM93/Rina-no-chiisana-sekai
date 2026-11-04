@@ -52,6 +52,9 @@ export const GISELA: NpcDef = {
       { text: ['Kindchen! Mein Lieblingsbesuch.', '… Ja, ich weiß, du bist mein einziger Besuch. Trotzdem.'], when: { minHearts: 2 } },
     ],
     chat: [
+      { text: ['Neben deinem Haus steht noch Opas alte Werkbank.', 'Der hat da früher alles Mögliche gebaut. Aus Ästen! Aus Steinen! Einmal sogar einen Stuhl, der gehalten hat.'], weight: 2 },
+      { text: ['Dein Winston ist ein feiner Hund.', 'Er hat mir heute zugehört. Ganz ohne Widerworte. Das kann hier sonst keiner.'] },
+      { text: ['Winston hat mich vorhin angeguckt, als hätte er seit Wochen nichts gegessen.', 'Ich hab ihm ein Stückchen Leberwurstbrot gegeben. Sag\'s nicht weiter.'] },
       { text: ['Weißt du, was ich von Ärzten halte?', 'Die wollen nur dein Geld! Die Hälfte der Behandlungen ist gar nicht nötig.', 'Ein Löffel Honig und früh ins Bett – fertig. Kostet nix.'] },
       { text: ['Dein Bruder, der Herr Doktor, meint, ich soll weniger Zucker essen.', 'Pah! Ich esse seit Jahrzehnten Zucker und lebe noch. Und zwar prächtig.'] },
       { text: ['Diese neumodischen Avocados …', 'Pfui! Schmeckt wie eingeschlafene Füße.'] },
@@ -151,6 +154,7 @@ export const GISELA: NpcDef = {
   ],
   heartLetters: {
     1: { id: 'herz-1', subject: 'Streng geheim!', body: 'Liebe Lina,\n\ndu kommst mich so oft besuchen – das gefällt mir. Hier ist mein Keksrezept.\n\nStreng geheim! Wehe, du zeigst es jemandem.\n\nOma Gisela', gift: { itemId: 'keksrezept', count: 1 } },
+    2: { id: 'herz-2', subject: 'Für den kleinen Herrn', body: 'Liebe Lina,\n\ndein Winston schläft ja überall – auf der Wiese, auf dem Futon, auf meinen Füßen.\n\nHier ist eine Anleitung für ein ordentliches Körbchen. Opa hat damals so eins für unseren Waldi gebaut. Die Werkbank steht ja noch neben deinem Haus.\n\nDeine Oma', gift: { itemId: 'rezept-hundekoerbchen', count: 1 } },
     3: { id: 'herz-3', subject: 'Für kalte Tage', body: 'Liebe Lina,\n\nich hab dir einen Schal gestrickt. Rosa.\n\nIch weiß, du wolltest vielleicht eine andere Farbe. Aber Rosa steht dir. Ende der Diskussion.\n\nDeine Oma', gift: { itemId: 'strickschal', count: 1 } },
     5: { id: 'herz-5', subject: 'Damit du mich nicht vergisst', body: 'Liebe Lina,\n\nich hab dir ein Foto von mir beigelegt. Damit du mich nicht vergisst.\n\nNicht, dass das ginge.\n\nDeine Oma, die dich sehr lieb hat.\n(Das bleibt unter uns!)', gift: { itemId: 'omas-foto', count: 1 } },
   },
@@ -163,6 +167,7 @@ export const GISELA_WELCOME: readonly string[] = [
   'Ich bin nämlich auch gerade eingezogen. Das lila Häuschen hinter der Brücke – mit der Bank davor.',
   'Die Bank ist meine. Nur, damit das klar ist.',
   'Du bist ja ganz dünn! Hier, ein Keks. Keine Widerrede.',
+  'Und da ist ja auch Winston! Na, du kleine Wurst? Pass schön auf mein Enkelkind auf.',
 ];
 
 export const GISELA_WELCOME_2: readonly string[] = [

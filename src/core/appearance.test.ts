@@ -43,4 +43,12 @@ describe('Aussehen', () => {
     expect(normalizeAppearance({}).shoes).toBe('saison');
     expect(normalizeAppearance({ shoes: 'flipflops' }).shoes).toBe('saison');
   });
+
+  it('Gesichtsform: Lina schmal, alte Spielstände bekommen sie automatisch', () => {
+    expect(DEFAULT_LINA.faceShape).toBe('oval');
+    const { faceShape: _drop, ...old } = DEFAULT_LINA;
+    expect(normalizeAppearance(old, DEFAULT_LINA).faceShape).toBe('oval');
+    expect(normalizeAppearance({ ...DEFAULT_LINA, faceShape: 'eckig' }, DEFAULT_LINA).faceShape).toBe('oval');
+    expect(normalizeAppearance({ ...DEFAULT_LINA, faceShape: 'rund' }, DEFAULT_LINA).faceShape).toBe('rund');
+  });
 });

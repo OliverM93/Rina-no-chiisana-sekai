@@ -97,8 +97,15 @@ Legende: ✅ erledigt · 🚧 in Arbeit · ⬜ geplant
   jeder Raum mit eigener Tapete/Boden/Möbeln; Haus wächst auch von außen
 - ✅ Spielstand Version 6 (Haus mit Räumen, Dorfkasse)
 
-**M6b ⬜ Werkbank, Außengestaltung, Tiere**
-- ⬜ Werkbank & Rezepte (per Brief, beim Sammeln, als Herz-Belohnung)
+**M6b ✅ Winston & Opas Werkbank**
+- ✅ Winston, Linas Dackel: läuft überall mit (auch ins Haus), setzt sich neben Lina, schläft nachts,
+  lässt sich streicheln, buddelt einmal am Tag etwas aus, schläft im Hundekörbchen
+- ✅ Opas Werkbank neben dem Haus: 9 Rezepte für handgemachte Möbel aus Ästen, Steinen, Muscheln, Blumen
+- ✅ Rezepte von Anfang an, beim ersten Fund (Herzmuschel, Seestern, Glitzerstein) und als
+  Herz-Briefe von Oma, Olaf und Christin
+- ✅ Spielstand Version 7 (Rezepte, Winston)
+
+**M6c ⬜ Außengestaltung & Tiere**
 - ⬜ Außenbereich: Zäune, Wege, Gartenmöbel, Deko, Lichterketten, mehr Beete
 - ⬜ Wachteln & Hühner halten (Stall, tägliche Eier)
 
@@ -124,7 +131,6 @@ Legende: ✅ erledigt · 🚧 in Arbeit · ⬜ geplant
 
 - Fotomodus/Postkarten, Tagebuch mit schönen Momenten
 - Sternbilder am Nachthimmel, Glühwürmchen im Sommer
-- Haustier (z. B. Katze), die Lina folgt
 
 ## ❓ Offene Fragen (bei Gelegenheit klären)
 

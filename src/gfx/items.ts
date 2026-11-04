@@ -7,6 +7,7 @@ import { blob, type Ctx, ellipse, roundRect, shine } from './canvas';
 import { natureIcons } from './nature-icons';
 import { drawPattern } from './interior';
 import { FURNITURE_ITEMS, FLOORS, WALLPAPERS } from '../data/furniture';
+import { RECIPE_ITEM_PREFIX, RECIPES } from '../data/recipes';
 
 export const ICON = 32;
 
@@ -313,6 +314,25 @@ for (const def of [...WALLPAPERS, ...FLOORS]) {
 }
 // Möbel: Platzhalter, bis die 3D-Vorschaubilder fertig sind (setIconImage)
 for (const f of FURNITURE_ITEMS) DRAW[f.itemId] = (ctx) => roundRect(ctx, 7, 9, 18, 16, 4, f.color ?? '#e6c59c', darken(f.color ?? '#e6c59c', 0.3), 1.4);
+
+// Rezeptkarten: Papierrolle mit Hammer-Zeichen
+for (const r of RECIPES) {
+  DRAW[`${RECIPE_ITEM_PREFIX}${r.id}`] = (ctx) => {
+    roundRect(ctx, 6, 5, 20, 23, 3, '#fff3d6', '#d9b77a', 1.3);
+    roundRect(ctx, 4, 4, 24, 4, 2, '#e6c59c', '#b98a5e', 1);
+    roundRect(ctx, 4, 26, 24, 4, 2, '#e6c59c', '#b98a5e', 1);
+    ctx.strokeStyle = '#c9a77a';
+    ctx.lineWidth = 1.2;
+    for (const y of [12, 16]) {
+      ctx.beginPath();
+      ctx.moveTo(9, y);
+      ctx.lineTo(16, y);
+      ctx.stroke();
+    }
+    roundRect(ctx, 17, 11, 7, 4, 1, '#8a8a96', '#5a5a66', 0.8);
+    roundRect(ctx, 19.6, 15, 1.8, 8, 0.8, '#b98a5e', '#7a5038', 0.6);
+  };
+}
 
 const imageOverrides = new Map<string, string>();
 

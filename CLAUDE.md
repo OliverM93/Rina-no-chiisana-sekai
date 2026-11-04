@@ -31,8 +31,9 @@ Meilensteine und Fortschritt: siehe [`ROADMAP.md`](ROADMAP.md).
 | **Jens** | Onkel, Coach, Dandy – Bistro/Kochstudio & Galerie, Französisch + Sächsisch | untersetzt, rundes Gesicht, dunkle zerzauste Haare, kein Bart, blaue Augen, Zahnlücken-Grinsen, dunkler Hoodie |
 | **Thalia** | beste Freundin, Geografie – Partys, Karten, Gesteine/Fossilien | schlank, glatte dunkelbraune schulterlange Haare mit Mittelscheitel, braune Augen, kleine Creolen, grünes Halstuch, schwarze Jacke, weite Jeans |
 | **Oma Gisela** | Oma – Bank vorm Haus, Weisheiten, Kekse, Strickrezepte; hat **immer das letzte Wort**, misstrauisch („Die Ärzte wollen nur dein Geld …“), starke Meinung zu allem („köstlich!“ – „pfui!“); Likörchen/Zigarette dezent & humorvoll, nie glorifizierend | klein, zierlich, offene silbergraue Haare (kein Dutt), **keine Brille**, königsblauer Mantel mit rotem Tuch |
+| **Winston** | Linas treuer kleiner Dackel – läuft ihr überallhin nach | rotbrauner Kurzhaardackel mit Schlappohren und rosa Halsband (`data/winston.ts`) |
 
-Figuren sind **Chibi-Menschen** (keine Tiere) – erkennbar an Frisur, Bart, Brille, Größe, Statur, Kleidung.
+Die Bewohner sind **Chibi-Menschen** (keine Tiere; Winston ist Linas Hund) – erkennbar an Frisur, Bart, Brille, Größe, Statur, Kleidung.
 Das Aussehen aller Bewohner steht in `src/data/npcs/looks.ts` (nach Fotos nachempfunden).
 **Fotos der echten Personen gehören NIE ins Repository** – sie dienen nur als Vorlage.
 
@@ -98,6 +99,8 @@ src/
     garden.ts      Beet: pflanzen, gießen, wachsen (1 Stufe pro gegossenem Tag), pflücken – nie vertrocknen
     room.ts        Haus mit Räumen (Größe, Ausgänge) als Raster: platzieren, drehen, verschieben, Deko, Teppiche
     bank.ts        Olafs Dorfkasse: zinsloser Kredit, zurückzahlen wann man will
+    crafting.ts    Werkbank: Rezepte lernen, Zutaten prüfen, bauen (alles oder nichts)
+    pet.ts         Winston: Streicheln, einmal am Tag buddeln
     grid.ts        Kollisionsraster, A*-Wegfindung, nächste freie Kachel
     movement.ts    Bewegung mit Kollision (Fuß-Box), Um-Ecken-Gleiten
     events.ts      typisierter Event-Emitter
@@ -114,6 +117,8 @@ src/
     session.ts     laufende Sitzung: Spielstand, Uhr, Karte, Event-Bus Welt ↔ UI
     gameplay.ts    Spielregeln: Sammeln, Verkaufen, Plaudern, Schenken, Post
     nature.ts      Werkzeuge, Angeln, Insekten, Beet, aktuelles Wetter
+    crafting.ts    Rezepte lernen (Rezeptkarten aus Briefen, Ideen beim ersten Fund), an der Werkbank bauen
+    pet.ts         Winston streicheln & buddeln lassen
     home.ts        Katalog kaufen, Möbel aufstellen/verschieben/wegräumen, Tapete & Boden, Ausbau & Kredit
     story.ts       Rahmenhandlung: Einzüge (Ankündigungsbrief → Einzug am nächsten Tag)
     input.ts       eigene Tastatursteuerung (blockiert keine Textfelder)
@@ -122,6 +127,7 @@ src/
     MapView3D.ts   baut die Welt aus dem Kartenmodell; terrain3d.ts (Höhenraster + gemalte Textur)
     Character3D.ts Figur (Bewegung, Wegfolgen, Sitzen, Werkzeug in der Hand); Npc.ts (Tagesablauf-KI); Collectibles3D.ts
     Weather3D.ts   Regen, Schnee, Blitze · Fishing3D.ts Angeln · Insects3D.ts Insekten · Garden3D.ts Beet
+    Winston.ts     Winston (folgt Linas Spur, sitzt, schläft, buddelt, Körbchen); Modell in models/dog.ts
     Interior3D.ts  Linas Zimmer (liegt bei Kachel 200/200 in derselben Szene, der Nebel versteckt das Dorf)
     models/        chibi3d.ts (Figuren), nature.ts, buildings.ts, critters.ts (Werkzeuge, Insekten, Pflanzen),
                    furniture.ts (Möbel + 3D-Vorschaubilder);
@@ -168,6 +174,11 @@ src/
   automatisch Gegenstände (Varianten → `futon-rosa` …). Raumlogik in `core/room.ts`, Modelle in
   `world3d/models/furniture.ts`. Gespeichert wird immer draußen weitergespielt (Laden im Haus → vor der Tür).
   Einrichten läuft über `decor:command`/`decor:state` auf dem Bus.
+- **Winston:** läuft auf Linas eigener Spur hinterher (bleibt nie an Ecken hängen), setzt sich neben sie,
+  wenn sie stehen bleibt. Texte & Funde in `data/winston.ts`.
+- **Werkbank:** Rezepte in `data/recipes.ts` (`start`, `fund` = beim ersten Fund, sonst als Brief-Geschenk
+  `rezept-<id>` – Rezeptkarten werden beim Annehmen sofort gelernt). Ergebnisse sind Möbel mit
+  `crafted: true` (nicht im Katalog). Ein Test prüft, dass jedes Rezept erreichbar ist.
 - **Spielstand:** `SAVE_VERSION` + `MIGRATIONS` in `core/save.ts`. Nach jeder Migration wird normalisiert
   (fehlende Felder → Standardwerte). Vor jedem Speichern bleibt der alte Stand als Backup erhalten.
 

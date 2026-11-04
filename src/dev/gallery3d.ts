@@ -8,8 +8,9 @@ import { DEFAULT_LINA, type Appearance } from '../core/appearance';
 import { GISELA } from '../data/npcs/gisela';
 import { LOOKS } from '../data/npcs/looks';
 import { palette } from '../style/palette';
-import { makeBench, makeBoard, makeBridge, makeFountain, makeHouse, makeLantern, makeMailbox, makePlotMarks, makeSellbox, makeSign } from '../world3d/models/buildings';
+import { makeBench, makeBoard, makeBridge, makeFountain, makeHouse, makeLantern, makeMailbox, makePlotMarks, makeSellbox, makeSign, makeWorkbench } from '../world3d/models/buildings';
 import { Chibi3D } from '../world3d/models/chibi3d';
+import { Dog3D } from '../world3d/models/dog';
 import { makeBush, makeFlower, makePine, makeRock, makeTree, FLOWER_COLORS } from '../world3d/models/nature';
 
 const canvas = document.getElementById('view') as HTMLCanvasElement;
@@ -40,7 +41,7 @@ const content = new THREE.Group();
 scene.add(content);
 
 const people: Array<[string, Appearance]> = [
-  ['Lina', DEFAULT_LINA],
+  ['Lina', { ...DEFAULT_LINA, faceShape: (params.get('gesicht') as Appearance['faceShape'] | null) ?? DEFAULT_LINA.faceShape }],
   ['Gisela', LOOKS.gisela],
   ['Olaf', LOOKS.olaf],
   ['Christin', LOOKS.christin],
@@ -50,10 +51,12 @@ const people: Array<[string, Appearance]> = [
   ['Oli', LOOKS.oli],
 ];
 const chibis: Chibi3D[] = [];
+const dogs: Array<{ dog: Dog3D; rest: 0 | 1 | 2; moving: boolean; digging?: boolean }> = [];
 
 function build() {
   content.clear();
   chibis.length = 0;
+  dogs.length = 0;
   (document.getElementById('label') as HTMLElement).textContent = view;
   if (view === 'figuren') {
     people.forEach(([, a], i) => {
@@ -62,6 +65,14 @@ function build() {
       content.add(c.root);
       chibis.push(c);
     });
+    // Winston: läuft, steht, sitzt, liegt, buddelt
+    ([[0, true], [0, false], [1, false], [2, false], [0, false, true]] as const).forEach(([rest, moving, digging], i) => {
+      const dog = new Dog3D();
+      dog.root.position.set(-1.6 + i * 0.8, 0, 1.1);
+      dog.root.rotation.y = i === 0 ? Math.PI / 2 : 0.4;
+      content.add(dog.root);
+      dogs.push({ dog, rest, moving, digging });
+    });
     const sitter = new Chibi3D(GISELA.appearance);
     const bench = makeBench();
     bench.position.set(0, 0, -1.6);
@@ -69,8 +80,10 @@ function build() {
     content.add(bench, sitter.root);
     sitter.pose({ step: 0, moving: false, running: false, sitting: true, blink: false, t: 0 });
     const zoom = Number(params.get('zoom') ?? 1);
-    camera.position.set(Math.sin(angle) * 7.6 * zoom, 2.4 * zoom, Math.cos(angle) * 7.6 * zoom);
-    camera.lookAt(Number(params.get('x') ?? 0), 0.5, -0.3);
+    const lookX = Number(params.get('x') ?? 0);
+    const lookY = Number(params.get('y') ?? 0.5);
+    camera.position.set(lookX + Math.sin(angle) * 7.6 * zoom, lookY - 0.5 + 2.4 * zoom, Math.cos(angle) * 7.6 * zoom);
+    camera.lookAt(lookX, lookY, -0.3);
   } else if (view === 'natur') {
     const items: THREE.Object3D[] = [];
     for (const s of ['fruehling', 'sommer', 'herbst', 'winter'] as const) items.push(makeTree(s, 3).group);
@@ -102,6 +115,7 @@ function build() {
       [makeFountain(), -0.5, 3.6],
       [makeBridge(), 3.2, 3.5],
       [makeSign('Bauplatz'), 5.5, 1.2],
+      [makeWorkbench(), 1.2, 3.4],
       [makePlotMarks(5, 3), 6.5, 2.5],
     ];
     content.add(house, house2);
@@ -141,6 +155,7 @@ build();
 let t = 0;
 renderer.setAnimationLoop(() => {
   t += 1 / 60;
+  dogs.forEach((d) => d.dog.pose({ step: t * 2.5, moving: d.moving, rest: d.rest, wag: d.rest === 2 ? 0 : 0.6, digging: !!d.digging, tilt: d.rest === 1 ? 0.6 : 0, eyesClosed: d.rest === 2, t }));
   chibis.forEach((c, i) => c.pose({ step: t * 3, moving: i % 2 === 1, running: false, sitting: false, blink: Math.sin(t * 2 + i) > 0.97, t }));
   renderer.render(scene, camera);
 });

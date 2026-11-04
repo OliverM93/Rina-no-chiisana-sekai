@@ -248,6 +248,50 @@ export function makeSellbox(): THREE.Group {
   return g;
 }
 
+/** Opas alte Werkbank: Tisch mit Schraubstock, Werkzeugwand und ein paar Ästen */
+export function makeWorkbench(): THREE.Group {
+  const g = new THREE.Group();
+  const wood = palette.wood.base;
+  const light = palette.wood.light;
+  // Beine & Platte
+  for (const x of [-0.8, 0.8]) for (const z of [-0.25, 0.25]) g.add(b(0.09, 0.62, 0.09, darken(wood, 0.1), x, 0.31, z));
+  g.add(b(1.9, 0.1, 0.68, light, 0, 0.66, 0));
+  g.add(b(1.7, 0.05, 0.55, darken(wood, 0.05), 0, 0.18, 0));
+  // Werkzeugwand hinten
+  for (const x of [-0.85, 0.85]) g.add(b(0.07, 0.75, 0.07, darken(wood, 0.1), x, 1.05, -0.3));
+  g.add(b(1.76, 0.5, 0.05, lighten(light, 0.06), 0, 1.15, -0.3));
+  // Hammer
+  g.add(b(0.05, 0.3, 0.03, wood, -0.55, 1.12, -0.26));
+  g.add(b(0.16, 0.06, 0.05, '#8a8a96', -0.55, 1.28, -0.26));
+  // Säge
+  g.add(b(0.36, 0.13, 0.015, '#c9cbd3', 0, 1.13, -0.26));
+  g.add(b(0.1, 0.09, 0.03, '#e85a8a', 0.22, 1.15, -0.26));
+  // Schraubenschlüssel & Zange
+  g.add(b(0.04, 0.26, 0.02, '#8a8a96', 0.5, 1.13, -0.26));
+  g.add(b(0.04, 0.22, 0.02, '#e8a07a', 0.62, 1.12, -0.26).rotateZ(0.2));
+  // Schraubstock
+  g.add(b(0.18, 0.12, 0.14, '#7a9ac8', 0.72, 0.77, 0.18));
+  g.add(c(0.015, 0.22, '#c9cbd3', 0.72, 0.77, 0.3).rotateX(Math.PI / 2));
+  // Äste & Steine auf der Platte
+  for (const [x, rz] of [[-0.45, 0.1], [-0.3, -0.06], [-0.38, 0.2]] as const) {
+    const ast = c(0.03, 0.55, '#8a5a3a', x, 0.74, 0.08);
+    ast.rotation.set(Math.PI / 2, 0, rz + Math.PI / 2);
+    g.add(ast);
+  }
+  for (const [x, z, r] of [[0.15, 0.1, 0.07], [0.27, 0.15, 0.05], [0.22, -0.02, 0.06]] as const) {
+    const st = mesh(sphere, toon('#a9a9b2'));
+    st.scale.set(r, r * 0.7, r);
+    st.position.set(x, 0.71 + r * 0.5, z);
+    g.add(st);
+  }
+  // Rezeptzettel (rosa) an der Wand
+  g.add(b(0.22, 0.26, 0.01, '#fbe0e8', -0.22, 1.2, -0.27));
+  g.traverse((o) => {
+    if ((o as THREE.Mesh).isMesh) o.castShadow = true;
+  });
+  return g;
+}
+
 export function makeBoard(): THREE.Group {
   const g = new THREE.Group();
   const wood = palette.wood.base;
