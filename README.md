@@ -88,6 +88,12 @@ Spruch auf Lager („So, und nicht mit e, sonst ist es ein See.“). Einmal am T
 **durchchecken** (mit kleiner Belohnung). Aus **Kamille** und **Pfefferminze** (neue Kräuter fürs Beet) und
 Lavendel braut sie in der Apotheke Tee. Oma findet natürlich, dass Ärzte nur dein Geld wollen.
 
+**Thalia (M7d):** Linas beste Freundin zieht ins gelbe Häuschen hinter der Brücke und bringt eine
+**Schaufel** (Taste 4) mit: Jeden Tag funkeln irgendwo im Dorf ein paar Risse im Boden – dort gräbt Lina
+**Fossilien** (Ammonit, Trilobit, Bernstein …) und **Kristalle** aus, alles landet im Sammelbuch. Mit **M**
+öffnet sich Thalias **Dorfkarte**. Und **samstags ab 19 Uhr** ist Party auf dem Dorfplatz – mit
+Lichterketten, allen Bewohnern und einem Tanz mit Thalia. 💃
+
 Im Menü: Aussehen ändern, speichern, **Spielstand exportieren/laden** (als Datei – praktisch zum Sichern
 oder für ein anderes Gerät), Vollbild, Hilfe.
 
@@ -137,6 +143,10 @@ und jede Jahreszeit sieht anders aus.
 | Praxis Dr. Lars | Gesundheits-Check | Apotheke |
 |---|---|---|
 | ![Praxis](docs/screenshots/3d-praxis.png) | ![Check](docs/screenshots/3d-checkup.png) | ![Apotheke](docs/screenshots/3d-apotheke.png) |
+
+| Grabstelle | Dorfkarte | Samstags-Party |
+|---|---|---|
+| ![Grabstelle](docs/screenshots/3d-grabstelle.png) | ![Karte](docs/screenshots/3d-dorfkarte.png) | ![Party](docs/screenshots/3d-party.png) |
 
 | Sammelbuch | Regen |
 |---|---|

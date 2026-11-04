@@ -146,8 +146,16 @@ Legende: ✅ erledigt · 🚧 in Arbeit · ⬜ geplant
 - ✅ Täglicher Gesundheits-Check („🩺 Durchchecken lassen“) mit kleiner Belohnung
 - ✅ Bewohner gehen beim Ansprechen vor Winston
 
+**M7d ✅ Thalia**
+- ✅ Ankündigungsbrief, gelbes Häuschen hinter der Brücke, Begrüßungsszene
+- ✅ Schaufel (Taste 4): jeden Tag ein paar funkelnde Grabstellen – 7 Fossilien & 4 Kristalle,
+  neuer Sammelbuch-Reiter „🦴 Funde“
+- ✅ Thalias Dorfkarte (Taste M / 🗺️) mit Häusern, Bewohnern und Lina
+- ✅ Samstags 19–22 Uhr Party auf dem Dorfplatz: Lichterketten & Wimpel, alle Bewohner kommen,
+  „💃 Tanzen!“ mit Thalia (Freundschaft für alle)
+- ✅ Herz-Geschenke: Fossilien-Vitrine, Globus
+
 - ⬜ Galerie (Kunstwerke sammeln & ausstellen)
-- ⬜ Story-Einzug: Thalia (mit eigener Szene)
 - ⬜ Lars: Praxis/Apotheke (Heiltränke, Pflaster), Gesundheitstipps
 - ⬜ Olaf: Sparbuch mit kleinen Zinsen (Kredit gibt's schon seit M6a)
 - ⬜ Jens: Bistro/Kochstudio (Rezepte) & Galerie (Kunstwerke sammeln/ausstellen)
