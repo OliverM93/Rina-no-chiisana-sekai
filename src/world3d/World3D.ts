@@ -161,6 +161,8 @@ export class World3D {
   /** erst nach dem Verlassen eines Ausgangs-Feldes darf er wieder auslösen */
   private exitArmed = true;
   private winston: Winston | null = null;
+  /** Automatisches Gehen (Tür-Animation) */
+  private autoWalk: { dx: number; dy: number; until: number } | null = null;
   private yard: Yard3D;
   private animals: Animals3D;
   private digSpots: DigSpots3D;
@@ -337,7 +339,9 @@ export class World3D {
         }
       }
       const blocked = this.session.uiBlocking || this.cutscene;
-      const intent = blocked ? { dx: 0, dy: 0, run: false } : this.keys.direction();
+      const auto = this.autoWalk && performance.now() < this.autoWalk.until ? this.autoWalk : null;
+      if (!auto) this.autoWalk = null;
+      const intent = auto ? { dx: auto.dx, dy: auto.dy, run: false } : blocked ? { dx: 0, dy: 0, run: false } : this.keys.direction();
       if (blocked && player.hasPath && !this.cutscene) player.cancelPath();
       const grid = this.session.map.grid;
       if (this.fishing.active && (intent.dx !== 0 || intent.dy !== 0 || player.hasPath)) this.stopFishing();
@@ -348,7 +352,8 @@ export class World3D {
         : (tx: number, ty: number) => grid.isBlocked(tx, ty);
       // drinnen bleibt Lina beim Einrichten stehen, im Garten darf sie herumlaufen
       if (this.session.decorActive && this.session.inside) intent.dx = intent.dy = 0;
-      player.update(dtMs, intent, solid);
+      // beim Durch-die-Tür-Gehen: keine Kollision (sonst stünde Lina vor der Hauswand)
+      player.update(dtMs, intent, auto ? () => false : solid);
       this.updateWinston(dtMs, player, blocked, solid);
       this.updateHomeOli(dtMs);
       if (this.session.inside && !this.session.decorActive) {
@@ -1137,7 +1142,7 @@ export class World3D {
       return;
     }
     if (id === 'haus-lina') {
-      this.enterHome();
+      this.doorTransition('up', () => this.enterHome(), 'up');
       return;
     }
     if (id === 'haus-thalia') {
@@ -1658,7 +1663,7 @@ export class World3D {
         title,
         lines: ['Aus dem Haus duftet es herrlich, drinnen wird gelacht.', '„Lina! Komm rein, komm rein – mir sitzen schon alle am Tisch!“'],
         choices: [
-          { label: '🍽️ Reingehen & mitessen', onSelect: () => this.sundayDinner(jens) },
+          { label: '🍽️ Reingehen & mitessen', onSelect: () => this.doorTransition('up', () => this.sundayDinner(jens), 'down') },
           { label: '👋 Später', onSelect: () => undefined },
         ],
       });
@@ -2101,8 +2106,46 @@ export class World3D {
   }
 
   private useExit(e: Exit) {
-    if (e.to === 'draussen') this.exitHome();
-    else this.placeInRoom(e.to, this.session.roomId);
+    if (this.cutscene) return;
+    if (e.to === 'draussen') this.doorTransition('down', () => this.exitHome(), 'down');
+    else this.doorTransition(e.dir, () => this.placeInRoom(e.to, this.session.roomId), e.dir === 'up' ? 'down' : 'up');
+  }
+
+  /**
+   * Tür-Animation: Lina geht ein paar Schritte (`dirIn`), das Bild blendet weich ab, `action` wechselt
+   * den Ort, dann blendet es wieder auf und Lina geht ein Stück weiter (`dirOut`). Winston kommt mit.
+   */
+  private doorTransition(dirIn: 'up' | 'down', action: () => void, dirOut: 'up' | 'down') {
+    const player = this.player;
+    if (!player || this.cutscene) return;
+    this.cutscene = true;
+    player.cancelPath();
+    if (player.sitting) this.standUp();
+    this.marker.visible = false;
+    const dy = (d: 'up' | 'down') => (d === 'up' ? -1 : 1);
+    player.face(dirIn);
+    this.autoWalk = { dx: 0, dy: dy(dirIn), until: performance.now() + 380 };
+    this.session.bus.emit('overlay:fade', true);
+    window.setTimeout(() => {
+      this.autoWalk = null;
+      action();
+      const p = this.player;
+      if (p) {
+        // ein Stück zurück „in die Tür“ setzen, damit Lina heraustreten kann
+        p.teleport(p.x, p.y - dy(dirOut) * 22);
+        p.face(dirOut);
+        this.dogFollow();
+      }
+      window.setTimeout(() => {
+        this.session.bus.emit('overlay:fade', false);
+        this.autoWalk = { dx: 0, dy: dy(dirOut), until: performance.now() + 260 };
+        window.setTimeout(() => {
+          this.autoWalk = null;
+          this.cutscene = false;
+          this.exitArmed = false;
+        }, 300);
+      }, 120);
+    }, 420);
   }
 
   private enterHome() {

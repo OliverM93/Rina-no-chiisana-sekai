@@ -179,6 +179,8 @@ Legende: ✅ erledigt · 🚧 in Arbeit · ⬜ geplant
   (respektvoll), True Crime „Wahre Fälle vom Land“, Kochshow „Kochen mit Herz“ – jeden Tag neue Folgen
 - ✅ Oli schaut mit, wenn er zu Hause ist (Kommentare, Freundschaft); Kochshow bringt 3 neue Rezepte bei
 - ✅ Küchenzeile mit Herd & Sofa im Katalog – Lina kocht zu Hause
+- ✅ Tür-Animation beim Betreten & Verlassen von Gebäuden (Lina geht hinein, weiches Abblenden, tritt heraus)
+- ✅ Lina im Sommer: kurzes schwarzes Oberteil mit kurzer Hose
 
 **M7g ✅ Treffen der Bewohner & Linas Streetwear**
 - ✅ Kaffeeklatsch an Omas Bank (Mo/Mi/Fr 15–17), Angeln am Fluss (Olaf & Christin, Di/Do/Sa 16–18),

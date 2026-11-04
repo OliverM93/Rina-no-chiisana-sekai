@@ -37,10 +37,13 @@ export function Hud({ session }: { session: Session }) {
   const { inside, inYard, decor } = useHomeState(session);
   const [stars, setStars] = useState(false);
   useEffect(() => session.bus.on('overlay:stars', setStars), [session]);
+  const [fade, setFade] = useState(false);
+  useEffect(() => session.bus.on('overlay:fade', setFade), [session]);
   return (
     <>
       {weather.rainbow && <div class="rainbow-overlay" aria-hidden="true" />}
       {stars && <StarsOverlay />}
+      <div class={`door-fade ${fade ? 'on' : ''}`} aria-hidden="true" />
       {isFireworkTime(now) && !inside && <FireworksOverlay />}
       <div class="hud-clock pop-in">
         <div class="hud-time">

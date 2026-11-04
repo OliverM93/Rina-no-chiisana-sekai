@@ -1679,3 +1679,19 @@ body {
   gap: 6px;
   margin-top: 10px;
 }
+
+/* ---------------------------------------------------------------- Tür-Animation */
+
+.door-fade {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(circle at 50% 55%, transparent 0%, var(--ui-text) 0%);
+  opacity: 0;
+  transition: opacity 0.38s ease-in-out;
+  z-index: 5;
+}
+
+.door-fade.on {
+  opacity: 1;
+}

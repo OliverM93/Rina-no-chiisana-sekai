@@ -54,7 +54,7 @@ describe('Aussehen', () => {
 
   it('Streetwear je nach Jahreszeit: Sommer kurz, Winter Fleece', () => {
     const a = { ...DEFAULT_LINA, outfit: 'saison' as const };
-    expect(outfitFor(a, 'sommer')).toBe('shorts');
+    expect(outfitFor(a, 'sommer')).toBe('sommer');
     expect(outfitFor(a, 'winter')).toBe('fleece');
     expect(outfitFor(a, 'herbst')).toBe('sweatshirt');
     expect(outfitFor({ ...a, outfit: 'kleid' }, 'winter')).toBe('kleid');

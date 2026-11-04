@@ -107,6 +107,8 @@ export type GameEvents = {
   'home:yard': boolean;
   /** Sternenhimmel mit Sternschnuppen einblenden (Sterne gucken mit Oli) */
   'overlay:stars': boolean;
+  /** Weiches Abblenden (Tür-Animation): true = dunkel */
+  'overlay:fade': boolean;
   /** Einrichtungsmodus: an/aus, was gerade gehalten wird */
   'decor:state': DecorState;
   /** Oberfläche → Welt: Einrichten steuern */
