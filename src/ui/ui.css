@@ -1365,6 +1365,17 @@ body {
 
 .card.bank {
   width: min(520px, 94vw);
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.bank-sub {
+  margin: 14px 0 2px;
+  font-size: 1.05rem;
+}
+
+.card.bank .bank-pay {
+  margin-top: 8px;
 }
 
 .bank-row {

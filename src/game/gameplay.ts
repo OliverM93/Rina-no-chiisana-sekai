@@ -5,6 +5,8 @@
  * Die Funktionen ändern `session.data` und melden Änderungen über den Bus.
  * Darstellung (Phaser/Preact) passiert woanders.
  */
+import { creditInterest } from '../core/bank';
+import { INTEREST_LETTERS } from '../data/npcs/olaf';
 import { dailySpawns, type DailySpawn, weightedPick } from '../core/daily';
 import { type DialogueContext, pickLine } from '../core/dialogue';
 import { claimHeartRewards, createNpcState, giveGift, type GiftReaction, heartsFor, type NpcState, talk } from '../core/friendship';
@@ -318,12 +320,31 @@ export function checkDailyMail(session: Session) {
   if (data.mail.lastCheckDay === day) return;
   const firstCheck = data.mail.lastCheckDay === '';
   data.mail.lastCheckDay = day;
+  creditMonthlyInterest(session);
   if (firstCheck) return; // Am Einzugstag gibt es den Willkommensbrief (siehe welcomeLetter)
   for (const npc of NPCS) {
     if (npc.letters.length === 0 || !mailDue(day, npc.id)) continue;
     const tmpl = pickByDay(session, `${npc.id}:brief`, npc.letters);
     sendLetter(session, npc, tmpl, `${npc.id}-${tmpl.id}-${day}`);
   }
+}
+
+/** Monatsanfang: Zinsen aufs Sparbuch, dazu ein Kontoauszug-Brief von Papa (Olaf) */
+export function creditMonthlyInterest(session: Session): number {
+  const data = session.data;
+  if (!data) return 0;
+  const z = creditInterest(data.bank, session.today());
+  const olaf = NPC_BY_ID.olaf;
+  if (z > 0 && olaf) {
+    const tmpl = pickByDay(session, 'olaf:zinsen', INTEREST_LETTERS);
+    sendLetter(
+      session,
+      olaf,
+      { ...tmpl, body: tmpl.body.replace('{zinsen}', formatMoney(z)).replace('{guthaben}', formatMoney(data.bank.savings)) },
+      `olaf-zinsen-${data.bank.interestMonth}`,
+    );
+  }
+  return z;
 }
 
 export const WELCOME_LETTER: LetterTemplate = {
