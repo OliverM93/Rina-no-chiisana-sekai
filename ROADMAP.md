@@ -120,9 +120,19 @@ Legende: ✅ erledigt · 🚧 in Arbeit · ⬜ geplant
 - ✅ Oma, Olaf & Christin freuen sich über Eier und haben etwas zu den Tieren zu sagen
 - ✅ Spielstand Version 9 (Abholtage der Ställe)
 
-## ⬜ M7 – Alle Bewohner, Shops & Events
+## 🚧 M7 – Alle Bewohner, Shops & Events
 
-- ⬜ Story-Einzüge: Oli, Lars, Jens, Thalia (jeweils mit eigener Szene) – Olaf & Christin sind schon da (M6a)
+**M7a ✅ Oli zieht bei Lina ein**
+- ✅ Ankündigungsbrief, Einzug am nächsten Tag direkt in Linas Haus (Begrüßungsszene, nennt sie „Lini“)
+- ✅ Tagesablauf: Kaffee, Training, Programmieren, Kochen, Punk am Strand – zu Hause sieht man ihn drinnen
+  (am Schreibtisch, an der Kaffeemaschine, an der Hantelbank, nachts auf dem Futon)
+- ✅ Bringt Schreibtisch & Hantelbank mit; Herz-Briefe: Kaffeemaschine, Plattenspieler, Mixtape, Sternenlampe, Foto
+- ✅ Gemeinsame Momente: 🧺 Picknick (tagsüber) und 🌠 Sterne gucken mit Sternschnuppen (abends)
+- ✅ Spielstand Version 10
+
+**M7b ⬜** Jens zieht ein: Bistro & Kochstudio (aus Eiern, Obst, Fisch … kochen), Galerie
+
+- ⬜ Story-Einzüge: Lars, Jens, Thalia (jeweils mit eigener Szene)
 - ⬜ Lars: Praxis/Apotheke (Heiltränke, Pflaster), Gesundheitstipps
 - ⬜ Olaf: Sparbuch mit kleinen Zinsen (Kredit gibt's schon seit M6a)
 - ⬜ Jens: Bistro/Kochstudio (Rezepte) & Galerie (Kunstwerke sammeln/ausstellen)

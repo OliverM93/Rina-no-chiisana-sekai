@@ -27,7 +27,7 @@ interface Entry {
 
 function entries(tab: Tab): Entry[] {
   if (tab === 'moebel') {
-    return FURNITURE.filter((f) => !f.crafted).map((f) => ({
+    return FURNITURE.filter((f) => !f.crafted && !f.gift).map((f) => ({
       id: f.id,
       name: f.name,
       price: f.price,

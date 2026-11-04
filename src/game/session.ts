@@ -99,6 +99,8 @@ export type GameEvents = {
   'home:inside': boolean;
   /** Lina betritt/verlässt ihren Garten (draußen) */
   'home:yard': boolean;
+  /** Sternenhimmel mit Sternschnuppen einblenden (Sterne gucken mit Oli) */
+  'overlay:stars': boolean;
   /** Einrichtungsmodus: an/aus, was gerade gehalten wird */
   'decor:state': DecorState;
   /** Oberfläche → Welt: Einrichten steuern */

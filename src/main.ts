@@ -27,6 +27,8 @@ const cssVars: Record<string, string> = {
   '--ui-mint': palette.ui.mint,
   '--ui-butter': palette.ui.butter,
   '--ui-sky': palette.ui.sky,
+  '--night-sky': palette.night.sky,
+  '--night-star': palette.night.star,
   '--rb-red': palette.rainbow.red,
   '--rb-orange': palette.rainbow.orange,
   '--rb-yellow': palette.rainbow.yellow,

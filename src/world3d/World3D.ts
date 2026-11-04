@@ -41,6 +41,10 @@ import { checkStory } from '../game/story';
 import { HOUSE_STAGES } from '../data/house';
 import { CHRISTIN_WELCOME } from '../data/npcs/christin';
 import { OLAF_WELCOME } from '../data/npcs/olaf';
+import { OLI_WELCOME } from '../data/npcs/oli';
+import { canDate, type DateKind, haveDate } from '../game/romance';
+import { makePicnic } from './models/buildings';
+import { addFriendship } from '../game/gameplay';
 import type { DecorCommand } from '../game/session';
 import {
   biteFish,
@@ -146,6 +150,9 @@ export class World3D {
   private winston: Winston | null = null;
   private yard: Yard3D;
   private animals: Animals3D;
+  /** Oli drinnen (wenn er zu Hause ist und Lina auch) */
+  private homeOli: Character | null = null;
+  private homeOliKey = '';
   /** Wie lange Lina schon stillsteht (für Winstons Buddeln & Körbchen) */
   private linaIdle = 0;
   private basketCheck = 0;
@@ -303,6 +310,7 @@ export class World3D {
       if (this.session.decorActive && this.session.inside) intent.dx = intent.dy = 0;
       player.update(dtMs, intent, solid);
       this.updateWinston(dtMs, player, blocked, solid);
+      this.updateHomeOli(dtMs);
       if (this.session.inside && !this.session.decorActive) {
         const t = player.tile;
         const lay = this.lay;
@@ -528,6 +536,9 @@ export class World3D {
     }
     this.syncMapObjects();
     this.refreshYard();
+    if ((events.includes('oli-eingezogen') || (data.flags.oliEingezogen && !data.flags.oliBegruesst)) && data.flags.olafBegruesst) {
+      window.setTimeout(() => this.oliArrival(), 2500);
+    }
     if ((events.includes('olaf-eingezogen') || (data.flags.olafEingezogen && !data.flags.olafBegruesst)) && data.flags.giselaWelcomed) {
       window.setTimeout(() => this.arrivalScene(), 2500);
     }
@@ -684,6 +695,9 @@ export class World3D {
     if (target?.kind === 'winston' && this.winston) {
       key = 'winston';
       pos = this.winston.dog.root.position.clone().add(new THREE.Vector3(0, 0.62, 0));
+    } else if (target?.kind === 'npc' && this.session.inside && this.homeOli?.visible && target.npc.def.id === 'oli') {
+      key = 'npc:oli-home';
+      pos = this.homeOli.root.position.clone().add(new THREE.Vector3(0, this.homeOli.sitting ? 0.9 : 1.15, 0));
     } else if (target?.kind === 'npc') {
       key = `npc:${target.npc.def.id}`;
       pos = target.npc.char.root.position.clone().add(new THREE.Vector3(0, target.npc.bubbleHeight, 0));
@@ -719,6 +733,14 @@ export class World3D {
   private resolveTarget(player: Character): Target | null {
     const tile = player.tile;
     if (this.winstonInFront(player)) return { kind: 'winston' };
+    if (this.session.inside && this.homeOli?.visible) {
+      const [hx, hy] = DIRS[player.facing];
+      const dx = this.homeOli.x - player.x;
+      const dy = this.homeOli.y - player.y;
+      const d = Math.hypot(dx, dy);
+      const oli = this.npcs.get('oli');
+      if (oli && d < TILE * 1.4 && dx * hx + dy * hy > d * 0.3) return { kind: 'npc', npc: oli };
+    }
     if (this.session.inside) return this.homeTarget(player);
     const pickup = this.collectibles.pickupNear(tile, player.facing, player.x, player.y);
     if (pickup) return { kind: 'pickup', id: pickup };
@@ -1061,7 +1083,10 @@ export class World3D {
     const player = this.player;
     if (!player) return;
     npc.startTalk(player.x, player.y);
-    player.faceTowards(npc.x, npc.y);
+    if (this.homeOli?.visible && npc.def.id === 'oli') {
+      player.faceTowards(this.homeOli.x, this.homeOli.y);
+      if (!this.homeOli.sitting) this.homeOli.faceTowards(player.x, player.y);
+    } else player.faceTowards(npc.x, npc.y);
     const data = this.session.data;
     if (npc.def.id === 'gisela' && data?.flags.giselaWelcomed && !data.flags.toolsGiven) {
       this.session.bus.emit('dialog:open', {
@@ -1108,6 +1133,17 @@ export class World3D {
               onCancel: () => this.npcDialog(npc, [id === 'gisela' ? 'Na? Doch nichts? Macht nix, Kindchen.' : 'Doch nichts? Kein Problem!'], npcHearts(this.session, id)),
             }),
         },
+        ...(id === 'oli'
+          ? (['picknick', 'sterne'] as const)
+              .filter((k) => canDate(this.session, k))
+              .map((k) => ({
+                label: k === 'picknick' ? '🧺 Picknick machen' : '🌠 Sterne gucken',
+                onSelect: () => {
+                  npc.endTalk();
+                  this.dateScene(k);
+                },
+              }))
+          : []),
         ...(id === 'olaf'
           ? [
               {
@@ -1306,6 +1342,173 @@ export class World3D {
       const id = findInteraction(map, t, player.facing, this.interactive);
       this.useObject(id ?? obj.id);
     });
+  }
+
+  // -------------------------------------------------------------------------
+  // Oli
+  // -------------------------------------------------------------------------
+
+  /** Oli drinnen zeigen, wenn er zu Hause ist: am Schreibtisch, an der Kaffeemaschine, auf dem Futon … */
+  private updateHomeOli(dtMs: number) {
+    const oli = this.npcs.get('oli');
+    const room = this.room;
+    const show = !!oli && oli.movedIn && this.session.inside && oli.atHome && !!room && !this.cutscene;
+    if (!show || !oli || !room) {
+      if (this.homeOli) this.homeOli.setVisible(false);
+      this.homeOliKey = '';
+      return;
+    }
+    if (!this.homeOli) {
+      this.homeOli = new Character(this.scene, oli.def.appearance, 0, 0, 'down', () => 0, this.session.season);
+      this.homeOli.speedFactor = 0.7;
+    }
+    const c = this.homeOli;
+    const label = oli.currentEntry?.label ?? '';
+    const key = `${this.session.roomId}|${label}|${oli.isSleeping}|${JSON.stringify(room.items)}`;
+    if (key !== this.homeOliKey) {
+      this.homeOliKey = key;
+      const spot = this.homeOliSpot(room, label, oli.isSleeping);
+      if (!spot) {
+        c.setVisible(false);
+        return;
+      }
+      c.setVisible(true);
+      c.setSitting(false);
+      c.teleport((ROOM_X + spot.x) * TILE, (ROOM_Y + spot.y) * TILE);
+      if (spot.lie !== undefined) {
+        c.setSitting(true);
+        c.seatHeight = spot.lie;
+      } else c.face(spot.facing);
+    }
+    if (c.visible) c.update(dtMs, { dx: 0, dy: 0, run: false }, () => true);
+  }
+
+  /** Wo steht Oli gerade im Zimmer? (Zimmerkoordinaten, Feldmitte = +0.5) */
+  private homeOliSpot(room: Room, label: string, sleeping: boolean): { x: number; y: number; facing: 'up' | 'down' | 'left' | 'right'; lie?: number } | null {
+    const find = (pred: (id: string) => boolean) => room.items.find((i) => pred(FURNITURE_BY_ITEM[i.itemId]?.def.id ?? ''));
+    if (sleeping) {
+      const futon = find((id) => id === 'futon');
+      if (!futon) return null;
+      const fp = footprint(FURNITURE_BY_ITEM[futon.itemId].def, futon.rot);
+      return { x: futon.x + fp.w / 2, y: futon.y + fp.d / 2 + 0.15, facing: 'down', lie: (this.interior.model(futon.uid)?.seatY ?? 0.1) + 0.02 };
+    }
+    const anchorIds = /Kaffee|kocht/.test(label) ? ['kaffeemaschine', 'kotatsu', 'chabudai'] : /programmiert/.test(label) ? ['schreibtisch-pc'] : /trainiert/.test(label) ? ['hantelbank'] : [];
+    const grid = this.roomGrid();
+    const free = (x: number, y: number) => x >= 0 && y >= 0 && x < this.lay.w && y < this.lay.h && !grid.isBlocked(x, y) && !exitAt(this.lay, x, y);
+    for (const id of anchorIds) {
+      const a = find((x) => x === id);
+      if (!a) continue;
+      // Kleines steht auf einem Tisch – dann zählt der Tisch
+      const base = a.on ? room.items.find((i) => i.uid === a.on) ?? a : a;
+      const fp = footprint(FURNITURE_BY_ITEM[base.itemId].def, base.rot);
+      const around: Array<[number, number, 'up' | 'down' | 'left' | 'right']> = [];
+      for (let dx = 0; dx < fp.w; dx++) around.push([base.x + dx, base.y + fp.d, 'up'], [base.x + dx, base.y - 1, 'down']);
+      for (let dy = 0; dy < fp.d; dy++) around.push([base.x - 1, base.y + dy, 'right'], [base.x + fp.w, base.y + dy, 'left']);
+      const hit = around.find(([x, y]) => free(x, y));
+      if (hit) return { x: hit[0] + 0.5, y: hit[1] + 0.62, facing: hit[2] };
+    }
+    // sonst: ein freier Platz im Zimmer (immer derselbe für diesen Raum)
+    const cx = Math.floor(this.lay.w / 2) + 1;
+    const cy = Math.floor(this.lay.h / 2);
+    for (let r = 0; r < 6; r++) for (let dx = -r; dx <= r; dx++) for (let dy = -r; dy <= r; dy++) if (free(cx + dx, cy + dy)) return { x: cx + dx + 0.5, y: cy + dy + 0.62, facing: 'down' };
+    return null;
+  }
+
+  /** Oli zieht ein: kommt mit Koffer zu Lina */
+  private oliArrival() {
+    const player = this.player;
+    const oli = this.npcs.get('oli');
+    const data = this.session.data;
+    if (!player || !oli || !data || data.flags.oliBegruesst) return;
+    if (this.cutscene || this.session.inside || this.session.uiBlocking) {
+      window.setTimeout(() => this.oliArrival(), 4000);
+      return;
+    }
+    this.cutscene = true;
+    player.cancelPath();
+    const grid = this.session.map.grid;
+    const lt = player.tile;
+    const meet = nearestWalkable(grid, { x: lt.x + 1, y: lt.y }, lt) ?? lt;
+    oli.scriptPlace(nearestWalkable(grid, { x: lt.x + 3, y: lt.y + 4 }, lt) ?? lt);
+    let arrived = false;
+    const done = () => {
+      if (arrived) return;
+      arrived = true;
+      oli.char.faceTowards(player.x, player.y);
+      player.faceTowards(oli.x, oli.y);
+      const ctx = this.session.interactionContext();
+      this.session.bus.emit('dialog:open', {
+        title: oli.def.name,
+        lines: OLI_WELCOME.map((l) => fillPlaceholders(l, ctx)),
+        onClose: () => {
+          giveItem(this.session, 'schreibtisch-pc', 1);
+          giveItem(this.session, 'hantelbank', 1);
+          // Oli startet mit einem Herz (und schickt gleich seinen ersten Herz-Brief)
+          addFriendship(this.session, 'oli', 40);
+          this.session.setFlag('oliBegruesst');
+          this.session.save();
+          oli.scriptDone();
+          this.cutscene = false;
+          this.winston?.pet(false);
+        },
+      });
+    };
+    oli.scriptWalkTo(meet, done);
+    window.setTimeout(() => {
+      if (arrived) return;
+      oli.scriptPlace(meet);
+      done();
+    }, 12000);
+  }
+
+  /** Picknick oder Sterne gucken mit Oli */
+  private dateScene(kind: DateKind) {
+    const player = this.player;
+    const oli = this.npcs.get('oli');
+    if (!player || !oli) return;
+    if (this.session.inside) this.exitHome();
+    this.stopFishing();
+    this.cutscene = true;
+    const grid = this.session.map.grid;
+    const want = kind === 'picknick' ? { x: 9, y: 22 } : { x: 33, y: 31 };
+    let a = nearestWalkable(grid, want) ?? player.tile;
+    let b = { x: a.x + 1, y: a.y };
+    if (grid.isBlocked(b.x, b.y)) {
+      b = a;
+      a = { x: a.x - 1, y: a.y };
+    }
+    const blanket = makePicnic();
+    const gy = Math.max(0, this.view.terrain.heightAt(a.x + 1, a.y + 0.5));
+    blanket.position.set(a.x + 1, gy, a.y + 0.55);
+    this.scene.add(blanket);
+    const seat = gy + 0.04;
+    player.teleport((a.x + 0.5) * TILE, (a.y + 0.5) * TILE + 10);
+    player.setSitting(true);
+    player.seatHeight = seat;
+    oli.scriptPlace(b);
+    oli.char.teleport((b.x + 0.5) * TILE, (b.y + 0.5) * TILE + 10);
+    oli.char.setSitting(true);
+    oli.char.seatHeight = seat;
+    this.camTarget.set(player.x * UNIT, 0, player.y * UNIT);
+    this.dogFollow();
+    if (kind === 'sterne') this.session.bus.emit('overlay:stars', true);
+    window.setTimeout(() => {
+      const lines = haveDate(this.session, kind);
+      this.winston?.burst('herz');
+      this.session.bus.emit('dialog:open', {
+        title: oli.def.name,
+        lines,
+        onClose: () => {
+          blanket.removeFromParent();
+          player.setSitting(false);
+          oli.char.setSitting(false);
+          oli.scriptDone();
+          this.session.bus.emit('overlay:stars', false);
+          this.session.bus.emit('toast', { text: kind === 'picknick' ? 'Was für ein schönes Picknick! 💕' : 'Was für ein Sternenhimmel … 💫' });
+          this.cutscene = false;
+        },
+      });
+    }, 900);
   }
 
   // -------------------------------------------------------------------------

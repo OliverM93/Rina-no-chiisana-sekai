@@ -68,6 +68,8 @@ const list: ItemDef[] = [
   // Essen & Geschenke
   { id: 'ei', name: 'Ei', plural: 'Eier', category: 'essen', price: 20, description: 'Noch ganz warm. Von Linas eigenen Hühnern! 🥚' },
   { id: 'wachtelei', name: 'Wachtelei', plural: 'Wachteleier', category: 'essen', price: 14, description: 'Winzig, gesprenkelt und sehr niedlich.' },
+  { id: 'mixtape', name: 'Olis Mixtape', plural: 'Olis Mixtapes', category: 'geschenk', price: null, maxStack: 1, description: 'Eine Kassette mit Herzchen drauf. Seite A: Punk. Seite B: auch Punk. Aber mit Liebe.' },
+  { id: 'foto-lina-oli', name: 'Foto von Lina & Oli', plural: 'Fotos von Lina & Oli', category: 'geschenk', price: null, maxStack: 1, description: 'Ihr zwei, lachend, mit Winston dazwischen. Auf der Rückseite: „Für immer. Dein Oli.“' },
   { id: 'keks', name: 'Omas Keks', plural: 'Omas Kekse', category: 'essen', price: 5, description: 'Butterkeks nach Oma Giselas Geheimrezept. Keine Widerrede!' },
   { id: 'strickschal', name: 'Gestrickter Schal', plural: 'Gestrickte Schals', category: 'geschenk', price: null, maxStack: 1, description: 'Von Oma Gisela gestrickt. Natürlich in Rosa – „Rosa steht dir.“' },
   { id: 'omas-foto', name: 'Foto von Oma Gisela', plural: 'Fotos von Oma Gisela', category: 'geschenk', price: null, maxStack: 1, description: 'Oma Gisela auf ihrer Bank, mit Kaffeetasse und sehr ernstem Blick. Auf der Rückseite: „Für Lina. Gut aufheben!“' },

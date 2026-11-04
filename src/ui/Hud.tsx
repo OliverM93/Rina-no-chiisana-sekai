@@ -34,9 +34,12 @@ export function Hud({ session }: { session: Session }) {
   const weather = currentWeather(session);
   const tools = ownedTools(session);
   const { inside, inYard, decor } = useHomeState(session);
+  const [stars, setStars] = useState(false);
+  useEffect(() => session.bus.on('overlay:stars', setStars), [session]);
   return (
     <>
       {weather.rainbow && <div class="rainbow-overlay" aria-hidden="true" />}
+      {stars && <StarsOverlay />}
       <div class="hud-clock pop-in">
         <div class="hud-time">
           <span class="hud-phase">{PHASE_ICON[getDayPhase(now)]}</span>
@@ -83,5 +86,20 @@ export function Hud({ session }: { session: Session }) {
         </div>
       )}
     </>
+  );
+}
+
+/** Sternenhimmel oben im Bild mit ein paar Sternschnuppen (die Kamera zeigt keinen echten Himmel) */
+function StarsOverlay() {
+  const stars = Array.from({ length: 46 }, (_, i) => ({ x: (i * 37.7) % 100, y: ((i * 53.3) % 40) + (i % 3) * 2, s: 1 + (i % 3), d: (i % 7) * 0.4 }));
+  return (
+    <div class="stars-overlay" aria-hidden="true">
+      {stars.map((st, i) => (
+        <span key={i} class="star" style={{ left: `${st.x}%`, top: `${st.y}%`, width: `${st.s}px`, height: `${st.s}px`, animationDelay: `${st.d}s` }} />
+      ))}
+      {[0, 1, 2].map((i) => (
+        <span key={`s${i}`} class="shooting-star" style={{ top: `${8 + i * 9}%`, left: `${20 + i * 25}%`, animationDelay: `${1 + i * 2.3}s` }} />
+      ))}
+    </div>
   );
 }

@@ -268,6 +268,93 @@ export function makeFurniture(itemId: string, links: FenceLinks = { n: false, e:
       }
       break;
     }
+    // ---- Olis Sachen ----
+    case 'schreibtisch-pc': {
+      g.add(b(1.8, 0.05, 0.62, '#3a3a44', 0, 0.72, -0.05));
+      for (const x of [-0.85, 0.85]) g.add(b(0.06, 0.72, 0.56, '#2b2a31', x, 0.36, -0.05));
+      // zwei Bildschirme
+      for (const [x, ry] of [[-0.35, 0.18], [0.35, -0.18]] as const) {
+        const scr = new THREE.Group();
+        scr.position.set(x, 0.75, -0.25);
+        scr.rotation.y = ry;
+        scr.add(b(0.06, 0.2, 0.06, '#2b2a31', 0, 0.1, 0));
+        scr.add(b(0.6, 0.36, 0.04, '#2b2a31', 0, 0.38, 0));
+        const screen = new THREE.MeshToonMaterial({ color: '#2a3a5a', emissive: '#4a8ad8', emissiveIntensity: 0.6 });
+        scr.add(b(0.54, 0.3, 0.01, screen, 0, 0.38, 0.022));
+        // Code-Zeilen
+        for (let i = 0; i < 5; i++) scr.add(b(0.12 + ((i * 7) % 5) * 0.06, 0.018, 0.005, i % 2 ? '#7ad8a0' : '#f4a3b8', -0.18 + ((i * 7) % 5) * 0.03, 0.48 - i * 0.05, 0.03));
+        g.add(scr);
+      }
+      // leuchtende Tastatur & Maus
+      g.add(b(0.5, 0.025, 0.16, new THREE.MeshToonMaterial({ color: '#3a3a44', emissive: '#c87af0', emissiveIntensity: 0.5 }), 0, 0.76, 0.1));
+      g.add(s(0.04, 0.02, 0.055, '#3a3a44', 0.38, 0.76, 0.1));
+      // Kaffeetasse
+      g.add(c(0.04, 0.08, '#f7f5ec', -0.65, 0.79, 0.08));
+      // Tower unterm Tisch
+      g.add(b(0.22, 0.48, 0.48, '#2b2a31', 0.62, 0.24, -0.05));
+      g.add(b(0.01, 0.4, 0.02, new THREE.MeshToonMaterial({ color: '#c87af0', emissive: '#c87af0', emissiveIntensity: 0.8 }), 0.51, 0.26, 0.18));
+      break;
+    }
+    case 'hantelbank': {
+      g.add(b(1.1, 0.08, 0.3, '#2b2a31', 0.1, 0.42, 0));
+      for (const x of [-0.35, 0.5]) g.add(b(0.06, 0.4, 0.06, '#8a8a96', x, 0.2, 0));
+      g.add(b(0.3, 0.04, 0.5, '#8a8a96', -0.35, 0.02, 0));
+      g.add(b(0.3, 0.04, 0.5, '#8a8a96', 0.5, 0.02, 0));
+      // Ablage + Langhantel
+      for (const z of [-0.32, 0.32]) g.add(b(0.05, 0.85, 0.05, '#8a8a96', -0.55, 0.43, z));
+      const bar = c(0.018, 1.5, '#c9cbd3', -0.55, 0.86, 0);
+      bar.rotation.x = Math.PI / 2;
+      g.add(bar);
+      for (const z of [-0.6, 0.6]) {
+        const plate = c(0.2, 0.05, '#2b2a31', -0.55, 0.86, z);
+        plate.rotation.x = Math.PI / 2;
+        g.add(plate);
+        const plate2 = c(0.15, 0.04, '#d9534f', -0.55, 0.86, z * 1.1);
+        plate2.rotation.x = Math.PI / 2;
+        g.add(plate2);
+      }
+      // Kurzhanteln am Boden
+      for (const z of [-0.15, 0.1]) {
+        g.add(c(0.012, 0.18, '#8a8a96', 0.75, 0.05, z).rotateZ(Math.PI / 2));
+        for (const x of [0.67, 0.83]) g.add(c(0.045, 0.04, '#2b2a31', x, 0.05, z).rotateZ(Math.PI / 2));
+      }
+      seatY = 0.46;
+      break;
+    }
+    case 'kaffeemaschine': {
+      g.add(b(0.26, 0.04, 0.22, '#3a3a44', 0, 0.02, 0));
+      g.add(b(0.26, 0.3, 0.12, '#c9cbd3', 0, 0.17, -0.05));
+      g.add(b(0.24, 0.06, 0.2, '#c9cbd3', 0, 0.32, 0));
+      g.add(c(0.035, 0.03, '#2b2a31', 0, 0.26, 0.06));
+      g.add(b(0.12, 0.02, 0.02, '#2b2a31', 0, 0.26, 0.1));
+      g.add(c(0.035, 0.05, '#f7f5ec', 0, 0.065, 0.04));
+      g.add(s(0.012, 0.012, 0.012, '#e8484f', 0.09, 0.22, 0.015));
+      break;
+    }
+    case 'plattenspieler': {
+      g.add(b(0.36, 0.08, 0.3, '#8a5a3a', 0, 0.04, 0));
+      g.add(c(0.12, 0.012, '#2b2a31', -0.04, 0.09, 0));
+      g.add(c(0.035, 0.014, '#e8484f', -0.04, 0.095, 0));
+      const arm = b(0.015, 0.012, 0.16, '#c9cbd3', 0.12, 0.1, 0.02);
+      arm.rotation.y = 0.4;
+      g.add(arm);
+      // Plattenstapel daneben
+      for (let i = 0; i < 3; i++) g.add(b(0.18, 0.01, 0.18, ['#2b2a31', '#f4a3b8', '#f7d26a'][i], 0, 0.006 + i * 0.012, 0.25).rotateY(i * 0.2));
+      break;
+    }
+    case 'sternenlampe': {
+      g.add(c(0.07, 0.05, '#5b6fa8', 0, 0.025, 0));
+      glow = glowMat('#fff3b0');
+      const ball = mesh(new THREE.IcosahedronGeometry(0.1, 0), glow);
+      ball.position.y = 0.15;
+      g.add(ball);
+      for (let i = 0; i < 6; i++) {
+        const a2 = (i / 6) * Math.PI * 2;
+        g.add(s(0.012, 0.012, 0.012, '#ffffff', Math.cos(a2) * 0.105, 0.15 + Math.sin(i * 1.7) * 0.05, Math.sin(a2) * 0.105));
+      }
+      lightAt = new THREE.Vector3(0, 0.15, 0);
+      break;
+    }
     // ---- Garten (draußen) ----
     case 'zaun-holz':
     case 'zaun-weiss':

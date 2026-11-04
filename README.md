@@ -71,6 +71,12 @@ baut Lina an der Werkbank. Keine Sorge: Haustür, Briefkasten, Beet und Wege ble
 Wachteln) aus dem Katalog kommt in den Garten – die Tiere trippeln drumherum, picken und hüpfen, wenn Lina sie
 streichelt. Jeden Tag liegen frische Eier im Nest (Leertaste am Stall). Nachts schlafen alle im Stall.
 
+**Oli (M7a):** Ein paar Tage nach Olaf kündigt Oli per Brief an, dass er zu „Lini“ zieht – am nächsten Tag
+steht er mit Koffer vor der Tür. Er wohnt bei Lina: Morgens macht er Kaffee, dann geht's zum Training, er
+programmiert, kocht und hört am Strand Punk. Ist er zu Hause, sieht man ihn drinnen am Schreibtisch, an der
+Kaffeemaschine oder an der Hantelbank. Mit ihm kann Lina tagsüber ein **🧺 Picknick** machen und abends
+**🌠 Sterne gucken** – mit Sternschnuppen.
+
 Im Menü: Aussehen ändern, speichern, **Spielstand exportieren/laden** (als Datei – praktisch zum Sichern
 oder für ein anderes Gerät), Vollbild, Hilfe.
 
@@ -108,6 +114,10 @@ und jede Jahreszeit sieht anders aus.
 | Hühner & Wachteln |
 |---|
 | ![Hühner](docs/screenshots/3d-huehner.png) |
+
+| Oli zieht ein | Oli zu Hause | Picknick | Sterne gucken |
+|---|---|---|---|
+| ![Einzug](docs/screenshots/3d-oli-einzug.png) | ![Zuhause](docs/screenshots/3d-oli-zuhause.png) | ![Picknick](docs/screenshots/3d-picknick.png) | ![Sterne](docs/screenshots/3d-sterne.png) |
 
 | Sammelbuch | Regen |
 |---|---|
