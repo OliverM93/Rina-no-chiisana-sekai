@@ -67,6 +67,10 @@ Lichterkette, Laternen, Kübel, Vogeltränke, Vogelhäuschen und einen Gartenwic
 sind zusätzliche Pflanzplätze. Gartensachen gibt's im Katalog (Stil „Garten“), Astzaun und Trittsteine
 baut Lina an der Werkbank. Keine Sorge: Haustür, Briefkasten, Beet und Wege bleiben immer erreichbar.
 
+**Hühner & Wachteln (M6d):** Ein **Hühnerstall** (mit drei Hühnern) oder ein **Wachtelstall** (mit vier
+Wachteln) aus dem Katalog kommt in den Garten – die Tiere trippeln drumherum, picken und hüpfen, wenn Lina sie
+streichelt. Jeden Tag liegen frische Eier im Nest (Leertaste am Stall). Nachts schlafen alle im Stall.
+
 Im Menü: Aussehen ändern, speichern, **Spielstand exportieren/laden** (als Datei – praktisch zum Sichern
 oder für ein anderes Gerät), Vollbild, Hilfe.
 
@@ -100,6 +104,10 @@ und jede Jahreszeit sieht anders aus.
 | Linas Garten | … am Abend | Garten gestalten |
 |---|---|---|
 | ![Garten](docs/screenshots/3d-garten.png) | ![Abend](docs/screenshots/3d-garten-abend.png) | ![Gestalten](docs/screenshots/3d-garten-gestalten.png) |
+
+| Hühner & Wachteln |
+|---|
+| ![Hühner](docs/screenshots/3d-huehner.png) |
 
 | Sammelbuch | Regen |
 |---|---|

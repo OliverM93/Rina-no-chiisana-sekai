@@ -29,8 +29,8 @@ export const GISELA: NpcDef = {
     { from: '22:00', label: 'schläft', activity: { kind: 'zuhause', sleeping: true } },
   ],
   preferences: {
-    loves: ['pfirsich', 'herzmuschel', 'wildblumen', 'rose', 'vergissmeinnicht', 'hering'],
-    likes: ['apfel', 'jakobsmuschel', 'schneckenhaus', 'seestern', 'glitzerstein', 'tulpe', 'lavendel', 'sonnenblume', 'scholle', 'dorsch', 'marienkaefer', 'zitronenfalter'],
+    loves: ['pfirsich', 'herzmuschel', 'wildblumen', 'rose', 'vergissmeinnicht', 'hering', 'ei'],
+    likes: ['wachtelei', 'apfel', 'jakobsmuschel', 'schneckenhaus', 'seestern', 'glitzerstein', 'tulpe', 'lavendel', 'sonnenblume', 'scholle', 'dorsch', 'marienkaefer', 'zitronenfalter'],
     dislikes: ['birne', 'ast', 'stein', 'waldameise', 'weinbergschnecke', 'maikaefer', 'heupferd', 'grashuepfer', 'ohrenqualle', 'aal', 'wels', 'strandkrabbe'],
   },
 
@@ -52,6 +52,8 @@ export const GISELA: NpcDef = {
       { text: ['Kindchen! Mein Lieblingsbesuch.', '… Ja, ich weiß, du bist mein einziger Besuch. Trotzdem.'], when: { minHearts: 2 } },
     ],
     chat: [
+      { text: ['Du hast Hühner? Wie Opa damals!', 'Der hatte eins, das hieß Frieda. Frieda hat jeden Morgen um fünf gekräht. Obwohl sie ein Huhn war.'], when: { tags: ['huehner'] }, weight: 3 },
+      { text: ['Wachteln! Die sind ja winzig.', 'Für ein Spiegelei brauchst du davon ungefähr zwölf. Sag ich nur.'], when: { tags: ['wachteln'] }, weight: 3 },
       { text: ['Neben deinem Haus steht noch Opas alte Werkbank.', 'Der hat da früher alles Mögliche gebaut. Aus Ästen! Aus Steinen! Einmal sogar einen Stuhl, der gehalten hat.'], weight: 2 },
       { text: ['Dein Winston ist ein feiner Hund.', 'Er hat mir heute zugehört. Ganz ohne Widerworte. Das kann hier sonst keiner.'] },
       { text: ['Winston hat mich vorhin angeguckt, als hätte er seit Wochen nichts gegessen.', 'Ich hab ihm ein Stückchen Leberwurstbrot gegeben. Sag\'s nicht weiter.'] },

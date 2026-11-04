@@ -66,6 +66,8 @@ const list: ItemDef[] = [
   { id: 'giesskanne', name: 'Gießkanne', plural: 'Gießkannen', category: 'werkzeug', price: null, maxStack: 1, description: 'Eine rosa Gießkanne für Linas Beet. Gießen = Wachsen!' },
 
   // Essen & Geschenke
+  { id: 'ei', name: 'Ei', plural: 'Eier', category: 'essen', price: 20, description: 'Noch ganz warm. Von Linas eigenen Hühnern! 🥚' },
+  { id: 'wachtelei', name: 'Wachtelei', plural: 'Wachteleier', category: 'essen', price: 14, description: 'Winzig, gesprenkelt und sehr niedlich.' },
   { id: 'keks', name: 'Omas Keks', plural: 'Omas Kekse', category: 'essen', price: 5, description: 'Butterkeks nach Oma Giselas Geheimrezept. Keine Widerrede!' },
   { id: 'strickschal', name: 'Gestrickter Schal', plural: 'Gestrickte Schals', category: 'geschenk', price: null, maxStack: 1, description: 'Von Oma Gisela gestrickt. Natürlich in Rosa – „Rosa steht dir.“' },
   { id: 'omas-foto', name: 'Foto von Oma Gisela', plural: 'Fotos von Oma Gisela', category: 'geschenk', price: null, maxStack: 1, description: 'Oma Gisela auf ihrer Bank, mit Kaffeetasse und sehr ernstem Blick. Auf der Rückseite: „Für Lina. Gut aufheben!“' },

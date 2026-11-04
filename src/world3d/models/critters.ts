@@ -271,3 +271,72 @@ export function makeWetPatch(): THREE.Mesh {
   m.position.y = 0.125;
   return m;
 }
+
+// ---------------------------------------------------------------------------
+// Hühner & Wachteln (Blick nach +Z). `body` nickt beim Picken.
+// ---------------------------------------------------------------------------
+
+export interface BirdModel {
+  group: THREE.Group;
+  /** Oberkörper/Kopf – dreht sich beim Picken nach vorn */
+  head: THREE.Group;
+  legs: THREE.Object3D[];
+}
+
+export function makeHen(color: string): BirdModel {
+  const g = new THREE.Group();
+  const head = new THREE.Group();
+  const legs: THREE.Object3D[] = [];
+  const dark = darken(color, 0.15);
+  g.add(p(sphere, color, 0.13, 0.12, 0.15, 0, 0.2, 0));
+  // Schwanzfedern
+  const tail = p(sphere, dark, 0.06, 0.1, 0.05, 0, 0.29, -0.13);
+  tail.rotation.x = -0.5;
+  g.add(tail);
+  // Flügel
+  for (const s of [-1, 1]) g.add(p(sphere, dark, 0.035, 0.08, 0.1, s * 0.12, 0.21, -0.01));
+  // Kopf (Drehpunkt am Hals)
+  head.position.set(0, 0.27, 0.1);
+  head.add(p(sphere, color, 0.075, 0.08, 0.075, 0, 0.07, 0.02));
+  head.add(p(cone, '#f2b134', 0.025, 0.05, 0.025, 0, 0.065, 0.1).rotateX(Math.PI / 2));
+  for (const z of [-0.02, 0.01, 0.04]) head.add(p(sphere, '#e8484f', 0.018, 0.03, 0.018, 0, 0.15, z));
+  head.add(p(sphere, '#e8484f', 0.015, 0.025, 0.012, 0, 0.03, 0.08));
+  for (const s of [-1, 1]) head.add(p(sphere, '#2b2a31', 0.012, 0.014, 0.008, s * 0.05, 0.09, 0.06));
+  g.add(head);
+  for (const s of [-1, 1]) {
+    const leg = new THREE.Group();
+    leg.position.set(s * 0.045, 0.1, 0);
+    leg.add(p(cyl, '#f2b134', 0.012, 0.1, 0.012, 0, -0.05, 0));
+    leg.add(p(sphere, '#f2b134', 0.03, 0.008, 0.04, 0, -0.1, 0.015));
+    g.add(leg);
+    legs.push(leg);
+  }
+  return { group: g, head, legs };
+}
+
+export function makeQuail(color: string): BirdModel {
+  const g = new THREE.Group();
+  const head = new THREE.Group();
+  const legs: THREE.Object3D[] = [];
+  g.add(p(sphere, color, 0.08, 0.07, 0.09, 0, 0.1, 0));
+  g.add(p(sphere, lighten(color, 0.2), 0.06, 0.05, 0.05, 0, 0.08, 0.05));
+  // Tupfen
+  for (const [x, y, z] of [[0.05, 0.13, -0.03], [-0.05, 0.12, -0.04], [0.02, 0.15, -0.05], [-0.03, 0.15, 0.01]] as const) g.add(p(sphere, '#f7f2e8', 0.012, 0.01, 0.012, x, y, z));
+  head.position.set(0, 0.14, 0.06);
+  head.add(p(sphere, color, 0.045, 0.045, 0.045, 0, 0.03, 0.02));
+  head.add(p(cone, '#3a3a44', 0.012, 0.025, 0.012, 0, 0.025, 0.065).rotateX(Math.PI / 2));
+  for (const s of [-1, 1]) head.add(p(sphere, '#2b2a31', 0.008, 0.009, 0.006, s * 0.03, 0.04, 0.045));
+  // Federschopf
+  const plume = p(sphere, '#3a2a22', 0.008, 0.035, 0.015, 0, 0.08, 0.04);
+  plume.rotation.x = 0.6;
+  head.add(plume);
+  g.add(head);
+  for (const s of [-1, 1]) {
+    const leg = new THREE.Group();
+    leg.position.set(s * 0.03, 0.04, 0);
+    leg.add(p(cyl, '#d9a48a', 0.008, 0.04, 0.008, 0, -0.02, 0));
+    g.add(leg);
+    legs.push(leg);
+  }
+  return { group: g, head, legs };
+}

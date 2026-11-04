@@ -101,6 +101,7 @@ src/
     bank.ts        Olafs Dorfkasse: zinsloser Kredit, zurückzahlen wann man will
     crafting.ts    Werkbank: Rezepte lernen, Zutaten prüfen, bauen (alles oder nichts)
     pet.ts         Winston: Streicheln, einmal am Tag buddeln
+    coop.ts        Ställe: Eier pro Tag (reproduzierbar), einmal am Tag abholen
     yard.ts        Linas Garten: Raster aufs Grundstück, freizuhaltende Felder, niemand wird eingesperrt
     grid.ts        Kollisionsraster, A*-Wegfindung, nächste freie Kachel
     movement.ts    Bewegung mit Kollision (Fuß-Box), Um-Ecken-Gleiten
@@ -128,6 +129,7 @@ src/
     MapView3D.ts   baut die Welt aus dem Kartenmodell; terrain3d.ts (Höhenraster + gemalte Textur)
     Character3D.ts Figur (Bewegung, Wegfolgen, Sitzen, Werkzeug in der Hand); Npc.ts (Tagesablauf-KI); Collectibles3D.ts
     Weather3D.ts   Regen, Schnee, Blitze · Fishing3D.ts Angeln · Insects3D.ts Insekten · Garden3D.ts Beet
+    Animals3D.ts   Hühner & Wachteln (trippeln um den Stall, picken, schlafen nachts)
     Yard3D.ts      Linas Garten (Zäune verbinden sich, Lichter abends, Vorschau beim Gestalten)
     Winston.ts     Winston (folgt Linas Spur, sitzt, schläft, buddelt, Körbchen); Modell in models/dog.ts
     Interior3D.ts  Linas Zimmer (liegt bei Kachel 200/200 in derselben Szene, der Nebel versteckt das Dorf)
@@ -185,6 +187,8 @@ src/
   `outdoor: true` (Stil „garten“) und nutzen dieselbe Raumlogik wie drinnen (`currentRoom` = Garten, wenn
   Lina draußen ist). Sie blockieren die Karte über `WorldMap.extra` (`session.syncYardCollision()`); Wege und
   Tore nicht. `keepsAccess` verhindert, dass etwas Wichtiges unerreichbar wird. Hochbeete sind Pflanzplätze.
+- **Tiere:** Ställe sind Gartenmöbel mit `coop: 'huhn' | 'wachtel'`, die Tiere kommen mit (`data/animals.ts`).
+  Abholtage in `world.coopDay`; Logik in `core/coop.ts` & `game/animals.ts`.
 - **Spielstand:** `SAVE_VERSION` + `MIGRATIONS` in `core/save.ts`. Nach jeder Migration wird normalisiert
   (fehlende Felder → Standardwerte). Vor jedem Speichern bleibt der alte Stand als Backup erhalten.
 
