@@ -434,6 +434,12 @@ export interface ChibiPose {
   t: number;
   /** Rechten Arm nach vorn halten (Winkel), z. B. beim Angeln */
   armForward?: number;
+  /** Freudensprung: Fortschritt 0..1 */
+  cheer?: number;
+  /** Winken: Fortschritt 0..1 */
+  wave?: number;
+  /** Sekunden, die die Figur schon still steht (schaut sich dann ab und zu um) */
+  idle?: number;
 }
 
 export class Chibi3D {
@@ -931,6 +937,7 @@ export class Chibi3D {
       return;
     }
     this.head.rotation.z = 0;
+    this.head.rotation.y = 0;
     if (p.moving) {
       const swing = Math.sin(p.step * Math.PI) * (p.running ? 0.75 : 0.55);
       this.legs[0].rotation.x = swing;
@@ -946,12 +953,40 @@ export class Chibi3D {
       this.body.position.y = 0;
       this.body.scale.y = 1 + Math.sin(p.t * 2.4) * 0.012;
       this.head.rotation.x = Math.sin(p.t * 0.9) * 0.02;
+      // nach einer Weile Stillstehen: sich gemütlich umschauen
+      const idle = p.idle ?? 0;
+      if (idle > 4) {
+        const look = Math.min(1, (idle - 4) / 1.5);
+        this.head.rotation.y = Math.sin(p.t * 0.45) * Math.max(0, Math.sin(p.t * 0.17)) * 0.45 * look;
+      }
     }
     this.arms[0].rotation.z = -0.25;
     this.arms[1].rotation.z = 0.25;
     if (p.armForward !== undefined) {
       this.arms[0].rotation.x = p.armForward;
       this.arms[0].rotation.z = -0.12;
+    }
+    if (p.cheer !== undefined && !p.moving) {
+      // Sprung: kurz in die Knie, hoch, landen – Arme nach oben
+      const k = p.cheer;
+      const hop = Math.sin(Math.min(1, k / 0.8) * Math.PI);
+      this.body.position.y = hop * 0.24;
+      this.body.scale.y = k < 0.12 ? 1 - k * 0.6 : 1 + hop * 0.05;
+      const up = Math.sin(Math.min(1, k * 1.25) * Math.PI);
+      for (const [i, arm] of this.arms.entries()) {
+        // nach vorn-oben (vor den Haaren sichtbar), leicht gespreizt
+        arm.rotation.x = -up * 2.5;
+        arm.rotation.z = (i === 0 ? -1 : 1) * (0.25 + up * 0.5);
+      }
+      for (const leg of this.legs) leg.rotation.x = 0;
+      this.head.rotation.x = -hop * 0.12;
+    }
+    if (p.wave !== undefined && p.armForward === undefined) {
+      // rechte Hand hoch und hin und her
+      const k = p.wave;
+      const up = Math.min(1, k * 5, (1 - k) * 5);
+      this.arms[0].rotation.x = 0;
+      this.arms[0].rotation.z = -(0.25 + up * 2.3) + Math.sin(k * Math.PI * 7) * 0.3 * up;
     }
   }
 

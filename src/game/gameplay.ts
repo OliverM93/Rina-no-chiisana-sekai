@@ -194,6 +194,7 @@ function pickByDay<T>(session: Session, key: string, list: readonly T[]): T {
 /** Heart-Up: Zeilen + Brief mit Geschenk */
 function handleHeartUp(session: Session, npc: NpcDef, st: NpcState, out: string[]) {
   session.bus.emit('sfx', 'herz');
+  session.bus.emit('fx', { kind: 'herzen', npc: npc.id });
   out.push(...pickByDay(session, `${npc.id}:herz:${st.points}`, npc.dialogue.heartUp));
   const due = claimHeartRewards(st, Object.keys(npc.heartLetters).map(Number));
   for (const h of due) sendLetter(session, npc, npc.heartLetters[h], `${npc.id}-${npc.heartLetters[h].id}`);
@@ -275,6 +276,7 @@ export function giftToNpc(session: Session, npcId: string, itemId: string): Gift
     if (!r.heartUp && heartsFor(st.points) > before) handleHeartUp(session, npc, st, lines);
   }
   if (r.heartUp) handleHeartUp(session, npc, st, lines);
+  else if (!r.repeatToday && r.reaction === 'liebt') session.bus.emit('fx', { kind: 'herzen', npc: npcId });
   session.changed();
   session.save();
   return { lines: fill(session, lines), hearts: heartsFor(st.points), reaction: r.reaction };

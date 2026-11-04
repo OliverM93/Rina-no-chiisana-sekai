@@ -123,6 +123,10 @@ Winstons Bellen … Lautstärke für Musik und Geräusche im Menü.
 Tag ein anderes an. Oli wechselt auch mal die Klamotten – immer in Schwarz: Troyer, Bandshirt, Polo oder Überjacke, dazu schwarze oder beige Hose oder Jeans und Chunky-Sneaker. Im
 Fernseher läuft jetzt auch der **Gruselkanal** – Oli schaut tapfer mit (hinter einem Kissen).
 
+**Kleine Freuden (M8c):** Beim Rennen staubt es, beim Angeln spritzt es, Gefundenes funkelt, verliebte
+Herzchen steigen auf, beim Bauen regnet es Konfetti – und in Sommernächten tanzen Glühwürmchen. Lina macht
+Freudensprünge, und die Bewohner winken, wenn sie sie anspricht.
+
 Im Menü: Aussehen ändern, Lautstärke, speichern, **Spielstand exportieren/laden** (als Datei – praktisch zum Sichern
 oder für ein anderes Gerät), Vollbild, Hilfe.
 

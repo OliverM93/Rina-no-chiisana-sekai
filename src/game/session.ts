@@ -31,6 +31,9 @@ import { VILLAGE_LAYOUT, VILLAGE_OBJECTS, VILLAGE_SPAWN } from '../data/maps/vil
 import { NPCS } from '../data/npcs';
 import type { InteractionContext } from '../data/interactions';
 
+/** Arten von Partikel-Effekten */
+export type FxKind = 'staub' | 'platsch' | 'funkeln' | 'herzen' | 'erde' | 'konfetti';
+
 export interface DialogChoice {
   label: string;
   onSelect: () => void;
@@ -111,6 +114,11 @@ export type GameEvents = {
   'settings:changed': { musicVolume: number; sfxVolume: number };
   /** Ein Geräusch abspielen (siehe audio/Audio.ts) */
   sfx: 'schritt' | 'schritt-holz' | 'aufheben' | 'tuer' | 'platsch' | 'biss' | 'fang' | 'kescher' | 'dialog' | 'klick' | 'muenzen' | 'bauen' | 'bellen' | 'gackern' | 'graben' | 'herz' | 'post';
+  /**
+   * Partikel-Effekt (siehe world3d/Particles3D.ts). Ort in Welteinheiten, `npc` = über diesem Bewohner,
+   * ohne Ort = bei Lina.
+   */
+  fx: { kind: FxKind; x?: number; y?: number; npc?: string };
   /** Weiches Abblenden (Tür-Animation): true = dunkel */
   'overlay:fade': boolean;
   /** Einrichtungsmodus: an/aus, was gerade gehalten wird */

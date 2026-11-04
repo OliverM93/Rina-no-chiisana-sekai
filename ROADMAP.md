@@ -201,11 +201,16 @@ Legende: ✅ erledigt · 🚧 in Arbeit · ⬜ geplant
 - ✅ **M8b Kleidung & Gruselkanal:** Linas Lieblings-Sweatshirts (Hawaii, Sport, Radierkopf) mit weiter Anzughose,
   im Herbst/Frühling täglich wechselnd · Oli zieht sich um (alles in Schwarz: Bandshirts, Polo, Überjacke; Hosen schwarz/beige/Jeans; Chunky-Sneaker) ·
   Gruselkanal im Fernseher („Gänsehaut um Mitternacht“), Sprüche der Bewohner zu Linas Horror-Liebe
-- ⬜ Mehr Animationen & Partikel, Balancing
-- ⬜ PWA (installierbar, offline)
-- ⬜ Barrierefreiheit (Textgröße, reduzierte Bewegung)
+- 🔶 **M8c Animationen & Partikel** (erster Schwung ✅): Staubwölkchen beim Rennen, Spritzer beim Angeln,
+  Funkeln beim Aufheben & Fangen, Herzchen (Herz-Aufstieg, Lieblingsgeschenk, Winston streicheln), Erdklumpen
+  beim Graben, Konfetti beim Bauen & Kochen, Glühwürmchen in Sommernächten · Lina macht Freudensprünge,
+  Bewohner winken zur Begrüßung, Figuren schauen sich beim Stillstehen um
+- ⬜ Weitere Animationen & Partikel, Balancing
 
 ## 💡 Ideen-Parkplatz
+
+- Ganz am Ende (wenn das Spiel fertig ist): als App installierbar & offline spielbar (PWA), größere Schrift /
+  weniger Bewegung als Einstellung
 
 - Fotomodus/Postkarten, Tagebuch mit schönen Momenten
 - Sternbilder am Nachthimmel, Glühwürmchen im Sommer

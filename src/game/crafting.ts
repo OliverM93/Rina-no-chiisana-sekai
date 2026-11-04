@@ -54,6 +54,7 @@ export function craftRecipe(session: Session, id: string): CraftResult | 'unbeka
   const res = craft(data.inventory, r, maxStackOf);
   if (res === 'ok') {
     session.bus.emit('sfx', 'bauen');
+    session.bus.emit('fx', { kind: 'konfetti' });
     session.changed();
     session.save();
   }
