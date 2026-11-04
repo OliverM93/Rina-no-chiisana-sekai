@@ -235,7 +235,7 @@ describe('Version 7 (M6b Werkbank & Winston)', () => {
     delete v6.recipes;
     delete v6.pet;
     const result = parseSave(JSON.stringify(v6), SPAWN, NOW, { startRecipes: ['ast-hocker'] });
-    expect(result.ok && result.data.version).toBe(7);
+    expect(result.ok && result.data.version).toBe(SAVE_VERSION);
     if (!result.ok) return;
     expect(result.data.recipes).toEqual(['ast-hocker']);
     expect(result.data.pet).toEqual({ pettedDay: '', pets: 0, digDay: '' });
@@ -245,6 +245,20 @@ describe('Version 7 (M6b Werkbank & Winston)', () => {
     const s = { ...freshSave(), recipes: ['steinlaterne', 'gibtsnicht'] };
     const result = parseSave(JSON.stringify(s), SPAWN, NOW, { startRecipes: ['ast-hocker'], isKnownRecipe: (id) => id !== 'gibtsnicht' });
     expect(result.ok && result.data.recipes).toEqual(['steinlaterne', 'ast-hocker']);
+  });
+});
+
+describe('Version 8 (M6c Garten)', () => {
+  it('legt einen leeren Garten an und behält Gartenmöbel', () => {
+    const v7 = { ...freshSave(), version: 7 } as Record<string, unknown>;
+    delete v7.yard;
+    const layout = { id: 'garten', name: 'Garten', w: 6, h: 4, exits: [], reserved: [[0, 0]] as Array<[number, number]> };
+    const opts = { yardLayout: layout, furnitureInfo: () => ({ w: 1, d: 1 }) };
+    const r1 = parseSave(JSON.stringify(v7), SPAWN, NOW, opts);
+    expect(r1.ok && r1.data.yard).toEqual({ id: 'garten', wallpaper: '', floor: '', items: [] });
+    const s = { ...freshSave(), yard: { id: 'garten', items: [{ uid: 'a', itemId: 'zaun', x: 2, y: 1, rot: 0 }, { uid: 'b', itemId: 'zaun', x: 0, y: 0, rot: 0 }] } };
+    const r2 = parseSave(JSON.stringify(s), SPAWN, NOW, opts);
+    expect(r2.ok && r2.data.yard.items.map((i) => i.uid)).toEqual(['a']);
   });
 });
 

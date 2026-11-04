@@ -105,8 +105,15 @@ Legende: ✅ erledigt · 🚧 in Arbeit · ⬜ geplant
   Herz-Briefe von Oma, Olaf und Christin
 - ✅ Spielstand Version 7 (Rezepte, Winston)
 
-**M6c ⬜ Außengestaltung & Tiere**
-- ⬜ Außenbereich: Zäune, Wege, Gartenmöbel, Deko, Lichterketten, mehr Beete
+**M6c ✅ Linas Garten**
+- ✅ „Garten gestalten“ auf Linas Grundstück (Raster, Vorschau, Drehen, Verschieben, Wegräumen; laufen mit WASD)
+- ✅ Zäune (verbinden sich), Gartentor, Wege (Trittsteine, Holz, Kies, Pflaster), Gartenbank/-tisch/-stühle,
+  Sonnenschirm, Lichterkette, Gartenlaterne, Windlicht, Kübel, Vogeltränke, Vogelhäuschen, Gartenwichtel
+- ✅ Hochbeete = zusätzliche Pflanzplätze; Sitzen auf Gartenbank & -stühlen; Lichter abends
+- ✅ Niemand wird eingesperrt: Haustür, Briefkasten, Beet, Werkbank & Wege bleiben immer erreichbar
+- ✅ Spielstand Version 8 (Garten)
+
+**M6d ⬜ Tiere**
 - ⬜ Wachteln & Hühner halten (Stall, tägliche Eier)
 
 ## ⬜ M7 – Alle Bewohner, Shops & Events

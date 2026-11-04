@@ -100,7 +100,7 @@ export function CatalogPanel({ session }: { session: Session }) {
           <span class="money book-progress">{formatMoney(money)}</span>
         </div>
         <div class="book-tabs">
-          {(['alle', 'japanisch', 'basis'] as const).map((s) => (
+          {(['alle', 'japanisch', 'basis', 'garten'] as const).map((s) => (
             <button key={s} class={`chip small ${style === s ? 'active' : ''}`} onClick={() => setStyle(s)}>
               {s === 'alle' ? 'Alle Stile' : STYLE_LABELS[s]}
             </button>

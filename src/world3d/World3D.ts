@@ -36,7 +36,7 @@ import {
   welcomeLetter,
 } from '../game/gameplay';
 import { KeyboardInput } from '../game/input';
-import { currentRoom, finishExpansion, moveFurniture, pickUpFurniture, placeFromBag } from '../game/home';
+import { bedTiles, canPlace, currentRoom, finishExpansion, moveFurniture, pickUpFurniture, placeFromBag } from '../game/home';
 import { checkStory } from '../game/story';
 import { HOUSE_STAGES } from '../data/house';
 import { CHRISTIN_WELCOME } from '../data/npcs/christin';
@@ -65,6 +65,8 @@ import { Fishing3D } from './Fishing3D';
 import { Garden3D } from './Garden3D';
 import { Insects3D } from './Insects3D';
 import { Interior3D, ROOM_X, ROOM_Y } from './Interior3D';
+import { Yard3D } from './Yard3D';
+import { YARD_AREA } from '../data/yard';
 import { makeCan, makeNet, makeRod, type ToolModel } from './models/critters';
 import { Weather3D } from './Weather3D';
 import { Winston } from './Winston';
@@ -138,6 +140,7 @@ export class World3D {
   /** erst nach dem Verlassen eines Ausgangs-Feldes darf er wieder auslösen */
   private exitArmed = true;
   private winston: Winston | null = null;
+  private yard: Yard3D;
   /** Wie lange Lina schon stillsteht (für Winstons Buddeln & Körbchen) */
   private linaIdle = 0;
   private basketCheck = 0;
@@ -202,6 +205,8 @@ export class World3D {
     this.garden = new Garden3D(this.scene, session, this.tweens);
     this.interactive.add('beet-lina');
     this.interior = new Interior3D(this.scene);
+    this.yard = new Yard3D(this.scene, this.view.terrain.heightAt);
+    this.garden.extraSpots = () => this.yardBedSpots();
 
     canvas.addEventListener('pointerdown', this.onPointerDown);
     canvas.addEventListener('pointerup', this.onPointerUp);
@@ -216,6 +221,7 @@ export class World3D {
         this.updateMailbox();
         this.garden.refresh();
         this.refreshRoom();
+        this.refreshYard();
       }),
       session.bus.on('tool:changed', (t) => this.equip(t)),
       session.bus.on('decor:command', (c) => this.decorCommand(c)),
@@ -283,7 +289,8 @@ export class World3D {
       const solid = this.session.inside && home
         ? (tx: number, ty: number) => this.interior.isBlocked(home, tx - ROOM_X, ty - ROOM_Y)
         : (tx: number, ty: number) => grid.isBlocked(tx, ty);
-      if (this.session.decorActive) intent.dx = intent.dy = 0;
+      // drinnen bleibt Lina beim Einrichten stehen, im Garten darf sie herumlaufen
+      if (this.session.decorActive && this.session.inside) intent.dx = intent.dy = 0;
       player.update(dtMs, intent, solid);
       this.updateWinston(dtMs, player, blocked, solid);
       if (this.session.inside && !this.session.decorActive) {
@@ -310,6 +317,10 @@ export class World3D {
       const target = this.session.inside ? this.roomCenter() : new THREE.Vector3(player.x * UNIT, 0, player.y * UNIT);
       this.camTarget.lerp(target, 1 - Math.pow(0.002, dt));
       if (!this.session.inside) this.updateOccluders(player);
+      if (!this.session.inside) {
+        const t = player.tile;
+        this.setInYard(t.x >= YARD_AREA.x && t.x < YARD_AREA.x + YARD_AREA.w && t.y >= YARD_AREA.y && t.y < YARD_AREA.y + YARD_AREA.h);
+      }
       this.updateBubble(player, blocked || this.session.decorActive);
     } else {
       // Titelbildschirm: langsamer Schwenk über das Dorf
@@ -355,6 +366,7 @@ export class World3D {
     const outside = mixHex(mixHex(mixHex('#bfe6f7', tint, 0.55), '#9aa6b4', clouds * 0.7), '#2a2e5c', n * 0.75);
     const sky = this.session.inside ? mixHex('#f3e3cf', '#3a3450', n * 0.7) : outside;
     this.interior.updateLight(n, clouds);
+    this.yard.updateLight(n);
     this.weather.setEnabled(!this.session.inside);
     this.leaves.visible = !this.session.inside;
     (this.scene.background as THREE.Color | null) ?? (this.scene.background = new THREE.Color());
@@ -489,6 +501,8 @@ export class World3D {
     }
     this.onNewDay();
     this.rebuildLinaHouse();
+    this.refreshYard(true);
+    this.setInYard(false);
   }
 
   /** Neuer Tag (oder Spielstart): Story, Ausbau, Karte */
@@ -707,6 +721,8 @@ export class World3D {
     }
     const front = { x: tile.x + fx, y: tile.y + fy };
     if (this.garden.isSpot(front)) return { kind: 'beet', tile: front };
+    const yardItem = this.yardItemAt(front.x, front.y);
+    if (yardItem) return { kind: 'moebel', uid: yardItem };
     const id = findInteraction(this.session.map, tile, player.facing, this.interactive);
     if (id) return { kind: 'object', id };
     if (this.collectibles.canPickFlowers(tile)) return { kind: 'flowers', tile };
@@ -1144,6 +1160,14 @@ export class World3D {
       this.canvas.style.cursor = this.session.decorActive ? (this.decor ? 'grabbing' : t ? 'grab' : '') : t || desk ? 'pointer' : '';
       return;
     }
+    if (this.session.decorActive) {
+      this.hoverCell = this.yardCellAt(e);
+      this.updateGhost();
+      const yard = this.session.data?.yard;
+      const t = this.hoverCell && yard ? this.yard.topAt(yard, this.hoverCell.x, this.hoverCell.y) : null;
+      this.canvas.style.cursor = this.decor ? 'grabbing' : t ? 'grab' : '';
+      return;
+    }
     const hit = this.pick(e);
     this.canvas.style.cursor = hit.npc || hit.objectId || hit.winston ? 'pointer' : '';
   };
@@ -1158,6 +1182,11 @@ export class World3D {
       this.hoverCell = this.roomCellAt(e);
       if (this.session.decorActive) this.decorClick();
       else this.roomClick();
+      return;
+    }
+    if (this.session.decorActive) {
+      this.hoverCell = this.yardCellAt(e);
+      this.decorClick();
       return;
     }
     const hit = this.pick(e);
@@ -1368,6 +1397,42 @@ export class World3D {
     return new THREE.Vector3(ROOM_X + L.w / 2, 0, ROOM_Y + L.h / 2 - 0.2);
   }
 
+  /** Darstellung des Ortes, an dem gerade eingerichtet wird (Zimmer oder Garten) */
+  private get dv(): Interior3D | Yard3D {
+    return this.session.inside ? this.interior : this.yard;
+  }
+
+  /** Kachel-Ursprung des aktuellen Raums/Gartens */
+  private get origin(): { x: number; y: number } {
+    return this.session.inside ? { x: ROOM_X, y: ROOM_Y } : { x: YARD_AREA.x, y: YARD_AREA.y };
+  }
+
+  private refreshYard(force = false) {
+    const yard = this.session.data?.yard;
+    if (yard) this.yard.refresh(yard, force);
+  }
+
+  /** Mauszeiger → Gartenzelle (über den Boden) */
+  private yardCellAt(e: PointerEvent): { x: number; y: number } | null {
+    this.raycaster.setFromCamera(this.ndc(e), this.camera);
+    const g = this.raycaster.intersectObject(this.view.terrain.ground, false)[0];
+    return g ? this.yard.cellFromPoint(g.point) : null;
+  }
+
+  /** Pflanzplätze in Hochbeeten (Weltkacheln + Höhe) */
+  private yardBedSpots(): Array<{ x: number; y: number; h: number }> {
+    const yard = this.session.data?.yard;
+    if (!yard) return [];
+    return yard.items.filter((i) => FURNITURE_BY_ITEM[i.itemId]?.def.bed).flatMap((i) => bedTiles(this.session, i.uid).map((t) => ({ ...t, h: 0.39 })));
+  }
+
+  private setInYard(on: boolean) {
+    if (this.session.inYard === on) return;
+    this.session.inYard = on;
+    if (!on && this.session.decorActive && !this.session.inside) this.stopDecor();
+    this.session.bus.emit('home:yard', on);
+  }
+
   private refreshRoom(force = false) {
     const c = currentRoom(this.session);
     if (this.session.inside && c) this.interior.refresh(c.room, c.layout, force);
@@ -1441,6 +1506,15 @@ export class World3D {
     return top ? { kind: 'moebel', uid: top.uid } : null;
   }
 
+  /** Gartenmöbel auf einer Weltkachel (Wege & Zäune zählen nicht) */
+  private yardItemAt(tx: number, ty: number): string | null {
+    const yard = this.session.data?.yard;
+    if (!yard) return null;
+    const top = this.yard.topAt(yard, tx - YARD_AREA.x, ty - YARD_AREA.y);
+    const def = top ? FURNITURE_BY_ITEM[top.itemId]?.def : undefined;
+    return top && def && !def.rug && !def.fence && !def.bed ? top.uid : null;
+  }
+
   private useFurniture(uid: string) {
     const home = this.room;
     const player = this.player;
@@ -1448,17 +1522,22 @@ export class World3D {
     const f = item ? FURNITURE_BY_ITEM[item.itemId] : undefined;
     if (!item || !f || !player || !home) return;
     if (f.def.light) {
-      this.interior.toggleLamp(uid);
+      this.dv.toggleLamp(uid);
       this.interior.updateLight(this.night, currentWeather(this.session).clouds);
+      this.yard.updateLight(this.night);
       return;
     }
     if (f.def.sit) {
       const { w, d } = footprint(f.def, item.rot);
-      const cx = ROOM_X + item.x + w / 2;
-      const cy = ROOM_Y + item.y + d / 2;
+      const o = this.origin;
+      const cx = o.x + item.x + w / 2;
+      const cy = o.y + item.y + d / 2;
       player.teleport(cx * TILE, cy * TILE - (f.def.sit === 'liegen' ? 10 : 0));
       player.setSitting(true);
-      player.seatHeight = this.interior.model(uid)?.seatY ?? 0.1;
+      // Blickrichtung: Sitzfläche zeigt nach +Z (gedreht mit dem Möbel)
+      player.face((['down', 'left', 'up', 'right'] as const)[item.rot]);
+      const ground = this.session.inside ? 0 : Math.max(0, this.view.terrain.heightAt(cx, cy));
+      player.seatHeight = (this.dv.model(uid)?.seatY ?? 0.1) + ground;
       this.session.bus.emit('toast', { text: f.def.sit === 'liegen' ? 'Ach, ist das gemütlich … 💤' : 'Lina macht es sich gemütlich. ☕' });
       return;
     }
@@ -1471,7 +1550,14 @@ export class World3D {
     if (!player?.sitting) return;
     player.setSitting(false);
     const home = this.room;
-    if (!home || !this.session.inside) return;
+    if (!home) return;
+    if (!this.session.inside) {
+      const t = player.tile;
+      const [fx, fy] = DIRS[player.facing];
+      const free = nearestWalkable(this.session.map.grid, { x: t.x + fx, y: t.y + fy }, t);
+      if (free) player.teleport(free.x * TILE + 32, free.y * TILE + 40);
+      return;
+    }
     // aufs nächste freie Feld treten
     const grid = this.roomGrid();
     const t = player.tile;
@@ -1537,13 +1623,15 @@ export class World3D {
   // --- Einrichten ----------------------------------------------------------
 
   private decorCommand(c: DecorCommand) {
-    if (!this.session.inside) return;
+    if (!this.session.inside && !this.session.inYard) return;
     switch (c.kind) {
       case 'start':
         this.session.decorActive = true;
         this.standUp();
         this.player?.cancelPath();
-        this.player?.setVisible(false);
+        this.stopFishing();
+        if (this.session.inside) this.player?.setVisible(false);
+        else this.yard.showGrid(true);
         break;
       case 'stop':
         this.stopDecor();
@@ -1572,8 +1660,10 @@ export class World3D {
     this.cancelHold();
     this.session.decorActive = false;
     this.interior.hideGhost();
+    this.yard.hideGhost();
+    this.yard.showGrid(false);
     const player = this.player;
-    if (player) {
+    if (player && this.session.inside) {
       player.setVisible(true);
       // Falls jetzt ein Möbel auf Linas Platz steht: zur Tür
       const t = player.tile;
@@ -1590,6 +1680,8 @@ export class World3D {
     this.decor = null;
     this.interior.setHidden(null);
     this.interior.hideGhost();
+    this.yard.setHidden(null);
+    this.yard.hideGhost();
   }
 
   private emitDecor(valid = true) {
@@ -1606,13 +1698,16 @@ export class World3D {
     const d = this.decor;
     if (!d) return;
     if (d.uid) {
-      if (!pickUpFurniture(this.session, d.uid)) {
-        this.session.bus.emit('toast', { text: 'Deine Tasche ist voll! 🎒' });
+      const r = pickUpFurniture(this.session, d.uid);
+      if (r !== 'ok') {
+        if (r === 'voll') this.session.bus.emit('toast', { text: 'Deine Tasche ist voll! 🎒' });
+        if (r === 'pflanzen') this.session.bus.emit('toast', { text: 'Im Hochbeet wächst noch etwas – erst pflücken, dann wegräumen. 🌱' });
         return;
       }
     }
     this.cancelHold();
     this.refreshRoom();
+    this.refreshYard();
     this.emitDecor();
   }
 
@@ -1622,7 +1717,7 @@ export class World3D {
     const cell = this.hoverCell;
     const home = this.room;
     if (!d || !cell || !home) {
-      this.interior.hideGhost();
+      this.dv.hideGhost();
       return;
     }
     const info = furnitureInfo(d.itemId);
@@ -1632,9 +1727,10 @@ export class World3D {
     const x = cell.x - Math.floor((fp.w - 1) / 2);
     const y = cell.y - Math.floor((fp.d - 1) / 2);
     const p = checkPlacement(home, this.lay, d.itemId, x, y, d.rot, furnitureInfo, d.uid ?? undefined);
+    if (p.ok) p.ok = canPlace(this.session, d.itemId, x, y, d.rot, d.uid ?? undefined);
     const base = p.on ? home.items.find((i) => i.uid === p.on) : undefined;
     const h = base ? (FURNITURE_BY_ITEM[base.itemId]?.def.surfaceHeight ?? 0) : 0;
-    this.interior.showGhost(d.itemId, x, y, d.rot, p.ok, h);
+    this.dv.showGhost(d.itemId, x, y, d.rot, p.ok, h);
     this.emitDecor(p.ok);
   }
 
@@ -1645,10 +1741,10 @@ export class World3D {
     if (!home || !cell) return;
     const d = this.decor;
     if (!d) {
-      const top = this.interior.topAt(home, cell.x, cell.y);
+      const top = this.dv.topAt(home, cell.x, cell.y);
       if (!top) return;
       this.decor = { itemId: top.itemId, uid: top.uid, rot: top.rot };
-      this.interior.setHidden(top.uid);
+      this.dv.setHidden(top.uid);
       this.updateGhost();
       return;
     }
@@ -1659,11 +1755,12 @@ export class World3D {
     const y = cell.y - Math.floor((fp.d - 1) / 2);
     const ok = d.uid ? moveFurniture(this.session, d.uid, x, y, d.rot) : placeFromBag(this.session, d.itemId, x, y, d.rot);
     if (!ok) {
-      this.session.bus.emit('toast', { text: 'Hier ist kein Platz dafür.' });
+      this.session.bus.emit('toast', { text: this.session.inside ? 'Hier ist kein Platz dafür.' : 'Hier geht das nicht – vielleicht im Weg oder auf Linas Platz?' });
       return;
     }
     this.cancelHold();
     this.refreshRoom();
+    this.refreshYard();
     this.emitDecor();
   }
 

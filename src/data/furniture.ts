@@ -6,7 +6,7 @@
  * Gegenständen (`zabuton-rosa`, `zabuton-indigo` …).
  */
 
-export type FurnitureStyle = 'japanisch' | 'basis' | 'handgemacht';
+export type FurnitureStyle = 'japanisch' | 'basis' | 'handgemacht' | 'garten';
 
 export interface FurnitureDef {
   /** Basis-ID (ohne Variante) */
@@ -32,6 +32,14 @@ export interface FurnitureDef {
   description: string;
   /** Nur an der Werkbank zu bauen (nicht im Katalog) */
   crafted?: boolean;
+  /** Für draußen (Linas Garten) statt fürs Haus */
+  outdoor?: boolean;
+  /** Zaun: verbindet sich mit Nachbarzäunen */
+  fence?: boolean;
+  /** Man kann hindurchgehen (Gartentor) */
+  walk?: boolean;
+  /** Hochbeet: jedes Feld ist ein Pflanzplatz */
+  bed?: boolean;
   /** Farbvarianten (Name → Farbe); ohne = eine Variante */
   variants?: Record<string, string>;
 }
@@ -64,6 +72,26 @@ export const FURNITURE: readonly FurnitureDef[] = [
   { id: 'seestern-deko', name: 'Seestern-Deko', style: 'handgemacht', crafted: true, price: 360, w: 1, d: 1, small: true, description: 'Ein Seestern auf einem Muschelbett. Ein kleines Stück Strand.' },
   { id: 'glitzerlampe', name: 'Glitzerlicht', style: 'handgemacht', crafted: true, price: 600, w: 1, d: 1, small: true, light: true, description: 'Ein Glitzerstein auf einem Steinsockel. Funkelt abends in allen Farben.' },
   { id: 'kieselmosaik', name: 'Kieselmosaik', style: 'handgemacht', crafted: true, price: 200, w: 2, d: 2, rug: true, description: 'Viele glatte Kiesel, zu einem runden Muster gelegt. Kühl unter den Füßen.' },
+  // Garten (draußen, M6c)
+  { id: 'zaun-holz', name: 'Astzaun', style: 'garten', crafted: true, outdoor: true, fence: true, price: 60, w: 1, d: 1, description: 'Ein Zaun aus Ästen, mit Bast zusammengebunden. Rustikal und gemütlich.' },
+  { id: 'zaun-weiss', name: 'Weißer Lattenzaun', style: 'garten', outdoor: true, fence: true, price: 150, w: 1, d: 1, description: 'Ein weißer Gartenzaun wie aus dem Bilderbuch.' },
+  { id: 'gartentor', name: 'Gartentor', style: 'garten', outdoor: true, fence: true, walk: true, price: 300, w: 1, d: 1, description: 'Ein kleines Tor im Zaun. Hindurchgehen erlaubt!' },
+  { id: 'weg-stein', name: 'Trittsteine', style: 'garten', crafted: true, outdoor: true, rug: true, price: 40, w: 1, d: 1, description: 'Flache Steine im Gras – von Stein zu Stein hüpfen.' },
+  { id: 'weg-holz', name: 'Holzbohlen-Weg', style: 'garten', outdoor: true, rug: true, price: 80, w: 1, d: 1, description: 'Ein Weg aus warmen Holzbohlen.' },
+  { id: 'weg-kies', name: 'Kiesweg', style: 'garten', outdoor: true, rug: true, price: 60, w: 1, d: 1, description: 'Knirscht so schön beim Drüberlaufen.' },
+  { id: 'weg-pflaster', name: 'Pflasterweg', style: 'garten', outdoor: true, rug: true, price: 120, w: 1, d: 1, description: 'Ordentliche Pflastersteine. Christin ist begeistert.' },
+  { id: 'gartenbank', name: 'Gartenbank', style: 'garten', outdoor: true, sit: 'sitzen', price: 900, w: 2, d: 1, description: 'Eine Holzbank für die Abendsonne.' },
+  { id: 'gartentisch', name: 'Gartentisch', style: 'garten', outdoor: true, surface: true, surfaceHeight: 0.6, price: 500, w: 1, d: 1, description: 'Ein runder Tisch für Limonade im Grünen.' },
+  { id: 'gartenstuhl', name: 'Gartenstuhl', style: 'garten', outdoor: true, sit: 'sitzen', price: 300, w: 1, d: 1, description: 'Ein Stuhl aus geschwungenem Metall.', variants: { weiss: '#f7f5ec', rosa: '#f4a3b8', mint: '#9ad8c0' } },
+  { id: 'sonnenschirm', name: 'Sonnenschirm', style: 'garten', outdoor: true, price: 600, w: 1, d: 1, description: 'Spendet Schatten an heißen Tagen.', variants: { rosa: '#f4a3b8', mint: '#9ad8c0', gelb: '#f7d26a' } },
+  { id: 'lichterkette', name: 'Lichterkette', style: 'garten', outdoor: true, light: true, price: 800, w: 2, d: 1, description: 'Zwei Pfosten mit bunten Lämpchen dazwischen. Abends wunderschön.' },
+  { id: 'gartenlaterne', name: 'Gartenlaterne', style: 'garten', outdoor: true, light: true, price: 450, w: 1, d: 1, description: 'Eine kleine Laterne auf einem Pfahl.' },
+  { id: 'windlicht', name: 'Windlicht', style: 'garten', outdoor: true, small: true, light: true, price: 200, w: 1, d: 1, description: 'Ein Glas mit Kerze für den Gartentisch.' },
+  { id: 'blumenkuebel', name: 'Blumenkübel', style: 'garten', outdoor: true, price: 250, w: 1, d: 1, description: 'Ein Terrakotta-Kübel voller Margeriten.' },
+  { id: 'vogeltraenke', name: 'Vogeltränke', style: 'garten', outdoor: true, price: 500, w: 1, d: 1, description: 'Eine steinerne Schale für durstige Spatzen.' },
+  { id: 'vogelhaus', name: 'Vogelhäuschen', style: 'garten', crafted: true, outdoor: true, price: 240, w: 1, d: 1, description: 'Ein Häuschen auf einem Pfahl. Bald ziehen bestimmt Meisen ein.' },
+  { id: 'gartenwichtel', name: 'Gartenwichtel', style: 'garten', outdoor: true, price: 350, w: 1, d: 1, description: 'Ein kleiner Wichtel mit roter Mütze. Oma findet ihn „pfui“. Lina findet ihn toll.' },
+  { id: 'hochbeet', name: 'Hochbeet', style: 'garten', outdoor: true, bed: true, price: 1200, w: 2, d: 1, description: 'Ein Beet aus Holz auf Kniehöhe – zwei neue Pflanzplätze!' },
   { id: 'topfpflanze', name: 'Monstera', style: 'basis', price: 300, w: 1, d: 1, description: 'Große, grüne Blätter mit Löchern. Sehr fotogen.' },
 ];
 
@@ -95,7 +123,7 @@ export const FLOORS: readonly SurfaceDef[] = [
   { id: 'boden-teppich', name: 'Rosa Teppichboden', style: 'basis', price: 500, kind: 'boden', pattern: 'teppich', color: '#f7c6d4', accent: '#f4b3c6', description: 'Flauschig und weich unter den Füßen.' },
 ];
 
-export const STYLE_LABELS: Record<FurnitureStyle, string> = { japanisch: 'Japanisch', basis: 'Basis', handgemacht: 'Handgemacht' };
+export const STYLE_LABELS: Record<FurnitureStyle, string> = { japanisch: 'Japanisch', basis: 'Basis', handgemacht: 'Handgemacht', garten: 'Garten' };
 
 /** Möbel-Gegenstand (mit Variante) → Basis + Farbe */
 export interface FurnitureItem {
@@ -114,11 +142,11 @@ export const FURNITURE_ITEMS: readonly FurnitureItem[] = FURNITURE.flatMap((def)
 export const FURNITURE_BY_ITEM: Readonly<Record<string, FurnitureItem>> = Object.fromEntries(FURNITURE_ITEMS.map((f) => [f.itemId, f]));
 export const SURFACE_BY_ID: Readonly<Record<string, SurfaceDef>> = Object.fromEntries([...WALLPAPERS, ...FLOORS].map((s) => [s.id, s]));
 
-export const VARIANT_LABELS: Record<string, string> = { rosa: 'Rosa', indigo: 'Indigo', creme: 'Creme', rot: 'Rot', blau: 'Blau', gruen: 'Grün', senf: 'Senfgelb' };
+export const VARIANT_LABELS: Record<string, string> = { weiss: 'Weiß', mint: 'Mint', gelb: 'Gelb', rosa: 'Rosa', indigo: 'Indigo', creme: 'Creme', rot: 'Rot', blau: 'Blau', gruen: 'Grün', senf: 'Senfgelb' };
 
 
 /** Raum-Infos für die Raumlogik (`core/room.ts`) */
 export function furnitureInfo(itemId: string) {
   const f = FURNITURE_BY_ITEM[itemId];
-  return f ? { w: f.def.w, d: f.def.d, rug: f.def.rug, small: f.def.small, surface: f.def.surface } : undefined;
+  return f ? { w: f.def.w, d: f.def.d, rug: f.def.rug, small: f.def.small, surface: f.def.surface, walk: f.def.walk } : undefined;
 }
