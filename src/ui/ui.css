@@ -1448,3 +1448,58 @@ body {
     transform: scale(0.95) rotate(2deg);
   }
 }
+
+/* ---------------------------------------------------------------- M7a: Sterne gucken */
+
+.stars-overlay {
+  position: fixed;
+  inset: 0 0 auto 0;
+  height: 48vh;
+  pointer-events: none;
+  background: linear-gradient(to bottom, var(--night-sky) 0%, color-mix(in srgb, var(--night-sky) 55%, transparent) 55%, transparent 100%);
+  animation: fade-in 1.6s ease-out;
+  overflow: hidden;
+}
+
+.stars-overlay .star {
+  position: absolute;
+  border-radius: 50%;
+  background: var(--night-star);
+  box-shadow: 0 0 6px var(--night-star);
+  animation: twinkle 2.4s ease-in-out infinite;
+}
+
+@keyframes twinkle {
+  50% {
+    opacity: 0.35;
+  }
+}
+
+.stars-overlay .shooting-star {
+  position: absolute;
+  width: 140px;
+  height: 2px;
+  border-radius: 2px;
+  background: linear-gradient(to right, transparent, var(--night-star));
+  opacity: 0;
+  transform: rotate(-18deg);
+  animation: shoot 6.5s ease-in infinite;
+}
+
+@keyframes shoot {
+  0% {
+    opacity: 0;
+    transform: translate(0, 0) rotate(-18deg);
+  }
+  4% {
+    opacity: 1;
+  }
+  14% {
+    opacity: 0;
+    transform: translate(260px, 85px) rotate(-18deg);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(260px, 85px) rotate(-18deg);
+  }
+}

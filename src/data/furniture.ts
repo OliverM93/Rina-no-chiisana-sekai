@@ -32,6 +32,8 @@ export interface FurnitureDef {
   description: string;
   /** Nur an der Werkbank zu bauen (nicht im Katalog) */
   crafted?: boolean;
+  /** Nur als Geschenk (z. B. von Oli), nicht im Katalog */
+  gift?: boolean;
   /** Für draußen (Linas Garten) statt fürs Haus */
   outdoor?: boolean;
   /** Zaun: verbindet sich mit Nachbarzäunen */
@@ -74,6 +76,12 @@ export const FURNITURE: readonly FurnitureDef[] = [
   { id: 'seestern-deko', name: 'Seestern-Deko', style: 'handgemacht', crafted: true, price: 360, w: 1, d: 1, small: true, description: 'Ein Seestern auf einem Muschelbett. Ein kleines Stück Strand.' },
   { id: 'glitzerlampe', name: 'Glitzerlicht', style: 'handgemacht', crafted: true, price: 600, w: 1, d: 1, small: true, light: true, description: 'Ein Glitzerstein auf einem Steinsockel. Funkelt abends in allen Farben.' },
   { id: 'kieselmosaik', name: 'Kieselmosaik', style: 'handgemacht', crafted: true, price: 200, w: 2, d: 2, rug: true, description: 'Viele glatte Kiesel, zu einem runden Muster gelegt. Kühl unter den Füßen.' },
+  // Olis Sachen (bringt er beim Einzug mit bzw. schenkt sie per Brief) – nicht im Katalog
+  { id: 'schreibtisch-pc', name: 'Olis Schreibtisch', style: 'basis', gift: true, price: 1600, w: 2, d: 1, description: 'Olis Schreibtisch mit Computer, zwei Bildschirmen und einer Tastatur, die in allen Farben leuchtet.' },
+  { id: 'hantelbank', name: 'Hantelbank', style: 'basis', gift: true, price: 900, w: 2, d: 1, description: 'Olis Hantelbank mit Langhantel. „Nur ein Satz noch, Lini!“' },
+  { id: 'kaffeemaschine', name: 'Kaffeemaschine', style: 'basis', gift: true, small: true, price: 700, w: 1, d: 1, description: 'Eine glänzende Siebträgermaschine. Oli behandelt sie wie ein Familienmitglied.' },
+  { id: 'plattenspieler', name: 'Plattenspieler', style: 'basis', gift: true, small: true, price: 800, w: 1, d: 1, description: 'Ein Plattenspieler mit Olis Lieblingsplatten. Laut aufdrehen erlaubt – meistens.' },
+  { id: 'sternenlampe', name: 'Sternenlampe', style: 'basis', gift: true, small: true, light: true, price: 600, w: 1, d: 1, description: 'Eine kleine Lampe, die Sterne an die Wände malt. Von Oli, für gemütliche Abende.' },
   // Garten (draußen, M6c)
   { id: 'zaun-holz', name: 'Astzaun', style: 'garten', crafted: true, outdoor: true, fence: true, price: 60, w: 1, d: 1, description: 'Ein Zaun aus Ästen, mit Bast zusammengebunden. Rustikal und gemütlich.' },
   { id: 'zaun-weiss', name: 'Weißer Lattenzaun', style: 'garten', outdoor: true, fence: true, price: 150, w: 1, d: 1, description: 'Ein weißer Gartenzaun wie aus dem Bilderbuch.' },

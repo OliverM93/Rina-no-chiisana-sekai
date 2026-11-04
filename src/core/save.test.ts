@@ -275,6 +275,16 @@ describe('Version 9 (M6d Tiere)', () => {
   });
 });
 
+describe('Version 10 (M7a Oli)', () => {
+  it('ergänzt gemeinsame Momente', () => {
+    const v9 = { ...freshSave(), version: 9 } as Record<string, unknown>;
+    delete (v9.world as Record<string, unknown>).dates;
+    const r = parseSave(JSON.stringify(v9), SPAWN, NOW);
+    expect(r.ok && r.data.version).toBe(SAVE_VERSION);
+    expect(r.ok && r.data.world.dates).toEqual({});
+  });
+});
+
 describe('Export', () => {
   it('erzeugt einen Dateinamen mit Datum', () => {
     expect(exportFileName(NOW)).toBe('rina-spielstand-2026-11-02.json');

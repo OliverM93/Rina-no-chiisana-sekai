@@ -16,6 +16,8 @@ export const palette = {
   sea: { base: '#86cfe6', deep: '#69b9da' },
   wood: { light: '#e6c59c', base: '#cfa175', dark: '#a97c56', bark: '#b5875f' },
   soil: { dry: '#9a6a4a', wet: '#6e4a36' },
+  /** Sternenhimmel (Sterne gucken mit Oli) */
+  night: { sky: '#1e2350', star: '#fff6d8' },
   rainbow: { red: '#ff8a8a', orange: '#ffc27a', yellow: '#fff08a', green: '#9ce59a', blue: '#8ac8ff', violet: '#b79af0' },
   stone: { light: '#e3e0e6', base: '#c9c4cf', dark: '#a9a3b2' },
 

@@ -48,6 +48,17 @@ export class Npc {
     return this.mode !== 'hidden';
   }
 
+  /** Aktueller Eintrag im Tagesablauf (z. B. „programmiert“, zu Hause) */
+  get currentEntry(): ScheduleEntry | null {
+    return this.entry;
+  }
+
+  /** Ist zu Hause (und damit drinnen, nicht in der Welt) */
+  get atHome(): boolean {
+    const hidden = this.mode === 'hidden' || (this.mode === 'talking' && this.afterTalk === 'hidden');
+    return hidden && this.entry?.activity.kind === 'zuhause';
+  }
+
   get isSleeping(): boolean {
     return this.mode === 'hidden' && this.entry?.activity.kind === 'zuhause' && !!this.entry.activity.sleeping;
   }

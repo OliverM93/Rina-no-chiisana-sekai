@@ -439,3 +439,38 @@ export function makePlotMarks(w: number, d: number): THREE.Group {
   g.add(b(0.025, 0.025, hd * 2, rope, hw, 0.24, 0));
   return g;
 }
+
+/** Picknickdecke mit Korb & Thermoskanne (für die Szene mit Oli), 2×1 Felder, Mitte = Ursprung */
+export function makePicnic(): THREE.Group {
+  const g = new THREE.Group();
+  const c2 = document.createElement('canvas');
+  c2.width = c2.height = 64;
+  const ctx = c2.getContext('2d') as CanvasRenderingContext2D;
+  for (let x = 0; x < 8; x++) for (let y = 0; y < 8; y++) {
+    ctx.fillStyle = (x + y) % 2 ? '#f7f5ec' : '#e85a6a';
+    ctx.fillRect(x * 8, y * 8, 8, 8);
+  }
+  const tex = new THREE.CanvasTexture(c2);
+  tex.colorSpace = THREE.SRGBColorSpace;
+  tex.magFilter = THREE.NearestFilter;
+  const blanket = new THREE.Mesh(new THREE.PlaneGeometry(1.9, 1.2).rotateX(-Math.PI / 2), new THREE.MeshToonMaterial({ map: tex }));
+  blanket.position.y = 0.02;
+  blanket.receiveShadow = true;
+  g.add(blanket);
+  // Korb
+  g.add(b(0.36, 0.2, 0.24, '#c9955f', 0.15, 0.12, -0.38));
+  const handle = mesh(new THREE.TorusGeometry(0.13, 0.015, 6, 14, Math.PI), toon('#a87448'));
+  handle.position.set(0.15, 0.22, -0.38);
+  g.add(handle);
+  g.add(b(0.38, 0.03, 0.26, '#e85a6a', 0.15, 0.225, -0.38));
+  // Thermoskanne & Becher
+  g.add(c(0.05, 0.24, '#5b7fc2', -0.15, 0.14, -0.42));
+  for (const x of [-0.02, 0.06]) g.add(c(0.035, 0.07, '#f7f5ec', x, 0.055, -0.15));
+  // Teller mit Sandwiches
+  g.add(c(0.12, 0.015, '#ffffff', 0.45, 0.03, -0.1));
+  for (const x of [0.41, 0.49]) g.add(b(0.08, 0.03, 0.08, '#f2d39a', x, 0.05, -0.1));
+  g.traverse((o) => {
+    if ((o as THREE.Mesh).isMesh) o.castShadow = true;
+  });
+  return g;
+}

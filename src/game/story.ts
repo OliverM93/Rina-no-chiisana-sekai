@@ -5,10 +5,11 @@
 import { daysBetween } from '../core/daily';
 import { NPC_BY_ID } from '../data/npcs';
 import { OLAF_ANNOUNCEMENT } from '../data/npcs/olaf';
+import { OLI_ANNOUNCEMENT } from '../data/npcs/oli';
 import { sendLetter } from './gameplay';
 import type { Session } from './session';
 
-export type StoryEvent = 'olaf-angekuendigt' | 'olaf-eingezogen';
+export type StoryEvent = 'olaf-angekuendigt' | 'olaf-eingezogen' | 'oli-angekuendigt' | 'oli-eingezogen';
 
 /** Einmal beim Laden und bei jedem neuen Tag aufrufen. Gibt neue Ereignisse zurück. */
 export function checkStory(session: Session): StoryEvent[] {
@@ -29,6 +30,23 @@ export function checkStory(session: Session): StoryEvent[] {
     if (!letter || daysBetween(letter.day, today) >= 1) {
       f.olafEingezogen = true;
       out.push('olaf-eingezogen');
+    }
+  }
+  // Oli: zwei Tage nach Olafs Einzug kommt sein Brief, am Tag darauf zieht er bei Lina ein
+  if (f.olafBegruesst && !f.oliAngekuendigt) {
+    const olafLetter = data.mail.letters.find((l) => l.id === 'olaf-einzug');
+    if (!olafLetter || daysBetween(olafLetter.day, today) >= 3) {
+      const oli = NPC_BY_ID.oli;
+      if (oli) sendLetter(session, oli, OLI_ANNOUNCEMENT, 'oli-einzug');
+      f.oliAngekuendigt = true;
+      out.push('oli-angekuendigt');
+    }
+  }
+  if (f.oliAngekuendigt && !f.oliEingezogen) {
+    const letter = data.mail.letters.find((l) => l.id === 'oli-einzug');
+    if (!letter || daysBetween(letter.day, today) >= 1) {
+      f.oliEingezogen = true;
+      out.push('oli-eingezogen');
     }
   }
   if (out.length > 0) {

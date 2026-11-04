@@ -182,6 +182,19 @@ function handleHeartUp(session: Session, npc: NpcDef, st: NpcState, out: string[
   for (const h of due) sendLetter(session, npc, npc.heartLetters[h], `${npc.id}-${npc.heartLetters[h].id}`);
 }
 
+/** Zusätzliche Freundschaft (z. B. nach einem gemeinsamen Moment). Gibt Herz-Zeilen zurück, falls ein Herz dazukam. */
+export function addFriendship(session: Session, npcId: string, points: number): string[] {
+  const npc = NPC_BY_ID[npcId];
+  if (!npc) return [];
+  const st = npcState(session, npcId);
+  const before = heartsFor(st.points);
+  st.points += points;
+  const lines: string[] = [];
+  if (heartsFor(st.points) > before) handleHeartUp(session, npc, st, lines);
+  session.changed();
+  return fill(session, lines);
+}
+
 export interface TalkOutcome {
   lines: string[];
   hearts: number;
