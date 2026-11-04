@@ -12,6 +12,7 @@ import type { NpcDef } from '../data/npcs/types';
 import type { Session } from '../game/session';
 import { isPartyTime, PARTY_ENTRY } from '../game/party';
 import { dinnerEntry } from '../game/dinner';
+import { meetupEntry } from '../game/meetups';
 import { Character, FEET_OFFSET } from './Character3D';
 
 type Mode = 'hidden' | 'walking' | 'sitting' | 'idle' | 'talking' | 'scripted';
@@ -38,7 +39,20 @@ export class Npc {
     this.char = new Character(parent, def.appearance, start.x, start.y, 'down', heightAt, session.season);
     this.char.speedFactor = NPC_SPEED;
     // Gleich an die richtige Stelle setzen (ohne Laufen)
-    this.applyEntry(activityAt(def.schedule, session.clock()), true);
+    this.applyEntry(this.wantedEntry(), true);
+  }
+
+  /** Sofort an den richtigen Platz (z. B. nach dem Laden eines Spielstands) */
+  snap() {
+    if (this.mode === 'talking' || this.mode === 'scripted') return;
+    if (!this.movedIn || this.away) return;
+    this.applyEntry(this.wantedEntry(), true);
+  }
+
+  /** Was gerade dran ist: Party, Sonntagsessen, Treffen – sonst der normale Tagesablauf */
+  private wantedEntry(): ScheduleEntry {
+    if (isPartyTime(this.session)) return PARTY_ENTRY;
+    return dinnerEntry(this.session, this.def.id) ?? meetupEntry(this.session, this.def.id) ?? activityAt(this.def.schedule, this.session.clock());
   }
 
   private get map(): WorldMap {
@@ -102,7 +116,7 @@ export class Npc {
       this.char.update(dtMs, { dx: 0, dy: 0, run: false }, (x, y) => grid.isBlocked(x, y));
       return;
     }
-    const entry = isPartyTime(this.session) ? PARTY_ENTRY : dinnerEntry(this.session, this.def.id) ?? activityAt(this.def.schedule, this.session.clock());
+    const entry = this.wantedEntry();
     if (entry !== this.entry) this.applyEntry(entry, false);
 
     if (this.mode === 'idle' && this.entry?.activity.kind === 'spazieren') {
