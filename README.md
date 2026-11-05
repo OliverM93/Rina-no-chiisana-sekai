@@ -139,7 +139,8 @@ eine Kommode.
 
 **Neue Einrichtungsstile (M8g):** Im Katalog gibt es jetzt **Cottagecore** (Blümchensessel, Häkelteppich,
 Kräutertöpfchen …), **Retro-Oma-Chic** (Ohrensessel, Nierentisch, Fransenlampe, Siebziger-Tapete …) und
-**Modern** (Loungesofa, Marmortisch, Bogenlampe, Terrazzo, Betonboden …).
+**Modern** (Loungesofa, Marmortisch, Bogenlampe, Terrazzo, Betonboden …) und **Mid-Century & Bauhaus**
+(Leder-Loungesessel, Freischwinger, Teak-Sideboard, Formen-Teppich, Sonnenspiegel, Schachbrett-Fliesen …).
 
 Im Menü: Aussehen ändern, Lautstärke, speichern, **Spielstand exportieren/laden** (als Datei – praktisch zum Sichern
 oder für ein anderes Gerät), Vollbild, Hilfe.

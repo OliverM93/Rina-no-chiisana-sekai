@@ -251,6 +251,81 @@ export function drawPattern(ctx: CanvasRenderingContext2D, def: SurfaceDef, s: n
       ctx.globalAlpha = 1;
       break;
     }
+    case 'bauhaus': {
+      // Grundformen in Grundfarben auf einem lockeren Raster
+      const cols = [accent, '#f2c14e', '#3a5fa8', '#2a2a30'];
+      const cell = s / 4;
+      for (let gy = 0; gy < 4; gy++) {
+        for (let gx = 0; gx < 4; gx++) {
+          const k = (gx * 3 + gy * 5) % 7;
+          if (k > 3) continue;
+          const cx = gx * cell + cell / 2;
+          const cy = gy * cell + cell / 2;
+          const r = cell * 0.28;
+          ctx.fillStyle = cols[(gx + gy * 2) % cols.length];
+          ctx.beginPath();
+          if (k === 0) ctx.arc(cx, cy, r, 0, Math.PI * 2);
+          else if (k === 1) ctx.rect(cx - r, cy - r, r * 2, r * 2);
+          else if (k === 2) {
+            ctx.moveTo(cx, cy - r);
+            ctx.lineTo(cx + r, cy + r);
+            ctx.lineTo(cx - r, cy + r);
+            ctx.closePath();
+          } else ctx.arc(cx, cy, r, Math.PI, 0);
+          ctx.fill();
+        }
+      }
+      break;
+    }
+    case 'atomic': {
+      // Fünfziger: kleine Sterne und Bumerangs
+      ctx.lineCap = 'round';
+      const star = (cx: number, cy: number, r: number) => {
+        ctx.strokeStyle = accent;
+        ctx.lineWidth = s / 160;
+        for (let k = 0; k < 4; k++) {
+          const ang = (k / 4) * Math.PI;
+          ctx.beginPath();
+          ctx.moveTo(cx - Math.cos(ang) * r, cy - Math.sin(ang) * r);
+          ctx.lineTo(cx + Math.cos(ang) * r, cy + Math.sin(ang) * r);
+          ctx.stroke();
+        }
+        ctx.fillStyle = '#e0b04a';
+        ctx.beginPath();
+        ctx.arc(cx, cy, r * 0.22, 0, Math.PI * 2);
+        ctx.fill();
+      };
+      const boomerang = (cx: number, cy: number, r: number, rot: number) => {
+        ctx.save();
+        ctx.translate(cx, cy);
+        ctx.rotate(rot);
+        ctx.fillStyle = '#d9822b';
+        ctx.beginPath();
+        ctx.moveTo(-r, 0);
+        ctx.quadraticCurveTo(0, -r * 1.2, r, 0);
+        ctx.quadraticCurveTo(0, -r * 0.5, -r, 0);
+        ctx.fill();
+        ctx.restore();
+      };
+      for (const [x, y] of [[0.2, 0.2], [0.7, 0.55], [0.35, 0.85]]) for (const [ox, oy] of [[0, 0], [s, 0], [0, s], [-s, 0], [0, -s]]) star(x * s + ox, y * s + oy, s / 14);
+      for (const [x, y, r] of [[0.65, 0.15, 0.4], [0.15, 0.6, -0.8], [0.85, 0.9, 1.6]]) for (const [ox, oy] of [[0, 0], [s, 0], [0, s], [-s, 0], [0, -s]]) boomerang(x * s + ox, y * s + oy, s / 12, r);
+      break;
+    }
+    case 'schach': {
+      const n = 4;
+      const t = s / n;
+      for (let gy = 0; gy < n; gy++) {
+        for (let gx = 0; gx < n; gx++) {
+          ctx.fillStyle = (gx + gy) % 2 ? accent : color;
+          ctx.fillRect(gx * t, gy * t, t, t);
+        }
+      }
+      ctx.globalAlpha = 0.25;
+      ctx.fillStyle = '#ffffff';
+      for (let gy = 0; gy < n; gy++) for (let gx = 0; gx < n; gx++) ctx.fillRect(gx * t + t * 0.1, gy * t + t * 0.1, t * 0.25, t * 0.04);
+      ctx.globalAlpha = 1;
+      break;
+    }
     case 'teppich': {
       ctx.fillStyle = accent;
       for (let i = 0; i < 300; i++) {

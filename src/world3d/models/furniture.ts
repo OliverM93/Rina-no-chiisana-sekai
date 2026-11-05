@@ -1324,6 +1324,147 @@ export function makeFurniture(itemId: string, links: FenceLinks = { n: false, e:
       for (let i = 0; i < 6; i++) g.add(s(0.03, 0.02, 0.01, '#9ab8a8', 0.02 + (i % 2 ? 0.03 : -0.03) + i * 0.008, 0.3 + i * 0.045, 0));
       break;
     }
+    // ---------------------------------------------------------------- Mid-Century & Bauhaus
+    case 'lederloungesessel': {
+      const walnut = '#5e3e28';
+      // Sitzschale & Rückenschale aus Nussbaum, Lederpolster
+      const seat = b(0.7, 0.08, 0.62, walnut, 0, 0.34, 0.04);
+      seat.rotation.x = -0.12;
+      g.add(seat);
+      g.add(b(0.62, 0.1, 0.54, col, 0, 0.41, 0.05).rotateX(-0.12));
+      const back = b(0.7, 0.62, 0.08, walnut, 0, 0.72, -0.28);
+      back.rotation.x = -0.32;
+      g.add(back);
+      const cushion = b(0.6, 0.54, 0.1, col, 0, 0.73, -0.22);
+      cushion.rotation.x = -0.32;
+      g.add(cushion);
+      for (const x of [-0.36, 0.36]) g.add(b(0.08, 0.06, 0.5, walnut, x, 0.52, 0.04));
+      for (const x of [-0.36, 0.36]) g.add(b(0.07, 0.04, 0.42, col, x, 0.56, 0.06));
+      // Sternfuß aus Metall
+      g.add(c(0.04, 0.26, '#2a2a30', 0, 0.16, 0));
+      for (let i = 0; i < 5; i++) {
+        const a2 = (i / 5) * Math.PI * 2;
+        const arm = b(0.34, 0.03, 0.04, '#2a2a30', Math.cos(a2) * 0.16, 0.03, Math.sin(a2) * 0.16);
+        arm.rotation.y = -a2;
+        g.add(arm);
+      }
+      seatY = 0.46;
+      break;
+    }
+    case 'freischwinger': {
+      const chrome = '#d9dde3';
+      // gebogenes Rohr: Kufen, Front, Sitz
+      for (const x of [-0.24, 0.24]) {
+        g.add(c(0.018, 0.56, chrome, x, 0.02, 0.02).rotateX(Math.PI / 2));
+        g.add(c(0.018, 0.44, chrome, x, 0.22, 0.3));
+        g.add(c(0.018, 0.5, chrome, x, 0.66, -0.24));
+      }
+      g.add(b(0.52, 0.05, 0.46, col, 0, 0.45, 0.06));
+      g.add(b(0.48, 0.36, 0.04, col, 0, 0.72, -0.22).rotateX(-0.08));
+      // Rahmen aus Holz um Sitz & Lehne
+      g.add(b(0.54, 0.03, 0.48, '#2a2a30', 0, 0.42, 0.06));
+      seatY = 0.47;
+      break;
+    }
+    case 'teaksideboard': {
+      const teak = '#b0703f';
+      g.add(b(1.84, 0.4, 0.46, teak, 0, 0.42, 0));
+      g.add(b(1.86, 0.03, 0.48, lighten(teak, 0.08), 0, 0.635, 0));
+      // Schiebetüren & Griffmulden
+      for (const x of [-0.6, 0, 0.6]) {
+        g.add(b(0.56, 0.34, 0.01, darken(teak, 0.06), x, 0.42, 0.235));
+        g.add(b(0.03, 0.12, 0.012, darken(teak, 0.3), x + 0.2, 0.44, 0.242));
+      }
+      for (const [x, z] of [[-0.82, -0.17], [0.82, -0.17], [-0.82, 0.17], [0.82, 0.17]]) {
+        const leg = c(0.022, 0.26, '#3a2a20', x, 0.11, z);
+        leg.rotation.z = x > 0 ? -0.18 : 0.18;
+        leg.rotation.x = z > 0 ? -0.12 : 0.12;
+        g.add(leg);
+      }
+      break;
+    }
+    case 'satztische': {
+      const teak = '#b0703f';
+      for (const [w, h, x, z, top] of [[0.62, 0.46, 0, -0.05, '#b0703f'], [0.5, 0.36, 0.06, 0.02, '#f2c14e'], [0.38, 0.26, 0.12, 0.09, '#d9483b']] as const) {
+        g.add(b(w, 0.03, w * 0.8, top, x, h, z));
+        for (const sx of [-1, 1]) g.add(b(0.03, h, 0.03, teak, x + sx * (w / 2 - 0.03), h / 2, z + w * 0.35));
+        for (const sx of [-1, 1]) g.add(b(0.03, h, 0.03, teak, x + sx * (w / 2 - 0.03), h / 2, z - w * 0.35));
+      }
+      break;
+    }
+    case 'tripodlampe': {
+      for (let i = 0; i < 3; i++) {
+        const a2 = (i / 3) * Math.PI * 2;
+        const leg = c(0.018, 1.2, '#8a5a3a', Math.cos(a2) * 0.14, 0.58, Math.sin(a2) * 0.14);
+        leg.rotation.z = -Math.cos(a2) * 0.22;
+        leg.rotation.x = Math.sin(a2) * 0.22;
+        g.add(leg);
+      }
+      glow = glowMat('#fff1c8');
+      const shade = mesh(new THREE.CylinderGeometry(0.1, 0.26, 0.3, 18, 1, true), toon('#2a2a30', { side: THREE.DoubleSide }));
+      shade.position.y = 1.25;
+      g.add(shade);
+      const bulb = mesh(new THREE.SphereGeometry(0.06, 10, 8), glow);
+      bulb.position.y = 1.18;
+      g.add(bulb);
+      lightAt = new THREE.Vector3(0, 1.0, 0);
+      break;
+    }
+    case 'opal-leuchte': {
+      g.add(c(0.08, 0.02, '#d9dde3', 0, 0.01, 0));
+      g.add(c(0.012, 0.18, '#d9dde3', 0, 0.1, 0));
+      glow = glowMat('#fffaf0');
+      const ball = mesh(new THREE.SphereGeometry(0.12, 18, 12), glow);
+      ball.position.y = 0.3;
+      g.add(ball);
+      lightAt = new THREE.Vector3(0, 0.35, 0);
+      break;
+    }
+    case 'formenteppich': {
+      g.add(b(1.9, 0.02, 1.9, '#f4efe4', 0, 0.01, 0));
+      g.add(b(1.92, 0.021, 0.06, '#2a2a30', 0, 0.0105, -0.93));
+      g.add(b(1.92, 0.021, 0.06, '#2a2a30', 0, 0.0105, 0.93));
+      g.add(c(0.38, 0.024, '#d9483b', -0.42, 0.012, -0.38));
+      g.add(b(0.62, 0.024, 0.62, '#3a5fa8', 0.42, 0.012, 0.36));
+      const tri = mesh(new THREE.CylinderGeometry(0.42, 0.42, 0.024, 3), toon('#f2c14e'));
+      tri.position.set(0.45, 0.013, -0.42);
+      g.add(tri);
+      g.add(b(1.2, 0.025, 0.05, '#2a2a30', -0.2, 0.0125, 0.52));
+      break;
+    }
+    case 'formenbild': {
+      const z = WALL_Z;
+      g.add(b(0.6, 0.6, 0.03, '#2a2a30', 0, HANG, z));
+      g.add(b(0.54, 0.54, 0.01, '#f4efe4', 0, HANG, z + 0.02));
+      const circ = c(0.12, 0.01, '#d9483b', -0.1, HANG + 0.1, z + 0.028);
+      circ.rotation.x = Math.PI / 2;
+      g.add(circ);
+      g.add(b(0.18, 0.18, 0.01, '#3a5fa8', 0.1, HANG - 0.1, z + 0.026));
+      const tri = mesh(new THREE.CylinderGeometry(0.11, 0.11, 0.01, 3), toon('#f2c14e'));
+      tri.rotation.x = Math.PI / 2;
+      tri.position.set(-0.11, HANG - 0.12, z + 0.03);
+      g.add(tri);
+      g.add(b(0.4, 0.02, 0.01, '#2a2a30', 0.02, HANG + 0.0, z + 0.03).rotateZ(0.5));
+      break;
+    }
+    case 'sonnenspiegel': {
+      const z = WALL_Z + 0.02;
+      for (let i = 0; i < 20; i++) {
+        const a2 = (i / 20) * Math.PI * 2;
+        const len = i % 2 ? 0.16 : 0.22;
+        const ray = b(0.018, len, 0.012, '#d9b45a', Math.cos(a2) * (0.16 + len / 2), HANG + 0.05 + Math.sin(a2) * (0.16 + len / 2), z);
+        ray.rotation.z = a2 - Math.PI / 2;
+        g.add(ray);
+        if (i % 2 === 0) g.add(s(0.02, 0.02, 0.01, '#e8c06a', Math.cos(a2) * (0.16 + len), HANG + 0.05 + Math.sin(a2) * (0.16 + len), z + 0.004));
+      }
+      const glass = c(0.15, 0.012, new THREE.MeshToonMaterial({ color: '#cfe4ee', emissive: '#bfe0f0', emissiveIntensity: 0.25 }), 0, HANG + 0.05, z + 0.01);
+      glass.rotation.x = Math.PI / 2;
+      g.add(glass);
+      const ring = new THREE.Mesh(new THREE.TorusGeometry(0.155, 0.015, 8, 24), toon('#d9b45a'));
+      ring.position.set(0, HANG + 0.05, z + 0.012);
+      g.add(ring);
+      break;
+    }
     default:
       g.add(b(0.6, 0.6, 0.6, col, 0, 0.3, 0));
   }

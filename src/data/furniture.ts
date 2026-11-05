@@ -7,7 +7,7 @@
  */
 import { ARTWORKS } from './art';
 
-export type FurnitureStyle = 'japanisch' | 'basis' | 'cottage' | 'retro' | 'modern' | 'handgemacht' | 'garten' | 'kunst';
+export type FurnitureStyle = 'japanisch' | 'basis' | 'cottage' | 'retro' | 'modern' | 'midcentury' | 'handgemacht' | 'garten' | 'kunst';
 
 export interface FurnitureDef {
   /** Basis-ID (ohne Variante) */
@@ -157,6 +157,16 @@ export const FURNITURE: readonly FurnitureDef[] = [
   { id: 'wuerfelregal', name: 'Würfelregal', style: 'modern', surface: true, surfaceHeight: 0.92, price: 800, w: 2, d: 1, description: 'Ein Regal aus hellen Holzwürfeln mit Platz für Bücher, Körbe und Kleinkram.' },
   { id: 'sitzsack', name: 'Sitzsack', style: 'modern', sit: 'sitzen', price: 500, w: 1, d: 1, description: 'Ein dicker Sitzsack. Man plumpst hinein und steht nie wieder auf.', variants: { rosa: '#f4a3b8', grau: '#9a9aa4', senf: '#e0b04a' } },
   { id: 'keramikvase', name: 'Keramikvase', style: 'modern', small: true, price: 280, w: 1, d: 1, description: 'Eine bauchige Vase mit einem einzelnen Eukalyptuszweig. Sehr minimalistisch.' },
+  // Mid-Century & Bauhaus (M8h): Teak & Nussbaum, Chrom, schräge Beine, Grundformen in Rot, Gelb, Blau
+  { id: 'lederloungesessel', name: 'Leder-Loungesessel', style: 'midcentury', sit: 'sitzen', price: 2400, w: 1, d: 1, description: 'Weiches Leder in geschwungenen Nussbaum-Schalen. Man sitzt wie in einer Umarmung.', variants: { cognac: '#a8643a', schwarz: '#2a2a30' } },
+  { id: 'freischwinger', name: 'Freischwinger', style: 'midcentury', sit: 'sitzen', price: 700, w: 1, d: 1, description: 'Ein Stuhl auf einem gebogenen Chromrohr – er federt ein bisschen, wenn man sich setzt.', variants: { schwarz: '#2a2a30', cognac: '#a8643a', geflecht: '#d9c08a' } },
+  { id: 'teaksideboard', name: 'Teak-Sideboard', style: 'midcentury', surface: true, surfaceHeight: 0.62, price: 1500, w: 2, d: 1, description: 'Ein langes Sideboard aus Teak mit Schiebetüren auf schrägen Beinchen.' },
+  { id: 'satztische', name: 'Satztische', style: 'midcentury', surface: true, surfaceHeight: 0.46, price: 650, w: 1, d: 1, description: 'Drei Tischchen, die ineinanderpassen. Platz sparen mit Stil.' },
+  { id: 'tripodlampe', name: 'Dreibein-Stehlampe', style: 'midcentury', light: true, price: 800, w: 1, d: 1, description: 'Drei schlanke Holzbeine und ein kegelförmiger Schirm. Wirft warmes Licht nach unten.' },
+  { id: 'opal-leuchte', name: 'Opalglas-Tischleuchte', style: 'midcentury', small: true, light: true, price: 450, w: 1, d: 1, description: 'Eine Kugel aus milchigem Glas auf einem Chromfuß. Ganz klare Form, ganz weiches Licht.' },
+  { id: 'formenteppich', name: 'Formen-Teppich', style: 'midcentury', rug: true, price: 900, w: 2, d: 2, description: 'Ein Teppich mit Kreis, Quadrat und Dreieck in Rot, Gelb und Blau.' },
+  { id: 'formenbild', name: 'Formen-Bild', style: 'midcentury', wall: true, price: 700, w: 1, d: 1, description: 'Ein Bild aus Grundformen und Grundfarben. Jens sagt: „Weniger ist mehr, ma chérie.“' },
+  { id: 'sonnenspiegel', name: 'Sonnenspiegel', style: 'midcentury', wall: true, price: 850, w: 1, d: 1, description: 'Ein runder Spiegel mit goldenen Strahlen rundherum – wie eine kleine Sonne an der Wand.' },
   { id: 'topfpflanze', name: 'Monstera', style: 'basis', price: 300, w: 1, d: 1, description: 'Große, grüne Blätter mit Löchern. Sehr fotogen.' },
 ];
 
@@ -184,6 +194,8 @@ export const WALLPAPERS: readonly SurfaceDef[] = [
   { id: 'tapete-ranken', name: 'Rankentapete', style: 'retro', price: 650, kind: 'tapete', pattern: 'ranken', color: '#e9dcc0', accent: '#8a6a3a', description: 'Verschlungene Ranken in Gold und Braun. Sehr gute Stube.' },
   { id: 'tapete-anthrazit', name: 'Akzentwand Anthrazit', style: 'modern', price: 500, kind: 'tapete', pattern: 'uni', color: '#4a4a52', accent: '#5a5a64', description: 'Eine dunkle, ruhige Wand. Passt zu Linas Lieblingsfarbe Schwarz.' },
   { id: 'tapete-terrazzo', name: 'Terrazzo-Tapete', style: 'modern', price: 750, kind: 'tapete', pattern: 'terrazzo', color: '#f2efea', accent: '#d9a79a', description: 'Helle Wand mit bunten Steinsplittern. Modern, aber verspielt.' },
+  { id: 'tapete-formen', name: 'Bauhaus-Formen', style: 'midcentury', price: 750, kind: 'tapete', pattern: 'bauhaus', color: '#f4efe4', accent: '#d9483b', description: 'Kreise, Quadrate und Dreiecke in Rot, Gelb und Blau auf hellem Grund.' },
+  { id: 'tapete-atomic', name: 'Atomic-Tapete', style: 'midcentury', price: 700, kind: 'tapete', pattern: 'atomic', color: '#e9e2cf', accent: '#3f7a7a', description: 'Kleine Sterne und Bumerangs wie in den Fünfzigern.' },
   { id: 'tapete-rosa', name: 'Pastellrosa Tapete', style: 'basis', price: 400, kind: 'tapete', pattern: 'streifen', color: '#fbe0e8', accent: '#f6cfdb', description: 'Ganz zarte Streifen in Rosa.' },
 ];
 
@@ -194,13 +206,15 @@ export const FLOORS: readonly SurfaceDef[] = [
   { id: 'boden-landhaus', name: 'Landhausdielen', style: 'cottage', price: 600, kind: 'boden', pattern: 'dielen', color: '#efe3cf', accent: '#c9b28f', description: 'Breite, hell gekalkte Dielen. Knarzen ein bisschen – das gehört so.' },
   { id: 'boden-fischgraet', name: 'Fischgrät-Parkett', style: 'retro', price: 900, kind: 'boden', pattern: 'fischgraet', color: '#c98f5a', accent: '#a5703f', description: 'Kleine Holzstäbe im Zickzack. Glänzt nach dem Bohnern.' },
   { id: 'boden-beton', name: 'Betonoptik', style: 'modern', price: 800, kind: 'boden', pattern: 'beton', color: '#c9c7c4', accent: '#b3b0ad', description: 'Glatter, hellgrauer Boden in Betonoptik. Schön kühl im Sommer.' },
+  { id: 'boden-nussbaum', name: 'Nussbaum-Parkett', style: 'midcentury', price: 900, kind: 'boden', pattern: 'dielen', color: '#7a5236', accent: '#5e3e28', description: 'Dunkles, warmes Nussbaumholz.' },
+  { id: 'boden-schach', name: 'Schachbrett-Fliesen', style: 'midcentury', price: 800, kind: 'boden', pattern: 'schach', color: '#f2efe8', accent: '#2a2a30', description: 'Schwarze und weiße Fliesen im Wechsel. Klar, grafisch, zeitlos.' },
   { id: 'boden-teppich', name: 'Rosa Teppichboden', style: 'basis', price: 500, kind: 'boden', pattern: 'teppich', color: '#f7c6d4', accent: '#f4b3c6', description: 'Flauschig und weich unter den Füßen.' },
 ];
 
 // Kunstwerke (Bild auf Staffelei) aus `art.ts` – nur über Jens erhältlich
 for (const a of ARTWORKS) (FURNITURE as FurnitureDef[]).push({ id: a.id, name: a.name, style: 'kunst', gift: true, price: a.price, w: 1, d: 1, description: `${a.description} – ${a.artist}` });
 
-export const STYLE_LABELS: Record<FurnitureStyle, string> = { japanisch: 'Japanisch', basis: 'Basis', cottage: 'Cottagecore', retro: 'Retro-Oma-Chic', modern: 'Modern', handgemacht: 'Handgemacht', garten: 'Garten', kunst: 'Kunst' };
+export const STYLE_LABELS: Record<FurnitureStyle, string> = { japanisch: 'Japanisch', basis: 'Basis', cottage: 'Cottagecore', retro: 'Retro-Oma-Chic', modern: 'Modern', midcentury: 'Mid-Century & Bauhaus', handgemacht: 'Handgemacht', garten: 'Garten', kunst: 'Kunst' };
 
 /** Möbel-Gegenstand (mit Variante) → Basis + Farbe */
 export interface FurnitureItem {
@@ -219,7 +233,7 @@ export const FURNITURE_ITEMS: readonly FurnitureItem[] = FURNITURE.flatMap((def)
 export const FURNITURE_BY_ITEM: Readonly<Record<string, FurnitureItem>> = Object.fromEntries(FURNITURE_ITEMS.map((f) => [f.itemId, f]));
 export const SURFACE_BY_ID: Readonly<Record<string, SurfaceDef>> = Object.fromEntries([...WALLPAPERS, ...FLOORS].map((s) => [s.id, s]));
 
-export const VARIANT_LABELS: Record<string, string> = { grau: 'Grau', weiss: 'Weiß', mint: 'Mint', gelb: 'Gelb', rosa: 'Rosa', indigo: 'Indigo', creme: 'Creme', rot: 'Rot', blau: 'Blau', gruen: 'Grün', senf: 'Senfgelb', salbei: 'Salbei', rost: 'Rost', petrol: 'Petrol', sand: 'Sand', schwarz: 'Schwarz' };
+export const VARIANT_LABELS: Record<string, string> = { grau: 'Grau', weiss: 'Weiß', mint: 'Mint', gelb: 'Gelb', rosa: 'Rosa', indigo: 'Indigo', creme: 'Creme', rot: 'Rot', blau: 'Blau', gruen: 'Grün', senf: 'Senfgelb', salbei: 'Salbei', rost: 'Rost', petrol: 'Petrol', sand: 'Sand', schwarz: 'Schwarz', cognac: 'Cognac', geflecht: 'Wiener Geflecht' };
 
 
 /** Raum-Infos für die Raumlogik (`core/room.ts`) */
