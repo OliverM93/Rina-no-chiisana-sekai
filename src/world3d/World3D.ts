@@ -48,7 +48,9 @@ import { dinnerGuests, isDinnerTime } from '../game/dinner';
 import { activeMeetups, joinMeetup, meetupOf } from '../game/meetups';
 import { CHECKUP_GIFTS, CHECKUP_LINES, LARS_WELCOME } from '../data/npcs/lars';
 import { hashString } from '../core/rng';
-import { canDate, type DateKind, haveDate } from '../game/romance';
+import { canDate, canKiss, type DateKind, giveKiss, haveDate } from '../game/romance';
+import { SPONTANEOUS_KISS_LINES, WELCOME_KISS_LINES } from '../data/npcs/oli';
+import { KISS } from './Character3D';
 import { isPartyTime } from '../game/party';
 import { makePartyLights, makePicnic } from './models/buildings';
 import { addFriendship } from '../game/gameplay';
@@ -167,6 +169,13 @@ export class World3D {
   private exitArmed = true;
   private winston: Winston | null = null;
   private stepAcc = 0;
+  /** Küsschen läuft (Oli kommt her / beide küssen sich) – Lina bleibt so lange stehen */
+  private kissBusy = false;
+  /** Oli darf im Zimmer laufen (zu Lina hin) */
+  private homeOliWalk = false;
+  private lastHomeKiss = -Infinity;
+  private nextSpontaneousKiss = 0;
+  private kissCount = 0;
   /** Automatisches Gehen (Tür-Animation) */
   private autoWalk: { dx: number; dy: number; until: number } | null = null;
   private yard: Yard3D;
@@ -348,7 +357,7 @@ export class World3D {
           this.onNewDay();
         }
       }
-      const blocked = this.session.uiBlocking || this.cutscene;
+      const blocked = this.session.uiBlocking || this.cutscene || this.kissBusy;
       const auto = this.autoWalk && performance.now() < this.autoWalk.until ? this.autoWalk : null;
       if (!auto) this.autoWalk = null;
       const intent = auto ? { dx: auto.dx, dy: auto.dy, run: false } : blocked ? { dx: 0, dy: 0, run: false } : this.keys.direction();
@@ -1330,6 +1339,17 @@ export class World3D {
               onCancel: () => this.npcDialog(npc, [id === 'gisela' ? 'Na? Doch nichts? Macht nix, Kindchen.' : 'Doch nichts? Kein Problem!'], npcHearts(this.session, id)),
             }),
         },
+        ...(id === 'oli' && canKiss(this.session)
+          ? [
+              {
+                label: '😘 Küsschen geben',
+                onSelect: () => {
+                  const c = this.homeOli?.visible ? this.homeOli : npc.char;
+                  this.kissScene(c, () => this.npcDialog(npc, giveKiss(this.session, this.kissCount++), npcHearts(this.session, id)));
+                },
+              },
+            ]
+          : []),
         ...(id === 'oli'
           ? (['picknick', 'sterne'] as const)
               .filter((k) => canDate(this.session, k))
@@ -1611,7 +1631,96 @@ export class World3D {
         c.seatHeight = spot.lie;
       } else c.face(spot.facing);
     }
-    if (c.visible) c.update(dtMs, { dx: 0, dy: 0, run: false }, () => true);
+    const walkSolid = (tx: number, ty: number) => this.interior.isBlocked(room, tx - ROOM_X, ty - ROOM_Y);
+    if (c.visible) c.update(dtMs, { dx: 0, dy: 0, run: false }, this.homeOliWalk ? walkSolid : () => true);
+    // ab und zu einfach so ein Küsschen, wenn Lina in der Nähe herumsteht
+    const player = this.player;
+    const now = performance.now();
+    if (!this.nextSpontaneousKiss) this.nextSpontaneousKiss = now + 60_000 + Math.random() * 120_000;
+    if (player && c.visible && !c.sitting && !oli.isSleeping && !player.moving && !this.kissBusy && !this.session.uiBlocking && !this.session.decorActive && now > this.nextSpontaneousKiss) {
+      this.nextSpontaneousKiss = now + 150_000 + Math.random() * 180_000;
+      if (Math.hypot(player.x - c.x, player.y - c.y) < TILE * 3.5) this.homeOliComes(SPONTANEOUS_KISS_LINES);
+    }
+  }
+
+  /** Oli kommt im Zimmer zu Lina und gibt ihr ein Küsschen */
+  private homeOliComes(lines: readonly string[]): boolean {
+    const c = this.homeOli;
+    const oli = this.npcs.get('oli');
+    const player = this.player;
+    const room = this.room;
+    if (!c?.visible || !oli || !player || !room || c.sitting || oli.isSleeping || this.kissBusy || this.cutscene || this.session.uiBlocking) return false;
+    this.kissBusy = true;
+    const done = () => {
+      this.homeOliWalk = false;
+      const line = lines[Math.floor(Math.random() * lines.length)];
+      this.kissScene(c, () => {
+        this.session.bus.emit('toast', { text: line });
+        this.homeOliKey = ''; // zurück an seinen Platz
+        this.kissBusy = false;
+      });
+    };
+    const grid = this.roomGrid();
+    const from = { x: c.tile.x - ROOM_X, y: c.tile.y - ROOM_Y };
+    const to = { x: player.tile.x - ROOM_X, y: player.tile.y - ROOM_Y };
+    const path = Math.hypot(from.x - to.x, from.y - to.y) < 1.5 ? [] : findPath(grid, from, to);
+    if (!path) {
+      this.kissBusy = false;
+      return false;
+    }
+    path.pop(); // nicht auf Lina drauf
+    if (path.length === 0) {
+      done();
+      return true;
+    }
+    this.homeOliWalk = true;
+    c.followPath(path.map((t) => ({ x: t.x + ROOM_X, y: t.y + ROOM_Y })), done);
+    // Sicherheitsnetz, falls er irgendwo hängen bleibt
+    window.setTimeout(() => {
+      if (this.homeOliWalk) {
+        c.cancelPath();
+        done();
+      }
+    }, 7000);
+    return true;
+  }
+
+  /**
+   * Küsschen: Lina tritt nah heran, beide beugen sich vor (Augen zu), Lina auf den Zehenspitzen,
+   * „Mwah“, Herzchen. `then` läuft danach.
+   */
+  private kissScene(oli: Character, then: () => void) {
+    const player = this.player;
+    if (!player) return then();
+    this.kissBusy = true;
+    player.cancelPath();
+    oli.cancelPath();
+    const dx = player.x - oli.x;
+    const dy = player.y - oli.y;
+    const d = Math.hypot(dx, dy) || 1;
+    const want = TILE * 0.56;
+    const sx = player.x;
+    const sy = player.y;
+    const tx = d > want ? oli.x + (dx / d) * want : sx;
+    const ty = d > want ? oli.y + (dy / d) * want : sy;
+    this.tweens.add(260, (k) => player.teleport(sx + (tx - sx) * k, sy + (ty - sy) * k), () => {
+      player.faceTowards(oli.x, oli.y);
+      oli.faceTowards(player.x, player.y);
+      window.setTimeout(() => {
+        player.kiss(true);
+        if (!oli.sitting) oli.kiss();
+        window.setTimeout(() => {
+          this.session.bus.emit('sfx', 'kuss');
+          const mx = (player.x + oli.x) / 2;
+          const my = (player.y + oli.y) / 2;
+          this.fxAt('herzen', mx, my, -0.25, 0.1);
+        }, KISS * 350);
+        window.setTimeout(() => {
+          this.kissBusy = false;
+          then();
+        }, KISS * 1000 + 100);
+      }, 180);
+    });
   }
 
   /** Wo steht Oli gerade im Zimmer? (Zimmerkoordinaten, Feldmitte = +0.5) */
@@ -2216,6 +2325,11 @@ export class World3D {
     this.placeInRoom('haupt', 'draussen');
     this.applyLight();
     this.session.bus.emit('home:inside', true);
+    // Ist Oli wach zu Hause, kommt er zur Begrüßung mit einem Küsschen (nicht bei jedem Rein-und-Raus)
+    window.setTimeout(() => {
+      if (performance.now() - this.lastHomeKiss < 10 * 60_000) return;
+      if (this.session.inside && this.homeOliComes(WELCOME_KISS_LINES)) this.lastHomeKiss = performance.now();
+    }, 1400);
   }
 
   private exitHome() {
