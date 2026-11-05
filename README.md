@@ -127,6 +127,10 @@ Fernseher läuft jetzt auch der **Gruselkanal** – Oli schaut tapfer mit (hinte
 Herzchen steigen auf, beim Bauen regnet es Konfetti – und in Sommernächten tanzen Glühwürmchen. Lina macht
 Freudensprünge, und die Bewohner winken, wenn sie sie anspricht.
 
+**Sparbuch (M8d):** In Papas Dorfkasse kann Lina Sternchen aufs Sparbuch legen und jederzeit wieder abheben.
+Am Monatsanfang gibt es ein bisschen Zinsen – und einen Kontoauszug-Brief von Olaf, der sich über den
+Zinseszins freut.
+
 Im Menü: Aussehen ändern, Lautstärke, speichern, **Spielstand exportieren/laden** (als Datei – praktisch zum Sichern
 oder für ein anderes Gerät), Vollbild, Hilfe.
 

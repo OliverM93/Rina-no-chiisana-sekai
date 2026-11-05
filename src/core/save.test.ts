@@ -225,7 +225,7 @@ describe('Version 6 (M6 Ausbau)', () => {
     if (!result.ok) return;
     expect(result.data.house.rooms[0]).toMatchObject({ id: 'haupt', wallpaper: 'tapete-shoji', floor: 'boden-tatami' });
     expect(result.data.house.rooms[0].items.map((i) => i.itemId)).toEqual(['andon']);
-    expect(result.data.bank).toEqual({ loan: 0 });
+    expect(result.data.bank).toEqual({ loan: 0, savings: 0, interestMonth: '', lastInterest: 0 });
   });
 });
 
@@ -294,6 +294,15 @@ describe('Version 11 (M7f Galerie)', () => {
     const s = { ...freshSave(), gallery: ['a', 'a', 'weg', 3] };
     const r2 = parseSave(JSON.stringify(s), SPAWN, NOW, { isKnownItem: (id) => id !== 'weg' });
     expect(r2.ok && r2.data.gallery).toEqual(['a']);
+  });
+});
+
+describe('Version 12 (M8d Sparbuch)', () => {
+  it('ergänzt das Sparbuch, der Kredit bleibt', () => {
+    const v11 = { ...freshSave(), version: 11, bank: { loan: 4200 } } as Record<string, unknown>;
+    const r = parseSave(JSON.stringify(v11), SPAWN, NOW);
+    expect(r.ok && r.data.version).toBe(12);
+    expect(r.ok && r.data.bank).toEqual({ loan: 4200, savings: 0, interestMonth: '', lastInterest: 0 });
   });
 });
 

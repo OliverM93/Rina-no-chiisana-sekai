@@ -21,7 +21,7 @@ import { createInventory, type Inventory, normalizeInventory } from './inventory
 import { createMailbox, type Mailbox, normalizeMailbox } from './mail';
 import { type DayMonth, DEFAULT_LINA_BIRTHDAY, formatIsoDay } from './time';
 
-export const SAVE_VERSION = 11;
+export const SAVE_VERSION = 12;
 export const SAVE_KEY = 'rina-no-chiisana-sekai.save';
 export const BACKUP_KEY = 'rina-no-chiisana-sekai.save.backup';
 
@@ -220,6 +220,8 @@ export const MIGRATIONS: Record<number, (old: RawSave) => RawSave> = {
   9: (old) => ({ ...old }),
   // v10 → v11 (M7f Galerie): gestiftete Kunstwerke. `normalizeSave` legt die Liste leer an.
   10: (old) => ({ ...old }),
+  // v11 → v12 (M8d Sparbuch): Guthaben & Zinsmonat in der Dorfkasse. `normalizeBank` ergänzt sie (Guthaben 0).
+  11: (old) => ({ ...old }),
 };
 
 export function migrate(raw: RawSave, migrations = MIGRATIONS, target = SAVE_VERSION): RawSave {
