@@ -7,7 +7,7 @@
  */
 import { ARTWORKS } from './art';
 
-export type FurnitureStyle = 'japanisch' | 'basis' | 'handgemacht' | 'garten' | 'kunst';
+export type FurnitureStyle = 'japanisch' | 'basis' | 'cottage' | 'retro' | 'modern' | 'handgemacht' | 'garten' | 'kunst';
 
 export interface FurnitureDef {
   /** Basis-ID (ohne Variante) */
@@ -136,6 +136,27 @@ export const FURNITURE: readonly FurnitureDef[] = [
   { id: 'fotowand', name: 'Fotowand', style: 'basis', wall: true, light: true, price: 900, w: 2, d: 1, description: 'Fotos von allen Liebsten an einer Lichterkette mit kleinen Klammern. Leuchtet abends.' },
   { id: 'spiegel-rund', name: 'Runder Spiegel', style: 'basis', wall: true, price: 500, w: 1, d: 1, description: 'Ein runder Spiegel mit goldenem Rand. Christin prüft darin, ob alles gerade hängt.' },
   { id: 'trockenkranz', name: 'Trockenblumenkranz', style: 'basis', wall: true, price: 350, w: 1, d: 1, description: 'Ein Kranz aus Lavendel, Eukalyptus und kleinen Rosen. Duftet ein bisschen nach Sommer.' },
+  // Cottagecore (M8g): Landhaus, Blümchen, Häkeln, Kräuter
+  { id: 'landhaustisch', name: 'Landhaustisch', style: 'cottage', price: 1100, w: 2, d: 1, surface: true, surfaceHeight: 0.62, description: 'Ein großer Holztisch mit gedrechselten Beinen und ein paar Kerben. Hier wird gebacken!' },
+  { id: 'bluemchensessel', name: 'Blümchensessel', style: 'cottage', sit: 'sitzen', price: 950, w: 1, d: 1, description: 'Ein gepolsterter Sessel mit Streublümchen. Perfekt für eine Tasse Tee und ein Buch.', variants: { rosa: '#f4b6c2', salbei: '#a9c4a0', creme: '#f3ead8' } },
+  { id: 'haekelteppich', name: 'Häkelteppich', style: 'cottage', rug: true, price: 450, w: 2, d: 2, description: 'Ein runder Teppich, Masche für Masche gehäkelt. Oma hat ein paar Reihen beigesteuert.' },
+  { id: 'kraeutertoepfe', name: 'Kräutertöpfchen', style: 'cottage', small: true, price: 220, w: 1, d: 1, description: 'Basilikum, Thymian und Rosmarin in drei kleinen Tontöpfen. Riecht nach Kochen.' },
+  { id: 'kerzenleuchter', name: 'Kerzenleuchter', style: 'cottage', small: true, light: true, price: 300, w: 1, d: 1, description: 'Ein Messingleuchter mit drei Kerzen. Flackert abends gemütlich.' },
+  { id: 'wollkorb', name: 'Wollkorb', style: 'cottage', price: 260, w: 1, d: 1, description: 'Ein Weidenkorb voller Wollknäuel. Winston findet ihn sehr verdächtig.' },
+  // Retro-Oma-Chic (M8g): Ohrensessel, Nierentisch, Fransen & Kristall
+  { id: 'ohrensessel', name: 'Ohrensessel', style: 'retro', sit: 'sitzen', price: 1300, w: 1, d: 1, description: 'Samtig, gemütlich und mit großen „Ohren“. Oma sagt: „So einen hatte Ludwig auch. Köstlich!“', variants: { senf: '#d9a441', rost: '#b8573a', petrol: '#3f7a7a' } },
+  { id: 'nierentisch', name: 'Nierentisch', style: 'retro', surface: true, surfaceHeight: 0.42, price: 700, w: 1, d: 1, description: 'Ein Tischchen in Nierenform auf schrägen Beinchen. Echt fünfziger Jahre.' },
+  { id: 'fransenlampe', name: 'Fransenlampe', style: 'retro', light: true, price: 650, w: 1, d: 1, description: 'Eine Stehlampe mit Stoffschirm und langen Fransen. Leuchtet warm wie früher.' },
+  { id: 'bonbonschale', name: 'Bonbonschale', style: 'retro', small: true, price: 240, w: 1, d: 1, description: 'Eine Kristallschale mit bunten Bonbons. Wie bei Oma – nur dass man hier welche nehmen darf.' },
+  { id: 'perserteppich', name: 'Orientteppich', style: 'retro', rug: true, price: 1200, w: 2, d: 2, description: 'Ein dicker Teppich mit Mustern und Fransen. Christin kämmt die Fransen jeden Sonntag gerade.' },
+  { id: 'gummibaum', name: 'Gummibaum', style: 'retro', price: 380, w: 1, d: 1, description: 'Glänzende, dicke Blätter. Steht seit Jahrzehnten in jeder guten Stube.' },
+  // Modern (M8g): klare Formen, Grau & Holz, Marmor
+  { id: 'loungesofa', name: 'Loungesofa', style: 'modern', sit: 'sitzen', price: 2100, w: 2, d: 1, description: 'Ein niedriges, breites Sofa mit vielen Kissen. Zum Versinken.', variants: { grau: '#9a9aa4', sand: '#d9c8ad', schwarz: '#3a3a42' } },
+  { id: 'marmortisch', name: 'Marmor-Couchtisch', style: 'modern', surface: true, surfaceHeight: 0.36, price: 1200, w: 1, d: 1, description: 'Rund, weiß mit grauen Adern, auf einem schwarzen Metallfuß.' },
+  { id: 'bogenlampe', name: 'Bogenlampe', style: 'modern', light: true, price: 900, w: 1, d: 1, description: 'Eine Lampe mit langem Bogen. Sie beugt sich über das Sofa, als wollte sie mitlesen.' },
+  { id: 'wuerfelregal', name: 'Würfelregal', style: 'modern', surface: true, surfaceHeight: 0.92, price: 800, w: 2, d: 1, description: 'Ein Regal aus hellen Holzwürfeln mit Platz für Bücher, Körbe und Kleinkram.' },
+  { id: 'sitzsack', name: 'Sitzsack', style: 'modern', sit: 'sitzen', price: 500, w: 1, d: 1, description: 'Ein dicker Sitzsack. Man plumpst hinein und steht nie wieder auf.', variants: { rosa: '#f4a3b8', grau: '#9a9aa4', senf: '#e0b04a' } },
+  { id: 'keramikvase', name: 'Keramikvase', style: 'modern', small: true, price: 280, w: 1, d: 1, description: 'Eine bauchige Vase mit einem einzelnen Eukalyptuszweig. Sehr minimalistisch.' },
   { id: 'topfpflanze', name: 'Monstera', style: 'basis', price: 300, w: 1, d: 1, description: 'Große, grüne Blätter mit Löchern. Sehr fotogen.' },
 ];
 
@@ -157,6 +178,12 @@ export const WALLPAPERS: readonly SurfaceDef[] = [
   { id: 'tapete-shoji', name: 'Shoji-Wand', style: 'japanisch', price: 900, kind: 'tapete', pattern: 'shoji', color: '#fbf6ea', accent: '#a97c56', description: 'Papierwände mit Holzgitter – das Licht scheint sanft hindurch.' },
   { id: 'tapete-kirschblueten', name: 'Washi mit Kirschblüten', style: 'japanisch', price: 800, kind: 'tapete', pattern: 'sakura', color: '#fdeff2', accent: '#f4a3b8', description: 'Zartrosa Papiertapete mit Kirschblüten.' },
   { id: 'tapete-wellen', name: 'Seigaiha-Wellen', style: 'japanisch', price: 800, kind: 'tapete', pattern: 'wellen', color: '#e6eef7', accent: '#5b7fc2', description: 'Ein altes Wellenmuster, das Glück und Ruhe bringen soll.' },
+  { id: 'tapete-bluemchen', name: 'Streublümchen-Tapete', style: 'cottage', price: 600, kind: 'tapete', pattern: 'bluemchen', color: '#fbf3e6', accent: '#e88aa0', description: 'Winzige Blümchen auf Creme – wie im Landhaus.' },
+  { id: 'tapete-salbei', name: 'Salbeigrüne Holzvertäfelung', style: 'cottage', price: 900, kind: 'tapete', pattern: 'vertaefelung', color: '#c4d4bb', accent: '#a9bda0', description: 'Halbhohe Holzleisten in sanftem Salbeigrün.' },
+  { id: 'tapete-kreise', name: 'Siebziger-Kreise', style: 'retro', price: 700, kind: 'tapete', pattern: 'kreise', color: '#f3e2c2', accent: '#d9822b', description: 'Orange und braune Kreise – Oma sagt, die hatte sie 1974 auch.' },
+  { id: 'tapete-ranken', name: 'Rankentapete', style: 'retro', price: 650, kind: 'tapete', pattern: 'ranken', color: '#e9dcc0', accent: '#8a6a3a', description: 'Verschlungene Ranken in Gold und Braun. Sehr gute Stube.' },
+  { id: 'tapete-anthrazit', name: 'Akzentwand Anthrazit', style: 'modern', price: 500, kind: 'tapete', pattern: 'uni', color: '#4a4a52', accent: '#5a5a64', description: 'Eine dunkle, ruhige Wand. Passt zu Linas Lieblingsfarbe Schwarz.' },
+  { id: 'tapete-terrazzo', name: 'Terrazzo-Tapete', style: 'modern', price: 750, kind: 'tapete', pattern: 'terrazzo', color: '#f2efea', accent: '#d9a79a', description: 'Helle Wand mit bunten Steinsplittern. Modern, aber verspielt.' },
   { id: 'tapete-rosa', name: 'Pastellrosa Tapete', style: 'basis', price: 400, kind: 'tapete', pattern: 'streifen', color: '#fbe0e8', accent: '#f6cfdb', description: 'Ganz zarte Streifen in Rosa.' },
 ];
 
@@ -164,13 +191,16 @@ export const FLOORS: readonly SurfaceDef[] = [
   { id: 'boden-dielen', name: 'Helle Holzdielen', style: 'basis', price: 300, kind: 'boden', pattern: 'dielen', color: '#e6c59c', accent: '#cfa175', description: 'Warmer, heller Holzboden.' },
   { id: 'boden-tatami', name: 'Tatami-Boden', style: 'japanisch', price: 1000, kind: 'boden', pattern: 'tatami', color: '#d9d49a', accent: '#5a5a3a', description: 'Der ganze Raum mit Tatami-Matten ausgelegt.' },
   { id: 'boden-dunkel', name: 'Dunkles Holz', style: 'japanisch', price: 700, kind: 'boden', pattern: 'dielen', color: '#8a5a3a', accent: '#6e4630', description: 'Dunkles, poliertes Holz wie in einem alten Teehaus.' },
+  { id: 'boden-landhaus', name: 'Landhausdielen', style: 'cottage', price: 600, kind: 'boden', pattern: 'dielen', color: '#efe3cf', accent: '#c9b28f', description: 'Breite, hell gekalkte Dielen. Knarzen ein bisschen – das gehört so.' },
+  { id: 'boden-fischgraet', name: 'Fischgrät-Parkett', style: 'retro', price: 900, kind: 'boden', pattern: 'fischgraet', color: '#c98f5a', accent: '#a5703f', description: 'Kleine Holzstäbe im Zickzack. Glänzt nach dem Bohnern.' },
+  { id: 'boden-beton', name: 'Betonoptik', style: 'modern', price: 800, kind: 'boden', pattern: 'beton', color: '#c9c7c4', accent: '#b3b0ad', description: 'Glatter, hellgrauer Boden in Betonoptik. Schön kühl im Sommer.' },
   { id: 'boden-teppich', name: 'Rosa Teppichboden', style: 'basis', price: 500, kind: 'boden', pattern: 'teppich', color: '#f7c6d4', accent: '#f4b3c6', description: 'Flauschig und weich unter den Füßen.' },
 ];
 
 // Kunstwerke (Bild auf Staffelei) aus `art.ts` – nur über Jens erhältlich
 for (const a of ARTWORKS) (FURNITURE as FurnitureDef[]).push({ id: a.id, name: a.name, style: 'kunst', gift: true, price: a.price, w: 1, d: 1, description: `${a.description} – ${a.artist}` });
 
-export const STYLE_LABELS: Record<FurnitureStyle, string> = { japanisch: 'Japanisch', basis: 'Basis', handgemacht: 'Handgemacht', garten: 'Garten', kunst: 'Kunst' };
+export const STYLE_LABELS: Record<FurnitureStyle, string> = { japanisch: 'Japanisch', basis: 'Basis', cottage: 'Cottagecore', retro: 'Retro-Oma-Chic', modern: 'Modern', handgemacht: 'Handgemacht', garten: 'Garten', kunst: 'Kunst' };
 
 /** Möbel-Gegenstand (mit Variante) → Basis + Farbe */
 export interface FurnitureItem {
@@ -189,7 +219,7 @@ export const FURNITURE_ITEMS: readonly FurnitureItem[] = FURNITURE.flatMap((def)
 export const FURNITURE_BY_ITEM: Readonly<Record<string, FurnitureItem>> = Object.fromEntries(FURNITURE_ITEMS.map((f) => [f.itemId, f]));
 export const SURFACE_BY_ID: Readonly<Record<string, SurfaceDef>> = Object.fromEntries([...WALLPAPERS, ...FLOORS].map((s) => [s.id, s]));
 
-export const VARIANT_LABELS: Record<string, string> = { grau: 'Grau', weiss: 'Weiß', mint: 'Mint', gelb: 'Gelb', rosa: 'Rosa', indigo: 'Indigo', creme: 'Creme', rot: 'Rot', blau: 'Blau', gruen: 'Grün', senf: 'Senfgelb', schwarz: 'Schwarz' };
+export const VARIANT_LABELS: Record<string, string> = { grau: 'Grau', weiss: 'Weiß', mint: 'Mint', gelb: 'Gelb', rosa: 'Rosa', indigo: 'Indigo', creme: 'Creme', rot: 'Rot', blau: 'Blau', gruen: 'Grün', senf: 'Senfgelb', salbei: 'Salbei', rost: 'Rost', petrol: 'Petrol', sand: 'Sand', schwarz: 'Schwarz' };
 
 
 /** Raum-Infos für die Raumlogik (`core/room.ts`) */

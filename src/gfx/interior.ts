@@ -113,6 +113,144 @@ export function drawPattern(ctx: CanvasRenderingContext2D, def: SurfaceDef, s: n
       ctx.fillRect(0, s / 2 - b / 4, s / 2, b / 2);
       break;
     }
+    case 'bluemchen': {
+      // Streublümchen (Cottagecore): kleine Fünf-Punkt-Blüten mit Blättchen, kachelbar
+      const pts: Array<[number, number, string]> = [[0.12, 0.18, accent], [0.55, 0.1, '#f2c14e'], [0.82, 0.45, accent], [0.35, 0.52, '#9ab8e0'], [0.68, 0.82, accent], [0.15, 0.78, '#f2c14e'], [0.92, 0.95, '#9ab8e0']];
+      for (const [x, y, col] of pts) {
+        for (const [ox, oy] of [[0, 0], [s, 0], [0, s], [-s, 0], [0, -s]]) {
+          const cx = x * s + ox;
+          const cy = y * s + oy;
+          const r = s / 48;
+          ctx.fillStyle = '#8fb08a';
+          ctx.beginPath();
+          ctx.ellipse(cx + r * 1.6, cy + r * 1.2, r * 1.1, r * 0.5, 0.6, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.fillStyle = col;
+          for (let k = 0; k < 5; k++) {
+            const ang = (k / 5) * Math.PI * 2;
+            ctx.beginPath();
+            ctx.arc(cx + Math.cos(ang) * r, cy + Math.sin(ang) * r, r * 0.75, 0, Math.PI * 2);
+            ctx.fill();
+          }
+          ctx.fillStyle = '#fff3c4';
+          ctx.beginPath();
+          ctx.arc(cx, cy, r * 0.55, 0, Math.PI * 2);
+          ctx.fill();
+        }
+      }
+      break;
+    }
+    case 'vertaefelung': {
+      // senkrechte Holzleisten mit Fugen + Abschlussleiste oben
+      ctx.fillStyle = accent;
+      for (let x = 0; x < s; x += s / 6) ctx.fillRect(x, 0, Math.max(1, s / 90), s);
+      ctx.fillStyle = lighten(color, 0.12);
+      for (let x = s / 12; x < s; x += s / 6) ctx.fillRect(x - s / 40, 0, s / 20, s);
+      ctx.globalAlpha = 0.5;
+      ctx.fillStyle = darken(color, 0.12);
+      ctx.fillRect(0, s * 0.02, s, s / 30);
+      ctx.globalAlpha = 1;
+      break;
+    }
+    case 'kreise': {
+      // Siebziger: ineinanderliegende Kreise in Orange/Braun
+      const r = s / 6;
+      const cols = [accent, darken(accent, 0.35), lighten(accent, 0.35)];
+      for (let row = 0; row <= 3; row++) {
+        for (let col = 0; col <= 3; col++) {
+          const cx = col * r * 2 + (row % 2 ? r : 0);
+          const cy = row * r * 2 * 0.75 + r * 0.5;
+          for (const [ox, oy] of [[0, 0], [s, 0], [-s, 0], [0, s], [0, -s]]) {
+            for (let k = 3; k >= 1; k--) {
+              ctx.fillStyle = cols[(k + row + col) % 3];
+              ctx.beginPath();
+              ctx.arc(cx + ox, cy + oy, (r * 0.9 * k) / 3, 0, Math.PI * 2);
+              ctx.fill();
+            }
+          }
+        }
+      }
+      break;
+    }
+    case 'ranken': {
+      // Ranken mit Blättchen in Gold/Braun
+      ctx.strokeStyle = accent;
+      ctx.lineWidth = s / 90;
+      for (let col = 0; col < 2; col++) {
+        const x0 = (col + 0.25) * (s / 2);
+        ctx.beginPath();
+        for (let y = -s * 0.05; y <= s * 1.05; y += s / 60) ctx.lineTo(x0 + Math.sin((y / s) * Math.PI * 4) * s * 0.08, y);
+        ctx.stroke();
+        for (let k = 0; k < 8; k++) {
+          const y = (k / 8) * s;
+          const x = x0 + Math.sin((y / s) * Math.PI * 4) * s * 0.08;
+          const side = k % 2 ? 1 : -1;
+          ctx.fillStyle = k % 3 === 0 ? '#c9a24a' : accent;
+          ctx.beginPath();
+          ctx.ellipse(x + side * s * 0.035, y, s * 0.03, s * 0.013, side * 0.6, 0, Math.PI * 2);
+          ctx.fill();
+        }
+      }
+      break;
+    }
+    case 'terrazzo': {
+      // bunte Steinsplitter (reproduzierbar)
+      const cols = [accent, '#9ab8a8', '#e8c06a', '#8a8a94', darken(accent, 0.2)];
+      for (let i = 0; i < 70; i++) {
+        const x = ((i * 73) % 97) / 97 * s;
+        const y = ((i * 41) % 89) / 89 * s;
+        const r = s / 90 + ((i * 7) % 5) * (s / 300);
+        ctx.fillStyle = cols[i % cols.length];
+        ctx.beginPath();
+        const n = 5;
+        for (let k = 0; k < n; k++) {
+          const ang = (k / n) * Math.PI * 2 + i;
+          const rr = r * (0.7 + ((i + k) % 3) * 0.2);
+          ctx.lineTo(x + Math.cos(ang) * rr, y + Math.sin(ang) * rr);
+        }
+        ctx.fill();
+      }
+      break;
+    }
+    case 'fischgraet': {
+      // Zickzack aus kleinen Holzstäben
+      const bw = s / 8;
+      const bl = s / 4;
+      ctx.lineWidth = Math.max(1, s / 200);
+      ctx.strokeStyle = darken(color, 0.2);
+      for (let col = -1; col < 9; col++) {
+        for (let row = -1; row < 6; row++) {
+          const x = col * bw;
+          const y = row * bl + (col % 2 ? bl / 2 : 0);
+          ctx.save();
+          ctx.translate(x, y);
+          ctx.rotate(col % 2 ? -Math.PI / 4 : Math.PI / 4);
+          ctx.fillStyle = (row + col) % 3 === 0 ? accent : (row + col) % 3 === 1 ? color : lighten(color, 0.08);
+          ctx.fillRect(0, 0, bl * 0.72, bw * 0.72);
+          ctx.strokeRect(0, 0, bl * 0.72, bw * 0.72);
+          ctx.restore();
+        }
+      }
+      break;
+    }
+    case 'beton': {
+      // fleckige Fläche mit feinen Fugen alle halbe Kachel
+      for (let i = 0; i < 120; i++) {
+        ctx.globalAlpha = 0.12;
+        ctx.fillStyle = i % 2 ? accent : lighten(color, 0.1);
+        ctx.beginPath();
+        ctx.arc(((i * 53) % 101) / 101 * s, ((i * 29) % 97) / 97 * s, s / 30 + (i % 4) * (s / 80), 0, Math.PI * 2);
+        ctx.fill();
+      }
+      ctx.globalAlpha = 0.5;
+      ctx.fillStyle = darken(color, 0.15);
+      ctx.fillRect(0, 0, s, Math.max(1, s / 256));
+      ctx.fillRect(0, 0, Math.max(1, s / 256), s);
+      ctx.fillRect(0, s / 2, s, Math.max(1, s / 256));
+      ctx.fillRect(s / 2, 0, Math.max(1, s / 256), s);
+      ctx.globalAlpha = 1;
+      break;
+    }
     case 'teppich': {
       ctx.fillStyle = accent;
       for (let i = 0; i < 300; i++) {

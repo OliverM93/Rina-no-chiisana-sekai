@@ -84,7 +84,7 @@ Legende: ✅ erledigt · 🚧 in Arbeit · ⬜ geplant
 - ✅ Möbelkatalog am Pult – der erste Ort zum Sternchen-Ausgeben
 - ✅ Sitzen auf Kissen & Futon, Lampen leuchten abends (an-/ausknipsbar)
 - ✅ 3D-Vorschaubilder der Möbel in Katalog & Tasche; Spielstand Version 5
-- ⬜ Weitere Stile (Cottagecore, französisches Bistro, modern, Retro-Oma-Chic) → nach und nach
+- ✅ Weitere Stile: Cottagecore, Retro-Oma-Chic, Modern (M8g) · ⬜ französisches Bistro → später
 - ✅ Wand-Deko (Bilder, Rollbilder, Regale an der Wand) → M8f
 
 ## 🚧 M6 – Hausausbau, Außengestaltung, Crafting
@@ -209,6 +209,9 @@ Legende: ✅ erledigt · 🚧 in Arbeit · ⬜ geplant
   auf Zehenspitzen, „Mwah“ und Herzchen
 - ✅ **M8f Wand-Deko:** Winston-Porträt, Gruselfilm-Poster, Wandregal, Wanduhr, Rollbild, Wimpelkette, Fotowand
   (leuchtet), runder Spiegel, Trockenblumenkranz – an Rück- & Seitenwänden, Möbel passen darunter
+- ✅ **M8g Neue Stile:** Cottagecore (Landhaustisch, Blümchensessel, Häkelteppich, Kräuter, Kerzenleuchter, Wollkorb),
+  Retro-Oma-Chic (Ohrensessel, Nierentisch, Fransenlampe, Bonbonschale, Orientteppich, Gummibaum), Modern
+  (Loungesofa, Marmortisch, Bogenlampe, Würfelregal, Sitzsack, Keramikvase) – dazu 6 Tapeten & 3 Böden
 - 🔶 **M8c Animationen & Partikel** (erster Schwung ✅): Staubwölkchen beim Rennen, Spritzer beim Angeln,
   Funkeln beim Aufheben & Fangen, Herzchen (Herz-Aufstieg, Lieblingsgeschenk, Winston streicheln), Erdklumpen
   beim Graben, Konfetti beim Bauen & Kochen, Glühwürmchen in Sommernächten · Lina macht Freudensprünge,
