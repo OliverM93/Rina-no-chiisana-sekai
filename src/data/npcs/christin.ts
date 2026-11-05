@@ -42,6 +42,12 @@ export const CHRISTIN: NpcDef = {
       { text: ['Dieser Regen!', 'Jetzt tragen alle Matsch auf den Dorfplatz. Ich seh schon, was ich morgen mache.'], when: { tags: ['wetter-regen'] }, weight: 3 },
     ],
     chat: [
+      { text: ['Ich hab heute die Gewürze nach Alphabet sortiert.', 'Olaf hat gefragt, wo der Zimt ist. Ich hab gesagt: Zwischen Kurkuma und Zitronenpfeffer. Er hat mich angeschaut, als wär ich eine Zauberin.'] },
+      { text: ['Weißt du, was beruhigend ist?', 'Ein frisch gefegter Weg. Ganz ohne Blätter. … Für ungefähr drei Minuten.'] },
+      { text: ['Dein Winston hat heute vor unserer Tür gesessen und mich angeguckt.', 'Ich hab ihm die Pfoten abgewischt. Er hat es mit Würde getragen.'] },
+      { text: ['Ich mag das Dorf.', 'Hier steht alles da, wo es hingehört. Die Bäume, die Bank, Oma. Vor allem Oma. Die bewegt sich nicht von ihrer Bank.'] },
+      { text: ['Ordnungstipp des Tages:', 'Was du in zwei Minuten erledigen kannst, mach sofort. … Ich mach jetzt sofort einen Kaffee.'] },
+      { text: ['Dein Papa hat mir gestern Blumen mitgebracht.', 'Er hat sie selbst gepflückt. Die Stiele waren unterschiedlich lang. Ich hab sie nachgeschnitten. Aus Liebe.'], when: { minHearts: 1 } },
       { text: ['Ich tanze!', 'Aber nach der Party wird aufgeräumt. Jedes Konfetti einzeln.'], when: { tags: ['party'] }, weight: 8 },
       { text: ['Deine Hühner scharren das ganze Gras auf.', 'Aber sie machen das in so schönen ordentlichen Kreisen. Das muss ich zugeben.'], when: { tags: ['huehner'] }, weight: 3 },
       { text: ['Die Wachteln sind so niedlich!', 'Und so sauber. Die putzen sich ständig. Sehr sympathisch.'], when: { tags: ['wachteln'] }, weight: 3 },

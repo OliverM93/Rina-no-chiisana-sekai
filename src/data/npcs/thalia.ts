@@ -44,6 +44,12 @@ export const THALIA: NpcDef = {
       { text: ['Heute ist Party-Abend! 💃', 'Ab sieben auf dem Dorfplatz. Komm unbedingt – ich hab eine Playlist gemacht. Drei Stunden. Nur Bangers.'], when: { weekdays: [6] }, weight: 4 },
     ],
     chat: [
+      { text: ['Ich hab mir einen neuen Stein-Namen ausgedacht: „Linait“.', 'Er ist rund, ein bisschen funkelig und total liebenswert. Kein Zusammenhang mit irgendwem.'] },
+      { text: ['Wusstest du, dass Flüsse immer den bequemsten Weg nehmen?', 'Wie ich am Sonntagmorgen. Vom Bett zur Kaffeemaschine. Und zurück.'] },
+      { text: ['Hast du die Wolken heute gesehen?', 'Die eine sah aus wie Winston. Die andere wie Winston mit Hut.'] },
+      { text: ['Ich hab beschlossen, heute mutig zu sein.', 'Ich hab Oma gefragt, wie alt sie ist. Sie hat gesagt: „Älter als deine Steine.“ Das war … geologisch unwahrscheinlich, aber ich hab nicht widersprochen.'] },
+      { text: ['Kartenzeichnen ist wie Malen, nur mit mehr Linealen.', 'Und weniger Ärger, wenn man daneben malt. Dann ist es halt eine neue Insel.'] },
+      { text: ['Weißt du, was ich an dir mag?', 'Du hörst zu, wenn ich zwanzig Minuten über Sedimentschichten rede. Das schaffen nicht viele.'], when: { minHearts: 1 } },
       { text: ['Horrorfilmabend bei dir? Ich bring Chips mit!', 'Und diesmal schreie ich nicht. … Okay, vielleicht ein bisschen. Aber nur bei den guten Stellen.'] },
       { text: ['Hast du die neue True-Crime-Folge gesehen?!', 'Ich hätte sofort gewusst, dass es der Hund war. Ich hab da so ein Gespür. Geografisch.'] },
       { text: ['Na endlich bist du da! 🎶', 'Komm, Lina, die Tanzfläche wartet!'], when: { tags: ['party'] }, weight: 8 },

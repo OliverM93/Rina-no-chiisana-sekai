@@ -55,16 +55,18 @@ export function matches(cond: LineCondition | undefined, ctx: DialogueContext): 
 }
 
 /**
- * Wählt eine passende Zeile(nfolge). Innerhalb des höchsten Gewichts wird
- * reihum (Tag + Gesprächsnummer) ausgewählt.
+ * Wählt eine passende Zeile(nfolge). Alle passenden Zeilen kommen reihum dran (`turn` = wievieltes
+ * Gespräch heute): zuerst die mit höherem Gewicht (besondere Tage, Party …), dann alle übrigen in einer
+ * pro Tag gemischten Reihenfolge. So wiederholt sich beim Plaudern nichts, bis alles einmal dran war.
  */
 export function pickLine(pool: readonly DialogueLine[], ctx: DialogueContext): string[] {
   const candidates = pool.filter((l) => matches(l.when, ctx));
   if (candidates.length === 0) return [];
-  // Höchstes Gewicht gewinnt (z. B. besondere Tage), sonst reihum.
-  const topWeight = Math.max(...candidates.map((l) => l.weight ?? 1));
-  const top = candidates.filter((l) => (l.weight ?? 1) === topWeight);
-  const start = hashString(ctx.day) % top.length;
-  const chosen = top[(start + ctx.turn) % top.length];
+  const key = (l: DialogueLine, i: number) => hashString(`${ctx.day}:${i}:${typeof l.text === 'string' ? l.text : l.text[0]}`);
+  const order = candidates
+    .map((l, i) => ({ l, w: l.weight ?? 1, k: key(l, i) }))
+    .sort((a, b) => b.w - a.w || a.k - b.k)
+    .map((x) => x.l);
+  const chosen = order[ctx.turn % order.length];
   return typeof chosen.text === 'string' ? [chosen.text] : [...chosen.text];
 }
