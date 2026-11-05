@@ -28,6 +28,16 @@ describe('Dialogauswahl', () => {
     expect(pickLine(pool, ctx())).toEqual(['normal']);
   });
 
+  it('Plaudern: jedes Mal etwas anderes, auch wenn einzelne Zeilen mehr Gewicht haben', () => {
+    const pool = [{ text: 'a' }, { text: 'b', weight: 2 }, { text: 'c' }, { text: 'd' }, { text: 'party', weight: 8, when: { tags: ['party'] } }];
+    const seq = [0, 1, 2, 3].map((turn) => pickLine(pool, ctx({ turn }))[0]);
+    expect(new Set(seq).size).toBe(4); // keine Wiederholung, bevor alle dran waren
+    expect(seq[0]).toBe('b'); // höheres Gewicht zuerst
+    const party = [0, 1, 2, 3, 4].map((turn) => pickLine(pool, ctx({ turn, tags: ['party'] }))[0]);
+    expect(party[0]).toBe('party');
+    expect(new Set(party).size).toBe(5);
+  });
+
   it('wechselt bei weiteren Gesprächen ab', () => {
     const pool = [{ text: 'a' }, { text: 'b' }, { text: 'c' }];
     const seen = new Set([0, 1, 2].map((turn) => pickLine(pool, ctx({ turn }))[0]));

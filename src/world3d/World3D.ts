@@ -1110,7 +1110,9 @@ export class World3D {
       }, 250);
     }
     const result = catchFish(this.session, fish);
-    this.session.bus.emit('dialog:open', { title: fish.name, lines: [...catchMessage(fish.name, 'fisch', result), FISH_BY_ID[fish.id].description] });
+    // Beschreibung nur beim ersten Fang (neu im Sammelbuch) – sonst nur kurz oben melden, ohne Unterbrechung
+    if (result.isNew) this.session.bus.emit('dialog:open', { title: fish.name, lines: [...catchMessage(fish.name, 'fisch', result), FISH_BY_ID[fish.id].description] });
+    else this.session.bus.emit('toast', { text: catchMessage(fish.name, 'fisch', result).join(' '), icon: itemIconUrl(fish.id) });
   }
 
   private stopFishing() {
@@ -1136,7 +1138,9 @@ export class World3D {
       this.particles.burst('funkeln', to);
       player.cheer();
       const result = catchInsect(this.session, def);
-      this.session.bus.emit('dialog:open', { title: def.name, lines: [...catchMessage(def.name, 'insekt', result), def.description] });
+      // Kescher: immer nur kurz oben melden (wie beim Blumenpflücken) – Lina läuft einfach weiter.
+      // Die Beschreibung steht im Sammelbuch.
+      this.session.bus.emit('toast', { text: catchMessage(def.name, 'insekt', result).join(' '), icon: itemIconUrl(def.id) });
     }, 330);
     return true;
   }
