@@ -1,12 +1,44 @@
 import { describe, expect, it } from 'vitest';
 import { furnitureInfo } from '../data/furniture';
 import { HOUSE_RULES, layoutOf, STARTER_HOUSE } from '../data/house';
-import { blockedCells, checkPlacement, exitAt, itemsAt, misfits, moveItem, normalizeHouse, placeItem, removeItem, type Room } from './room';
+import { backWindows, blockedCells, checkPlacement, exitAt, itemsAt, misfits, moveItem, normalizeHouse, placeItem, removeItem, type Room, wallRotationAt } from './room';
 
 const empty = (): Room => ({ id: 'haupt', wallpaper: 'tapete-creme', floor: 'boden-dielen', items: [] });
 const L0 = layoutOf(0, 'haupt');
 
 describe('Zimmer', () => {
+  it('Wand-Deko hängt nur an Rück- und Seitenwänden, nicht vor Fenstern', () => {
+    const r = empty();
+    const wins = backWindows(L0);
+    expect(wins.length).toBeGreaterThan(0);
+    const free = [...Array(L0.w).keys()].find((x) => wins.every((w) => Math.abs(x + 0.5 - w) >= 0.75) && x > 0)!;
+    expect(checkPlacement(r, L0, 'bild-winston', free, 0, 0, furnitureInfo).ok).toBe(true); // Rückwand
+    expect(checkPlacement(r, L0, 'bild-winston', free, 2, 0, furnitureInfo).ok).toBe(false); // mitten im Raum
+    expect(checkPlacement(r, L0, 'bild-winston', Math.floor(wins[0]), 0, 0, furnitureInfo).ok).toBe(false); // Fenster
+    expect(checkPlacement(r, L0, 'bild-winston', 0, 2, 3, furnitureInfo).ok).toBe(true); // linke Wand
+    expect(checkPlacement(r, L0, 'bild-winston', L0.w - 1, 2, 1, furnitureInfo).ok).toBe(true); // rechte Wand
+    expect(checkPlacement(r, L0, 'bild-winston', L0.w - 1, 2, 3, furnitureInfo).ok).toBe(false); // falsche Seite
+    expect(checkPlacement(r, L0, 'wandregal', 0, 1, 3, furnitureInfo).ok).toBe(true); // 2 breit an der Seitenwand
+    expect(wallRotationAt(L0, 3, 0)).toBe(0);
+    expect(wallRotationAt(L0, 0, 3)).toBe(3);
+    expect(wallRotationAt(L0, L0.w - 1, 3)).toBe(1);
+    expect(wallRotationAt(L0, 3, 3)).toBeNull();
+  });
+
+  it('Wand-Deko blockiert nichts, Möbel dürfen darunter stehen – aber nicht zwei Bilder übereinander', () => {
+    const r = empty();
+    const pic = placeItem(r, L0, 'bild-winston', 0, 2, 3, furnitureInfo)!;
+    expect(pic).not.toBeNull();
+    expect(placeItem(r, L0, 'andon', 0, 2, 0, furnitureInfo)).not.toBeNull(); // Laterne darunter
+    expect(checkPlacement(r, L0, 'poster-grusel', 0, 2, 3, furnitureInfo).ok).toBe(false); // schon belegt
+    expect(blockedCells(r, L0, furnitureInfo).has('0,2')).toBe(true); // durch die Laterne, nicht das Bild
+    removeItem(r, r.items.find((i) => i.itemId === 'andon')!.uid);
+    expect(blockedCells(r, L0, furnitureInfo).has('0,2')).toBe(false);
+    // ganz unten beim Greifen
+    placeItem(r, L0, 'zabuton-rosa', 0, 2, 0, furnitureInfo);
+    expect(itemsAt(r, 0, 2, furnitureInfo).map((i) => i.itemId)).toEqual(['zabuton-rosa', 'bild-winston']);
+  });
+
   it('Möbel brauchen freien Platz im Raum, nicht auf Tür oder Pult', () => {
     const r = empty();
     expect(placeItem(r, L0, 'kotatsu-rot', 2, 1, 0, furnitureInfo)).not.toBeNull();

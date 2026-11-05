@@ -27,6 +27,8 @@ const FACING_ANGLE: Record<Facing, number> = { down: 0, right: Math.PI / 2, up: 
 
 const CHEER = 0.75;
 const WAVE = 1.3;
+/** Dauer eines Küsschens (s) */
+export const KISS = 1.4;
 
 export class Character {
   readonly chibi: Chibi3D;
@@ -143,6 +145,20 @@ export class Character {
     if (!this.sitting) this.cheerLeft = CHEER;
   }
 
+  private kissLeft = 0;
+  /** `tiptoe` = auf die Zehenspitzen (Lina ist kleiner) */
+  private kissTiptoe = false;
+
+  /** Küsschen: vorbeugen, Augen zu (Dauer s) */
+  kiss(tiptoe = false) {
+    this.kissLeft = KISS;
+    this.kissTiptoe = tiptoe;
+  }
+
+  get kissing(): boolean {
+    return this.kissLeft > 0;
+  }
+
   /** Mit der Hand winken (z. B. zur Begrüßung) */
   wave() {
     this.waveLeft = WAVE;
@@ -238,6 +254,7 @@ export class Character {
     if (this.blinkLeft > 0) this.blinkLeft -= dt;
     if (this.cheerLeft > 0) this.cheerLeft = Math.max(0, this.cheerLeft - dt);
     if (this.waveLeft > 0) this.waveLeft = Math.max(0, this.waveLeft - dt);
+    if (this.kissLeft > 0) this.kissLeft = Math.max(0, this.kissLeft - dt);
     this.idleTime = this.moving || this.sitting ? 0 : this.idleTime + dt;
     this.time += dt;
     this.sync(dt);
@@ -254,7 +271,7 @@ export class Character {
     const ground = this.sitting ? 0 : Math.max(0, this.heightAt(px, pz));
     this.chibi.root.position.set(px, ground + this.seatHeight, pz);
     this.chibi.root.rotation.y = this.angle;
-    this.chibi.pose({ step: this.stepPhase, moving: this.moving, running: this.running, sitting: this.sitting, blink: this.blinkLeft > 0, t: this.time, armForward: this.armForward, cheer: this.cheerLeft > 0 ? 1 - this.cheerLeft / CHEER : undefined, wave: this.waveLeft > 0 ? 1 - this.waveLeft / WAVE : undefined, idle: this.idleTime });
+    this.chibi.pose({ step: this.stepPhase, moving: this.moving, running: this.running, sitting: this.sitting, blink: this.blinkLeft > 0 || (this.kissLeft > 0.25 && this.kissLeft < KISS - 0.25), t: this.time, armForward: this.armForward, cheer: this.cheerLeft > 0 ? 1 - this.cheerLeft / CHEER : undefined, wave: this.waveLeft > 0 ? 1 - this.waveLeft / WAVE : undefined, idle: this.idleTime, kiss: this.kissLeft > 0 ? 1 - this.kissLeft / KISS : undefined, tiptoe: this.kissTiptoe });
   }
 
   destroy() {

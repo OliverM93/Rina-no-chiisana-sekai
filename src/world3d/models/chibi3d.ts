@@ -440,6 +440,10 @@ export interface ChibiPose {
   wave?: number;
   /** Sekunden, die die Figur schon still steht (schaut sich dann ab und zu um) */
   idle?: number;
+  /** Küsschen: Fortschritt 0..1 (vorbeugen, Kopf neigen) */
+  kiss?: number;
+  /** beim Küsschen auf die Zehenspitzen */
+  tiptoe?: boolean;
 }
 
 export class Chibi3D {
@@ -926,6 +930,7 @@ export class Chibi3D {
     if (fm.map !== want) fm.map = want;
 
     if (p.sitting) {
+      this.body.rotation.x = 0;
       this.body.position.y = -this.hipY + 0.02;
       for (const leg of this.legs) leg.rotation.x = -Math.PI / 2.2;
       for (const [i, arm] of this.arms.entries()) {
@@ -980,6 +985,20 @@ export class Chibi3D {
       }
       for (const leg of this.legs) leg.rotation.x = 0;
       this.head.rotation.x = -hop * 0.12;
+    }
+    this.body.rotation.x = 0;
+    if (p.kiss !== undefined && !p.moving && !p.sitting) {
+      // weich vorbeugen, kurz halten, zurück – Kopf leicht schräg, Hände hinter den Rücken
+      const k = p.kiss;
+      const lean = k < 0.25 ? Math.sin((k / 0.25) * Math.PI / 2) : k > 0.75 ? Math.sin(((1 - k) / 0.25) * Math.PI / 2) : 1;
+      this.body.rotation.x = lean * 0.2;
+      this.head.rotation.z = lean * 0.18;
+      this.head.rotation.x = lean * 0.08;
+      if (p.tiptoe) this.body.position.y = lean * 0.035;
+      for (const [i, arm] of this.arms.entries()) {
+        arm.rotation.x = lean * 0.5;
+        arm.rotation.z = (i === 0 ? -1 : 1) * 0.15;
+      }
     }
     if (p.wave !== undefined && p.armForward === undefined) {
       // rechte Hand hoch und hin und her

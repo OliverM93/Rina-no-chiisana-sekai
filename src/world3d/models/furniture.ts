@@ -35,6 +35,9 @@ function s(rx: number, ry: number, rz: number, color: string | THREE.Material, x
 }
 
 const WOOD = '#b98a5e';
+/** Wand-Deko: Höhe der Bildmitte und Lage der Wand (Rückseite des Feldes) */
+const HANG = 1.3;
+const WALL_Z = -0.48;
 const DARK_WOOD = '#6e4630';
 const PAPER = '#fbf3e2';
 
@@ -954,6 +957,150 @@ export function makeFurniture(itemId: string, links: FenceLinks = { n: false, e:
           g.add(s(0.07, 0.025, 0.06, col2, Math.cos(a2) * r, 0.02, Math.sin(a2) * r));
         }
       }
+      break;
+    }
+    // ---------------------------------------------------------------- Wand-Deko (hängt an der Rückseite des Feldes)
+    case 'bild-winston': {
+      const z = WALL_Z;
+      g.add(b(0.58, 0.68, 0.04, '#c9955f', 0, HANG, z));
+      g.add(b(0.5, 0.6, 0.01, '#fdeff2', 0, HANG, z + 0.022));
+      // Winston im Profil: Körper, Kopf, Schlappohr, Nase, rosa Halsband
+      g.add(s(0.15, 0.08, 0.01, '#b8642e', 0.02, HANG - 0.1, z + 0.03));
+      g.add(s(0.08, 0.075, 0.01, '#b8642e', -0.13, HANG + 0.0, z + 0.032));
+      g.add(s(0.03, 0.06, 0.01, '#7a3e1c', -0.1, HANG - 0.03, z + 0.036));
+      g.add(s(0.018, 0.018, 0.01, '#2a1d18', -0.21, HANG + 0.0, z + 0.036));
+      g.add(b(0.03, 0.05, 0.01, '#f4a3b8', -0.06, HANG - 0.06, z + 0.037));
+      g.add(b(0.2, 0.012, 0.01, '#d9b45a', 0, HANG + 0.22, z + 0.03));
+      break;
+    }
+    case 'poster-grusel': {
+      const z = WALL_Z;
+      g.add(b(0.52, 0.74, 0.01, '#2a2238', 0, HANG, z));
+      // Mond, Kürbis mit leuchtenden Augen, Titelbalken – ausgedachter Film
+      g.add(c(0.1, 0.01, '#f7efc0', 0.12, HANG + 0.2, z + 0.008).rotateX(Math.PI / 2));
+      g.add(s(0.14, 0.11, 0.01, '#e8873a', 0, HANG - 0.08, z + 0.01));
+      g.add(b(0.03, 0.05, 0.01, '#5a7a3a', 0, HANG + 0.04, z + 0.012));
+      for (const dx of [-0.05, 0.05]) g.add(b(0.03, 0.025, 0.01, '#ffe17a', dx, HANG - 0.06, z + 0.016));
+      g.add(b(0.08, 0.015, 0.01, '#ffe17a', 0, HANG - 0.12, z + 0.016));
+      g.add(b(0.44, 0.07, 0.01, '#9a3a4a', 0, HANG - 0.28, z + 0.008));
+      g.add(b(0.34, 0.02, 0.01, '#f1efe9', 0, HANG - 0.28, z + 0.014));
+      break;
+    }
+    case 'wandregal': {
+      const z = WALL_Z + 0.1;
+      g.add(b(1.6, 0.05, 0.22, WOOD, 0, HANG - 0.1, z));
+      for (const dx of [-0.6, 0.6]) g.add(b(0.04, 0.12, 0.04, DARK_WOOD, dx, HANG - 0.17, WALL_Z + 0.02));
+      // Bücher
+      const books = ['#f4a3b8', '#5b6fa8', '#f7d26a', '#9ad8c0', '#e85a8a'];
+      books.forEach((bc, i) => g.add(b(0.06, 0.2 + (i % 2) * 0.04, 0.16, bc, -0.6 + i * 0.075, HANG + 0.03 + (i % 2) * 0.02, z)));
+      // Pflänzchen im Topf & Kerze
+      g.add(c(0.07, 0.1, '#d98a5f', 0.15, HANG - 0.02, z));
+      g.add(s(0.1, 0.09, 0.09, '#6fb06a', 0.15, HANG + 0.1, z));
+      g.add(c(0.04, 0.09, '#fbf3e2', 0.5, HANG - 0.03, z));
+      g.add(s(0.015, 0.025, 0.015, '#ffd76a', 0.5, HANG + 0.03, z));
+      break;
+    }
+    case 'wanduhr': {
+      const z = WALL_Z;
+      const face = c(0.25, 0.05, col, 0, HANG + 0.05, z + 0.02);
+      face.rotation.x = Math.PI / 2;
+      g.add(face);
+      const inner = c(0.21, 0.01, '#fffaf2', 0, HANG + 0.05, z + 0.05);
+      inner.rotation.x = Math.PI / 2;
+      g.add(inner);
+      for (let i = 0; i < 12; i++) {
+        const a = (i / 12) * Math.PI * 2;
+        g.add(b(0.012, i % 3 === 0 ? 0.04 : 0.02, 0.01, '#4a4048', Math.sin(a) * 0.17, HANG + 0.05 + Math.cos(a) * 0.17, z + 0.058));
+      }
+      g.add(b(0.016, 0.13, 0.01, '#4a4048', 0.03, HANG + 0.09, z + 0.062).rotateZ(-0.5));
+      g.add(b(0.012, 0.17, 0.01, '#4a4048', -0.02, HANG + 0.12, z + 0.064).rotateZ(0.25));
+      break;
+    }
+    case 'rollbild': {
+      const z = WALL_Z;
+      g.add(c(0.02, 0.5, DARK_WOOD, 0, HANG + 0.42, z + 0.03).rotateZ(Math.PI / 2));
+      g.add(b(0.4, 0.86, 0.01, '#e8dcc0', 0, HANG, z + 0.01));
+      g.add(b(0.32, 0.6, 0.01, '#fbf6ea', 0, HANG + 0.02, z + 0.015));
+      // Berge & Kranich
+      g.add(c(0.14, 0.01, '#9aa8b8', -0.04, HANG - 0.14, z + 0.02, cone).rotateX(Math.PI / 2));
+      g.add(c(0.1, 0.01, '#b8c4d0', 0.08, HANG - 0.16, z + 0.022, cone).rotateX(Math.PI / 2));
+      g.add(s(0.05, 0.015, 0.01, '#3a3440', 0.02, HANG + 0.12, z + 0.022));
+      g.add(s(0.012, 0.012, 0.01, '#d9534f', -0.03, HANG + 0.13, z + 0.024));
+      g.add(c(0.025, 0.46, DARK_WOOD, 0, HANG - 0.44, z + 0.03).rotateZ(Math.PI / 2));
+      break;
+    }
+    case 'wimpelkette': {
+      const z = WALL_Z + 0.02;
+      const cols = ['#f4a3b8', '#ffe17a', '#9ad8c0', '#a9c8ff', '#d6b3ff', '#f7c6d4'];
+      for (let i = 0; i < 9; i++) {
+        const x = -0.8 + i * 0.2;
+        const sag = Math.sin((i / 8) * Math.PI) * 0.12;
+        const flag = c(0.07, 0.01, cols[i % cols.length], x, HANG + 0.18 - sag, z, new THREE.ConeGeometry(1, 1, 3));
+        flag.rotation.x = Math.PI / 2;
+        flag.rotation.z = Math.PI;
+        flag.scale.set(0.07, 0.01, 0.12);
+        g.add(flag);
+      }
+      for (let i = 0; i < 8; i++) {
+        const x0 = -0.8 + i * 0.2;
+        const y0 = HANG + 0.24 - Math.sin((i / 8) * Math.PI) * 0.12;
+        const y1 = HANG + 0.24 - Math.sin(((i + 1) / 8) * Math.PI) * 0.12;
+        const seg = b(0.2, 0.008, 0.008, '#8a7a70', x0 + 0.1, (y0 + y1) / 2, z);
+        seg.rotation.z = Math.atan2(y1 - y0, 0.2);
+        g.add(seg);
+      }
+      break;
+    }
+    case 'fotowand': {
+      const z = WALL_Z + 0.02;
+      glow = glowMat('#ffe9a8');
+      const photos = ['#f4a3b8', '#a9c8ff', '#9ad8c0', '#ffe17a', '#d6b3ff', '#f7c6d4'];
+      for (let i = 0; i < 6; i++) {
+        const x = -0.65 + i * 0.26;
+        const sag = Math.sin((i / 5) * Math.PI) * 0.1;
+        const tilt = (i % 2 ? 1 : -1) * 0.08;
+        const ph = new THREE.Group();
+        ph.position.set(x, HANG - sag, z);
+        ph.rotation.z = tilt;
+        ph.add(b(0.2, 0.24, 0.01, '#ffffff', 0, -0.1, 0));
+        ph.add(b(0.16, 0.16, 0.01, photos[i], 0, -0.08, 0.004));
+        // kleine Figur auf dem Foto (Kopf & Körper)
+        ph.add(s(0.03, 0.03, 0.005, '#f2c9a8', 0, -0.06, 0.01));
+        ph.add(b(0.05, 0.04, 0.005, darken(photos[i], 0.3), 0, -0.11, 0.01));
+        ph.add(b(0.02, 0.04, 0.012, '#c9955f', 0, 0.02, 0.006));
+        g.add(ph);
+      }
+      for (let i = 0; i < 11; i++) {
+        const x = -0.78 + i * 0.156;
+        const sag = Math.sin((i / 10) * Math.PI) * 0.1;
+        g.add(mesh(new THREE.SphereGeometry(0.022, 8, 6), glow).translateX(x).translateY(HANG + 0.03 - sag).translateZ(z + 0.01));
+      }
+      lightAt = new THREE.Vector3(0, HANG - 0.2, z + 0.9);
+      break;
+    }
+    case 'spiegel-rund': {
+      const z = WALL_Z;
+      const ring = new THREE.Mesh(new THREE.TorusGeometry(0.24, 0.03, 8, 28), toon('#d9b45a'));
+      ring.position.set(0, HANG + 0.05, z + 0.03);
+      g.add(ring);
+      const glass = c(0.23, 0.01, new THREE.MeshToonMaterial({ color: '#cfe4ee', emissive: '#bfe0f0', emissiveIntensity: 0.25 }), 0, HANG + 0.05, z + 0.02);
+      glass.rotation.x = Math.PI / 2;
+      g.add(glass);
+      // Lichtreflex
+      g.add(b(0.04, 0.16, 0.005, '#ffffff', -0.08, HANG + 0.1, z + 0.028).rotateZ(-0.6));
+      break;
+    }
+    case 'trockenkranz': {
+      const z = WALL_Z + 0.03;
+      const ring = new THREE.Mesh(new THREE.TorusGeometry(0.2, 0.035, 8, 24), toon('#c9a77a'));
+      ring.position.set(0, HANG + 0.05, z);
+      g.add(ring);
+      const bits = ['#a58bd6', '#8fae8a', '#f4a3b8', '#a58bd6', '#8fae8a', '#e8c06a', '#f4a3b8', '#8fae8a'];
+      bits.forEach((bc, i) => {
+        const a = (i / bits.length) * Math.PI * 2;
+        g.add(s(0.045, 0.03, 0.03, bc, Math.cos(a) * 0.2, HANG + 0.05 + Math.sin(a) * 0.2, z + 0.02));
+      });
+      g.add(b(0.08, 0.06, 0.01, '#f7efe2', 0, HANG - 0.17, z + 0.04));
       break;
     }
     // ---------------------------------------------------------------- Cottagecore

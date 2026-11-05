@@ -65,6 +65,8 @@ export interface FootInfo {
   surface?: boolean;
   /** Man kann hindurchgehen (z. B. Gartentor), steht aber wie ein Möbel */
   walk?: boolean;
+  /** Hängt an der Wand (Bild, Poster, Wandregal): blockiert den Boden nicht */
+  wall?: boolean;
 }
 
 export type InfoFn = (itemId: string) => FootInfo | undefined;
@@ -89,6 +91,38 @@ export function reservedCells(layout: RoomLayout): Set<string> {
   if (layout.desk) out.add(key(...layout.desk));
   for (const [x, y] of layout.reserved ?? []) out.add(key(x, y));
   return out;
+}
+
+/**
+ * Fenster in der Rückwand: Mitten (x, in Feldern). Dort hängt keine Wand-Deko.
+ * (Dieselbe Regel nutzt `world3d/Interior3D.ts` zum Bauen.)
+ */
+export function backWindows(layout: RoomLayout): number[] {
+  const backDoors = layout.exits.filter((e) => e.dir === 'up').flatMap((e) => e.cells.map(([x]) => x));
+  const xs = layout.id === 'dach' ? [layout.w / 2] : [2, layout.w - 2];
+  return xs.filter((x) => !backDoors.some((d) => Math.abs(d + 0.5 - x) < 1.2));
+}
+
+/**
+ * An welcher Wand hängt Wand-Deko mit dieser Drehung? 0 = Rückwand (schaut nach vorn),
+ * 3 = linke Wand (schaut nach rechts), 1 = rechte Wand (schaut nach links). 2 = vorne gibt es keine Wand.
+ */
+export function wallCellsOk(layout: RoomLayout, cells: Array<[number, number]>, rot: Rotation): boolean {
+  if (rot === 0) {
+    const wins = backWindows(layout);
+    return cells.every(([cx, cy]) => cy === 0 && !wins.some((w) => cx + 0.5 > w - 0.75 && cx + 0.5 < w + 0.75));
+  }
+  if (rot === 3) return cells.every(([cx]) => cx === 0);
+  if (rot === 1) return cells.every(([cx]) => cx === layout.w - 1);
+  return false;
+}
+
+/** Passende Drehung für Wand-Deko an einem Feld (Rückwand zuerst), oder null */
+export function wallRotationAt(layout: RoomLayout, x: number, y: number): Rotation | null {
+  if (y === 0) return 0;
+  if (x === 0) return 3;
+  if (x === layout.w - 1) return 1;
+  return null;
 }
 
 export interface Placement {
@@ -120,11 +154,17 @@ export function checkPlacement(room: Room, layout: RoomLayout, itemId: string, x
     return map;
   };
 
+  if (info.wall) {
+    // Wand-Deko: nur an einer Wand, nicht übereinander – Möbel darunter sind egal
+    if (!wallCellsOk(layout, cells, rot)) return { ok: false };
+    const walls = occupied((_o, oi) => !!oi.wall);
+    return { ok: cells.every(([cx, cy]) => !walls.has(key(cx, cy)) || walls.get(key(cx, cy))?.rot !== rot) };
+  }
   if (info.rug) {
     const rugs = occupied((_o, oi) => !!oi.rug);
     return { ok: cells.every(([cx, cy]) => !rugs.has(key(cx, cy))) };
   }
-  const solids = occupied((o, oi) => !oi.rug && !o.on);
+  const solids = occupied((o, oi) => !oi.rug && !oi.wall && !o.on);
   const tops = occupied((o) => !!o.on);
   const hits = cells.map(([cx, cy]) => solids.get(key(cx, cy)));
   if (hits.every((h) => !h)) return { ok: true };
@@ -186,7 +226,8 @@ export function itemsAt(room: Room, x: number, y: number, infoOf: InfoFn): Place
   for (const i of room.items) {
     const info = infoOf(i.itemId);
     if (!info) continue;
-    if (cellsOf(i.x, i.y, info, i.rot).some(([cx, cy]) => cx === x && cy === y)) hits.push({ item: i, layer: i.on ? 2 : info.rug ? 0 : 1 });
+    // Wand-Deko liegt ganz unten: was davor steht, greift man zuerst
+    if (cellsOf(i.x, i.y, info, i.rot).some(([cx, cy]) => cx === x && cy === y)) hits.push({ item: i, layer: i.on ? 2 : info.wall ? -1 : info.rug ? 0 : 1 });
   }
   return hits.sort((a, b) => b.layer - a.layer).map((h) => h.item);
 }
@@ -196,7 +237,7 @@ export function blockedCells(room: Room, layout: RoomLayout, infoOf: InfoFn): Se
   const out = new Set<string>(layout.desk ? [key(...layout.desk)] : []);
   for (const i of room.items) {
     const info = infoOf(i.itemId);
-    if (!info || info.rug || info.walk || i.on) continue;
+    if (!info || info.rug || info.walk || info.wall || i.on) continue;
     for (const [cx, cy] of cellsOf(i.x, i.y, info, i.rot)) out.add(key(cx, cy));
   }
   return out;
