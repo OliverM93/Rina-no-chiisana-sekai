@@ -100,6 +100,7 @@ export const palette = {
     accentDark: '#e27896',
     mint: '#8fd1c0',
     butter: '#ffe39b',
+    gold: '#f2b84b',
     sky: '#b4d8f5',
   },
 } as const;
