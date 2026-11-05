@@ -3,7 +3,7 @@
  * verschieben, wegräumen, Tapete & Boden wechseln – und der Hausausbau
  * über Olafs Dorfkasse.
  */
-import { borrow, canBorrow, repay } from '../core/bank';
+import { borrow, canBorrow, deposit, repay, withdraw } from '../core/bank';
 import { freeSlots, spaceFor } from '../core/inventory';
 import { keepsAccess, yardBlockedTiles } from '../core/yard';
 import { tileOf } from '../core/worldmap';
@@ -177,6 +177,34 @@ export function orderExpansion(session: Session): OrderResult {
   session.changed();
   session.save();
   return 'ok';
+}
+
+/** Aufs Sparbuch einzahlen (höchstens, was Lina dabeihat) */
+export function depositSavings(session: Session, amount: number): number {
+  const data = session.data;
+  if (!data) return 0;
+  const put = deposit(data.bank, amount, data.money, session.today());
+  data.money -= put;
+  if (put > 0) {
+    session.bus.emit('sfx', 'muenzen');
+    session.changed();
+    session.save();
+  }
+  return put;
+}
+
+/** Vom Sparbuch abheben */
+export function withdrawSavings(session: Session, amount: number): number {
+  const data = session.data;
+  if (!data) return 0;
+  const take = withdraw(data.bank, amount);
+  data.money += take;
+  if (take > 0) {
+    session.bus.emit('sfx', 'muenzen');
+    session.changed();
+    session.save();
+  }
+  return take;
 }
 
 export function repayLoan(session: Session, amount: number): number {
