@@ -301,8 +301,21 @@ describe('Version 12 (M8d Sparbuch)', () => {
   it('ergänzt das Sparbuch, der Kredit bleibt', () => {
     const v11 = { ...freshSave(), version: 11, bank: { loan: 4200 } } as Record<string, unknown>;
     const r = parseSave(JSON.stringify(v11), SPAWN, NOW);
-    expect(r.ok && r.data.version).toBe(12);
+    expect(r.ok && r.data.version).toBe(SAVE_VERSION);
     expect(r.ok && r.data.bank).toEqual({ loan: 4200, savings: 0, interestMonth: '', lastInterest: 0 });
+  });
+});
+
+describe('Version 13 (M8j Fortschritt)', () => {
+  it('schätzt die Zähler aus dem alten Stand, damit niemand zurückfällt', () => {
+    const v12 = { ...freshSave(), version: 12, money: 1234 } as Record<string, unknown>;
+    delete v12.stats;
+    delete v12.story;
+    (v12.house as { rooms: Array<{ items: unknown[] }> }).rooms[0].items = [1, 2, 3, 4, 5].map((i) => ({ uid: `u${i}`, itemId: 'zabuton-rosa', x: i, y: 4, rot: 0 }));
+    const r = parseSave(JSON.stringify(v12), SPAWN, NOW);
+    expect(r.ok && r.data.version).toBe(13);
+    expect(r.ok && r.data.stats).toEqual({ sold: 1234, bought: 2, crafted: 0, cooked: 0 });
+    expect(r.ok && r.data.story).toEqual({});
   });
 });
 

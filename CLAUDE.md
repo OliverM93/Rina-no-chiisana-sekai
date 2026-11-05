@@ -107,6 +107,7 @@ src/
     movement.ts    Bewegung mit Kollision (Fuß-Box), Um-Ecken-Gleiten
     events.ts      typisierter Event-Emitter
     rng.ts         reproduzierbarer Zufall
+    progress.ts    Zähler (verkauft, gekauft, gebaut, gekocht), Meilenstein-Bedingungen, Wartezeit in Spielzeit
     music.ts       Musik-Stimmungen (Tempo, Tonart, Akkorde) + Phrasen komponieren, Stimmung nach Zeit/Wetter
   audio/       Audio.ts – Web-Audio-Klang: Sequenzer, Instrumente, Umgebung (Vögel, Grillen, Regen, Wellen), Geräusche
   data/        Inhalte (leicht erweiterbar): Karten, Interaktionstexte, Story-Texte,
@@ -128,7 +129,8 @@ src/
     pet.ts         Winston streicheln & buddeln lassen
     romance.ts     Gemeinsame Momente mit Oli (Picknick, Sterne gucken): wann möglich, Freundschaft
     home.ts        Katalog kaufen, Möbel aufstellen/verschieben/wegräumen, Tapete & Boden, Ausbau & Kredit
-    story.ts       Rahmenhandlung: Einzüge (Ankündigungsbrief → Einzug am nächsten Tag)
+    story.ts       Rahmenhandlung: Einzüge per Meilenstein (`data/progress.ts`) → Brief → nach kurzer Spielzeit Einzug
+    progress.ts    aktueller Meilenstein, Fortschritt, sanfte Hinweise der Bewohner
     input.ts       eigene Tastatursteuerung (blockiert keine Textfelder)
   world3d/     Three.js-Schicht
     World3D.ts     Renderer, Kamera, Licht/Tag-Nacht, Interaktion, Maus (Raycasting), Story-Szenen
@@ -168,6 +170,13 @@ src/
   Bart, Brille …): Kopf mit gezeichneter Gesichtstextur (Blinzeln = Texturwechsel), Arme/Beine mit Gelenken.
 - **Tag & Nacht:** Sonne/Himmel/Nebel nach Uhrzeit, Fenster & Laternen leuchten (Emissive + Punktlichter
   an den nächstgelegenen Laternen).
+- **Fortschritt statt Kalender:** Einzüge & Hausausbau hängen an **Meilensteinen und Spielzeit**, nicht an echten
+  Tagen. `data/progress.ts` legt je Einzug fest, was Lina getan haben muss (Sammelbuch, verkauft, gekauft, gebaut,
+  gekocht, Flags) – **keine Herzen** (die steigen nur 1×/Tag). Danach Brief, nach `WAIT_SECONDS` (10 Min Spielzeit,
+  `session.playTime()`) Einzug; Zeitstempel in `SaveData.story`, Zähler in `SaveData.stats`. World3D prüft alle
+  paar Sekunden (`progressTick`, nur draußen & ohne offene Fenster). Hinweise gibt der Bewohner `hintBy` im
+  Gespräch. **Echtzeit bleibt** für Tag/Nacht, Jahreszeiten, Wetter, Feste, Geburtstage, Tägliches, Treffen,
+  Party, Sonntagsessen und Jens' Reisen.
 - **Einzüge:** `NpcDef.movesIn` = Story-Flag; Kartenobjekte mit `requires`/`until` erscheinen/verschwinden
   per Flag (`applyMapFlags`, z. B. Bauplatz → Haus). Ablauf in `game/story.ts`.
 - **Bewohner:** Daten in `src/data/npcs/<id>.ts` (Aussehen, Haus, Tagesablauf, Vorlieben, Dialog-Pools,

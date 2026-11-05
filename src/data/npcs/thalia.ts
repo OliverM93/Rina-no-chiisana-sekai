@@ -87,7 +87,7 @@ export const THALIA: NpcDef = {
 export const THALIA_ANNOUNCEMENT = {
   id: 'einzug',
   subject: 'Ich zieh zu dir ins Dorf! 🌍',
-  body: 'Lina!!!\n\nich hab ein Häuschen in {dorf} gefunden! Ganz in der Nähe vom Strand – perfekt zum Steinesammeln.\n\nMorgen komm ich. Mit meinen Karten, meinen Steinen und ganz viel Party-Laune.\n\nDeine Thalia 💚',
+  body: 'Lina!!!\n\nich hab ein Häuschen in {dorf} gefunden! Ganz in der Nähe vom Strand – perfekt zum Steinesammeln.\n\nIch bin schon auf dem Weg! Mit meinen Karten, meinen Steinen und ganz viel Party-Laune.\n\nDeine Thalia 💚',
 };
 
 export const THALIA_WELCOME: readonly string[] = [

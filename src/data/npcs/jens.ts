@@ -101,7 +101,7 @@ export const JENS: NpcDef = {
 export const JENS_ANNOUNCEMENT = {
   id: 'einzug',
   subject: 'Onkel Jens kommt! 🌈',
-  body: 'Ma chérie!\n\nich hab genug von der großen weiten Welt – vorerst. Ich komme zu euch ins Dorf und mach ein Bistro auf!\n\nCroissants, Kunst und ganz viel Glamour.\n\nMorgen bin ich da. Halt dich fest!\n\nBisous,\nOnkel Jens',
+  body: 'Ma chérie!\n\nich hab genug von der großen weiten Welt – vorerst. Ich komme zu euch ins Dorf und mach ein Bistro auf!\n\nCroissants, Kunst und ganz viel Glamour.\n\nMein Flieger ist schon gelandet – gleich bin ich da. Halt dich fest!\n\nBisous,\nOnkel Jens',
 };
 
 export const JENS_WELCOME: readonly string[] = [
