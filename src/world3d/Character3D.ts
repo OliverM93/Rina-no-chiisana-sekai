@@ -10,7 +10,8 @@ import type { Tile } from '../core/grid';
 import type { Season } from '../core/time';
 import { facingFromVector, type FootBox, moveWithCollision, type SolidFn } from '../core/movement';
 import type { Facing } from '../core/save';
-import { Chibi3D } from './models/chibi3d';
+import { actClosesEyes, Chibi3D } from './models/chibi3d';
+import type { IdleAct } from '../data/idle';
 
 const FOOT: FootBox = { hw: 13, hh: 7 };
 const STEP_LENGTH = 24;
@@ -159,6 +160,22 @@ export class Character {
     return this.kissLeft > 0;
   }
 
+  private act: { id: IdleAct; left: number; dur: number } | null = null;
+
+  /** Leerlauf-Animation abspielen (bricht ab, sobald die Figur sich bewegt) */
+  playAct(id: IdleAct, seconds: number) {
+    if (!this.sitting && !this.moving) this.act = { id, left: seconds, dur: seconds };
+  }
+
+  get acting(): boolean {
+    return !!this.act;
+  }
+
+  /** Sekunden ohne Bewegung (0 beim Laufen/Sitzen) */
+  get idleSeconds(): number {
+    return this.idleTime;
+  }
+
   /** Mit der Hand winken (z. B. zur Begrüßung) */
   wave() {
     this.waveLeft = WAVE;
@@ -256,6 +273,10 @@ export class Character {
     if (this.waveLeft > 0) this.waveLeft = Math.max(0, this.waveLeft - dt);
     if (this.kissLeft > 0) this.kissLeft = Math.max(0, this.kissLeft - dt);
     this.idleTime = this.moving || this.sitting ? 0 : this.idleTime + dt;
+    if (this.act) {
+      this.act.left -= dt;
+      if (this.act.left <= 0 || this.moving || this.sitting || this.cheerLeft > 0 || this.kissLeft > 0) this.act = null;
+    }
     this.time += dt;
     this.sync(dt);
   }
@@ -271,7 +292,8 @@ export class Character {
     const ground = this.sitting ? 0 : Math.max(0, this.heightAt(px, pz));
     this.chibi.root.position.set(px, ground + this.seatHeight, pz);
     this.chibi.root.rotation.y = this.angle;
-    this.chibi.pose({ step: this.stepPhase, moving: this.moving, running: this.running, sitting: this.sitting, blink: this.blinkLeft > 0 || (this.kissLeft > 0.25 && this.kissLeft < KISS - 0.25), t: this.time, armForward: this.armForward, cheer: this.cheerLeft > 0 ? 1 - this.cheerLeft / CHEER : undefined, wave: this.waveLeft > 0 ? 1 - this.waveLeft / WAVE : undefined, idle: this.idleTime, kiss: this.kissLeft > 0 ? 1 - this.kissLeft / KISS : undefined, tiptoe: this.kissTiptoe });
+    const actK = this.act ? { id: this.act.id, k: 1 - this.act.left / this.act.dur } : undefined;
+    this.chibi.pose({ step: this.stepPhase, moving: this.moving, running: this.running, sitting: this.sitting, blink: this.blinkLeft > 0 || (this.kissLeft > 0.25 && this.kissLeft < KISS - 0.25) || (!!actK && actClosesEyes(actK.id, actK.k)), t: this.time, armForward: this.armForward, cheer: this.cheerLeft > 0 ? 1 - this.cheerLeft / CHEER : undefined, wave: this.waveLeft > 0 ? 1 - this.waveLeft / WAVE : undefined, idle: this.idleTime, kiss: this.kissLeft > 0 ? 1 - this.kissLeft / KISS : undefined, tiptoe: this.kissTiptoe, act: actK });
   }
 
   destroy() {

@@ -6,6 +6,7 @@
  * ist eine gezeichnete Textur (mit Blinzel-Variante).
  * Ursprung = zwischen den Füßen, Blickrichtung = +Z.
  */
+import type { IdleAct } from '../../data/idle';
 import * as THREE from 'three';
 import { outfitFor, shoesFor, type Appearance } from '../../core/appearance';
 import type { Season } from '../../core/time';
@@ -444,6 +445,23 @@ export interface ChibiPose {
   kiss?: number;
   /** beim Küsschen auf die Zehenspitzen */
   tiptoe?: boolean;
+  /** Leerlauf-Animation (Strecken, Gähnen, Summen …), Fortschritt 0..1 */
+  act?: { id: IdleAct; k: number };
+}
+
+/** Weiche Hüllkurve: einblenden, halten, ausblenden */
+function envelope(k: number, inEnd = 0.25, outStart = 0.75): number {
+  if (k < inEnd) return Math.sin((k / inEnd) * Math.PI / 2);
+  if (k > outStart) return Math.sin(((1 - k) / (1 - outStart)) * Math.PI / 2);
+  return 1;
+}
+
+/** Hat die Figur bei dieser Leerlauf-Animation gerade die Augen zu? */
+export function actClosesEyes(id: IdleAct, k: number): boolean {
+  if (id === 'strecken') return k > 0.35 && k < 0.7;
+  if (id === 'gaehnen') return k > 0.25 && k < 0.75;
+  if (id === 'summen') return k > 0.15 && k < 0.85;
+  return false;
 }
 
 export class Chibi3D {
@@ -987,6 +1005,7 @@ export class Chibi3D {
       this.head.rotation.x = -hop * 0.12;
     }
     this.body.rotation.x = 0;
+    this.body.rotation.z = 0;
     if (p.kiss !== undefined && !p.moving && !p.sitting) {
       // weich vorbeugen, kurz halten, zurück – Kopf leicht schräg, Hände hinter den Rücken
       const k = p.kiss;
@@ -1000,12 +1019,97 @@ export class Chibi3D {
         arm.rotation.z = (i === 0 ? -1 : 1) * 0.15;
       }
     }
+    if (p.act && !p.moving && p.armForward === undefined) this.poseAct(p.act.id, p.act.k);
     if (p.wave !== undefined && p.armForward === undefined) {
       // rechte Hand hoch und hin und her
       const k = p.wave;
       const up = Math.min(1, k * 5, (1 - k) * 5);
       this.arms[0].rotation.x = 0;
       this.arms[0].rotation.z = -(0.25 + up * 2.3) + Math.sin(k * Math.PI * 7) * 0.3 * up;
+    }
+  }
+
+  /** Leerlauf-Animationen (nur im Stehen) */
+  private poseAct(id: IdleAct, k: number) {
+    const e = envelope(k);
+    const [r, l] = this.arms;
+    switch (id) {
+      case 'strecken': {
+        // Arme hoch über den Kopf, auf die Zehenspitzen, ganz lang machen
+        const up = envelope(k, 0.3, 0.7);
+        // nach vorn-oben zum „V“ (gerade nach oben oder seitlich verschwänden sie hinter Kopf & Locken)
+        r.rotation.x = l.rotation.x = -up * 2.35;
+        r.rotation.z = -(0.25 + up * 0.6) + Math.sin(k * Math.PI * 3) * 0.08 * up;
+        l.rotation.z = 0.25 + up * 0.6 - Math.sin(k * Math.PI * 3) * 0.08 * up;
+        this.body.scale.y = 1 + up * 0.08;
+        this.body.position.y = up * 0.04;
+        // gemütlich zur einen, dann zur anderen Seite dehnen
+        this.body.rotation.z = Math.sin(k * Math.PI * 2) * 0.12 * up;
+        this.head.rotation.z = Math.sin(k * Math.PI * 2) * 0.1 * up;
+        this.head.rotation.x = -up * 0.18;
+        break;
+      }
+      case 'gaehnen': {
+        // Kopf in den Nacken, Hand vor den Mund, anderer Arm streckt sich ein bisschen
+        r.rotation.x = -e * 2.1;
+        r.rotation.z = -0.25 + e * 0.6;
+        l.rotation.x = -e * 0.5;
+        l.rotation.z = 0.25 + e * 0.35;
+        this.head.rotation.x = -e * 0.28;
+        this.body.scale.y = 1 + e * 0.03;
+        break;
+      }
+      case 'summen': {
+        // im Takt hin und her wiegen
+        const beat = Math.sin(k * Math.PI * 8);
+        this.body.rotation.z = beat * 0.07 * e;
+        this.head.rotation.z = beat * 0.14 * e;
+        this.body.position.y = Math.abs(beat) * 0.025 * e;
+        r.rotation.z = -0.25 - (0.2 + beat * 0.15) * e;
+        l.rotation.z = 0.25 + (0.2 - beat * 0.15) * e;
+        break;
+      }
+      case 'wippen': {
+        // Hände hinterm Rücken, mit dem Fuß wippen, umschauen
+        r.rotation.x = l.rotation.x = e * 0.45;
+        r.rotation.z = -0.12;
+        l.rotation.z = 0.12;
+        this.legs[1].rotation.x = -Math.max(0, Math.sin(k * Math.PI * 10)) * 0.28 * e;
+        this.body.position.y = Math.max(0, Math.sin(k * Math.PI * 5)) * 0.015 * e;
+        this.head.rotation.y = Math.sin(k * Math.PI * 2) * 0.3 * e;
+        break;
+      }
+      case 'kraulen': {
+        // vorbeugen, in die Knie, Winston kraulen
+        this.body.rotation.x = e * 0.42;
+        this.body.position.y = -e * 0.06;
+        for (const leg of this.legs) leg.rotation.x = -e * 0.25;
+        r.rotation.x = -e * (1.05 + Math.sin(k * Math.PI * 9) * 0.18);
+        r.rotation.z = -0.15;
+        l.rotation.x = -e * 0.3;
+        this.head.rotation.x = e * 0.12;
+        this.head.rotation.z = e * 0.1;
+        break;
+      }
+      case 'haende-reiben': {
+        // Hände vor der Brust aneinander reiben, ein bisschen bibbern
+        const rub = Math.sin(k * Math.PI * 14) * 0.13 * e;
+        r.rotation.x = -e * 1.15 + rub;
+        l.rotation.x = -e * 1.15 - rub;
+        r.rotation.z = -0.25 + e * 0.75;
+        l.rotation.z = 0.25 - e * 0.75;
+        this.body.scale.y = 1 - e * 0.025;
+        this.head.rotation.z = Math.sin(k * Math.PI * 22) * 0.02 * e;
+        break;
+      }
+      case 'regen-fuehlen': {
+        // Hand ausstrecken, Handfläche nach oben, in den Himmel schauen
+        r.rotation.x = -e * 1.4;
+        r.rotation.z = -0.25 - e * 0.55;
+        this.head.rotation.x = -e * 0.3;
+        this.head.rotation.y = Math.sin(k * Math.PI * 1.5) * 0.15 * e;
+        break;
+      }
     }
   }
 
