@@ -1699,7 +1699,14 @@ body:has(.dialog-layer) .decor-bar {
   font-size: 16px;
   font-weight: 700;
   line-height: 1.45;
-  animation: fade-in 0.5s ease-out;
+  /* nur leicht hineinrutschen – der Text bleibt immer lesbar, auch wenn eine Animation hängt */
+  animation: tv-line-in 0.4s ease-out;
+}
+
+@keyframes tv-line-in {
+  from {
+    transform: translateY(6px);
+  }
 }
 
 .tv-progress {
