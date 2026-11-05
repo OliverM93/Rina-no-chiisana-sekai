@@ -33,7 +33,7 @@ function entries(tab: Tab): Entry[] {
       price: f.price,
       style: f.style,
       description: f.description,
-      size: f.small ? 'klein (passt auf Tische)' : f.rug ? `Teppich ${f.w}×${f.d}` : `${f.w}×${f.d} Felder`,
+      size: f.wall ? `🖼️ Wand-Deko, ${f.w} breit (Möbel passen darunter)` : f.small ? 'klein (passt auf Tische)' : f.rug ? `Teppich ${f.w}×${f.d}` : `${f.w}×${f.d} Felder`,
       variants: f.variants
         ? Object.entries(f.variants).map(([v, color]) => ({ itemId: `${f.id}-${v}`, label: VARIANT_LABELS[v] ?? v, color }))
         : [{ itemId: f.id, label: '', color: null }],

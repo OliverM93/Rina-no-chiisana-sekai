@@ -133,6 +133,10 @@ Zinseszins freut.
 **Küsschen (M8e):** Lina und Oli smoochen gern und oft: im Gespräch „😘 Küsschen geben“ – so oft man möchte.
 Kommt Lina nach Hause, holt Oli sie mit einem Begrüßungsküsschen ab, und zwischendurch gibt's einfach so eins.
 
+**Wand-Deko (M8f):** Bilder, Poster, Regale, eine Uhr, ein Spiegel und eine leuchtende Fotowand mit allen
+Liebsten hängen jetzt an den Wänden – einfach beim Einrichten auf die Wand zielen. Darunter passt weiterhin
+eine Kommode.
+
 Im Menü: Aussehen ändern, Lautstärke, speichern, **Spielstand exportieren/laden** (als Datei – praktisch zum Sichern
 oder für ein anderes Gerät), Vollbild, Hilfe.
 

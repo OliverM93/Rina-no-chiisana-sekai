@@ -3,7 +3,7 @@
  * Nebel versteckt das Dorf) – so bleiben Lina, Licht und Kamera dieselben.
  */
 import * as THREE from 'three';
-import { blockedCells, footprint, itemsAt, type PlacedItem, type Room, type RoomLayout, type Rotation } from '../core/room';
+import { backWindows, blockedCells, footprint, itemsAt, type PlacedItem, type Room, type RoomLayout, type Rotation } from '../core/room';
 import { FURNITURE_BY_ITEM, furnitureInfo, SURFACE_BY_ID } from '../data/furniture';
 import { drawPattern } from '../gfx/interior';
 import { mesh, toon } from './materials';
@@ -33,6 +33,8 @@ export class Interior3D {
   private ghostKey = '';
   private windowGlass: THREE.MeshToonMaterial;
   readonly floor: THREE.Mesh;
+  /** Rück- und Seitenwände (zum Zielen beim Aufhängen von Wand-Deko) */
+  walls: THREE.Mesh[] = [];
   private lit = new Set<string>();
 
   private shell = new THREE.Group();
@@ -69,6 +71,10 @@ export class Interior3D {
     left.position.set(-0.075, wallH / 2, H / 2);
     const right = left.clone();
     right.position.x = W + 0.075;
+    back.userData.wall = 'back';
+    left.userData.wall = 'left';
+    right.userData.wall = 'right';
+    this.walls = [back, left, right];
     for (const wall of [back, left, right]) {
       wall.receiveShadow = true;
       this.shell.add(wall);
@@ -89,10 +95,8 @@ export class Interior3D {
     base.position.set(W / 2, -0.151, H / 2 - 0.1);
     this.shell.add(base);
     // Fenster in der Rückwand (nicht dort, wo ein Durchgang ist)
-    const backDoors = layout.exits.filter((e) => e.dir === 'up').flatMap((e) => e.cells.map(([x]) => x));
-    const windows = attic ? [W / 2] : W >= 10 ? [2, W - 2] : [2, W - 2];
-    for (const x of windows) {
-      if (backDoors.some((d) => Math.abs(d + 0.5 - x) < 1.2)) continue;
+    // (dieselbe Regel kennt die Raumlogik – dort hängt keine Wand-Deko)
+    for (const x of backWindows(layout)) {
       const y = attic ? 0.95 : 1.35;
       const frame = mesh(new THREE.BoxGeometry(1.1, 0.9, 0.06), toon('#ffffff'));
       frame.position.set(x, y, 0.02);
@@ -250,8 +254,25 @@ export class Interior3D {
     return blockedCells(home, L, furnitureInfo).has(`${x},${y}`);
   }
 
-  topAt(home: Room, x: number, y: number): PlacedItem | null {
-    return itemsAt(home, x, y, furnitureInfo)[0] ?? null;
+  /** Oberstes Möbel an einem Feld; zielt man auf eine Wand, zuerst die Wand-Deko dort */
+  topAt(home: Room, x: number, y: number, wallRot: Rotation | null = null): PlacedItem | null {
+    const all = itemsAt(home, x, y, furnitureInfo);
+    if (wallRot !== null) {
+      const onWall = all.find((i) => furnitureInfo(i.itemId)?.wall && i.rot === wallRot);
+      if (onWall) return onWall;
+    }
+    return all.find((i) => !furnitureInfo(i.itemId)?.wall) ?? all[0] ?? null;
+  }
+
+  /** Treffer auf einer Wand → Feld davor + passende Drehung für Wand-Deko */
+  wallCell(p: THREE.Vector3, side: string, layout: RoomLayout): { x: number; y: number; rot: Rotation } {
+    const lx = p.x - ROOM_X;
+    const lz = p.z - ROOM_Y;
+    const clampX = (v: number) => Math.max(0, Math.min(layout.w - 1, Math.floor(v)));
+    const clampY = (v: number) => Math.max(0, Math.min(layout.h - 1, Math.floor(v)));
+    if (side === 'left') return { x: 0, y: clampY(lz), rot: 3 };
+    if (side === 'right') return { x: layout.w - 1, y: clampY(lz), rot: 1 };
+    return { x: clampX(lx), y: 0, rot: 0 };
   }
 
   model(uid: string): FurnitureModel | null {

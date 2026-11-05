@@ -10,7 +10,7 @@ import { dressFor } from '../core/appearance';
 import * as THREE from 'three';
 import { DPR, TILE, UNIT } from '../config';
 import { CollisionGrid, findPath, nearestWalkable, type Tile } from '../core/grid';
-import { checkPlacement, type Exit, exitAt, footprint, type Room, type RoomLayout, type Rotation } from '../core/room';
+import { checkPlacement, type Exit, exitAt, footprint, type Room, type RoomLayout, type Rotation, wallRotationAt } from '../core/room';
 import { FURNITURE_BY_ITEM, furnitureInfo } from '../data/furniture';
 import { getDaylight, isSameDayMonth } from '../core/time';
 import { isWatered, spotKey } from '../core/garden';
@@ -163,6 +163,8 @@ export class World3D {
   /** Einrichten: was gerade gehalten wird (uid = schon im Zimmer, sonst aus der Tasche) */
   private decor: { itemId: string; uid: string | null; rot: Rotation } | null = null;
   private hoverCell: { x: number; y: number } | null = null;
+  /** Beim Einrichten auf eine Wand gezielt: deren Drehung für Wand-Deko (0 hinten, 3 links, 1 rechts) */
+  private hoverWall: Rotation | null = null;
   /** erst nach dem Verlassen eines Ausgangs-Feldes darf er wieder auslösen */
   private exitArmed = true;
   private winston: Winston | null = null;
@@ -2446,7 +2448,28 @@ export class World3D {
 
   private roomCellAt(e: PointerEvent): { x: number; y: number } | null {
     this.raycaster.setFromCamera(this.ndc(e), this.camera);
-    const hits = this.decor ? this.raycaster.intersectObject(this.interior.floor, false) : this.raycaster.intersectObject(this.interior.group, true);
+    if (this.session.decorActive) {
+      // Einrichten: Boden oder Wand (zum Aufhängen von Bildern & Regalen)
+      // ohne etwas in der Hand: auf Möbel zielen (auch Wand-Deko), sonst Boden/Wand
+      const hit = this.decor
+        ? this.raycaster.intersectObjects([this.interior.floor, ...this.interior.walls], false)[0]
+        : this.raycaster.intersectObject(this.interior.group, true)[0];
+      this.hoverWall = null;
+      if (!hit) return null;
+      const side = hit.object.userData.wall as string | undefined;
+      if (side) {
+        const wc = this.interior.wallCell(hit.point, side, this.lay);
+        this.hoverWall = wc.rot;
+        return { x: wc.x, y: wc.y };
+      }
+      const cell = this.interior.cellFromPoint(hit.point);
+      // Treffer hoch oben direkt an einer Wand = Wand-Deko
+      const lx = hit.point.x - ROOM_X;
+      const lz = hit.point.z - ROOM_Y;
+      if (!this.decor && hit.point.y > 0.7) this.hoverWall = lz < 0.12 ? 0 : lx < 0.12 ? 3 : lx > this.lay.w - 0.12 ? 1 : null;
+      return cell.x >= 0 && cell.y >= 0 && cell.x < this.lay.w && cell.y < this.lay.h ? cell : null;
+    }
+    const hits = this.raycaster.intersectObject(this.interior.group, true);
     if (hits.length === 0) return null;
     // Bei Möbeln zählt das Feld unter dem Treffer; sonst Bodenpunkt
     const p = hits[0].point;
@@ -2593,6 +2616,7 @@ export class World3D {
     }
     const info = furnitureInfo(d.itemId);
     if (!info) return;
+    this.snapWallRotation(info);
     // Zelle unter dem Mauszeiger = Mitte des Möbels
     const fp = footprint(info, d.rot);
     const x = cell.x - Math.floor((fp.w - 1) / 2);
@@ -2605,6 +2629,15 @@ export class World3D {
     this.emitDecor(p.ok);
   }
 
+  /** Wand-Deko dreht sich von selbst zur Wand, auf die man zielt (oder an der das Feld liegt) */
+  private snapWallRotation(info: { wall?: boolean }) {
+    const d = this.decor;
+    const cell = this.hoverCell;
+    if (!d || !cell || !info.wall || !this.session.inside) return;
+    const rot = this.hoverWall ?? wallRotationAt(this.lay, cell.x, cell.y);
+    if (rot !== null) d.rot = rot;
+  }
+
   /** Klick beim Einrichten: hochheben oder abstellen */
   private decorClick() {
     const home = this.room;
@@ -2612,7 +2645,7 @@ export class World3D {
     if (!home || !cell) return;
     const d = this.decor;
     if (!d) {
-      const top = this.dv.topAt(home, cell.x, cell.y);
+      const top = this.dv.topAt(home, cell.x, cell.y, this.hoverWall);
       if (!top) return;
       this.decor = { itemId: top.itemId, uid: top.uid, rot: top.rot };
       this.dv.setHidden(top.uid);
@@ -2621,6 +2654,7 @@ export class World3D {
     }
     const info = furnitureInfo(d.itemId);
     if (!info) return;
+    this.snapWallRotation(info);
     const fp = footprint(info, d.rot);
     const x = cell.x - Math.floor((fp.w - 1) / 2);
     const y = cell.y - Math.floor((fp.d - 1) / 2);

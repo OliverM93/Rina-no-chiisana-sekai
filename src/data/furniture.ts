@@ -45,6 +45,8 @@ export interface FurnitureDef {
   bed?: boolean;
   /** Stall mit Tieren (Hühner/Wachteln), legt täglich Eier */
   coop?: 'huhn' | 'wachtel';
+  /** Hängt an der Wand (Rückwand oder Seitenwand) – darunter darf etwas stehen */
+  wall?: boolean;
   /** Farbvarianten (Name → Farbe); ohne = eine Variante */
   variants?: Record<string, string>;
 }
@@ -124,6 +126,16 @@ export const FURNITURE: readonly FurnitureDef[] = [
   { id: 'hochbeet', name: 'Hochbeet', style: 'garten', outdoor: true, bed: true, price: 1200, w: 2, d: 1, description: 'Ein Beet aus Holz auf Kniehöhe – zwei neue Pflanzplätze!' },
   { id: 'huehnerstall', name: 'Hühnerstall', style: 'garten', outdoor: true, coop: 'huhn', price: 2800, w: 2, d: 2, description: 'Ein rotes Hühnerhaus mit Rampe – drei fröhliche Hühner ziehen gleich mit ein. Jeden Tag frische Eier!' },
   { id: 'wachtelstall', name: 'Wachtelstall', style: 'garten', outdoor: true, coop: 'wachtel', price: 1900, w: 2, d: 1, description: 'Ein kleines Häuschen mit Gitter für vier Wachteln. Sie legen winzige gesprenkelte Eier.' },
+  // Wand-Deko (M8f): hängt an Rück- oder Seitenwand, darunter dürfen Möbel stehen
+  { id: 'bild-winston', name: 'Winston-Porträt', style: 'basis', wall: true, price: 600, w: 1, d: 1, description: 'Ein gerahmtes Porträt von Winston. Er guckt sehr würdevoll. Fast.' },
+  { id: 'poster-grusel', name: 'Gruselfilm-Poster', style: 'basis', wall: true, price: 400, w: 1, d: 1, description: '„Die Nacht der Kürbisse“ – Linas liebster Gruselklassiker. Oli guckt lieber nicht so genau hin.' },
+  { id: 'wandregal', name: 'Wandregal', style: 'basis', wall: true, price: 500, w: 2, d: 1, description: 'Ein schwebendes Brett mit Büchern, einem Pflänzchen und einer kleinen Kerze.' },
+  { id: 'wanduhr', name: 'Wanduhr', style: 'basis', wall: true, price: 450, w: 1, d: 1, description: 'Eine runde Uhr. Sie geht genau richtig – Papa hat sie gestellt.', variants: { rosa: '#f4a3b8', mint: '#9ad8c0', schwarz: '#2a2a30' } },
+  { id: 'rollbild', name: 'Rollbild', style: 'japanisch', wall: true, price: 700, w: 1, d: 1, description: 'Ein Kakejiku mit einem Kranich über den Bergen. Ganz still und schön.' },
+  { id: 'wimpelkette', name: 'Wimpelkette', style: 'basis', wall: true, price: 250, w: 2, d: 1, description: 'Bunte Stoffwimpel an einer Schnur. Jeden Tag ein bisschen Geburtstag.' },
+  { id: 'fotowand', name: 'Fotowand', style: 'basis', wall: true, light: true, price: 900, w: 2, d: 1, description: 'Fotos von allen Liebsten an einer Lichterkette mit kleinen Klammern. Leuchtet abends.' },
+  { id: 'spiegel-rund', name: 'Runder Spiegel', style: 'basis', wall: true, price: 500, w: 1, d: 1, description: 'Ein runder Spiegel mit goldenem Rand. Christin prüft darin, ob alles gerade hängt.' },
+  { id: 'trockenkranz', name: 'Trockenblumenkranz', style: 'basis', wall: true, price: 350, w: 1, d: 1, description: 'Ein Kranz aus Lavendel, Eukalyptus und kleinen Rosen. Duftet ein bisschen nach Sommer.' },
   { id: 'topfpflanze', name: 'Monstera', style: 'basis', price: 300, w: 1, d: 1, description: 'Große, grüne Blätter mit Löchern. Sehr fotogen.' },
 ];
 
@@ -177,11 +189,11 @@ export const FURNITURE_ITEMS: readonly FurnitureItem[] = FURNITURE.flatMap((def)
 export const FURNITURE_BY_ITEM: Readonly<Record<string, FurnitureItem>> = Object.fromEntries(FURNITURE_ITEMS.map((f) => [f.itemId, f]));
 export const SURFACE_BY_ID: Readonly<Record<string, SurfaceDef>> = Object.fromEntries([...WALLPAPERS, ...FLOORS].map((s) => [s.id, s]));
 
-export const VARIANT_LABELS: Record<string, string> = { grau: 'Grau', weiss: 'Weiß', mint: 'Mint', gelb: 'Gelb', rosa: 'Rosa', indigo: 'Indigo', creme: 'Creme', rot: 'Rot', blau: 'Blau', gruen: 'Grün', senf: 'Senfgelb' };
+export const VARIANT_LABELS: Record<string, string> = { grau: 'Grau', weiss: 'Weiß', mint: 'Mint', gelb: 'Gelb', rosa: 'Rosa', indigo: 'Indigo', creme: 'Creme', rot: 'Rot', blau: 'Blau', gruen: 'Grün', senf: 'Senfgelb', schwarz: 'Schwarz' };
 
 
 /** Raum-Infos für die Raumlogik (`core/room.ts`) */
 export function furnitureInfo(itemId: string) {
   const f = FURNITURE_BY_ITEM[itemId];
-  return f ? { w: f.def.w, d: f.def.d, rug: f.def.rug, small: f.def.small, surface: f.def.surface, walk: f.def.walk } : undefined;
+  return f ? { w: f.def.w, d: f.def.d, rug: f.def.rug, small: f.def.small, surface: f.def.surface, walk: f.def.walk, wall: f.def.wall } : undefined;
 }
