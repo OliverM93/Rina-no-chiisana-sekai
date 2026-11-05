@@ -3,6 +3,7 @@
  * gerade sichtbar ist, und verbindet sich mit dem Event-Bus der Sitzung.
  */
 import { BABBLE_EVERY, VOICES } from '../data/voices';
+import { syllableAt } from '../core/babble';
 import { useEffect } from 'preact/hooks';
 import { DEFAULT_LINA } from '../core/appearance';
 import type { Session } from '../game/session';
@@ -113,7 +114,7 @@ export function App({ session }: { session: Session }) {
             const speaker = state.dialog?.title;
             if (!speaker || !VOICES[speaker] || i % BABBLE_EVERY !== 0 || !/\p{L}/u.test(ch)) return;
             if ((line.slice(0, i).match(/\*/g)?.length ?? 0) % 2 === 1) return;
-            session.bus.emit('voice', { speaker, ch });
+            session.bus.emit('voice', { speaker, syl: syllableAt(line, i, BABBLE_EVERY) });
           }}
         />
       )}

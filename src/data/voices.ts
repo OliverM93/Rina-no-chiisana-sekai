@@ -1,7 +1,8 @@
 /**
  * Brabbelsprache: Jede Figur „spricht“ beim Text mit kleinen, selbst erzeugten Silben –
- * niedlich und unverständlich. Tonhöhe, Spannweite, Tempo und Klangfarbe je Person.
- * (Die Silben entstehen in `audio/Audio.ts`; die Vokale kommen aus dem Text selbst.)
+ * hoch, niedlich und unverständlich. Tonhöhe, Kopfgröße (Formanten), Tempo, Lebhaftigkeit
+ * und Klangfarbe je Person; Männer etwas tiefer. Synthese in `audio/Audio.ts`,
+ * Silben & Satzmelodie in `core/babble.ts`.
  */
 
 export interface Voice {
@@ -11,26 +12,34 @@ export interface Voice {
   range: number;
   /** Länge einer Silbe in Sekunden */
   syllable: number;
-  /** Klangfarbe: rund (Dreieck) oder etwas schnarrender (Säge) */
-  tone: 'rund' | 'hell';
-  /** leichtes Zittern (z. B. bei Oma) */
+  /** „Kopfgröße“: > 1 = kleiner, niedlicher (Formanten höher) */
+  formant: number;
+  /** Klangfarbe 0 (weich, rund) … 1 (hell, klar) */
+  bright: number;
+  /** Wie stark jede Silbe singt (Tonhöhenbogen in Halbtönen) */
+  lilt: number;
+  /** leichtes Zittern in Hz (z. B. bei Oma) */
   vibrato?: number;
+  /** etwas Hauch in der Stimme 0..1 */
+  breath?: number;
 }
 
 /** Stimmen je Name im Dialogtitel (Name → Stimme) */
 export const VOICES: Readonly<Record<string, Voice>> = {
-  'Oma Gisela': { pitch: 360, range: 5, syllable: 0.075, tone: 'rund', vibrato: 7 },
-  Olaf: { pitch: 175, range: 3, syllable: 0.065, tone: 'rund' },
-  Christin: { pitch: 310, range: 4, syllable: 0.055, tone: 'hell' },
-  Oli: { pitch: 205, range: 5, syllable: 0.055, tone: 'rund' },
-  Jens: { pitch: 235, range: 9, syllable: 0.06, tone: 'hell' },
-  Lars: { pitch: 140, range: 4, syllable: 0.07, tone: 'rund' },
-  Thalia: { pitch: 340, range: 7, syllable: 0.05, tone: 'hell' },
-  Lina: { pitch: 300, range: 5, syllable: 0.055, tone: 'rund' },
+  // Frauen: hoch & hell
+  Lina: { pitch: 520, range: 4, syllable: 0.07, formant: 1.25, bright: 0.5, lilt: 2.5, breath: 0.15 },
+  Thalia: { pitch: 590, range: 6, syllable: 0.06, formant: 1.3, bright: 0.65, lilt: 3 },
+  Christin: { pitch: 545, range: 2.5, syllable: 0.06, formant: 1.22, bright: 0.6, lilt: 1.2 },
+  'Oma Gisela': { pitch: 470, range: 5, syllable: 0.09, formant: 1.12, bright: 0.3, lilt: 2, vibrato: 6.5, breath: 0.3 },
+  // Männer: etwas tiefer, aber immer noch knuffig
+  Oli: { pitch: 330, range: 4, syllable: 0.075, formant: 1.1, bright: 0.35, lilt: 2.2, breath: 0.1 },
+  Jens: { pitch: 365, range: 8, syllable: 0.068, formant: 1.16, bright: 0.6, lilt: 4 },
+  Olaf: { pitch: 290, range: 2.2, syllable: 0.08, formant: 1.02, bright: 0.3, lilt: 0.8 },
+  Lars: { pitch: 255, range: 3.5, syllable: 0.085, formant: 1.0, bright: 0.35, lilt: 1.6 },
 };
 
 /** Für alle anderen (Schilder haben keinen Titel und brabbeln nicht) */
-export const DEFAULT_VOICE: Voice = { pitch: 260, range: 5, syllable: 0.06, tone: 'rund' };
+export const DEFAULT_VOICE: Voice = { pitch: 430, range: 4, syllable: 0.07, formant: 1.15, bright: 0.45, lilt: 2 };
 
 /** Jede wievielte Buchstabe eine Silbe bekommt */
 export const BABBLE_EVERY = 3;

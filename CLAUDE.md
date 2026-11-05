@@ -108,7 +108,9 @@ src/
     events.ts      typisierter Event-Emitter
     rng.ts         reproduzierbarer Zufall
     progress.ts    Zähler (verkauft, gekauft, gebaut, gekocht), Meilenstein-Bedingungen, Wartezeit in Spielzeit
-    music.ts       Musik-Stimmungen (Tempo, Tonart, Akkorde) + Phrasen komponieren, Stimmung nach Zeit/Wetter
+    music.ts       Musik-Themen (Tempo, Tonart, Akkordfolgen, Instrumente, 4/4 oder Walzer) + Lieder komponieren
+                   (Motiv, Form A–A'–B–A'–C), Thema nach Zeit/Wetter/Ort (`placeMood`)
+    babble.ts      Brabbelsprache: Silbe (Mitlaut, Selbstlaut) + Satzmelodie aus einer Textzeile
   audio/       Audio.ts – Web-Audio-Klang: Sequenzer, Instrumente, Umgebung (Vögel, Grillen, Regen, Wellen), Geräusche
   data/        Inhalte (leicht erweiterbar): Karten, Interaktionstexte, Story-Texte,
                items.ts (alle Gegenstände + Preise, Gartenblumen, Werkzeuge), species.ts (Fische & Insekten –
@@ -255,7 +257,11 @@ src/
   Gespräch, Geschenk 1× pro Fest & Jahr über `world.dates`), Schmuck in `world3d/Festivals3D.ts`.
 - **Tiere:** Ställe sind Gartenmöbel mit `coop: 'huhn' | 'wachtel'`, die Tiere kommen mit (`data/animals.ts`).
   Abholtage in `world.coopDay`; Logik in `core/coop.ts` & `game/animals.ts`.
-- **Klang:** `GameAudio` (`audio/Audio.ts`) startet nach der ersten Taste/Klick (Browser-Regel). Geräusche
+- **Klang:** `GameAudio` (`audio/Audio.ts`) startet nach der ersten Taste/Klick (Browser-Regel). **Musik:** draußen
+  Natur-Themen nach Tageszeit/Wetter (+ Strand), nahe an Häusern das Thema der Bewohner (`data/music.ts`:
+  Olaf & Christin, Oma, Bistro, Praxis, Thalia), zu Hause „Lini & Oli“ (ab Olis Einzug). Ortswechsel greift am
+  nächsten Taktende. Zum Anhören `?musik=bistro` an die URL hängen. **Stimmen:** `data/voices.ts` (Tonhöhe,
+  Kopfgröße/Formanten, Lebhaftigkeit, Hauch; Männer tiefer), Silben aus `core/babble.ts`. Geräusche
   laufen über das Bus-Event `sfx` (`session.bus.emit('sfx', 'muenzen')`), Lautstärke über `settings:changed`.
   `main.ts` setzt alle 2 s Stimmung (`moodFor`) und Umgebung. Hörprobe ohne Lautsprecher:
   `GameAudio.preview(mood)` rendert offline in einen AudioBuffer. Musik: Pad (zwei verstimmte Oszillatoren) +

@@ -3,7 +3,9 @@
  */
 import { VOICES } from './data/voices';
 import { GameAudio } from './audio/Audio';
-import { moodFor } from './core/music';
+import { moodFor, MOODS, placeMood, type Mood } from './core/music';
+import { homeMood, MUSIC_PLACES } from './data/music';
+import { objectById } from './core/worldmap';
 import { isPrecipitation } from './core/weather';
 import { getSeason } from './core/time';
 import { currentWeather } from './game/nature';
@@ -85,10 +87,12 @@ async function start() {
   });
   session.bus.on('voice', (v) => {
     const voice = VOICES[v.speaker];
-    if (voice) audio.babble(voice, v.ch);
+    if (voice) audio.babble(voice, v.syl);
   });
   session.bus.on('settings:changed', (s) => audio.setVolumes(s.musicVolume, s.sfxVolume));
-  // Stimmung & Umgebung alle 2 Sekunden (echte Zeit)
+  // Stimmung & Umgebung alle 2 Sekunden (echte Zeit); `?musik=bistro` erzwingt ein Thema zum Anhören
+  const forcedMood = new URLSearchParams(location.search).get('musik');
+  const forced = forcedMood && forcedMood in MOODS ? (forcedMood as Mood) : null;
   window.setInterval(() => {
     const now = session.clock();
     const h = now.getHours();
@@ -96,9 +100,19 @@ async function start() {
     const raining = isPrecipitation(w.kind) && w.kind !== 'schnee';
     const inside = session.inside;
     const title = !session.playing || ui.state.screen !== 'playing';
-    audio.setMood(title ? 'morgen' : moodFor(h, { raining, snowing: w.kind === 'schnee', inside, party: isPartyTime(session) }));
     const pos = session.data?.player;
     const nearSea = !!pos && pos.y / 64 > 27;
+    // Orts-Themen: nahe an einem Haus spielt das Lied seiner Bewohner
+    const map = session.map;
+    const place =
+      pos && !inside
+        ? placeMood(pos.x / 64, pos.y / 64, MUSIC_PLACES, (id) => {
+            const o = objectById(map, id);
+            return o && !map.inactive.has(id) ? { x: o.x + o.w / 2, y: o.y + o.h / 2 } : null;
+          })
+        : null;
+    const home = homeMood(session.data?.flags ?? {});
+    audio.setMood(forced ?? (title ? 'morgen' : moodFor(h, { raining, snowing: w.kind === 'schnee', inside, party: isPartyTime(session), place, home, nearSea })));
     const season = getSeason(now);
     audio.setAmbience({
       birds: inside || raining || h < 5 || h >= 20 ? 0 : season === 'winter' ? 0.3 : 1,

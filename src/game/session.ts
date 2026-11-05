@@ -2,6 +2,7 @@
  * Die laufende Spielsitzung: Spielstand, Uhr, Karte und der Event-Bus
  * zwischen Spielwelt (Phaser) und Oberfläche (Preact).
  */
+import type { Syllable } from '../core/babble';
 import { buildYardLayout, yardBlockedTiles } from '../core/yard';
 import { setExtraBlocked } from '../core/worldmap';
 import type { RoomLayout } from '../core/room';
@@ -120,7 +121,7 @@ export type GameEvents = {
    */
   fx: { kind: FxKind; x?: number; y?: number; npc?: string };
   /** Brabbelsprache: eine Silbe für diesen Buchstaben, gesprochen von `speaker` (Name im Dialogtitel) */
-  voice: { speaker: string; ch: string };
+  voice: { speaker: string; syl: Syllable };
   /** Weiches Abblenden (Tür-Animation): true = dunkel */
   'overlay:fade': boolean;
   /** Einrichtungsmodus: an/aus, was gerade gehalten wird */
