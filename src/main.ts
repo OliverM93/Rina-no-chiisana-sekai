@@ -1,6 +1,7 @@
 /**
  * Einstiegspunkt: Schrift laden, Sitzung anlegen, Oberfläche & Spielwelt starten.
  */
+import { VOICES } from './data/voices';
 import { GameAudio } from './audio/Audio';
 import { moodFor } from './core/music';
 import { isPrecipitation } from './core/weather';
@@ -78,7 +79,14 @@ async function start() {
   window.addEventListener('pointerdown', wake);
   window.addEventListener('keydown', wake);
   session.bus.on('sfx', (s) => audio.play(s));
-  session.bus.on('dialog:open', () => audio.play('dialog'));
+  session.bus.on('dialog:open', (d) => {
+    // Bewohner brabbeln selbst – das „Blubb“ nur bei Schildern & Texten ohne Sprecher
+    if (!d.title || !VOICES[d.title]) audio.play('dialog');
+  });
+  session.bus.on('voice', (v) => {
+    const voice = VOICES[v.speaker];
+    if (voice) audio.babble(voice, v.ch);
+  });
   session.bus.on('settings:changed', (s) => audio.setVolumes(s.musicVolume, s.sfxVolume));
   // Stimmung & Umgebung alle 2 Sekunden (echte Zeit)
   window.setInterval(() => {

@@ -2,6 +2,7 @@
  * Wurzel der Oberfläche: entscheidet, welcher Bildschirm/welches Fenster
  * gerade sichtbar ist, und verbindet sich mit dem Event-Bus der Sitzung.
  */
+import { BABBLE_EVERY, VOICES } from '../data/voices';
 import { useEffect } from 'preact/hooks';
 import { DEFAULT_LINA } from '../core/appearance';
 import type { Session } from '../game/session';
@@ -102,7 +103,20 @@ export function App({ session }: { session: Session }) {
       {state.panel?.kind === 'tv' && <TvPanel session={session} withOli={state.panel.withOli} />}
       {state.panel?.kind === 'herd' && <CraftPanel session={session} station="herd" />}
       {state.panel && !['mail', 'book', 'catalog', 'bank', 'werkbank', 'kochstudio', 'apotheke', 'karte', 'galerie', 'tv', 'herd'].includes(state.panel.kind) && <InventoryPanel session={session} panel={state.panel} />}
-      {state.dialog && <DialogBox dialog={state.dialog} onClose={closeDialog} onChoose={chooseInDialog} />}
+      {state.dialog && (
+        <DialogBox
+          dialog={state.dialog}
+          onClose={closeDialog}
+          onChoose={chooseInDialog}
+          onChar={(ch, i, line) => {
+            // Brabbelsprache: nur Bewohner sprechen, nur Buchstaben, nicht in *Handlungen*
+            const speaker = state.dialog?.title;
+            if (!speaker || !VOICES[speaker] || i % BABBLE_EVERY !== 0 || !/\p{L}/u.test(ch)) return;
+            if ((line.slice(0, i).match(/\*/g)?.length ?? 0) % 2 === 1) return;
+            session.bus.emit('voice', { speaker, ch });
+          }}
+        />
+      )}
       {state.confirm && <Confirm request={state.confirm} />}
       {state.toast && <Toast key={state.toast.id} text={state.toast.text} icon={state.toast.icon} />}
     </>
