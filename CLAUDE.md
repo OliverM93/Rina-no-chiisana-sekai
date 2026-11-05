@@ -266,7 +266,10 @@ src/
   Hörprobe: `GameAudio.previewVoice(voice, text)`.
 - **Partikel & kleine Animationen:** Bus-Event `fx` (`{ kind, npc? , x?, y? }` – ohne Ort bei Lina) oder direkt
   `particles.burst()` in World3D. Alles über wenige InstancedMeshes mit festem Vorrat. `Character.cheer()` =
-  Freudensprung, `wave()` = Winken; nach 4 s Stillstand schauen Figuren sich um.
+  Freudensprung, `wave()` = Winken; nach 4 s Stillstand schauen Figuren sich um. **Leerlauf:** steht Lina ~10 s
+  still, macht sie ab und zu etwas Niedliches (`data/idle.ts`: Strecken, Gähnen, Summen, Wippen, Winston kraulen,
+  im Winter Hände reiben, im Regen Tropfen fühlen – je nach Lage gewichtet, `game/idle.ts`), Posen in
+  `Chibi3D.poseAct`, abgespielt über `Character.playAct`, ausgelöst in `World3D.updateIdle`.
 - **Spielstand:** `SAVE_VERSION` + `MIGRATIONS` in `core/save.ts`. Nach jeder Migration wird normalisiert
   (fehlende Felder → Standardwerte). Vor jedem Speichern bleibt der alte Stand als Backup erhalten.
 

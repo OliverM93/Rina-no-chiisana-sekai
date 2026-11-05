@@ -12,9 +12,11 @@ import { DPR, TILE, UNIT } from '../config';
 import { CollisionGrid, findPath, nearestWalkable, type Tile } from '../core/grid';
 import { checkPlacement, type Exit, exitAt, footprint, type Room, type RoomLayout, type Rotation, wallRotationAt } from '../core/room';
 import { FURNITURE_BY_ITEM, furnitureInfo } from '../data/furniture';
-import { getDaylight, isSameDayMonth } from '../core/time';
+import { getDaylight, getSeason, isSameDayMonth } from '../core/time';
+import { IDLE_GAP, IDLE_START, type IdleAct } from '../data/idle';
+import { pickIdleAct } from '../game/idle';
 import { isWatered, spotKey } from '../core/garden';
-import { WEATHER_LABELS } from '../core/weather';
+import { isPrecipitation, WEATHER_LABELS } from '../core/weather';
 import { applyMapFlags, findInteraction, isActive, type MapObject, OBJECT_KINDS, objectById, terrainAt, tileOf } from '../core/worldmap';
 import { itemCountLabel, itemDef, type ToolId, TOOLS } from '../data/items';
 import { FISH_BY_ID, type FishHabitat } from '../data/species';
@@ -401,6 +403,7 @@ export class World3D {
         }
       } else this.stepAcc = 0.2;
       this.updateWinston(dtMs, player, blocked, solid);
+      this.updateIdle(player, blocked);
       this.updateHomeOli(dtMs);
       if (this.session.inside && !this.session.decorActive) {
         const t = player.tile;
@@ -933,6 +936,53 @@ export class World3D {
     (this.bubble.material as THREE.SpriteMaterial).opacity = e;
     this.bubble.scale.set(0.5 * s, 0.42 * s, 1);
     this.bubble.position.set(this.bubblePos.x, this.bubblePos.y - (1 - e) * 0.15 + Math.sin(now / 300) * 0.05, this.bubblePos.z);
+  }
+
+  private idleNext = IDLE_START;
+  private lastIdleAct: IdleAct | null = null;
+
+  /** Steht Lina länger still, macht sie ab und zu etwas Niedliches (Strecken, Summen, Winston kraulen …) */
+  private updateIdle(player: Character, blocked: boolean) {
+    const idle = player.idleSeconds;
+    if (idle < 1) {
+      this.idleNext = IDLE_START;
+      return;
+    }
+    if (idle < this.idleNext || player.acting || blocked || this.session.decorActive || this.fishing.active || player.armForward !== undefined) return;
+    const w = this.winston;
+    const winstonNear = !!w && w.dog.root.visible && !w.sleeping && !w.busy && Math.hypot(w.x - player.x, w.y - player.y) < TILE * 1.6;
+    const kind = this.weather.current.kind;
+    const act = pickIdleAct(
+      {
+        hour: this.session.clock().getHours(),
+        raining: isPrecipitation(kind) && kind !== 'schnee',
+        winter: getSeason(this.session.clock()) === 'winter' || kind === 'schnee',
+        inside: this.session.inside,
+        winstonNear,
+      },
+      this.lastIdleAct,
+    );
+    if (!act) return;
+    this.lastIdleAct = act.id;
+    this.idleNext = idle + act.duration + IDLE_GAP[0] + Math.random() * (IDLE_GAP[1] - IDLE_GAP[0]);
+    if (act.id === 'kraulen' && w) {
+      player.faceTowards(w.x, w.y);
+      window.setTimeout(() => {
+        if (player.acting) w.pet(false);
+      }, 700);
+    } else if (act.id !== 'wippen' && act.id !== 'regen-fuehlen') {
+      player.face('down');
+    }
+    player.playAct(act.id, act.duration);
+    const emote = act.emote;
+    if (emote && act.id !== 'kraulen') {
+      const times = act.id === 'summen' ? [400, 2000] : [act.duration * 450];
+      for (const ms of times) {
+        window.setTimeout(() => {
+          if (player.acting) this.popEmote(player.root.position.clone().add(new THREE.Vector3(0.15, 1.45, 0)), emote);
+        }, ms);
+      }
+    }
   }
 
   private updateMailbox() {
