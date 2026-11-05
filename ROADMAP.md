@@ -85,7 +85,7 @@ Legende: ✅ erledigt · 🚧 in Arbeit · ⬜ geplant
 - ✅ Sitzen auf Kissen & Futon, Lampen leuchten abends (an-/ausknipsbar)
 - ✅ 3D-Vorschaubilder der Möbel in Katalog & Tasche; Spielstand Version 5
 - ⬜ Weitere Stile (Cottagecore, französisches Bistro, modern, Retro-Oma-Chic) → nach und nach
-- ⬜ Wand-Deko (Bilder, Rollbilder, Regale an der Wand)
+- ✅ Wand-Deko (Bilder, Rollbilder, Regale an der Wand) → M8f
 
 ## 🚧 M6 – Hausausbau, Außengestaltung, Crafting
 
@@ -204,6 +204,8 @@ Legende: ✅ erledigt · 🚧 in Arbeit · ⬜ geplant
 - ✅ **M8d Sparbuch:** In Olafs Dorfkasse einzahlen & abheben, wann man will. Am Monatsanfang gibt es 1 % Zinsen
   (mit Zinseszins, höchstens 2000 ⭐ im Monat, verpasste Monate werden nachgeholt) und einen Kontoauszug-Brief von
   Papa. Spielstand v12
+- ✅ **M8f Wand-Deko:** Winston-Porträt, Gruselfilm-Poster, Wandregal, Wanduhr, Rollbild, Wimpelkette, Fotowand
+  (leuchtet), runder Spiegel, Trockenblumenkranz – an Rück- & Seitenwänden, Möbel passen darunter
 - 🔶 **M8c Animationen & Partikel** (erster Schwung ✅): Staubwölkchen beim Rennen, Spritzer beim Angeln,
   Funkeln beim Aufheben & Fangen, Herzchen (Herz-Aufstieg, Lieblingsgeschenk, Winston streicheln), Erdklumpen
   beim Graben, Konfetti beim Bauen & Kochen, Glühwürmchen in Sommernächten · Lina macht Freudensprünge,

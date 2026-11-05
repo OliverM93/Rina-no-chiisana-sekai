@@ -131,6 +131,10 @@ Freudensprünge, und die Bewohner winken, wenn sie sie anspricht.
 Am Monatsanfang gibt es ein bisschen Zinsen – und einen Kontoauszug-Brief von Olaf, der sich über den
 Zinseszins freut.
 
+**Wand-Deko (M8f):** Bilder, Poster, Regale, eine Uhr, ein Spiegel und eine leuchtende Fotowand mit allen
+Liebsten hängen jetzt an den Wänden – einfach beim Einrichten auf die Wand zielen. Darunter passt weiterhin
+eine Kommode.
+
 Im Menü: Aussehen ändern, Lautstärke, speichern, **Spielstand exportieren/laden** (als Datei – praktisch zum Sichern
 oder für ein anderes Gerät), Vollbild, Hilfe.
 

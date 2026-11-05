@@ -183,6 +183,10 @@ src/
   automatisch Gegenstände (Varianten → `futon-rosa` …). Raumlogik in `core/room.ts`, Modelle in
   `world3d/models/furniture.ts`. Gespeichert wird immer draußen weitergespielt (Laden im Haus → vor der Tür).
   Einrichten läuft über `decor:command`/`decor:state` auf dem Bus.
+  **Wand-Deko** (`wall: true`): hängt an Rückwand (rot 0) oder Seitenwand (rot 3 links / 1 rechts), nicht vor
+  Fenstern (`backWindows`), blockiert den Boden nicht – Möbel dürfen darunter stehen. Beim Einrichten zielt man
+  auf die Wand (`Interior3D.walls`), die Drehung rastet von selbst ein (`wallRotationAt`). Modelle hängen bei
+  `HANG`/`WALL_Z` in `models/furniture.ts`.
 - **Winston:** läuft auf Linas eigener Spur hinterher (bleibt nie an Ecken hängen), setzt sich neben sie,
   wenn sie stehen bleibt. Texte & Funde in `data/winston.ts`.
 - **Werkbank:** Rezepte in `data/recipes.ts` (`start`, `fund` = beim ersten Fund, sonst als Brief-Geschenk
