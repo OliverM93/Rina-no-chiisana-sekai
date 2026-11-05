@@ -84,7 +84,7 @@ Legende: ✅ erledigt · 🚧 in Arbeit · ⬜ geplant
 - ✅ Möbelkatalog am Pult – der erste Ort zum Sternchen-Ausgeben
 - ✅ Sitzen auf Kissen & Futon, Lampen leuchten abends (an-/ausknipsbar)
 - ✅ 3D-Vorschaubilder der Möbel in Katalog & Tasche; Spielstand Version 5
-- ✅ Weitere Stile: Cottagecore, Retro-Oma-Chic, Modern (M8g) · ⬜ französisches Bistro → später
+- ✅ Weitere Stile: Cottagecore, Retro-Oma-Chic, Modern (M8g), Mid-Century & Bauhaus (M8h) · ⬜ französisches Bistro → später
 - ✅ Wand-Deko (Bilder, Rollbilder, Regale an der Wand) → M8f
 
 ## 🚧 M6 – Hausausbau, Außengestaltung, Crafting
@@ -212,6 +212,9 @@ Legende: ✅ erledigt · 🚧 in Arbeit · ⬜ geplant
 - ✅ **M8g Neue Stile:** Cottagecore (Landhaustisch, Blümchensessel, Häkelteppich, Kräuter, Kerzenleuchter, Wollkorb),
   Retro-Oma-Chic (Ohrensessel, Nierentisch, Fransenlampe, Bonbonschale, Orientteppich, Gummibaum), Modern
   (Loungesofa, Marmortisch, Bogenlampe, Würfelregal, Sitzsack, Keramikvase) – dazu 6 Tapeten & 3 Böden
+- ✅ **M8h Mid-Century & Bauhaus:** Leder-Loungesessel, Freischwinger (auch mit Wiener Geflecht), Teak-Sideboard,
+  Satztische, Dreibein-Stehlampe, Opalglas-Leuchte, Formen-Teppich, Formen-Bild & Sonnenspiegel (Wand), dazu
+  Bauhaus-Formen- & Atomic-Tapete, Nussbaum-Parkett & Schachbrett-Fliesen
 - 🔶 **M8c Animationen & Partikel** (erster Schwung ✅): Staubwölkchen beim Rennen, Spritzer beim Angeln,
   Funkeln beim Aufheben & Fangen, Herzchen (Herz-Aufstieg, Lieblingsgeschenk, Winston streicheln), Erdklumpen
   beim Graben, Konfetti beim Bauen & Kochen, Glühwürmchen in Sommernächten · Lina macht Freudensprünge,

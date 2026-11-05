@@ -112,7 +112,7 @@ src/
   data/        Inhalte (leicht erweiterbar): Karten, Interaktionstexte, Story-Texte,
                items.ts (alle Gegenstände + Preise, Gartenblumen, Werkzeuge), species.ts (Fische & Insekten –
                echte heimische Arten), furniture.ts (Möbel, Tapeten, Böden, Varianten; Stile: japanisch, basis,
-               cottage, retro, modern, handgemacht, garten, kunst – Muster in `gfx/interior.ts`),
+               cottage, retro, modern, midcentury, handgemacht, garten, kunst – Muster in `gfx/interior.ts`),
                house.ts (Ausbaustufen, Räume, Preise, Start-Haus),
                npcs/ (je Bewohner eine Datei)
                wardrobe.ts (Aufdruck-Kleidung, Bandnamen)
