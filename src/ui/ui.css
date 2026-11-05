@@ -45,6 +45,15 @@ body {
   pointer-events: auto;
 }
 
+/*
+ * Reine Deko-Ebenen über dem ganzen Bildschirm (Tür-Abblenden, Regenbogen, Sterne, Feuerwerk) lassen Klicks
+ * immer durch – sonst schlucken sie jeden Mausklick auf Knöpfe und Spielwelt. (Muss nach `#ui > *` stehen
+ * und genauso spezifisch sein.)
+ */
+#ui > [aria-hidden='true'] {
+  pointer-events: none;
+}
+
 /* ---------------------------------------------------------------- Buttons */
 
 .btn {

@@ -273,6 +273,8 @@ src/
   Benachrichtigungen** (`.toast`, über allem), Mitte Fenster (`.modal-layer` lässt oben `--toast-strip` frei),
   unten Dialog / Werkzeuge / Einrichten-Leiste / Knöpfe. Ist ein Dialog offen, blenden die Knöpfe unten aus.
   Neue Overlays in diese Zonen einordnen.
+  **Reine Deko-Ebenen über dem ganzen Bildschirm** (Abblenden, Regenbogen, Sterne …) bekommen `aria-hidden="true"` –
+  dann lassen sie Klicks durch (`#ui > [aria-hidden='true']`). Sonst schlucken sie jeden Mausklick.
 - **Farben nur aus `src/style/palette.ts`.** Keine fest verdrahteten Farben in Komponenten (Ausnahme:
   kleine Details innerhalb von Zeichenfunktionen).
 - **Keine externen Assets/Abhängigkeiten zur Laufzeit** (Schrift Nunito kommt als npm-Paket mit, OFL).
