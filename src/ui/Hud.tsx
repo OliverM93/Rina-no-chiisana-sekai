@@ -78,12 +78,13 @@ export function Hud({ session }: { session: Session }) {
         <button class="hud-bag" aria-label="Tasche öffnen (I)" title="Tasche (I)" onClick={() => ui.set({ panel: { kind: 'inventory' } })}>
           🎒
         </button>
-        {hasUnreadMail(session) && (
-          <div class="hud-mail" title="Neue Post im Briefkasten">
-            ✉️
-          </div>
-        )}
       </div>
+      {/* außerhalb der Knopfleiste: sonst landet sie durch deren Einblend-Animation unter dem Rucksack */}
+      {hasUnreadMail(session) && (
+        <div class="hud-mail" title="Neue Post im Briefkasten">
+          ✉️ Neue Post!
+        </div>
+      )}
       {(inside || inYard) && <DecorBar session={session} decor={decor} />}
       {tools.length > 0 && !decor.active && (
         <div class="hud-tools pop-in">

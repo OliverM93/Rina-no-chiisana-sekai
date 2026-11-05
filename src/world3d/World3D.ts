@@ -153,6 +153,11 @@ export class World3D {
   private night = 0;
   private bubble: THREE.Sprite;
   private bubbleKey: string | null = null;
+  private bubbleAlpha = 0;
+  private bubbleTime = performance.now();
+  private readonly bubblePos = new THREE.Vector3();
+  private readonly talkTexture = bubbleTexture(false);
+  private readonly useTexture = bubbleTexture(true);
   private marker: THREE.Mesh;
   private leaves: THREE.InstancedMesh;
   private leafState: Array<{ p: THREE.Vector3; v: THREE.Vector3; spin: number; phase: number }> = [];
@@ -248,7 +253,7 @@ export class World3D {
       this.npcs.set(def.id, npc);
     }
 
-    this.bubble = new THREE.Sprite(new THREE.SpriteMaterial({ map: bubbleTexture(), transparent: true, depthTest: false }));
+    this.bubble = new THREE.Sprite(new THREE.SpriteMaterial({ map: this.talkTexture, transparent: true, depthTest: false }));
     this.bubble.scale.set(0.5, 0.42, 1);
     this.bubble.renderOrder = 10;
     this.bubble.visible = false;
@@ -856,34 +861,78 @@ export class World3D {
     }
   }
 
-  private updateBubble(player: Character, blocked: boolean) {
-    const target = blocked ? null : this.resolveTarget(player);
-    let key: string | null = null;
-    let pos: THREE.Vector3 | null = null;
-    if (target?.kind === 'winston' && this.winston) {
-      key = 'winston';
-      pos = this.winston.dog.root.position.clone().add(new THREE.Vector3(0, 0.62, 0));
-    } else if (target?.kind === 'npc' && this.session.inside && this.homeOli?.visible && target.npc.def.id === 'oli') {
-      key = 'npc:oli-home';
-      pos = this.homeOli.root.position.clone().add(new THREE.Vector3(0, this.homeOli.sitting ? 0.9 : 1.15, 0));
-    } else if (target?.kind === 'npc') {
-      key = `npc:${target.npc.def.id}`;
-      pos = target.npc.char.root.position.clone().add(new THREE.Vector3(0, target.npc.bubbleHeight, 0));
-    } else if (target?.kind === 'object') {
+  /** Wohin das Symbol über dem Ziel gehört – Sprechblase bei Figuren, Funkeln bei Dingen */
+  private bubbleFor(target: Target | null): { key: string; pos: THREE.Vector3; talk: boolean } | null {
+    if (!target) return null;
+    if (target.kind === 'winston' && this.winston) {
+      return { key: 'winston', talk: true, pos: this.winston.dog.root.position.clone().add(new THREE.Vector3(0, 0.62, 0)) };
+    }
+    if (target.kind === 'npc' && this.session.inside && this.homeOli?.visible && target.npc.def.id === 'oli') {
+      return { key: 'npc:oli-home', talk: true, pos: this.homeOli.root.position.clone().add(new THREE.Vector3(0, this.homeOli.sitting ? 0.9 : 1.15, 0)) };
+    }
+    if (target.kind === 'npc') {
+      return { key: `npc:${target.npc.def.id}`, talk: true, pos: target.npc.char.root.position.clone().add(new THREE.Vector3(0, target.npc.bubbleHeight, 0)) };
+    }
+    if (target.kind === 'object') {
       const obj = objectById(this.session.map, target.id);
-      if (obj && obj.kind !== 'tree' && obj.kind !== 'rock') {
-        key = `obj:${target.id}`;
-        const c = footprintCenter(obj);
-        const h = obj.kind === 'house' || obj.kind === 'bistro' || obj.kind === 'praxis' ? 1.9 : obj.kind === 'board' ? 1.9 : obj.kind === 'workbench' ? 1.7 : obj.kind === 'fountain' ? 1.7 : obj.kind === 'plot' ? 1.3 : 1.25;
-        pos = new THREE.Vector3(c.x, h, obj.kind === 'house' || obj.kind === 'bistro' || obj.kind === 'praxis' || obj.kind === 'plot' ? c.z + obj.h / 2 - 0.3 : c.z);
+      if (!obj || obj.kind === 'tree' || obj.kind === 'rock') return null;
+      const c = footprintCenter(obj);
+      const big = obj.kind === 'house' || obj.kind === 'bistro' || obj.kind === 'praxis';
+      const h = big || obj.kind === 'board' ? 1.9 : obj.kind === 'workbench' || obj.kind === 'fountain' ? 1.7 : obj.kind === 'plot' ? 1.3 : 1.25;
+      return { key: `obj:${target.id}`, talk: false, pos: new THREE.Vector3(c.x, h, big || obj.kind === 'plot' ? c.z + obj.h / 2 - 0.3 : c.z) };
+    }
+    if (target.kind === 'katalog') {
+      const d = this.lay.desk;
+      if (!d) return null;
+      return { key: 'katalog', talk: false, pos: this.interior.cellCenter(d[0], d[1]).add(new THREE.Vector3(0, 1.3, 0)) };
+    }
+    if (target.kind === 'moebel') {
+      const model = this.session.inside ? this.interior.model(target.uid) : this.yard.model(target.uid);
+      if (!model) return null;
+      const box = new THREE.Box3().setFromObject(model.group);
+      if (box.isEmpty()) return null;
+      const c = box.getCenter(new THREE.Vector3());
+      return { key: `moebel:${target.uid}`, talk: false, pos: new THREE.Vector3(c.x, Math.min(box.max.y, 2.2) + 0.35, c.z) };
+    }
+    if (target.kind === 'beet') {
+      return { key: `beet:${target.tile.x},${target.tile.y}`, talk: false, pos: new THREE.Vector3(target.tile.x + 0.5, 0.95, target.tile.y + 0.5) };
+    }
+    return null;
+  }
+
+  /** Symbol blendet weich ein und aus statt aufzuploppen */
+  private updateBubble(player: Character, blocked: boolean) {
+    const now = performance.now();
+    const dt = Math.min(0.1, (now - this.bubbleTime) / 1000);
+    this.bubbleTime = now;
+    const want = this.bubbleFor(blocked ? null : this.resolveTarget(player));
+    if (want && want.key === this.bubbleKey) {
+      this.bubbleAlpha = Math.min(1, this.bubbleAlpha + dt * 6);
+      this.bubblePos.copy(want.pos);
+    } else {
+      this.bubbleAlpha = Math.max(0, this.bubbleAlpha - dt * 8);
+      if (this.bubbleAlpha === 0) {
+        this.bubbleKey = want?.key ?? null;
+        if (want) {
+          this.bubblePos.copy(want.pos);
+          const mat = this.bubble.material as THREE.SpriteMaterial;
+          const tex = want.talk ? this.talkTexture : this.useTexture;
+          if (mat.map !== tex) {
+            mat.map = tex;
+            mat.needsUpdate = true;
+          }
+        }
       }
     }
-    this.bubble.visible = !!pos;
-    if (pos) {
-      this.bubble.position.set(pos.x, pos.y + Math.sin(performance.now() / 300) * 0.05, pos.z);
-      if (key !== this.bubbleKey) this.bubble.scale.set(0.5, 0.42, 1);
-    }
-    this.bubbleKey = key;
+    const a = this.bubbleAlpha;
+    this.bubble.visible = a > 0.01;
+    if (!this.bubble.visible) return;
+    // weich: ease-out, kleines Überschwingen beim Erscheinen
+    const e = 1 - Math.pow(1 - a, 3);
+    const s = 0.55 + 0.45 * e + Math.sin(a * Math.PI) * 0.08;
+    (this.bubble.material as THREE.SpriteMaterial).opacity = e;
+    this.bubble.scale.set(0.5 * s, 0.42 * s, 1);
+    this.bubble.position.set(this.bubblePos.x, this.bubblePos.y - (1 - e) * 0.15 + Math.sin(now / 300) * 0.05, this.bubblePos.z);
   }
 
   private updateMailbox() {
@@ -2820,13 +2869,14 @@ function setOpacity(node: THREE.Object3D, opacity: number) {
   });
 }
 
-function bubbleTexture(): THREE.Texture {
+/** Sprechblase (drei Punkte) für Figuren, Funkel-Blase für Dinge, mit denen man etwas machen kann */
+function bubbleTexture(use: boolean): THREE.Texture {
   const c = document.createElement('canvas');
   c.width = 128;
   c.height = 108;
   const ctx = c.getContext('2d') as CanvasRenderingContext2D;
   ctx.fillStyle = '#ffffff';
-  ctx.strokeStyle = palette.ui.accent;
+  ctx.strokeStyle = use ? palette.ui.gold : palette.ui.accent;
   ctx.lineWidth = 7;
   ctx.beginPath();
   ctx.roundRect(8, 8, 112, 72, 36);
@@ -2835,11 +2885,29 @@ function bubbleTexture(): THREE.Texture {
   ctx.lineTo(76, 78);
   ctx.stroke();
   ctx.fill();
-  ctx.fillStyle = palette.ui.accentDark;
-  for (const x of [38, 64, 90]) {
-    ctx.beginPath();
-    ctx.arc(x, 44, 8, 0, Math.PI * 2);
-    ctx.fill();
+  if (use) {
+    // vierzackiger Funkelstern + kleiner Begleiter
+    const star = (x: number, y: number, r: number) => {
+      ctx.beginPath();
+      for (let i = 0; i < 8; i++) {
+        const ang = (i / 8) * Math.PI * 2 - Math.PI / 2;
+        const rr = i % 2 === 0 ? r : r * 0.32;
+        ctx.lineTo(x + Math.cos(ang) * rr, y + Math.sin(ang) * rr);
+      }
+      ctx.closePath();
+      ctx.fill();
+    };
+    ctx.fillStyle = palette.ui.gold;
+    star(60, 44, 26);
+    ctx.fillStyle = palette.ui.accent;
+    star(92, 30, 11);
+  } else {
+    ctx.fillStyle = palette.ui.accentDark;
+    for (const x of [38, 64, 90]) {
+      ctx.beginPath();
+      ctx.arc(x, 44, 8, 0, Math.PI * 2);
+      ctx.fill();
+    }
   }
   const t = new THREE.CanvasTexture(c);
   t.colorSpace = THREE.SRGBColorSpace;
