@@ -113,7 +113,7 @@ export type GameEvents = {
   /** Lautstärke geändert */
   'settings:changed': { musicVolume: number; sfxVolume: number };
   /** Ein Geräusch abspielen (siehe audio/Audio.ts) */
-  sfx: 'schritt' | 'schritt-holz' | 'aufheben' | 'tuer' | 'platsch' | 'biss' | 'fang' | 'kescher' | 'dialog' | 'klick' | 'muenzen' | 'bauen' | 'bellen' | 'gackern' | 'graben' | 'herz' | 'post';
+  sfx: 'kuss' | 'schritt' | 'schritt-holz' | 'aufheben' | 'tuer' | 'platsch' | 'biss' | 'fang' | 'kescher' | 'dialog' | 'klick' | 'muenzen' | 'bauen' | 'bellen' | 'gackern' | 'graben' | 'herz' | 'post';
   /**
    * Partikel-Effekt (siehe world3d/Particles3D.ts). Ort in Welteinheiten, `npc` = über diesem Bewohner,
    * ohne Ort = bei Lina.

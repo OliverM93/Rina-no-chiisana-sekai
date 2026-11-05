@@ -130,6 +130,8 @@ Freudensprünge, und die Bewohner winken, wenn sie sie anspricht.
 **Sparbuch (M8d):** In Papas Dorfkasse kann Lina Sternchen aufs Sparbuch legen und jederzeit wieder abheben.
 Am Monatsanfang gibt es ein bisschen Zinsen – und einen Kontoauszug-Brief von Olaf, der sich über den
 Zinseszins freut.
+**Küsschen (M8e):** Lina und Oli smoochen gern und oft: im Gespräch „😘 Küsschen geben“ – so oft man möchte.
+Kommt Lina nach Hause, holt Oli sie mit einem Begrüßungsküsschen ab, und zwischendurch gibt's einfach so eins.
 
 Im Menü: Aussehen ändern, Lautstärke, speichern, **Spielstand exportieren/laden** (als Datei – praktisch zum Sichern
 oder für ein anderes Gerät), Vollbild, Hilfe.

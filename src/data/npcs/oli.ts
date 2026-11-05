@@ -138,3 +138,30 @@ export const STARS_LINES: readonly (readonly string[])[] = [
   ['So viele Sterne …', 'Wusstest du, dass manche davon schon gar nicht mehr da sind? Ihr Licht ist nur noch unterwegs.', 'Mein Licht ist jedenfalls genau hier. Bei dir.'],
   ['Da! Noch eine! 🌠', 'Ich glaube, das Universum mag dich auch.', 'Kann ich gut verstehen.'],
 ];
+
+/** Nach einem Küsschen (Lina gibt Oli eins) */
+export const KISS_LINES: readonly (readonly string[])[] = [
+  ['*Küsschen* 😘', 'Mmh. Noch eins? … Nur eins. Okay, zwei.'],
+  ['*wird ein bisschen rot*', 'Lini … du kannst doch nicht einfach so süß sein. Das ist unfair.'],
+  ['*Nasenstupser* Boop. 👃', 'Ich hab dich lieb, Lini.'],
+  ['Mmmh, du schmeckst nach Kaffee.', 'Mein Lieblingsgeschmack. Direkt nach dir.'],
+  ['*Küsschen auf die Stirn*', 'So. Jetzt bist du offiziell geküsst. Mit Stempel.'],
+  ['*grinst ganz breit*', 'Ich glaub, ich bin der glücklichste Mensch im ganzen Dorf. Ach was – auf der ganzen Welt.'],
+  ['Noch eins für unterwegs? 😘', '*Küsschen* … und eins für Winston. Der guckt schon so eifersüchtig.'],
+];
+
+/** Wenn Lina nach Hause kommt und Oli wach ist */
+export const WELCOME_KISS_LINES: readonly string[] = [
+  'Oli kommt dir entgegen: „Da bist du ja!“ – *Küsschen* 😘',
+  'Oli strahlt: „Lini! Ich hab dich vermisst.“ – *Küsschen* 💕',
+  '„Willkommen zu Hause, Süße.“ – *Küsschen* 😘',
+  'Oli: „Na, du Hübsche?“ – *Küsschen auf die Wange* 💋',
+];
+
+/** Spontan zwischendurch, wenn beide zu Hause sind */
+export const SPONTANEOUS_KISS_LINES: readonly string[] = [
+  'Oli gibt dir einfach so ein Küsschen. 😘',
+  'Oli: „Ich musste gerade an dich denken.“ – *Küsschen* 💕',
+  'Oli schleicht sich an: *Küsschen auf die Wange* – „Hab dich!“',
+  'Oli: „Kurze Küsschen-Pause.“ 😘',
+];

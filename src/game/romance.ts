@@ -4,7 +4,7 @@
  */
 import { heartsFor } from '../core/friendship';
 import { hashString } from '../core/rng';
-import { PICNIC_LINES, STARS_LINES } from '../data/npcs/oli';
+import { KISS_LINES, PICNIC_LINES, STARS_LINES } from '../data/npcs/oli';
 import { addFriendship, npcState } from './gameplay';
 import { currentWeather, isRaining } from './nature';
 import type { Session } from './session';
@@ -36,5 +36,24 @@ export function haveDate(session: Session, kind: DateKind): string[] {
   const lines = [...pool[hashString(`${session.today()}:${kind}`) % pool.length]];
   lines.push(...addFriendship(session, 'oli', DATE_POINTS));
   session.save();
+  return lines;
+}
+
+/** Küsschen geben: so oft man möchte – das erste am Tag zählt für die Freundschaft */
+export const KISS_POINTS = 6;
+
+export function canKiss(session: Session): boolean {
+  return !!session.data?.flags.oliEingezogen;
+}
+
+export function giveKiss(session: Session, n = 0): string[] {
+  const data = session.data;
+  if (!data) return [];
+  const lines = [...KISS_LINES[(hashString(`${session.today()}:kuss`) + n) % KISS_LINES.length]];
+  if (data.world.dates.kuss !== session.today()) {
+    data.world.dates.kuss = session.today();
+    lines.push(...addFriendship(session, 'oli', KISS_POINTS));
+    session.save();
+  }
   return lines;
 }

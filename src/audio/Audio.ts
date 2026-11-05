@@ -10,6 +10,7 @@
 import { composePhrase, midiToHz, type Mood, MOODS, type NoteEvent } from '../core/music';
 
 export type Sfx =
+  | 'kuss'
   | 'schritt'
   | 'schritt-holz'
   | 'aufheben'
@@ -439,6 +440,12 @@ export class GameAudio {
         break;
       case 'graben':
         for (let i = 0; i < 3; i++) this.noiseBurst(out, t + i * 0.15, 0.1, 350, 0.35, 'lowpass');
+        break;
+      case 'kuss':
+        // „Mwah“: kleiner Schmatz (Rauschen) + aufsteigender Ton, dann ein Glöckchen
+        this.noiseBurst(out, t, 0.05, 2400, 0.25, 'bandpass');
+        this.tone(t + 0.02, 520, 0.16, 0.07, 'sine', 980);
+        this.tone(t + 0.22, 1568, 0.4, 0.05, 'sine');
         break;
       case 'herz':
         this.tone(t, 988, 0.2, 0.08, 'sine');

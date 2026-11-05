@@ -204,6 +204,9 @@ Legende: ✅ erledigt · 🚧 in Arbeit · ⬜ geplant
 - ✅ **M8d Sparbuch:** In Olafs Dorfkasse einzahlen & abheben, wann man will. Am Monatsanfang gibt es 1 % Zinsen
   (mit Zinseszins, höchstens 2000 ⭐ im Monat, verpasste Monate werden nachgeholt) und einen Kontoauszug-Brief von
   Papa. Spielstand v12
+- ✅ **M8e Küsschen:** Lina & Oli smoochen gern und oft – „😘 Küsschen geben“ im Gespräch (so oft man mag), Oli holt
+  Lina zu Hause mit einem Begrüßungsküsschen ab und gibt ihr zwischendurch spontan eins. Vorbeugen, Augen zu, Lina
+  auf Zehenspitzen, „Mwah“ und Herzchen
 - 🔶 **M8c Animationen & Partikel** (erster Schwung ✅): Staubwölkchen beim Rennen, Spritzer beim Angeln,
   Funkeln beim Aufheben & Fangen, Herzchen (Herz-Aufstieg, Lieblingsgeschenk, Winston streicheln), Erdklumpen
   beim Graben, Konfetti beim Bauen & Kochen, Glühwürmchen in Sommernächten · Lina macht Freudensprünge,
