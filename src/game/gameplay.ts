@@ -18,7 +18,7 @@ import { formatIsoDay, getDayPhase, getSeason, isSameDayMonth } from '../core/ti
 import { daysUntilBirthday, festivalsOn } from '../core/festivals';
 import { weatherAt } from '../core/weather';
 import { terrainAt } from '../core/worldmap';
-import { BEACH_FINDS, BEACH_FINDS_PER_DAY, CURRENCY, itemCountLabel, itemDef, maxStackOf, ROCK_FINDS } from '../data/items';
+import { BEACH_FINDS, BEACH_FINDS_PER_DAY, CURRENCY, isKeepsake, itemCountLabel, itemDef, maxStackOf, ROCK_FINDS } from '../data/items';
 import { fillPlaceholders } from '../data/interactions';
 import { FURNITURE_BY_ITEM } from '../data/furniture';
 import { NPC_BY_ID, NPCS } from '../data/npcs';
@@ -270,7 +270,8 @@ export interface GiftOutcome extends TalkOutcome {
 
 export function giftToNpc(session: Session, npcId: string, itemId: string): GiftOutcome | null {
   const npc = NPC_BY_ID[npcId];
-  if (!npc || !takeItem(session, itemId, 1)) return null;
+  // Werkzeuge & Erinnerungsstücke behält Lina (sonst wären sie für immer weg)
+  if (!npc || isKeepsake(itemId) || !takeItem(session, itemId, 1)) return null;
   const st = npcState(session, npcId);
   const r = giveGift(st, npc.preferences, itemId, session.today());
   const lines: string[] = [];

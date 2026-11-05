@@ -72,6 +72,7 @@ export const CHRISTIN: NpcDef = {
     goodbye: ['Tschüss, Lina!', 'Bis bald – und Schuhe abputzen!', 'Mach\'s gut! Und räum schön auf.'],
   },
   letters: [
+    { id: 'rosen', subject: 'Für ein ordentliches Rosenbeet', body: 'Liebe Lina,\n\nich hab dir Rosensamen besorgt. Rosen in einer geraden Reihe sind das Schönste, was es gibt.\n\nNicht zu dicht pflanzen! Und regelmäßig gießen.\n\nLiebe Grüße\nChristin 🌹', gift: { itemId: 'samen-rose', count: 3 } },
     { id: 'ordnung', subject: 'Kleiner Ordnungstipp', body: 'Liebe Lina,\n\nein Tipp von mir: Jeden Tag eine Sache aufräumen. Dann wird es nie unordentlich!\n\nLiebe Grüße\nChristin', gift: { itemId: 'samen-lavendel', count: 2 } },
   ],
   heartLetters: {

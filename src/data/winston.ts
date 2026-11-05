@@ -47,6 +47,7 @@ export const DIG_FINDS = [
   { itemId: 'samen-sonnenblume', weight: 10 },
   { itemId: 'samen-tulpe', weight: 10 },
   { itemId: 'samen-vergissmeinnicht', weight: 8 },
+  { itemId: 'samen-rose', weight: 6 },
   { itemId: 'schneckenhaus', weight: 8 },
   { itemId: 'glitzerstein', weight: 8 },
 ] as const;

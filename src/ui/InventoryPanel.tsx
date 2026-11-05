@@ -3,7 +3,7 @@
  */
 import { useEffect, useMemo, useState } from 'preact/hooks';
 import { sortInventory } from '../core/inventory';
-import { CURRENCY, FLOWER_BY_SEED, ITEM_ORDER, itemDef, maxStackOf, type ToolId, TOOLS } from '../data/items';
+import { CURRENCY, FLOWER_BY_SEED, isKeepsake, ITEM_ORDER, itemDef, maxStackOf, type ToolId, TOOLS } from '../data/items';
 import { NPC_BY_ID } from '../data/npcs';
 import { formatMoney, sellSlots } from '../game/gameplay';
 import { toggleTool } from '../game/nature';
@@ -79,13 +79,17 @@ export function InventoryPanel({ session, panel }: { session: Session; panel: Ui
       setSelected(null);
       return;
     }
+    if (mode === 'gift' && isKeepsake(s.itemId)) {
+      showToast((TOOLS as readonly string[]).includes(s.itemId) ? 'Dein Werkzeug brauchst du noch! 🔧' : 'Das ist ein Erinnerungsstück – das behältst du lieber. 💕');
+      return;
+    }
     if (mode === 'seeds' && !FLOWER_BY_SEED[s.itemId]) {
       showToast('Das kann man nicht einpflanzen. 🌱');
       return;
     }
     if (mode === 'sell') {
       if (itemDef(s.itemId)?.price == null) {
-        showToast('Das ist unverkäuflich – viel zu wertvoll! 💕');
+        showToast((TOOLS as readonly string[]).includes(s.itemId) ? 'Dein Werkzeug brauchst du noch! 🔧' : 'Das ist unverkäuflich – viel zu wertvoll! 💕');
         return;
       }
       const next = new Set(sellSet);
@@ -179,7 +183,13 @@ export function InventoryPanel({ session, panel }: { session: Session; panel: Ui
                 <div class="item-cat">{CATEGORY_LABEL[selDef.category]}</div>
                 <div class="item-desc">{selDef.description}</div>
                 <div class="item-price">
-                  {selDef.price === null ? 'unverkäuflich 💕' : `Wert: ${selDef.price} ${CURRENCY.icon} pro Stück`}
+                  {(TOOLS as readonly string[]).includes(sel.itemId)
+                    ? 'Werkzeug – behältst du immer 🔧'
+                    : isKeepsake(sel.itemId)
+                      ? 'Erinnerungsstück – unverkäuflich, nicht zum Verschenken 💕'
+                      : selDef.price === null
+                        ? 'unverkäuflich 💕'
+                        : `Wert: ${selDef.price} ${CURRENCY.icon} pro Stück`}
                 </div>
               </div>
             </>
@@ -202,7 +212,7 @@ export function InventoryPanel({ session, panel }: { session: Session; panel: Ui
             </button>
           )}
           {mode === 'gift' && (
-            <button class="btn primary" disabled={!sel} onClick={gift}>
+            <button class="btn primary" disabled={!sel || isKeepsake(sel.itemId)} onClick={gift}>
               🎁 Schenken
             </button>
           )}

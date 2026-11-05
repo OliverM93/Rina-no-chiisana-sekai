@@ -70,6 +70,7 @@ import {
   toggleTool,
   updateGarden,
   waterAt,
+  missingKeepsakes,
 } from '../game/nature';
 import type { Session } from '../game/session';
 import { mixHex, palette } from '../style/palette';
@@ -586,6 +587,16 @@ export class World3D {
     updateGarden(this.session);
     this.garden.refresh(true);
     this.insects.refresh(true);
+    // Verlorene Werkzeuge & Erinnerungsstücke (ältere Spielstände) kommen zurück
+    const lost = missingKeepsakes(this.session);
+    if (lost.length > 0) {
+      window.setTimeout(() => {
+        for (const id of lost) this.giveOrDrop(id);
+        const tools = lost.filter((id) => (TOOLS as readonly string[]).includes(id));
+        const text = tools.length > 0 ? `Oma hat dir ${tools.map((t) => itemDef(t)?.name).join(', ')} wiedergebracht. „Pass diesmal besser drauf auf, Kind!“ 🔧` : 'Olis Möbel stehen wieder bereit – sie lagen noch im Keller. 📦';
+        this.session.bus.emit('toast', { text });
+      }, 2200);
+    }
     if (data.flags.giselaWelcomed && !data.flags.toolsGiven) {
       window.setTimeout(() => this.session.bus.emit('toast', { text: 'Oma Gisela hat etwas für dich – sprich sie doch mal an! 🎁' }), 2500);
     }
@@ -651,7 +662,7 @@ export class World3D {
     this.refreshFestivals();
     if ((events.includes('thalia-eingezogen') || (data.flags.thaliaEingezogen && !data.flags.thaliaBegruesst)) && data.flags.larsBegruesst && this.scheduleArrival('thalia')) {
       window.setTimeout(() => this.npcArrival('thalia', THALIA_WELCOME, -1, () => {
-        giveItem(this.session, 'schaufel', 1);
+        this.giveOrDrop('schaufel');
         this.session.bus.emit('toast', { text: 'Schaufel eingesteckt! (Taste 4) – und die Dorfkarte gibt\'s mit M. 🗺️' });
         window.setTimeout(() => this.digSpots.refresh(), 50);
       }), 5000);
@@ -668,6 +679,17 @@ export class World3D {
     if ((events.includes('olaf-eingezogen') || (data.flags.olafEingezogen && !data.flags.olafBegruesst)) && data.flags.giselaWelcomed && this.scheduleArrival('olaf')) {
       window.setTimeout(() => this.arrivalScene(), 2500);
     }
+  }
+
+  /** Wichtiges in die Tasche – passt es nicht mehr hinein, fällt es vor Lina auf den Boden (geht nie verloren) */
+  private giveOrDrop(itemId: string, count = 1) {
+    const left = giveItem(this.session, itemId, count);
+    const p = this.player;
+    for (let i = 0; i < left && p; i++) {
+      const [fx, fy] = DIRS[p.facing];
+      this.collectibles.drop(itemId, new THREE.Vector3(p.x * UNIT, 1.1, p.y * UNIT), { x: p.x + fx * 40 + i * 14, y: p.y + fy * 40 + 8 });
+    }
+    if (left > 0) this.session.bus.emit('toast', { text: 'Deine Tasche ist voll – es liegt vor deinen Füßen. 🎒' });
   }
 
   /** Jede Einzugsszene nur einmal anstoßen (bis sie gelaufen ist, steht das Flag „begrüßt“ noch aus) */
@@ -789,7 +811,7 @@ export class World3D {
         title,
         lines: [...GISELA_WELCOME],
         onClose: () => {
-          giveItem(this.session, 'keks', 1);
+          this.giveOrDrop('keks');
           this.session.bus.emit('dialog:open', {
             title,
             lines: [...GISELA_WELCOME_2, ...GISELA_TOOLS].map((l) => fillPlaceholders(l, this.session.interactionContext())),
@@ -1820,8 +1842,8 @@ export class World3D {
         title: oli.def.name,
         lines: OLI_WELCOME.map((l) => fillPlaceholders(l, ctx)),
         onClose: () => {
-          giveItem(this.session, 'schreibtisch-pc', 1);
-          giveItem(this.session, 'hantelbank', 1);
+          this.giveOrDrop('schreibtisch-pc');
+          this.giveOrDrop('hantelbank');
           // Oli startet mit einem Herz (und schickt gleich seinen ersten Herz-Brief)
           addFriendship(this.session, 'oli', 40);
           this.session.setFlag('oliBegruesst');
@@ -1888,8 +1910,8 @@ export class World3D {
   /** Lars eröffnet seine Praxis und begrüßt Lina (und schenkt ihr Kräutersamen) */
   private larsArrival() {
     this.npcArrival('lars', LARS_WELCOME, 1, () => {
-      giveItem(this.session, 'samen-kamille', 2);
-      giveItem(this.session, 'samen-pfefferminze', 2);
+      this.giveOrDrop('samen-kamille', 2);
+      this.giveOrDrop('samen-pfefferminze', 2);
     });
   }
 
@@ -2069,7 +2091,7 @@ export class World3D {
       hearts: npcHearts(this.session, 'lars'),
       lines: [...lines, `Hier, zur Belohnung fürs Tapfersein: ${itemDef(gift)?.name ?? gift}! 🍭`],
       onClose: () => {
-        giveItem(this.session, gift, 1);
+        this.giveOrDrop(gift);
         this.session.save();
         npc.endTalk();
       },
