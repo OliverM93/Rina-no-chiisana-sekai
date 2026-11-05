@@ -113,9 +113,11 @@ for (const i of INSECTS) list.push({ id: i.id, name: i.name, plural: i.plural, c
 for (const f of FINDS) list.push({ id: f.id, name: f.name, plural: f.plural, category: 'fossil', price: f.price, maxStack: 10, description: f.description });
 
 // Möbel, Tapeten & Böden (aus `furniture.ts`). Verkaufswert = ein Viertel des Katalogpreises.
+// Einmalige Geschenke (nicht im Katalog, keine Kunstwerke) sind Erinnerungsstücke: unverkäuflich.
 for (const f of FURNITURE_ITEMS) {
   const name = f.variant ? `${f.def.name} (${VARIANT_LABELS[f.variant] ?? f.variant})` : f.def.name;
-  list.push({ id: f.itemId, name, plural: name, category: 'moebel', price: Math.round(f.def.price / 4), maxStack: 1, description: f.def.description });
+  const keepsake = !!f.def.gift && f.def.style !== 'kunst';
+  list.push({ id: f.itemId, name, plural: name, category: 'moebel', price: keepsake ? null : Math.round(f.def.price / 4), maxStack: 1, description: f.def.description });
 }
 for (const w of [...WALLPAPERS, ...FLOORS]) list.push({ id: w.id, name: w.name, plural: w.name, category: w.kind, price: Math.round(w.price / 4), maxStack: 1, description: w.description });
 
@@ -192,3 +194,13 @@ export const TOOLS = ['angel', 'netz', 'giesskanne', 'schaufel'] as const;
 /** Die ersten drei gibt es von Oma, die Schaufel von Thalia */
 export const STARTER_TOOLS = ['angel', 'netz', 'giesskanne'] as const;
 export type ToolId = (typeof TOOLS)[number];
+
+/**
+ * Erinnerungsstücke: Werkzeuge und einmalige Geschenke der Liebsten (Olis Schreibtisch, Jens' Andenken,
+ * Fest-Geschenke …). Man kann sie weder verkaufen noch verschenken – sonst wären sie für immer weg.
+ */
+export function isKeepsake(itemId: string): boolean {
+  if ((TOOLS as readonly string[]).includes(itemId)) return true;
+  const f = FURNITURE_BY_ITEM[itemId];
+  return !!f && !!f.def.gift && f.def.style !== 'kunst';
+}

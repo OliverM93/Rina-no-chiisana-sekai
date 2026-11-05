@@ -45,6 +45,31 @@ export function toggleTool(session: Session, tool: ToolId | null) {
   session.bus.emit('tool:changed', next);
 }
 
+/** Besitzt Lina das irgendwo (Tasche, Haus, Garten, noch nicht abgeholt im Briefkasten)? */
+export function ownsAnywhere(session: Session, itemId: string): boolean {
+  const data = session.data;
+  if (!data) return false;
+  if (data.inventory.slots.some((s) => s?.itemId === itemId)) return true;
+  if (data.house.rooms.some((r) => r.items.some((i) => i.itemId === itemId))) return true;
+  if (data.yard.items.some((i) => i.itemId === itemId)) return true;
+  if (data.world.ground.some((g) => g.itemId === itemId)) return true;
+  return data.mail.letters.some((l) => l.gift?.itemId === itemId && !l.giftTaken);
+}
+
+/**
+ * Was Lina haben sollte, aber nicht mehr hat (z. B. aus älteren Spielständen verschenkt):
+ * Omas Werkzeuge, Thalias Schaufel, Olis Möbel vom Einzug. Wird beim Laden zurückgegeben.
+ */
+export function missingKeepsakes(session: Session): string[] {
+  const f = session.data?.flags;
+  if (!f) return [];
+  const want: string[] = [];
+  if (f.toolsGiven) want.push(...STARTER_TOOLS);
+  if (f.thaliaBegruesst) want.push('schaufel');
+  if (f.oliBegruesst) want.push('schreibtisch-pc', 'hantelbank');
+  return want.filter((id) => !ownsAnywhere(session, id));
+}
+
 /** Oma Gisela gibt Lina Angel, Kescher, Gießkanne und ein paar Samen. */
 export function giveStarterTools(session: Session) {
   const data = session.data;
