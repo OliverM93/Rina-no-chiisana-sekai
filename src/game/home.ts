@@ -9,7 +9,7 @@ import { keepsAccess, yardBlockedTiles } from '../core/yard';
 import { tileOf } from '../core/worldmap';
 import { YARD_AREA } from '../data/yard';
 import { spotKey } from '../core/garden';
-import { checkPlacement, footprint, misfits, moveItem, placeItem, type Room, type RoomLayout, type Rotation, removeItem } from '../core/room';
+import { cellsOf, checkPlacement, footprint, misfits, moveItem, placeItem, type Room, type RoomLayout, type Rotation, removeItem } from '../core/room';
 import { daysBetween } from '../core/daily';
 import { FURNITURE_BY_ITEM, furnitureInfo, SURFACE_BY_ID } from '../data/furniture';
 import { emptyRoom, HOUSE_STAGES, layoutOf, MAX_STAGE, roomLayouts } from '../data/house';
@@ -67,6 +67,10 @@ export function canPlace(session: Session, itemId: string, x: number, y: number,
   const c = currentRoom(session);
   if (!c || !fitsHere(session, itemId) || !checkPlacement(c.room, c.layout, itemId, x, y, rot, furnitureInfo, moving).ok) return false;
   if (session.inside) return true;
+  // nicht auf die Anbauten von Linas Haus
+  const info = furnitureInfo(itemId);
+  const annex = new Set(session.houseAnnexTiles());
+  if (info && cellsOf(x, y, info, rot).some(([cx, cy]) => annex.has((cy + YARD_AREA.y) * session.map.width + cx + YARD_AREA.x))) return false;
   // Garten: Probe-Aufstellung → niemand wird eingesperrt, Lina steht nicht im Weg
   const trial: Room = structuredClone(c.room);
   if (moving) {
@@ -79,7 +83,7 @@ export function canPlace(session: Session, itemId: string, x: number, y: number,
 function yardOk(session: Session, yard: Room): boolean {
   const data = session.data;
   if (!data) return false;
-  const tiles = yardBlockedTiles(session.map, YARD_AREA, yard, session.yardLayout, furnitureInfo);
+  const tiles = [...yardBlockedTiles(session.map, YARD_AREA, yard, session.yardLayout, furnitureInfo), ...session.houseAnnexTiles()];
   const lina = tileOf(data.player.x, data.player.y);
   if (tiles.includes(lina.y * session.map.width + lina.x)) return false;
   return keepsAccess(session.map, YARD_AREA, tiles);
@@ -241,6 +245,20 @@ export function finishExpansion(session: Session): number | null {
       if (giveItem(session, m.itemId, 1, false) > 0) data.world.ground.push({ id: `lager-${m.uid}`, itemId: m.itemId, x: session.spawnPoint().x + 40, y: session.spawnPoint().y + 30 });
     }
   }
+  // Gartensachen, wo jetzt ein Anbau steht, kommen in die Tasche (oder liegen vor der Tür)
+  const yard = data.yard;
+  if (yard) {
+    const annex = new Set(session.houseAnnexTiles(house.stage));
+    for (const it of [...yard.items]) {
+      const info = furnitureInfo(it.itemId);
+      if (!info || it.on) continue;
+      if (!cellsOf(it.x, it.y, info, it.rot).some(([cx, cy]) => annex.has((cy + YARD_AREA.y) * session.map.width + cx + YARD_AREA.x))) continue;
+      for (const m of removeItem(yard, it.uid)) {
+        if (giveItem(session, m.itemId, 1, false) > 0) data.world.ground.push({ id: `lager-${m.uid}`, itemId: m.itemId, x: session.spawnPoint().x + 40, y: session.spawnPoint().y + 30 });
+      }
+    }
+  }
+  session.syncYardCollision();
   session.changed();
   session.save();
   return house.stage;

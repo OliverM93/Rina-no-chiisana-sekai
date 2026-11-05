@@ -113,7 +113,8 @@ src/
                items.ts (alle Gegenstände + Preise, Gartenblumen, Werkzeuge), species.ts (Fische & Insekten –
                echte heimische Arten), furniture.ts (Möbel, Tapeten, Böden, Varianten; Stile: japanisch, basis,
                cottage, retro, modern, midcentury, handgemacht, garten, kunst – Muster in `gfx/interior.ts`),
-               house.ts (Ausbaustufen, Räume, Preise, Start-Haus),
+               house.ts (Ausbaustufen 0–6, Räume, Preise, Start-Haus, Start-Einrichtung neuer Räume,
+               `HOUSE_ANNEX` = Kacheln, die Anbauten außen belegen),
                npcs/ (je Bewohner eine Datei)
                wardrobe.ts (Aufdruck-Kleidung, Bandnamen)
   style/       palette.ts – EINZIGE Quelle für Farben (auch CSS-Variablen der UI)
@@ -184,6 +185,9 @@ src/
   automatisch Gegenstände (Varianten → `futon-rosa` …). Raumlogik in `core/room.ts`, Modelle in
   `world3d/models/furniture.ts`. Gespeichert wird immer draußen weitergespielt (Laden im Haus → vor der Tür).
   Einrichten läuft über `decor:command`/`decor:state` auf dem Bus.
+  **Hausausbau:** 0 Zimmer → 1 großes Zimmer → 2 Schlafzimmer → 3 Dachzimmer → 4 Wohnküche (Wohnzimmer 12 × 8 +
+  Küche) → 5 Wintergarten → 6 Keller. Außen zeigt `makeHouse(…, stage)` jede Stufe; Anbauten außerhalb der 5 × 3
+  Kacheln stehen in `HOUSE_ANNEX` und blockieren Karte & Garten (`session.houseAnnexTiles`, `syncYardCollision`).
   **Wand-Deko** (`wall: true`): hängt an Rückwand (rot 0) oder Seitenwand (rot 3 links / 1 rechts), nicht vor
   Fenstern (`backWindows`), blockiert den Boden nicht – Möbel dürfen darunter stehen. Beim Einrichten zielt man
   auf die Wand (`Interior3D.walls`), die Drehung rastet von selbst ein (`wallRotationAt`). Modelle hängen bei

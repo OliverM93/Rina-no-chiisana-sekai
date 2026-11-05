@@ -196,6 +196,9 @@ export const WALLPAPERS: readonly SurfaceDef[] = [
   { id: 'tapete-terrazzo', name: 'Terrazzo-Tapete', style: 'modern', price: 750, kind: 'tapete', pattern: 'terrazzo', color: '#f2efea', accent: '#d9a79a', description: 'Helle Wand mit bunten Steinsplittern. Modern, aber verspielt.' },
   { id: 'tapete-formen', name: 'Bauhaus-Formen', style: 'midcentury', price: 750, kind: 'tapete', pattern: 'bauhaus', color: '#f4efe4', accent: '#d9483b', description: 'Kreise, Quadrate und Dreiecke in Rot, Gelb und Blau auf hellem Grund.' },
   { id: 'tapete-atomic', name: 'Atomic-Tapete', style: 'midcentury', price: 700, kind: 'tapete', pattern: 'atomic', color: '#e9e2cf', accent: '#3f7a7a', description: 'Kleine Sterne und Bumerangs wie in den Fünfzigern.' },
+  { id: 'tapete-kacheln', name: 'Küchenfliesen', style: 'basis', price: 600, kind: 'tapete', pattern: 'kacheln', color: '#f3f1ea', accent: '#9ad8c0', description: 'Weiße Fliesen mit einer mintgrünen Bordüre. Spritzwasser? Kein Problem.' },
+  { id: 'tapete-glas', name: 'Glaswand', style: 'basis', price: 1200, kind: 'tapete', pattern: 'glas', color: '#d9eef2', accent: '#8fb08a', description: 'Große Glasscheiben mit weißen Sprossen – draußen grünt der Garten.' },
+  { id: 'tapete-backstein', name: 'Backstein', style: 'basis', price: 700, kind: 'tapete', pattern: 'backstein', color: '#c9775a', accent: '#e9d8c4', description: 'Rote Backsteine mit hellen Fugen. Gemütlich wie ein alter Gewölbekeller.' },
   { id: 'tapete-rosa', name: 'Pastellrosa Tapete', style: 'basis', price: 400, kind: 'tapete', pattern: 'streifen', color: '#fbe0e8', accent: '#f6cfdb', description: 'Ganz zarte Streifen in Rosa.' },
 ];
 
@@ -208,6 +211,7 @@ export const FLOORS: readonly SurfaceDef[] = [
   { id: 'boden-beton', name: 'Betonoptik', style: 'modern', price: 800, kind: 'boden', pattern: 'beton', color: '#c9c7c4', accent: '#b3b0ad', description: 'Glatter, hellgrauer Boden in Betonoptik. Schön kühl im Sommer.' },
   { id: 'boden-nussbaum', name: 'Nussbaum-Parkett', style: 'midcentury', price: 900, kind: 'boden', pattern: 'dielen', color: '#7a5236', accent: '#5e3e28', description: 'Dunkles, warmes Nussbaumholz.' },
   { id: 'boden-schach', name: 'Schachbrett-Fliesen', style: 'midcentury', price: 800, kind: 'boden', pattern: 'schach', color: '#f2efe8', accent: '#2a2a30', description: 'Schwarze und weiße Fliesen im Wechsel. Klar, grafisch, zeitlos.' },
+  { id: 'boden-terrakotta', name: 'Terrakotta-Fliesen', style: 'basis', price: 700, kind: 'boden', pattern: 'terrakotta', color: '#d9895f', accent: '#b8693f', description: 'Warme, rötliche Tonfliesen. Fühlen sich nach Urlaub an.' },
   { id: 'boden-teppich', name: 'Rosa Teppichboden', style: 'basis', price: 500, kind: 'boden', pattern: 'teppich', color: '#f7c6d4', accent: '#f4b3c6', description: 'Flauschig und weich unter den Füßen.' },
 ];
 

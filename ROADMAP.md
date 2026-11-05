@@ -215,6 +215,10 @@ Legende: ✅ erledigt · 🚧 in Arbeit · ⬜ geplant
 - ✅ **M8h Mid-Century & Bauhaus:** Leder-Loungesessel, Freischwinger (auch mit Wiener Geflecht), Teak-Sideboard,
   Satztische, Dreibein-Stehlampe, Opalglas-Leuchte, Formen-Teppich, Formen-Bild & Sonnenspiegel (Wand), dazu
   Bauhaus-Formen- & Atomic-Tapete, Nussbaum-Parkett & Schachbrett-Fliesen
+- ✅ **M8i Hausausbau 2:** drei neue Stufen – **Wohnküche** (Wohnzimmer wächst auf 12 × 8, eigene Küche mit Herd),
+  **Wintergarten** (Glaswände, Terrakotta, Pflanzen), **Keller** (Backstein, kleine Fenster oben, Treppe nach unten);
+  außen: Küchenanbau mit Ofenrohr, Glas-Wintergarten, Kellerfenster & Luke. Anbauten blockieren jetzt ihre Kacheln
+  (vorher konnte man durch den Schlafzimmer-Anbau laufen)
 - 🔶 **M8c Animationen & Partikel** (erster Schwung ✅): Staubwölkchen beim Rennen, Spritzer beim Angeln,
   Funkeln beim Aufheben & Fangen, Herzchen (Herz-Aufstieg, Lieblingsgeschenk, Winston streicheln), Erdklumpen
   beim Graben, Konfetti beim Bauen & Kochen, Glühwürmchen in Sommernächten · Lina macht Freudensprünge,

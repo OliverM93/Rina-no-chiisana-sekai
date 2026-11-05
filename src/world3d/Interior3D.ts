@@ -96,16 +96,19 @@ export class Interior3D {
     this.shell.add(base);
     // Fenster in der Rückwand (nicht dort, wo ein Durchgang ist)
     // (dieselbe Regel kennt die Raumlogik – dort hängt keine Wand-Deko)
+    // Keller: kleine Fenster ganz oben (draußen ist dort der Boden)
+    const cellar = layout.id === 'keller';
+    const [fw, fh] = cellar ? [0.8, 0.36] : [1.1, 0.9];
     for (const x of backWindows(layout)) {
-      const y = attic ? 0.95 : 1.35;
-      const frame = mesh(new THREE.BoxGeometry(1.1, 0.9, 0.06), toon('#ffffff'));
+      const y = attic ? 0.95 : cellar ? 1.95 : 1.35;
+      const frame = mesh(new THREE.BoxGeometry(fw, fh, 0.06), toon('#ffffff'));
       frame.position.set(x, y, 0.02);
-      const glass = mesh(new THREE.BoxGeometry(0.95, 0.75, 0.07), this.windowGlass, false, false);
+      const glass = mesh(new THREE.BoxGeometry(fw - 0.15, fh - 0.15, 0.07), this.windowGlass, false, false);
       glass.position.set(x, y, 0.025);
-      const bar = mesh(new THREE.BoxGeometry(0.04, 0.75, 0.08), toon('#ffffff'));
+      const bar = mesh(new THREE.BoxGeometry(0.04, fh - 0.15, 0.08), toon('#ffffff'));
       bar.position.set(x, y, 0.03);
-      const sill = mesh(new THREE.BoxGeometry(1.2, 0.05, 0.16), toon('#cfa175'));
-      sill.position.set(x, y - 0.47, 0.08);
+      const sill = mesh(new THREE.BoxGeometry(fw + 0.1, 0.05, 0.16), toon('#cfa175'));
+      sill.position.set(x, y - fh / 2 - 0.02, 0.08);
       this.shell.add(frame, glass, bar, sill);
     }
     // Ausgänge

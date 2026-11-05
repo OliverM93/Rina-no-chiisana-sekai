@@ -45,7 +45,9 @@ export interface HouseModel {
 
 /**
  * Häuschen mit 5 × 3 Kacheln Grundfläche. `stage` = Ausbaustufe:
- * 1 = Erker an der Seite, 2 = Anbau hinten, 3 = Dachgaube mit Fenster.
+ * 1 = Erker an der Seite, 2 = Anbau hinten, 3 = Dachgaube mit Fenster,
+ * 4 = Küche hinten rechts (Ofenrohr), 5 = Wintergarten links, 6 = Kellerfenster & Kellerluke.
+ * Was außerhalb der 5 × 3 Kacheln liegt, belegt `HOUSE_ANNEX` in `data/house.ts`.
  */
 export function makeHouse(roofColor: string, stage = 0): HouseModel {
   const g = new THREE.Group();
@@ -181,6 +183,80 @@ export function makeHouse(roofColor: string, stage = 0): HouseModel {
     droof.position.set(-1.4, dy + 0.45, dz);
     g.add(droof);
     windows.push(new THREE.Vector3(-1.4, dy + 0.15, dz + 0.35));
+  }
+  if (stage >= 4) {
+    // Küche hinten rechts: kleiner Anbau mit Pultdach, Ofenrohr und Fenster
+    const kx = 1.6;
+    const kw = 1.3;
+    const kd = 0.95;
+    const kz = -D / 2 - kd / 2 + 0.05;
+    const kh = 1.05;
+    g.add(b(kw, kh, kd, darken(wall, 0.02), kx, 0.22 + kh / 2, kz));
+    const lean = b(kw + 0.25, 0.1, kd + 0.3, darken(roofColor, 0.06), kx, 0.22 + kh + 0.12, kz - 0.05);
+    lean.rotation.x = 0.32;
+    g.add(lean);
+    // Ofenrohr mit Hütchen
+    // (so hoch, dass es von vorn über den Dachfirst schaut)
+    g.add(c(0.08, 2.5, '#8d8a93', kx + 0.35, 0.22 + kh + 1.2, kz - 0.15));
+    g.add(c(0.14, 0.06, '#6e6a73', kx + 0.35, 0.22 + kh + 2.48, kz - 0.15));
+    g.add(c(0.1, 0.12, '#6e6a73', kx + 0.35, 0.22 + kh + 2.56, kz - 0.15));
+    // Fenster zur Seite (rechts) und nach hinten
+    g.add(b(0.05, 0.42, 0.5, windowGlass, kx + kw / 2 + 0.01, 0.22 + 0.62, kz));
+    g.add(b(0.5, 0.42, 0.05, windowGlass, kx, 0.22 + 0.62, kz - kd / 2 - 0.01));
+    windows.push(new THREE.Vector3(kx + kw / 2 + 0.05, 0.22 + 0.62, kz));
+  }
+  if (stage >= 5) {
+    // Wintergarten links: weißes Sprossenwerk, Glaswände, schräges Glasdach, Pflanzen drin
+    const wx = -W / 2 - 0.52;
+    const ww = 1.0;
+    const wd = 1.9;
+    const wz = 0.0;
+    const wh = 1.25;
+    const frame = '#ffffff';
+    g.add(b(ww + 0.08, 0.18, wd + 0.08, palette.wood.light, wx, 0.09, wz));
+    const glassMat = new THREE.MeshToonMaterial({ color: '#d9eef2', transparent: true, opacity: 0.45, emissive: '#d9eef2', emissiveIntensity: 0.1 });
+    // Pflanzen (vor dem Glas, damit sie durchschimmern)
+    for (const [px, pz, r, col] of [[-0.2, -0.5, 0.26, '#6fb06a'], [0.15, 0.25, 0.22, '#5a8a52'], [-0.15, 0.65, 0.18, '#8fae8a']] as const) {
+      g.add(c(0.11, 0.18, '#d98a5f', wx + px, 0.27, wz + pz));
+      const leaf = mesh(sphere, toon(col));
+      leaf.scale.setScalar(r);
+      leaf.position.set(wx + px, 0.36 + r * 0.8, wz + pz);
+      g.add(leaf);
+    }
+    for (const [gw, gh, gd, x, z] of [[0.04, wh, wd, wx - ww / 2, wz], [ww, wh, 0.04, wx, wz + wd / 2], [ww, wh, 0.04, wx, wz - wd / 2]] as const) {
+      const pane = mesh(new THREE.BoxGeometry(gw, gh, gd), glassMat, false, false);
+      pane.position.set(x, 0.18 + wh / 2, z);
+      g.add(pane);
+    }
+    // Sprossen
+    for (const z of [-wd / 2, -wd / 6, wd / 6, wd / 2]) g.add(b(0.06, wh, 0.06, frame, wx - ww / 2, 0.18 + wh / 2, wz + z));
+    for (const x of [-ww / 2, 0, ww / 2]) for (const z of [-wd / 2, wd / 2]) g.add(b(0.06, wh, 0.06, frame, wx + x, 0.18 + wh / 2, wz + z));
+    g.add(b(0.06, 0.06, wd, frame, wx - ww / 2, 0.18 + wh, wz));
+    g.add(b(0.06, 0.06, wd, frame, wx - ww / 2, 0.18 + wh * 0.5, wz));
+    // Glasdach zur Hauswand hin ansteigend
+    const roofPane = mesh(new THREE.BoxGeometry(ww + 0.2, 0.04, wd + 0.12), glassMat, false, false);
+    roofPane.position.set(wx, 0.18 + wh + 0.17, wz);
+    roofPane.rotation.z = -0.34;
+    g.add(roofPane);
+    for (const z of [-wd / 2, 0, wd / 2]) {
+      const rib = b(ww + 0.2, 0.05, 0.05, frame, wx, 0.18 + wh + 0.19, wz + z);
+      rib.rotation.z = -0.34;
+      g.add(rib);
+    }
+    windows.push(new THREE.Vector3(wx, 0.7, wz + wd / 2));
+  }
+  if (stage >= 6) {
+    // Keller: kleine Fenster im Sockel und eine Kellerluke rechts neben der Tür
+    for (const x of [-1.9, -0.75]) {
+      g.add(b(0.5, 0.16, 0.04, '#5a4a40', x, 0.11, zf + 0.06));
+      g.add(b(0.42, 0.1, 0.05, windowGlass, x, 0.11, zf + 0.07));
+      windows.push(new THREE.Vector3(x, 0.11, zf + 0.08));
+    }
+    const hatch = b(0.55, 0.06, 0.45, palette.wood.base, 0.85, 0.2, zf + 0.22);
+    hatch.rotation.x = 0.35;
+    g.add(hatch);
+    g.add(b(0.04, 0.05, 0.34, darken(palette.wood.base, 0.3), 0.85, 0.24, zf + 0.22).rotateX(0.35));
+    g.add(b(0.62, 0.16, 0.5, palette.stone.light, 0.85, 0.08, zf + 0.22));
   }
   return { group: g, windows };
 }
