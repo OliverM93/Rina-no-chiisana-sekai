@@ -119,6 +119,8 @@ export type GameEvents = {
    * ohne Ort = bei Lina.
    */
   fx: { kind: FxKind; x?: number; y?: number; npc?: string };
+  /** Brabbelsprache: eine Silbe für diesen Buchstaben, gesprochen von `speaker` (Name im Dialogtitel) */
+  voice: { speaker: string; ch: string };
   /** Weiches Abblenden (Tür-Animation): true = dunkel */
   'overlay:fade': boolean;
   /** Einrichtungsmodus: an/aus, was gerade gehalten wird */

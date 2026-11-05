@@ -8,6 +8,7 @@
  * auch in Hintergrund-Tabs nicht stolpert.
  */
 import { composePhrase, midiToHz, type Mood, MOODS, type NoteEvent } from '../core/music';
+import type { Voice } from '../data/voices';
 
 export type Sfx =
   | 'kuss'
@@ -28,6 +29,9 @@ export type Sfx =
   | 'graben'
   | 'herz'
   | 'post';
+
+/** Musik deutlich hörbar über Umgebung & Geräuschen (vorher ging sie darin unter) */
+const MUSIC_GAIN = 2.2;
 
 export type Ambience = { birds: number; crickets: number; rain: number; waves: number };
 
@@ -82,7 +86,26 @@ export class GameAudio {
     return ctx.startRendering();
   }
 
-  private setup(ctx: BaseAudioContext) {
+  /** Hörprobe Brabbelsprache: spricht `text` offline mit dieser Stimme (wie in der Dialogbox) */
+  static async previewVoice(voice: Voice, text: string, every = 3, cps = 55): Promise<AudioBuffer> {
+    const a = new GameAudio();
+    const chars = [...text];
+    const sec = chars.length / cps + 1;
+    const ctx = new OfflineAudioContext(2, Math.ceil(44100 * sec), 44100);
+    a.setup(ctx, false);
+    a.offlineAt = 0;
+    chars.forEach((ch, i) => {
+      if (i % every !== 0 || !/\p{L}/u.test(ch)) return;
+      a.offlineAt = 0.1 + i / cps;
+      a.babble(voice, ch);
+    });
+    return ctx.startRendering();
+  }
+
+  /** nur für Offline-Hörproben: Startzeit statt `currentTime` */
+  private offlineAt: number | null = null;
+
+  private setup(ctx: BaseAudioContext, ambience = true) {
     this.ctx = ctx;
     this.master = ctx.createGain();
     this.master.gain.value = 0.9;
@@ -90,14 +113,14 @@ export class GameAudio {
     comp.threshold.value = -18;
     comp.ratio.value = 3;
     this.master.connect(comp).connect(ctx.destination);
-    this.musicBus = this.bus(this.volumes.music * 1.1);
+    this.musicBus = this.bus(this.volumes.music * MUSIC_GAIN);
     this.sfxBus = this.bus(this.volumes.sfx * 0.7);
     this.ambBus = this.bus(this.volumes.sfx * 0.8);
     // weißes Rauschen (für Regen, Wellen, Schritte, Schlagzeug)
     this.noise = ctx.createBuffer(1, ctx.sampleRate * 2, ctx.sampleRate);
     const d = this.noise.getChannelData(0);
     for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1;
-    this.startAmbience();
+    if (ambience) this.startAmbience();
     this.phraseStart = ctx.currentTime + 0.3;
   }
 
@@ -112,7 +135,7 @@ export class GameAudio {
     this.volumes = { music, sfx };
     if (!this.ctx) return;
     const t = this.ctx.currentTime;
-    this.musicBus.gain.setTargetAtTime(music * 1.1, t, 0.2);
+    this.musicBus.gain.setTargetAtTime(music * MUSIC_GAIN, t, 0.2);
     this.sfxBus.gain.setTargetAtTime(sfx * 0.7, t, 0.1);
     this.ambBus.gain.setTargetAtTime(sfx * 0.8, t, 0.2);
   }
@@ -185,19 +208,26 @@ export class GameAudio {
     const f = midiToHz(n.midi);
     const dur = n.len * sd;
     if (n.voice === 'pad') {
-      const o = ctx.createOscillator();
+      // warmes Pad aus zwei leicht verstimmten Oszillatoren …
       const g = ctx.createGain();
       const lp = ctx.createBiquadFilter();
-      o.type = 'triangle';
-      o.frequency.value = f;
       lp.type = 'lowpass';
-      lp.frequency.value = 900;
+      lp.frequency.value = 1100;
       g.gain.setValueAtTime(0, t);
-      g.gain.linearRampToValueAtTime(0.06 * n.vel, t + dur * 0.35);
+      g.gain.linearRampToValueAtTime(0.07 * n.vel, t + dur * 0.3);
       g.gain.linearRampToValueAtTime(0, t + dur * 1.05);
-      o.connect(lp).connect(g).connect(out);
-      o.start(t);
-      o.stop(t + dur * 1.1);
+      for (const detune of [-7, 7]) {
+        const o = ctx.createOscillator();
+        o.type = 'triangle';
+        o.frequency.value = f;
+        o.detune.value = detune;
+        o.connect(lp);
+        o.start(t);
+        o.stop(t + dur * 1.1);
+      }
+      lp.connect(g).connect(out);
+      // … plus ein weicher E-Piano-Anschlag am Taktanfang (gemütlicher „Lo-fi“-Akkord)
+      this.epiano(out, t, f * 2, 0.09 * n.vel);
       return;
     }
     if (n.voice === 'bass') {
@@ -252,6 +282,84 @@ export class GameAudio {
     o.connect(g).connect(out);
     o.start(t);
     o.stop(t + dur + 0.25);
+  }
+
+  /** Weicher E-Piano-Ton: Sinus mit kurzem glockigem Oberton, langes Ausklingen */
+  private epiano(out: AudioNode, t: number, f: number, vol: number) {
+    const ctx = this.ctx as BaseAudioContext;
+    const o = ctx.createOscillator();
+    const g = ctx.createGain();
+    o.type = 'sine';
+    o.frequency.value = f;
+    g.gain.setValueAtTime(0, t);
+    g.gain.linearRampToValueAtTime(vol, t + 0.012);
+    g.gain.exponentialRampToValueAtTime(0.001, t + 1.8);
+    // Glocke: Modulator
+    const m = ctx.createOscillator();
+    const mg = ctx.createGain();
+    m.frequency.value = f * 2;
+    mg.gain.setValueAtTime(f * 0.8, t);
+    mg.gain.exponentialRampToValueAtTime(1, t + 0.4);
+    m.connect(mg).connect(o.frequency);
+    o.connect(g).connect(out);
+    for (const x of [o, m]) {
+      x.start(t);
+      x.stop(t + 1.9);
+    }
+  }
+
+  // -------------------------------------------------------------------------
+  // Brabbelsprache
+  // -------------------------------------------------------------------------
+
+  /**
+   * Eine kleine gesprochene Silbe: Klang durch zwei Formant-Filter (Vokal aus dem Buchstaben),
+   * Tonhöhe zufällig um die Stimme herum, kurzer Gleiter. Klingt niedlich & unverständlich.
+   */
+  babble(voice: Voice, ch: string) {
+    const ctx = this.ctx;
+    if (!ctx || (this.offlineAt === null && ctx.state !== 'running')) return;
+    const t = this.offlineAt ?? ctx.currentTime + 0.005;
+    const dur = voice.syllable * (0.85 + Math.random() * 0.3);
+    const semis = (Math.random() * 2 - 1) * voice.range;
+    const f = voice.pitch * Math.pow(2, semis / 12);
+    const [f1, f2] = formantsFor(ch);
+    const src = ctx.createOscillator();
+    src.type = voice.tone === 'hell' ? 'sawtooth' : 'triangle';
+    src.frequency.setValueAtTime(f * 1.04, t);
+    src.frequency.exponentialRampToValueAtTime(f * 0.94, t + dur);
+    if (voice.vibrato) {
+      const lfo = ctx.createOscillator();
+      const lg = ctx.createGain();
+      lfo.frequency.value = voice.vibrato;
+      lg.gain.value = f * 0.03;
+      lfo.connect(lg).connect(src.frequency);
+      lfo.start(t);
+      lfo.stop(t + dur + 0.02);
+    }
+    const g = ctx.createGain();
+    g.gain.setValueAtTime(0, t);
+    g.gain.linearRampToValueAtTime(0.5, t + 0.008);
+    g.gain.setValueAtTime(0.5, t + dur * 0.6);
+    g.gain.exponentialRampToValueAtTime(0.001, t + dur);
+    const mix = ctx.createGain();
+    mix.gain.value = 1.5;
+    for (const [freq, q, lvl] of [[f1, 6, 1], [f2, 9, 0.55]] as const) {
+      const bp = ctx.createBiquadFilter();
+      bp.type = 'bandpass';
+      bp.frequency.value = freq;
+      bp.Q.value = q;
+      const lg = ctx.createGain();
+      lg.gain.value = lvl;
+      src.connect(bp).connect(lg).connect(g);
+    }
+    // etwas vom Grundton für Wärme
+    const dry = ctx.createGain();
+    dry.gain.value = voice.pitch < 200 ? 0.45 : 0.25;
+    src.connect(dry).connect(g);
+    g.connect(mix).connect(this.sfxBus);
+    src.start(t);
+    src.stop(t + dur + 0.03);
   }
 
   // -------------------------------------------------------------------------
@@ -463,4 +571,22 @@ export class GameAudio {
     if (this.ctx instanceof AudioContext) void this.ctx.close();
     this.ctx = null;
   }
+}
+
+/** Grobe Vokal-Formanten (F1, F2) für einen Buchstaben – Konsonanten bekommen einen „passenden“ Vokal */
+function formantsFor(ch: string): [number, number] {
+  const c = ch.toLowerCase();
+  const table: Record<string, [number, number]> = {
+    a: [800, 1250],
+    e: [480, 1900],
+    i: [300, 2300],
+    o: [500, 880],
+    u: [330, 800],
+    ä: [650, 1750],
+    ö: [450, 1500],
+    ü: [300, 1650],
+  };
+  if (table[c]) return table[c];
+  const vowels = Object.values(table);
+  return vowels[(c.codePointAt(0) ?? 0) % vowels.length];
 }

@@ -258,7 +258,12 @@ src/
 - **Klang:** `GameAudio` (`audio/Audio.ts`) startet nach der ersten Taste/Klick (Browser-Regel). Geräusche
   laufen über das Bus-Event `sfx` (`session.bus.emit('sfx', 'muenzen')`), Lautstärke über `settings:changed`.
   `main.ts` setzt alle 2 s Stimmung (`moodFor`) und Umgebung. Hörprobe ohne Lautsprecher:
-  `GameAudio.preview(mood)` rendert offline in einen AudioBuffer.
+  `GameAudio.preview(mood)` rendert offline in einen AudioBuffer. Musik: Pad (zwei verstimmte Oszillatoren) +
+  E-Piano-Akkord pro Takt + Melodie/Bass/Beat, `MUSIC_GAIN` hebt sie über Umgebung & Geräusche.
+  **Brabbelsprache:** Stimmen je Bewohner in `data/voices.ts` (Tonhöhe, Spannweite, Tempo, Klangfarbe). Die
+  Dialogbox meldet jeden Buchstaben (`onChar`), App schickt jede `BABBLE_EVERY`-te als Bus-Event `voice`, `GameAudio.babble`
+  spricht eine Silbe (Formant-Filter nach Vokal). Nicht in *Handlungen*; Dialoge ohne Bewohner-Titel nur „Blubb“.
+  Hörprobe: `GameAudio.previewVoice(voice, text)`.
 - **Partikel & kleine Animationen:** Bus-Event `fx` (`{ kind, npc? , x?, y? }` – ohne Ort bei Lina) oder direkt
   `particles.burst()` in World3D. Alles über wenige InstancedMeshes mit festem Vorrat. `Character.cheer()` =
   Freudensprung, `wave()` = Winken; nach 4 s Stillstand schauen Figuren sich um.

@@ -15,9 +15,11 @@ interface Props {
   dialog: DialogRequest;
   onClose: () => void;
   onChoose: (index: number) => void;
+  /** wird bei jedem neu erscheinenden Buchstaben aufgerufen (Brabbelsprache) */
+  onChar?: (ch: string, index: number, line: string) => void;
 }
 
-export function DialogBox({ dialog, onClose, onChoose }: Props) {
+export function DialogBox({ dialog, onClose, onChoose, onChar }: Props) {
   const [index, setIndex] = useState(0);
   const [shown, setShown] = useState(0);
   const [selected, setSelected] = useState(0);
@@ -42,6 +44,11 @@ export function DialogBox({ dialog, onClose, onChoose }: Props) {
     const id = window.setInterval(() => setShown((s) => s + 1), 1000 / CHARS_PER_SECOND);
     return () => window.clearInterval(id);
   }, [index, done, dialog]);
+
+  // Brabbelsprache: der gerade erschienene Buchstabe (nicht beim Überspringen)
+  useEffect(() => {
+    if (shown > 0 && shown <= chars.length) onChar?.(chars[shown - 1], shown - 1, line);
+  }, [shown]);
 
   const advance = useCallback(() => {
     if (!state.current.done) {

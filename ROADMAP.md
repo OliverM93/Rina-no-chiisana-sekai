@@ -223,6 +223,8 @@ Legende: ✅ erledigt · 🚧 in Arbeit · ⬜ geplant
   aus dem Katalog · Jens: Werkbank & Sammelbuch · Lars: Kochen & Verkaufen · Thalia: Durchchecken & Sammelbuch),
   Einzug & Hausausbau nach ~10 Min Spielzeit, sanfte Hinweise der Bewohner; Echtzeit bleibt für Tag/Nacht,
   Jahreszeiten, Feste & Tägliches. Spielstand v13
+- ✅ **Brabbelsprache & Musik:** Jede Figur brabbelt beim Sprechen in eigener Stimme (Oma zittrig hoch, Lars tief,
+  Jens lebhaft …); die Musik ist deutlich hörbarer und gemütlicher (warmes Pad, E-Piano-Akkorde)
 - 🔶 **M8c Animationen & Partikel** (erster Schwung ✅): Staubwölkchen beim Rennen, Spritzer beim Angeln,
   Funkeln beim Aufheben & Fangen, Herzchen (Herz-Aufstieg, Lieblingsgeschenk, Winston streicheln), Erdklumpen
   beim Graben, Konfetti beim Bauen & Kochen, Glühwürmchen in Sommernächten · Lina macht Freudensprünge,
