@@ -9,6 +9,7 @@
  *   verloren, nur weil später neue Felder dazukommen.
  * - Vor jedem Überschreiben wird der vorherige Stand als Backup behalten.
  */
+import { createStats, normalizeNumberRecord, normalizeStats, type Stats } from './progress';
 import { type Appearance, DEFAULT_LINA, normalizeAppearance } from './appearance';
 import { createNpcState, type NpcState, normalizeNpcState } from './friendship';
 import { type Collection, normalizeCollection } from './catching';
@@ -21,7 +22,7 @@ import { createInventory, type Inventory, normalizeInventory } from './inventory
 import { createMailbox, type Mailbox, normalizeMailbox } from './mail';
 import { type DayMonth, DEFAULT_LINA_BIRTHDAY, formatIsoDay } from './time';
 
-export const SAVE_VERSION = 12;
+export const SAVE_VERSION = 13;
 export const SAVE_KEY = 'rina-no-chiisana-sekai.save';
 export const BACKUP_KEY = 'rina-no-chiisana-sekai.save.backup';
 
@@ -107,6 +108,10 @@ export interface SaveData {
   yard: Room;
   /** Kunstwerke, die Lina der Galerie von Jens gestiftet hat */
   gallery: string[];
+  /** Zähler für den Fortschritt (Verkauft, Gekauft, Gebaut, Gekocht) */
+  stats: Stats;
+  /** Spielzeit (s), zu der ein Story-Brief kam – der Einzug folgt nach kurzer Spielzeit */
+  story: Record<string, number>;
 }
 
 export interface SaveOptions {
@@ -177,6 +182,8 @@ export function createNewSave(opts: NewGameOptions): SaveData {
     pet: createPet(),
     yard: emptyYard(),
     gallery: [],
+    stats: createStats(),
+    story: {},
   };
 }
 
@@ -222,6 +229,15 @@ export const MIGRATIONS: Record<number, (old: RawSave) => RawSave> = {
   10: (old) => ({ ...old }),
   // v11 → v12 (M8d Sparbuch): Guthaben & Zinsmonat in der Dorfkasse. `normalizeBank` ergänzt sie (Guthaben 0).
   11: (old) => ({ ...old }),
+  // v12 → v13 (M8j Fortschritt statt Kalender): Zähler & Story-Wartezeiten. Die Zähler werden grob aus dem
+  // Spielstand geschätzt (Möbel im Haus/Garten = gekauft, Sternchen = verkauft), damit niemand zurückfällt.
+  12: (old) => {
+    const house = old.house as { rooms?: Array<{ items?: unknown[] }> } | undefined;
+    const yard = old.yard as { items?: unknown[] } | undefined;
+    const furniture = (house?.rooms ?? []).reduce((n, r) => n + (Array.isArray(r.items) ? r.items.length : 0), 0) + (Array.isArray(yard?.items) ? yard.items.length : 0);
+    const money = typeof old.money === 'number' ? old.money : 0;
+    return { ...old, stats: { sold: Math.max(0, Math.floor(money)), bought: Math.max(0, furniture - 3), crafted: 0, cooked: 0 }, story: {} };
+  },
 };
 
 export function migrate(raw: RawSave, migrations = MIGRATIONS, target = SAVE_VERSION): RawSave {
@@ -348,6 +364,8 @@ export function normalizeSave(raw: RawSave, spawn: { x: number; y: number }, now
     recipes: withStart(normalizeRecipeBook(raw.recipes, opts.isKnownRecipe ?? (() => true)), opts.startRecipes ?? []),
     pet: normalizePet(raw.pet),
     gallery: Array.isArray(raw.gallery) ? [...new Set(raw.gallery.filter((g): g is string => typeof g === 'string' && isKnownItem(g)))] : [],
+    stats: normalizeStats(raw.stats),
+    story: normalizeNumberRecord(raw.story),
     yard: normalizeRoom(raw.yard, emptyYard(), opts.yardLayout ?? { id: 'garten', name: 'Garten', w: 0, h: 0, exits: [] }, isKnownItem, opts.furnitureInfo ?? (() => undefined)),
   };
 }

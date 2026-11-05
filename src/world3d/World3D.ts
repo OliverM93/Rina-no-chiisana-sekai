@@ -120,6 +120,15 @@ const DIRS = { down: [0, 1], up: [0, -1], left: [-1, 0], right: [1, 0] } as cons
 const CAM_OFFSET = new THREE.Vector3(0, 5.4, 7.2);
 const LANTERN_LIGHTS = 6;
 
+/** Eingezogen-/Begrüßt-Flags je Einzug (für ausstehende Einzugsszenen) */
+const MILESTONE_FLAGS: ReadonlyArray<readonly [string, string]> = [
+  ['olafEingezogen', 'olafBegruesst'],
+  ['oliEingezogen', 'oliBegruesst'],
+  ['jensEingezogen', 'jensBegruesst'],
+  ['larsEingezogen', 'larsBegruesst'],
+  ['thaliaEingezogen', 'thaliaBegruesst'],
+];
+
 export class World3D {
   readonly renderer: THREE.WebGLRenderer;
   private scene = new THREE.Scene();
@@ -172,6 +181,8 @@ export class World3D {
   private stepAcc = 0;
   /** Küsschen läuft (Oli kommt her / beide küssen sich) – Lina bleibt so lange stehen */
   private kissBusy = false;
+  /** Einzugsszenen, die schon angestoßen wurden */
+  private arrivalsScheduled = new Set<string>();
   /** Oli darf im Zimmer laufen (zu Lina hin) */
   private homeOliWalk = false;
   private lastHomeKiss = -Infinity;
@@ -356,7 +367,7 @@ export class World3D {
         if (this.collectibles.checkDay()) {
           checkDailyMail(this.session);
           this.onNewDay();
-        }
+        } else this.progressTick();
       }
       const blocked = this.session.uiBlocking || this.cutscene || this.kissBusy;
       const auto = this.autoWalk && performance.now() < this.autoWalk.until ? this.autoWalk : null;
@@ -615,11 +626,32 @@ export class World3D {
   }
 
   /** Neuer Tag (oder Spielstart): Story, Ausbau, Karte */
+  /**
+   * Fortschritt zwischendurch (alle paar Sekunden): Meilenstein erreicht → Brief, kurze Spielzeit
+   * später → Einzug; Hausausbau fertig. Nur draußen und wenn gerade nichts anderes läuft.
+   */
+  private progressTick() {
+    const data = this.session.data;
+    if (!data || this.session.inside || this.session.uiBlocking || this.cutscene || this.kissBusy || this.session.decorActive) return;
+    const pending = MILESTONE_FLAGS.some(([moved, greeted]) => data.flags[moved] && !data.flags[greeted]);
+    const events = checkStory(this.session);
+    const stage = finishExpansion(this.session);
+    if (events.length === 0 && stage === null && !pending) return;
+    this.applyProgress(events, stage);
+  }
+
   private onNewDay() {
     const data = this.session.data;
     if (!data) return;
     const events = checkStory(this.session);
     const stage = finishExpansion(this.session);
+    this.applyProgress(events, stage);
+  }
+
+  /** Ereignisse der Rahmenhandlung umsetzen (Haus, Karte, Einzugsszenen – jede nur einmal) */
+  private applyProgress(events: readonly string[], stage: number | null) {
+    const data = this.session.data;
+    if (!data) return;
     if (stage !== null) {
       this.rebuildLinaHouse();
       const olaf = NPCS.find((n) => n.id === 'olaf');
@@ -628,23 +660,23 @@ export class World3D {
     this.syncMapObjects();
     this.refreshYard();
     this.refreshFestivals();
-    if ((events.includes('thalia-eingezogen') || (data.flags.thaliaEingezogen && !data.flags.thaliaBegruesst)) && data.flags.larsBegruesst) {
+    if ((events.includes('thalia-eingezogen') || (data.flags.thaliaEingezogen && !data.flags.thaliaBegruesst)) && data.flags.larsBegruesst && this.scheduleArrival('thalia')) {
       window.setTimeout(() => this.npcArrival('thalia', THALIA_WELCOME, -1, () => {
         this.giveOrDrop('schaufel');
         this.session.bus.emit('toast', { text: 'Schaufel eingesteckt! (Taste 4) – und die Dorfkarte gibt\'s mit M. 🗺️' });
         window.setTimeout(() => this.digSpots.refresh(), 50);
       }), 5000);
     }
-    if ((events.includes('lars-eingezogen') || (data.flags.larsEingezogen && !data.flags.larsBegruesst)) && data.flags.jensBegruesst) {
+    if ((events.includes('lars-eingezogen') || (data.flags.larsEingezogen && !data.flags.larsBegruesst)) && data.flags.jensBegruesst && this.scheduleArrival('lars')) {
       window.setTimeout(() => this.larsArrival(), 4500);
     }
-    if ((events.includes('jens-eingezogen') || (data.flags.jensEingezogen && !data.flags.jensBegruesst)) && data.flags.oliBegruesst) {
+    if ((events.includes('jens-eingezogen') || (data.flags.jensEingezogen && !data.flags.jensBegruesst)) && data.flags.oliBegruesst && this.scheduleArrival('jens')) {
       window.setTimeout(() => this.jensArrival(), 3500);
     }
-    if ((events.includes('oli-eingezogen') || (data.flags.oliEingezogen && !data.flags.oliBegruesst)) && data.flags.olafBegruesst) {
+    if ((events.includes('oli-eingezogen') || (data.flags.oliEingezogen && !data.flags.oliBegruesst)) && data.flags.olafBegruesst && this.scheduleArrival('oli')) {
       window.setTimeout(() => this.oliArrival(), 2500);
     }
-    if ((events.includes('olaf-eingezogen') || (data.flags.olafEingezogen && !data.flags.olafBegruesst)) && data.flags.giselaWelcomed) {
+    if ((events.includes('olaf-eingezogen') || (data.flags.olafEingezogen && !data.flags.olafBegruesst)) && data.flags.giselaWelcomed && this.scheduleArrival('olaf')) {
       window.setTimeout(() => this.arrivalScene(), 2500);
     }
   }
@@ -658,6 +690,13 @@ export class World3D {
       this.collectibles.drop(itemId, new THREE.Vector3(p.x * UNIT, 1.1, p.y * UNIT), { x: p.x + fx * 40 + i * 14, y: p.y + fy * 40 + 8 });
     }
     if (left > 0) this.session.bus.emit('toast', { text: 'Deine Tasche ist voll – es liegt vor deinen Füßen. 🎒' });
+  }
+
+  /** Jede Einzugsszene nur einmal anstoßen (bis sie gelaufen ist, steht das Flag „begrüßt“ noch aus) */
+  private scheduleArrival(id: string): boolean {
+    if (this.arrivalsScheduled.has(id)) return false;
+    this.arrivalsScheduled.add(id);
+    return true;
   }
 
   /** Festschmuck & Begrüßung zum Fest */

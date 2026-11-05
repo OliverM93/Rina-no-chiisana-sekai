@@ -251,6 +251,12 @@ export class Session {
     setExtraBlocked(this.map, [...garden, ...this.houseAnnexTiles()]);
   }
 
+  /** Bisherige Spielzeit in Sekunden (inkl. der laufenden Sitzung) */
+  playTime(): number {
+    if (!this.data) return 0;
+    return this.data.playTimeSec + Math.max(0, (performance.now() - this.playStart) / 1000);
+  }
+
   /** Speichert (inkl. Spielzeit). Gibt false zurück, wenn der Browser-Speicher nicht verfügbar ist. */
   save(): boolean {
     if (!this.data) return false;

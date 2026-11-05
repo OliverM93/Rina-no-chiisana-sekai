@@ -38,7 +38,7 @@ export function BankPanel({ session, panel }: { session: Session; panel: Extract
 
   const order = () => {
     const r = orderExpansion(session);
-    if (r === 'ok') showToast('Abgemacht! Morgen ist dein Ausbau fertig. 🔨');
+    if (r === 'ok') showToast('Abgemacht! In ein paar Minuten ist dein Ausbau fertig. 🔨');
     else if (r === 'kredit-offen') showToast('Erst den alten Kredit abbezahlen – dann bauen wir weiter.');
   };
   const savings = data.bank.savings;
@@ -76,7 +76,7 @@ export function BankPanel({ session, panel }: { session: Session; panel: Extract
         </div>
 
         {house.pending ? (
-          <div class="bank-box">🔨 Gerade wird gebaut: <b>{HOUSE_STAGES[house.pending.stage].name}</b> – morgen ist alles fertig!</div>
+          <div class="bank-box">🔨 Gerade wird gebaut: <b>{HOUSE_STAGES[house.pending.stage].name}</b> – in ein paar Minuten ist alles fertig!</div>
         ) : next ? (
           <div class="bank-box">
             <div class="item-name">Nächster Ausbau: {next.name}</div>

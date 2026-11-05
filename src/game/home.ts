@@ -10,7 +10,7 @@ import { tileOf } from '../core/worldmap';
 import { YARD_AREA } from '../data/yard';
 import { spotKey } from '../core/garden';
 import { cellsOf, checkPlacement, footprint, misfits, moveItem, placeItem, type Room, type RoomLayout, type Rotation, removeItem } from '../core/room';
-import { daysBetween } from '../core/daily';
+import { waitOver } from '../core/progress';
 import { FURNITURE_BY_ITEM, furnitureInfo, SURFACE_BY_ID } from '../data/furniture';
 import { emptyRoom, HOUSE_STAGES, layoutOf, MAX_STAGE, roomLayouts } from '../data/house';
 import { itemDef, maxStackOf } from '../data/items';
@@ -33,6 +33,7 @@ export function buyFromCatalog(session: Session, itemId: string): BuyResult {
   if (data.money < price) return 'zu-teuer';
   if (spaceFor(data.inventory, itemId, maxStackOf) < 1) return 'tasche-voll';
   data.money -= price;
+  data.stats.bought += 1;
   session.bus.emit('sfx', 'muenzen');
   giveItem(session, itemId, 1, false);
   session.changed();
@@ -168,7 +169,7 @@ export function nextStage(session: Session) {
 
 export type OrderResult = 'ok' | 'kredit-offen' | 'fertig' | 'laeuft';
 
-/** Ausbau bestellen: wird als zinsloser Kredit verbucht, fertig am nächsten Tag. */
+/** Ausbau bestellen: wird als zinsloser Kredit verbucht, fertig nach kurzer Spielzeit (`WAIT_SECONDS`). */
 export function orderExpansion(session: Session): OrderResult {
   const data = session.data;
   if (!data) return 'fertig';
@@ -177,7 +178,7 @@ export function orderExpansion(session: Session): OrderResult {
   if (!next) return 'fertig';
   if (!canBorrow(data.bank)) return 'kredit-offen';
   borrow(data.bank, next.price);
-  data.house.pending = { stage: next.stage, day: session.today() };
+  data.house.pending = { stage: next.stage, day: session.today(), at: session.playTime() };
   session.changed();
   session.save();
   return 'ok';
@@ -230,7 +231,7 @@ export function repayLoan(session: Session, amount: number): number {
 export function finishExpansion(session: Session): number | null {
   const data = session.data;
   const pend = data?.house.pending;
-  if (!data || !pend || daysBetween(pend.day, session.today()) < 1) return null;
+  if (!data || !pend || !waitOver(pend.at, session.playTime())) return null;
   const house = data.house;
   house.stage = pend.stage;
   delete house.pending;
