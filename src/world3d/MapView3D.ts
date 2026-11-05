@@ -11,6 +11,7 @@ import {
   type HouseModel,
   makeBench,
   makeBoard,
+  BRIDGE_DECK,
   makeBridge,
   makeFountain,
   makeHouse,
@@ -57,9 +58,21 @@ export function footprintCenter(o: MapObject): { x: number; z: number } {
   return { x: o.x + o.w / 2, z: o.y + o.h / 2 };
 }
 
+/** Höhe, auf der die Brücke steht */
+const BRIDGE_Y = 0.02;
+
 export function buildMapView3D(scene: THREE.Scene, map: WorldMap, season: Season, anisotropy: number): MapView3D {
   const terrain = buildTerrain(map, season, anisotropy);
   scene.add(terrain.ground, terrain.water);
+  // Lauf-Höhe: auf Brücken stehen Figuren auf den Bohlen statt auf dem abgesenkten Flussbett
+  // (sonst versinkt z. B. Winston halb in der Brücke). Das Gelände-Netz selbst bleibt unverändert.
+  const decks = map.objects.filter((o) => o.kind === 'bridge').map((o) => ({ x0: o.x, x1: o.x + o.w, z0: o.y, z1: o.y + o.h }));
+  const groundAt = terrain.heightAt;
+  terrain.heightAt = (x, z) => {
+    const h = groundAt(x, z);
+    for (const d of decks) if (x >= d.x0 && x <= d.x1 && z >= d.z0 && z <= d.z1) return Math.max(h, BRIDGE_Y + BRIDGE_DECK);
+    return h;
+  };
 
   const nodes = new Map<string, THREE.Object3D>();
   const trees = new Map<string, TreeModel>();
@@ -144,7 +157,7 @@ export function buildMapView3D(scene: THREE.Scene, map: WorldMap, season: Season
         break;
       case 'bridge':
         node = makeBridge();
-        node.position.y = 0.02;
+        node.position.y = BRIDGE_Y;
         break;
     }
     node.position.x = c.x;
