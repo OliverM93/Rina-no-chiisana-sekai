@@ -133,7 +133,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 16px;
+  padding: var(--toast-strip) 16px 16px;
   background: rgba(106, 77, 90, 0.18);
   backdrop-filter: blur(2px);
   z-index: 20;
@@ -550,10 +550,19 @@ body {
 
 /* ---------------------------------------------------------------- Toast & Laden */
 
+:root {
+  /* Platz oben für Benachrichtigungen – Fenster beginnen erst darunter */
+  --toast-strip: 74px;
+}
+
+/*
+ * Benachrichtigung: oben in der Mitte, zwischen Uhr und Menü-Knopf. Unten liegen Dialog,
+ * Werkzeuge und Einrichten-Leiste, in der Mitte die Fenster – dort überlappt nichts.
+ */
 .toast {
   position: fixed;
   left: 50%;
-  bottom: max(26px, env(safe-area-inset-bottom));
+  top: max(16px, env(safe-area-inset-top));
   transform: translateX(-50%);
   background: var(--ui-text);
   color: #fff;
@@ -561,10 +570,24 @@ body {
   padding: 10px 20px;
   border-radius: 999px;
   box-shadow: 0 8px 20px rgba(106, 77, 90, 0.25);
-  z-index: 50;
-  max-width: calc(100% - 32px);
+  z-index: 60;
+  max-width: min(560px, calc(100% - 440px));
+  min-width: min(260px, calc(100% - 32px));
+  justify-content: center;
   text-align: center;
+  line-height: 1.3;
   pointer-events: none;
+}
+
+/* schmale Fenster: unter Uhr & Menü statt dazwischen */
+@media (max-width: 760px) {
+  :root {
+    --toast-strip: 150px;
+  }
+  .toast {
+    top: calc(max(12px, env(safe-area-inset-top)) + 86px);
+    max-width: calc(100% - 32px);
+  }
 }
 
 .loading-layer {
@@ -631,7 +654,7 @@ body {
 @keyframes toast-in {
   from {
     opacity: 0;
-    transform: translate(-50%, 12px) scale(0.9);
+    transform: translate(-50%, -12px) scale(0.9);
   }
   to {
     opacity: 1;
@@ -756,6 +779,16 @@ body {
   pointer-events: none;
 }
 
+/* Während ein Dialog offen ist, machen die Knöpfe unten Platz (sonst überlappen sie die Textbox) */
+/* (visibility statt opacity: die pop-in-Animation hält opacity sonst auf 1) */
+body:has(.dialog-layer) .hud-bottom,
+body:has(.dialog-layer) .hud-tools,
+body:has(.dialog-layer) .decor-start,
+body:has(.dialog-layer) .decor-bar {
+  visibility: hidden;
+  pointer-events: none;
+}
+
 .hud-money {
   background: rgba(255, 253, 249, 0.95);
   border: 3px solid var(--ui-border);
@@ -804,7 +837,6 @@ body {
   display: flex;
   align-items: center;
   gap: 8px;
-  bottom: calc(max(26px, env(safe-area-inset-bottom)) + 70px);
 }
 
 .toast-icon {
@@ -1365,7 +1397,7 @@ body {
 
 .card.bank {
   width: min(520px, 94vw);
-  max-height: 90vh;
+  max-height: 100%;
   overflow-y: auto;
 }
 

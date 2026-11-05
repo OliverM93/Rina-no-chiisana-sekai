@@ -248,6 +248,10 @@ src/
 
 - **Texte im Spiel, Kommentare, Doku: Deutsch.** Bezeichner im Code englisch; Daten-IDs deutsch in
   kebab-case (`haus-lina`, `briefkasten-lina`).
+- **Bildschirm-Zonen, damit nichts überlappt:** oben links Uhr, oben rechts Menü/Post, **oben Mitte
+  Benachrichtigungen** (`.toast`, über allem), Mitte Fenster (`.modal-layer` lässt oben `--toast-strip` frei),
+  unten Dialog / Werkzeuge / Einrichten-Leiste / Knöpfe. Ist ein Dialog offen, blenden die Knöpfe unten aus.
+  Neue Overlays in diese Zonen einordnen.
 - **Farben nur aus `src/style/palette.ts`.** Keine fest verdrahteten Farben in Komponenten (Ausnahme:
   kleine Details innerhalb von Zeichenfunktionen).
 - **Keine externen Assets/Abhängigkeiten zur Laufzeit** (Schrift Nunito kommt als npm-Paket mit, OFL).
