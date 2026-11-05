@@ -90,7 +90,7 @@ Legende: ✅ erledigt · 🚧 in Arbeit · ⬜ geplant
 ## 🚧 M6 – Hausausbau, Außengestaltung, Crafting
 
 **M6a ✅ Olaf & Christin, Dorfkasse, Hausausbau**
-- ✅ Olaf & Christin ziehen ein (Ankündigungsbrief, Einzug am nächsten Tag, Begrüßungsszene, eigenes Haus
+- ✅ Olaf & Christin ziehen ein (Ankündigungsbrief, Einzug kurz danach, Begrüßungsszene, eigenes Haus
   auf dem Bauplatz), Tagesabläufe, Dialoge, Vorlieben, Briefe
 - ✅ Olafs Dorfkasse: Ausbau als zinsloser Kredit, zurückzahlen wann man will
 - ✅ Feste Ausbaustufen: großes Zimmer (10×7) → Schlafzimmer-Anbau → Dachzimmer; Durchgang & Treppe,
@@ -123,7 +123,7 @@ Legende: ✅ erledigt · 🚧 in Arbeit · ⬜ geplant
 ## 🚧 M7 – Alle Bewohner, Shops & Events
 
 **M7a ✅ Oli zieht bei Lina ein**
-- ✅ Ankündigungsbrief, Einzug am nächsten Tag direkt in Linas Haus (Begrüßungsszene, nennt sie „Lini“)
+- ✅ Ankündigungsbrief, Einzug kurz danach direkt in Linas Haus (Begrüßungsszene, nennt sie „Lini“)
 - ✅ Tagesablauf: Kaffee, Training, Programmieren, Kochen, Punk am Strand – zu Hause sieht man ihn drinnen
   (am Schreibtisch, an der Kaffeemaschine, an der Hantelbank, nachts auf dem Futon)
 - ✅ Bringt Schreibtisch & Hantelbank mit; Herz-Briefe: Kaffeemaschine, Plattenspieler, Mixtape, Sternenlampe, Foto
@@ -219,6 +219,10 @@ Legende: ✅ erledigt · 🚧 in Arbeit · ⬜ geplant
   **Wintergarten** (Glaswände, Terrakotta, Pflanzen), **Keller** (Backstein, kleine Fenster oben, Treppe nach unten);
   außen: Küchenanbau mit Ofenrohr, Glas-Wintergarten, Kellerfenster & Luke. Anbauten blockieren jetzt ihre Kacheln
   (vorher konnte man durch den Schlafzimmer-Anbau laufen)
+- ✅ **M8j Fortschritt statt Kalender:** Einzüge per Meilenstein (Olaf: Sammelbuch & Verkaufen · Oli: erstes Möbel
+  aus dem Katalog · Jens: Werkbank & Sammelbuch · Lars: Kochen & Verkaufen · Thalia: Durchchecken & Sammelbuch),
+  Einzug & Hausausbau nach ~10 Min Spielzeit, sanfte Hinweise der Bewohner; Echtzeit bleibt für Tag/Nacht,
+  Jahreszeiten, Feste & Tägliches. Spielstand v13
 - 🔶 **M8c Animationen & Partikel** (erster Schwung ✅): Staubwölkchen beim Rennen, Spritzer beim Angeln,
   Funkeln beim Aufheben & Fangen, Herzchen (Herz-Aufstieg, Lieblingsgeschenk, Winston streicheln), Erdklumpen
   beim Graben, Konfetti beim Bauen & Kochen, Glühwürmchen in Sommernächten · Lina macht Freudensprünge,

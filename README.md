@@ -48,10 +48,15 @@ Hochheben, **R** oder Mausrad zum Drehen, Klick zum Abstellen. Deko passt auf Ti
 liegen unter Möbeln. Auf Kissen und Futon kann sie sich setzen, Laternen leuchten abends (und lassen sich
 an- und ausknipsen).
 
-**Olaf & Christin (M6):** Am Tag nach Linas Einzug kündigt Papa Olaf per Brief an, dass er mit Christin ins
-Dorf zieht – am nächsten Tag stehen die beiden vor Linas Tür. Olaf führt die **Dorfkasse**: Dort beauftragt
+**So geht es voran:** Die Liebsten ziehen nicht nach Kalendertagen ein, sondern wenn Lina im Spiel etwas
+erlebt hat – gesammelt, verkauft, eingerichtet, gebastelt, gekocht, beim Arzt gewesen. Dann kommt ein Brief, und
+nach ein paar Minuten Spielzeit stehen sie vor der Tür. Wer schon da ist, verrät im Gespräch, was noch fehlt.
+Tag & Nacht, Jahreszeiten, Wetter, Feste, Geburtstage und Tägliches laufen weiter nach echter Zeit.
+
+**Olaf & Christin (M6):** Hat Lina die ersten Tiere gefangen und ein paar Funde verkauft, kündigt Papa Olaf per
+Brief an, dass er mit Christin ins Dorf zieht – kurz darauf stehen die beiden vor Linas Tür. Olaf führt die **Dorfkasse**: Dort beauftragt
 Lina den **Hausausbau** (großes Zimmer → Schlafzimmer-Anbau → Dachzimmer → Wohnküche → Wintergarten → Keller) als zinslosen Kredit und zahlt ihn
-zurück, wann sie möchte. Am nächsten Tag ist der Ausbau fertig – auch von außen sieht man Erker, Anbau,
+zurück, wann sie möchte. Nach ein paar Minuten Spielzeit ist der Ausbau fertig – auch von außen sieht man Erker, Anbau,
 Dachgaube, Küchen-Ofenrohr, Wintergarten und Kellerfenster. Christin achtet auf Ordnung und Sauberkeit („Schuhe abputzen!“).
 
 **Winston & Opas Werkbank (M6b):** Linas kleiner Dackel **Winston** trippelt ihr überallhin nach – auch ins
@@ -71,13 +76,13 @@ baut Lina an der Werkbank. Keine Sorge: Haustür, Briefkasten, Beet und Wege ble
 Wachteln) aus dem Katalog kommt in den Garten – die Tiere trippeln drumherum, picken und hüpfen, wenn Lina sie
 streichelt. Jeden Tag liegen frische Eier im Nest (Leertaste am Stall). Nachts schlafen alle im Stall.
 
-**Oli (M7a):** Ein paar Tage nach Olaf kündigt Oli per Brief an, dass er zu „Lini“ zieht – am nächsten Tag
+**Oli (M7a):** Sobald Lina ihr Zimmer mit etwas aus dem Katalog einrichtet, kündigt Oli an, dass er zu „Lini“ zieht – kurz darauf
 steht er mit Koffer vor der Tür. Er wohnt bei Lina: Morgens macht er Kaffee, dann geht's zum Training, er
 programmiert, kocht und hört am Strand Punk. Ist er zu Hause, sieht man ihn drinnen am Schreibtisch, an der
 Kaffeemaschine oder an der Hantelbank. Mit ihm kann Lina tagsüber ein **🧺 Picknick** machen und abends
 **🌠 Sterne gucken** – mit Sternschnuppen.
 
-**Onkel Jens (M7b):** Ein paar Tage nach Oli eröffnet Jens sein Bistro **„Chez Jens“** neben Omas Haus. Im
+**Onkel Jens (M7b):** Hat Lina an der Werkbank gebastelt und ein paar Arten gesammelt, eröffnet Jens sein Bistro **„Chez Jens“** neben Omas Haus. Im
 **Kochstudio** kocht Lina mit ihm aus Eiern, Obst, Fisch & Co. Rührei, Obstsalat, Fischbrötchen, Apfelkuchen
 oder Crêpes – die Bewohner lieben Selbstgekochtes. Jens liebt Kunst, spricht Französisch und Sächsisch
 („Ei verbibbsch, c'est magnifique!“) und reist gern um die Welt: Dann ist sein Bistro zu, und im Briefkasten

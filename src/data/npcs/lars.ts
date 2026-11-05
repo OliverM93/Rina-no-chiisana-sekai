@@ -93,7 +93,7 @@ export const LARS: NpcDef = {
 export const LARS_ANNOUNCEMENT = {
   id: 'einzug',
   subject: 'Doktor kommt!',
-  body: 'Schwesterherz,\n\nich hab eine Praxis gefunden – in eurem Dorf! Mit kleiner Apotheke.\n\nMorgen zieh ich ein. Bring gute Laune mit, die ist ansteckend. Und ich bin Arzt, ich muss das wissen.\n\nDein Lars 🩺',
+  body: 'Schwesterherz,\n\nich hab eine Praxis gefunden – in eurem Dorf! Mit kleiner Apotheke.\n\nIch bin schon unterwegs, gleich zieh ich ein. Bring gute Laune mit, die ist ansteckend. Und ich bin Arzt, ich muss das wissen.\n\nDein Lars 🩺',
 };
 
 export const LARS_WELCOME: readonly string[] = [

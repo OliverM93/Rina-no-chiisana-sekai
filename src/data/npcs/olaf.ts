@@ -92,7 +92,7 @@ export const OLAF: NpcDef = {
 export const OLAF_ANNOUNCEMENT = {
   id: 'einzug',
   subject: 'Wir kommen!',
-  body: 'Liebe Lina,\n\nChristin und ich haben eine Entscheidung getroffen: Wir ziehen zu dir ins Dorf! Morgen sind wir da – auf dem Bauplatz neben deinem Haus.\n\nIch eröffne dort auch eine kleine Dorfkasse. Falls du mal dein Haus ausbauen möchtest – ohne Zinsen, versprochen.\n\nBis morgen!\nDein Papa (und Christin)',
+  body: 'Liebe Lina,\n\nChristin und ich haben eine Entscheidung getroffen: Wir ziehen zu dir ins Dorf! Der Umzugswagen ist schon unterwegs – gleich sind wir da, auf dem Bauplatz neben deinem Haus.\n\nIch eröffne dort auch eine kleine Dorfkasse. Falls du mal dein Haus ausbauen möchtest – ohne Zinsen, versprochen.\n\nBis gleich!\nDein Papa (und Christin)',
 };
 
 export const OLAF_WELCOME: readonly string[] = [

@@ -28,8 +28,8 @@ export interface Room {
 export interface House {
   stage: number;
   rooms: Room[];
-  /** bestellter Ausbau, fertig am Tag nach `day` */
-  pending?: { stage: number; day: string };
+  /** bestellter Ausbau; fertig nach kurzer Spielzeit ab `at` (Sekunden Spielzeit). Alte Stände ohne `at` sind sofort fertig. */
+  pending?: { stage: number; day: string; at?: number };
 }
 
 /** Ausgang eines Raums: Haustür, Durchgang, Treppe */
@@ -311,7 +311,7 @@ export function normalizeHouse(raw: unknown, fallback: House, rules: HouseRules,
   const house: House = { stage, rooms };
   const pend = r.pending as Record<string, unknown> | undefined;
   if (pend && typeof pend.stage === 'number' && typeof pend.day === 'string' && pend.stage > stage && pend.stage <= rules.maxStage) {
-    house.pending = { stage: Math.floor(pend.stage), day: pend.day };
+    house.pending = { stage: Math.floor(pend.stage), day: pend.day, ...(typeof pend.at === 'number' && Number.isFinite(pend.at) ? { at: pend.at } : {}) };
   }
   return house;
 }

@@ -53,6 +53,8 @@ export function craftRecipe(session: Session, id: string): CraftResult | 'unbeka
   if (!data || !r || !data.recipes.includes(id)) return 'unbekannt';
   const res = craft(data.inventory, r, maxStackOf);
   if (res === 'ok') {
+    if (r.station === 'kueche') data.stats.cooked += 1;
+    else if (r.station !== 'apotheke') data.stats.crafted += 1;
     session.bus.emit('sfx', 'bauen');
     session.bus.emit('fx', { kind: 'konfetti' });
     session.changed();

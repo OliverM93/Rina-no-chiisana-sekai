@@ -112,7 +112,7 @@ export const OLI: NpcDef = {
 export const OLI_ANNOUNCEMENT = {
   id: 'einzug',
   subject: 'Ich komme zu dir!',
-  body: 'Lini,\n\nich hab meine Sachen gepackt: Laptop, Hanteln, Kaffeebohnen – und ganz viel Vorfreude.\n\nMorgen bin ich bei dir. Endlich wohnen wir zusammen!\n\nDein Oli 💕',
+  body: 'Lini,\n\nich hab meine Sachen gepackt: Laptop, Hanteln, Kaffeebohnen – und ganz viel Vorfreude.\n\nIch sitz schon im Zug. Gleich bin ich bei dir. Endlich wohnen wir zusammen!\n\nDein Oli 💕',
 };
 
 /** Einzugsszene */

@@ -5,6 +5,7 @@
  * Die Funktionen ändern `session.data` und melden Änderungen über den Bus.
  * Darstellung (Phaser/Preact) passiert woanders.
  */
+import { progressHint } from './progress';
 import { creditInterest } from '../core/bank';
 import { INTEREST_LETTERS } from '../data/npcs/olaf';
 import { dailySpawns, type DailySpawn, weightedPick } from '../core/daily';
@@ -71,6 +72,7 @@ export function sellSlots(session: Session, indices: readonly number[]): number 
   if (earned > 0) {
     session.bus.emit('sfx', 'muenzen');
     data.money += earned;
+    data.stats.sold += earned;
     session.changed();
     session.save();
   }
@@ -232,6 +234,12 @@ export function talkToNpc(session: Session, npcId: string): TalkOutcome {
     if (npc.birthday && npc.birthdayLines && isSameDayMonth(session.clock(), npc.birthday)) lines.push(...npc.birthdayLines.greeting);
     else if (fest.length > 0) lines.push(...fest);
     else lines.push(...pickLine(npc.dialogue.greetings, ctx));
+    // sanfter Hinweis, was für den nächsten Einzug noch fehlt (einmal am Tag zur Begrüßung)
+    const hint = progressHint(session, npcId);
+    if (hint && session.data) {
+      lines.push(...hint);
+      session.data.world.dates[`hinweis-${npcId}`] = session.today();
+    }
     const treat = npc.dailyTreat;
     if (treat && dayRandom(session, `${npcId}:treat`)() < treat.chance) {
       lines.push(...treat.lines);
@@ -250,7 +258,9 @@ export function chatWithNpc(session: Session, npcId: string): TalkOutcome {
   const npc = NPC_BY_ID[npcId];
   const st = npcState(session, npcId);
   st.talksToday += 1;
-  const lines = pickLine(npc.dialogue.chat, dialogueContext(session, npcId, false));
+  // beim Weiterplaudern ab und zu (jedes dritte Mal) wieder ein Hinweis
+  const hint = st.talksToday % 3 === 0 ? progressHint(session, npcId) : null;
+  const lines = hint ? [...hint] : pickLine(npc.dialogue.chat, dialogueContext(session, npcId, false));
   return { lines: fill(session, lines), hearts: heartsFor(st.points) };
 }
 
