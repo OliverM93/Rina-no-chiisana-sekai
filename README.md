@@ -131,6 +131,10 @@ Freudensprünge, und die Bewohner winken, wenn sie sie anspricht.
 Am Monatsanfang gibt es ein bisschen Zinsen – und einen Kontoauszug-Brief von Olaf, der sich über den
 Zinseszins freut.
 
+**Neue Einrichtungsstile (M8g):** Im Katalog gibt es jetzt **Cottagecore** (Blümchensessel, Häkelteppich,
+Kräutertöpfchen …), **Retro-Oma-Chic** (Ohrensessel, Nierentisch, Fransenlampe, Siebziger-Tapete …) und
+**Modern** (Loungesofa, Marmortisch, Bogenlampe, Terrazzo, Betonboden …).
+
 Im Menü: Aussehen ändern, Lautstärke, speichern, **Spielstand exportieren/laden** (als Datei – praktisch zum Sichern
 oder für ein anderes Gerät), Vollbild, Hilfe.
 

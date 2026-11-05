@@ -956,6 +956,227 @@ export function makeFurniture(itemId: string, links: FenceLinks = { n: false, e:
       }
       break;
     }
+    // ---------------------------------------------------------------- Cottagecore
+    case 'landhaustisch': {
+      g.add(b(1.84, 0.07, 0.86, '#c9a06e', 0, 0.6, 0));
+      g.add(b(1.7, 0.08, 0.74, darken('#c9a06e', 0.12), 0, 0.53, 0));
+      for (const [x, z] of [[-0.8, -0.34], [0.8, -0.34], [-0.8, 0.34], [0.8, 0.34]]) {
+        g.add(c(0.05, 0.52, '#b98a5e', x, 0.26, z));
+        for (const y of [0.12, 0.3, 0.44]) g.add(s(0.065, 0.03, 0.065, '#a97c56', x, y, z));
+      }
+      // Kerben & ein Laib Brot auf dem Brett
+      g.add(b(0.4, 0.03, 0.26, '#b98a5e', -0.45, 0.65, 0.05));
+      g.add(s(0.14, 0.07, 0.09, '#d9a066', -0.45, 0.7, 0.05));
+      break;
+    }
+    case 'bluemchensessel': {
+      g.add(b(0.72, 0.22, 0.66, col, 0, 0.26, 0.02));
+      g.add(b(0.72, 0.56, 0.16, col, 0, 0.6, -0.27));
+      for (const x of [-0.34, 0.34]) g.add(b(0.12, 0.3, 0.62, darken(col, 0.06), x, 0.42, 0.02));
+      g.add(b(0.6, 0.08, 0.5, lighten(col, 0.12), 0, 0.41, 0.06));
+      // Streublümchen auf dem Polster
+      for (const [x, y, z] of [[-0.2, 0.7, -0.18], [0.15, 0.55, -0.18], [0.05, 0.8, -0.18], [-0.1, 0.46, 0.25], [0.2, 0.46, 0.15]]) g.add(s(0.025, 0.025, 0.012, '#fbf3e6', x, y, z));
+      for (const [x, z] of [[-0.3, -0.26], [0.3, -0.26], [-0.3, 0.3], [0.3, 0.3]]) g.add(c(0.03, 0.15, '#8a5a3a', x, 0.075, z));
+      seatY = 0.46;
+      break;
+    }
+    case 'haekelteppich': {
+      const rings = ['#f7efe2', '#f4b6c2', '#f7efe2', '#a9c4a0', '#f7efe2', '#f2c14e'];
+      rings.forEach((rc, i) => {
+        const r = 0.95 - i * 0.15;
+        const m = c(r, 0.012 + i * 0.002, rc, 0, 0.006 + i * 0.002, 0);
+        g.add(m);
+      });
+      // Bogenkante (gehäkelt)
+      for (let i = 0; i < 24; i++) {
+        const a = (i / 24) * Math.PI * 2;
+        g.add(s(0.07, 0.01, 0.07, '#f4b6c2', Math.cos(a) * 0.95, 0.006, Math.sin(a) * 0.95));
+      }
+      break;
+    }
+    case 'kraeutertoepfe': {
+      for (const [x, leaf] of [[-0.18, '#6fb06a'], [0, '#8fae8a'], [0.18, '#5a8a52']] as const) {
+        g.add(c(0.075, 0.12, '#d98a5f', x, 0.06, 0));
+        g.add(c(0.082, 0.025, darken('#d98a5f', 0.1), x, 0.12, 0));
+        for (let k = 0; k < 4; k++) g.add(s(0.04, 0.06, 0.04, leaf, x + Math.cos(k * 1.6) * 0.03, 0.17 + k * 0.012, Math.sin(k * 1.6) * 0.03));
+      }
+      break;
+    }
+    case 'kerzenleuchter': {
+      g.add(c(0.1, 0.02, '#c9a24a', 0, 0.01, 0));
+      g.add(c(0.02, 0.18, '#c9a24a', 0, 0.1, 0));
+      g.add(b(0.34, 0.025, 0.03, '#c9a24a', 0, 0.2, 0));
+      glow = glowMat('#ffd76a');
+      for (const x of [-0.15, 0, 0.15]) {
+        const top = x === 0 ? 0.3 : 0.22;
+        g.add(c(0.03, 0.02, '#c9a24a', x, top - 0.01, 0));
+        g.add(c(0.022, 0.12, '#fbf3e2', x, top + 0.06, 0));
+        g.add(mesh(new THREE.SphereGeometry(0.02, 8, 6), glow).translateX(x).translateY(top + 0.14));
+      }
+      lightAt = new THREE.Vector3(0, 0.45, 0);
+      break;
+    }
+    case 'wollkorb': {
+      g.add(c(0.28, 0.3, '#b98a5e', 0, 0.15, 0));
+      for (let i = 0; i < 6; i++) g.add(c(0.285, 0.015, '#a97c56', 0, 0.04 + i * 0.05, 0));
+      for (const [x, z, wc] of [[-0.1, 0.05, '#f4a3b8'], [0.1, -0.05, '#9ad8c0'], [0, 0.1, '#f7d26a'], [0.05, -0.12, '#a9c8ff']] as const) g.add(s(0.11, 0.11, 0.11, wc, x, 0.33, z));
+      const needle = c(0.008, 0.36, '#d9c8ad', 0.05, 0.42, 0.02);
+      needle.rotation.z = 0.7;
+      g.add(needle);
+      break;
+    }
+    // ---------------------------------------------------------------- Retro-Oma-Chic
+    case 'ohrensessel': {
+      g.add(b(0.74, 0.24, 0.66, col, 0, 0.27, 0.02));
+      g.add(b(0.74, 0.78, 0.18, col, 0, 0.66, -0.26));
+      // „Ohren“
+      for (const x of [-0.34, 0.34]) g.add(b(0.1, 0.28, 0.24, darken(col, 0.05), x, 0.92, -0.18));
+      for (const x of [-0.35, 0.35]) g.add(s(0.08, 0.1, 0.33, darken(col, 0.08), x, 0.46, 0.02));
+      g.add(b(0.58, 0.08, 0.52, lighten(col, 0.1), 0, 0.43, 0.06));
+      // Häkeldeckchen auf der Lehne
+      g.add(b(0.26, 0.16, 0.02, '#fbf6ec', 0, 0.94, -0.16));
+      for (const [x, z] of [[-0.3, -0.26], [0.3, -0.26], [-0.3, 0.3], [0.3, 0.3]]) {
+        const leg = c(0.025, 0.16, '#6e4630', x, 0.08, z);
+        leg.rotation.x = z > 0 ? 0.2 : -0.2;
+        g.add(leg);
+      }
+      seatY = 0.47;
+      break;
+    }
+    case 'nierentisch': {
+      const top = s(0.42, 0.025, 0.3, '#2a2a30', 0, 0.42, 0);
+      g.add(top);
+      g.add(s(0.36, 0.028, 0.24, '#d9534f', -0.03, 0.43, 0));
+      for (const [x, z] of [[-0.25, -0.15], [0.28, -0.1], [0, 0.2]]) {
+        const leg = c(0.015, 0.44, '#c9a24a', x, 0.21, z);
+        leg.rotation.z = -x * 0.5;
+        leg.rotation.x = z * 0.6;
+        g.add(leg);
+        g.add(s(0.025, 0.02, 0.025, '#2a2a30', x * 1.2, 0.01, z * 1.2));
+      }
+      break;
+    }
+    case 'fransenlampe': {
+      g.add(c(0.16, 0.04, '#6e4630', 0, 0.02, 0));
+      g.add(c(0.02, 1.05, '#c9a24a', 0, 0.55, 0));
+      glow = glowMat('#ffcf8a');
+      const shade = mesh(new THREE.CylinderGeometry(0.16, 0.28, 0.3, 16, 1, true), glow);
+      shade.position.y = 1.18;
+      g.add(shade);
+      for (let i = 0; i < 20; i++) {
+        const a = (i / 20) * Math.PI * 2;
+        g.add(b(0.012, 0.1, 0.012, '#d9a441', Math.cos(a) * 0.28, 0.98, Math.sin(a) * 0.28));
+      }
+      lightAt = new THREE.Vector3(0, 1.1, 0);
+      break;
+    }
+    case 'bonbonschale': {
+      g.add(c(0.04, 0.06, '#dfeff5', 0, 0.03, 0));
+      const bowl = mesh(new THREE.SphereGeometry(0.16, 14, 8, 0, Math.PI * 2, Math.PI / 2, Math.PI / 2), new THREE.MeshToonMaterial({ color: '#dfeff5', transparent: true, opacity: 0.75, side: THREE.DoubleSide }));
+      bowl.position.y = 0.2;
+      g.add(bowl);
+      const sweets = ['#e85a8a', '#f7d26a', '#9ad8c0', '#a9c8ff', '#f4a3b8', '#d9534f'];
+      sweets.forEach((sc, i) => {
+        const a = (i / sweets.length) * Math.PI * 2;
+        g.add(s(0.04, 0.03, 0.03, sc, Math.cos(a) * 0.07, 0.13 + (i % 2) * 0.02, Math.sin(a) * 0.07));
+      });
+      break;
+    }
+    case 'perserteppich': {
+      g.add(b(1.9, 0.02, 1.9, '#8a2f35', 0, 0.01, 0));
+      g.add(b(1.6, 0.022, 1.6, '#1f3a5a', 0, 0.011, 0));
+      g.add(b(1.4, 0.024, 1.4, '#a8443d', 0, 0.012, 0));
+      const med = c(0.45, 0.026, '#e0b04a', 0, 0.013, 0);
+      g.add(med);
+      g.add(c(0.3, 0.028, '#1f3a5a', 0, 0.014, 0));
+      for (const [x, z] of [[-0.55, -0.55], [0.55, -0.55], [-0.55, 0.55], [0.55, 0.55]]) g.add(c(0.14, 0.027, '#e0b04a', x, 0.013, z));
+      // Fransen
+      for (let i = 0; i < 18; i++) for (const z of [-0.99, 0.99]) g.add(b(0.02, 0.008, 0.08, '#f3ead8', -0.85 + i * 0.1, 0.006, z));
+      break;
+    }
+    case 'gummibaum': {
+      g.add(c(0.17, 0.3, '#f3ead8', 0, 0.15, 0));
+      g.add(c(0.18, 0.03, '#c9a24a', 0, 0.28, 0));
+      g.add(c(0.02, 0.8, '#6e4630', 0, 0.68, 0));
+      for (let i = 0; i < 9; i++) {
+        const a = i * 2.3;
+        const y = 0.5 + i * 0.07;
+        const leaf = s(0.14, 0.03, 0.07, '#2f5a3a', Math.cos(a) * 0.12, y, Math.sin(a) * 0.12);
+        leaf.rotation.y = -a;
+        leaf.rotation.z = 0.3;
+        g.add(leaf);
+      }
+      break;
+    }
+    // ---------------------------------------------------------------- Modern
+    case 'loungesofa': {
+      g.add(b(1.9, 0.22, 0.86, col, 0, 0.17, 0));
+      g.add(b(1.9, 0.3, 0.2, darken(col, 0.06), 0, 0.42, -0.33));
+      for (const x of [-0.85, 0.85]) g.add(b(0.2, 0.22, 0.86, darken(col, 0.04), x, 0.36, 0));
+      for (const x of [-0.37, 0.37]) g.add(b(0.72, 0.09, 0.66, lighten(col, 0.08), x, 0.32, 0.06));
+      for (const [x, rc] of [[-0.5, '#f4a3b8'], [-0.1, '#f2efea'], [0.45, darken(col, 0.25)]] as const) g.add(b(0.32, 0.28, 0.1, rc, x, 0.5, -0.18).rotateZ(x * 0.2));
+      for (const [x, z] of [[-0.85, -0.35], [0.85, -0.35], [-0.85, 0.35], [0.85, 0.35]]) g.add(b(0.05, 0.06, 0.05, '#2a2a30', x, 0.03, z));
+      seatY = 0.38;
+      break;
+    }
+    case 'marmortisch': {
+      g.add(c(0.42, 0.05, '#f4f2ee', 0, 0.35, 0));
+      // graue Adern
+      for (const [x, z, r] of [[-0.1, 0.05, 0.4], [0.12, -0.12, -0.6], [0.05, 0.2, 1.1]] as const) g.add(b(0.4, 0.004, 0.012, '#b9b6c0', x, 0.377, z).rotateY(r));
+      g.add(c(0.03, 0.32, '#2a2a30', 0, 0.16, 0));
+      g.add(c(0.22, 0.02, '#2a2a30', 0, 0.01, 0));
+      break;
+    }
+    case 'bogenlampe': {
+      g.add(b(0.3, 0.06, 0.3, '#f4f2ee', -0.25, 0.03, -0.25));
+      // Bogen aus Segmenten
+      const pts: THREE.Vector3[] = [];
+      for (let i = 0; i <= 10; i++) {
+        const t = i / 10;
+        pts.push(new THREE.Vector3(-0.25 + t * 0.6, 0.06 + Math.sin(t * Math.PI * 0.62) * 1.5, -0.25 + t * 0.5));
+      }
+      const arc = mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts), 20, 0.018, 6, false), toon('#2a2a30'));
+      g.add(arc);
+      glow = glowMat('#fff1c8');
+      const end = pts[pts.length - 1];
+      const shade = mesh(new THREE.SphereGeometry(0.17, 14, 8, 0, Math.PI * 2, 0, Math.PI / 2), toon('#2a2a30', { side: THREE.DoubleSide }));
+      shade.position.set(end.x, end.y - 0.02, end.z);
+      g.add(shade);
+      const bulb = mesh(new THREE.SphereGeometry(0.06, 10, 8), glow);
+      bulb.position.set(end.x, end.y - 0.04, end.z);
+      g.add(bulb);
+      lightAt = new THREE.Vector3(end.x, end.y - 0.2, end.z);
+      break;
+    }
+    case 'wuerfelregal': {
+      const wood = '#e3c9a0';
+      g.add(b(1.84, 0.04, 0.42, wood, 0, 0.9, 0));
+      g.add(b(1.84, 0.04, 0.42, wood, 0, 0.46, 0));
+      g.add(b(1.84, 0.04, 0.42, wood, 0, 0.02, 0));
+      for (const x of [-0.9, -0.3, 0.3, 0.9]) g.add(b(0.04, 0.9, 0.42, wood, x, 0.46, 0));
+      g.add(b(1.84, 0.88, 0.02, darken(wood, 0.1), 0, 0.46, -0.2));
+      // Inhalt: Körbe & Bücher
+      g.add(b(0.5, 0.3, 0.32, '#d9c8ad', -0.6, 0.2, 0.02));
+      g.add(b(0.5, 0.3, 0.32, '#2a2a30', 0.6, 0.62, 0.02));
+      for (let i = 0; i < 5; i++) g.add(b(0.06, 0.3 - (i % 2) * 0.04, 0.26, ['#f4a3b8', '#4a4a52', '#f2efea', '#9ab8a8', '#e8c06a'][i], -0.15 + i * 0.075, 0.62, 0));
+      g.add(c(0.08, 0.16, '#f2efea', 0.1, 0.12, 0));
+      g.add(s(0.1, 0.1, 0.1, '#6fb06a', 0.1, 0.26, 0));
+      break;
+    }
+    case 'sitzsack': {
+      g.add(s(0.42, 0.24, 0.4, col, 0, 0.22, 0));
+      g.add(s(0.36, 0.26, 0.2, darken(col, 0.06), 0, 0.4, -0.2));
+      g.add(s(0.2, 0.05, 0.2, lighten(col, 0.1), 0, 0.42, 0.06));
+      seatY = 0.36;
+      break;
+    }
+    case 'keramikvase': {
+      g.add(s(0.09, 0.11, 0.09, '#e9e4dc', 0, 0.11, 0));
+      g.add(c(0.035, 0.08, '#e9e4dc', 0, 0.24, 0));
+      g.add(c(0.008, 0.3, '#7a8a74', 0.02, 0.4, 0).rotateZ(-0.15));
+      for (let i = 0; i < 6; i++) g.add(s(0.03, 0.02, 0.01, '#9ab8a8', 0.02 + (i % 2 ? 0.03 : -0.03) + i * 0.008, 0.3 + i * 0.045, 0));
+      break;
+    }
     default:
       g.add(b(0.6, 0.6, 0.6, col, 0, 0.3, 0));
   }
