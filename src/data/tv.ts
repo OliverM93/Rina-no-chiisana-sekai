@@ -1,9 +1,13 @@
 /**
- * Linas Fernseher: vier Sender mit ausgedachten Sendungen im Stil ihrer
- * Lieblingsformate (keine echten Sendungsnamen). Jeden Tag läuft pro Sender
- * eine andere Folge (reproduzierbar). Ist Oli zu Hause, schaut er mit.
+ * Linas Fernseher: sechs Sender mit ausgedachten Sendungen im Stil ihrer
+ * Lieblingsformate (keine echten Sendungsnamen, keine echten Fälle oder Personen).
+ * Jeden Tag läuft pro Sender eine andere Folge (reproduzierbar). Ist Oli zu Hause,
+ * schaut er mit.
  *
- * Die Doku begleitet Menschen respektvoll und warmherzig – nie spöttisch.
+ * Bewusst KEIN Kuschelfernsehen: Das Programm zeigt ernste Themen nüchtern und
+ * ehrlich – als ironischer Bruch mit der Pastell-Welt draußen vor dem Fenster.
+ * Grenzen: nichts Explizites, keine Gewaltdetails, niemand wird verspottet.
+ * Die Doku nimmt ihre Protagonisten ernst – Scham, Rückschläge, Krankheit inklusive.
  */
 
 export interface TvEpisode {
@@ -27,74 +31,88 @@ export interface TvChannel {
 
 export const TV_CHANNELS: readonly TvChannel[] = [
   {
+    id: 'nachrichten',
+    name: 'Nachrichten',
+    show: 'Die Nachrichten um Acht',
+    colors: ['#1e2a3a', '#3a4a5e'],
+    icon: '📰',
+    episodes: [
+      { title: 'Hitzesommer', lines: ['Guten Abend. Der dritte Hitzesommer in Folge: In mehreren Landkreisen ist das Grundwasser so niedrig wie nie seit Beginn der Messungen.', 'Landwirte melden Ernteausfälle von bis zu vierzig Prozent. Gemeinden bitten, keine Rasenflächen mehr zu sprengen.', 'Und nun das Wetter: weiterhin trocken. Keine Aussicht auf Regen.'] },
+      { title: 'Pflegenotstand', lines: ['In einem Pflegeheim im Norden kümmern sich nachts zwei Fachkräfte um achtundsechzig Bewohnerinnen und Bewohner.', 'Eine Pflegerin sagt in die Kamera: „Ich gehe jeden Morgen mit dem Gefühl nach Hause, dass ich jemanden vergessen habe.“', 'Das Ministerium kündigt eine Arbeitsgruppe an. Sie soll im nächsten Jahr erste Ergebnisse vorlegen.'] },
+      { title: 'Wohnungsmarkt', lines: ['Auf eine Zweizimmerwohnung in der Innenstadt kommen im Schnitt dreihundertvierzig Bewerbungen.', 'Eine alleinerziehende Mutter erzählt, dass sie seit zwei Jahren sucht und mit ihren Kindern bei ihrer Schwester auf dem Sofa schläft.', 'Die Mieten sind im letzten Jahr erneut gestiegen. Die Löhne nicht im gleichen Maß.'] },
+      { title: 'Werksschließung', lines: ['Das Werk in der Kreisstadt schließt Ende des Jahres. Eintausendzweihundert Menschen verlieren ihre Arbeit.', 'Vor dem Tor stehen Kerzen. Ein Mann sagt, sein Vater habe hier schon gearbeitet, und dessen Vater auch.', 'Die Unternehmensführung spricht von einer „schmerzhaften, aber notwendigen Neuausrichtung“.'] },
+      { title: 'Einsamkeit', lines: ['Jeder fünfte Mensch über siebzig fühlt sich laut einer neuen Studie dauerhaft einsam.', 'Eine Frau zeigt ihren Kalender: In den letzten drei Wochen hat sie mit niemandem gesprochen außer mit der Kassiererin im Supermarkt.', 'Fachleute sprechen von einem unterschätzten Gesundheitsrisiko – vergleichbar mit Rauchen.'] },
+    ],
+    oli: ['Oli schaut zum Fenster hinaus, wo gerade ein Schmetterling an der Scheibe vorbeigaukelt. „Krass, wie das da draußen alles weitergeht.“', 'Oli: „Lini … ruf morgen mal Oma Gisela an. Einfach so.“', 'Oli schaltet nicht um, aber er nimmt deine Hand.', 'Oli: „Und wir überlegen, ob das Sofa lieber rosa oder mint sein soll.“'],
+  },
+  {
     id: 'herzklopfen',
     name: 'Kanal Herzklopfen',
     show: 'Blind Date am Leuchtturm',
-    colors: ['#f4a3b8', '#e85a8a'],
-    icon: '💘',
+    colors: ['#5a3a48', '#a8566e'],
+    icon: '💔',
     episodes: [
-      { title: 'Bernd & Bärbel', lines: ['Bernd (54, Schrebergärtner) wartet nervös am Tisch. Er hat Rosen mitgebracht. Aus seinem Garten. Mit Erde dran.', 'Bärbel (52) kommt rein: „Oh! Sind das … Rosen mit Wurzeln?“ – „Damit sie länger halten!“', 'Am Ende: Sie wollen sich wiedersehen. Im Schrebergarten. 💕'] },
-      { title: 'Kevin & Jacqueline', lines: ['Kevin (27) erzählt beim Vorspeisenteller 20 Minuten über sein Auto.', 'Jacqueline (26) gähnt. Dann stellt sich raus: Sie schraubt auch an Autos!', 'Die beiden reden bis Mitternacht über Zündkerzen. Die Kellnerin wischt schon die Tische. 💘'] },
-      { title: 'Helga & Heinz', lines: ['Helga (78) und Heinz (81) sind beide verwitwet und ein bisschen aufgeregt.', '„Ich tanze gern“, sagt Helga. „Ich auch!“, sagt Heinz. „Aber nur langsam. Wegen der Hüfte.“', 'Zum Schluss tanzen sie am Leuchtturm. Ganz langsam. Die Kamera wackelt, weil der Kameramann weint. 🥹'] },
-      { title: 'Marvin & Lea', lines: ['Marvin (31) bestellt für beide – ohne zu fragen. Lea (29) zieht eine Augenbraue hoch.', '„Ich hätte gern selbst bestellt.“ – Marvin: „Oh. Ja. Entschuldige!“ Er lernt schnell.', 'Am Ende: Freunde. „Er war nett, aber kein Kribbeln.“ Ehrlich und fair. 👍'] },
+      { title: 'Manfred, 63', lines: ['Manfred (63) ist seit vierzehn Monaten Witwer. Er hat noch nie ein Date gehabt, bei dem seine Frau nicht dabei war.', 'Beim Hauptgang erzählt er nur von ihr. Seine Verabredung hört zu, freundlich und geduldig. Irgendwann schweigen beide.', 'Am Ende: „Ich glaube, ich bin noch nicht so weit.“ Er zahlt für beide und geht allein zum Auto.'] },
+      { title: 'Jessica, 34', lines: ['Jessica (34) erzählt, dass sie in den letzten Jahren vor allem gelernt hat, wie man nach einem Date nicht mehr zurückgeschrieben wird.', 'Ihr Gegenüber schaut während des Essens dreimal aufs Handy. Einmal lächelt er dabei.', 'Im Abschlussinterview sagt er, sie sei „voll nett“. Sie sagt nichts. Die Kamera bleibt etwas zu lange auf ihrem Gesicht.'] },
+      { title: 'Tobias, 29', lines: ['Tobias (29) hat seit der Trennung vor drei Jahren eine Angststörung. Er sagt das gleich am Anfang, weil er es nicht verstecken will.', 'Seine Verabredung findet das mutig. Dann wird das Gespräch schwierig, Pausen werden länger, er entschuldigt sich für alles.', 'Sie wollen sich wiedersehen. „Als Freunde.“ Er nickt, als hätte er das erwartet.'] },
+      { title: 'Petra & Uwe', lines: ['Petra (58) und Uwe (61) verstehen sich auf Anhieb. Sie lachen über dieselben Dinge, bestellen dasselbe Dessert.', 'Dann erwähnt Uwe beiläufig, dass er noch verheiratet ist. „Auf dem Papier.“', 'Petra steht auf, bedankt sich höflich für den Abend und geht. Das Dessert kommt. Uwe isst beide.'] },
     ],
-    oli: ['Oli: „Lini, wir waren beim ersten Date viel nervöser als die. Weißt du noch? Ich hab meinen Kaffee umgekippt.“', 'Oli: „Ich wette, die zwei sehen sich wieder. Wetteinsatz: ein Rührei.“', 'Oli: „Wenn der jetzt nicht fragt, ob sie sich wiedersehen, schrei ich den Fernseher an.“'],
+    oli: ['Oli, leise: „Puh. Das tat weh beim Zuschauen.“', 'Oli: „Lini, wenn ich mal so aufs Handy gucke beim Essen – hau mir bitte auf die Finger.“', 'Oli starrt auf den Bildschirm. „Der arme Manfred.“ Dann holt er Taschentücher. Für sich.', 'Oli: „Und das läuft unter Unterhaltung, ja?“'],
   },
   {
     id: 'doku',
     name: 'Doku-Kanal',
-    show: 'Großer Weg – Mein neues Leben',
-    colors: ['#9ad8c0', '#4f9a7a'],
-    icon: '🌱',
+    show: 'Schwerer Weg',
+    colors: ['#2e3e3a', '#4f6a5e'],
+    icon: '🩺',
     episodes: [
-      { title: 'Ronny, 280 Kilo', lines: ['Ronny (38) wiegt 280 Kilo. Treppen sind für ihn ein großes Hindernis, und er wünscht sich, mit seiner Tochter in den Zoo zu gehen.', 'Schritt für Schritt: Ernährungsberatung, Physiotherapie, viel Unterstützung von der Familie. Es gibt gute und schwere Tage.', 'Nach einem Jahr steht er vor dem Elefantengehege – mit seiner Tochter an der Hand. Lina hat Tränen in den Augen. 🥲'] },
-      { title: 'Sabine, 230 Kilo', lines: ['Sabine (45) traut sich seit Jahren kaum aus dem Haus. Sie erzählt offen, wie sehr sie sich geschämt hat.', 'Eine Ärztin begleitet sie, eine Therapeutin hilft ihr mit dem Kopf – „denn das Gewicht ist nur ein Teil der Geschichte“.', 'Am Ende geht sie zum ersten Mal seit zehn Jahren schwimmen. Sie lacht im Wasser wie ein Kind. 💚'] },
-      { title: 'Die Brüder Krüger', lines: ['Die Brüder Dennis und Marco (zusammen über 500 Kilo) wollen es gemeinsam schaffen.', 'Sie kochen jetzt zusammen – Gemüse statt Fertigpizza. „Schmeckt sogar!“, sagt Marco überrascht.', 'Nach acht Monaten fahren sie zusammen Fahrrad. Langsam. Aber sie fahren. 🚲'] },
-      { title: 'Wiedersehen mit Ronny', lines: ['Zwei Jahre später: Ronny hat viel geschafft, aber es gab auch Rückschläge.', '„Das Wichtigste ist, nicht aufzugeben – und sich nicht dafür zu hassen, wenn’s mal nicht klappt.“', 'Er arbeitet jetzt selbst als Mutmacher in einer Selbsthilfegruppe. Lina klatscht vor dem Fernseher. 👏'] },
+      { title: 'Ronny, 280 Kilo', lines: ['Ronny (38) wiegt 280 Kilo. Er hat das Haus seit elf Monaten nicht verlassen. Die Treppe ist zu schmal für die Trage.', 'Die Ärztin sagt ihm sehr ruhig, dass sein Herz das nicht mehr lange mitmacht, wenn sich nichts ändert. Er nickt und weint.', 'Er beginnt ein Programm mit Ernährung, Bewegung und Therapie. Nach drei Monaten: minus 24 Kilo. Er sagt, die Kilos seien leichter gewesen als die Gespräche über seine Kindheit.'] },
+      { title: 'Sabine, 230 Kilo', lines: ['Sabine (45) wurde in der Schule jahrelang gemobbt. Sie sagt: „Essen war das Einzige, das nie gemein zu mir war.“', 'Nach der Magen-OP gibt es Komplikationen. Zwei Wochen Intensivstation. Ihre Tochter sitzt jeden Tag am Bett.', 'Ein halbes Jahr später geht sie zum ersten Mal wieder spazieren, mit Stöcken, zwanzig Minuten. Sie sagt, das sei mehr wert als jede Zahl auf der Waage.'] },
+      { title: 'Rückfall', lines: ['Dennis (41) hatte im letzten Jahr 90 Kilo abgenommen. Dann starb seine Mutter. Er hat fast alles wieder zugenommen.', 'Er schämt sich, vor der Kamera zu sprechen. Er tut es trotzdem, weil er will, dass andere sehen, dass so etwas passiert.', 'Seine Therapeutin sagt: „Ein Rückfall ist kein Scheitern. Er ist ein Teil der Krankheit.“ Dennis fängt noch einmal an.'] },
+      { title: 'In Erinnerung an Marco', lines: ['Diese Folge ist Marco gewidmet, der in der letzten Staffel dabei war. Er ist im Frühjahr an Herzversagen gestorben. Er wurde 36.', 'Seine Schwester erzählt von ihm: laut, lustig, der beste Onkel. Und davon, wie lange er sich nicht getraut hat, Hilfe zu suchen.', 'Sie engagiert sich jetzt in einer Selbsthilfegruppe. „Damit es bei anderen früher anfängt.“'] },
     ],
-    oli: ['Oli: „Respekt. Das ist so viel härter als jedes Training im Gym.“', 'Oli: „Ich find’s toll, dass die Familie so hinter ihm steht.“', 'Oli: „Lini … du weinst ja. Komm her.“ *reicht Taschentuch*'],
+    oli: ['Oli, still: „Das ist eine echte Krankheit. Und alle tun immer so, als wär’s nur fehlende Disziplin.“', 'Oli legt den Arm um dich und sagt eine ganze Weile gar nichts.', 'Oli: „Respekt, dass er das vor der Kamera erzählt. Ich könnte das nicht.“', 'Oli: „Lini … du weinst ja. Komm her.“'],
   },
   {
     id: 'krimi',
     name: 'Krimikanal',
     show: 'Wahre Fälle vom Land',
-    colors: ['#3a3a54', '#8a8ab8'],
+    colors: ['#1c1c26', '#4a4a64'],
     icon: '🔍',
     episodes: [
-      { title: 'Der verschwundene Gartenzwerg', lines: ['Ein Dorf in Niedersachsen, 1998. Über Nacht verschwinden 14 Gartenzwerge. Spurlos.', 'Monate später kommen Postkarten – aus Paris, Rom, New York. Auf jeder: ein Zwerg vor einer Sehenswürdigkeit.', 'Der Täter wurde nie gefasst. Lina hat einen Verdacht. Er reist gern und ist ein bisschen fabelhaft … 🤔'] },
-      { title: 'Das Rätsel der Kuchenplatte', lines: ['Kaffeekränzchen, 15:02 Uhr: Der Käsekuchen ist da. 15:09 Uhr: Er ist weg.', 'Sechs Verdächtige, alle mit Krümeln am Mund. Die Ermittlerin: „Das macht es nicht leichter.“', 'Auflösung: Es war der Hund. Natürlich war es der Hund. Winston guckt verdächtig weg. 🐶'] },
-      { title: 'Der Mann, der nicht da war', lines: ['Ein echter Klassiker: Ein Mann meldet sich als vermisst – bei der Polizei. Persönlich.', 'Die Beamten sind verwirrt. Er auch. Stunden vergehen.', 'Am Ende stellt sich raus: Er wollte nur nicht zum Geburtstag seiner Schwiegermutter. Lina lacht laut. 😂'] },
-      { title: 'Die Spur im Schnee', lines: ['Winter, ein abgelegener Hof. Fußspuren führen zum Hühnerstall – aber nicht wieder hinaus.', 'Die Kommissarin folgt der Spur. Spannende Musik. Lina hält sich ein Kissen vors Gesicht.', 'Im Stall: der Nachbar, der heimlich die Hühner füttert, weil sie ihm leidtun. Happy End. 🐔'] },
+      { title: 'Der Heimweg', lines: ['Herbst 1997. Eine 19-Jährige fährt nach der Disco mit dem Fahrrad nach Hause, vier Kilometer über Feldwege. Sie kommt nie an.', 'Ihr Fahrrad wird zwei Tage später im Graben gefunden. Die Ermittlungen laufen jahrelang ins Leere. Ihre Mutter lässt das Licht im Flur an.', 'Dreiundzwanzig Jahre später führt eine neue DNA-Analyse zu einem Mann aus dem Nachbardorf. Die Mutter hat das Urteil nicht mehr erlebt.'] },
+      { title: 'Dreimal angezeigt', lines: ['Eine Frau hat ihren Ex-Partner dreimal wegen Bedrohung angezeigt. Die Verfahren wurden eingestellt, „mangels öffentlichen Interesses“.', 'Ihre Freundin liest im Interview die Nachrichten vor, die sie damals bekommen hat. Sie muss zweimal abbrechen.', 'Der Fall hat zu einer Gesetzesänderung geführt. Für sie selbst kam sie zu spät. Die Sendung blendet am Ende eine Telefonnummer für Hilfe ein.'] },
+      { title: 'Der Enkeltrick', lines: ['Ein Anruf: „Oma, ich hatte einen Unfall, ich brauche sofort Geld.“ Die 84-Jährige hebt ihr gesamtes Erspartes ab. 38.000 Euro.', 'Ein Abholer klingelt, freundlich, gut angezogen. Sie macht ihm sogar noch einen Kaffee.', 'Die Bande wird gefasst, das Geld bleibt verschwunden. Sie erzählt, dass sie sich seitdem nicht mehr traut, ans Telefon zu gehen.'] },
+      { title: 'Der falsche Mann', lines: ['1989 wird ein Mann wegen Brandstiftung mit Todesfolge verurteilt. Er beteuert seine Unschuld. Niemand glaubt ihm.', 'Neunzehn Jahre Haft. Seine Kinder wachsen ohne ihn auf. Seine Frau lässt sich scheiden.', 'Ein neues Gutachten zeigt: Es war ein technischer Defekt. Er bekommt eine Entschädigung. Er sagt, er wisse nicht, was er mit den Jahren hätte anfangen sollen, die man ihm nicht zurückgeben kann.'] },
     ],
-    oli: ['Oli: „Ich hab ja gleich gesagt, dass es der Nachbar war.“ – Hat er nicht.', 'Oli: „Lini, du ermittelst schon wieder mit, oder? Ich seh’s an deinem Blick.“', 'Oli: „Wenn wir mal verschwinden, weiß ich genau, dass du uns findest. Mit deinem True-Crime-Wissen.“'],
-  },
-  {
-    id: 'kochen',
-    name: 'Kochkanal',
-    show: 'Kochen mit Herz',
-    colors: ['#f7d26a', '#e8873a'],
-    icon: '🍳',
-    episodes: [
-      { title: 'Apfelpfannkuchen wie bei Oma', recipe: 'apfelpfannkuchen', lines: ['Heute: fluffige Apfelpfannkuchen! Zwei Eier, ein Apfel, eine Prise Liebe.', 'Der Koch wendet den Pfannkuchen in der Luft. Er landet … fast in der Pfanne.', 'Lina schreibt mit. Das muss sie unbedingt nachkochen! 📝'] },
-      { title: 'Fischsuppe mit Minze', recipe: 'fischsuppe', lines: ['Eine leichte Fischsuppe mit frischer Pfefferminze. Klingt komisch, schmeckt himmlisch.', '„Ein Barsch aus dem Fluss, ein Zweig Minze aus dem Garten – mehr braucht’s nicht!“', 'Lina: „Die mach ich morgen für Oli.“ 📝'] },
-      { title: 'Blumige Salatschüssel', recipe: 'blumensalat', lines: ['Essbare Blüten! Sonnenblumenblätter und Vergissmeinnicht machen den Salat bunt.', 'Die Moderatorin: „Wir essen mit den Augen zuerst!“', 'Lina guckt auf ihr Beet. Da wächst ja schon alles … 📝'] },
-    ],
-    oli: ['Oli: „Lini, das kochen wir am Wochenende. Ich schneide, du würzt. Teamwork!“', 'Oli: „Ich hab jetzt Hunger. Kannst du bitte das Kochen ausschalten und uns was kochen?“', 'Oli: „Deins schmeckt bestimmt besser als das im Fernsehen.“'],
+    oli: ['Oli: „Ich hab Gänsehaut. Und nicht die gute.“', 'Oli schaut kurz zur Tür, ob sie abgeschlossen ist. Ganz unauffällig.', 'Oli: „Lini, du hast schon wieder diesen Ermittlerinnen-Blick.“', 'Oli: „Ruf bitte morgen Oma an und sag ihr, sie soll nie jemandem Geld geben, der anruft. Nie.“'],
   },
   {
     id: 'grusel',
     name: 'Gruselkanal',
     show: 'Gänsehaut um Mitternacht',
-    colors: ['#2a2238', '#9a3a4a'],
+    colors: ['#140e1c', '#4a1e2a'],
     icon: '🕯️',
     episodes: [
-      { title: 'Das Haus am Ende des Feldwegs', lines: ['Ein altes Bauernhaus. Jede Nacht um 3:07 Uhr klopft es dreimal an der Kellertür.', 'Die Musik wird leiser … leiser … Lina rückt ganz nah an den Bildschirm. Sie liebt diesen Moment.', 'Hinter der Tür: ein Waschbär mit einer Vorliebe für Einmachgläser. Oder?! Der Abspann lässt es offen. 😱'] },
-      { title: 'Die Puppe im Dachboden (Teil 1)', lines: ['Eine Porzellanpuppe, die jeden Morgen woanders sitzt. Die Familie stellt sie zurück. Sie sitzt wieder woanders.', 'Die Kamera zoomt auf das Puppengesicht. Hat sie gerade geblinzelt? Lina: „Sie hat geblinzelt. Hundertpro.“', 'Fortsetzung folgt. Lina ist empört, weil sie sofort wissen will, wie es weitergeht. 🪆'] },
-      { title: 'Nebel über dem Moor', lines: ['Eine Wandergruppe verirrt sich im Nebel. Irgendwo pfeift jemand eine Melodie. Immer dieselbe.', 'Einer sagt: „Wir sollten uns trennen.“ Lina ruft: „NEIN! Niemals trennen!“', 'Natürlich trennen sie sich. Lina schüttelt den Kopf und isst noch eine Handvoll Popcorn. 🍿'] },
-      { title: 'Der Fahrstuhl in den 13. Stock', lines: ['Ein Hotel ohne 13. Stock. Aber der Fahrstuhl hat einen Knopf dafür. Und er leuchtet.', 'Die Hauptfigur drückt ihn. Natürlich drückt sie ihn. Die Türen schließen sich. Stille.', 'Bing. Die Türen öffnen sich … Schnitt! Abspann! Lina wirft ein Kissen nach dem Fernseher. 😤'] },
-      { title: 'Die Puppe im Dachboden (Teil 2)', lines: ['Endlich! Die Familie stellt eine Kamera auf. Nachts, 2:14 Uhr: Die Puppe … bleibt sitzen.', 'Dann kommt die kleine Tochter, gähnt und trägt die Puppe in ihr Bett. Jede Nacht. Schlafwandelnd.', 'Lina: „Okay, das ist eigentlich voll süß.“ Ein kleines bisschen enttäuscht ist sie trotzdem. 😅'] },
+      { title: 'Das Haus am Ende des Feldwegs', lines: ['Ein Ehepaar zieht nach dem Tod seines Sohnes in ein altes Bauernhaus, um neu anzufangen. Jede Nacht um 3:07 Uhr klopft es dreimal an der Kellertür.', 'Die Frau beginnt, nachts mit der Tür zu sprechen. Ihr Mann schläft im Auto.', 'Kein Happy End. Der Abspann läuft über einem leeren Kinderzimmer.'] },
+      { title: 'Die Puppe auf dem Dachboden', lines: ['Eine Porzellanpuppe sitzt jeden Morgen an einem anderen Platz. Die Familie stellt sie zurück. Sie sitzt wieder woanders.', 'Die Mutter installiert eine Kamera. Die Aufnahmen zeigen nichts. Nur die Tochter, die nachts mit offenen Augen vor der Puppe steht.', 'Das Mädchen sagt: „Sie hat gesagt, wir dürfen nicht mehr gehen.“ Schwarzbild.'] },
+      { title: 'Nebel über dem Moor', lines: ['Vier Freunde verirren sich im Moor. Irgendwo pfeift jemand eine Melodie. Immer dieselbe, immer näher.', 'Einer sagt: „Wir sollten uns trennen.“ Lina ruft: „NEIN!“ Natürlich trennen sie sich.', 'Am Morgen findet die Suchmannschaft drei Rucksäcke. Und einen Zettel mit den Noten der Melodie.'] },
+      { title: 'Zimmer 13', lines: ['Ein Hotel ohne 13. Stock. Der Fahrstuhl hat trotzdem einen Knopf dafür, und er leuchtet.', 'Die Nachtportierin drückt ihn. Die Türen öffnen sich auf einen Flur, der genauso aussieht wie ihrer. Nur dass am Ende jemand steht, der aussieht wie sie.', 'Bing. Die Türen schließen sich. Am nächsten Morgen sitzt sie wieder an der Rezeption. Sie lächelt etwas zu breit.'] },
     ],
     oli: ['Oli hält sich ein Kissen vor die Augen: „Sag Bescheid, wenn’s vorbei ist, Lini.“', 'Oli: „Ich hab überhaupt keine Angst. Ich halte nur deine Hand, damit DU keine Angst hast.“', 'Oli: „Warum gehen die IMMER in den Keller? Warum?!“', 'Oli: „Heute schlafen wir mit Licht. Nur so. Aus … Gemütlichkeit.“'],
+  },
+  {
+    id: 'kochen',
+    name: 'Kochkanal',
+    show: 'Kochen ums Überleben',
+    colors: ['#3a2a1c', '#8a5a2e'],
+    icon: '🍳',
+    episodes: [
+      { title: 'Apfelpfannkuchen', recipe: 'apfelpfannkuchen', lines: ['Küchenchef Bernd (52) zeigt Apfelpfannkuchen: zwei Eier, ein Apfel, Mehl, Milch. Im Hintergrund bewertet ein Gerichtsvollzieher die Kühltruhe.', 'Bernd erklärt, dass sein Restaurant nach 21 Jahren schließt, die Energiekosten haben sich verdreifacht. Der Pfannkuchen gelingt perfekt.', '„Das hier kann mir keiner nehmen“, sagt er und tippt sich an die Stirn. Lina schreibt das Rezept mit. 📝'] },
+      { title: 'Fischsuppe', recipe: 'fischsuppe', lines: ['Eine Fischsuppe mit Barsch und frischer Minze. Die Köchin bereitet sie auf einem Kutter vor, der nächsten Monat verschrottet wird.', 'Die Fangquoten wurden wieder gesenkt, ihr Mann fährt jetzt Pakete aus. Sie schneidet die Minze sehr fein, sehr langsam.', '„Mein Opa hat die schon so gekocht.“ Sie probiert und sagt nichts. Lina schreibt mit. 📝'] },
+      { title: 'Blumige Salatschüssel', recipe: 'blumensalat', lines: ['Essbare Blüten auf einem Salat: Sonnenblumenblätter, Vergissmeinnicht. Gedreht in einer Gemeinschaftsküche, wo dreimal die Woche umsonst gekocht wird.', 'Die Schlange draußen ist länger als im letzten Jahr, sagt der Koch. Viele davon arbeiten Vollzeit.', '„Wir essen mit den Augen zuerst“, sagt er. „Manche hier zum ersten Mal seit Tagen überhaupt.“ Lina schreibt mit. 📝'] },
+    ],
+    oli: ['Oli: „Lini, das kochen wir am Wochenende. Und wir laden Oma ein.“', 'Oli schaut eine Weile still auf den Bildschirm. „Ich geb nächste Woche was bei der Tafel ab.“', 'Oli: „Der Pfannkuchen sah echt gut aus. Der Rest … puh.“'],
   },
 ];
 

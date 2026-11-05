@@ -110,7 +110,8 @@ Oli und Lars sind immer dabei, Olaf, Christin und Oma manchmal. Einfach an Jens'
 Oversize-Sweatshirt, im Sommer mit kurzer Hose, im Winter mit dicker Fleece-Jacke.
 
 **Fernsehabend & Küche (M7h):** Mit **Fernseher**, **Sofa** und **Küchenzeile** aus dem Katalog wird Linas
-Zimmer zum Wohnzimmer: Datingshow, True Crime, Doku und Kochshow – jeden Tag neue Folgen, und Oli schaut mit,
+Zimmer zum Wohnzimmer: Nachrichten, Datingshow, True Crime, Doku, Horror und Kochshow – bewusst ernste, ehrliche
+Themen als ironischer Bruch mit der kuscheligen Welt draußen. Jeden Tag neue Folgen, und Oli schaut mit,
 wenn er zu Hause ist. Aus der Kochshow lernt Lina neue Rezepte und kocht sie am eigenen Herd nach.
 
 **Klang (M8a):** Musik und Geräusche sind komplett selbst erzeugt, ohne Audiodateien. Die Musik passt sich
