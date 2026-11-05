@@ -26,7 +26,7 @@ import { parseWeatherOverride, type WeatherKind } from '../core/weather';
 import { buildWorldMap, tileCenter, type WorldMap } from '../core/worldmap';
 import { isKnownItem, type ToolId } from '../data/items';
 import { furnitureInfo } from '../data/furniture';
-import { HOUSE_RULES, STARTER_HOUSE } from '../data/house';
+import { annexOffsets, HOUSE_RULES, STARTER_HOUSE } from '../data/house';
 import { VILLAGE_LAYOUT, VILLAGE_OBJECTS, VILLAGE_SPAWN } from '../data/maps/village';
 import { NPCS } from '../data/npcs';
 import type { InteractionContext } from '../data/interactions';
@@ -237,10 +237,18 @@ export class Session {
     this.bus.emit('game:started', undefined);
   }
 
-  /** Gartenmöbel als Hindernisse in die Karte übernehmen */
+  /** Kacheln (Index in der Karte), die die Anbauten an Linas Haus belegen */
+  houseAnnexTiles(stage = this.data?.house.stage ?? 0): number[] {
+    const house = this.map.objects.find((o) => o.id === 'haus-lina');
+    if (!house) return [];
+    return annexOffsets(stage).map(([dx, dy]) => (house.y + dy) * this.map.width + house.x + dx);
+  }
+
+  /** Gartenmöbel und Hausanbauten als Hindernisse in die Karte übernehmen */
   syncYardCollision() {
     const yard = this.data?.yard;
-    setExtraBlocked(this.map, yard ? yardBlockedTiles(this.map, YARD_AREA, yard, this.yardLayout, furnitureInfo) : []);
+    const garden = yard ? yardBlockedTiles(this.map, YARD_AREA, yard, this.yardLayout, furnitureInfo) : [];
+    setExtraBlocked(this.map, [...garden, ...this.houseAnnexTiles()]);
   }
 
   /** Speichert (inkl. Spielzeit). Gibt false zurück, wenn der Browser-Speicher nicht verfügbar ist. */

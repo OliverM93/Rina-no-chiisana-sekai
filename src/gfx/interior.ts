@@ -326,6 +326,79 @@ export function drawPattern(ctx: CanvasRenderingContext2D, def: SurfaceDef, s: n
       ctx.globalAlpha = 1;
       break;
     }
+    case 'kacheln': {
+      // weiße Fliesen mit Fugen, unten eine farbige Bordüre
+      const n = 6;
+      const t = s / n;
+      ctx.fillStyle = darken(color, 0.1);
+      for (let i = 0; i <= n; i++) {
+        ctx.fillRect(i * t - 1, 0, Math.max(1, s / 200), s);
+        ctx.fillRect(0, i * t - 1, s, Math.max(1, s / 200));
+      }
+      ctx.fillStyle = accent;
+      ctx.fillRect(0, t * 4, s, t * 0.5);
+      ctx.globalAlpha = 0.35;
+      ctx.fillStyle = '#ffffff';
+      for (let gy = 0; gy < n; gy++) for (let gx = 0; gx < n; gx++) ctx.fillRect(gx * t + t * 0.15, gy * t + t * 0.15, t * 0.18, t * 0.05);
+      ctx.globalAlpha = 1;
+      break;
+    }
+    case 'glas': {
+      // große Scheiben mit Sprossen, dahinter Himmel und Garten
+      const g = ctx.createLinearGradient(0, 0, 0, s);
+      g.addColorStop(0, lighten(color, 0.3));
+      g.addColorStop(0.62, color);
+      g.addColorStop(0.62, lighten(accent, 0.2));
+      g.addColorStop(1, accent);
+      ctx.fillStyle = g;
+      ctx.fillRect(0, 0, s, s);
+      // Büsche hinter dem Glas
+      ctx.fillStyle = darken(accent, 0.1);
+      for (let i = 0; i < 6; i++) {
+        ctx.beginPath();
+        ctx.arc((i + 0.3) * (s / 5.5), s * 0.66, s * 0.09, Math.PI, 0);
+        ctx.fill();
+      }
+      ctx.fillStyle = '#ffffff';
+      const bar = s / 48;
+      ctx.fillRect(0, 0, bar, s);
+      ctx.fillRect(s / 2 - bar / 2, 0, bar, s);
+      ctx.fillRect(0, s * 0.33, s, bar);
+      ctx.fillRect(0, s - bar * 2, s, bar * 2);
+      ctx.globalAlpha = 0.3;
+      ctx.fillRect(s * 0.1, s * 0.05, s * 0.05, s * 0.22);
+      ctx.fillRect(s * 0.6, s * 0.05, s * 0.05, s * 0.22);
+      ctx.globalAlpha = 1;
+      break;
+    }
+    case 'backstein': {
+      const rows = 8;
+      const h = s / rows;
+      const w = s / 4;
+      ctx.fillStyle = accent;
+      ctx.fillRect(0, 0, s, s);
+      for (let r = 0; r < rows; r++) {
+        const off = r % 2 ? w / 2 : 0;
+        for (let k = -1; k < 5; k++) {
+          const shade = ((r * 7 + k * 3) % 5) / 30;
+          ctx.fillStyle = shade > 0.08 ? darken(color, shade) : lighten(color, shade);
+          ctx.fillRect(k * w + off + s / 160, r * h + s / 160, w - s / 80, h - s / 80);
+        }
+      }
+      break;
+    }
+    case 'terrakotta': {
+      const n = 4;
+      const t = s / n;
+      for (let gy = 0; gy < n; gy++) {
+        for (let gx = 0; gx < n; gx++) {
+          const k = (gx * 5 + gy * 3) % 4;
+          ctx.fillStyle = k === 0 ? accent : k === 1 ? lighten(color, 0.06) : color;
+          ctx.fillRect(gx * t + s / 128, gy * t + s / 128, t - s / 64, t - s / 64);
+        }
+      }
+      break;
+    }
     case 'teppich': {
       ctx.fillStyle = accent;
       for (let i = 0; i < 300; i++) {

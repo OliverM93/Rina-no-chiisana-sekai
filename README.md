@@ -50,9 +50,9 @@ an- und ausknipsen).
 
 **Olaf & Christin (M6):** Am Tag nach Linas Einzug kündigt Papa Olaf per Brief an, dass er mit Christin ins
 Dorf zieht – am nächsten Tag stehen die beiden vor Linas Tür. Olaf führt die **Dorfkasse**: Dort beauftragt
-Lina den **Hausausbau** (großes Zimmer → Schlafzimmer-Anbau → Dachzimmer) als zinslosen Kredit und zahlt ihn
-zurück, wann sie möchte. Am nächsten Tag ist der Ausbau fertig – auch von außen sieht man Erker, Anbau und
-Dachgaube. Christin achtet auf Ordnung und Sauberkeit („Schuhe abputzen!“).
+Lina den **Hausausbau** (großes Zimmer → Schlafzimmer-Anbau → Dachzimmer → Wohnküche → Wintergarten → Keller) als zinslosen Kredit und zahlt ihn
+zurück, wann sie möchte. Am nächsten Tag ist der Ausbau fertig – auch von außen sieht man Erker, Anbau,
+Dachgaube, Küchen-Ofenrohr, Wintergarten und Kellerfenster. Christin achtet auf Ordnung und Sauberkeit („Schuhe abputzen!“).
 
 **Winston & Opas Werkbank (M6b):** Linas kleiner Dackel **Winston** trippelt ihr überallhin nach – auch ins
 Haus. Bleibt sie stehen, setzt er sich neben sie; nachts schläft er (gern im selbstgebauten Hundekörbchen).

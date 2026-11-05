@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { furnitureInfo } from '../data/furniture';
-import { HOUSE_RULES, layoutOf, STARTER_HOUSE } from '../data/house';
+import { HOUSE_RULES, layoutOf, MAX_STAGE, STARTER_HOUSE } from '../data/house';
 import { backWindows, blockedCells, checkPlacement, exitAt, itemsAt, misfits, moveItem, normalizeHouse, placeItem, removeItem, type Room, wallRotationAt } from './room';
 
 const empty = (): Room => ({ id: 'haupt', wallpaper: 'tapete-creme', floor: 'boden-dielen', items: [] });
@@ -100,6 +100,6 @@ describe('Haus & Ausbau', () => {
     const h2 = normalizeHouse({ stage: 2, rooms: [STARTER_HOUSE.rooms[0]], pending: { stage: 3, day: '2026-01-01' } }, STARTER_HOUSE, HOUSE_RULES, () => true, furnitureInfo);
     expect(h2.rooms.map((r) => r.id)).toEqual(['haupt', 'schlafzimmer']);
     expect(h2.pending).toEqual({ stage: 3, day: '2026-01-01' });
-    expect(normalizeHouse({ stage: 99 }, STARTER_HOUSE, HOUSE_RULES, () => true, furnitureInfo).stage).toBe(3);
+    expect(normalizeHouse({ stage: 99 }, STARTER_HOUSE, HOUSE_RULES, () => true, furnitureInfo).stage).toBe(MAX_STAGE);
   });
 });
