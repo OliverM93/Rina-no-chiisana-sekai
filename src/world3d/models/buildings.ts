@@ -382,6 +382,9 @@ export function makeFountain(): THREE.Group {
 }
 
 /** Holzbrücke (3 Kacheln lang in X-Richtung) */
+/** Oberkante der Brückenbohlen über dem Brücken-Ursprung (Bohle: Mitte 0.06, halbe Höhe 0.04) */
+export const BRIDGE_DECK = 0.1;
+
 export function makeBridge(): THREE.Group {
   const g = new THREE.Group();
   const wood = palette.wood.light;
