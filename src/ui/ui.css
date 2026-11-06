@@ -565,6 +565,8 @@ body {
 :root {
   /* Platz oben für Benachrichtigungen – Fenster beginnen erst darunter */
   --toast-strip: 74px;
+  /* Breite der Knopfleiste rechts unten (Sternchen, Karte, Buch, Tasche) */
+  --hud-right-width: 350px;
 }
 
 /*
@@ -1264,7 +1266,14 @@ body:has(.dialog-layer) .decor-bar {
   box-shadow: 0 4px 0 var(--ui-accent-dark);
 }
 
+/* Tastenkürzel als kleines Schild an Knöpfen (wie 1–3 bei den Werkzeugen) */
+.hud-bag {
+  position: relative;
+}
+
 .hud-tool-key {
+  pointer-events: none;
+  line-height: 16px;
   position: absolute;
   right: -4px;
   bottom: -4px;
@@ -1395,11 +1404,10 @@ body:has(.dialog-layer) .decor-bar {
   font-size: 13px;
 }
 
+/* links unten statt mittig: rechts unten stehen Sternchen, Karte, Buch & Tasche – nichts darf darunter rutschen */
 .decor-bar {
   position: fixed;
-  left: 0;
-  right: 0;
-  margin: 0 auto;
+  left: max(16px, env(safe-area-inset-left));
   width: fit-content;
   bottom: max(14px, env(safe-area-inset-bottom));
   display: flex;
@@ -1410,13 +1418,20 @@ body:has(.dialog-layer) .decor-bar {
   background: rgba(255, 253, 249, 0.95);
   border: 3px solid var(--ui-border);
   box-shadow: 0 4px 0 var(--ui-border);
-  max-width: 94vw;
+  max-width: calc(100vw - 32px - var(--hud-right-width));
+}
+
+.decor-bar .btn {
+  flex: none;
+  white-space: nowrap;
 }
 
 .decor-hint {
   font-weight: 800;
   font-size: 14px;
+  line-height: 1.25;
   margin-right: 6px;
+  min-width: 0;
 }
 
 .catalog-cell {

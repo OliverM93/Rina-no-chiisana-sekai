@@ -195,7 +195,9 @@ src/
 - **Zuhause:** Möbel in `data/furniture.ts` (Größe in Feldern, `surface`/`small`/`rug`/`sit`/`light`) werden
   automatisch Gegenstände (Varianten → `futon-rosa` …). Raumlogik in `core/room.ts`, Modelle in
   `world3d/models/furniture.ts`. Gespeichert wird immer draußen weitergespielt (Laden im Haus → vor der Tür).
-  Einrichten läuft über `decor:command`/`decor:state` auf dem Bus.
+  Einrichten läuft über `decor:command`/`decor:state` auf dem Bus. **Tasten:** G = Einrichten/Garten gestalten (nochmal G =
+  fertig), I = Tasche, B = Sammelbuch, M = Karte, 1–4 = Werkzeuge – die Knöpfe tragen ihr Kürzel als Schild
+  (`.hud-tool-key`). Die Einrichten-Leiste steht links unten und lässt `--hud-right-width` für die Knöpfe rechts frei.
   **Hausausbau:** 0 Zimmer → 1 großes Zimmer → 2 Schlafzimmer → 3 Dachzimmer → 4 Wohnküche (Wohnzimmer 12 × 8 +
   Küche) → 5 Wintergarten → 6 Keller. Außen zeigt `makeHouse(…, stage)` jede Stufe; Anbauten außerhalb der 5 × 3
   Kacheln stehen in `HOUSE_ANNEX` und blockieren Karte & Garten (`session.houseAnnexTiles`, `syncYardCollision`).
