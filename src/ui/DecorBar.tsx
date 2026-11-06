@@ -41,8 +41,9 @@ export function DecorBar({ session, decor }: { session: Session; decor: DecorSta
   const outside = !session.inside;
   if (!decor.active) {
     return (
-      <button class="btn primary decor-start pop-in" onClick={() => send({ kind: 'start' })}>
+      <button class="btn primary decor-start pop-in" title="Taste G" onClick={() => send({ kind: 'start' })}>
         {outside ? '🌷 Garten gestalten' : '🛋️ Einrichten'}
+        <span class="hud-tool-key">G</span>
       </button>
     );
   }
@@ -93,7 +94,7 @@ export function DecorBar({ session, decor }: { session: Session; decor: DecorSta
           🎒 In die Tasche
         </button>
         <button class="btn primary small" onClick={() => send({ kind: 'stop' })}>
-          ✓ Fertig
+          ✓ Fertig (G)
         </button>
       </div>
     </>

@@ -70,13 +70,16 @@ export function Hud({ session }: { session: Session }) {
         {session.data?.flags.thaliaBegruesst && (
           <button class="hud-bag hud-book" aria-label="Dorfkarte öffnen (M)" title="Dorfkarte (M)" onClick={() => ui.set({ panel: { kind: 'karte' } })}>
             🗺️
+            <span class="hud-tool-key">M</span>
           </button>
         )}
         <button class="hud-bag hud-book" aria-label="Sammelbuch öffnen (B)" title="Sammelbuch (B)" onClick={() => ui.set({ panel: { kind: 'book' } })}>
           📖
+          <span class="hud-tool-key">B</span>
         </button>
         <button class="hud-bag" aria-label="Tasche öffnen (I)" title="Tasche (I)" onClick={() => ui.set({ panel: { kind: 'inventory' } })}>
           🎒
+          <span class="hud-tool-key">I</span>
         </button>
       </div>
       {/* außerhalb der Knopfleiste: sonst landet sie durch deren Einblend-Animation unter dem Rucksack */}
