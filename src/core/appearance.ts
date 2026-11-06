@@ -182,7 +182,7 @@ export const DEFAULT_LINA: Appearance = {
   hairStyle: 'locken',
   hairColor: palette.hair.kastanie,
   skinTone: palette.skin[0],
-  outfit: 'saison',
+  outfit: 'hawaii',
   outfitColor: palette.outfit[10],
   accentColor: palette.outfit[10],
   height: 1,

@@ -59,7 +59,9 @@ describe('Aussehen', () => {
     expect(outfitFor(a, 'winter')).toBe('fleece');
     expect(outfitFor(a, 'herbst')).toBe('sweatshirt');
     expect(outfitFor({ ...a, outfit: 'kleid' }, 'winter')).toBe('kleid');
-    expect(DEFAULT_LINA.outfit).toBe('saison');
+    // Standard: das Hawaii-Sweatshirt (die Jahreszeiten-Streetwear gibt es im Editor als „saison“)
+    expect(DEFAULT_LINA.outfit).toBe('hawaii');
+    expect(outfitFor(DEFAULT_LINA, 'winter')).toBe('hawaii');
   });
 
   it('Frühling & Herbst: jeden Tag ein anderes Lieblings-Sweatshirt (reproduzierbar)', () => {
