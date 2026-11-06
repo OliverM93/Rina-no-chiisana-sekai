@@ -25,6 +25,7 @@ export type ObjectKind =
   | 'bridge'
   | 'sellbox'
   | 'beet'
+  | 'stall'
   | NatureKind;
 
 export interface MapObjectDef {
@@ -70,6 +71,8 @@ export const OBJECT_KINDS: Record<ObjectKind, KindInfo> = {
   bridge: { w: 3, h: 1, blocks: 'none' },
   sellbox: { w: 1, h: 1, blocks: 'all', interactFrom: [[0, 1], [1, 0]] },
   workbench: { w: 2, h: 1, blocks: 'all', interactFrom: [[0, 1], [1, 1], [-1, 0], [2, 0]] },
+  // Punschstand (nur in der Adventszeit, siehe `requires: 'adventszeit'`)
+  stall: { w: 2, h: 1, blocks: 'all', interactFrom: [[0, 1], [1, 1]] },
   // Beet 4×2: jede Kachel ist ein Pflanzplatz, erreichbar von allen Seiten
   beet: {
     w: 4,

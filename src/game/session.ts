@@ -33,7 +33,7 @@ import { NPCS } from '../data/npcs';
 import type { InteractionContext } from '../data/interactions';
 
 /** Arten von Partikel-Effekten */
-export type FxKind = 'staub' | 'platsch' | 'funkeln' | 'herzen' | 'erde' | 'konfetti';
+export type FxKind = 'staub' | 'platsch' | 'funkeln' | 'herzen' | 'erde' | 'konfetti' | 'atem';
 
 export interface DialogChoice {
   label: string;
