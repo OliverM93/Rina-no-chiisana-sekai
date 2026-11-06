@@ -97,6 +97,8 @@ export const VILLAGE_OBJECTS: readonly MapObjectDef[] = [
   { id: 'laterne-platz-3', kind: 'lantern', x: 23, y: 22 },
   { id: 'laterne-platz-4', kind: 'lantern', x: 31, y: 22 },
   { id: 'bank-platz', kind: 'bench', x: 29, y: 22 },
+  // Punschstand neben dem Weihnachtsbaum – steht nur im Dezember bis Weihnachten (virtuelles Flag)
+  { id: 'punschstand', kind: 'stall', x: 29, y: 19, requires: 'adventszeit' },
 
   // Brücke über den Fluss
   { id: 'bruecke', kind: 'bridge', x: 37, y: 19 },

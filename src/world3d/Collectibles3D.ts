@@ -11,6 +11,7 @@ import { type MapObject, tileOf } from '../core/worldmap';
 import { TREE_FRUITS } from '../data/items';
 import { dayRandom, giveItem, markPicked, todaysBeachFinds } from '../game/gameplay';
 import { todaysEasterEggs } from '../game/festivals';
+import { todaysSnowballs } from '../game/winter';
 import type { Session } from '../game/session';
 import { itemIconUrl } from '../gfx/items';
 import type { Tweens } from './tweens';
@@ -66,7 +67,7 @@ export class Collectibles {
     for (const p of this.pickups.values()) this.destroyPickup(p);
     this.pickups.clear();
     for (const g of data.world.ground) this.addPickup(g.id, g.itemId, g.x, g.y, false);
-    for (const s of [...todaysBeachFinds(this.session), ...todaysEasterEggs(this.session)]) this.addPickup(s.id, s.itemId, (s.x + 0.5) * TILE, (s.y + 0.55) * TILE, true);
+    for (const s of [...todaysBeachFinds(this.session), ...todaysEasterEggs(this.session), ...todaysSnowballs(this.session)]) this.addPickup(s.id, s.itemId, (s.x + 0.5) * TILE, (s.y + 0.55) * TILE, true);
     this.refreshFruit();
     this.refreshFlowers();
   }

@@ -231,6 +231,11 @@ Legende: ✅ erledigt · 🚧 in Arbeit · ⬜ geplant
   Bewohner winken zur Begrüßung, Figuren schauen sich beim Stillstehen um
 - ✅ **Christins Rolle:** gießt abends Linas Garten mit (nicht bei Regen), Ordnungstipp des Tages im Gespräch
   (14 echte kleine Spieltipps), neue Garten-Sprüche
+- ✅ **Winterzauber:** Olis Adventskalender (24 Türchen per Post, am 24. eine Schneekugel mit Lina, Oli & Winston),
+  Schneebälle sammeln & Schneemann bauen (taut außerhalb des Winters), Wintermöbel im Katalog (Weihnachtsbaum,
+  Adventskranz, Kaminofen, Lebkuchenhaus, Nussknacker, Schneeflocken-Teppich & -Tapete, Lichtervorhang, Strumpf,
+  Schlitten), Bratapfel & Zimtsterne, Punschstand am Weihnachtsbaum, Fußspuren im Schnee, Atemwölkchen,
+  Schneeflocken fangen · Modelle für Sparschwein, Weihnachtsstern & Kuscheldecke (waren rosa Würfel)
 - ⬜ Weitere Animationen & Partikel, Balancing
 
 ## 💡 Ideen-Parkplatz

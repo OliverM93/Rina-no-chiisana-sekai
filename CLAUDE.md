@@ -115,7 +115,7 @@ src/
   data/        Inhalte (leicht erweiterbar): Karten, Interaktionstexte, Story-Texte,
                items.ts (alle Gegenstände + Preise, Gartenblumen, Werkzeuge), species.ts (Fische & Insekten –
                echte heimische Arten), furniture.ts (Möbel, Tapeten, Böden, Varianten; Stile: japanisch, basis,
-               cottage, retro, modern, midcentury, handgemacht, garten, kunst – Muster in `gfx/interior.ts`),
+               cottage, retro, modern, midcentury, handgemacht, garten, kunst, winter – Muster in `gfx/interior.ts`),
                house.ts (Ausbaustufen 0–6, Räume, Preise, Start-Haus, Start-Einrichtung neuer Räume,
                `HOUSE_ANNEX` = Kacheln, die Anbauten außen belegen),
                npcs/ (je Bewohner eine Datei)
@@ -140,6 +140,7 @@ src/
     Character3D.ts Figur (Bewegung, Wegfolgen, Sitzen, Werkzeug in der Hand); Npc.ts (Tagesablauf-KI); Collectibles3D.ts
     Particles3D.ts Partikel (Staub, Spritzer, Funkeln, Herzchen, Erde, Konfetti) + Glühwürmchen
     Weather3D.ts   Regen, Schnee, Blitze · Fishing3D.ts Angeln · Insects3D.ts Insekten · Garden3D.ts Beet
+    Footprints3D.ts Fußspuren im Schnee (Ringpuffer)
     Animals3D.ts   Hühner & Wachteln (trippeln um den Stall, picken, schlafen nachts)
     Yard3D.ts      Linas Garten (Zäune verbinden sich, Lichter abends, Vorschau beim Gestalten)
     Winston.ts     Winston (folgt Linas Spur, sitzt, schläft, buddelt, Körbchen); Modell in models/dog.ts
@@ -261,6 +262,15 @@ src/
   noch durstig ist – nicht bei Regen (`game/christin.ts`, `world.dates.christinGiesst`, Dialog-Tag `beet-gegossen`).
   Im Gespräch „💡 Ordnungstipp?“: jeden Tag ein echter kleiner Spieltipp in ihrer Art (`CHRISTIN_TIPS`) – bewusst
   kein Lob fürs Aufräumen.
+- **Winterzauber:** `data/winter.ts` + `game/winter.ts`. **Olis Adventskalender:** 1.–24. Dezember je ein Brief
+  (`checkAdvent`, ID `advent-<jahr>-<tür>`), das 24. Türchen (Schneekugel `schneekugel-wir`) kommt notfalls bis
+  Silvester; Rezeptkarten für Bratapfel & Zimtsterne (Herd/Kochstudio). **Schneebälle** liegen Dezember–Februar auf
+  der Wiese (`todaysSnowballs`), 3 Schneebälle + 2 Äste = **Schneemann** an der Werkbank (Gartenmöbel; außerhalb des
+  Winters zeigt das Modell ihn getaut – `setModelSeason` in `models/furniture.ts`). **Wintermöbel** (Stil
+  „winter“, `seasonal: true`) stehen nur im Winter im Katalog. **Punschstand** = Kartenobjekt `punschstand`
+  (`kind: 'stall'`, `requires: 'adventszeit'` – virtuelles Flag aus `syncMapObjects`, 1.–26. Dezember, 15–22 Uhr).
+  **Kleine Freuden:** Fußspuren im Schnee (`Footprints3D`, auch Winstons Pfoten), Atemwölkchen bei Kälte
+  (Fx `atem`), Leerlauf „Flocken fangen“, wenn es schneit.
 - **Tiere:** Ställe sind Gartenmöbel mit `coop: 'huhn' | 'wachtel'`, die Tiere kommen mit (`data/animals.ts`).
   Abholtage in `world.coopDay`; Logik in `core/coop.ts` & `game/animals.ts`.
 - **Klang:** `GameAudio` (`audio/Audio.ts`) startet nach der ersten Taste/Klick (Browser-Regel). **Musik:** draußen
@@ -299,6 +309,8 @@ src/
   kleine Details innerhalb von Zeichenfunktionen).
 - **Keine externen Assets/Abhängigkeiten zur Laufzeit** (Schrift Nunito kommt als npm-Paket mit, OFL).
 - **Inhalte gehören in `src/data/`**, nicht in Szenen/Komponenten.
+- **Durchlauf-Test:** `game/playthrough.test.ts` spielt die ganze Rahmenhandlung (alle Einzüge, alle Ausbaustufen,
+  Speichern & Laden) mit erreichbaren Mitteln durch – bei neuen Meilensteinen dort ergänzen.
 - **Kernlogik bekommt Tests** (Zeit, Inventar, Speichern, Freundschaft, Bau-Grid, Wegfindung …).
 - **Spielstand-Format geändert?** → `SAVE_VERSION` erhöhen, Migration in `MIGRATIONS` ergänzen, Test schreiben.
 - **Nichts Verpflichtendes, kein Scheitern, kein Zeitdruck.** Alles Tägliche ist optional.

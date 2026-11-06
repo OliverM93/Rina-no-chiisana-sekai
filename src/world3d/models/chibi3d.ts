@@ -1110,6 +1110,18 @@ export class Chibi3D {
         this.head.rotation.y = Math.sin(k * Math.PI * 1.5) * 0.15 * e;
         break;
       }
+      case 'flocken-fangen': {
+        // beide Hände nach vorn, Handflächen hoch, nach oben schauen – und ein kleiner Hüpfer, wenn eine Flocke landet
+        const hop = Math.max(0, Math.sin(k * Math.PI * 3)) * 0.05 * e;
+        r.rotation.x = -e * 0.9;
+        l.rotation.x = -e * 0.9;
+        r.rotation.z = -0.25 - e * 0.75;
+        l.rotation.z = 0.25 + e * 0.75;
+        this.head.rotation.x = -e * 0.35 + Math.sin(k * Math.PI * 4) * 0.05 * e;
+        this.head.rotation.z = Math.sin(k * Math.PI * 2) * 0.08 * e;
+        this.body.position.y += hop;
+        break;
+      }
     }
   }
 

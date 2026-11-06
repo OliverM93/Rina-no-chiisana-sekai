@@ -301,6 +301,50 @@ const DRAW: Record<string, Draw> = {
     ctx.restore();
     shine(ctx, 12.5, 10, 2);
   },
+  schneeball: (ctx) => {
+    ellipse(ctx, 16, 18, 10, 9.5, '#ffffff', '#b8cfe0', 1.5);
+    ellipse(ctx, 13, 21, 3, 2, '#e4eef6');
+    ellipse(ctx, 20, 15, 2, 1.5, '#e4eef6');
+    shine(ctx, 12, 13, 2.5, 0.9);
+  },
+  bratapfel: (ctx) => {
+    ellipse(ctx, 16, 23, 12, 4, '#ffffff', '#c9c4cf', 1.2);
+    ellipse(ctx, 16, 17, 9, 8, '#c9302c', darken('#c9302c', 0.3), 1.4);
+    ellipse(ctx, 16, 11, 4.5, 2, '#f2d39a', '#c9955f', 1);
+    ellipse(ctx, 16, 10.5, 2, 1, '#8a5a3a');
+    roundRect(ctx, 15.4, 5, 1.2, 4, 0.6, '#6e4630');
+    shine(ctx, 12, 15, 2);
+    for (const [x, y] of [[10, 6], [21, 5]] as const) ellipse(ctx, x, y, 1.5, 2.2, '#ffffff');
+  },
+  zimtsterne: (ctx) => {
+    const star = (x: number, y: number, r: number) => {
+      ctx.fillStyle = '#b8763f';
+      ctx.beginPath();
+      for (let i = 0; i < 10; i++) {
+        const a = (i / 10) * Math.PI * 2 - Math.PI / 2;
+        const rr = i % 2 === 0 ? r : r * 0.5;
+        if (i === 0) ctx.moveTo(x + Math.cos(a) * rr, y + Math.sin(a) * rr);
+        else ctx.lineTo(x + Math.cos(a) * rr, y + Math.sin(a) * rr);
+      }
+      ctx.closePath();
+      ctx.fill();
+      ctx.strokeStyle = darken('#b8763f', 0.3);
+      ctx.lineWidth = 1;
+      ctx.stroke();
+      ctx.fillStyle = '#ffffff';
+      ctx.beginPath();
+      for (let i = 0; i < 10; i++) {
+        const a = (i / 10) * Math.PI * 2 - Math.PI / 2;
+        const rr = (i % 2 === 0 ? r : r * 0.5) * 0.72;
+        if (i === 0) ctx.moveTo(x + Math.cos(a) * rr, y - 0.6 + Math.sin(a) * rr);
+        else ctx.lineTo(x + Math.cos(a) * rr, y - 0.6 + Math.sin(a) * rr);
+      }
+      ctx.closePath();
+      ctx.fill();
+    };
+    star(11, 19, 8);
+    star(21, 13, 7);
+  },
   plaetzchen: (ctx) => {
     const star = (x: number, y: number, r: number, c: string) => {
       ctx.fillStyle = c;

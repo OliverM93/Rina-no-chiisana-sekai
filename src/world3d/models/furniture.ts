@@ -9,6 +9,7 @@ import { ART_BY_ID } from '../../data/art';
 import { artCanvas } from '../../gfx/art';
 import { darken, lighten } from '../../style/palette';
 import { mesh, toon } from '../materials';
+import type { Season } from '../../core/time';
 
 const box = new THREE.BoxGeometry(1, 1, 1);
 const cyl = new THREE.CylinderGeometry(1, 1, 1, 16);
@@ -40,6 +41,12 @@ const HANG = 1.3;
 const WALL_Z = -0.48;
 const DARK_WOOD = '#6e4630';
 const PAPER = '#fbf3e2';
+
+/** Jahreszeit für Modelle, die sich ändern (Schneemann taut außerhalb des Winters) */
+let modelSeason: Season = 'sommer';
+export function setModelSeason(season: Season) {
+  modelSeason = season;
+}
 
 export interface FurnitureModel {
   group: THREE.Group;
@@ -1465,6 +1472,256 @@ export function makeFurniture(itemId: string, links: FenceLinks = { n: false, e:
       g.add(ring);
       break;
     }
+    // ---------------------------------------------------------------- Fest-Geschenke
+    case 'sparschwein': {
+      const pink = '#f6a8be';
+      g.add(s(0.15, 0.12, 0.11, pink, 0, 0.13, 0));
+      g.add(c(0.045, 0.04, darken(pink, 0.08), 0, 0.13, 0.13).rotateX(Math.PI / 2));
+      for (const x of [-0.016, 0.016]) g.add(s(0.008, 0.012, 0.005, darken(pink, 0.35), x, 0.13, 0.152));
+      for (const [x, z] of [[-0.08, -0.05], [0.08, -0.05], [-0.08, 0.05], [0.08, 0.05]]) g.add(c(0.025, 0.06, darken(pink, 0.06), x, 0.03, z));
+      for (const x of [-0.06, 0.06]) g.add(s(0.012, 0.012, 0.008, '#2a2a30', x, 0.18, 0.09));
+      g.add(b(0.07, 0.008, 0.01, '#6e4630', 0, 0.255, 0));
+      // Weihnachtsmütze
+      g.add(c(0.075, 0.03, '#ffffff', -0.02, 0.24, -0.02));
+      const hat = c(0.065, 0.13, '#e8484f', -0.02, 0.31, -0.02, cone);
+      hat.rotation.z = 0.35;
+      g.add(hat);
+      g.add(s(0.022, 0.022, 0.022, '#ffffff', -0.07, 0.37, -0.02));
+      break;
+    }
+    case 'weihnachtsstern': {
+      g.add(c(0.17, 0.26, '#d9b45a', 0, 0.13, 0));
+      g.add(c(0.18, 0.03, darken('#d9b45a', 0.15), 0, 0.26, 0));
+      g.add(c(0.15, 0.02, '#6e4a36', 0, 0.265, 0));
+      for (let ring = 0; ring < 2; ring++) {
+        for (let i = 0; i < 6; i++) {
+          const a = (i / 6) * Math.PI * 2 + ring * 0.5;
+          const r = ring === 0 ? 0.2 : 0.12;
+          const leaf = s(0.11 - ring * 0.03, 0.015, 0.05, ring === 0 ? '#2f7a4a' : '#d8343c', Math.cos(a) * r, 0.36 + ring * 0.05, Math.sin(a) * r);
+          leaf.rotation.y = -a;
+          leaf.rotation.z = 0.25;
+          g.add(leaf);
+        }
+      }
+      for (let i = 0; i < 5; i++) {
+        const a = (i / 5) * Math.PI * 2;
+        const leaf = s(0.08, 0.015, 0.04, '#e8484f', Math.cos(a) * 0.07, 0.45, Math.sin(a) * 0.07);
+        leaf.rotation.y = -a;
+        g.add(leaf);
+      }
+      g.add(s(0.03, 0.02, 0.03, '#f2c94c', 0, 0.47, 0));
+      break;
+    }
+    case 'kuscheldecke': {
+      g.add(b(1.86, 0.04, 0.9, '#c94a5a', 0, 0.02, 0));
+      for (let i = 0; i < 7; i++) g.add(b(0.07, 0.042, 0.9, '#f0d7a8', -0.78 + i * 0.26, 0.022, 0));
+      for (let i = 0; i < 4; i++) g.add(b(1.86, 0.043, 0.06, '#7a2f3a', 0, 0.023, -0.33 + i * 0.22));
+      // eine umgeschlagene Ecke
+      const fold = b(0.4, 0.05, 0.3, '#d65a6a', 0.66, 0.05, 0.25);
+      fold.rotation.y = 0.5;
+      g.add(fold);
+      break;
+    }
+    // ---------------------------------------------------------------- Winterzauber
+    case 'weihnachtsbaum': {
+      g.add(c(0.2, 0.2, '#c9302c', 0, 0.1, 0));
+      g.add(c(0.21, 0.03, '#f2c94c', 0, 0.19, 0));
+      g.add(c(0.04, 0.12, '#7a5236', 0, 0.26, 0));
+      const greens = ['#2f7a4a', '#3a8a56', '#4a9a62'];
+      [[0.42, 0.5, 0.5], [0.33, 0.45, 0.82], [0.22, 0.38, 1.1], [0.12, 0.28, 1.33]].forEach(([r, h, y], i) => g.add(c(r, h, greens[i % 3], 0, y, 0, cone)));
+      const balls = ['#e8484f', '#f2c94c', '#5b7fc2', '#e85a8a', '#ffffff'];
+      for (let i = 0; i < 14; i++) {
+        const t = i / 14;
+        const r = (1 - t) * 0.38 + 0.06;
+        const a = i * 2.4;
+        g.add(s(0.03, 0.03, 0.03, balls[i % balls.length], Math.cos(a) * r, 0.4 + t * 0.95, Math.sin(a) * r));
+      }
+      glow = glowMat('#ffe08a');
+      for (let i = 0; i < 18; i++) {
+        const t = i / 18;
+        const r = (1 - t) * 0.4 + 0.05;
+        const a = i * 1.15;
+        g.add(s(0.016, 0.016, 0.016, glow, Math.cos(a) * r, 0.36 + t * 1.0, Math.sin(a) * r));
+      }
+      const star = c(0.07, 0.03, glow, 0, 1.52, 0, new THREE.CylinderGeometry(1, 1, 1, 5));
+      star.rotation.x = Math.PI / 2;
+      g.add(star);
+      lightAt = new THREE.Vector3(0, 0.9, 0.2);
+      break;
+    }
+    case 'adventskranz': {
+      const ring = new THREE.Mesh(new THREE.TorusGeometry(0.15, 0.05, 8, 20), toon('#2f7a4a'));
+      ring.rotation.x = Math.PI / 2;
+      ring.position.y = 0.05;
+      g.add(ring);
+      for (let i = 0; i < 10; i++) {
+        const a = (i / 10) * Math.PI * 2;
+        g.add(s(0.03, 0.025, 0.03, i % 2 ? '#3a8a56' : '#4a9a62', Math.cos(a) * 0.15, 0.08, Math.sin(a) * 0.15));
+      }
+      glow = glowMat('#ffd36b');
+      for (let i = 0; i < 4; i++) {
+        const a = (i / 4) * Math.PI * 2 + Math.PI / 4;
+        const x = Math.cos(a) * 0.15;
+        const z = Math.sin(a) * 0.15;
+        g.add(c(0.025, 0.12, '#d8343c', x, 0.14, z));
+        g.add(s(0.012, 0.022, 0.012, glow, x, 0.22, z));
+      }
+      for (const a of [0.3, 2.2, 4.0]) g.add(s(0.018, 0.018, 0.018, '#e8484f', Math.cos(a) * 0.19, 0.09, Math.sin(a) * 0.19));
+      g.add(b(0.06, 0.012, 0.012, '#a0613a', 0.02, 0.1, 0.17).rotateY(0.4));
+      lightAt = new THREE.Vector3(0, 0.3, 0);
+      break;
+    }
+    case 'kaminofen': {
+      const iron = '#3a3a44';
+      g.add(b(0.5, 0.05, 0.5, '#8a8a92', 0, 0.025, 0.02));
+      for (const [x, z] of [[-0.17, -0.15], [0.17, -0.15], [-0.17, 0.15], [0.17, 0.15]]) g.add(c(0.03, 0.12, iron, x, 0.11, z));
+      g.add(b(0.42, 0.52, 0.38, iron, 0, 0.42, 0));
+      g.add(b(0.46, 0.04, 0.42, darken(iron, 0.2), 0, 0.7, 0));
+      glow = glowMat('#ff9a3a');
+      g.add(b(0.26, 0.2, 0.01, glow, 0, 0.42, 0.195));
+      g.add(b(0.3, 0.03, 0.02, '#8a8a92', 0, 0.535, 0.2));
+      g.add(b(0.3, 0.03, 0.02, '#8a8a92', 0, 0.305, 0.2));
+      for (const x of [-0.06, 0.04]) g.add(s(0.06, 0.03, 0.03, '#8a5a3a', x, 0.35, 0.1));
+      g.add(c(0.07, 1.2, iron, 0, 1.3, -0.08));
+      g.add(c(0.075, 0.03, darken(iron, 0.2), 0, 0.9, -0.08));
+      lightAt = new THREE.Vector3(0, 0.45, 0.4);
+      break;
+    }
+    case 'lebkuchenhaus': {
+      const ginger = '#b8763f';
+      g.add(b(0.24, 0.015, 0.24, '#ffffff', 0, 0.008, 0));
+      g.add(b(0.18, 0.12, 0.15, ginger, 0, 0.075, 0));
+      for (const side of [-1, 1]) {
+        const roof = b(0.11, 0.015, 0.18, '#ffffff', side * 0.05, 0.17, 0);
+        roof.rotation.z = -side * 0.75;
+        g.add(roof);
+      }
+      g.add(b(0.04, 0.06, 0.01, '#7a4a2a', 0, 0.045, 0.078));
+      for (const [x, col] of [[-0.055, '#e8484f'], [0.055, '#8fd08a']] as const) g.add(b(0.03, 0.03, 0.01, col, x, 0.095, 0.078));
+      for (const x of [-0.08, -0.03, 0.03, 0.08]) g.add(s(0.008, 0.008, 0.008, ['#e8484f', '#f2c94c', '#5b7fc2', '#e85a8a'][Math.abs(Math.round(x * 50)) % 4], x, 0.14, 0.078));
+      break;
+    }
+    case 'nussknacker': {
+      g.add(c(0.06, 0.02, '#2f7a4a', 0, 0.01, 0));
+      for (const x of [-0.025, 0.025]) g.add(c(0.018, 0.09, '#2a2a30', x, 0.065, 0));
+      g.add(c(0.045, 0.1, '#d8343c', 0, 0.16, 0));
+      g.add(b(0.1, 0.012, 0.03, '#f2c94c', 0, 0.16, 0.03));
+      for (const x of [-0.06, 0.06]) g.add(c(0.014, 0.08, '#d8343c', x, 0.17, 0));
+      g.add(c(0.035, 0.06, '#f7d9c4', 0, 0.24, 0));
+      g.add(b(0.05, 0.02, 0.012, '#ffffff', 0, 0.225, 0.034));
+      for (const x of [-0.012, 0.012]) g.add(s(0.005, 0.005, 0.004, '#2a2a30', x, 0.25, 0.035));
+      g.add(c(0.04, 0.07, '#2a2a30', 0, 0.305, 0));
+      g.add(c(0.042, 0.012, '#f2c94c', 0, 0.272, 0));
+      break;
+    }
+    case 'flockenteppich': {
+      g.add(b(1.9, 0.03, 1.9, '#bfe0f0', 0, 0.015, 0));
+      g.add(b(1.94, 0.028, 1.94, '#ffffff', 0, 0.012, 0));
+      for (const [x, z, r] of [[-0.45, -0.4, 0.28], [0.5, 0.35, 0.32], [0.45, -0.5, 0.18], [-0.5, 0.5, 0.2], [0, 0, 0.14]] as const) {
+        for (let i = 0; i < 3; i++) {
+          const arm = b(r * 2, 0.034, 0.04, '#ffffff', x, 0.017, z);
+          arm.rotation.y = (i / 3) * Math.PI;
+          g.add(arm);
+        }
+      }
+      break;
+    }
+    case 'lichtervorhang': {
+      const z = WALL_Z + 0.02;
+      g.add(b(1.8, 0.012, 0.012, '#6e6a70', 0, HANG + 0.42, z));
+      glow = glowMat('#ffe6a3');
+      for (let i = 0; i < 12; i++) {
+        const x = -0.82 + i * 0.15;
+        const len = 0.35 + ((i * 37) % 5) * 0.08;
+        g.add(b(0.006, len, 0.006, '#6e6a70', x, HANG + 0.42 - len / 2, z));
+        for (let k = 1; k <= 3; k++) g.add(s(0.02, 0.026, 0.02, glow, x, HANG + 0.42 - (len * k) / 3, z + 0.01));
+      }
+      lightAt = new THREE.Vector3(0, HANG, z + 0.3);
+      break;
+    }
+    case 'weihnachtsstrumpf': {
+      const z = WALL_Z + 0.04;
+      g.add(b(0.01, 0.06, 0.01, '#6e6a70', 0, HANG + 0.27, z));
+      g.add(b(0.16, 0.07, 0.05, '#ffffff', 0, HANG + 0.2, z));
+      g.add(b(0.13, 0.26, 0.04, '#d8343c', 0, HANG + 0.03, z));
+      g.add(s(0.1, 0.06, 0.04, '#d8343c', 0.04, HANG - 0.1, z));
+      g.add(s(0.05, 0.04, 0.042, '#ffffff', 0.1, HANG - 0.11, z));
+      g.add(b(0.13, 0.025, 0.042, '#2f7a4a', 0, HANG + 0.07, z));
+      g.add(s(0.022, 0.022, 0.022, '#f2c94c', 0.02, HANG + 0.26, z + 0.02));
+      break;
+    }
+    case 'schlitten': {
+      const red = '#d8343c';
+      for (const z of [-0.2, 0.2]) {
+        g.add(b(1.5, 0.04, 0.04, red, 0, 0.04, z));
+        const tip = new THREE.Mesh(new THREE.TorusGeometry(0.12, 0.02, 6, 12, Math.PI), toon(red));
+        tip.position.set(0.75, 0.16, z);
+        tip.rotation.z = -Math.PI / 2;
+        g.add(tip);
+        for (const x of [-0.5, 0, 0.45]) g.add(b(0.04, 0.16, 0.04, '#8a5a3a', x, 0.14, z));
+      }
+      for (let i = 0; i < 5; i++) g.add(b(1.3, 0.035, 0.1, i % 2 ? '#c9955f' : '#b98a5e', -0.05, 0.24, -0.2 + i * 0.1));
+      g.add(c(0.012, 0.6, '#8a7a70', 0.9, 0.24, 0).rotateX(Math.PI / 2));
+      break;
+    }
+    case 'schneemann': {
+      if (modelSeason === 'winter') {
+        g.add(s(0.32, 0.28, 0.32, '#ffffff', 0, 0.27, 0));
+        g.add(s(0.23, 0.21, 0.23, '#ffffff', 0, 0.7, 0));
+        g.add(s(0.17, 0.16, 0.17, '#ffffff', 0, 1.03, 0));
+        for (const x of [-0.06, 0.06]) g.add(s(0.022, 0.022, 0.015, '#2a2a30', x, 1.07, 0.155));
+        const nose = c(0.03, 0.14, '#f08a3a', 0, 1.02, 0.22, cone);
+        nose.rotation.x = Math.PI / 2;
+        g.add(nose);
+        for (let i = 0; i < 5; i++) g.add(s(0.012, 0.012, 0.01, '#2a2a30', -0.08 + i * 0.04, 0.97 - Math.sin((i / 4) * Math.PI) * 0.03, 0.15));
+        for (const y of [0.62, 0.72, 0.82]) g.add(s(0.022, 0.022, 0.015, '#2a2a30', 0, y, 0.22));
+        // Schal & Mütze
+        const scarf = new THREE.Mesh(new THREE.TorusGeometry(0.15, 0.04, 8, 18), toon('#e8484f'));
+        scarf.rotation.x = Math.PI / 2;
+        scarf.position.y = 0.89;
+        g.add(scarf);
+        g.add(b(0.08, 0.18, 0.03, '#e8484f', 0.1, 0.8, 0.13).rotateZ(0.2));
+        g.add(c(0.15, 0.06, '#2a2a30', 0, 1.17, 0));
+        g.add(c(0.11, 0.16, '#2a2a30', 0, 1.27, 0));
+        g.add(c(0.112, 0.03, '#e8484f', 0, 1.22, 0));
+        // Ast-Arme
+        for (const side of [-1, 1]) {
+          const arm = b(0.4, 0.025, 0.025, '#7a5236', side * 0.38, 0.8, 0);
+          arm.rotation.z = side * 0.45;
+          g.add(arm);
+          const twig = b(0.1, 0.02, 0.02, '#7a5236', side * 0.55, 0.92, 0);
+          twig.rotation.z = side * 1.2;
+          g.add(twig);
+        }
+      } else {
+        // getaut: Pfütze mit Mütze, Nase und Ästen
+        g.add(c(0.38, 0.012, '#cfe4ee', 0, 0.006, 0));
+        g.add(c(0.15, 0.06, '#2a2a30', -0.05, 0.04, 0));
+        g.add(c(0.11, 0.1, '#2a2a30', -0.05, 0.11, 0));
+        const nose = c(0.03, 0.14, '#f08a3a', 0.2, 0.025, 0.1, cone);
+        nose.rotation.z = Math.PI / 2;
+        g.add(nose);
+        for (const [x, z, r] of [[0.1, -0.18, 0.3], [-0.2, 0.15, -0.5]] as const) g.add(b(0.36, 0.02, 0.02, '#7a5236', x, 0.015, z).rotateY(r));
+        for (const [x, z] of [[0.05, 0.2], [-0.12, -0.1], [0.18, -0.05]] as const) g.add(s(0.02, 0.012, 0.02, '#2a2a30', x, 0.012, z));
+      }
+      break;
+    }
+    case 'schneekugel-wir': {
+      g.add(c(0.1, 0.06, '#c9955f', 0, 0.03, 0));
+      g.add(c(0.105, 0.012, '#d9b45a', 0, 0.06, 0));
+      g.add(b(0.08, 0.04, 0.05, '#f7c6d4', 0, 0.09, -0.02));
+      const roof = c(0.06, 0.04, '#e8484f', 0, 0.13, -0.02, new THREE.ConeGeometry(1, 1, 4));
+      roof.rotation.y = Math.PI / 4;
+      g.add(roof);
+      for (const [x, col, h] of [[-0.05, '#7a4a2a', 0.05], [-0.025, '#2a2a30', 0.055]] as const) {
+        g.add(c(0.01, h, col, x, 0.065 + h / 2, 0.04));
+        g.add(s(0.012, 0.012, 0.012, '#f7d9c4', x, 0.07 + h, 0.04));
+      }
+      g.add(s(0.016, 0.008, 0.008, '#b5653a', 0.04, 0.072, 0.05));
+      g.add(s(0.105, 0.105, 0.105, new THREE.MeshToonMaterial({ color: '#e8f4ff', transparent: true, opacity: 0.4 }), 0, 0.15, 0));
+      for (const [x, y, z] of [[-0.04, 0.2, 0.03], [0.05, 0.18, -0.03], [0.01, 0.23, 0.05], [-0.06, 0.15, -0.05]] as const) g.add(s(0.008, 0.008, 0.008, '#ff8fb1', x, y, z));
+      break;
+    }
     default:
       g.add(b(0.6, 0.6, 0.6, col, 0, 0.3, 0));
   }
@@ -1520,6 +1777,9 @@ export function renderFurnitureThumbnails(ids: readonly string[], size = 128): R
   } catch {
     return out;
   }
+  // Symbole zeigen den Schneemann immer in voller Pracht
+  const season = modelSeason;
+  modelSeason = 'winter';
   renderer.setSize(size, size, false);
   renderer.outputColorSpace = THREE.SRGBColorSpace;
   const scene = new THREE.Scene();
@@ -1543,5 +1803,6 @@ export function renderFurnitureThumbnails(ids: readonly string[], size = 128): R
     scene.remove(m.group);
   }
   renderer.dispose();
+  modelSeason = season;
   return out;
 }

@@ -7,7 +7,7 @@
  */
 import { ARTWORKS } from './art';
 
-export type FurnitureStyle = 'japanisch' | 'basis' | 'cottage' | 'retro' | 'modern' | 'midcentury' | 'handgemacht' | 'garten' | 'kunst';
+export type FurnitureStyle = 'japanisch' | 'basis' | 'cottage' | 'retro' | 'modern' | 'midcentury' | 'handgemacht' | 'garten' | 'kunst' | 'winter';
 
 export interface FurnitureDef {
   /** Basis-ID (ohne Variante) */
@@ -49,6 +49,8 @@ export interface FurnitureDef {
   wall?: boolean;
   /** Farbvarianten (Name → Farbe); ohne = eine Variante */
   variants?: Record<string, string>;
+  /** Nur im Winter (Dezember–Februar) im Katalog */
+  seasonal?: boolean;
 }
 
 export const FURNITURE: readonly FurnitureDef[] = [
@@ -100,6 +102,18 @@ export const FURNITURE: readonly FurnitureDef[] = [
   { id: 'sparschwein', name: 'Sparschwein mit Mütze', style: 'basis', gift: true, small: true, price: 400, w: 1, d: 1, description: 'Von Papa Olaf. Rosa, rund und mit Weihnachtsmütze. „Kleinvieh macht auch Mist!“' },
   { id: 'weihnachtsstern', name: 'Weihnachtsstern', style: 'basis', gift: true, price: 400, w: 1, d: 1, description: 'Von Christin – rote Blätter im goldenen Topf. Bitte gerade hinstellen.' },
   { id: 'kuscheldecke', name: 'Kuscheldecke', style: 'basis', gift: true, rug: true, price: 600, w: 2, d: 1, description: 'Von Oli – flauschig, kariert und groß genug für zwei. Und einen Dackel.' },
+  // Winterzauber: nur von Dezember bis Februar im Katalog
+  { id: 'weihnachtsbaum', name: 'Weihnachtsbaum', style: 'winter', seasonal: true, light: true, price: 1800, w: 1, d: 1, description: 'Eine kleine Tanne mit Kugeln, Lichterkette und goldenem Stern. Duftet nach Wald.' },
+  { id: 'adventskranz', name: 'Adventskranz', style: 'winter', seasonal: true, small: true, light: true, price: 600, w: 1, d: 1, description: 'Tannengrün mit vier roten Kerzen und Zimtstangen. Erst eine, dann zwei, dann drei, dann vier …' },
+  { id: 'kaminofen', name: 'Kaminofen', style: 'winter', seasonal: true, light: true, price: 2400, w: 1, d: 1, description: 'Ein kleiner gusseiserner Ofen mit Sichtfenster. Knistert gemütlich – und Winston liegt sofort davor.' },
+  { id: 'lebkuchenhaus', name: 'Lebkuchenhaus', style: 'winter', seasonal: true, small: true, price: 450, w: 1, d: 1, description: 'Mit Zuckerguss-Schnee und Gummibärchen-Fenstern. Zu schön zum Anknabbern. Fast.' },
+  { id: 'nussknacker', name: 'Nussknacker', style: 'winter', seasonal: true, small: true, price: 380, w: 1, d: 1, description: 'Ein strammer Holzsoldat mit rotem Rock und sehr ernstem Blick.' },
+  { id: 'flockenteppich', name: 'Schneeflocken-Teppich', style: 'winter', seasonal: true, rug: true, price: 900, w: 2, d: 2, description: 'Weich, eisblau und mit großen weißen Schneeflocken. Kalte Füße? Nicht hier.' },
+  { id: 'lichtervorhang', name: 'Lichtervorhang', style: 'winter', seasonal: true, wall: true, light: true, price: 700, w: 2, d: 1, description: 'Viele kleine warme Lichter, die wie Eiszapfen von der Wand hängen.' },
+  { id: 'weihnachtsstrumpf', name: 'Weihnachtsstrumpf', style: 'winter', seasonal: true, wall: true, price: 300, w: 1, d: 1, description: 'Ein dicker roter Strumpf mit weißem Rand. Wer weiß, was morgen drinsteckt …' },
+  { id: 'schlitten', name: 'Holzschlitten', style: 'winter', seasonal: true, outdoor: true, price: 1200, w: 2, d: 1, description: 'Ein alter Holzschlitten mit roten Kufen. Mit Winston drauf ist er perfekt.' },
+  { id: 'schneemann', name: 'Schneemann', style: 'winter', outdoor: true, crafted: true, price: 120, w: 1, d: 1, description: 'Mit Karottennase, Kohleknöpfen und Mütze. Wenn es taut, bleiben nur Mütze und Nase – im nächsten Winter wird er wieder gebaut!' },
+  { id: 'schneekugel-wir', name: 'Schneekugel mit uns', style: 'winter', gift: true, small: true, price: 400, w: 1, d: 1, description: 'Von Oli, aus dem 24. Türchen: Lina, Oli und Winston vor einem kleinen Haus. Schütteln – und es schneit Herzchen.' },
   // Wohnzimmer & Küche (M7h)
   { id: 'fernseher', name: 'Fernseher', style: 'basis', price: 2500, w: 2, d: 1, description: 'Ein Fernseher auf einem Lowboard. Für Datingshows, Dokus, True Crime – und die Kochshow.' },
   { id: 'sofa', name: 'Sofa', style: 'basis', sit: 'sitzen', price: 1800, w: 2, d: 1, description: 'Ein kuscheliges Sofa für zwei. Und einen Dackel.', variants: { rosa: '#f4a3b8', grau: '#9a9aa4', mint: '#9ad8c0' } },
@@ -199,6 +213,7 @@ export const WALLPAPERS: readonly SurfaceDef[] = [
   { id: 'tapete-kacheln', name: 'Küchenfliesen', style: 'basis', price: 600, kind: 'tapete', pattern: 'kacheln', color: '#f3f1ea', accent: '#9ad8c0', description: 'Weiße Fliesen mit einer mintgrünen Bordüre. Spritzwasser? Kein Problem.' },
   { id: 'tapete-glas', name: 'Glaswand', style: 'basis', price: 1200, kind: 'tapete', pattern: 'glas', color: '#d9eef2', accent: '#8fb08a', description: 'Große Glasscheiben mit weißen Sprossen – draußen grünt der Garten.' },
   { id: 'tapete-backstein', name: 'Backstein', style: 'basis', price: 700, kind: 'tapete', pattern: 'backstein', color: '#c9775a', accent: '#e9d8c4', description: 'Rote Backsteine mit hellen Fugen. Gemütlich wie ein alter Gewölbekeller.' },
+  { id: 'tapete-flocken', name: 'Schneeflocken-Tapete', style: 'winter', price: 600, kind: 'tapete', pattern: 'flocken', color: '#dfeef6', accent: '#ffffff', description: 'Eisblau mit weißen Schneeflocken – gemütlich-kalt, aber nur an der Wand.' },
   { id: 'tapete-rosa', name: 'Pastellrosa Tapete', style: 'basis', price: 400, kind: 'tapete', pattern: 'streifen', color: '#fbe0e8', accent: '#f6cfdb', description: 'Ganz zarte Streifen in Rosa.' },
 ];
 
@@ -218,7 +233,7 @@ export const FLOORS: readonly SurfaceDef[] = [
 // Kunstwerke (Bild auf Staffelei) aus `art.ts` – nur über Jens erhältlich
 for (const a of ARTWORKS) (FURNITURE as FurnitureDef[]).push({ id: a.id, name: a.name, style: 'kunst', gift: true, price: a.price, w: 1, d: 1, description: `${a.description} – ${a.artist}` });
 
-export const STYLE_LABELS: Record<FurnitureStyle, string> = { japanisch: 'Japanisch', basis: 'Basis', cottage: 'Cottagecore', retro: 'Retro-Oma-Chic', modern: 'Modern', midcentury: 'Mid-Century & Bauhaus', handgemacht: 'Handgemacht', garten: 'Garten', kunst: 'Kunst' };
+export const STYLE_LABELS: Record<FurnitureStyle, string> = { japanisch: 'Japanisch', basis: 'Basis', cottage: 'Cottagecore', retro: 'Retro-Oma-Chic', modern: 'Modern', midcentury: 'Mid-Century & Bauhaus', handgemacht: 'Handgemacht', garten: 'Garten', kunst: 'Kunst', winter: 'Winterzauber' };
 
 /** Möbel-Gegenstand (mit Variante) → Basis + Farbe */
 export interface FurnitureItem {

@@ -94,6 +94,10 @@ const list: ItemDef[] = [
   { id: 'blumensalat', name: 'Blumensalat', plural: 'Schüsseln Blumensalat', category: 'essen', price: 140, description: 'Ein bunter Salat mit essbaren Blüten. Zu schön zum Essen. Fast.' },
   // Feste
   { id: 'plaetzchen', name: 'Omas Plätzchen', plural: 'Omas Plätzchen', category: 'essen', price: 15, description: 'Zimtsterne, Vanillekipferl, Butterplätzchen. Weihnachten in Keksform.' },
+  // Winter
+  { id: 'schneeball', name: 'Schneeball', plural: 'Schneebälle', category: 'material', price: 2, maxStack: 30, description: 'Fest gerollt und eiskalt. Drei davon und zwei Äste – fertig ist ein Schneemann!' },
+  { id: 'bratapfel', name: 'Bratapfel', plural: 'Bratäpfel', category: 'essen', price: 95, description: 'Ein warmer Apfel mit Keks-Zimt-Füllung. Riecht das ganze Haus nach Weihnachten.' },
+  { id: 'zimtsterne', name: 'Zimtsterne', plural: 'Zimtsterne', category: 'essen', price: 40, description: 'Kleine Sterne mit weißem Zuckerguss. Selbst gebacken! Oma sagt: „Gar nicht schlecht.“ Das ist ein großes Lob.' },
   { id: 'lebkuchenherz', name: 'Lebkuchenherz', plural: 'Lebkuchenherzen', category: 'geschenk', price: null, maxStack: 1, description: 'Von Jens, mit Zuckerguss: „Ma chérie“. Und ein Hauch Glitzer. Natürlich.' },
   { id: 'geburtstagstorte', name: 'Olis Geburtstagstorte', plural: 'Olis Geburtstagstorten', category: 'essen', price: 300, description: 'Drei Stockwerke geplant, zwei geschafft. Mit ganz viel Liebe und schiefer Kerze.' },
   { id: 'gluecksklee', name: 'Glücksklee', plural: 'Glücksklee', category: 'fund', price: 50, description: 'Ein vierblättriges Kleeblatt für das neue Jahr. Von Oma – „bringt Glück, keine Widerrede“.' },
