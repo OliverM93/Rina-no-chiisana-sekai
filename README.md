@@ -263,5 +263,6 @@ Pull Requests werden automatisch geprüft (Typecheck, Tests, Build – `.github/
 ## Technik
 
 TypeScript · Vite · Three.js · Preact · Vitest. Alle 3D-Modelle und Texturen entstehen im Code (keine
-externen Modelle oder Bilder). Details zu Architektur und Konventionen stehen in [`CLAUDE.md`](CLAUDE.md), die Meilensteine in
-[`ROADMAP.md`](ROADMAP.md).
+externen Modelle oder Bilder). Die Projektdokumentation liegt in [`docs/`](docs/): [Architektur](docs/architecture.md),
+[Spielmechaniken](docs/game-mechanics.md) und [Entwicklungsstand & Roadmap](docs/development-status.md).
+Arbeitsregeln und Konventionen stehen in [`CLAUDE.md`](CLAUDE.md).
