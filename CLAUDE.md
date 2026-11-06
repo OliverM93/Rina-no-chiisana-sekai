@@ -295,6 +295,8 @@ src/
   kleine Details innerhalb von Zeichenfunktionen).
 - **Keine externen Assets/Abhängigkeiten zur Laufzeit** (Schrift Nunito kommt als npm-Paket mit, OFL).
 - **Inhalte gehören in `src/data/`**, nicht in Szenen/Komponenten.
+- **Durchlauf-Test:** `game/playthrough.test.ts` spielt die ganze Rahmenhandlung (alle Einzüge, alle Ausbaustufen,
+  Speichern & Laden) mit erreichbaren Mitteln durch – bei neuen Meilensteinen dort ergänzen.
 - **Kernlogik bekommt Tests** (Zeit, Inventar, Speichern, Freundschaft, Bau-Grid, Wegfindung …).
 - **Spielstand-Format geändert?** → `SAVE_VERSION` erhöhen, Migration in `MIGRATIONS` ergänzen, Test schreiben.
 - **Nichts Verpflichtendes, kein Scheitern, kein Zeitdruck.** Alles Tägliche ist optional.
