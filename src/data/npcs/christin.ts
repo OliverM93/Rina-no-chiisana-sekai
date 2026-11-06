@@ -2,12 +2,17 @@
  * Christin – Olafs Freundin. Sehr ordentlich, achtet auf Ordnung und
  * Sauberkeit, freundlich, aber mit klaren Vorstellungen davon, wo die
  * Dinge hingehören.
+ *
+ * Ihre Rolle im Dorf: Sie gießt abends Linas Garten mit (`game/christin.ts`) und hat
+ * jeden Tag einen Ordnungstipp – kleine, echte Spieltipps in ihrer Art (`CHRISTIN_TIPS`).
  */
 import { LOOKS } from './looks';
 import type { NpcDef } from './types';
 
 const PLATZ = { x: 23, y: 16, w: 9, h: 7 };
 const WIESE = { x: 4, y: 19, w: 12, h: 8 };
+/** Vor Linas Beet – hier gießt sie abends */
+const BEET_LINA = { x: 5, y: 13, w: 6, h: 2 };
 
 export const CHRISTIN: NpcDef = {
   id: 'christin',
@@ -23,7 +28,8 @@ export const CHRISTIN: NpcDef = {
     { from: '11:00', label: 'Spaziergang über die Wiese', activity: { kind: 'spazieren', area: WIESE } },
     { from: '13:00', label: 'Sitzt auf der Bank am Platz', activity: { kind: 'sitzen', bench: 'bank-platz' } },
     { from: '15:00', label: 'Kontrollgang über den Dorfplatz', activity: { kind: 'spazieren', area: PLATZ } },
-    { from: '18:00', label: 'Zu Hause', activity: { kind: 'zuhause' } },
+    { from: '18:00', label: 'Gießt Linas Garten', activity: { kind: 'spazieren', area: BEET_LINA } },
+    { from: '18:45', label: 'Zu Hause', activity: { kind: 'zuhause' } },
     { from: '22:00', label: 'schläft', activity: { kind: 'zuhause', sleeping: true } },
   ],
   preferences: {
@@ -39,6 +45,7 @@ export const CHRISTIN: NpcDef = {
       { text: ['Oh, Lina! Schön dich zu sehen.', 'Du hast da einen kleinen Fleck. Moment … So. Viel besser.'] },
       { text: ['Ein ruhiger Abend.', 'Ich hab Olafs Socken nach Farben sortiert. Er hat es noch nicht bemerkt.'], when: { phases: ['abend', 'abenddaemmerung'] } },
       { text: ['Alles Gute zum Geburtstag, Lina! 🎂', 'Ich hab dir einen Kuchen gebacken. Und die Küche danach natürlich sofort aufgeräumt.'], when: { tags: ['geburtstag-lina'] }, weight: 10 },
+      { text: ['Hallo Lina!', 'Ich hab vorhin deine Blumen gegossen. Nicht zu viel, nicht zu wenig. Ich hab mitgezählt.'], when: { tags: ['beet-gegossen'] }, weight: 4 },
       { text: ['Dieser Regen!', 'Jetzt tragen alle Matsch auf den Dorfplatz. Ich seh schon, was ich morgen mache.'], when: { tags: ['wetter-regen'] }, weight: 3 },
     ],
     chat: [
@@ -59,6 +66,10 @@ export const CHRISTIN: NpcDef = {
       { text: ['Olaf hat seine Quittungen nach Datum sortiert.', 'Ich hab sie nach Farbe umsortiert. Viel schöner. Er war … erschüttert.'] },
       { text: ['Hast du in deinem Haus schon alles an seinem Platz?', 'Ein Kissen hier, ein Tischchen da – Hauptsache gerade ausgerichtet!'] },
       { text: ['Deine Oma hat mich gefragt, ob ich ihr beim Putzen helfe.', 'Ich hab Ja gesagt. Sie hat gesagt, sie hat schon geputzt. Und dann hatte sie das letzte Wort.'] },
+      { text: ['Beim Gießen fang ich immer links an und arbeite mich nach rechts vor.', 'Wie beim Lesen. Dann weiß das Beet, woran es ist.'] },
+      { text: ['Ich hab in deinem Beet nach Unkraut gesucht.', 'Keins gefunden. Ich hab aber auch sehr genau geguckt. Mit Lupe.'], when: { tags: ['beet-gegossen'] }, weight: 2 },
+      { text: ['Weißt du, was ich an Blumen mag?', 'Die wachsen ganz von allein in die richtige Richtung. Nach oben. Sehr vernünftig.'] },
+      { text: ['Gießkanne leer machen, umgedreht hinstellen, fertig.', 'Dann kann sie trocknen. Kleiner Tipp. Ganz umsonst.'] },
       { text: ['Ich bin froh, dass Olaf und ich hier sind.', 'Und du hast so ein schönes, ordentliches Beet.'], when: { minHearts: 2 } },
     ],
     gifts: {
@@ -91,4 +102,25 @@ export const CHRISTIN_WELCOME: readonly string[] = [
   'Hallo Lina! Ich freu mich so, dass wir jetzt Nachbarn sind.',
   'Wenn du mal Hilfe beim Aufräumen brauchst – ich bin direkt nebenan.',
   '… Und wenn du keine brauchst, komme ich trotzdem mal gucken.',
+];
+
+/**
+ * Christins Ordnungstipp des Tages: echte kleine Spieltipps – sachlich, hilfreich und ganz Christin.
+ * (Kein Lob fürs Aufräumen – nur Tipps.)
+ */
+export const CHRISTIN_TIPS: readonly (readonly string[])[] = [
+  ['Ordnungstipp: In deiner Tasche gibt es einen Knopf „Sortieren“.', 'Ein Klick – und alles liegt ordentlich nebeneinander. Herrlich.'],
+  ['Ordnungstipp: Was du nicht brauchst, kommt in die Verkaufskiste vor deinem Haus.', 'Platz schaffen UND Sternchen verdienen. Zwei Fliegen, eine Klappe.'],
+  ['Ordnungstipp: Äste und Steine nicht herumliegen lassen!', 'An Opas Werkbank wird daraus ein Hocker, ein Zaun oder ein Gartenweg.'],
+  ['Ordnungstipp: Beim Einrichten – Taste G – drehst du Möbel mit R.', 'Gerade ausgerichtet sieht alles gleich doppelt so schön aus.'],
+  ['Ordnungstipp: Das Sammelbuch – Taste B – ist wie ein Aktenordner.', 'Jeder Fisch und jeder Käfer bekommt seinen eigenen Platz. Sehr befriedigend.'],
+  ['Ordnungstipp: Ein Hochbeet im Garten bringt zwei Pflanzplätze mehr.', 'Und man muss sich nicht so bücken. Mein Rücken sagt Danke.'],
+  ['Ordnungstipp: Regen gießt dein Beet gleich mit.', 'Und an trockenen Tagen schau ich abends vorbei und gieße, was noch durstig ist. Abends verdunstet weniger. Logisch.'],
+  ['Ordnungstipp: Sternchen, die du gerade nicht brauchst, gehören aufs Sparbuch bei Olaf.', 'Am Monatsanfang gibt es sogar ein bisschen Zinsen. Er erklärt dir das gern. Sehr ausführlich.'],
+  ['Ordnungstipp: Wand-Deko hängt an der Wand – darunter darf trotzdem ein Möbel stehen.', 'Platz doppelt genutzt. So mag ich das.'],
+  ['Ordnungstipp: Teppiche zuerst legen, dann die Möbel draufstellen.', 'Das ist die richtige Reihenfolge. Immer.'],
+  ['Ordnungstipp: Beim Blumenpflücken fällt manchmal ein Samenkorn ab.', 'Gleich wieder einpflanzen – dann bleibt das Beet nie leer.'],
+  ['Ordnungstipp: Obstbäume tragen nach drei Tagen wieder.', 'Ich schreib mir das immer in den Kalender. Mit Farbe für jede Obstsorte.'],
+  ['Ordnungstipp: Muscheln am Strand liegen jeden Tag an anderen Stellen.', 'Einmal am Morgen ablaufen, und du hast sie alle. Systematisch, von links nach rechts.'],
+  ['Ordnungstipp: Felsen kann man einmal am Tag abklopfen.', 'Ich mach mir dafür eine Runde. Immer dieselbe. Dann vergess ich keinen.'],
 ];

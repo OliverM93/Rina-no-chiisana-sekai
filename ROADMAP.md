@@ -229,6 +229,8 @@ Legende: ✅ erledigt · 🚧 in Arbeit · ⬜ geplant
   Funkeln beim Aufheben & Fangen, Herzchen (Herz-Aufstieg, Lieblingsgeschenk, Winston streicheln), Erdklumpen
   beim Graben, Konfetti beim Bauen & Kochen, Glühwürmchen in Sommernächten · Lina macht Freudensprünge,
   Bewohner winken zur Begrüßung, Figuren schauen sich beim Stillstehen um
+- ✅ **Christins Rolle:** gießt abends Linas Garten mit (nicht bei Regen), Ordnungstipp des Tages im Gespräch
+  (14 echte kleine Spieltipps), neue Garten-Sprüche
 - ⬜ Weitere Animationen & Partikel, Balancing
 
 ## 💡 Ideen-Parkplatz
@@ -242,6 +244,5 @@ Legende: ✅ erledigt · 🚧 in Arbeit · ⬜ geplant
 ## ❓ Offene Fragen (bei Gelegenheit klären)
 
 - Geburtstage der Bewohner
-- Christins Rolle im Dorf ausbauen (z. B. kleine Aufräum-Aufgaben, Gartenpflege, Ordnungs-Tipps)?
 - Wer zieht als Erstes ein (nach Oma Gisela)? Welche Bauplätze für wen?
 - Lieblingsessen/-farben/-hobbys der Bewohner für Geschenke & Dialoge
