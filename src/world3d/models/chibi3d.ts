@@ -130,7 +130,8 @@ function drawFace(a: Appearance, blink: boolean): HTMLCanvasElement {
   ctx.fill();
 
   // Mund
-  const my = a.beard === 'voll' ? eyeY + 46 : eyeY + 40;
+  // Mit Bart sitzt der Mund in der Lücke zwischen Schnurrbart und Bart
+  const my = a.beard === 'voll' || a.beard === 'kurz' ? eyeY + 43 : eyeY + 40;
   const lip = darken(a.skinTone, 0.55);
   if (a.smile === 'laecheln') {
     ctx.strokeStyle = lip;
@@ -209,6 +210,42 @@ function part(geo: THREE.BufferGeometry, color: string | THREE.Material, sx: num
 /** Kugelausschnitt (für Haarkappen, Bart …) */
 function shell(r: number, color: string, phiStart: number, phiLength: number, thetaStart: number, thetaLength: number): THREE.Mesh {
   const g = new THREE.SphereGeometry(r, 28, 18, phiStart, phiLength, thetaStart, thetaLength);
+  return mesh(g, toon(color, { side: THREE.DoubleSide }));
+}
+
+/**
+ * Bart als ein Stück Kugelschale: unten bis unters Kinn (`thetaEnd`), oben in der Mitte knapp unter der
+ * Unterlippe (`midTop`) und zu den Seiten sanft bis zu den Koteletten hoch (`sideTop`). Winkel wie bei
+ * `THREE.SphereGeometry` (theta von oben gemessen, Gesicht bei phi = FRONT).
+ */
+function beardShell(r: number, color: string, midTop: number, sideTop: number, thetaEnd: number): THREE.Mesh {
+  const W = 36;
+  const H = 14;
+  const spread = 1.18;
+  const pos: number[] = [];
+  const idx: number[] = [];
+  for (let i = 0; i <= W; i++) {
+    const d = -spread + (i / W) * spread * 2;
+    // weicher Übergang: Mitte (um den Mund) tief, ab ~0.8 rad seitlich hoch
+    const t = Math.min(1, Math.max(0, (Math.abs(d) - 0.28) / 0.55));
+    const top = midTop + (sideTop - midTop) * t * t * (3 - 2 * t);
+    const phi = FRONT + d;
+    for (let j = 0; j <= H; j++) {
+      const theta = top + (j / H) * (thetaEnd - top);
+      pos.push(-r * Math.cos(phi) * Math.sin(theta), r * Math.cos(theta), r * Math.sin(phi) * Math.sin(theta));
+    }
+  }
+  for (let i = 0; i < W; i++) {
+    for (let j = 0; j < H; j++) {
+      const a = i * (H + 1) + j;
+      const b = (i + 1) * (H + 1) + j;
+      idx.push(a, b, a + 1, b, b + 1, a + 1);
+    }
+  }
+  const g = new THREE.BufferGeometry();
+  g.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
+  g.setIndex(idx);
+  g.computeVertexNormals();
   return mesh(g, toon(color, { side: THREE.DoubleSide }));
 }
 
@@ -872,19 +909,17 @@ export class Chibi3D {
     } else if (a.beard !== 'keiner') {
       const bc = a.beardColor || lighten(a.hairColor, 0.05);
       const full = a.beard === 'voll';
-      const beard = shell(R * 1.03, bc, FRONT - 1.1, 2.2, full ? 1.9 : 2.05, full ? 0.85 : 0.65);
+      // Ein Stück: Koteletten an den Seiten hoch, in der Mitte bis knapp unter die Unterlippe (Mund bleibt frei)
+      const beard = beardShell(R * 1.03, bc, full ? 1.88 : 1.98, full ? 1.45 : 1.55, full ? 2.75 : 2.62);
       if (oval) taperChin(beard.geometry, R * 1.03);
       beard.scale.set(wide, 0.93, 0.95);
       this.head.add(beard);
-      // Koteletten
+      // Schnurrbart: zwischen Nase und Mund, an den Enden leicht hängend
       for (const s of [-1, 1]) {
-        const sb = shell(R * 1.025, bc, FRONT + s * 1.05 - 0.18, 0.36, 1.35, 0.7);
-        if (oval) taperChin(sb.geometry, R * 1.025);
-        sb.scale.set(wide, 0.93, 0.95);
-        this.head.add(sb);
+        const m = part(sphereLow, bc, R * 0.15, R * 0.06, R * 0.06, s * R * 0.12, -R * 0.115, R * 0.925);
+        m.rotation.z = s * -0.2;
+        this.head.add(m);
       }
-      // Schnurrbart
-      for (const s of [-1, 1]) this.head.add(part(sphereLow, bc, R * 0.14, R * 0.065, R * 0.06, s * R * 0.12, -R * 0.32, R * 0.9));
     }
 
     addHair(this.head, a, R);
