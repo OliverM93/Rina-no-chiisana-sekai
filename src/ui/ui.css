@@ -1311,6 +1311,38 @@ body:has(.dialog-layer) .decor-bar {
   padding: 2px;
 }
 
+.flower-rows {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  max-height: 52vh;
+  overflow-y: auto;
+  padding: 2px;
+}
+
+.flower-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.flower-row-name {
+  flex: 0 0 120px;
+  font-weight: 700;
+  font-size: 0.85rem;
+  color: var(--ui-text-soft, var(--ui-text));
+}
+
+.flower-row-cells {
+  display: flex;
+  gap: 6px;
+}
+
+.flower-row-cells .book-cell {
+  width: 52px;
+  flex: none;
+}
+
 .book-cell {
   aspect-ratio: 1;
   border-radius: 16px;

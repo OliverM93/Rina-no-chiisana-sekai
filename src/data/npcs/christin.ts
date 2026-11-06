@@ -89,6 +89,8 @@ export const CHRISTIN: NpcDef = {
     goodbye: ['Tschüss, Lina!', 'Bis bald – und Schuhe abputzen!', 'Mach\'s gut! Und räum schön auf.'],
   },
   letters: [
+    { id: 'tulpen-weiss', subject: 'Weiße Tulpen', body: 'Liebe Lina,\n\nweiße Tulpen! Ich würde sie immer abwechselnd mit den roten pflanzen: rot, weiß, rot, weiß. Sieht ordentlich aus.\n\nDie Natur ist da eigensinnig: Wenn man beim Pflücken Glück hat, fällt ein Same ab, aus dem rosa Tulpen werden. Das war so nicht geplant. Ich hab es trotzdem gern.\n\nChristin', gift: { itemId: 'samen-tulpe-weiss', count: 3 } },
+    { id: 'rosen-weiss', subject: 'Weiße Rosen', body: 'Liebe Lina,\n\nweiße Rosen gehören in einen Garten, der Ruhe ausstrahlt. Ich hab dir Samen mitgeschickt.\n\nBitte nicht zu dicht neben die roten pflanzen. … Es sei denn, du willst Rosa. Dann doch.\n\nChristin', gift: { itemId: 'samen-rose-weiss', count: 2 } },
     { id: 'rosen', subject: 'Für ein ordentliches Rosenbeet', body: 'Liebe Lina,\n\nich hab dir Rosensamen besorgt. Rosen in einer geraden Reihe sind das Schönste, was es gibt.\n\nNicht zu dicht pflanzen! Und regelmäßig gießen.\n\nLiebe Grüße\nChristin 🌹', gift: { itemId: 'samen-rose', count: 3 } },
     { id: 'ordnung', subject: 'Kleiner Ordnungstipp', body: 'Liebe Lina,\n\nein Tipp von mir: Jeden Tag eine Sache aufräumen. Dann wird es nie unordentlich!\n\nLiebe Grüße\nChristin', gift: { itemId: 'samen-lavendel', count: 2 } },
   ],
@@ -120,6 +122,7 @@ export const CHRISTIN_TIPS: readonly (readonly string[])[] = [
   ['Ordnungstipp: Wand-Deko hängt an der Wand – darunter darf trotzdem ein Möbel stehen.', 'Platz doppelt genutzt. So mag ich das.'],
   ['Ordnungstipp: Teppiche zuerst legen, dann die Möbel draufstellen.', 'Das ist die richtige Reihenfolge. Immer.'],
   ['Ordnungstipp: Beim Blumenpflücken fällt manchmal ein Samenkorn ab.', 'Gleich wieder einpflanzen – dann bleibt das Beet nie leer.'],
+  ['Ordnungstipp: Pflanz zwei Farben derselben Blume nebeneinander – zum Beispiel rote und gelbe Tulpen.','Wenn beide blühen und du eine pflückst, fällt manchmal ein Misch-Same ab. Das Sammelbuch hat einen Reiter für jede Farbe.'],
   ['Ordnungstipp: Obstbäume tragen nach drei Tagen wieder.', 'Ich schreib mir das immer in den Kalender. Mit Farbe für jede Obstsorte.'],
   ['Ordnungstipp: Muscheln am Strand liegen jeden Tag an anderen Stellen.', 'Einmal am Morgen ablaufen, und du hast sie alle. Systematisch, von links nach rechts.'],
   ['Ordnungstipp: Felsen kann man einmal am Tag abklopfen.', 'Ich mach mir dafür eine Runde. Immer dieselbe. Dann vergess ich keinen.'],

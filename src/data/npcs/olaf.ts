@@ -78,6 +78,7 @@ export const OLAF: NpcDef = {
     goodbye: ['Bis später, mein Schatz!', 'Pass auf dich auf!', 'Und immer schön die Quittungen aufheben!'],
   },
   letters: [
+    { id: 'sonnenblumen-rot', subject: 'Rote Sonnenblumen', body: 'Liebe Lina,\n\nein Kollege vom Amt hat mir rote Sonnenblumen-Samen mitgebracht. Ich hab sie nicht gebraucht. Ich hab ihn gefragt, ob sie rot sind. Er hat „ja“ gesagt.\n\nGelb und Rot zusammen, soll man gehört haben, ergibt Orange. Ich glaube das nicht. Beweis es mir.\n\nPapa', gift: { itemId: 'samen-sonnenblume-rot', count: 2 } },
     { id: 'tipp', subject: 'Ein kleiner Spartipp', body: 'Liebe Lina,\n\nwer jeden Tag ein paar Muscheln verkauft, hat am Ende des Monats eine ordentliche Summe. Kleinvieh macht auch Mist!\n\nDein Papa' },
     { id: 'gruss', subject: 'Grüße von nebenan', body: 'Liebe Lina,\n\nChristin lässt fragen, ob du deine Fenster schon geputzt hast. Ich habe gesagt, das geht sie nichts an.\n\nSie hat trotzdem einen Lappen beigelegt. Dann eben Äpfel – den Lappen hab ich versteckt.\n\nDein Papa', gift: { itemId: 'apfel', count: 2 } },
   ],

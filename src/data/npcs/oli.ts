@@ -95,6 +95,7 @@ export const OLI: NpcDef = {
   },
   dailyTreat: { itemId: 'keks', chance: 0.25, lines: ['Ach, warte – ich hab dir was gebacken!', 'Selbstgemacht. Nach Omas Rezept. Psst, das darf sie nicht wissen.'] },
   letters: [
+    { id: 'vergissmeinnicht-rosa', subject: 'Für unser Beet', body: 'Lini,\n\nich hab rosa Vergissmeinnicht-Samen gefunden! Rosa! Ich wusste gar nicht, dass es das gibt.\n\nWenn du sie neben die blauen pflanzt, kommt vielleicht etwas Lila raus. Wie dein Lieblings-Pulli. Also … fast.\n\nDein Oli 💕', gift: { itemId: 'samen-vergissmeinnicht-rosa', count: 2 } },
     { id: 'zettel', subject: 'Zettel am Kühlschrank', body: 'Lini,\n\nbin beim Training. Kaffee steht in der Kanne, noch warm.\n\nHab einen schönen Tag! 💕\n\nOli', gift: { itemId: 'keks', count: 1 } },
     { id: 'konzert', subject: 'Konzert-Bericht', body: 'Lini,\n\ngestern war es soooo laut. Mein linkes Ohr piept noch.\n\nAber das Beste am Abend war, nach Hause zu kommen. Zu dir. 🤘💕\n\nOli' },
     { id: 'code', subject: 'Programmiert für dich', body: 'Lini,\n\nwhile (true) {\n  hab_dich_lieb();\n}\n\nDas Programm läuft für immer. Absichtlich.\n\nOli' },

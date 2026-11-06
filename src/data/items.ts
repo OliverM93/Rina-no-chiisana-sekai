@@ -3,6 +3,7 @@ import { FURNITURE_BY_ITEM } from './furniture';
 import { RECIPE_ITEM_PREFIX, RECIPES } from './recipes';
 import { FISH, INSECTS } from './species';
 import { FINDS } from './fossils';
+import { COLORS, colorWord, FLOWER_SPECIES, type FlowerColor, paletteOf, SPECIES_BY_ID, variantId } from './flowers';
 
 /**
  * Alle Gegenstände im Spiel.
@@ -49,7 +50,7 @@ const list: ItemDef[] = [
 
   // Gartenblumen
   { id: 'tulpe', name: 'Tulpe', plural: 'Tulpen', category: 'blume', price: 25, description: 'Eine knallrote Tulpe aus Linas eigenem Beet. 🌷' },
-  { id: 'rose', name: 'Rose', plural: 'Rosen', category: 'blume', price: 40, description: 'Duftet wunderbar. Fast zu schön zum Verkaufen … 🌹' },
+  { id: 'rose', name: 'Rose', plural: 'Rosen', category: 'blume', price: 40, description: 'Eine rote Rose. Duftet wunderbar. Fast zu schön zum Verkaufen … 🌹' },
   { id: 'sonnenblume', name: 'Sonnenblume', plural: 'Sonnenblumen', category: 'blume', price: 30, description: 'Groß und fröhlich – dreht sich immer zur Sonne. 🌻' },
   { id: 'lavendel', name: 'Lavendel', plural: 'Lavendelzweige', category: 'blume', price: 30, description: 'Riecht nach Sommer in der Provence. Jens würde sagen: „Magnifique!“' },
   { id: 'vergissmeinnicht', name: 'Vergissmeinnicht', plural: 'Vergissmeinnicht', category: 'blume', price: 35, description: 'Winzige himmelblaue Blüten. Damit man sich immer erinnert. 💙' },
@@ -131,6 +132,40 @@ for (const r of RECIPES) {
   list.push({ id: `${RECIPE_ITEM_PREFIX}${r.id}`, name: `Rezept: ${name}`, plural: `Rezepte: ${name}`, category: 'rezept', price: null, maxStack: 1, description: `Eine Bauanleitung für die Werkbank: ${name}.` });
 }
 
+// Blumen in anderen Farben (aus `flowers.ts`): Blüten & Samen entstehen automatisch
+for (const sp of FLOWER_SPECIES) {
+  const flower = list.find((i) => i.id === sp.id) as ItemDef;
+  const seed = list.find((i) => i.id === `samen-${sp.id}`) as ItemDef;
+  for (const color of [...sp.seedColors, ...sp.crossColors]) {
+    const cross = sp.crossColors.includes(color);
+    const rare = color === 'schwarz';
+    const mult = rare ? 6 : cross ? 2 : 1.3;
+    const word = colorWord(color, sp.gender);
+    const adj = word.charAt(0).toUpperCase() + word.slice(1);
+    const label = COLORS[color].label;
+    list.push({
+      id: variantId(sp, color),
+      name: `${adj} ${flower.name}`,
+      plural: `${colorWord(color, sp.gender, true)} ${flower.plural}`,
+      category: 'blume',
+      price: Math.round(flower.price! * mult),
+      description: rare
+        ? `${adj} ${flower.name}: Gibt es sonst nirgends – nur, wenn zwei Mischfarben nebeneinander blühen und das Glück mitspielt. 🖤`
+        : cross
+          ? `${adj} ${flower.name} – eine neue Farbe! Entstanden, als zwei Blumen nebeneinander geblüht haben. ✨`
+          : `${adj} ${flower.name}. Ein bisschen anders als die normale – und ein guter Kreuzungs-Partner im Beet.`,
+    });
+    list.push({
+      id: variantId(sp, color, true),
+      name: `${seed.name} (${label})`,
+      plural: `${seed.plural} (${label})`,
+      category: 'samen',
+      price: Math.round(seed.price! * mult),
+      description: rare ? 'Ein ganz besonderer Same. Daraus wird etwas Schwarzes … 🖤' : cross ? 'Ein Misch-Same. Was wohl daraus wird? ✨' : `${seed.description} (Farbe: ${label})`,
+    });
+  }
+}
+
 export const ITEMS: Readonly<Record<string, ItemDef>> = Object.fromEntries(list.map((i) => [i.id, i]));
 
 /** Reihenfolge beim Sortieren der Tasche */
@@ -173,23 +208,51 @@ export const ROCK_FINDS = [
   { itemId: 'glitzerstein', weight: 12 },
 ] as const;
 
-/** Blumen fürs eigene Beet: Samen → Blume */
+/** Blumen fürs eigene Beet: Samen → Blume (alle Farben) */
 export interface GardenFlower {
+  /** ID der Blume (auch Pflanzen-ID im Beet) */
   flower: string;
   seed: string;
   color: string;
   center: string;
+  /** Art (`tulpe` für `tulpe-gelb`) */
+  species: string;
+  /** Farbe (nur bei Arten mit Farbvarianten) */
+  colorKey: FlowerColor | null;
+  /** Gibt es nur durch Kreuzen? (kein Samen aus Briefen & Funden) */
+  crossOnly: boolean;
 }
 
-export const GARDEN_FLOWERS: readonly GardenFlower[] = [
-  { flower: 'tulpe', seed: 'samen-tulpe', color: '#e8484f', center: '#f7d26a' },
-  { flower: 'rose', seed: 'samen-rose', color: '#e85a8a', center: '#b8324a' },
-  { flower: 'sonnenblume', seed: 'samen-sonnenblume', color: '#f7c832', center: '#6a4a2a' },
-  { flower: 'lavendel', seed: 'samen-lavendel', color: '#a98ad8', center: '#7a5ab8' },
-  { flower: 'vergissmeinnicht', seed: 'samen-vergissmeinnicht', color: '#7ab8f0', center: '#f7e26a' },
+/** Kräuter ohne Farbvarianten */
+const PLAIN_HERBS: ReadonlyArray<Pick<GardenFlower, 'flower' | 'seed' | 'color' | 'center'>> = [
   { flower: 'kamille', seed: 'samen-kamille', color: '#ffffff', center: '#f7d26a' },
   { flower: 'pfefferminze', seed: 'samen-pfefferminze', color: '#6fbf73', center: '#4f9a5a' },
 ];
+
+export const GARDEN_FLOWERS: readonly GardenFlower[] = [
+  ...FLOWER_SPECIES.flatMap((sp) =>
+    paletteOf(sp).map((c): GardenFlower => ({
+      flower: variantId(sp, c),
+      seed: variantId(sp, c, true),
+      color: COLORS[c].hex,
+      center: sp.center,
+      species: sp.id,
+      colorKey: c,
+      crossOnly: sp.crossColors.includes(c),
+    })),
+  ),
+  ...PLAIN_HERBS.map((h): GardenFlower => ({ ...h, species: h.flower, colorKey: null, crossOnly: false })),
+];
+
+/** Blumenart einer Blume/eines Samens (`tulpe-gelb` → `tulpe`), sonst die ID selbst */
+export function speciesOfFlower(id: string): string {
+  return GARDEN_FLOWER[id]?.species ?? FLOWER_BY_SEED[id]?.species ?? id;
+}
+
+export function hasColorVariants(species: string): boolean {
+  return species in SPECIES_BY_ID;
+}
+
 export const FLOWER_BY_SEED: Readonly<Record<string, GardenFlower>> = Object.fromEntries(GARDEN_FLOWERS.map((g) => [g.seed, g]));
 export const GARDEN_FLOWER: Readonly<Record<string, GardenFlower>> = Object.fromEntries(GARDEN_FLOWERS.map((g) => [g.flower, g]));
 

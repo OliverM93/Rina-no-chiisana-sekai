@@ -1297,7 +1297,9 @@ export class World3D {
       const got = pickGardenFlower(this.session, t.x, t.y);
       if (got) {
         this.garden.bounce(t);
-        this.session.bus.emit('toast', { text: got.seed ? `${name} gepflückt – und ein paar Samen gefunden! 🌱` : `${name} gepflückt! 💐`, icon: itemIconUrl(got.flower) });
+        const text = got.crossed ? `${name} gepflückt – und ein Misch-Same ist abgefallen! ✨` : got.seed ? `${name} gepflückt – und ein paar Samen gefunden! 🌱` : `${name} gepflückt! 💐`;
+        this.session.bus.emit('toast', { text, icon: itemIconUrl(got.crossed && got.seedId ? got.seedId : got.flower) });
+        if (got.crossed) this.fxAt('funkeln', (t.x + 0.5) * TILE, (t.y + 0.5) * TILE, 0.3);
       }
       return;
     }

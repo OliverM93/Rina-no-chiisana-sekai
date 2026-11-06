@@ -86,6 +86,8 @@ export const JENS: NpcDef = {
     goodbye: ['Au revoir, chérie! 💋', 'Tschüssi, mei Gudste!', 'À bientôt – und bleib fabelhaft!'],
   },
   letters: [
+    { id: 'rosen-gelb', subject: 'Gelbe Rosen, ma chérie', body: 'Ma chérie,\n\ngelbe Rosen! In Paris stehen sie in jedem zweiten Fenster. Ich hab dir Samen eingepackt.\n\nStell sie neben deine roten, und mit etwas Glück wird daraus ein Orange wie ein Sonnenuntergang über der Seine. Sehr fotogen. Sehr Jens.\n\nBisous\nJens', gift: { itemId: 'samen-rose-gelb', count: 2 } },
+    { id: 'vergissmeinnicht-weiss', subject: 'Ein kleines Meer aus Weiß', body: 'Liebe Lina,\n\nweißes Vergissmeinnicht! Wie Schnee im Mai. Ich hab einen Haufen Samen bekommen und viel zu wenig Beet.\n\nNimm sie. Mit einem Hauch Rosa daneben wird daraus ein sehr schönes Lila. Probier es aus, ich bin gespannt.\n\nDein Onkel', gift: { itemId: 'samen-vergissmeinnicht-weiss', count: 2 } },
     { id: 'kunst', subject: 'Ein kleiner Gedanke', body: 'Ma chérie,\n\nheute hab ich ein Bild gemalt: blauer Himmel, eine rosa Wolke, und mittendrin ein kleiner Dackel.\n\nRate mal, wer das ist.\n\nBisous,\nOnkel Jens 🎨' },
     { id: 'coach', subject: 'Coaching-Tipp der Woche', body: 'Liebe Lina,\n\nmorgens in den Spiegel schauen und sagen: „Ich bin fabelhaft.“\n\nFunktioniert bei mir jeden Tag. Probier\'s aus!\n\nDein Jens 💫' },
   ],
