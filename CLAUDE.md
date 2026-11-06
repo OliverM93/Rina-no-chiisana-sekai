@@ -258,6 +258,10 @@ src/
 - **Feste:** `core/festivals.ts` (welches Fest an welchem Datum, Ostern berechnet), Inhalte in
   `data/festivals.ts` (Geschenke & Sprüche je Bewohner), Regeln in `game/festivals.ts` (`festTalk` beim ersten
   Gespräch, Geschenk 1× pro Fest & Jahr über `world.dates`), Schmuck in `world3d/Festivals3D.ts`.
+- **Christin:** gießt abends (ab 18:30, nach dem Angeln mit Olaf; sonntags nach dem Essen bei Jens – Tagesablauf „Gießt Linas Garten“) einmal alles in Linas Beeten, was
+  noch durstig ist – nicht bei Regen (`game/christin.ts`, `world.dates.christinGiesst`, Dialog-Tag `beet-gegossen`).
+  Im Gespräch „💡 Ordnungstipp?“: jeden Tag ein echter kleiner Spieltipp in ihrer Art (`CHRISTIN_TIPS`) – bewusst
+  kein Lob fürs Aufräumen.
 - **Winterzauber:** `data/winter.ts` + `game/winter.ts`. **Olis Adventskalender:** 1.–24. Dezember je ein Brief
   (`checkAdvent`, ID `advent-<jahr>-<tür>`), das 24. Türchen (Schneekugel `schneekugel-wir`) kommt notfalls bis
   Silvester; Rezeptkarten für Bratapfel & Zimtsterne (Herd/Kochstudio). **Schneebälle** liegen Dezember–Februar auf

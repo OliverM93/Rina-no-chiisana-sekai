@@ -229,6 +229,8 @@ Legende: ✅ erledigt · 🚧 in Arbeit · ⬜ geplant
   Funkeln beim Aufheben & Fangen, Herzchen (Herz-Aufstieg, Lieblingsgeschenk, Winston streicheln), Erdklumpen
   beim Graben, Konfetti beim Bauen & Kochen, Glühwürmchen in Sommernächten · Lina macht Freudensprünge,
   Bewohner winken zur Begrüßung, Figuren schauen sich beim Stillstehen um
+- ✅ **Christins Rolle:** gießt abends Linas Garten mit (nicht bei Regen), Ordnungstipp des Tages im Gespräch
+  (14 echte kleine Spieltipps), neue Garten-Sprüche
 - ✅ **Winterzauber:** Olis Adventskalender (24 Türchen per Post, am 24. eine Schneekugel mit Lina, Oli & Winston),
   Schneebälle sammeln & Schneemann bauen (taut außerhalb des Winters), Wintermöbel im Katalog (Weihnachtsbaum,
   Adventskranz, Kaminofen, Lebkuchenhaus, Nussknacker, Schneeflocken-Teppich & -Tapete, Lichtervorhang, Strumpf,
@@ -247,6 +249,5 @@ Legende: ✅ erledigt · 🚧 in Arbeit · ⬜ geplant
 ## ❓ Offene Fragen (bei Gelegenheit klären)
 
 - Geburtstage der Bewohner
-- Christins Rolle im Dorf ausbauen (z. B. kleine Aufräum-Aufgaben, Gartenpflege, Ordnungs-Tipps)?
 - Wer zieht als Erstes ein (nach Oma Gisela)? Welche Bauplätze für wen?
 - Lieblingsessen/-farben/-hobbys der Bewohner für Geschenke & Dialoge

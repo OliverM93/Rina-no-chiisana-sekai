@@ -41,6 +41,7 @@ import {
 import { KeyboardInput } from '../game/input';
 import { bedTiles, canPlace, currentRoom, finishExpansion, moveFurniture, pickUpFurniture, placeFromBag } from '../game/home';
 import { checkStory } from '../game/story';
+import { christinTip, christinWaters } from '../game/christin';
 import { buyDrink, checkAdvent, isAdventTime, punschOpen } from '../game/winter';
 import { PUNSCH_DRINKS, PUNSCH_HOURS } from '../data/winter';
 import { Footprints3D } from './Footprints3D';
@@ -391,6 +392,7 @@ export class World3D {
           checkAdvent(this.session);
           this.onNewDay();
         } else this.progressTick();
+        this.christinRound();
       }
       const blocked = this.session.uiBlocking || this.cutscene || this.kissBusy;
       const auto = this.autoWalk && performance.now() < this.autoWalk.until ? this.autoWalk : null;
@@ -1562,6 +1564,9 @@ export class World3D {
                 },
               },
             ]
+          : []),
+        ...(id === 'christin'
+          ? [{ label: '💡 Ordnungstipp?', onSelect: () => this.npcDialog(npc, [...christinTip(this.session)], npcHearts(this.session, id)) }]
           : []),
         ...(id === 'jens'
           ? [
@@ -2861,7 +2866,21 @@ export class World3D {
   // Partikel
   // -------------------------------------------------------------------------
 
-  /** Partikel an einer Stelle in Welteinheiten (Höhe = Gelände, drinnen Boden) */
+  /** Christins Gießrunde am Abend (gießt, was in Linas Beeten noch durstig ist) */
+  private christinRound() {
+    const spots = christinWaters(this.session);
+    if (spots.length === 0) return;
+    updateGarden(this.session);
+    this.garden.refresh(true);
+    if (this.session.inside) return;
+    for (const key of spots) {
+      const [x, y] = key.split(',').map(Number);
+      this.fxAt('platsch', (x + 0.5) * TILE, (y + 0.5) * TILE);
+    }
+    this.session.bus.emit('sfx', 'platsch');
+    this.session.bus.emit('toast', { text: `💧 Christin hat deine Blumen gegossen (${spots.length}). Ordentlich, von links nach rechts.` });
+  }
+
   // -------------------------------------------------------------------------
   // Winter: Fußspuren, Atemwölkchen, Punschstand
   // -------------------------------------------------------------------------
@@ -2958,6 +2977,7 @@ export class World3D {
     });
   }
 
+  /** Partikel an einer Stelle in Welteinheiten (Höhe = Gelände, drinnen Boden) */
   private fxAt(kind: FxKind, x: number, y: number, lift = 0, towardsCamera = 0) {
     const px = x * UNIT;
     const pz = y * UNIT + towardsCamera;

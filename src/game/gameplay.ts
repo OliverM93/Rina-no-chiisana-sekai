@@ -159,6 +159,7 @@ function dialogueContext(session: Session, npcId: string, firstToday: boolean): 
   const w = weatherAt(now, session.weatherOverride);
   tags.push(`wetter-${w.kind}`);
   if (session.data?.flags.olafEingezogen) tags.push('olaf-da');
+  if (session.data?.world.dates.christinGiesst === session.today()) tags.push('beet-gegossen');
   if (session.data?.flags.oliEingezogen) tags.push('oli-da');
   if (session.data?.flags.jensEingezogen) tags.push('jens-da');
   if (session.data?.flags.larsEingezogen) tags.push('lars-da');
