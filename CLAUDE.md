@@ -17,7 +17,7 @@ anfühlen. Die Welt dreht sich um Linas Familie und Freunde.
   *inspiriert* von Animal Crossing/Chiikawa/Die Sims – **keine** fremden Assets, Figuren, Namen, Musik.
 - **Sprache im Spiel:** Deutsch.
 
-Meilensteine und Fortschritt: siehe [`ROADMAP.md`](ROADMAP.md).
+Meilensteine und Fortschritt: siehe [`docs/development-status.md`](docs/development-status.md).
 
 ### Die Menschen im Spiel
 
@@ -79,221 +79,26 @@ npm run preview      # Build lokal ansehen → http://localhost:4173
   läuft normal weiter. **Wetter testen:** `?wetter=regen|sonnig|wolkig|gewitter|schnee|regenbogen`.
 - **Debug im Dev-Modus:** `window.__rina` enthält `{ session, game, ui }` (`game.debug` → Lina, Bewohner …).
 
-## Architektur
+## Dokumentation
 
-```
-src/
-  core/        Reine Spiellogik – KEIN Three.js, KEIN DOM. Hier gehören Tests hin (*.test.ts).
-    time.ts        Echtzeit-Uhr, Jahreszeiten, Tagesphasen, Tageslicht, URL-Zeit-Override
-    save.ts        Spielstand-Format, Versionierung, Migrationen, Normalisierung, SaveManager
-    appearance.ts  Aussehen von Figuren (Parameter für die Chibi-Zeichnung)
-    worldmap.ts    Kartenmodell aus ASCII + Objekten, Kollision, Interaktionspunkte
-    inventory.ts   Tasche (Plätze, Stapel, Sortieren)
-    friendship.ts  Herzen, Plaudern, Geschenke, Herz-Belohnungen
-    schedule.ts    Tagesabläufe der Bewohner
-    dialogue.ts    Auswahl von Dialogzeilen nach Tageszeit/Jahreszeit/Herzen/Tagen
-    daily.ts       tägliche Funde, Obst-Nachwachsen
-    mail.ts        Briefkasten
-    weather.ts     Wetter pro Tag (reproduzierbar), Regen-Stunden, Regenbogen, `?wetter=` zum Testen
-    catching.ts    Wann welche Art unterwegs ist (Monat/Uhrzeit/Regen), Sammelbuch
-    garden.ts      Beet: pflanzen, gießen, wachsen (1 Stufe pro gegossenem Tag), pflücken – nie vertrocknen
-    room.ts        Haus mit Räumen (Größe, Ausgänge) als Raster: platzieren, drehen, verschieben, Deko, Teppiche
-    bank.ts        Olafs Dorfkasse: zinsloser Kredit, zurückzahlen wann man will; Sparbuch (1 % am Monatsanfang, max. 2000)
-    crafting.ts    Werkbank: Rezepte lernen, Zutaten prüfen, bauen (alles oder nichts)
-    pet.ts         Winston: Streicheln, einmal am Tag buddeln
-    coop.ts        Ställe: Eier pro Tag (reproduzierbar), einmal am Tag abholen
-    yard.ts        Linas Garten: Raster aufs Grundstück, freizuhaltende Felder, niemand wird eingesperrt
-    grid.ts        Kollisionsraster, A*-Wegfindung, nächste freie Kachel
-    movement.ts    Bewegung mit Kollision (Fuß-Box), Um-Ecken-Gleiten
-    events.ts      typisierter Event-Emitter
-    rng.ts         reproduzierbarer Zufall
-    progress.ts    Zähler (verkauft, gekauft, gebaut, gekocht), Meilenstein-Bedingungen, Wartezeit in Spielzeit
-    music.ts       Musik-Themen (Tempo, Tonart, Akkordfolgen, Instrumente, 4/4 oder Walzer) + Lieder komponieren
-                   (Motiv, Form A–A'–B–A'–C), Thema nach Zeit/Wetter/Ort (`placeMood`)
-    babble.ts      Brabbelsprache: Silbe (Mitlaut, Selbstlaut) + Satzmelodie aus einer Textzeile
-  audio/       Audio.ts – Web-Audio-Klang: Sequenzer, Instrumente, Umgebung (Vögel, Grillen, Regen, Wellen), Geräusche
-  data/        Inhalte (leicht erweiterbar): Karten, Interaktionstexte, Story-Texte,
-               items.ts (alle Gegenstände + Preise, Gartenblumen, Werkzeuge), species.ts (Fische & Insekten –
-               echte heimische Arten), furniture.ts (Möbel, Tapeten, Böden, Varianten; Stile: japanisch, basis,
-               cottage, retro, modern, midcentury, handgemacht, garten, kunst, winter – Muster in `gfx/interior.ts`),
-               house.ts (Ausbaustufen 0–6, Räume, Preise, Start-Haus, Start-Einrichtung neuer Räume,
-               `HOUSE_ANNEX` = Kacheln, die Anbauten außen belegen),
-               npcs/ (je Bewohner eine Datei)
-               wardrobe.ts (Aufdruck-Kleidung, Bandnamen)
-  style/       palette.ts – EINZIGE Quelle für Farben (auch CSS-Variablen der UI)
-  gfx/         2D-Zeichnungen für Texturen & Symbole: terrain.ts (Gelände-Textur), items.ts (Symbole), prints.ts (Kleidungs-Aufdrucke),
-               canvas.ts (Hilfen)
-  game/        Sitzung & Spielregeln (ohne Darstellung)
-    session.ts     laufende Sitzung: Spielstand, Uhr, Karte, Event-Bus Welt ↔ UI
-    gameplay.ts    Spielregeln: Sammeln, Verkaufen, Plaudern, Schenken, Post
-    nature.ts      Werkzeuge, Angeln, Insekten, Beet, aktuelles Wetter
-    crafting.ts    Rezepte lernen (Rezeptkarten aus Briefen, Ideen beim ersten Fund), an der Werkbank bauen
-    pet.ts         Winston streicheln & buddeln lassen
-    romance.ts     Gemeinsame Momente mit Oli (Picknick, Sterne gucken): wann möglich, Freundschaft
-    home.ts        Katalog kaufen, Möbel aufstellen/verschieben/wegräumen, Tapete & Boden, Ausbau & Kredit
-    story.ts       Rahmenhandlung: Einzüge per Meilenstein (`data/progress.ts`) → Brief → nach kurzer Spielzeit Einzug
-    progress.ts    aktueller Meilenstein, Fortschritt, sanfte Hinweise der Bewohner
-    input.ts       eigene Tastatursteuerung (blockiert keine Textfelder)
-  world3d/     Three.js-Schicht
-    World3D.ts     Renderer, Kamera, Licht/Tag-Nacht, Interaktion, Maus (Raycasting), Story-Szenen
-    MapView3D.ts   baut die Welt aus dem Kartenmodell; terrain3d.ts (Höhenraster + gemalte Textur)
-    Character3D.ts Figur (Bewegung, Wegfolgen, Sitzen, Werkzeug in der Hand); Npc.ts (Tagesablauf-KI); Collectibles3D.ts
-    Particles3D.ts Partikel (Staub, Spritzer, Funkeln, Herzchen, Erde, Konfetti) + Glühwürmchen
-    Weather3D.ts   Regen, Schnee, Blitze · Fishing3D.ts Angeln · Insects3D.ts Insekten · Garden3D.ts Beet
-    Footprints3D.ts Fußspuren im Schnee (Ringpuffer)
-    Animals3D.ts   Hühner & Wachteln (trippeln um den Stall, picken, schlafen nachts)
-    Yard3D.ts      Linas Garten (Zäune verbinden sich, Lichter abends, Vorschau beim Gestalten)
-    Winston.ts     Winston (folgt Linas Spur, sitzt, schläft, buddelt, Körbchen); Modell in models/dog.ts
-    Interior3D.ts  Linas Zimmer (liegt bei Kachel 200/200 in derselben Szene, der Nebel versteckt das Dorf)
-    models/        chibi3d.ts (Figuren), nature.ts, buildings.ts, critters.ts (Werkzeuge, Insekten, Pflanzen),
-                   furniture.ts (Möbel + 3D-Vorschaubilder);
-                   materials.ts (Toon-Materialien)
-  ui/          Preact-Overlay: App, TitleScreen, CharacterEditor, Hud, DialogBox (mit Auswahl & Herzen),
-               InventoryPanel (Tasche/Verkaufen/Schenken), MailPanel, Menu, store.ts
-  dev/         Entwickler-Galerie (wird nicht ins Spiel gebaut)
-```
+Die Doku liegt in `docs/` – **bei Änderungen die passende Datei mitpflegen**:
 
-### Wichtige Konzepte
+| Datei | Inhalt | Anpassen, wenn … |
+|---|---|---|
+| [`docs/architecture.md`](docs/architecture.md) | Ordnerstruktur, Schichten, Event-Bus, Koordinaten, Modelle, Gelände, Klang, Spielstand, CI/Deployment | neue Dateien/Module, neue technische Konzepte |
+| [`docs/game-mechanics.md`](docs/game-mechanics.md) | Fortschritt, Bewohner, Natur, Zuhause, Garten, Feste, Winterzauber … mit Ort im Code | neue oder geänderte Spielregeln, Inhalte, Bewohner-Features |
+| [`docs/development-status.md`](docs/development-status.md) | Meilensteine (✅/🚧/⬜), aktueller Stand, Ideen-Parkplatz, offene Fragen | ein Feature fertig wird oder Pläne sich ändern |
+| [`README.md`](README.md) | Spielen, Steuerung, Entwickeln, Veröffentlichung | Steuerung/Befehle ändern sich |
+
+`docs/screenshots/` enthält die Bilder für README und Pull Requests (nie Fotos echter Personen).
+
+### Harte Architektur-Regeln (Details: [`docs/architecture.md`](docs/architecture.md))
 
 - **Schichten:** `core` (Logik) ← `data` (Inhalte) ← `gfx` (Zeichnen) ← `game` (Regeln) ← `world3d` (Three.js) / `ui` (Preact).
-  `core` darf nie aus `game`/`ui`/`gfx` importieren.
-- **Event-Bus:** Welt und UI sprechen nur über `session.bus` (`dialog:open`, `game:started`,
-  `appearance:changed`, …). Die UI setzt `session.uiBlocking`, wenn Fenster offen sind.
-- **Koordinaten:** Spiellogik & Spielstand rechnen in Welteinheiten (1 Kachel = `TILE` = 64). Three.js
-  rechnet in Kacheln (`UNIT = 1/64`): Logik-x → 3D-X, Logik-y → 3D-Z, Höhe = Y. Vorne/Kamera = +Z.
-- **Modelle:** Ursprung = Mitte der Grundfläche auf Bodenhöhe, Tür/Blick zeigt nach +Z.
-  Kollision nur über eine kleine Fuß-Box. Bäume/Häuser zwischen Kamera und Lina werden halbtransparent.
-- **Gelände:** Höhenraster (Fluss/Meer abgesenkt) + Textur, die per „Dual-Grid“-Autotiling mit runden Kanten
-  gemalt wird (`gfx/terrain.ts`, `world3d/terrain3d.ts`). Karte = ASCII in `data/maps/village.ts`.
-- **Objekte** (Häuser, Schilder, Laternen …) stehen in `VILLAGE_OBJECTS`; Größe, Kollision und
-  Interaktionspunkte pro Art in `OBJECT_KINDS` (`core/worldmap.ts`).
-- **Interaktionen:** Texte in `data/interactions.ts`, abhängig von Tageszeit/Jahreszeit/Tag. `{dorf}` wird
-  ersetzt. Ein Test prüft, dass jedes interaktive Objekt zu Fuß erreichbar ist.
-- **Figuren:** `world3d/models/chibi3d.ts` baut jede Figur aus `Appearance` (Frisur, Farben, Größe, Statur,
-  Bart, Brille …): Kopf mit gezeichneter Gesichtstextur (Blinzeln = Texturwechsel), Arme/Beine mit Gelenken.
-- **Tag & Nacht:** Sonne/Himmel/Nebel nach Uhrzeit, Fenster & Laternen leuchten (Emissive + Punktlichter
-  an den nächstgelegenen Laternen).
-- **Fortschritt statt Kalender:** Einzüge & Hausausbau hängen an **Meilensteinen und Spielzeit**, nicht an echten
-  Tagen. `data/progress.ts` legt je Einzug fest, was Lina getan haben muss (Sammelbuch, verkauft, gekauft, gebaut,
-  gekocht, Flags) – **keine Herzen** (die steigen nur 1×/Tag). Danach Brief, nach `WAIT_SECONDS` (10 Min Spielzeit,
-  `session.playTime()`) Einzug; Zeitstempel in `SaveData.story`, Zähler in `SaveData.stats`. World3D prüft alle
-  paar Sekunden (`progressTick`, nur draußen & ohne offene Fenster). Hinweise gibt der Bewohner `hintBy` im
-  Gespräch. **Echtzeit bleibt** für Tag/Nacht, Jahreszeiten, Wetter, Feste, Geburtstage, Tägliches, Treffen,
-  Party, Sonntagsessen und Jens' Reisen.
-- **Einzüge:** `NpcDef.movesIn` = Story-Flag; Kartenobjekte mit `requires`/`until` erscheinen/verschwinden
-  per Flag (`applyMapFlags`, z. B. Bauplatz → Haus). Ablauf in `game/story.ts`.
-- **Bewohner:** Daten in `src/data/npcs/<id>.ts` (Aussehen, Haus, Tagesablauf, Vorlieben, Dialog-Pools,
-  Briefe). Ein neuer Bewohner braucht: Datei + Eintrag in `npcs/index.ts` + Haus/Bank in `VILLAGE_OBJECTS`.
-  Dialogzeilen haben Bedingungen (`when`) und Gewichte; ausgewählt wird reproduzierbar pro Tag.
-- **Freundschaft:** sinkt nie. Erstes Gespräch am Tag und erstes Geschenk am Tag zählen; Herz-Belohnungen
-  kommen per Brief.
-- **Tägliches:** Muscheln (reproduzierbar pro Datum), Obst wächst nach 3 Tagen nach, Felsen & Blumen 1×/Tag.
-  Heruntergefallenes bleibt liegen (gespeichert in `world.ground`).
-- **Natur:** Fische/Insekten in `data/species.ts` werden automatisch zu Gegenständen, Symbolen
-  (`gfx/nature-icons.ts`) und Sammelbuch-Einträgen. Insekten wechseln stündlich (reproduzierbar), fliehen nie.
-  Angeln: Verpassen ist kein Scheitern – der Fisch knabbert einfach nochmal. Regen gießt das Beet.
-  Der Regenbogen ist ein Bogen in der Oberfläche (die Schrägsicht zeigt keinen Himmel).
-- **Zuhause:** Möbel in `data/furniture.ts` (Größe in Feldern, `surface`/`small`/`rug`/`sit`/`light`) werden
-  automatisch Gegenstände (Varianten → `futon-rosa` …). Raumlogik in `core/room.ts`, Modelle in
-  `world3d/models/furniture.ts`. Gespeichert wird immer draußen weitergespielt (Laden im Haus → vor der Tür).
-  Einrichten läuft über `decor:command`/`decor:state` auf dem Bus. **Tasten:** G = Einrichten/Garten gestalten (nochmal G =
-  fertig), I = Tasche, B = Sammelbuch, M = Karte, 1–4 = Werkzeuge – die Knöpfe tragen ihr Kürzel als Schild
-  (`.hud-tool-key`). Die Einrichten-Leiste steht links unten und lässt `--hud-right-width` für die Knöpfe rechts frei.
-  **Hausausbau:** 0 Zimmer → 1 großes Zimmer → 2 Schlafzimmer → 3 Dachzimmer → 4 Wohnküche (Wohnzimmer 12 × 8 +
-  Küche) → 5 Wintergarten → 6 Keller. Außen zeigt `makeHouse(…, stage)` jede Stufe; Anbauten außerhalb der 5 × 3
-  Kacheln stehen in `HOUSE_ANNEX` und blockieren Karte & Garten (`session.houseAnnexTiles`, `syncYardCollision`).
-  **Wand-Deko** (`wall: true`): hängt an Rückwand (rot 0) oder Seitenwand (rot 3 links / 1 rechts), nicht vor
-  Fenstern (`backWindows`), blockiert den Boden nicht – Möbel dürfen darunter stehen. Beim Einrichten zielt man
-  auf die Wand (`Interior3D.walls`), die Drehung rastet von selbst ein (`wallRotationAt`). Modelle hängen bei
-  `HANG`/`WALL_Z` in `models/furniture.ts`.
-- **Nichts geht für immer verloren:** Werkzeuge und einmalige Geschenke (Möbel mit `gift: true`, außer Kunst) sind
-  Erinnerungsstücke (`isKeepsake`): unverkäuflich (`price: null`) und nicht verschenkbar. Fehlt beim Laden etwas, das
-  Lina haben sollte (`missingKeepsakes`: Omas Werkzeuge, Thalias Schaufel, Olis Einzugsmöbel), kommt es zurück.
-  Wichtige Übergaben laufen über `World3D.giveOrDrop` – bei voller Tasche landet es vor Linas Füßen. Jede Samensorte
-  braucht eine Quelle außer der eigenen Blüte (Test in `data/keepsakes.test.ts`).
-- **Winston:** läuft auf Linas eigener Spur hinterher (bleibt nie an Ecken hängen), setzt sich neben sie,
-  wenn sie stehen bleibt. Texte & Funde in `data/winston.ts`.
-- **Werkbank:** Rezepte in `data/recipes.ts` (`start`, `fund` = beim ersten Fund, sonst als Brief-Geschenk
-  `rezept-<id>` – Rezeptkarten werden beim Annehmen sofort gelernt). Ergebnisse sind Möbel mit
-  `crafted: true` (nicht im Katalog). Ein Test prüft, dass jedes Rezept erreichbar ist.
-- **Garten:** `data/yard.ts` (`YARD_AREA`) legt Linas Grundstück fest. Gartensachen sind Möbel mit
-  `outdoor: true` (Stil „garten“) und nutzen dieselbe Raumlogik wie drinnen (`currentRoom` = Garten, wenn
-  Lina draußen ist). Sie blockieren die Karte über `WorldMap.extra` (`session.syncYardCollision()`); Wege und
-  Tore nicht. `keepsAccess` verhindert, dass etwas Wichtiges unerreichbar wird. Hochbeete sind Pflanzplätze.
-- **Oli:** wohnt in Linas Haus (`home: 'haus-lina'`). Ist er „zu Hause“ und Lina drinnen, zeigt World3D ihn im
-  Zimmer (`updateHomeOli`: Platz je nach Tagesablauf-Label an Schreibtisch/Kaffeemaschine/Hantelbank, nachts
-  auf dem Futon). Gemeinsame Momente in `game/romance.ts`, Tage in `world.dates`. **Küsschen** so oft man mag
-  (Gesprächswahl „😘 Küsschen geben“, erstes am Tag zählt): `World3D.kissScene` – beide beugen sich vor, Augen zu,
-  Lina auf Zehenspitzen, „Mwah“ (`sfx: 'kuss'`), Herzchen. Kommt Lina heim, holt Oli sie mit einem Begrüßungsküsschen
-  ab (`homeOliComes`, läuft im Zimmer zu ihr); zu Hause gibt's ab und zu auch spontan eins.
-- **Jens:** Bistro = Kartenobjekt `bistro` (`bistro-jens`, ersetzt `bauplatz-3`). Kochen nutzt dieselben Rezepte
-  wie die Werkbank (`station: 'kueche'` in `data/recipes.ts`, Fenster `CraftPanel` mit `station="kueche"`).
-  `NpcDef.away(day)` = verreist (dann Postkarte mit Andenken, `travelPostcard`, in `game/story.ts`).
-- **Lars:** Praxis = Kartenobjekt `praxis` (`praxis-lars`, ersetzt `bauplatz-2` am Dorfplatz). Tees sind
-  Rezepte mit `station: 'apotheke'`. Gesundheits-Check 1×/Tag (`world.dates.checkup`). Einzugsszenen laufen
-  über `World3D.npcArrival(id, welcome, side)`.
-- **Thalia:** Grabstellen = `todaysDigSpots` (`game/digging.ts`, reproduzierbar pro Datum, Funde in
-  `data/fossils.ts`, Sammelbuch-Reiter „Funde“). Party samstags 19–22 Uhr (`game/party.ts`): `Npc` ersetzt dann
-  den Tagesablauf durch `PARTY_ENTRY`, Lichterketten in World3D. Dorfkarte = `ui/MapPanel.tsx` (Taste M),
-  Positionen über `session.livePositions()`.
-- **Geburtstage der Bewohner:** `NpcDef.birthday` + `birthdayLines`; Geschenke am Geburtstag zählen doppelt,
-  Tags `geburtstag-<id>` / `bald-geburtstag-<id>` (7 Tage vorher).
-- **Treffen der Bewohner:** `data/meetups.ts` (Wochentage, Uhrzeit, Plätze, Gespräche), Regeln in
-  `game/meetups.ts`; `Npc` ersetzt den Tagesablauf (Reihenfolge: Party → Sonntagsessen → Treffen → Plan).
-  `Npc.snap()` setzt alle beim Laden sofort an den richtigen Platz.
-- **Kleidung:** `outfitFor(a, season, day)` – bei `'saison'` im Frühling/Herbst täglich ein anderes Teil aus
-  `STREETWEAR_ROTATION`. Bewohner mit `NpcDef.wardrobe` ziehen sich per `dressFor` jeden Tag reproduzierbar um.
-  `Chibi3D(appearance, season, day)`; Aufdrucke als gebogene Fläche vor dem Oberteil (`printDecal`), Galerie
-  `?ansicht=kleidung`. Keine echten Marken-/Filmnamen auf Kleidung – eigene Designs.
-- **Fernseher & Küche:** Sendungen in `data/tv.ts` (ausgedachte Formate, keine echten Sendungsnamen/Fälle/Personen).
-  **Bewusst kein Kuschelfernsehen:** Nachrichten, Datingshow, Doku, True Crime, Horror und Kochshow zeigen ernste
-  Themen nüchtern und ehrlich – als ironischer Bruch mit der Pastell-Welt. Grenzen: nichts Explizites, keine
-  Gewaltdetails, niemand wird verspottet (die Doku nimmt ihre Protagonisten ernst). Regeln
-  in `game/tv.ts` (Folge pro Tag, Oli schaut mit, Kochshow lehrt Rezepte mit `tv: true`). Linas Herd =
-  `CraftPanel` mit `station="herd"` (Küchen-Rezepte zu Hause).
-- **Galerie:** Kunstwerke in `data/art.ts` (werden Möbel im Stil „kunst“, Bild auf Staffelei, gemalt in
-  `gfx/art.ts`), Regeln in `game/gallery.ts`, gestiftete Bilder in `SaveData.gallery`.
-- **Sonntagsessen:** `game/dinner.ts` – Gäste gehen per `{ kind: 'zuhause', at: 'bistro-jens' }` zu Jens
-  ins Haus; Lina klopft an seine Tür (`visitBistro`).
-- **Feste:** `core/festivals.ts` (welches Fest an welchem Datum, Ostern berechnet), Inhalte in
-  `data/festivals.ts` (Geschenke & Sprüche je Bewohner), Regeln in `game/festivals.ts` (`festTalk` beim ersten
-  Gespräch, Geschenk 1× pro Fest & Jahr über `world.dates`), Schmuck in `world3d/Festivals3D.ts`.
-- **Christin:** gießt abends (ab 18:30, nach dem Angeln mit Olaf; sonntags nach dem Essen bei Jens – Tagesablauf „Gießt Linas Garten“) einmal alles in Linas Beeten, was
-  noch durstig ist – nicht bei Regen (`game/christin.ts`, `world.dates.christinGiesst`, Dialog-Tag `beet-gegossen`).
-  Im Gespräch „💡 Ordnungstipp?“: jeden Tag ein echter kleiner Spieltipp in ihrer Art (`CHRISTIN_TIPS`) – bewusst
-  kein Lob fürs Aufräumen.
-- **Winterzauber:** `data/winter.ts` + `game/winter.ts`. **Olis Adventskalender:** 1.–24. Dezember je ein Brief
-  (`checkAdvent`, ID `advent-<jahr>-<tür>`), das 24. Türchen (Schneekugel `schneekugel-wir`) kommt notfalls bis
-  Silvester; Rezeptkarten für Bratapfel & Zimtsterne (Herd/Kochstudio). **Schneebälle** liegen Dezember–Februar auf
-  der Wiese (`todaysSnowballs`), 3 Schneebälle + 2 Äste = **Schneemann** an der Werkbank (Gartenmöbel; außerhalb des
-  Winters zeigt das Modell ihn getaut – `setModelSeason` in `models/furniture.ts`). **Wintermöbel** (Stil
-  „winter“, `seasonal: true`) stehen nur im Winter im Katalog. **Punschstand** = Kartenobjekt `punschstand`
-  (`kind: 'stall'`, `requires: 'adventszeit'` – virtuelles Flag aus `syncMapObjects`, 1.–26. Dezember, 15–22 Uhr).
-  **Kleine Freuden:** Fußspuren im Schnee (`Footprints3D`, auch Winstons Pfoten), Atemwölkchen bei Kälte
-  (Fx `atem`), Leerlauf „Flocken fangen“, wenn es schneit.
-- **Tiere:** Ställe sind Gartenmöbel mit `coop: 'huhn' | 'wachtel'`, die Tiere kommen mit (`data/animals.ts`).
-  Abholtage in `world.coopDay`; Logik in `core/coop.ts` & `game/animals.ts`.
-- **Klang:** `GameAudio` (`audio/Audio.ts`) startet nach der ersten Taste/Klick (Browser-Regel). **Musik:** draußen
-  Natur-Themen nach Tageszeit/Wetter (+ Strand), nahe an Häusern das Thema der Bewohner (`data/music.ts`:
-  Olaf & Christin, Oma, Bistro, Praxis, Thalia), zu Hause „Lini & Oli“ (ab Olis Einzug). Ortswechsel greift am
-  nächsten Taktende. Zum Anhören `?musik=bistro` an die URL hängen. **Stimmen:** `data/voices.ts` (Tonhöhe,
-  Kopfgröße/Formanten, Lebhaftigkeit, Hauch; Männer tiefer), Silben aus `core/babble.ts`. Geräusche
-  laufen über das Bus-Event `sfx` (`session.bus.emit('sfx', 'muenzen')`), Lautstärke über `settings:changed`.
-  `main.ts` setzt alle 2 s Stimmung (`moodFor`) und Umgebung. Hörprobe ohne Lautsprecher:
-  `GameAudio.preview(mood)` rendert offline in einen AudioBuffer. Musik: Pad (zwei verstimmte Oszillatoren) +
-  E-Piano-Akkord pro Takt + Melodie/Bass/Beat, `MUSIC_GAIN` hebt sie über Umgebung & Geräusche.
-  **Brabbelsprache:** Stimmen je Bewohner in `data/voices.ts` (Tonhöhe, Spannweite, Tempo, Klangfarbe). Die
-  Dialogbox meldet jeden Buchstaben (`onChar`), App schickt jede `BABBLE_EVERY`-te als Bus-Event `voice`, `GameAudio.babble`
-  spricht eine Silbe (Formant-Filter nach Vokal). Nicht in *Handlungen*; Dialoge ohne Bewohner-Titel nur „Blubb“.
-  Hörprobe: `GameAudio.previewVoice(voice, text)`.
-- **Partikel & kleine Animationen:** Bus-Event `fx` (`{ kind, npc? , x?, y? }` – ohne Ort bei Lina) oder direkt
-  `particles.burst()` in World3D. Alles über wenige InstancedMeshes mit festem Vorrat. `Character.cheer()` =
-  Freudensprung, `wave()` = Winken; nach 4 s Stillstand schauen Figuren sich um. **Leerlauf:** steht Lina ~10 s
-  still, macht sie ab und zu etwas Niedliches (`data/idle.ts`: Strecken, Gähnen, Summen, Wippen, Winston kraulen,
-  im Winter Hände reiben, im Regen Tropfen fühlen – je nach Lage gewichtet, `game/idle.ts`), Posen in
-  `Chibi3D.poseAct`, abgespielt über `Character.playAct`, ausgelöst in `World3D.updateIdle`.
-- **Spielstand:** `SAVE_VERSION` + `MIGRATIONS` in `core/save.ts`. Nach jeder Migration wird normalisiert
-  (fehlende Felder → Standardwerte). Vor jedem Speichern bleibt der alte Stand als Backup erhalten.
+  `core` darf nie aus `game`/`ui`/`gfx` importieren und kennt weder Three.js noch das DOM.
+- **Event-Bus:** Welt und UI sprechen nur über `session.bus`.
+- **Koordinaten:** Spiellogik in Welteinheiten (1 Kachel = `TILE` = 64), Three.js in Kacheln (`UNIT = 1/64`).
+- **Inhalte** gehören in `src/data/`, **Farben** nur in `src/style/palette.ts`.
 
 ## Konventionen
 

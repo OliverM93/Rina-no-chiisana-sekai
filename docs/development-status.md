@@ -1,4 +1,19 @@
-# Roadmap – Rina no Chiisana Sekai
+# Entwicklungsstand & Roadmap – Rina no Chiisana Sekai
+
+## Aktueller Stand
+
+- **Spielbar:** Dorf mit allen Bewohnern (Oma Gisela, Olaf & Christin, Oli, Jens, Lars, Thalia, Winston), Rahmenhandlung
+  über Meilensteine, Natur (Angeln, Insekten, Garten, Wetter, Sammelbuch), Haus & Einrichtung mit 7 Ausbaustufen,
+  Werkbank/Küche/Apotheke, Feste inklusive Winterzauber, Klang (Musik, Stimmen, Geräusche), Spielstand mit Migrationen.
+- **Qualitätssicherung:** 36 Testdateien (217 Tests) inkl. Durchlauf-Test der ganzen Geschichte; CI prüft jeden Pull
+  Request (Typecheck, Tests, Build); jeder Merge nach `main` wird automatisch auf GitHub Pages veröffentlicht.
+- **Als Nächstes denkbar:** Fotomodus & Tagebuch, Geburtstage der übrigen Bewohner (Daten fehlen), Blumen-Kreuzungen,
+  Sternbilder, französisches Bistro-Möbelset – siehe „Ideen-Parkplatz“ und „Offene Fragen“ unten.
+- **Pflege:** Wird ein Feature fertig, wird es hier abgehakt (✅) – siehe Regeln in [`../CLAUDE.md`](../CLAUDE.md).
+
+Verwandte Doku: [`architecture.md`](architecture.md) (Technik) · [`game-mechanics.md`](game-mechanics.md) (Spielregeln).
+
+## Roadmap
 
 Jeder Meilenstein ist für sich spielbar und kommt als eigener Pull Request.
 Legende: ✅ erledigt · 🚧 in Arbeit · ⬜ geplant
@@ -87,7 +102,7 @@ Legende: ✅ erledigt · 🚧 in Arbeit · ⬜ geplant
 - ✅ Weitere Stile: Cottagecore, Retro-Oma-Chic, Modern (M8g), Mid-Century & Bauhaus (M8h) · ⬜ französisches Bistro → später
 - ✅ Wand-Deko (Bilder, Rollbilder, Regale an der Wand) → M8f
 
-## 🚧 M6 – Hausausbau, Außengestaltung, Crafting
+## ✅ M6 – Hausausbau, Außengestaltung, Crafting
 
 **M6a ✅ Olaf & Christin, Dorfkasse, Hausausbau**
 - ✅ Olaf & Christin ziehen ein (Ankündigungsbrief, Einzug kurz danach, Begrüßungsszene, eigenes Haus
@@ -169,11 +184,11 @@ Legende: ✅ erledigt · 🚧 in Arbeit · ⬜ geplant
 - ✅ Jens sächselt gern mit Lina
 - ✅ Olis Geburtstag (29.07.): eigene Sprüche, Geschenke freuen doppelt, Oma erinnert vorher daran
 - ⬜ Weitere Geburtstage der Bewohner (Daten noch offen) – Olaf & Jens sind Zwillinge
-- ⬜ Lars: Praxis/Apotheke (Heiltränke, Pflaster), Gesundheitstipps
+- ✅ Lars: Praxis/Apotheke (Tees, Gesundheits-Check) → M7c
 - ✅ Olaf: Sparbuch mit kleinen Zinsen (M8d)
-- ⬜ Jens: Bistro/Kochstudio (Rezepte) & Galerie (Kunstwerke sammeln/ausstellen)
-- ⬜ Thalia: Abendevents (Partys/Tanzabende), Karten, Gesteine/Fossilien, Wetterstation, neue Gebiete
-- ⬜ Oli: romantische Szenen (Picknick, Sternschnuppen), gemeinsames Haus/Zimmer
+- ✅ Jens: Bistro/Kochstudio (Rezepte) & Galerie (Kunstwerke sammeln/ausstellen) → M7b, M7f
+- ✅ Thalia: Partys, Dorfkarte, Gesteine/Fossilien → M7d · ⬜ Wetterstation, neue Gebiete
+- ✅ Oli: romantische Szenen (Picknick, Sterne gucken, Küsschen), gemeinsames Haus/Zimmer → M7a, M8e
 **M7h ✅ Fernsehabend & Linas Küche**
 - ✅ Fernseher (Katalog): Datingshow „Blind Date am Leuchtturm“, Doku „Großer Weg – Mein neues Leben“
   (respektvoll), True Crime „Wahre Fälle vom Land“, Kochshow „Kochen mit Herz“ – jeden Tag neue Folgen
@@ -187,9 +202,9 @@ Legende: ✅ erledigt · 🚧 in Arbeit · ⬜ geplant
   Training auf der Wiese (Oli & Lars, Mi/Sa 8–10), Steine & Skizzen am Strand (Thalia & Jens, Di/Fr 13–15)
 - ✅ Lina gesellt sich dazu und hört mit (Freundschaft für alle), Emojis über den Köpfen, Angeln in der Hand
 - ✅ Lina: Oversize-Sweatshirt, kurze Hose im Sommer, Fleece-Jacke im Winter („Streetwear je nach Jahreszeit“)
-- ⬜ Feste: Weihnachten, Silvester, Linas Geburtstag (16.06.), Geburtstage der Bewohner
+- ✅ Feste: Weihnachten, Silvester, Linas Geburtstag (16.06.) → M7e · ⬜ Geburtstage der übrigen Bewohner (siehe oben)
 
-## ⬜ M8 – Feinschliff
+## 🚧 M8 – Feinschliff
 
 - ✅ **M8a Klang:** Musik & Geräusche komplett selbst erzeugt (Web Audio, keine Audiodateien)
   - Musik komponiert sich laufend aus kleinen Phrasen (`core/music.ts`), Stimmung nach Tageszeit, Wetter,
