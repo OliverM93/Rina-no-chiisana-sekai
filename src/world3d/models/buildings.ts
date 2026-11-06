@@ -809,3 +809,52 @@ export function makeBalloons(): THREE.Group {
   g.add(c(0.06, 0.1, '#8a5a3a', 0, 0.05, 0));
   return g;
 }
+
+/** Punschstand am Weihnachtsbaum: Holztheke, rot-weißes Dach, Lichterkette, dampfende Töpfe (2 × 1 Kacheln) */
+export function makePunschstand(): THREE.Group {
+  const g = new THREE.Group();
+  const wood = palette.wood.base;
+  // Theke
+  g.add(b(1.8, 0.85, 0.6, palette.wood.light, 0, 0.43, 0.05));
+  g.add(b(1.9, 0.07, 0.7, wood, 0, 0.88, 0.05));
+  for (let i = 0; i < 6; i++) g.add(b(0.02, 0.7, 0.01, darken(palette.wood.light, 0.12), -0.75 + i * 0.3, 0.42, 0.36));
+  // Pfosten & Dach mit Streifen
+  for (const x of [-0.88, 0.88]) for (const z of [-0.22, 0.32]) g.add(b(0.08, 1.95, 0.08, wood, x, 0.98, z));
+  const stripes = ['#e8484f', '#fff8ee'];
+  for (let i = 0; i < 8; i++) {
+    const strip = b(0.25, 0.06, 0.95, stripes[i % 2], -0.875 + i * 0.25, 2.02, 0.1);
+    strip.rotation.x = 0.18;
+    g.add(strip);
+  }
+  // Schild
+  g.add(b(1.0, 0.26, 0.04, '#fff8ee', 0, 1.78, 0.42));
+  g.add(b(0.86, 0.04, 0.045, '#e8484f', 0, 1.7, 0.43));
+  g.add(b(0.86, 0.04, 0.045, '#2f7a4a', 0, 1.86, 0.43));
+  // Tannengirlande vorne
+  for (let i = 0; i < 9; i++) {
+    const m = mesh(sphere, toon(i % 2 ? '#2f7a4a' : '#3a8a56'));
+    m.scale.set(0.11, 0.08, 0.08);
+    m.position.set(-0.86 + i * 0.215, 1.6 - Math.sin((i / 8) * Math.PI) * 0.1, 0.47);
+    g.add(m);
+  }
+  // Lichterkette
+  for (let i = 0; i < 12; i++) {
+    const bulb = mesh(sphere, lampGlass);
+    bulb.scale.setScalar(0.035);
+    bulb.position.set(-0.85 + i * 0.155, 1.53 - Math.sin((i / 11) * Math.PI) * 0.1, 0.5);
+    g.add(bulb);
+  }
+  // Töpfe mit Dampf & Becher
+  for (const [x, col] of [[-0.45, '#c9302c'], [0.15, '#5b4a8a']] as const) {
+    g.add(c(0.17, 0.22, '#4a4a55', x, 1.03, -0.02));
+    g.add(c(0.15, 0.02, col, x, 1.14, -0.02));
+    for (let k = 0; k < 3; k++) {
+      const steam = mesh(sphere, toon('#f4f8fb'));
+      steam.scale.setScalar(0.06 - k * 0.012);
+      steam.position.set(x + (k - 1) * 0.05, 1.25 + k * 0.12, -0.02);
+      g.add(steam);
+    }
+  }
+  for (const [x, col] of [[0.55, '#f2c94c'], [0.7, '#e85a8a'], [0.62, '#8ac8ff']] as const) g.add(c(0.05, 0.11, col, x, 0.97, 0.15 + (x - 0.6) * 0.8));
+  return g;
+}

@@ -8,6 +8,7 @@
  */
 import * as THREE from 'three';
 import type { FxKind } from '../game/session';
+import { palette } from '../style/palette';
 
 type Shape = 'kugel' | 'stern' | 'herz' | 'schnipsel';
 
@@ -49,6 +50,7 @@ const RECIPES: Record<FxKind, Recipe> = {
   funkeln: { count: 12, shape: 'stern', colors: ['#fff3a8', '#ffffff', '#ffd76a'], size: [0.06, 0.1], out: 1.0, up: [0.6, 1.3], life: [0.8, 1.1], gravity: 0.6, spin: 6, lift: 0.55 },
   herzen: { count: 5, shape: 'herz', colors: ['#ff8fb1', '#ff6f9c', '#ffb3c9'], size: [0.13, 0.18], out: 0.35, up: [0.5, 0.8], life: [1.3, 1.7], gravity: 0, sway: 1, lift: 1.4 },
   erde: { count: 14, shape: 'kugel', colors: ['#8a6244', '#a27a55', '#6e4c34'], size: [0.045, 0.075], out: 1.0, up: [1.3, 2.1], life: [0.55, 0.75], gravity: 7 },
+  atem: { count: 3, shape: 'kugel', colors: [palette.snow.breath, palette.snow.base], size: [0.018, 0.03], out: 0.05, up: [0.04, 0.12], life: [0.8, 1.1], gravity: -0.05, puff: true },
   konfetti: { count: 26, shape: 'schnipsel', colors: ['#ff9ec2', '#ffe17a', '#9fe0c9', '#a9c8ff', '#d6b3ff'], size: [0.055, 0.075], out: 1.3, up: [1.6, 2.4], life: [1.2, 1.6], gravity: 2.6, spin: 9, sway: 0.6, lift: 1.1 },
 };
 
@@ -107,8 +109,8 @@ export class Particles3D {
     scene.add(this.flies);
   }
 
-  /** Effekt an einer Stelle (3D-Koordinaten in Kacheln) auslösen */
-  burst(kind: FxKind, at: THREE.Vector3) {
+  /** Effekt an einer Stelle (3D-Koordinaten in Kacheln) auslösen; `drift` = zusätzliche Geschwindigkeit (z. B. Atem nach vorn) */
+  burst(kind: FxKind, at: THREE.Vector3, drift?: THREE.Vector3) {
     const r = RECIPES[kind];
     const rand = (a: number, b: number) => a + Math.random() * (b - a);
     for (let i = 0; i < r.count; i++) {
@@ -118,7 +120,7 @@ export class Particles3D {
       this.live.push({
         shape: r.shape,
         p: new THREE.Vector3(at.x + Math.cos(a) * 0.05, at.y + (r.lift ?? 0), at.z + Math.sin(a) * 0.05),
-        v: new THREE.Vector3(Math.cos(a) * out, rand(r.up[0], r.up[1]), Math.sin(a) * out),
+        v: new THREE.Vector3(Math.cos(a) * out + (drift?.x ?? 0), rand(r.up[0], r.up[1]) + (drift?.y ?? 0), Math.sin(a) * out + (drift?.z ?? 0)),
         age: 0,
         life: rand(r.life[0], r.life[1]),
         size: rand(r.size[0], r.size[1]),

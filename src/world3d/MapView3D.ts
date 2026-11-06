@@ -11,6 +11,7 @@ import {
   type HouseModel,
   makeBench,
   makeBoard,
+  makePunschstand,
   BRIDGE_DECK,
   makeBridge,
   makeFountain,
@@ -141,6 +142,9 @@ export function buildMapView3D(scene: THREE.Scene, map: WorldMap, season: Season
         break;
       case 'board':
         node = makeBoard();
+        break;
+      case 'stall':
+        node = makePunschstand();
         break;
       case 'lantern':
         node = makeLantern();

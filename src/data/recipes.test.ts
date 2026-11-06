@@ -3,6 +3,7 @@ import { FURNITURE_BY_ITEM } from './furniture';
 import { isKnownItem, itemDef } from './items';
 import { NPCS } from './npcs';
 import { RECIPE_ITEM_PREFIX, RECIPES } from './recipes';
+import { ADVENT_DOORS } from './winter';
 
 describe('Rezepte', () => {
   it('ergeben Möbel und brauchen echte Zutaten', () => {
@@ -16,7 +17,7 @@ describe('Rezepte', () => {
 
   it('jedes Rezept ist irgendwie erreichbar', () => {
     const fromLetters = new Set(
-      NPCS.flatMap((n) => [...n.letters, ...Object.values(n.heartLetters)])
+      [...NPCS.flatMap((n) => [...n.letters, ...Object.values(n.heartLetters)]), ...ADVENT_DOORS]
         .map((l) => l.gift?.itemId ?? '')
         .filter((id) => id.startsWith(RECIPE_ITEM_PREFIX))
         .map((id) => id.slice(RECIPE_ITEM_PREFIX.length)),

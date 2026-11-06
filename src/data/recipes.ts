@@ -40,6 +40,10 @@ export const RECIPES: readonly RecipeDef[] = [
   { id: 'fischbroetchen', station: 'kueche', result: 'fischbroetchen', ingredients: [{ itemId: 'hering', count: 1 }, { itemId: 'ei', count: 1 }], hint: 'Freunde dich mit Jens an.' },
   { id: 'apfelkuchen', station: 'kueche', result: 'apfelkuchen', ingredients: [{ itemId: 'apfel', count: 3 }, { itemId: 'ei', count: 2 }], hint: 'Jens verrät es bestimmt, wenn ihr euch näherkommt.' },
   { id: 'crepes', station: 'kueche', result: 'crepes', count: 2, ingredients: [{ itemId: 'ei', count: 2 }, { itemId: 'pfirsich', count: 1 }], hint: 'Ein Rezept aus Paris – von Jens.' },
+  // Winter: Rezeptkarten aus Olis Adventskalender
+  { id: 'bratapfel', station: 'kueche', result: 'bratapfel', ingredients: [{ itemId: 'apfel', count: 1 }, { itemId: 'keks', count: 1 }], hint: 'Steckt vielleicht in einem Türchen von Olis Adventskalender …' },
+  { id: 'zimtsterne', station: 'kueche', result: 'zimtsterne', count: 3, ingredients: [{ itemId: 'ei', count: 1 }, { itemId: 'keks', count: 2 }], hint: 'Steckt vielleicht in einem Türchen von Olis Adventskalender …' },
+  { id: 'schneemann', result: 'schneemann', ingredients: [{ itemId: 'schneeball', count: 3 }, { itemId: 'ast', count: 2 }], fund: 'schneeball', hint: 'Im Winter liegen Schneebälle auf der Wiese …' },
   { id: 'zaun-holz', result: 'zaun-holz', count: 2, ingredients: [{ itemId: 'ast', count: 3 }], start: true, hint: '' },
   { id: 'weg-stein', result: 'weg-stein', count: 2, ingredients: [{ itemId: 'stein', count: 3 }], start: true, hint: '' },
   { id: 'vogelhaus', result: 'vogelhaus', ingredients: [{ itemId: 'ast', count: 5 }, { itemId: 'stein', count: 1 }], hint: 'Oma Gisela beobachtet gern Vögel …' },

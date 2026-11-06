@@ -45,6 +45,10 @@ export class Winston {
   private last = { x: 0, y: 0 };
   private step = 0;
   private moving = false;
+  /** Läuft gerade (für Pfotenabdrücke im Schnee) */
+  get walking(): boolean {
+    return this.moving;
+  }
   private idle = 0;
   private time = 0;
   private wag = 0.3;

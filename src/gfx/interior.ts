@@ -22,6 +22,34 @@ export function drawPattern(ctx: CanvasRenderingContext2D, def: SurfaceDef, s: n
       ctx.globalAlpha = 1;
       break;
     }
+    case 'flocken': {
+      // Schneeflocken in zwei Größen, versetzt (kachelbar)
+      ctx.strokeStyle = accent;
+      ctx.lineCap = 'round';
+      const flake = (cx: number, cy: number, r: number) => {
+        ctx.lineWidth = Math.max(1, r * 0.16);
+        for (let i = 0; i < 3; i++) {
+          const a = (i / 3) * Math.PI;
+          ctx.beginPath();
+          ctx.moveTo(cx - Math.cos(a) * r, cy - Math.sin(a) * r);
+          ctx.lineTo(cx + Math.cos(a) * r, cy + Math.sin(a) * r);
+          ctx.stroke();
+        }
+        for (let i = 0; i < 6; i++) {
+          const a = (i / 6) * Math.PI * 2;
+          const mx = cx + Math.cos(a) * r * 0.6;
+          const my = cy + Math.sin(a) * r * 0.6;
+          for (const d of [-0.6, 0.6]) {
+            ctx.beginPath();
+            ctx.moveTo(mx, my);
+            ctx.lineTo(mx + Math.cos(a + d) * r * 0.3, my + Math.sin(a + d) * r * 0.3);
+            ctx.stroke();
+          }
+        }
+      };
+      for (const [x, y, r] of [[0.25, 0.25, 0.1], [0.75, 0.75, 0.1], [0.75, 0.2, 0.05], [0.25, 0.7, 0.05], [0.5, 0.48, 0.035], [0, 0.95, 0.035], [1, 0.95, 0.035]] as const) flake(x * s, y * s, r * s);
+      break;
+    }
     case 'streifen': {
       ctx.fillStyle = accent;
       for (let x = 0; x < s; x += s / 8) ctx.fillRect(x, 0, s / 16, s);

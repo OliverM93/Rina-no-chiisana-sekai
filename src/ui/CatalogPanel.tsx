@@ -5,6 +5,7 @@
 import { useEffect, useState } from 'preact/hooks';
 import { CURRENCY } from '../data/items';
 import { FLOORS, FURNITURE, type FurnitureStyle, STYLE_LABELS, VARIANT_LABELS, WALLPAPERS } from '../data/furniture';
+import { getSeason } from '../core/time';
 import { formatMoney } from '../game/gameplay';
 import { buyFromCatalog } from '../game/home';
 import type { Session } from '../game/session';
@@ -25,9 +26,9 @@ interface Entry {
   size?: string;
 }
 
-function entries(tab: Tab): Entry[] {
+function entries(tab: Tab, winter: boolean): Entry[] {
   if (tab === 'moebel') {
-    return FURNITURE.filter((f) => !f.crafted && !f.gift).map((f) => ({
+    return FURNITURE.filter((f) => !f.crafted && !f.gift && (!f.seasonal || winter)).map((f) => ({
       id: f.id,
       name: f.name,
       price: f.price,
@@ -62,7 +63,8 @@ export function CatalogPanel({ session }: { session: Session }) {
   });
 
   const money = session.data?.money ?? 0;
-  const list = entries(tab).filter((e) => style === 'alle' || e.style === style);
+  const winter = getSeason(session.clock()) === 'winter';
+  const list = entries(tab, winter).filter((e) => style === 'alle' || e.style === style);
   const sel = list.find((e) => e.id === selected) ?? null;
   const v = sel ? sel.variants[Math.min(variant, sel.variants.length - 1)] : null;
 
@@ -100,7 +102,7 @@ export function CatalogPanel({ session }: { session: Session }) {
           <span class="money book-progress">{formatMoney(money)}</span>
         </div>
         <div class="book-tabs">
-          {(['alle', 'japanisch', 'basis', 'cottage', 'retro', 'modern', 'midcentury', 'garten'] as const).map((s) => (
+          {(['alle', 'japanisch', 'basis', 'cottage', 'retro', 'modern', 'midcentury', 'garten', ...(winter || tab !== 'moebel' ? (['winter'] as const) : [])] as const).map((s) => (
             <button key={s} class={`chip small ${style === s ? 'active' : ''}`} onClick={() => setStyle(s)}>
               {s === 'alle' ? 'Alle Stile' : STYLE_LABELS[s]}
             </button>

@@ -41,6 +41,9 @@ import {
 import { KeyboardInput } from '../game/input';
 import { bedTiles, canPlace, currentRoom, finishExpansion, moveFurniture, pickUpFurniture, placeFromBag } from '../game/home';
 import { checkStory } from '../game/story';
+import { buyDrink, checkAdvent, isAdventTime, punschOpen } from '../game/winter';
+import { PUNSCH_DRINKS, PUNSCH_HOURS } from '../data/winter';
+import { Footprints3D } from './Footprints3D';
 import { HOUSE_STAGES } from '../data/house';
 import { CHRISTIN_WELCOME } from '../data/npcs/christin';
 import { OLAF_WELCOME } from '../data/npcs/olaf';
@@ -99,6 +102,7 @@ import { Weather3D } from './Weather3D';
 import { Winston } from './Winston';
 import { petWinston, winstonDig, winstonMayDig } from '../game/pet';
 import { DIG_LINES } from '../data/winston';
+import { setModelSeason } from './models/furniture';
 import { lampGlass, makeHouse, windowGlass } from './models/buildings';
 import { buildMapView3D, footprintCenter, type MapView3D } from './MapView3D';
 import { Npc } from './Npc';
@@ -115,7 +119,7 @@ type Target =
   | { kind: 'winston' }
   | { kind: 'tier'; index: number };
 
-const SPECIAL_OBJECTS = ['verkaufskiste', 'haus-gisela', 'haus-olaf', 'briefkasten-lina', 'werkbank-lina', 'bistro-jens', 'praxis-lars', 'haus-thalia'];
+const SPECIAL_OBJECTS = ['verkaufskiste', 'haus-gisela', 'haus-olaf', 'briefkasten-lina', 'werkbank-lina', 'bistro-jens', 'praxis-lars', 'haus-thalia', 'punschstand'];
 const DIRS = { down: [0, 1], up: [0, -1], left: [-1, 0], right: [1, 0] } as const;
 
 /** Kamera-Versatz zum Blickziel (schräg von oben, wie im Vorbild) */
@@ -186,6 +190,13 @@ export class World3D {
   private exitArmed = true;
   private winston: Winston | null = null;
   private stepAcc = 0;
+  /** Fußspuren im Schnee */
+  private footprints: Footprints3D;
+  private printAcc = 0;
+  private printSide = 1;
+  private winstonPrintAcc = 0;
+  /** Atemwölkchen bei Kälte: nächster Zeitpunkt je Figur */
+  private breathAt = new Map<string, number>();
   /** Küsschen läuft (Oli kommt her / beide küssen sich) – Lina bleibt so lange stehen */
   private kissBusy = false;
   /** Einzugsszenen, die schon angestoßen wurden */
@@ -226,6 +237,7 @@ export class World3D {
     this.renderer.outputColorSpace = THREE.SRGBColorSpace;
 
     const map = session.map;
+    setModelSeason(session.season);
     this.view = buildMapView3D(this.scene, map, session.season, this.renderer.capabilities.getMaxAnisotropy());
     this.collectibles = new Collectibles(this.scene, session, this.view, this.tweens);
 
@@ -271,6 +283,7 @@ export class World3D {
     this.leaves = this.makeLeaves();
     this.weather = new Weather3D(this.scene);
     this.particles = new Particles3D(this.scene);
+    this.footprints = new Footprints3D(this.scene);
     this.fishing = new Fishing3D(this.scene);
     this.fishing.onBite = () => this.session.bus.emit('sfx', 'biss');
     this.insects = new Insects3D(this.scene, session, this.view, this.tweens);
@@ -356,6 +369,8 @@ export class World3D {
     this.updateLeaves(dt);
     this.weather.update(dt, this.camTarget);
     this.particles.update(dt, this.camera, this.camTarget, this.fireflyLevel());
+    this.footprints.update(dt, !this.session.inside);
+    this.updateBreath();
     this.hemi.intensity = this.baseHemi + this.weather.lightning * 1.4;
     this.insects.update(dt, this.night);
     this.digSpots.update(dt, !this.session.inside);
@@ -373,6 +388,7 @@ export class World3D {
         this.dayCheck = 0;
         if (this.collectibles.checkDay()) {
           checkDailyMail(this.session);
+          checkAdvent(this.session);
           this.onNewDay();
         } else this.progressTick();
       }
@@ -402,6 +418,7 @@ export class World3D {
           if (player.running && !this.session.inside && this.weather.current.kind !== 'schnee') this.fxAt('staub', player.x, player.y);
         }
       } else this.stepAcc = 0.2;
+      this.updatePrints(dtMs, player);
       this.updateWinston(dtMs, player, blocked, solid);
       this.updateIdle(player, blocked);
       this.updateHomeOli(dtMs);
@@ -589,6 +606,7 @@ export class World3D {
 
     this.collectibles.refresh();
     checkDailyMail(this.session);
+    checkAdvent(this.session);
     this.updateMailbox();
     this.fishing.stop();
     this.equip(this.session.tool);
@@ -723,7 +741,7 @@ export class World3D {
   /** Story-Flags auf die Karte anwenden (Bauplatz → Haus) */
   private syncMapObjects() {
     const data = this.session.data;
-    if (data) applyMapFlags(this.session.map, data.flags);
+    if (data) applyMapFlags(this.session.map, { ...data.flags, adventszeit: isAdventTime(this.session.clock()) });
     for (const [id, node] of this.view.nodes) node.visible = isActive(this.session.map, id);
   }
 
@@ -956,6 +974,7 @@ export class World3D {
       {
         hour: this.session.clock().getHours(),
         raining: isPrecipitation(kind) && kind !== 'schnee',
+        snowing: kind === 'schnee',
         winter: getSeason(this.session.clock()) === 'winter' || kind === 'schnee',
         inside: this.session.inside,
         winstonNear,
@@ -970,7 +989,7 @@ export class World3D {
       window.setTimeout(() => {
         if (player.acting) w.pet(false);
       }, 700);
-    } else if (act.id !== 'wippen' && act.id !== 'regen-fuehlen') {
+    } else if (act.id !== 'wippen' && act.id !== 'regen-fuehlen' && act.id !== 'flocken-fangen') {
       player.face('down');
     }
     player.playAct(act.id, act.duration);
@@ -1373,6 +1392,10 @@ export class World3D {
     }
     if (id === 'bistro-jens') {
       this.visitBistro();
+      return;
+    }
+    if (id === 'punschstand') {
+      this.visitPunsch();
       return;
     }
     if (id === 'werkbank-lina') {
@@ -2839,6 +2862,102 @@ export class World3D {
   // -------------------------------------------------------------------------
 
   /** Partikel an einer Stelle in Welteinheiten (Höhe = Gelände, drinnen Boden) */
+  // -------------------------------------------------------------------------
+  // Winter: Fußspuren, Atemwölkchen, Punschstand
+  // -------------------------------------------------------------------------
+
+  /** Liegt hier Schnee? (Winter, draußen) */
+  private get snowy(): boolean {
+    return this.session.season === 'winter' && !this.session.inside;
+  }
+
+  /** Fußspuren im Schnee hinter Lina und Winston */
+  private updatePrints(dtMs: number, player: Character) {
+    if (!this.snowy) return;
+    const ground = (x: number, z: number) => Math.max(0, this.view.terrain.heightAt(x, z));
+    if (player.moving && !player.sitting) {
+      this.printAcc += dtMs / 1000;
+      if (this.printAcc > (player.running ? 0.17 : 0.24)) {
+        this.printAcc = 0;
+        this.printSide = -this.printSide;
+        const [fx, fy] = DIRS[player.facing];
+        const px = player.x * UNIT;
+        const pz = player.y * UNIT;
+        this.footprints.add(px, ground(px, pz), pz, Math.atan2(fx, fy), this.printSide);
+      }
+    }
+    const w = this.winston;
+    if (w && w.dog.root.visible && w.walking) {
+      this.winstonPrintAcc += dtMs / 1000;
+      if (this.winstonPrintAcc > 0.16) {
+        this.winstonPrintAcc = 0;
+        const px = w.x * UNIT;
+        const pz = w.y * UNIT;
+        const a = w.dog.root.rotation.y;
+        this.footprints.add(px, ground(px, pz), pz, a, Math.random() < 0.5 ? -1 : 1, 0.45);
+      }
+    }
+  }
+
+  /** Bei Kälte sieht man den Atem: kleine Wölkchen vor dem Mund (Lina & Bewohner in der Nähe) */
+  private updateBreath() {
+    const player = this.player;
+    if (!player || this.session.inside || getSeason(this.session.clock()) !== 'winter') return;
+    const now = performance.now() / 1000;
+    const puff = (key: string, x: number, y: number, facing: keyof typeof DIRS, height: number) => {
+      const at = this.breathAt.get(key) ?? now + Math.random() * 2;
+      if (!this.breathAt.has(key)) this.breathAt.set(key, at);
+      if (now < at) return;
+      this.breathAt.set(key, now + 2.6 + Math.random() * 1.8);
+      const [fx, fy] = DIRS[facing];
+      const px = x * UNIT + fx * 0.22;
+      const pz = y * UNIT + fy * 0.22 + 0.06;
+      const ground = Math.max(0, this.view.terrain.heightAt(px, pz));
+      this.particles.burst('atem', new THREE.Vector3(px, ground + height, pz), new THREE.Vector3(fx * 0.3, 0, fy * 0.3));
+    };
+    if (player.visible) puff('lina', player.x, player.y, player.facing, player.sitting ? 0.62 : 0.82);
+    for (const npc of this.npcs.values()) {
+      if (!npc.char.visible || Math.hypot(npc.x - player.x, npc.y - player.y) > TILE * 9) continue;
+      puff(npc.def.id, npc.x, npc.y, npc.char.facing, npc.char.sitting ? 0.62 : 0.82 * npc.def.appearance.height);
+    }
+  }
+
+  /** Punschstand am Weihnachtsbaum (Advent & Weihnachten, nachmittags & abends) */
+  private visitPunsch() {
+    const title = 'Punschstand';
+    const now = this.session.clock();
+    if (!punschOpen(now)) {
+      this.session.bus.emit('dialog:open', { title, lines: [`Ein Holzstand mit Lichterkette. Auf dem Schild steht: „Geöffnet ab ${PUNSCH_HOURS[0]} Uhr – heißer Punsch & Kakao!“`] });
+      return;
+    }
+    const money = this.session.data?.money ?? 0;
+    this.session.bus.emit('dialog:open', {
+      title,
+      lines: ['Es duftet nach Orangen, Zimt und Nelken. Aus den Töpfen steigt Dampf auf.', 'Was darf es sein?'],
+      choices: [
+        ...PUNSCH_DRINKS.map((d) => ({
+          label: `${d.label} (${d.price} ⭐)`,
+          onSelect: () => {
+            const r = buyDrink(this.session, d.id);
+            if (!r.ok) {
+              this.session.bus.emit('dialog:open', { title, lines: [money < d.price ? 'Dafür reichen deine Sternchen gerade nicht. ⭐' : 'Der Stand hat gerade zu.'] });
+              return;
+            }
+            this.session.bus.emit('dialog:open', {
+              title,
+              lines: [...r.lines],
+              onClose: () => {
+                this.player?.cheer();
+                this.playFx('herzen');
+              },
+            });
+          },
+        })),
+        { label: '👋 Nein danke', onSelect: () => undefined },
+      ],
+    });
+  }
+
   private fxAt(kind: FxKind, x: number, y: number, lift = 0, towardsCamera = 0) {
     const px = x * UNIT;
     const pz = y * UNIT + towardsCamera;

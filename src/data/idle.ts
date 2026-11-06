@@ -4,11 +4,13 @@
  * Die Posen stehen in `world3d/models/chibi3d.ts` (`IdleAct`), die Auswahl in `game/idle.ts`.
  */
 
-export type IdleAct = 'strecken' | 'gaehnen' | 'summen' | 'wippen' | 'kraulen' | 'haende-reiben' | 'regen-fuehlen';
+export type IdleAct = 'strecken' | 'gaehnen' | 'summen' | 'wippen' | 'kraulen' | 'haende-reiben' | 'regen-fuehlen' | 'flocken-fangen';
 
 export interface IdleContext {
   hour: number;
   raining: boolean;
+  /** Es schneit gerade */
+  snowing?: boolean;
   winter: boolean;
   inside: boolean;
   /** Winston steht wach direkt neben Lina */
@@ -34,6 +36,7 @@ export const IDLE_ACTS: readonly IdleActDef[] = [
   { id: 'wippen', duration: 3, weight: () => 1.3 },
   { id: 'kraulen', duration: 2.8, emote: '💕', weight: (c) => (c.winstonNear ? 3 : 0) },
   { id: 'haende-reiben', duration: 2.6, emote: '❄️', weight: (c) => (c.winter && !c.inside ? 2.5 : 0) },
+  { id: 'flocken-fangen', duration: 3.2, emote: '❄️', weight: (c) => (c.snowing && !c.inside ? 3 : 0) },
   { id: 'regen-fuehlen', duration: 2.6, emote: '💧', weight: (c) => (c.raining && !c.inside ? 2.5 : 0) },
 ];
 

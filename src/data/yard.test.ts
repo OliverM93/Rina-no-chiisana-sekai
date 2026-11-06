@@ -32,7 +32,8 @@ describe('Linas Garten im Dorf', () => {
 
   it('Gartensachen haben eine Grundfläche, Zäune sind 1×1', () => {
     for (const f of FURNITURE.filter((x) => x.outdoor)) {
-      expect(f.style, f.id).toBe('garten');
+      // Gartensachen gehören zum Stil „Garten“ – oder zum Winterzauber (Schlitten, Schneemann)
+      expect(['garten', 'winter'], f.id).toContain(f.style);
       if (f.fence) expect([f.w, f.d], f.id).toEqual([1, 1]);
     }
   });

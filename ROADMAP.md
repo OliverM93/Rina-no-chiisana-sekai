@@ -229,6 +229,11 @@ Legende: ✅ erledigt · 🚧 in Arbeit · ⬜ geplant
   Funkeln beim Aufheben & Fangen, Herzchen (Herz-Aufstieg, Lieblingsgeschenk, Winston streicheln), Erdklumpen
   beim Graben, Konfetti beim Bauen & Kochen, Glühwürmchen in Sommernächten · Lina macht Freudensprünge,
   Bewohner winken zur Begrüßung, Figuren schauen sich beim Stillstehen um
+- ✅ **Winterzauber:** Olis Adventskalender (24 Türchen per Post, am 24. eine Schneekugel mit Lina, Oli & Winston),
+  Schneebälle sammeln & Schneemann bauen (taut außerhalb des Winters), Wintermöbel im Katalog (Weihnachtsbaum,
+  Adventskranz, Kaminofen, Lebkuchenhaus, Nussknacker, Schneeflocken-Teppich & -Tapete, Lichtervorhang, Strumpf,
+  Schlitten), Bratapfel & Zimtsterne, Punschstand am Weihnachtsbaum, Fußspuren im Schnee, Atemwölkchen,
+  Schneeflocken fangen · Modelle für Sparschwein, Weihnachtsstern & Kuscheldecke (waren rosa Würfel)
 - ⬜ Weitere Animationen & Partikel, Balancing
 
 ## 💡 Ideen-Parkplatz
