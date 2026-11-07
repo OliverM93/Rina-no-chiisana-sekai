@@ -112,6 +112,12 @@ Wetter und Feste laufen nach echter Zeit.
   echte Sendung): strenger, ruhiger Chirurg mit buschigen Brauen und gütigen Augen, der Patienten ernst nimmt („Ein Schritt. Dann
   noch einer.“). Drei Folgen (`data/tv.ts`, `lina`-Reaktion + eigene `oli`-Sprüche pro Folge), das **Dr.-No-Porträt** (`bild-dr-no`,
   Wand-Deko im Möbelkatalog) und Kommentare von Oli, Lars, Jens und Oma.
+- **Sammeltassen:** Lina sammelt Becher der (ausgedachten) Kaffeehaus-Kette „Sternenbohne“ (`data/tassen.ts`, 19 Stück): 3 **Klassik-Tassen**
+  und 4 **Saison-Tassen** (Frühling/Sommer/Herbst/Winter, im Katalog nur in ihrer Jahreszeit, `FurnitureDef.inSeason`) kauft sie im
+  Möbelkatalog (Stil „Lieblingsthemen“); 12 **Städte-Tassen** sind Geschenke: Onkel Jens schickt auf Reisen eine zweite Karte mit Tasse
+  (`TRAVELS[].mug`, `travelMugLetter`; bei den neuen Städten Tokio, Wien, Lissabon, Leipzig ist die Tasse das Andenken), Thalia
+  bringt Berlin und Reykjavík mit, Oli eine schwarze Klassik-Tasse. Tassen sind kleine Möbel und stehen auf jedem Regal; das
+  **Tassenregal** (4 breit) zeigt per Anschauen den Stand der Sammlung (`game/tassen.ts`) und woher die fehlenden kommen.
 - **Galerie:** Kunstwerke in `data/art.ts` (werden Möbel im Stil „kunst“, Bild auf Staffelei, gemalt in
   `gfx/art.ts`), Regeln in `game/gallery.ts`, gestiftete Bilder in `SaveData.gallery`.
 - **Sonntagsessen:** `game/dinner.ts` – Gäste gehen per `{ kind: 'zuhause', at: 'bistro-jens' }` zu Jens

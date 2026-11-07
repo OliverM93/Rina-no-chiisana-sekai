@@ -12,7 +12,7 @@ const MOVE_IN_GIFTS = ['schreibtisch-pc', 'hantelbank'];
 describe('Geschenk-Möbel', () => {
   it('jedes Möbel „nur als Geschenk“ kommt irgendwoher', () => {
     const fromLetters = new Set([...NPCS.flatMap((n) => [...n.letters, ...Object.values(n.heartLetters)]), ...ADVENT_DOORS].map((l) => l.gift?.itemId));
-    for (const f of FURNITURE_ITEMS.filter((x) => x.def.gift)) expect(fromLetters.has(f.itemId) || MOVE_IN_GIFTS.includes(f.itemId) || TRAVELS.some((t) => t.souvenir === f.itemId) || !!ART_BY_ID[f.itemId] || Object.values(FEST_GIFTS).some((g) => Object.values(g ?? {}).some((x) => x.itemId === f.itemId)), f.itemId).toBe(true);
+    for (const f of FURNITURE_ITEMS.filter((x) => x.def.gift)) expect(fromLetters.has(f.itemId) || MOVE_IN_GIFTS.includes(f.itemId) || TRAVELS.some((t) => t.souvenir === f.itemId || t.mug === f.itemId) || !!ART_BY_ID[f.itemId] || Object.values(FEST_GIFTS).some((g) => Object.values(g ?? {}).some((x) => x.itemId === f.itemId)), f.itemId).toBe(true);
   });
 
   it('Oli wohnt bei Lina und nennt sie Lini', () => {

@@ -7,6 +7,7 @@
  */
 import { ARTWORKS } from './art';
 import { POSTERS } from './posters';
+import { TASSEN } from './tassen';
 
 export type FurnitureStyle = 'japanisch' | 'basis' | 'cottage' | 'retro' | 'modern' | 'midcentury' | 'handgemacht' | 'garten' | 'kunst' | 'winter' | 'lieblinge';
 
@@ -52,6 +53,8 @@ export interface FurnitureDef {
   variants?: Record<string, string>;
   /** Nur im Winter (Dezember–Februar) im Katalog */
   seasonal?: boolean;
+  /** Nur in dieser Jahreszeit im Katalog (Saison-Tassen) */
+  inSeason?: 'fruehling' | 'sommer' | 'herbst' | 'winter';
 }
 
 export const FURNITURE: readonly FurnitureDef[] = [
@@ -238,6 +241,12 @@ export const FLOORS: readonly SurfaceDef[] = [
 
 // Poster (Wand) & Bildbände (Tisch) zu Linas Lieblingsthemen aus `posters.ts`
 for (const p of POSTERS) (FURNITURE as FurnitureDef[]).push({ id: p.id, name: p.name, style: 'lieblinge', wall: p.kind === 'poster' || undefined, small: p.kind === 'buch' || undefined, price: p.price, w: 1, d: 1, description: p.description });
+
+// Sammeltassen (Klassik & Saison im Katalog, Städte-Tassen als Geschenke) aus `tassen.ts`; dazu das Tassenregal
+for (const t of TASSEN) {
+  (FURNITURE as FurnitureDef[]).push({ id: t.id, name: t.name, style: 'lieblinge', small: true, gift: t.kind === 'stadt' || undefined, inSeason: t.season, price: t.kind === 'stadt' ? 400 : t.price, w: 1, d: 1, description: t.description });
+}
+(FURNITURE as FurnitureDef[]).push({ id: 'tassenregal', name: 'Tassenregal', style: 'lieblinge', surface: true, surfaceHeight: 0.95, price: 900, w: 4, d: 1, description: 'Ein langes Regal aus hellem Holz mit Haken und vier Brettern für Linas Sammeltassen. Der Platz für die schönsten Stücke – und einen kleinen Zettel: „Bitte nicht benutzen.“' });
 
 // Kunstwerke (Bild auf Staffelei) aus `art.ts` – nur über Jens erhältlich
 for (const a of ARTWORKS) (FURNITURE as FurnitureDef[]).push({ id: a.id, name: a.name, style: 'kunst', gift: true, price: a.price, w: 1, d: 1, description: `${a.description} – ${a.artist}` });

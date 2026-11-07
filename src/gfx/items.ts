@@ -12,6 +12,7 @@ import { FINDS } from '../data/fossils';
 import { ARTWORKS } from '../data/art';
 import { artCanvas } from './art';
 import { POSTERS } from '../data/posters';
+import { TASSEN } from '../data/tassen';
 import { posterCanvas } from './posters';
 
 export const ICON = 32;
@@ -713,6 +714,22 @@ for (const p of POSTERS) {
     ctx.translate(8.5, 4.5);
     ctx.drawImage(posterCanvas(p, 60, 84), 0, 0, 15, 21);
     ctx.restore();
+  };
+}
+
+// Sammeltassen: Becher mit Band und Emblem (bis die 3D-Vorschau fertig ist)
+for (const t of TASSEN) {
+  DRAW[t.id] = (ctx) => {
+    ctx.strokeStyle = darken(t.color, 0.3);
+    ctx.lineWidth = 3;
+    ctx.beginPath();
+    ctx.arc(24.5, 17, 4, -Math.PI / 2, Math.PI / 2);
+    ctx.stroke();
+    roundRect(ctx, 6, 7, 17, 20, 4, t.color, darken(t.color, 0.3), 1.3);
+    roundRect(ctx, 6, 13, 17, 4, 0, t.accent, null);
+    ellipse(ctx, 14.5, 21, 3, 3, t.accent);
+    ellipse(ctx, 14.5, 21, 1.1, 1.1, t.color);
+    ellipse(ctx, 14.5, 7.5, 7.5, 1.8, '#6e4630', darken(t.color, 0.3), 1);
   };
 }
 

@@ -42,6 +42,7 @@ import { KeyboardInput } from '../game/input';
 import { bedTiles, canPlace, currentRoom, finishExpansion, moveFurniture, pickUpFurniture, placeFromBag } from '../game/home';
 import { checkStory } from '../game/story';
 import { drinkCoffee, drinksFor, isCoffeeMachine, KICK_SPEED, kickActive } from '../game/coffee';
+import { tassenStand } from '../game/tassen';
 import type { Drink } from '../data/coffee';
 import { christinTip, christinWaters } from '../game/christin';
 import { buyDrink, checkAdvent, isAdventTime, punschOpen } from '../game/winter';
@@ -2601,6 +2602,10 @@ export class World3D {
     }
     if (f.def.id === 'herd') {
       this.session.bus.emit('ui:open', { kind: 'herd' });
+      return;
+    }
+    if (item.itemId === 'tassenregal') {
+      this.session.bus.emit('dialog:open', { title: 'Tassenregal', lines: tassenStand(this.session) });
       return;
     }
     if (isCoffeeMachine(item.itemId)) {

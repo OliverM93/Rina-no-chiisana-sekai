@@ -97,6 +97,7 @@ export const OLI: NpcDef = {
   },
   dailyTreat: { itemId: 'keks', chance: 0.25, lines: ['Ach, warte – ich hab dir was gebacken!', 'Selbstgemacht. Nach Omas Rezept. Psst, das darf sie nicht wissen.'] },
   letters: [
+    { id: 'tasse-schwarz', subject: 'Für dein Regal', body: 'Lini,\n\nich hab diese Tasse gesehen und musste an dich denken: komplett schwarz, mit goldenem Emblem. Ich weiß, du hast schon viele – aber die hier passt wie die Faust aufs Auge zu deinem Pulli.\n\nStell sie neben die anderen. Und wenn du sie benutzt, mach ich uns einen Kaffee rein.\n\nDein Oli ☕💕', gift: { itemId: 'tasse-klassik-schwarz', count: 1 } },
     { id: 'vergissmeinnicht-rosa', subject: 'Für unser Beet', body: 'Lini,\n\nich hab rosa Vergissmeinnicht-Samen gefunden! Rosa! Ich wusste gar nicht, dass es das gibt.\n\nWenn du sie neben die blauen pflanzt, kommt vielleicht etwas Lila raus. Wie dein Lieblings-Pulli. Also … fast.\n\nDein Oli 💕', gift: { itemId: 'samen-vergissmeinnicht-rosa', count: 2 } },
     { id: 'zettel', subject: 'Zettel am Kühlschrank', body: 'Lini,\n\nbin beim Training. Kaffee steht in der Kanne, noch warm.\n\nHab einen schönen Tag! 💕\n\nOli', gift: { itemId: 'keks', count: 1 } },
     { id: 'konzert', subject: 'Konzert-Bericht', body: 'Lini,\n\ngestern war es soooo laut. Mein linkes Ohr piept noch.\n\nAber das Beste am Abend war, nach Hause zu kommen. Zu dir. 🤘💕\n\nOli' },
