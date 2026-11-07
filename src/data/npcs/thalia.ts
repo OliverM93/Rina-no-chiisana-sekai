@@ -81,6 +81,8 @@ export const THALIA: NpcDef = {
     goodbye: ['Bis später, Süße! 💚', 'Hab dich lieb!', 'Tschüssi! Und immer schön auf den Boden schauen – da liegen Schätze!'],
   },
   letters: [
+    { id: 'tasse-berlin', subject: 'Ein Mitbringsel aus Berlin', body: 'Süße,\n\nich war auf einer Tagung in Berlin – drei Tage Gesteinskunde, ich bin verzückt. Und auf dem Rückweg hab ich dir diese Tasse gekauft. Ich weiß ja, dass du sammelst!\n\nSie hat noch ein bisschen Gesteinsstaub am Henkel. Das ist Absicht.\n\nThalia 💚', gift: { itemId: 'tasse-stadt-berlin', count: 1 } },
+    { id: 'tasse-reykjavik', subject: 'Von der Insel aus Feuer und Eis', body: 'Lina!!!\n\nich bin gerade von meiner Island-Exkursion zurück. Vulkane! Geysire! Ein Papageitaucher hat mir ins Notizbuch geguckt!\n\nIch hab dir eine Tasse mitgebracht. Mit Papageitaucher. Ist wichtig.\n\nThalia 🌋', gift: { itemId: 'tasse-stadt-reykjavik', count: 1 } },
     { id: 'karte', subject: 'Eine Schatzkarte!', body: 'Lina!\n\nich hab eine Schatzkarte für dich gezeichnet. Das X ist … überall, wo du gräbst.\n\nOkay, das ist keine gute Schatzkarte. Aber die Steine sind echt!\n\nDeine Thalia 💚', gift: { itemId: 'stein', count: 3 } },
     { id: 'party', subject: 'Party-Erinnerung!', body: 'Süße,\n\nSamstag ist wieder Party auf dem Dorfplatz! Ab 19 Uhr. Bring gute Laune mit. Und Winston. Winston tanzt am besten.\n\nThalia 💃' },
   ],

@@ -129,14 +129,21 @@ export function jensTravels(day: string): boolean {
   return hashString(`jens:reise:${day}`) % 7 === 3;
 }
 
-/** Reiseziele mit Postkarte & Andenken */
-export const TRAVELS: ReadonlyArray<{ city: string; text: string; souvenir: string }> = [
-  { city: 'Paris', text: 'Ich sitze in einem Café am Montmartre, trinke einen Café crème und male die Dächer. Der Kellner hat mir zugezwinkert. Paris, je t\'aime!', souvenir: 'eiffelturm' },
-  { city: 'Venedig', text: 'Gondeln! Masken! Ein Gondoliere, der „O sole mio“ gesungen hat – nur für mich. Na ja, für mich und zwölf Touristen.', souvenir: 'venedig-maske' },
-  { city: 'Amsterdam', text: 'Tulpen, so weit das Auge reicht. Und Museen! Ich stand eine Stunde vor einem Bild mit Sonnenblumen und hab geweint. Vor Glück.', souvenir: 'holzschuhe' },
-  { city: 'Sevilla', text: 'Flamenco! Ich hab mitgetanzt. Die Tänzer sagen, ich hätte Talent. Mein Knie sagt was anderes.', souvenir: 'faecher' },
-  { city: 'New York', text: 'Die Stadt schläft nie – und ich auch nicht. Broadway, Galerien, Pizza um drei Uhr nachts. Fabelhaft!', souvenir: 'schneekugel' },
-  { city: 'Kyoto', text: 'Kirschblüten und Tempel. Alles so still und schön. Ich hab gelernt, Tee zu machen. Und mir einen Glücksbringer gekauft.', souvenir: 'daruma' },
+/**
+ * Reiseziele mit Postkarte & Andenken. Zu den ersten sechs Städten schickt Jens zusätzlich eine Sammeltasse (`mug`),
+ * bei den neuen ist die Tasse selbst das Andenken.
+ */
+export const TRAVELS: ReadonlyArray<{ city: string; text: string; souvenir: string; mug?: string }> = [
+  { city: 'Paris', text: 'Ich sitze in einem Café am Montmartre, trinke einen Café crème und male die Dächer. Der Kellner hat mir zugezwinkert. Paris, je t\'aime!', souvenir: 'eiffelturm', mug: 'tasse-stadt-paris' },
+  { city: 'Venedig', text: 'Gondeln! Masken! Ein Gondoliere, der „O sole mio“ gesungen hat – nur für mich. Na ja, für mich und zwölf Touristen.', souvenir: 'venedig-maske', mug: 'tasse-stadt-venedig' },
+  { city: 'Amsterdam', text: 'Tulpen, so weit das Auge reicht. Und Museen! Ich stand eine Stunde vor einem Bild mit Sonnenblumen und hab geweint. Vor Glück.', souvenir: 'holzschuhe', mug: 'tasse-stadt-amsterdam' },
+  { city: 'Sevilla', text: 'Flamenco! Ich hab mitgetanzt. Die Tänzer sagen, ich hätte Talent. Mein Knie sagt was anderes.', souvenir: 'faecher', mug: 'tasse-stadt-sevilla' },
+  { city: 'New York', text: 'Die Stadt schläft nie – und ich auch nicht. Broadway, Galerien, Pizza um drei Uhr nachts. Fabelhaft!', souvenir: 'schneekugel', mug: 'tasse-stadt-new-york' },
+  { city: 'Kyoto', text: 'Kirschblüten und Tempel. Alles so still und schön. Ich hab gelernt, Tee zu machen. Und mir einen Glücksbringer gekauft.', souvenir: 'daruma', mug: 'tasse-stadt-kyoto' },
+  { city: 'Tokio', text: 'Alles blinkt, alles ist niedlich, und die Katzen winken! Ich hab in einem Café fünf Stunden gesessen und nur geguckt. Lina, du musst da mal hin. Du sprichst ja sogar ein bisschen Japanisch!', souvenir: 'tasse-stadt-tokio' },
+  { city: 'Wien', text: 'Kaffeehaus, Torte, Walzer. Ich hab drei Stunden an einem einzigen Kaffee gesessen und der Kellner hat sich nicht beschwert. Das nenne ich Kultur!', souvenir: 'tasse-stadt-wien' },
+  { city: 'Lissabon', text: 'Blaue Fliesen, gelbe Straßenbahnen und ein Fado-Sänger, der mich zum Weinen gebracht hat. Dann hab ich Sardinen gegessen. Auch schön.', souvenir: 'tasse-stadt-lissabon' },
+  { city: 'Leipzig', text: 'Ich war mal in der alten Heimat! Nu, die Thomaskirche steht noch, und ich hab drei Eierschecke gegessen. Ich hab so ein Heimweh gekriegt, dass ich dir gleich was mitgebracht hab.', souvenir: 'tasse-stadt-leipzig' },
 ];
 
 /** Postkarte des Tages (wenn Jens reist) */
@@ -147,6 +154,18 @@ export function travelPostcard(day: string, index: number): LetterTemplate {
     subject: `Postkarte aus ${t.city} ✈️`,
     body: `Ma chérie!\n\nGrüße aus ${t.city}!\n\n${t.text}\n\nIch hab dir was mitgebracht. Bis bald!\n\nBisous,\nOnkel Jens 💋`,
     gift: { itemId: t.souvenir, count: 1 },
+  };
+}
+
+/** Zweiter Brief zur Reise: eine Sammeltasse für Linas Regal (nur bei den Städten mit `mug`) */
+export function travelMugLetter(day: string, index: number): LetterTemplate | null {
+  const t = TRAVELS[index % TRAVELS.length];
+  if (!t.mug) return null;
+  return {
+    id: `tasse-${day}`,
+    subject: `Noch was aus ${t.city} ☕`,
+    body: `Ma chérie,\n\nich hab mich erinnert, dass du Tassen sammelst. Da stand eine Sternenbohne gleich neben dem Hotel – und auf der Tasse steht „${t.city}“. Quasi Schicksal.\n\nStell sie ruhig ganz nach vorn. Ich komme schauen.\n\nBisous,\nOnkel Jens 💋`,
+    gift: { itemId: t.mug, count: 1 },
   };
 }
 

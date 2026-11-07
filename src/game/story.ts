@@ -9,7 +9,7 @@ import { progressState } from './progress';
 import { NPC_BY_ID } from '../data/npcs';
 import { OLAF_ANNOUNCEMENT } from '../data/npcs/olaf';
 import { OLI_ANNOUNCEMENT } from '../data/npcs/oli';
-import { JENS_ANNOUNCEMENT, jensTravels, travelPostcard } from '../data/npcs/jens';
+import { JENS_ANNOUNCEMENT, jensTravels, travelMugLetter, travelPostcard } from '../data/npcs/jens';
 import { LARS_ANNOUNCEMENT } from '../data/npcs/lars';
 import { THALIA_ANNOUNCEMENT } from '../data/npcs/thalia';
 import { sendLetter } from './gameplay';
@@ -59,7 +59,11 @@ export function checkStory(session: Session): StoryEvent[] {
   if (f.jensBegruesst && jensTravels(today) && data.world.dates['jens-reise'] !== today) {
     const jens = NPC_BY_ID.jens;
     const n = Number(data.world.dates['jens-reisen'] ?? '0') || 0;
-    if (jens) sendLetter(session, jens, travelPostcard(today, n), `jens-reise-${today}`);
+    if (jens) {
+      sendLetter(session, jens, travelPostcard(today, n), `jens-reise-${today}`);
+      const mug = travelMugLetter(today, n);
+      if (mug) sendLetter(session, jens, mug, `jens-tasse-${today}`);
+    }
     data.world.dates['jens-reise'] = today;
     data.world.dates['jens-reisen'] = String(n + 1);
     out.push('jens-reist');

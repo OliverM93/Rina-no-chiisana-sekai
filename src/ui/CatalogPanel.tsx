@@ -26,9 +26,9 @@ interface Entry {
   size?: string;
 }
 
-function entries(tab: Tab, winter: boolean): Entry[] {
+function entries(tab: Tab, winter: boolean, season: string): Entry[] {
   if (tab === 'moebel') {
-    return FURNITURE.filter((f) => !f.crafted && !f.gift && (!f.seasonal || winter)).map((f) => ({
+    return FURNITURE.filter((f) => !f.crafted && !f.gift && (!f.seasonal || winter) && (!f.inSeason || f.inSeason === season)).map((f) => ({
       id: f.id,
       name: f.name,
       price: f.price,
@@ -63,8 +63,9 @@ export function CatalogPanel({ session }: { session: Session }) {
   });
 
   const money = session.data?.money ?? 0;
-  const winter = getSeason(session.clock()) === 'winter';
-  const list = entries(tab, winter).filter((e) => style === 'alle' || e.style === style);
+  const season = getSeason(session.clock());
+  const winter = season === 'winter';
+  const list = entries(tab, winter, season).filter((e) => style === 'alle' || e.style === style);
   const sel = list.find((e) => e.id === selected) ?? null;
   const v = sel ? sel.variants[Math.min(variant, sel.variants.length - 1)] : null;
 

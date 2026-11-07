@@ -8,6 +8,7 @@ import { FURNITURE_BY_ITEM } from '../../data/furniture';
 import { ART_BY_ID } from '../../data/art';
 import { artCanvas } from '../../gfx/art';
 import { POSTER_BY_ID } from '../../data/posters';
+import { TASSE_BY_ID } from '../../data/tassen';
 import { posterCanvas } from '../../gfx/posters';
 import { darken, lighten } from '../../style/palette';
 import { mesh, toon } from '../materials';
@@ -138,6 +139,30 @@ export function makeFurniture(itemId: string, links: FenceLinks = { n: false, e:
     g.add(frame);
     g.traverse((o) => {
       if ((o as THREE.Mesh).isMesh) o.castShadow = true;
+    });
+    return { group: g, glow, lightAt, seatY };
+  }
+  const tasse = f ? TASSE_BY_ID[f.def.id] : undefined;
+  if (tasse) {
+    // Becher mit Henkel, Bandfarbe, Lippenrand und dem Bohne-Stern-Emblem (ausgedacht) auf der Vorderseite
+    const body = c(0.045, 0.085, tasse.color, 0, 0.0425, 0);
+    g.add(body);
+    g.add(c(0.0465, 0.014, tasse.accent, 0, 0.065, 0));
+    g.add(c(0.0455, 0.006, lighten(tasse.color, 0.25), 0, 0.087, 0));
+    g.add(c(0.039, 0.004, '#4a2a1c', 0, 0.0895, 0));
+    const handle = new THREE.Mesh(new THREE.TorusGeometry(0.026, 0.007, 6, 12, Math.PI), toon(tasse.color));
+    handle.position.set(0.045, 0.045, 0);
+    handle.rotation.z = -Math.PI / 2;
+    g.add(handle);
+    const emblem = c(0.016, 0.004, tasse.accent, 0, 0.04, 0.0445);
+    emblem.rotation.x = Math.PI / 2;
+    g.add(emblem);
+    g.add(s(0.006, 0.006, 0.003, tasse.color, 0, 0.04, 0.0475));
+    g.traverse((o) => {
+      if ((o as THREE.Mesh).isMesh) {
+        o.castShadow = true;
+        o.receiveShadow = true;
+      }
     });
     return { group: g, glow, lightAt, seatY };
   }
@@ -492,6 +517,18 @@ export function makeFurniture(itemId: string, links: FenceLinks = { n: false, e:
       g.add(s(0.012, 0.012, 0.012, brass, -0.02, 0.425, -0.005));
       // Tropfgitter
       g.add(b(0.18, 0.008, 0.07, '#8a8a92', 0.02, 0.045, 0.1));
+      break;
+    }
+    case 'tassenregal': {
+      // vier Bretter nebeneinander in einem hellen Gestell mit Haken für Henkel – oben darauf stehen die Tassen
+      const wood = '#e6c59c';
+      for (const x of [-1.9, 1.9]) g.add(b(0.06, 0.9, 0.3, darken(wood, 0.08), x, 0.45, 0));
+      g.add(b(3.84, 0.05, 0.32, wood, 0, 0.9, 0));
+      g.add(b(3.84, 0.04, 0.3, wood, 0, 0.55, 0));
+      g.add(b(3.84, 0.04, 0.3, wood, 0, 0.2, 0));
+      g.add(b(3.8, 0.9, 0.02, darken(wood, 0.12), 0, 0.45, -0.15));
+      // Haken fürs untere Brett
+      for (let i = 0; i < 8; i++) g.add(s(0.012, 0.012, 0.012, '#8a6a3a', -1.7 + i * 0.49, 0.5, 0.0));
       break;
     }
     case 'plattenspieler': {
