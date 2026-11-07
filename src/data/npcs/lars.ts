@@ -45,6 +45,13 @@ export const LARS: NpcDef = {
     ],
     chat: [
       { text: ['Dr. No aus „Schwerer Weg“ – kennst du den?', 'Fachlich gesehen: streng, aber fair. Genau so einen Chefarzt hätte ich mir manchmal gewünscht. Ich würde mit ihm einen Kaffee trinken.'] },
+      { text: ['Auf der Weihnachtsfeier im Krankenhaus wollte jede Kollegin neben mir sitzen.', 'Ich hab gesagt: „Platz ist genug für alle.“ … Das war, glaub ich, nicht die richtige Antwort.'] },
+      { text: ['Eine Ärztin hat mich gefragt, ob ich mal „was Privates“ mit ihr besprechen will.', 'Ich hab gesagt: „Gern! Termin nächsten Dienstag.“ … Jetzt versteh ich, warum sie so komisch geguckt hat.'] },
+      { text: ['Zwei Krankenschwestern haben mir Kuchen auf den Tisch gestellt. Beide. Gleichzeitig. Mit Zettelchen.', 'Ich hab beide gegessen. Aus Höflichkeit. Und um das Gleichgewicht auf der Station zu halten.'] },
+      { text: ['Lina: „Mein Bruder, der Herzensbrecher.“', 'Lars: „Ich bin Herzspezialist. Das ist was ganz anderes.“ – „Ja, ja.“ – „Ehrlich!“'], weight: 2 },
+      { text: ['Im Krankenhaus nennen sie mich „Dr. Lars“.', 'Ich hab den Verdacht, es liegt nicht am Kittel. Es ist der Bart. Verrat das niemandem.'] },
+      { text: ['Oma sagt, ich bin „ein Fang“.', 'Ich bin kein Fisch, Oma! … Auch wenn ich zugeben muss: Ich beiße manchmal an. Meistens an Kuchen.'] },
+      { text: ['Eine Kollegin hat mir ihre Telefonnummer auf einen Rezeptblock geschrieben.', 'Ich hab sie als „Magenschmerzen, dringend“ in die Akte gelegt. Man weiß ja nie.'] },
       { text: ['Du hast wieder Horrorfilme geguckt, oder?', 'Medizinisch gesehen: Gruseln ist gut für den Kreislauf. Kein Rezept nötig. Aber Popcorn in Maßen!'] },
       { text: ['Du guckst so gern diese Dokus über Menschen, die abnehmen wollen, oder?', 'Ehrlich, als Arzt: Die Leute dort sind echte Helden. Das ist so harte Arbeit.'] },
       { text: ['Tanzen ist gesund!', 'Ärztliche Empfehlung. Ich zeig dir gleich meinen Robot. Patentiert.'], when: { tags: ['party'] }, weight: 8 },

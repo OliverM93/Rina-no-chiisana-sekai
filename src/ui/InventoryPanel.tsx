@@ -1,7 +1,7 @@
 /**
  * Linas Tasche – zum Ansehen, Verkaufen (Verkaufskiste) und Verschenken.
  */
-import { useEffect, useMemo, useState } from 'preact/hooks';
+import { useEffect, useMemo, useRef, useState } from 'preact/hooks';
 import { sortInventory } from '../core/inventory';
 import { CURRENCY, FLOWER_BY_SEED, isKeepsake, ITEM_ORDER, itemDef, maxStackOf, type ToolId, TOOLS } from '../data/items';
 import { NPC_BY_ID } from '../data/npcs';
@@ -38,6 +38,14 @@ export function InventoryPanel({ session, panel }: { session: Session; panel: Ui
     return i >= 0 ? i : null;
   });
   const [sellSet, setSellSet] = useState<Set<number>>(new Set());
+  /** Tastatur-Cursor (Pfeiltasten) */
+  const [cursor, setCursor] = useState<number>(() => selected ?? 0);
+  const gridRef = useRef<HTMLDivElement>(null);
+  // Schnelle Tastendrücke kommen vor dem nächsten Neuzeichnen an – der Cursor wird deshalb sofort in einer Ref mitgeführt
+  const sellRef = useRef<Set<number>>(sellSet);
+  sellRef.current = sellSet;
+  const cursorRef = useRef(cursor);
+  cursorRef.current = cursor;
   const mode = panel.kind;
 
   const close = () => {
@@ -50,10 +58,40 @@ export function InventoryPanel({ session, panel }: { session: Session; panel: Ui
       if (e.code === 'Escape' || (mode === 'inventory' && (e.code === 'KeyI' || e.code === 'Tab'))) {
         e.preventDefault();
         close();
+        return;
       }
-      if (mode === 'seeds' && (e.code === 'Enter' || e.code === 'Space')) {
+      // Pfeiltasten: Cursor durch die Plätze bewegen
+      const cols = Math.max(1, gridRef.current ? getComputedStyle(gridRef.current).gridTemplateColumns.split(' ').length : 5);
+      const step = e.code === 'ArrowLeft' ? -1 : e.code === 'ArrowRight' ? 1 : e.code === 'ArrowUp' ? -cols : e.code === 'ArrowDown' ? cols : 0;
+      if (step !== 0) {
         e.preventDefault();
-        plant();
+        let next = Math.min(slots.length - 1, Math.max(0, cursorRef.current + step));
+        if (mode === 'seeds') {
+          // beim Pflanzen springt der Cursor von Samen zu Samen (leere Plätze & anderes sind nicht wählbar)
+          const seeds = slots.map((sl, idx) => (sl && FLOWER_BY_SEED[sl.itemId] ? idx : -1)).filter((idx) => idx >= 0);
+          if (seeds.length === 0) return;
+          const at = seeds.indexOf(cursorRef.current);
+          const dir = step > 0 ? 1 : -1;
+          next = seeds[(((at === -1 ? (dir > 0 ? -1 : 0) : at) + dir) % seeds.length + seeds.length) % seeds.length];
+        }
+        cursorRef.current = next;
+        setCursor(next);
+        const sl = slots[next];
+        // nur anzeigen, was in diesem Fenster auch wählbar ist (keine Hinweise beim bloßen Durchlaufen)
+        setSelected(sl && (mode !== 'seeds' || FLOWER_BY_SEED[sl.itemId]) ? next : null);
+        return;
+      }
+      if (e.code === 'Space' || e.code === 'Enter') {
+        e.preventDefault();
+        if (mode === 'seeds') plant(cursorRef.current);
+        else if (mode === 'gift') {
+          if (selected === cursorRef.current) gift();
+          else onSlot(cursorRef.current);
+        } else if (mode === 'sell') {
+          // Leertaste markiert, Enter verkauft die Markierten
+          if (e.code === 'Enter' && sellRef.current.size > 0) sell();
+          else onSlot(cursorRef.current);
+        } else onSlot(cursorRef.current);
       }
     };
     window.addEventListener('keydown', onKey);
@@ -74,6 +112,9 @@ export function InventoryPanel({ session, panel }: { session: Session; panel: Ui
   if (!data) return null;
 
   const onSlot = (i: number) => {
+    cursorRef.current = i;
+    setCursor(i);
+    (document.activeElement as HTMLElement | null)?.blur?.(); // Leertaste soll nicht den fokussierten Knopf noch einmal auslösen
     const s = slots[i];
     if (!s) {
       setSelected(null);
@@ -92,16 +133,18 @@ export function InventoryPanel({ session, panel }: { session: Session; panel: Ui
         showToast((TOOLS as readonly string[]).includes(s.itemId) ? 'Dein Werkzeug brauchst du noch! 🔧' : 'Das ist unverkäuflich – viel zu wertvoll! 💕');
         return;
       }
-      const next = new Set(sellSet);
+      const next = new Set(sellRef.current);
       if (next.has(i)) next.delete(i);
       else next.add(i);
+      sellRef.current = next;
       setSellSet(next);
     }
     setSelected(i);
   };
 
   const sell = () => {
-    const earned = sellSlots(session, [...sellSet]);
+    const earned = sellSlots(session, [...sellRef.current]);
+    sellRef.current = new Set();
     setSellSet(new Set());
     setSelected(null);
     if (earned > 0) showToast(`Verkauft! +${formatMoney(earned)}`);
@@ -115,10 +158,10 @@ export function InventoryPanel({ session, panel }: { session: Session; panel: Ui
     panel.onPick(s.itemId);
   };
 
-  const plant = () => {
-    if (panel.kind !== 'seeds' || selected === null) return;
-    const s = slots[selected];
-    if (!s) return;
+  const plant = (index: number | null = selected) => {
+    if (panel.kind !== 'seeds' || index === null) return;
+    const s = slots[index];
+    if (!s || !FLOWER_BY_SEED[s.itemId]) return;
     ui.set({ panel: null });
     panel.onPick(s.itemId);
   };
@@ -155,14 +198,14 @@ export function InventoryPanel({ session, panel }: { session: Session; panel: Ui
               ↕ Sortieren
             </button>
           )}
-          {mode === 'sell' && <span class="soft">Tippe an, was du verkaufen möchtest.</span>}
+          {mode === 'sell' && <span class="soft">Tippe an (oder Pfeiltasten + Leertaste), was du verkaufen möchtest. Enter verkauft.</span>}
         </div>
 
-        <div class="slot-grid">
+        <div class="slot-grid" ref={gridRef}>
           {slots.map((s, i) => (
             <button
               key={i}
-              class={`slot ${s ? '' : 'empty'} ${selected === i ? 'selected' : ''} ${sellSet.has(i) ? 'marked' : ''}`}
+              class={`slot ${s ? '' : 'empty'} ${selected === i ? 'selected' : ''} ${cursor === i ? 'cursor' : ''} ${sellSet.has(i) ? 'marked' : ''}`}
               onClick={() => onSlot(i)}
               aria-label={s ? `${itemDef(s.itemId)?.name ?? s.itemId}, ${s.count} Stück` : 'leerer Platz'}
             >
@@ -217,7 +260,7 @@ export function InventoryPanel({ session, panel }: { session: Session; panel: Ui
             </button>
           )}
           {mode === 'seeds' && (
-            <button class="btn primary" disabled={!sel} onClick={plant}>
+            <button class="btn primary" disabled={!sel} onClick={() => plant()}>
               🌱 Pflanzen
             </button>
           )}

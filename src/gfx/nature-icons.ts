@@ -339,7 +339,7 @@ export function natureIcons(): Record<string, Draw> {
   for (const f of FISH) out[f.id] = fishIcon(f);
   for (const i of INSECTS) out[i.id] = insectIcon(i);
   for (const g of GARDEN_FLOWERS) {
-    out[g.flower] = flowerIcon(g.color, g.center, g.flower);
+    out[g.flower] = flowerIcon(g.color, g.center, g.species);
     out[g.seed] = seedIcon(g.color);
   }
   return out;

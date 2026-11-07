@@ -56,7 +56,7 @@ export class Garden3D {
             wet.position.y = 0.005;
             node.add(wet);
           }
-          const plant = makePlant(p.stage, gf?.color ?? '#ffffff', gf?.center ?? '#f7d26a', p.flower);
+          const plant = makePlant(p.stage, gf?.color ?? '#ffffff', gf?.center ?? '#f7d26a', gf?.species ?? p.flower);
           plant.scale.setScalar(1.5);
           node.add(plant);
           this.group.add(node);

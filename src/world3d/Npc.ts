@@ -66,6 +66,11 @@ export class Npc {
     return this.mode !== 'hidden';
   }
 
+  /** Steht/sitzt sie gerade in der Welt? Dann kann Lina nicht durch sie hindurchlaufen. */
+  get blocksPlayer(): boolean {
+    return this.mode === 'idle' || this.mode === 'sitting' || this.mode === 'talking';
+  }
+
   /** Aktueller Eintrag im Tagesablauf (z. B. „programmiert“, zu Hause) */
   get currentEntry(): ScheduleEntry | null {
     return this.entry;

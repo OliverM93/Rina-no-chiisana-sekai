@@ -112,7 +112,7 @@ async function start() {
           })
         : null;
     const home = homeMood(session.data?.flags ?? {});
-    audio.setMood(forced ?? (title ? 'morgen' : moodFor(h, { raining, snowing: w.kind === 'schnee', inside, party: isPartyTime(session), place, home, nearSea })));
+    audio.setMood(forced ?? (title ? 'morgen' : moodFor(h, { raining, snowing: w.kind === 'schnee', inside, party: isPartyTime(session), place, home })));
     const season = getSeason(now);
     audio.setAmbience({
       birds: inside || raining || h < 5 || h >= 20 ? 0 : season === 'winter' ? 0.3 : 1,

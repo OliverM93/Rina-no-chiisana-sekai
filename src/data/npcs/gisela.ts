@@ -54,6 +54,14 @@ export const GISELA: NpcDef = {
     ],
     chat: [
       { text: ['Der Doktor im Fernsehen, den du so gern guckst – der mit den Augenbrauen –', 'Der erinnert mich an Ludwig, wenn er den Zaun streichen wollte und keiner ihm helfen durfte. Ernst. Und dann ganz weich. Köstlich.'] },
+      { text: ['Du lernst ja Japanisch, Kind, hat Olaf erzählt.', 'Sag mal was. … Aha. Und was heißt das? … Klingt wie Niesen. Aber hübsch, hübsch.'] },
+      { text: ['Neulich hat mich der Briefträger mit „Konnichiwa“ begrüßt.', 'Ich hab gesagt: Hier sagt man „Guten Tag“, junger Mann. … Aber ich hab ihm zugenickt. Man will ja nicht so sein.'] },
+      { text: ['Mein Ludwig hat immer behauptet: „Wer Japanisch kann, kann auch Judo.“', 'Das stimmt nicht. Aber er hat es gern geglaubt. Er hat dann einmal den Gartenzaun „geworfen“. Der Zaun hat gewonnen.'], weight: 2 },
+      { text: ['Du sagst vor dem Essen immer so ein Wort. „Itadakimasu“, nicht?', 'Find ich reizend. Bei mir sagt man „Guten Appetit“ – und danach hat keiner mehr Zeit zum Reden. Und jetzt iss.'] },
+      { text: ['Was heißt „Oma“ auf Japanisch? … „Obaachan“?', 'Obaachan. Hm. Klingt, als hätte ich einen Hund, der Bachan heißt. Aber von dir lass ich\'s mir gefallen.'], when: { minHearts: 1 } },
+      { text: ['Du hast in der Uni Japanisch gelernt – und ich in der Küche Kuchenbacken.', 'Ich würde sagen, ich hab das Nützlichere erwischt. … Aber sag das Ding mit dem Kuchen mal auf Japanisch. Für mich.'] },
+      { text: ['Der Lars hat ja so viele Verehrerinnen im Krankenhaus.', 'Das hat er von seinem Großvater. Der hatte auch keine Ahnung, wie er dazu kam. Er hat nur freundlich gelächelt. Das reicht manchmal.'], when: { tags: ['lars-da'] } },
+      { text: ['Hast du schon was Orangenes im Beet?', 'Rot neben Gelb, mein Kind. Opa Ludwig hat immer behauptet, das hätte er erfunden. Hat er nicht. Aber ich hab ihn reden lassen.'] },
       { text: ['Du guckst immer noch diese Gruselfilme, Kind?', 'Pfui. Davon kriegt man Falten. … Erzähl mir trotzdem, wie er ausgeht.'] },
       { text: ['Du guckst immer diese Sendungen, wo sich fremde Leute zum Essen treffen.', 'Zu meiner Zeit hat man sich beim Tanztee kennengelernt. Ganz ohne Kamera. … Na gut, der Ludwig hatte eine dabei.'] },
       { text: ['Kindchen, du kochst so gern – das hast du von mir.', 'Nicht von deinem Vater. Der verbrennt sogar Wasser.'] },
@@ -164,6 +172,8 @@ export const GISELA: NpcDef = {
   },
 
   letters: [
+    { id: 'tulpen-gelb', subject: 'Gelbe Tulpen', body: 'Liebes Kind,\n\nich hab im Schrank noch Zwiebeln von gelben Tulpen gefunden. Rote hast du ja schon.\n\nPflanz die gelben daneben. Wenn beide blühen und du sie pflückst, fällt manchmal ein Samen heraus, aus dem etwas Orangenes wächst. Das hat schon Opa Ludwig gemacht. Der alte Zauberer.\n\nOma\n\nP. S. Nicht ausgraben, um nachzuschauen!', gift: { itemId: 'samen-tulpe-gelb', count: 3 } },
+    { id: 'lavendel-weiss', subject: 'Weißer Lavendel', body: 'Liebes Kind,\n\nweißen Lavendel gibt es kaum. Den hab ich von einer Dame, die ihn nur an Menschen abgibt, die sie mag. Ich hab ihr gesagt, du bist eine.\n\nNeben den lila gepflanzt, wird er mit etwas Glück rosa. Frag nicht, wie das geht. Ich weiß nur, dass es geht.\n\nOma', gift: { itemId: 'samen-lavendel-weiss', count: 2 } },
     { id: 'kekse', subject: 'Zu viele Kekse', body: 'Liebe Lina,\n\nich hab zu viele Kekse gebacken. Also eigentlich genau richtig viele – für dich. Iss nicht alle auf einmal!\n\nDeine Oma', gift: { itemId: 'keks', count: 3 } },
     { id: 'warm', subject: 'Zieh dich warm an!', body: 'Liebe Lina,\n\ndenk dran, dich warm anzuziehen. Und iss was Ordentliches. Und ruf mal an.\n\nAch so, du wohnst ja jetzt nebenan. Dann komm halt vorbei!\n\nOma' },
     { id: 'muschel', subject: 'Strandfund', body: 'Lina, Schätzchen!\n\nAm Strand hab ich eine Muschel gefunden, die sah aus wie du, wenn du schmollst. Ich leg sie dir bei.\n\nOma Gisela', gift: { itemId: 'herzmuschel', count: 1 } },
@@ -204,6 +214,7 @@ export const GISELA_TOOLS: readonly string[] = [
   'Dazu ein Kescher für Schmetterlinge – aber bring mir keine Krabbeltiere ins Haus!',
   'Und eine Gießkanne. In Rosa. Rosa steht dir.',
   'Und ein paar Blumensamen für das Beet neben deinem Haus. Gießen nicht vergessen!',
+  'Rote Tulpen, gelbe Tulpen. Pflanz sie nebeneinander, hat Opa Ludwig immer gesagt. Da passiert mit etwas Glück was Hübsches. Was, verrat ich nicht.',
   'Mit den Tasten 1, 2 und 3 nimmst du die Sachen in die Hand. Q steckt sie wieder weg.',
   '… Woher ich das weiß? Ich weiß alles. Ende der Diskussion.',
 ];
