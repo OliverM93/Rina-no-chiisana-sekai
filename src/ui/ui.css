@@ -322,6 +322,46 @@ body {
   background: var(--ui-accent);
 }
 
+.hud-zoom {
+  position: fixed;
+  right: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  z-index: 5;
+}
+
+.hud-zoom button {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 3px solid var(--ui-border);
+  background: rgba(255, 253, 249, 0.95);
+  color: var(--ui-accent);
+  font-size: 1.3rem;
+  font-weight: 800;
+  line-height: 1;
+  cursor: pointer;
+  box-shadow: 0 3px 0 var(--ui-border);
+}
+
+.hud-zoom button:active {
+  transform: translateY(1px);
+}
+
+.hud-zoom button:disabled {
+  opacity: 0.35;
+  pointer-events: none;
+}
+
+.hud-menu-button:disabled,
+.hud-bag:disabled {
+  opacity: 0.35;
+  pointer-events: none;
+}
+
 .hud-menu-button:active {
   transform: translateY(2px);
   box-shadow: 0 2px 0 var(--ui-border);
@@ -447,6 +487,10 @@ body {
   align-items: center;
   gap: 8px;
   flex: 0 0 200px;
+  /* bleibt beim Scrollen durch die Optionen sichtbar – Änderungen sieht man immer */
+  position: sticky;
+  top: 0;
+  align-self: flex-start;
 }
 
 .preview-stage {
@@ -727,16 +771,21 @@ body {
     flex: none;
     flex-direction: row;
     align-items: flex-end;
+    align-self: stretch;
+    justify-content: center;
+    z-index: 2;
+    padding: 4px 0 8px;
+    background: var(--ui-panel);
   }
 
   .preview-stage {
-    width: 140px;
-    height: 160px;
+    width: 100px;
+    height: 120px;
   }
 
   .preview-canvas {
-    width: 128px;
-    height: 157px;
+    width: 92px;
+    height: 113px;
   }
 
   .card {
@@ -1013,6 +1062,7 @@ body:has(.dialog-layer) .decor-bar {
   padding: 0 6px;
 }
 
+.slot.cursor,
 .slot.selected {
   border-color: var(--ui-accent);
   box-shadow: 0 0 0 3px rgba(244, 151, 176, 0.35);

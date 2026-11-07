@@ -32,9 +32,10 @@ export function App({ session }: { session: Session }) {
     };
     const offs = [
       session.bus.on('world:ready', onReady),
-      session.bus.on('dialog:open', (dialog) => ui.set({ dialog })),
+      // Dialoge & Fenster sind vom Menü getrennt: ein offenes Menü schließt sich, wenn sie aufgehen
+      session.bus.on('dialog:open', (dialog) => ui.set({ dialog, menuOpen: false })),
       session.bus.on('toast', (t) => showToast(t.text, t.icon)),
-      session.bus.on('ui:open', (panel) => ui.set({ panel })),
+      session.bus.on('ui:open', (panel) => ui.set({ panel, menuOpen: false })),
     ];
     if (session.worldReady) onReady();
     return () => offs.forEach((off) => off());

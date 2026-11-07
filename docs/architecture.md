@@ -96,6 +96,12 @@ src/
   `core` darf nie aus `game`/`ui`/`gfx` importieren.
 - **Event-Bus:** Welt und UI sprechen nur über `session.bus` (`dialog:open`, `game:started`,
   `appearance:changed`, …). Die UI setzt `session.uiBlocking`, wenn Fenster offen sind.
+- **Menü & Fenster:** Dialoge, Fenster und Rückfragen sperren das Menü (`Hud`: `busy`), ein offenes Menü schließt sich,
+  wenn ein Dialog oder Fenster aufgeht (`App`). Zoom-Knöpfe senden `camera:zoom` auf dem Bus (`World3D.zoomBy`).
+  Tasche, Verkaufskiste, Geschenk- und Samenauswahl lassen sich mit Pfeiltasten durchlaufen (Leertaste wählt/markiert, Enter
+  verkauft bzw. schenkt/pflanzt).
+- **Bewohner sind fest:** Stehende, sitzende und sprechende Bewohner blockieren Lina (`Npc.blocksPlayer`,
+  `World3D.npcStands`); wer läuft oder in einer Szene mitspielt, nicht.
 - **Koordinaten:** Spiellogik & Spielstand rechnen in Welteinheiten (1 Kachel = `TILE` = 64). Three.js
   rechnet in Kacheln (`UNIT = 1/64`): Logik-x → 3D-X, Logik-y → 3D-Z, Höhe = Y. Vorne/Kamera = +Z.
 - **Modelle:** Ursprung = Mitte der Grundfläche auf Bodenhöhe, Tür/Blick zeigt nach +Z.
@@ -111,7 +117,7 @@ src/
 - **Tag & Nacht:** Sonne/Himmel/Nebel nach Uhrzeit, Fenster & Laternen leuchten (Emissive + Punktlichter
   an den nächstgelegenen Laternen).
 - **Klang:** `GameAudio` (`audio/Audio.ts`) startet nach der ersten Taste/Klick (Browser-Regel). **Musik:** draußen
-  Natur-Themen nach Tageszeit/Wetter (+ Strand), nahe an Häusern das Thema der Bewohner (`data/music.ts`:
+  Natur-Themen nach Tageszeit/Wetter (am Strand dieselbe Musik, nur mit Meeresrauschen), nahe an Häusern das Thema der Bewohner (`data/music.ts`:
   Olaf & Christin, Oma, Bistro, Praxis, Thalia), zu Hause „Lini & Oli“ (ab Olis Einzug). Ortswechsel greift am
   nächsten Taktende. Zum Anhören `?musik=bistro` an die URL hängen. **Stimmen:** `data/voices.ts` (Tonhöhe,
   Kopfgröße/Formanten, Lebhaftigkeit, Hauch; Männer tiefer), Silben aus `core/babble.ts`. Geräusche
