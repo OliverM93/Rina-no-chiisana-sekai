@@ -41,6 +41,8 @@ import {
 import { KeyboardInput } from '../game/input';
 import { bedTiles, canPlace, currentRoom, finishExpansion, moveFurniture, pickUpFurniture, placeFromBag } from '../game/home';
 import { checkStory } from '../game/story';
+import { drinkCoffee, drinksFor, isCoffeeMachine, KICK_SPEED, kickActive } from '../game/coffee';
+import type { Drink } from '../data/coffee';
 import { christinTip, christinWaters } from '../game/christin';
 import { buyDrink, checkAdvent, isAdventTime, punschOpen } from '../game/winter';
 import { PUNSCH_DRINKS, PUNSCH_HOURS } from '../data/winter';
@@ -409,6 +411,8 @@ export class World3D {
       // drinnen bleibt Lina beim Einrichten stehen, im Garten darf sie herumlaufen
       if (this.session.decorActive && this.session.inside) intent.dx = intent.dy = 0;
       // beim Durch-die-Tür-Gehen: keine Kollision (sonst stünde Lina vor der Hauswand)
+      // Kaffee-Kick: ein paar Minuten flotter unterwegs
+      player.speedFactor = kickActive(this.session) ? KICK_SPEED : 1;
       player.update(dtMs, intent, auto ? () => false : solid);
       // Schritte: bei jedem zweiten halben Schritt ein leises Geräusch
       if (player.moving) {
@@ -2579,6 +2583,10 @@ export class World3D {
       this.session.bus.emit('ui:open', { kind: 'herd' });
       return;
     }
+    if (isCoffeeMachine(item.itemId)) {
+      this.coffeeMenu(item.itemId, itemDef(item.itemId)?.name ?? f.def.name);
+      return;
+    }
     if (f.def.coop) {
       this.session.bus.emit('sfx', 'gackern');
       if (this.player) this.fxAt('funkeln', this.player.x, this.player.y);
@@ -2608,6 +2616,48 @@ export class World3D {
     }
     const name = itemDef(item.itemId)?.name ?? f.def.name;
     this.session.bus.emit('dialog:open', { title: name, lines: [f.def.description] });
+  }
+
+  /** Siebträgermaschine: erst Klassiker oder Milchschaum, dann das Getränk */
+  private coffeeMenu(itemId: string, title: string) {
+    const drinks = drinksFor(itemId);
+    const pure = drinks.filter((d) => !d.milk);
+    const milk = drinks.filter((d) => d.milk);
+    const pick = (list: Drink[]) =>
+      this.session.bus.emit('dialog:open', {
+        title,
+        lines: ['Was darf es sein?'],
+        choices: [...list.map((d) => ({ label: `${d.icon} ${d.name}`, onSelect: () => this.serveCoffee(itemId, d) })), { label: '👋 Doch nichts', onSelect: () => undefined }],
+      });
+    if (milk.length === 0) {
+      pick(pure);
+      return;
+    }
+    this.session.bus.emit('dialog:open', {
+      title,
+      lines: [`Die Maschine summt leise und ist startklar. Sie kann ${drinks.length} Getränke.`],
+      choices: [
+        { label: '☕ Klassiker (ohne Milch)', onSelect: () => pick(pure) },
+        { label: '🥛 Mit Milchschaum', onSelect: () => pick(milk) },
+        { label: '👋 Doch nichts', onSelect: () => undefined },
+      ],
+    });
+  }
+
+  private serveCoffee(itemId: string, drink: Drink) {
+    const together = !!this.homeOli?.visible && this.session.inside;
+    const r = drinkCoffee(this.session, itemId, drink.id, together);
+    if (!r) return;
+    this.session.bus.emit('dialog:open', {
+      title: `${drink.icon} ${drink.name}`,
+      lines: r.lines,
+      onClose: () => {
+        this.player?.cheer();
+        if (r.art || r.together) this.playFx('herzen');
+        else this.playFx('funkeln');
+        this.session.bus.emit('toast', { text: '☕ Kaffee-Kick! Lina läuft ein paar Minuten flotter.' });
+      },
+    });
   }
 
   private standUp() {

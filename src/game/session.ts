@@ -154,6 +154,8 @@ export class Session {
   roomId = 'haupt';
   /** Einrichtungsmodus aktiv */
   decorActive = false;
+  /** Bis wann (Spielzeit in Sekunden, `playTime()`) Lina vom Kaffee-Kick flotter läuft – wird nicht gespeichert */
+  coffeeUntil = 0;
   /** Werkzeug in Linas Hand (wird nicht gespeichert) */
   tool: ToolId | null = null;
   /** Erzwungenes Wetter (`?wetter=regen`, zum Testen) */

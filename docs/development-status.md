@@ -251,6 +251,7 @@ Legende: ✅ erledigt · 🚧 in Arbeit · ⬜ geplant
   Adventskranz, Kaminofen, Lebkuchenhaus, Nussknacker, Schneeflocken-Teppich & -Tapete, Lichtervorhang, Strumpf,
   Schlitten), Bratapfel & Zimtsterne, Punschstand am Weihnachtsbaum, Fußspuren im Schnee, Atemwölkchen,
   Schneeflocken fangen · Modelle für Sparschwein, Weihnachtsstern & Kuscheldecke (waren rosa Würfel)
+- ✅ **M8l Kaffee:** vier Siebträgermaschinen in Preisklassen (3 neue 3D-Modelle), 8 Getränke, Kaffee-Kick, Kaffee zu zweit mit Oli
 - ⬜ Weitere Animationen & Partikel, Balancing
 
 ## 💡 Ideen-Parkplatz
