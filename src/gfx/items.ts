@@ -11,6 +11,8 @@ import { RECIPE_ITEM_PREFIX, RECIPES } from '../data/recipes';
 import { FINDS } from '../data/fossils';
 import { ARTWORKS } from '../data/art';
 import { artCanvas } from './art';
+import { POSTERS } from '../data/posters';
+import { posterCanvas } from './posters';
 
 export const ICON = 32;
 
@@ -699,6 +701,17 @@ for (const art of ARTWORKS) {
     ctx.save();
     ctx.translate(6, 8);
     ctx.drawImage(artCanvas(art, 80, 64), 0, 0, 20, 16);
+    ctx.restore();
+  };
+}
+
+// Poster & Bildbände: das Cover im schmalen Rahmen (bis die 3D-Vorschau fertig ist)
+for (const p of POSTERS) {
+  DRAW[p.id] = (ctx) => {
+    roundRect(ctx, 7, 3, 18, 26, 1.5, p.kind === 'poster' ? '#2b2a31' : '#f4efe4', '#1a1a1e', 1.2);
+    ctx.save();
+    ctx.translate(8.5, 4.5);
+    ctx.drawImage(posterCanvas(p, 60, 84), 0, 0, 15, 21);
     ctx.restore();
   };
 }

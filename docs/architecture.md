@@ -44,11 +44,11 @@ src/
   data/        Inhalte (leicht erweiterbar): Karten, Interaktionstexte, Story-Texte,
                items.ts (alle Gegenstände + Preise, Gartenblumen, Werkzeuge), species.ts (Fische & Insekten –
                echte heimische Arten), furniture.ts (Möbel, Tapeten, Böden, Varianten; Stile: japanisch, basis,
-               cottage, retro, modern, midcentury, handgemacht, garten, kunst, winter – Muster in `gfx/interior.ts`),
+               cottage, retro, modern, midcentury, handgemacht, garten, kunst, winter, lieblinge – Muster in `gfx/interior.ts`),
                house.ts (Ausbaustufen 0–6, Räume, Preise, Start-Haus, Start-Einrichtung neuer Räume,
                `HOUSE_ANNEX` = Kacheln, die Anbauten außen belegen),
                npcs/ (je Bewohner eine Datei)
-               wardrobe.ts (Aufdruck-Kleidung, Bandnamen), recipes.ts (Rezepte), coffee.ts (Siebträgermaschinen & Getränke), flowers.ts (Blumenfarben & Mischregeln), festivals.ts, meetups.ts,
+               wardrobe.ts (Aufdruck-Kleidung, Bandnamen), recipes.ts (Rezepte), coffee.ts (Siebträgermaschinen & Getränke), flowers.ts (Blumenfarben & Mischregeln), posters.ts (Poster & Bildbände), festivals.ts, meetups.ts,
                tv.ts, animals.ts, fossils.ts, winston.ts, winter.ts, art.ts, progress.ts (Meilensteine)
   style/       palette.ts – EINZIGE Quelle für Farben (auch CSS-Variablen der UI)
   gfx/         2D-Zeichnungen für Texturen & Symbole: terrain.ts (Gelände-Textur), items.ts (Symbole), prints.ts (Kleidungs-Aufdrucke),

@@ -7,6 +7,8 @@ import * as THREE from 'three';
 import { FURNITURE_BY_ITEM } from '../../data/furniture';
 import { ART_BY_ID } from '../../data/art';
 import { artCanvas } from '../../gfx/art';
+import { POSTER_BY_ID } from '../../data/posters';
+import { posterCanvas } from '../../gfx/posters';
 import { darken, lighten } from '../../style/palette';
 import { mesh, toon } from '../materials';
 import type { Season } from '../../core/time';
@@ -136,6 +138,50 @@ export function makeFurniture(itemId: string, links: FenceLinks = { n: false, e:
     g.add(frame);
     g.traverse((o) => {
       if ((o as THREE.Mesh).isMesh) o.castShadow = true;
+    });
+    return { group: g, glow, lightAt, seatY };
+  }
+  const poster = f ? POSTER_BY_ID[f.def.id] : undefined;
+  if (poster) {
+    const tex = new THREE.CanvasTexture(posterCanvas(poster, 200, 280));
+    tex.colorSpace = THREE.SRGBColorSpace;
+    const pmat = new THREE.MeshToonMaterial({ map: tex });
+    if (poster.kind === 'poster') {
+      // an der Wand: dünner schwarzer Rahmen, Bild, zwei Klebestreifen
+      const z = WALL_Z;
+      g.add(b(0.5, 0.7, 0.02, '#26242a', 0, HANG, z));
+      const plane = new THREE.Mesh(new THREE.PlaneGeometry(0.46, 0.66), pmat);
+      plane.position.set(0, HANG, z + 0.012);
+      g.add(plane);
+      for (const x of [-0.17, 0.17]) g.add(b(0.07, 0.025, 0.004, '#f2e8c8', x, HANG + 0.34, z + 0.014));
+    } else {
+      // Bildband auf dem Tisch: ein bis drei Bände übereinander, das oberste mit dem Cover nach oben
+      const n = 1 + (poster.id.length % 3);
+      const colors = [poster.colors[0], poster.colors[1], '#2a2a30'];
+      let y = 0;
+      for (let i = 0; i < n; i++) {
+        const last = i === n - 1;
+        const h = 0.04 + (i % 2) * 0.015;
+        const book = b(0.22 - i * 0.012, h, 0.3 - i * 0.016, last ? '#f4efe4' : colors[i % 3], 0.01 * (i % 2 ? 1 : -1), y + h / 2, 0);
+        book.rotation.y = (i % 2 ? 0.08 : -0.05) * (i + 1);
+        g.add(book);
+        if (last) {
+          // Seiten (hell) und Cover oben
+          g.add(b(0.2 - i * 0.012, h * 0.55, 0.28 - i * 0.016, '#fbf6ec', 0.01 * (i % 2 ? 1 : -1), y + h / 2, 0.012).rotateY(book.rotation.y));
+          const cover = new THREE.Mesh(new THREE.PlaneGeometry(0.2 - i * 0.012, 0.28 - i * 0.016), pmat);
+          cover.rotation.x = -Math.PI / 2;
+          cover.rotation.z = book.rotation.y;
+          cover.position.set(0.01 * (i % 2 ? 1 : -1), y + h + 0.001, 0);
+          g.add(cover);
+        }
+        y += h;
+      }
+    }
+    g.traverse((o) => {
+      if ((o as THREE.Mesh).isMesh) {
+        o.castShadow = true;
+        o.receiveShadow = true;
+      }
     });
     return { group: g, glow, lightAt, seatY };
   }

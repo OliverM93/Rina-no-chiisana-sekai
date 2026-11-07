@@ -96,6 +96,11 @@ Wetter und Feste laufen nach echter Zeit.
   Gewaltdetails, niemand wird verspottet (die Doku nimmt ihre Protagonisten ernst). Regeln
   in `game/tv.ts` (Folge pro Tag, Oli schaut mit, Kochshow lehrt Rezepte mit `tv: true`). Linas Herd =
   `CraftPanel` mit `station="herd"` (Küchen-Rezepte zu Hause).
+- **Poster & Bildbände (Lieblingsthemen):** `data/posters.ts` – ein Retro-Kaffee-Poster (Wand-Deko) und drei Coffee-Table-Books (kleine
+  Bildbände für Tische): „Kaffee – eine Liebeserklärung“, Dr. Nos Memoiren „Ein Schritt. Dann noch einer.“ und „Kawaii“. Titel
+  und Motive sind ausgedacht (keine echten Werke/Personen). Stil „Lieblingsthemen“ im Möbelkatalog. Gemalt wird in
+  `gfx/posters.ts`, die 3D-Modelle (Poster mit Rahmen, Stapel Bildbände mit Cover oben) in `models/furniture.ts`. Neue Poster:
+  Eintrag in `POSTERS` + Motiv in `MOTIFS`. (Horror- und Zauberschul-Poster wurden wieder entfernt – Lina mochte sie nicht.)
 - **Kaffee:** Siebträgermaschinen in vier Preisklassen (`data/coffee.ts`, Möbel in `data/furniture.ts`): Einsteiger (650 ⭐, Espresso &
   Lungo), Olis `kaffeemaschine` (Geschenk, mit Dampflanze: + Americano & Cappuccino), Zweikreiser (3200 ⭐, eingebaute Mühle:
   + Café Crème, Latte Macchiato, Flat White) und Messing-Handhebelmaschine (8800 ⭐: + Latte-Art „Latte mit Herz“). Maschine
