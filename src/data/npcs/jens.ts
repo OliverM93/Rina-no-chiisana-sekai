@@ -47,6 +47,7 @@ export const JENS: NpcDef = {
       { text: ['Ein Regenbogen! 🌈', 'Na, wenn das mal kein Zeichen ist. Für uns Fabelhaften ist das ja quasi die Hausfahne.'], when: { tags: ['regenbogen'] }, weight: 5 },
     ],
     chat: [
+      { text: ['Dieser Dr. No aus deiner Sendung, chérie! Diese Augenbrauen!', 'Ich würde sie malen. Auf eine große Leinwand. Titel: „Autorität in Schwarz-Grau“. Und dann ein Rahmen aus Gold.'] },
       { text: ['Lina, du lernst Japanisch! Sag mal was!', 'Ich versteh ja nur „Arigato“ und „Sushi“. Aber ich nicke sehr überzeugend. Hai, hai!'] },
       { text: ['In Kyoto hab ich gelernt: „Ichi-go ichi-e“ – ein Moment, eine Begegnung, nie wieder genau so.', 'Das kennst du doch aus deinem Japanisch-Kurs, chérie? Erklär mir das mal richtig. Ich hab nur genickt und geweint.'] },
       { text: ['Du und dein Japanisch, ma chérie.', 'Ich hab mir sagen lassen, „kawaii“ bedeutet „niedlich“. Dann bin ich ja quasi euer Ehrenbürger. Kawaii. Mit Glitzer.'] },

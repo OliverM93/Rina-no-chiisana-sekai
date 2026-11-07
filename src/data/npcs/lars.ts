@@ -44,6 +44,7 @@ export const LARS: NpcDef = {
       { text: ['Schnee! Schal an, Mütze auf!', 'Ärztliche Anordnung. Und brüderliche auch.'], when: { tags: ['wetter-schnee'] }, weight: 3 },
     ],
     chat: [
+      { text: ['Dr. No aus „Schwerer Weg“ – kennst du den?', 'Fachlich gesehen: streng, aber fair. Genau so einen Chefarzt hätte ich mir manchmal gewünscht. Ich würde mit ihm einen Kaffee trinken.'] },
       { text: ['Auf der Weihnachtsfeier im Krankenhaus wollte jede Kollegin neben mir sitzen.', 'Ich hab gesagt: „Platz ist genug für alle.“ … Das war, glaub ich, nicht die richtige Antwort.'] },
       { text: ['Eine Ärztin hat mich gefragt, ob ich mal „was Privates“ mit ihr besprechen will.', 'Ich hab gesagt: „Gern! Termin nächsten Dienstag.“ … Jetzt versteh ich, warum sie so komisch geguckt hat.'] },
       { text: ['Zwei Krankenschwestern haben mir Kuchen auf den Tisch gestellt. Beide. Gleichzeitig. Mit Zettelchen.', 'Ich hab beide gegessen. Aus Höflichkeit. Und um das Gleichgewicht auf der Station zu halten.'] },

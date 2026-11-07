@@ -53,6 +53,7 @@ export const GISELA: NpcDef = {
       { text: ['Kindchen! Mein Lieblingsbesuch.', '… Ja, ich weiß, du bist mein einziger Besuch. Trotzdem.'], when: { minHearts: 2 } },
     ],
     chat: [
+      { text: ['Der Doktor im Fernsehen, den du so gern guckst – der mit den Augenbrauen –', 'Der erinnert mich an Ludwig, wenn er den Zaun streichen wollte und keiner ihm helfen durfte. Ernst. Und dann ganz weich. Köstlich.'] },
       { text: ['Du lernst ja Japanisch, Kind, hat Olaf erzählt.', 'Sag mal was. … Aha. Und was heißt das? … Klingt wie Niesen. Aber hübsch, hübsch.'] },
       { text: ['Neulich hat mich der Briefträger mit „Konnichiwa“ begrüßt.', 'Ich hab gesagt: Hier sagt man „Guten Tag“, junger Mann. … Aber ich hab ihm zugenickt. Man will ja nicht so sein.'] },
       { text: ['Mein Ludwig hat immer behauptet: „Wer Japanisch kann, kann auch Judo.“', 'Das stimmt nicht. Aber er hat es gern geglaubt. Er hat dann einmal den Gartenzaun „geworfen“. Der Zaun hat gewonnen.'], weight: 2 },

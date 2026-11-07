@@ -56,6 +56,8 @@ export const OLI: NpcDef = {
       { text: ['Schnee, Lini! ❄️', 'Wer zuerst einen Schneemann baut, kriegt einen Kakao. Ich verlier auch absichtlich.'], when: { tags: ['wetter-schnee'] }, weight: 3 },
     ],
     chat: [
+      { text: ['Lini, dein Doktor No läuft heute wieder.', 'Ich hab schon die Taschentücher hingelegt. Und deinen Platz auf dem Sofa freigehalten. Ich bin ein guter Freund.'] },
+      { text: ['Wenn Dr. No „Ein Schritt. Dann noch einer.“ sagt, dann krieg ich auch Lust, was zu machen.', 'Aufräumen zum Beispiel. Oder Hanteln. Oder … nee, ich glaub, Hanteln.'] },
       { text: ['Lini, heute Abend Horrorfilm?', 'Ich such einen aus. Einen nicht ganz so gruseligen. … Okay, du suchst aus. Aber ich halte das Kissen.'], weight: 2 },
       { text: ['Ich hab die ganze Nacht an die Puppe aus der Serie gedacht.', 'Wie kannst du sowas gucken und danach seelenruhig einschlafen? Du bist unglaublich.'], when: { phases: ['morgen', 'morgendaemmerung'] } },
       { text: ['Lini, heute Abend True Crime?', 'Aber diesmal nicht wieder bis drei Uhr nachts. … Okay, bis zwei.'] },

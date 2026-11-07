@@ -980,6 +980,43 @@ export function makeFurniture(itemId: string, links: FenceLinks = { n: false, e:
       g.add(b(0.2, 0.012, 0.01, '#d9b45a', 0, HANG + 0.22, z + 0.03));
       break;
     }
+    case 'bild-dr-no': {
+      // Dr. No: weißer Kittel, graue Schläfen, buschige Brauen, Brille, Stethoskop – ernst und gütig
+      const z = WALL_Z;
+      g.add(b(0.62, 0.74, 0.04, '#8a6a3a', 0, HANG, z));
+      g.add(b(0.54, 0.66, 0.01, '#3f5a66', 0, HANG, z + 0.022));
+      // Kittel & Schultern
+      g.add(s(0.2, 0.1, 0.01, '#f4f1ea', 0, HANG - 0.24, z + 0.03));
+      g.add(b(0.1, 0.08, 0.01, '#f4f1ea', 0, HANG - 0.2, z + 0.034));
+      // Hals, Kopf
+      g.add(b(0.06, 0.05, 0.01, '#e0b894', 0, HANG - 0.14, z + 0.032));
+      g.add(s(0.105, 0.125, 0.01, '#e8c4a0', 0, HANG + 0.02, z + 0.04));
+      // graue Haare an den Seiten, oben kahl
+      for (const x of [-0.1, 0.1]) g.add(s(0.03, 0.07, 0.01, '#bdbdc4', x, HANG + 0.03, z + 0.036));
+      g.add(s(0.07, 0.025, 0.01, '#bdbdc4', 0, HANG + 0.13, z + 0.034));
+      // buschige Brauen
+      for (const x of [-0.04, 0.04]) g.add(b(0.075, 0.028, 0.01, '#4a4a52', x, HANG + 0.088, z + 0.05));
+      // Augen & Brille
+      for (const x of [-0.04, 0.04]) {
+        g.add(s(0.012, 0.012, 0.005, '#2a2a30', x, HANG + 0.03, z + 0.054));
+        g.add(b(0.065, 0.004, 0.004, '#3a3a40', x, HANG + 0.052, z + 0.052));
+        g.add(b(0.004, 0.045, 0.004, '#3a3a40', x - 0.032, HANG + 0.03, z + 0.052));
+        g.add(b(0.004, 0.045, 0.004, '#3a3a40', x + 0.032, HANG + 0.03, z + 0.052));
+        g.add(b(0.065, 0.004, 0.004, '#3a3a40', x, HANG + 0.008, z + 0.052));
+      }
+      // Nase, fester Mund
+      g.add(b(0.014, 0.04, 0.012, '#d9ae88', 0, HANG - 0.01, z + 0.052));
+      g.add(b(0.06, 0.008, 0.005, '#8a4a40', 0, HANG - 0.06, z + 0.052));
+      // Stethoskop
+      const tor = new THREE.Mesh(new THREE.TorusGeometry(0.06, 0.008, 6, 16, Math.PI), toon('#3a3a40'));
+      tor.position.set(0, HANG - 0.15, z + 0.04);
+      tor.rotation.z = Math.PI;
+      g.add(tor);
+      g.add(s(0.018, 0.018, 0.008, '#b8bcc4', 0.0, HANG - 0.285, z + 0.042));
+      // Namensschild
+      g.add(b(0.12, 0.026, 0.004, '#d9b45a', 0, HANG - 0.31, z + 0.025));
+      break;
+    }
     case 'poster-grusel': {
       const z = WALL_Z;
       g.add(b(0.52, 0.74, 0.01, '#2a2238', 0, HANG, z));
