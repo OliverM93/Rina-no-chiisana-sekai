@@ -7,6 +7,7 @@
  */
 import { ARTWORKS } from './art';
 import { POSTERS } from './posters';
+import { FURNITURE_HEIGHTS } from './furnitureHeights';
 import { TASSEN } from './tassen';
 
 export type FurnitureStyle = 'japanisch' | 'basis' | 'cottage' | 'retro' | 'modern' | 'midcentury' | 'handgemacht' | 'garten' | 'kunst' | 'winter' | 'lieblinge';
@@ -26,6 +27,10 @@ export interface FurnitureDef {
   surfaceHeight?: number;
   /** Klein genug für Tische & Kommoden */
   small?: boolean;
+  /** Winzig (Tasse): auf Regalen mit `slots` stehen mehrere nebeneinander */
+  tiny?: boolean;
+  /** Wie viele Winzlinge (Tassen) passen auf ein Feld dieser Oberfläche? (Standard 1) */
+  slots?: number;
   /** Teppich: man kann darüber laufen, Möbel darauf stellen */
   rug?: boolean;
   /** Man kann sich hinsetzen (Kissen) bzw. hinlegen (Futon) */
@@ -35,6 +40,8 @@ export interface FurnitureDef {
   description: string;
   /** Nur an der Werkbank zu bauen (nicht im Katalog) */
   crafted?: boolean;
+  /** Nicht mehr im Katalog, aber wer es schon hat, behält es */
+  retired?: boolean;
   /** Nur als Geschenk (z. B. von Oli), nicht im Katalog */
   gift?: boolean;
   /** Für draußen (Linas Garten) statt fürs Haus */
@@ -188,6 +195,10 @@ export const FURNITURE: readonly FurnitureDef[] = [
   { id: 'tripodlampe', name: 'Dreibein-Stehlampe', style: 'midcentury', light: true, price: 800, w: 1, d: 1, description: 'Drei schlanke Holzbeine und ein kegelförmiger Schirm. Wirft warmes Licht nach unten.' },
   { id: 'opal-leuchte', name: 'Opalglas-Tischleuchte', style: 'midcentury', small: true, light: true, price: 450, w: 1, d: 1, description: 'Eine Kugel aus milchigem Glas auf einem Chromfuß. Ganz klare Form, ganz weiches Licht.' },
   { id: 'formenteppich', name: 'Formen-Teppich', style: 'midcentury', rug: true, price: 900, w: 2, d: 2, description: 'Ein Teppich mit Kreis, Quadrat und Dreieck in Rot, Gelb und Blau.' },
+  // Hellerau-Regale: Leiterregal-System im Stil der Dresdner Gartenstadt – Leitern an der Wand, Bretter dazwischen
+  { id: 'hellerau-regal', name: 'Hellerau-Wandregal', style: 'midcentury', wall: true, price: 650, w: 1, d: 1, description: 'Zwei schlanke Leitern an der Wand, drei Bretter dazwischen – ein Regal aus der Gartenstadt Hellerau. Schlicht, leicht, zeitlos. Bücher und ein Pflänzchen sind schon drauf.', variants: { sand: '#e3c79a', weiss: '#f2efe9', schwarz: '#2f2f35', mint: '#a8d8c4' } },
+  { id: 'hellerau-regalwand', name: 'Hellerau-Regalwand', style: 'midcentury', wall: true, price: 1500, w: 2, d: 1, description: 'Zwei Regalfelder an drei Leitern, unten ein Schränkchen mit Tür. Wächst mit den Büchern mit – und mit der Zeit auch ein bisschen mit Linas Sammelleidenschaft.', variants: { sand: '#e3c79a', weiss: '#f2efe9', schwarz: '#2f2f35', mint: '#a8d8c4' } },
+  { id: 'hellerau-standregal', name: 'Hellerau-Standregal', style: 'midcentury', surface: true, surfaceHeight: 1.46, price: 1100, w: 1, d: 1, description: 'Das Hellerau-Regal zum Hinstellen: vier Bretter zwischen zwei Leiterseiten, oben ist Platz für Kleinigkeiten.', variants: { sand: '#e3c79a', weiss: '#f2efe9', schwarz: '#2f2f35', mint: '#a8d8c4' } },
   { id: 'formenbild', name: 'Formen-Bild', style: 'midcentury', wall: true, price: 700, w: 1, d: 1, description: 'Ein Bild aus Grundformen und Grundfarben. Jens sagt: „Weniger ist mehr, ma chérie.“' },
   { id: 'sonnenspiegel', name: 'Sonnenspiegel', style: 'midcentury', wall: true, price: 850, w: 1, d: 1, description: 'Ein runder Spiegel mit goldenen Strahlen rundherum – wie eine kleine Sonne an der Wand.' },
   { id: 'topfpflanze', name: 'Monstera', style: 'basis', price: 300, w: 1, d: 1, description: 'Große, grüne Blätter mit Löchern. Sehr fotogen.' },
@@ -244,9 +255,12 @@ for (const p of POSTERS) (FURNITURE as FurnitureDef[]).push({ id: p.id, name: p.
 
 // Sammeltassen (Klassik & Saison im Katalog, Städte-Tassen als Geschenke) aus `tassen.ts`; dazu das Tassenregal
 for (const t of TASSEN) {
-  (FURNITURE as FurnitureDef[]).push({ id: t.id, name: t.name, style: 'lieblinge', small: true, gift: t.kind === 'stadt' || undefined, inSeason: t.season, price: t.kind === 'stadt' ? 400 : t.price, w: 1, d: 1, description: t.description });
+  (FURNITURE as FurnitureDef[]).push({ id: t.id, name: t.name, style: 'lieblinge', small: true, tiny: true, gift: t.kind === 'stadt' || undefined, inSeason: t.season, price: t.kind === 'stadt' ? 400 : t.price, w: 1, d: 1, description: t.description });
 }
-(FURNITURE as FurnitureDef[]).push({ id: 'tassenregal', name: 'Tassenregal', style: 'lieblinge', surface: true, surfaceHeight: 0.95, price: 900, w: 4, d: 1, description: 'Ein langes Regal aus hellem Holz mit Haken und vier Brettern für Linas Sammeltassen. Der Platz für die schönsten Stücke – und einen kleinen Zettel: „Bitte nicht benutzen.“' });
+// Tassenbord: hängt an der Wand, schmal, Tassen stehen dicht an dicht (vier je Feld). Das lange Standregal von früher
+// bleibt für alle, die es schon haben, ist aber nicht mehr im Katalog.
+(FURNITURE as FurnitureDef[]).push({ id: 'tassenbord', name: 'Tassenbord', style: 'lieblinge', wall: true, surface: true, surfaceHeight: 1.15, slots: 4, price: 700, w: 2, d: 1, description: 'Ein schmales Wandbord aus hellem Holz, auf dem Linas Sammeltassen dicht an dicht stehen – bis zu acht Stück. Darunter darf ruhig noch ein Möbelstück stehen.' });
+(FURNITURE as FurnitureDef[]).push({ id: 'tassenregal', name: 'Langes Tassenregal', style: 'lieblinge', retired: true, surface: true, surfaceHeight: 0.95, price: 900, w: 4, d: 1, description: 'Das erste Tassenregal: lang, aus hellem Holz, mit vier Brettern. Das schmale Tassenbord an der Wand ist platzsparender.' });
 
 // Kunstwerke (Bild auf Staffelei) aus `art.ts` – nur über Jens erhältlich
 for (const a of ARTWORKS) (FURNITURE as FurnitureDef[]).push({ id: a.id, name: a.name, style: 'kunst', gift: true, price: a.price, w: 1, d: 1, description: `${a.description} – ${a.artist}` });
@@ -276,5 +290,7 @@ export const VARIANT_LABELS: Record<string, string> = { grau: 'Grau', weiss: 'We
 /** Raum-Infos für die Raumlogik (`core/room.ts`) */
 export function furnitureInfo(itemId: string) {
   const f = FURNITURE_BY_ITEM[itemId];
-  return f ? { w: f.def.w, d: f.def.d, rug: f.def.rug, small: f.def.small, surface: f.def.surface, walk: f.def.walk, wall: f.def.wall } : undefined;
+  return f
+    ? { w: f.def.w, d: f.def.d, rug: f.def.rug, small: f.def.small, surface: f.def.surface, walk: f.def.walk, wall: f.def.wall, height: FURNITURE_HEIGHTS[f.def.id], tiny: f.def.tiny, slots: f.def.slots }
+    : undefined;
 }

@@ -14,6 +14,8 @@ export interface PlacedItem {
   rot: Rotation;
   /** steht auf diesem Möbel (uid) */
   on?: string;
+  /** Platz auf einem Regal mit mehreren Plätzen je Feld (z. B. Tassenregal), von 0 an */
+  slot?: number;
 }
 
 /** Ein Raum: Tapete, Boden, Möbel */
@@ -67,6 +69,33 @@ export interface FootInfo {
   walk?: boolean;
   /** Hängt an der Wand (Bild, Poster, Wandregal): blockiert den Boden nicht */
   wall?: boolean;
+  /** Bodenmöbel: Höhe der Oberkante. Wand-Deko: Höhe der Unterkante (`data/furnitureHeights.ts`) */
+  height?: number;
+  /** Winzig (Tasse): mehrere passen auf ein Feld eines Regals mit `slots` */
+  tiny?: boolean;
+  /** Wie viele Winzlinge passen auf ein Feld dieser Oberfläche? (Standard 1) */
+  slots?: number;
+}
+
+/** So viel Luft muss zwischen Möbel-Oberkante und Wand-Deko-Unterkante bleiben */
+export const WALL_CLEARANCE = 0.05;
+/** Unterkante, wenn nichts bekannt ist (Wand-Deko hängt ungefähr auf Augenhöhe) */
+const DEFAULT_WALL_BOTTOM = 0.9;
+/** Wie weit liegt ein Wandregal von der Feldmitte zur Wand hin? (Brettmitte) */
+export const WALL_SHELF_Z = -0.38;
+/** Abstand zweier Winzlinge nebeneinander */
+const SLOT_SPACING = 0.23;
+
+/**
+ * Wo steht ein Winzling (z. B. Tasse) auf seinem Regal? Verschiebung gegenüber der Feldmitte (Welteinheiten:
+ * Felder) – gedreht mit dem Regal, an Wandregalen zur Wand hin.
+ */
+export function riderOffset(baseInfo: FootInfo, baseRot: Rotation, slot: number): { dx: number; dz: number } {
+  const n = baseInfo.slots ?? 1;
+  const lx = n > 1 ? (slot - (n - 1) / 2) * SLOT_SPACING : 0;
+  const lz = baseInfo.wall ? WALL_SHELF_Z : 0;
+  const a = -baseRot * (Math.PI / 2);
+  return { dx: lx * Math.cos(a) + lz * Math.sin(a), dz: -lx * Math.sin(a) + lz * Math.cos(a) };
 }
 
 export type InfoFn = (itemId: string) => FootInfo | undefined;
@@ -127,17 +156,28 @@ export function wallRotationAt(layout: RoomLayout, x: number, y: number): Rotati
   return null;
 }
 
+/** Zusätze beim Prüfen: gewünschter Regalplatz; `lenient` = ältere Spielstände laden, ohne die Höhenprüfung (nichts geht verloren) */
+export interface PlaceHint {
+  slot?: number;
+  lenient?: boolean;
+}
+
 export interface Placement {
   ok: boolean;
   /** steht auf diesem Möbel */
   on?: string;
+  /** Platz auf einem Regal mit mehreren Plätzen */
+  slot?: number;
+  /** Drehung, die der Gegenstand annimmt (Tassen auf Wandregalen schauen in den Raum) */
+  rot?: Rotation;
 }
 
 /**
  * Darf `itemId` an (x, y) mit Drehung `rot` stehen? `ignore` = uid, die gerade
  * bewegt wird (zählt nicht als Hindernis).
  */
-export function checkPlacement(room: Room, layout: RoomLayout, itemId: string, x: number, y: number, rot: Rotation, infoOf: InfoFn, ignore?: string): Placement {
+export function checkPlacement(room: Room, layout: RoomLayout, itemId: string, x: number, y: number, rot: Rotation, infoOf: InfoFn, ignore?: string, hint: PlaceHint = {}): Placement {
+  const wantSlot = hint.slot;
   const info = infoOf(itemId);
   if (!info) return { ok: false };
   const cells = cellsOf(x, y, info, rot);
@@ -156,26 +196,67 @@ export function checkPlacement(room: Room, layout: RoomLayout, itemId: string, x
     return map;
   };
 
+  const solids = occupied((o, oi) => !oi.rug && !oi.wall && !o.on);
+  const walls = occupied((_o, oi) => !!oi.wall);
   if (info.wall) {
-    // Wand-Deko: nur an einer Wand, nicht übereinander – Möbel darunter sind egal
+    // Wand-Deko: nur an einer Wand, nicht übereinander – und nur über Möbeln, die niedrig genug sind
     if (!wallCellsOk(layout, cells, rot)) return { ok: false };
-    const walls = occupied((_o, oi) => !!oi.wall);
-    return { ok: cells.every(([cx, cy]) => !walls.has(key(cx, cy)) || walls.get(key(cx, cy))?.rot !== rot) };
+    const bottom = info.height ?? DEFAULT_WALL_BOTTOM;
+    return {
+      ok: cells.every(([cx, cy]) => {
+        if (walls.has(key(cx, cy)) && walls.get(key(cx, cy))?.rot === rot) return false;
+        const under = solids.get(key(cx, cy));
+        const uh = under ? (infoOf(under.itemId)?.height ?? 0) : 0;
+        return hint.lenient || uh <= bottom - WALL_CLEARANCE;
+      }),
+    };
   }
   if (info.rug) {
     const rugs = occupied((_o, oi) => !!oi.rug);
     return { ok: cells.every(([cx, cy]) => !rugs.has(key(cx, cy))) };
   }
-  const solids = occupied((o, oi) => !oi.rug && !oi.wall && !o.on);
   const tops = occupied((o) => !!o.on);
+  /** Wie viele Gegenstände stehen schon auf diesem Feld dieser Unterlage? Und welche Plätze sind belegt? */
+  const taken = (baseUid: string): Set<number> => {
+    const s = new Set<number>();
+    for (const o of others) if (o.on === baseUid && o.x === x && o.y === y) s.add(o.slot ?? 0);
+    return s;
+  };
+  const freeSlot = (n: number, used: Set<number>): number | null => {
+    if (wantSlot !== undefined && wantSlot >= 0 && wantSlot < n && !used.has(wantSlot)) return wantSlot;
+    for (let i = 0; i < n; i++) if (!used.has(i)) return i;
+    return null;
+  };
   const hits = cells.map(([cx, cy]) => solids.get(key(cx, cy)));
-  if (hits.every((h) => !h)) return { ok: true };
-  // Kleines darf auf eine freie Stelle einer Oberfläche
+  // Platz unter Wand-Deko: nichts, was höher ist als deren Unterkante
+  const overhead = (): boolean =>
+    cells.every(([cx, cy]) => {
+      const w = walls.get(key(cx, cy));
+      const wi = w ? infoOf(w.itemId) : undefined;
+      return hint.lenient || !wi || (info.height ?? 0) <= (wi.height ?? DEFAULT_WALL_BOTTOM) - WALL_CLEARANCE;
+    });
   if (info.small && cells.length === 1) {
+    // Kleines darf auf eine freie Stelle einer Oberfläche (Tassen: mehrere je Feld)
     const base = hits[0];
     const baseInfo = base ? infoOf(base.itemId) : undefined;
-    if (base && baseInfo?.surface && !tops.has(key(x, y))) return { ok: true, on: base.uid };
+    if (base && baseInfo?.surface) {
+      if (info.tiny && (baseInfo.slots ?? 1) > 1) {
+        const slot = freeSlot(baseInfo.slots ?? 1, taken(base.uid));
+        if (slot !== null) return { ok: true, on: base.uid, slot };
+      } else if (!tops.has(key(x, y))) return { ok: true, on: base.uid };
+    }
+    // Tassen auf einem Wandregal
+    if (info.tiny) {
+      const shelf = walls.get(key(x, y));
+      const si = shelf ? infoOf(shelf.itemId) : undefined;
+      if (shelf && si?.surface) {
+        const slot = freeSlot(si.slots ?? 1, taken(shelf.uid));
+        if (slot !== null) return { ok: true, on: shelf.uid, slot, rot: shelf.rot };
+        if (!hits[0]) return { ok: false }; // Bord voll: die Tasse fällt nicht auf den Boden
+      }
+    }
   }
+  if (hits.every((h) => !h)) return { ok: overhead() };
   return { ok: false };
 }
 
@@ -185,10 +266,10 @@ export function newUid(): string {
   return `m-${Date.now().toString(36)}-${uidCounter.toString(36)}`;
 }
 
-export function placeItem(room: Room, layout: RoomLayout, itemId: string, x: number, y: number, rot: Rotation, infoOf: InfoFn, uid = newUid()): PlacedItem | null {
-  const p = checkPlacement(room, layout, itemId, x, y, rot, infoOf);
+export function placeItem(room: Room, layout: RoomLayout, itemId: string, x: number, y: number, rot: Rotation, infoOf: InfoFn, uid = newUid(), hint: PlaceHint = {}): PlacedItem | null {
+  const p = checkPlacement(room, layout, itemId, x, y, rot, infoOf, undefined, hint);
   if (!p.ok) return null;
-  const item: PlacedItem = { uid, itemId, x, y, rot, ...(p.on ? { on: p.on } : {}) };
+  const item: PlacedItem = { uid, itemId, x, y, rot: p.rot ?? rot, ...(p.on ? { on: p.on } : {}), ...(p.slot !== undefined ? { slot: p.slot } : {}) };
   room.items.push(item);
   return item;
 }
@@ -209,9 +290,11 @@ export function moveItem(room: Room, layout: RoomLayout, uid: string, x: number,
   }
   item.x = x;
   item.y = y;
-  item.rot = rot;
+  item.rot = p.rot ?? rot;
   if (p.on) item.on = p.on;
   else delete item.on;
+  if (p.slot !== undefined) item.slot = p.slot;
+  else delete item.slot;
   return true;
 }
 
@@ -260,8 +343,8 @@ export function misfits(room: Room, layout: RoomLayout, infoOf: InfoFn): PlacedI
       out.push(it);
       continue;
     }
-    const p = checkPlacement(keep, layout, it.itemId, it.x, it.y, it.rot, infoOf);
-    if (p.ok) keep.items.push({ ...it, ...(p.on ? { on: p.on } : {}) });
+    const p = checkPlacement(keep, layout, it.itemId, it.x, it.y, it.rot, infoOf, undefined, { slot: it.slot, lenient: true });
+    if (p.ok) keep.items.push({ ...it, ...(p.on ? { on: p.on } : {}), ...(p.slot !== undefined ? { slot: p.slot } : {}) });
     else out.push(it);
   }
   return out;
@@ -285,7 +368,7 @@ export function normalizeRoom(raw: unknown, fallback: Room, layout: RoomLayout, 
     if (typeof p.itemId !== 'string' || !isKnown(p.itemId) || typeof p.x !== 'number' || typeof p.y !== 'number') continue;
     const rot = (typeof p.rot === 'number' ? ((Math.floor(p.rot) % 4) + 4) % 4 : 0) as Rotation;
     const uid = typeof p.uid === 'string' && p.uid ? p.uid : newUid();
-    placeItem(room, layout, p.itemId, Math.floor(p.x), Math.floor(p.y), rot, infoOf, uid);
+    placeItem(room, layout, p.itemId, Math.floor(p.x), Math.floor(p.y), rot, infoOf, uid, { slot: typeof p.slot === 'number' ? Math.floor(p.slot) : undefined, lenient: true });
   }
   return room;
 }

@@ -28,7 +28,7 @@ interface Entry {
 
 function entries(tab: Tab, winter: boolean, season: string): Entry[] {
   if (tab === 'moebel') {
-    return FURNITURE.filter((f) => !f.crafted && !f.gift && (!f.seasonal || winter) && (!f.inSeason || f.inSeason === season)).map((f) => ({
+    return FURNITURE.filter((f) => !f.crafted && !f.gift && !f.retired && (!f.seasonal || winter) && (!f.inSeason || f.inSeason === season)).map((f) => ({
       id: f.id,
       name: f.name,
       price: f.price,

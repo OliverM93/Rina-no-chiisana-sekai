@@ -37,9 +37,14 @@ describe('Sammeltassen', () => {
     });
   });
 
-  it('das Tassenregal hat Platz für mehrere Tassen', () => {
-    const regal = FURNITURE_BY_ITEM['tassenregal'];
-    expect(regal.def.surface).toBe(true);
-    expect(regal.def.w).toBeGreaterThanOrEqual(3);
+  it('das Tassenbord hängt an der Wand, ist schmal und fasst viele Tassen', () => {
+    const bord = FURNITURE_BY_ITEM['tassenbord'];
+    expect(bord.def.wall).toBe(true);
+    expect(bord.def.surface).toBe(true);
+    expect(bord.def.w).toBeLessThanOrEqual(2);
+    expect((bord.def.slots ?? 1) * bord.def.w).toBeGreaterThanOrEqual(8);
+    // das alte lange Standregal bleibt für alle, die es schon haben, ist aber nicht mehr im Katalog
+    expect(FURNITURE_BY_ITEM['tassenregal'].def.retired).toBe(true);
+    for (const t of TASSEN) expect(FURNITURE_BY_ITEM[t.id].def.tiny, t.id).toBe(true);
   });
 });
