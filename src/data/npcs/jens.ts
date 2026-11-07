@@ -47,6 +47,14 @@ export const JENS: NpcDef = {
       { text: ['Ein Regenbogen! 🌈', 'Na, wenn das mal kein Zeichen ist. Für uns Fabelhaften ist das ja quasi die Hausfahne.'], when: { tags: ['regenbogen'] }, weight: 5 },
     ],
     chat: [
+      { text: ['Lina, du lernst Japanisch! Sag mal was!', 'Ich versteh ja nur „Arigato“ und „Sushi“. Aber ich nicke sehr überzeugend. Hai, hai!'] },
+      { text: ['In Kyoto hab ich gelernt: „Ichi-go ichi-e“ – ein Moment, eine Begegnung, nie wieder genau so.', 'Das kennst du doch aus deinem Japanisch-Kurs, chérie? Erklär mir das mal richtig. Ich hab nur genickt und geweint.'] },
+      { text: ['Du und dein Japanisch, ma chérie.', 'Ich hab mir sagen lassen, „kawaii“ bedeutet „niedlich“. Dann bin ich ja quasi euer Ehrenbürger. Kawaii. Mit Glitzer.'] },
+      { text: ['Sayonara heißt Tschüss, nicht wahr?', 'Dann sag ich ab jetzt: „Sayonara, mei Gudste!“ … Oder wie mir in Sachsen sagen: „Dschüssi“. Ist ja fast das Gleiche. Gleiche Melodie!'] },
+      { text: ['Lina: „Nu gugge ma, Onkel Jens, was haste denn da wieder gekocht?“', 'Jens: „Mei Gudste sächselt! Ich bin gerührt! Jetzt noch ein „Ei verbibbsch“, und ich ernenn dich zur Ehren-Leipzscherin!“'], weight: 2 },
+      { text: ['Lina: „Scheener Gaffee, Onkel Jens!“', 'Jens: „Mit weichem G! Du sagst es genau richtig! Ich muss mich setzen. Ausnahmsweise nicht aus Eitelkeit.“'] },
+      { text: ['Lina: „Ei verbibbsch, Onkel Jens, da haste dich aber rausgeputzt!“', 'Jens: „Ma chérie, sächsisch aus deinem Mund – das is Musik! Mach noch mal! … Nee, warte, ich hol mei Telefon!“'], weight: 2 },
+      { text: ['Lina: „Nu freilich, Onkel Jens. Und tschüssssi!“', 'Jens: „Drei S! Mindestens! Ich bin so stolz, ich muss gleich ein Gemälde malen. Titel: „Die Nichte, sächselnd“.“'] },
       { text: ['Ma chérie, du und deine Gruselfilme!', 'Ich sach dir was: Das Gruseligste, was ich je gesehn hab, war ne Tapete in nem Hotel in Wien. Mon dieu, nee, nee, nee.'] },
       { text: ['Nu, mei Gudste, haste heute schon was Schönes erlebt?', 'Nee? Dann wird\'s aber Zeit! Gugge, die Sonne scheint – oder sie scheint bald. Irgendwann.'] },
       { text: ['Kaffee? Mir sagen dazu „Gaffee“. Mit weichem G.', 'Und wenn er gut is: „Scheener Gaffee!“ Na los, sag\'s mal nach! … Fast. Üben wir noch.'] },
@@ -152,7 +160,7 @@ export const DINNER_OPENERS: readonly (readonly string[])[] = [
 export const DINNER_LINES: Readonly<Record<string, readonly string[]>> = {
   oli: ['Oli: „Jens, das ist das beste Essen der Woche!“', 'Oli: „Ich hab schon dreimal nachgenommen. Proteine, Lini!“'],
   lars: ['Lars: „Ärztlich gesehen ist das hier sehr gesund.“ – Jens: „Nu sicher, da is Butter drin!“', 'Lars: „Wie nennt man einen Koch, der Witze erzählt? … Jens.“'],
-  olaf: ['Olaf: „Ich hab ausgerechnet: Pro Person 1,2 Klöße. Das geht nicht auf.“ – Jens: „Dann nimmste halt zwee, Brüderchen!“'],
+  olaf: ['Olaf: „Ich hab ausgerechnet: Pro Person 1,2 Klöße. Das geht nicht auf.“ – Jens: „Dann nimmste halt zwee, Brüderchen!“', 'Olaf rülpst herzhaft. – Olaf: „Was keine Miete zahlt, muss raus!“ – Christin: „OLAF.“ – Jens: „Mei Bruder! Der Mann hat einfach Stil.“'],
   christin: ['Christin hat die Servietten zu kleinen Schwänen gefaltet. Alle exakt gleich groß.'],
   gisela: ['Oma: „Zu wenig Salz.“ … *isst drei Portionen* … „Köstlich. Aber zu wenig Salz.“'],
 };
