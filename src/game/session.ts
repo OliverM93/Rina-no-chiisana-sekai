@@ -111,6 +111,8 @@ export type GameEvents = {
   'home:yard': boolean;
   /** Sternenhimmel mit Sternschnuppen einblenden (Sterne gucken mit Oli) */
   'overlay:stars': boolean;
+  /** Kamera zoomen (Knöpfe in der Oberfläche): hinein oder hinaus */
+  'camera:zoom': 'in' | 'out';
   /** Lautstärke geändert */
   'settings:changed': { musicVolume: number; sfxVolume: number };
   /** Ein Geräusch abspielen (siehe audio/Audio.ts) */

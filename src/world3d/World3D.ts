@@ -316,6 +316,7 @@ export class World3D {
     canvas.addEventListener('pointermove', this.onPointerMove);
     canvas.addEventListener('wheel', this.onWheel, { passive: false });
     window.addEventListener('resize', this.resize);
+    this.unsubscribers.push(this.session.bus.on('camera:zoom', (dir) => this.zoomBy(dir === 'in' ? 0.85 : 1 / 0.85)));
     this.unsubscribers.push(
       this.keys.onAction(() => this.tryInteract()),
       session.bus.on('game:started', () => this.startPlay()),
@@ -407,7 +408,7 @@ export class World3D {
       const home = this.room;
       const solid = this.session.inside && home
         ? (tx: number, ty: number) => this.interior.isBlocked(home, tx - ROOM_X, ty - ROOM_Y)
-        : (tx: number, ty: number) => grid.isBlocked(tx, ty);
+        : (tx: number, ty: number) => grid.isBlocked(tx, ty) || this.npcStands(tx, ty, player);
       // drinnen bleibt Lina beim Einrichten stehen, im Garten darf sie herumlaufen
       if (this.session.decorActive && this.session.inside) intent.dx = intent.dy = 0;
       // beim Durch-die-Tür-Gehen: keine Kollision (sonst stünde Lina vor der Hauswand)
@@ -482,8 +483,25 @@ export class World3D {
       if (Math.abs(e.deltaY) > 2) this.rotateHeld();
       return;
     }
-    this.zoom = Math.min(1.45, Math.max(0.55, this.zoom * (e.deltaY > 0 ? 1.08 : 0.93)));
+    this.zoomBy(e.deltaY > 0 ? 1.08 : 0.93);
   };
+
+  /** Steht hier gerade ein Bewohner? (Lina läuft nicht durch sie hindurch – ihre eigene Kachel zählt nie) */
+  private npcStands(tx: number, ty: number, player: Character): boolean {
+    const pt = player.tile;
+    if (pt.x === tx && pt.y === ty) return false;
+    for (const npc of this.npcs.values()) {
+      if (!npc.blocksPlayer || !npc.char.visible) continue;
+      const t = npc.char.tile;
+      if (t.x === tx && t.y === ty) return true;
+    }
+    return false;
+  }
+
+  /** Hinein-/Herauszoomen (Mausrad & Knöpfe) */
+  private zoomBy(factor: number) {
+    this.zoom = Math.min(1.45, Math.max(0.55, this.zoom * factor));
+  }
 
   // -------------------------------------------------------------------------
   // Tag & Nacht
@@ -1301,7 +1319,9 @@ export class World3D {
       const got = pickGardenFlower(this.session, t.x, t.y);
       if (got) {
         this.garden.bounce(t);
-        this.session.bus.emit('toast', { text: got.seed ? `${name} gepflückt – und ein paar Samen gefunden! 🌱` : `${name} gepflückt! 💐`, icon: itemIconUrl(got.flower) });
+        const text = got.crossed ? `${name} gepflückt – und ein Misch-Same ist abgefallen! ✨` : got.seed ? `${name} gepflückt – und ein paar Samen gefunden! 🌱` : `${name} gepflückt! 💐`;
+        this.session.bus.emit('toast', { text, icon: itemIconUrl(got.crossed && got.seedId ? got.seedId : got.flower) });
+        if (got.crossed) this.fxAt('funkeln', (t.x + 0.5) * TILE, (t.y + 0.5) * TILE, 0.3);
       }
       return;
     }

@@ -6,11 +6,12 @@ import { isAvailable, pickSpecies, registerCatch } from '../core/catching';
 import { growGarden, pickBloom, plantSeed, spotKey, water } from '../core/garden';
 import { hashString, mulberry32 } from '../core/rng';
 import { isPrecipitation, weatherAt, type WeatherNow } from '../core/weather';
-import { FLOWER_BY_SEED, GARDEN_FLOWER, itemDef, STARTER_TOOLS, type ToolId, TOOLS } from '../data/items';
+import { FLOWER_BY_SEED, itemDef, STARTER_TOOLS, type ToolId, TOOLS } from '../data/items';
 import { type FishDef, type FishHabitat, FISH, type InsectDef, INSECTS } from '../data/species';
 import { countItem } from '../core/inventory';
 import { itemIconUrl } from '../gfx/items';
 import { giveItem, takeItem } from './gameplay';
+import { registerBlooms, seedDrop, seedRandom } from './flowers';
 import type { Session } from './session';
 
 // ---------------------------------------------------------------------------
@@ -76,6 +77,7 @@ export function giveStarterTools(session: Session) {
   if (!data || data.flags.toolsGiven) return;
   for (const t of STARTER_TOOLS) if (!hasTool(session, t)) giveItem(session, t, 1, false);
   giveItem(session, 'samen-tulpe', 3, false);
+  giveItem(session, 'samen-tulpe-gelb', 2, false); // rot × gelb = orange – gleich ausprobieren
   giveItem(session, 'samen-vergissmeinnicht', 2, false);
   data.flags.toolsGiven = true;
   session.changed();
@@ -164,6 +166,7 @@ export function updateGarden(session: Session): boolean {
   if (!data) return false;
   const changed = growGarden(data.world.garden, session.today(), currentWeather(session).rainedToday);
   if (changed) session.changed();
+  registerBlooms(session);
   return changed;
 }
 
@@ -194,23 +197,28 @@ export function waterAt(session: Session, x: number, y: number): boolean {
   return ok;
 }
 
-/** Blüte pflücken – manchmal fällt dabei ein Samenkorn ab. */
-export function pickGardenFlower(session: Session, x: number, y: number): { flower: string; seed: boolean } | null {
+/**
+ * Blüte pflücken – manchmal fällt dabei ein Samenkorn ab. Blühen daneben Blumen derselben Art in anderer
+ * Farbe, kann es ein Misch-Same sein (siehe `game/flowers.ts`).
+ */
+export function pickGardenFlower(session: Session, x: number, y: number): { flower: string; seed: boolean; seedId: string | null; crossed: boolean } | null {
   const data = session.data;
   if (!data) return null;
   const key = spotKey(x, y);
+  const plant = data.world.garden[key];
+  if (!plant) return null;
+  // Same-Wurf mit dem Zustand vor dem Pflücken (die Nachbarn blühen noch)
+  const drop = seedDrop(data.world.garden, key, plant.flower, seedRandom(session, key));
   const flower = pickBloom(data.world.garden, key, session.today());
   if (!flower) return null;
   if (giveItem(session, flower, 1, false) > 0) {
     data.world.garden[key].stage = 3; // passt nicht mehr in die Tasche – bleibt stehen
     return null;
   }
-  const seedId = GARDEN_FLOWER[flower]?.seed;
-  const seed = !!seedId && mulberry32(hashString(`${session.today()}:${key}:samen`))() < 0.4;
-  if (seed && seedId) giveItem(session, seedId, 1, false);
+  if (drop.seedId) giveItem(session, drop.seedId, 1, false);
   session.changed();
   session.save();
-  return { flower, seed };
+  return { flower, seed: !!drop.seedId, seedId: drop.seedId, crossed: drop.crossed };
 }
 
 export function seedsInBag(session: Session): string[] {

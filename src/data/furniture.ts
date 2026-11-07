@@ -145,6 +145,7 @@ export const FURNITURE: readonly FurnitureDef[] = [
   { id: 'huehnerstall', name: 'Hühnerstall', style: 'garten', outdoor: true, coop: 'huhn', price: 2800, w: 2, d: 2, description: 'Ein rotes Hühnerhaus mit Rampe – drei fröhliche Hühner ziehen gleich mit ein. Jeden Tag frische Eier!' },
   { id: 'wachtelstall', name: 'Wachtelstall', style: 'garten', outdoor: true, coop: 'wachtel', price: 1900, w: 2, d: 1, description: 'Ein kleines Häuschen mit Gitter für vier Wachteln. Sie legen winzige gesprenkelte Eier.' },
   // Wand-Deko (M8f): hängt an Rück- oder Seitenwand, darunter dürfen Möbel stehen
+  { id: 'bild-dr-no', name: 'Dr.-No-Porträt', style: 'basis', wall: true, price: 900, w: 1, d: 1, description: 'Ein gerahmtes Porträt von Dr. No aus „Schwerer Weg“. Strenger Blick, gütige Augen, buschige Brauen. Eine Ikone. Hängt am besten über dem Sofa.' },
   { id: 'bild-winston', name: 'Winston-Porträt', style: 'basis', wall: true, price: 600, w: 1, d: 1, description: 'Ein gerahmtes Porträt von Winston. Er guckt sehr würdevoll. Fast.' },
   { id: 'poster-grusel', name: 'Gruselfilm-Poster', style: 'basis', wall: true, price: 400, w: 1, d: 1, description: '„Die Nacht der Kürbisse“ – Linas liebster Gruselklassiker. Oli guckt lieber nicht so genau hin.' },
   { id: 'wandregal', name: 'Wandregal', style: 'basis', wall: true, price: 500, w: 2, d: 1, description: 'Ein schwebendes Brett mit Büchern, einem Pflänzchen und einer kleinen Kerze.' },

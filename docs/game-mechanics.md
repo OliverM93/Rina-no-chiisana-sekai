@@ -28,6 +28,16 @@ Wetter und Feste laufen nach echter Zeit.
   (`gfx/nature-icons.ts`) und Sammelbuch-Einträgen. Insekten wechseln stündlich (reproduzierbar), fliehen nie.
   Angeln: Verpassen ist kein Scheitern – der Fisch knabbert einfach nochmal. Regen gießt das Beet.
   Der Regenbogen ist ein Bogen in der Oberfläche (die Schrägsicht zeigt keinen Himmel).
+- **Blumen & Kreuzungen (Beet/Samen, Phase 1):** `data/flowers.ts` legt je Blumenart (Tulpe, Rose, Sonnenblume, Lavendel,
+  Vergissmeinnicht) die Standardfarbe, die Samen-Farben (gibt es als Samen aus Briefen, Omas Starterset …) und die
+  Mischfarben fest, dazu die Mischregeln (`MIXES`: Rot × Gelb = Orange, Rot × Weiß = Rosa, Blau × Rosa = Lila,
+  Orange × Rosa = Schwarz – selten). Blumen & Samen der Farbvarianten werden automatisch zu Gegenständen
+  (`tulpe-gelb`, `samen-tulpe-gelb`; die Standardfarbe behält die alte ID). **Kreuzen:** Blühen zwei Farben derselben Art
+  in den 8 Nachbarfeldern, kann beim Pflücken ein Misch-Same abfallen (`game/flowers.ts`, `seedDrop`; reproduzierbar
+  pro Tag und Platz). Neu erblühte Farben tragen sich ins Sammelbuch ein (Reiter „Blumen“, `registerBlooms`), zählen aber
+  nicht als Tier-Fund für Einzugs-Meilensteine. Geschenke: Wer die Art mag, mag jede Farbe, Mischfarben kommen nie
+  schlecht an (`giftPreferences`). Geplant (jeweils eigener Schritt, nur wenn sinnvoll): Samenstand, Gemüse & Kräuter,
+  Sträuße & Blumendeko, Gewächshaus – siehe `development-status.md`.
 - **Zuhause:** Möbel in `data/furniture.ts` (Größe in Feldern, `surface`/`small`/`rug`/`sit`/`light`) werden
   automatisch Gegenstände (Varianten → `futon-rosa` …). Raumlogik in `core/room.ts`, Modelle in
   `world3d/models/furniture.ts`. Gespeichert wird immer draußen weitergespielt (Laden im Haus → vor der Tür).
@@ -93,6 +103,10 @@ Wetter und Feste laufen nach echter Zeit.
   **Kaffee-Kick** (Lina läuft bis zu 5 Spielminuten 22 % flotter, `Session.coffeeUntil`, nicht gespeichert), **Kaffee zu zweit**
   mit Oli (einmal am Tag Freundschaft, bessere Maschine = mehr Punkte, Latte-Art +4) und ein Spruch bei der fünften Tasse am
   Tag (Zähler `world.dates.kaffee` = „Datum:Anzahl“).
+- **Dr. No (Hommage):** Linas Lieblingsarzt aus der Doku „Schwerer Weg“ ist eine **ausgedachte** Figur (keine echte Person, keine
+  echte Sendung): strenger, ruhiger Chirurg mit buschigen Brauen und gütigen Augen, der Patienten ernst nimmt („Ein Schritt. Dann
+  noch einer.“). Drei Folgen (`data/tv.ts`, `lina`-Reaktion + eigene `oli`-Sprüche pro Folge), das **Dr.-No-Porträt** (`bild-dr-no`,
+  Wand-Deko im Möbelkatalog) und Kommentare von Oli, Lars, Jens und Oma.
 - **Galerie:** Kunstwerke in `data/art.ts` (werden Möbel im Stil „kunst“, Bild auf Staffelei, gemalt in
   `gfx/art.ts`), Regeln in `game/gallery.ts`, gestiftete Bilder in `SaveData.gallery`.
 - **Sonntagsessen:** `game/dinner.ts` – Gäste gehen per `{ kind: 'zuhause', at: 'bistro-jens' }` zu Jens
