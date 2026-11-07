@@ -48,7 +48,11 @@ Wetter und Feste laufen nach echter Zeit.
   Küche) → 5 Wintergarten → 6 Keller. Außen zeigt `makeHouse(…, stage)` jede Stufe; Anbauten außerhalb der 5 × 3
   Kacheln stehen in `HOUSE_ANNEX` und blockieren Karte & Garten (`session.houseAnnexTiles`, `syncYardCollision`).
   **Wand-Deko** (`wall: true`): hängt an Rückwand (rot 0) oder Seitenwand (rot 3 links / 1 rechts), nicht vor
-  Fenstern (`backWindows`), blockiert den Boden nicht – Möbel dürfen darunter stehen. Beim Einrichten zielt man
+  Fenstern (`backWindows`), blockiert den Boden nicht – **Möbel dürfen darunter stehen, wenn sie niedrig genug sind**: Die
+  Oberkante des Möbels muss mindestens `WALL_CLEARANCE` unter der Unterkante der Wand-Deko liegen (Kommode, Tisch, Sofa ja;
+  Regal, Sessel, Stehlampe nein – dann hätte das Poster keinen Platz). Gilt in beide Richtungen (Poster über Regal / Regal unter
+  Poster). Die Höhen stehen in `data/furnitureHeights.ts` (gemessen mit `scripts/measure-heights.cjs`, ein Test prüft, dass keins
+  fehlt); ältere Spielstände laden ohne diese Prüfung (`PlaceHint.lenient`), es geht nichts verloren. Beim Einrichten zielt man
   auf die Wand (`Interior3D.walls`), die Drehung rastet von selbst ein (`wallRotationAt`). Modelle hängen bei
   `HANG`/`WALL_Z` in `models/furniture.ts`.
 - **Nichts geht für immer verloren:** Werkzeuge und einmalige Geschenke (Möbel mit `gift: true`, außer Kunst) sind
@@ -118,8 +122,15 @@ Wetter und Feste laufen nach echter Zeit.
   und 4 **Saison-Tassen** (Frühling/Sommer/Herbst/Winter, im Katalog nur in ihrer Jahreszeit, `FurnitureDef.inSeason`) kauft sie im
   Möbelkatalog (Stil „Lieblingsthemen“); 12 **Städte-Tassen** sind Geschenke: Onkel Jens schickt auf Reisen eine zweite Karte mit Tasse
   (`TRAVELS[].mug`, `travelMugLetter`; bei den neuen Städten Tokio, Wien, Lissabon, Leipzig ist die Tasse das Andenken), Thalia
-  bringt Berlin und Reykjavík mit, Oli eine schwarze Klassik-Tasse. Tassen sind kleine Möbel und stehen auf jedem Regal; das
-  **Tassenregal** (4 breit) zeigt per Anschauen den Stand der Sammlung (`game/tassen.ts`) und woher die fehlenden kommen.
+  bringt Berlin und Reykjavík mit, Oli eine schwarze Klassik-Tasse. Tassen sind kleine Möbel (`tiny`) und stehen auf jedem Regal; das
+  **Tassenbord** (`tassenbord`, Wand-Deko, 2 breit) hängt an der Wand und fasst **vier Tassen je Feld** (`FurnitureDef.slots`, Platz
+  `PlacedItem.slot`, Lage `riderOffset`) – bis zu acht dicht an dicht, darunter darf ein niedriges Möbel stehen. Es zeigt per Anschauen
+  den Stand der Sammlung (`game/tassen.ts`) und woher die fehlenden kommen. Das alte lange Standregal (`tassenregal`, `retired`) ist
+  nicht mehr im Katalog, bleibt aber für alle, die es schon haben.
+- **Hellerau-Regale:** drei Leiterregale im Stil „Mid-Century“ (nach der Dresdner Gartenstadt Hellerau benannt): `hellerau-regal`
+  (Wand, 1 breit, drei Bretter), `hellerau-regalwand` (Wand, 2 breit, mit Schränkchen) und `hellerau-standregal` (Boden, vier Bretter,
+  oben Platz für Kleinigkeiten), je in Sand, Weiß, Schwarz und Mint. Bücher & Pflänzchen sind schon drauf (`hellerauShelf` in
+  `models/furniture.ts`).
 - **Galerie:** Kunstwerke in `data/art.ts` (werden Möbel im Stil „kunst“, Bild auf Staffelei, gemalt in
   `gfx/art.ts`), Regeln in `game/gallery.ts`, gestiftete Bilder in `SaveData.gallery`.
 - **Sonntagsessen:** `game/dinner.ts` – Gäste gehen per `{ kind: 'zuhause', at: 'bistro-jens' }` zu Jens

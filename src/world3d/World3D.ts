@@ -10,7 +10,7 @@ import { dressFor } from '../core/appearance';
 import * as THREE from 'three';
 import { DPR, TILE, UNIT } from '../config';
 import { CollisionGrid, findPath, nearestWalkable, type Tile } from '../core/grid';
-import { checkPlacement, type Exit, exitAt, footprint, type Room, type RoomLayout, type Rotation, wallRotationAt } from '../core/room';
+import { checkPlacement, type Exit, riderOffset, exitAt, footprint, type Room, type RoomLayout, type Rotation, wallRotationAt } from '../core/room';
 import { FURNITURE_BY_ITEM, furnitureInfo } from '../data/furniture';
 import { getDaylight, getSeason, isSameDayMonth } from '../core/time';
 import { IDLE_GAP, IDLE_START, type IdleAct } from '../data/idle';
@@ -2604,7 +2604,7 @@ export class World3D {
       this.session.bus.emit('ui:open', { kind: 'herd' });
       return;
     }
-    if (item.itemId === 'tassenregal') {
+    if (item.itemId === 'tassenregal' || item.itemId === 'tassenbord') {
       this.session.bus.emit('dialog:open', { title: 'Tassenregal', lines: tassenStand(this.session) });
       return;
     }
@@ -2892,7 +2892,9 @@ export class World3D {
     if (p.ok) p.ok = canPlace(this.session, d.itemId, x, y, d.rot, d.uid ?? undefined);
     const base = p.on ? home.items.find((i) => i.uid === p.on) : undefined;
     const h = base ? (FURNITURE_BY_ITEM[base.itemId]?.def.surfaceHeight ?? 0) : 0;
-    this.dv.showGhost(d.itemId, x, y, d.rot, p.ok, h);
+    const baseInfo = base ? furnitureInfo(base.itemId) : undefined;
+    const off = base && baseInfo ? riderOffset(baseInfo, base.rot, p.slot ?? 0) : undefined;
+    this.dv.showGhost(d.itemId, x, y, p.rot ?? d.rot, p.ok, h, off);
     this.emitDecor(p.ok);
   }
 
