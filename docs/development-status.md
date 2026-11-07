@@ -251,6 +251,7 @@ Legende: ✅ erledigt · 🚧 in Arbeit · ⬜ geplant
   Adventskranz, Kaminofen, Lebkuchenhaus, Nussknacker, Schneeflocken-Teppich & -Tapete, Lichtervorhang, Strumpf,
   Schlitten), Bratapfel & Zimtsterne, Punschstand am Weihnachtsbaum, Fußspuren im Schnee, Atemwölkchen,
   Schneeflocken fangen · Modelle für Sparschwein, Weihnachtsstern & Kuscheldecke (waren rosa Würfel)
+- ✅ **Dr.-No-Porträt neu gestaltet:** Wandbild und Buchcover zeigen Dr. No jetzt mit Drahtbrille, grauen Schläfen, Polo & goldenem Stethoskop
 - ✅ **M8m Poster & Bildbände:** Retro-Kaffee-Poster und drei Coffee-Table-Books (Kaffee, Dr. No, Kawaii), Stil „Lieblingsthemen“
 - ✅ **M8l Kaffee:** vier Siebträgermaschinen in Preisklassen (3 neue 3D-Modelle), 8 Getränke, Kaffee-Kick, Kaffee zu zweit mit Oli
 - 🚧 **M8k Beet & Samen** (Schritt für Schritt, jeder Schritt einzeln spielbar – Ideen werden verworfen, wenn sie sich im Spiel nicht lohnen)
@@ -262,6 +263,7 @@ Legende: ✅ erledigt · 🚧 in Arbeit · ⬜ geplant
   - ⬜ Phase 4 – Sträuße & Blumendeko (Vase, Kranz, Geschenke)
   - ⬜ Phase 5 – Gewächshaus für den Winter
 - ✅ **Mehr Musik draußen:** 23 neue Lieder (Tag, Morgen, Abend, Nacht, Regen, Schnee + je ein Tageslied pro Jahreszeit), die sich bei jedem neuen Lied reihum abwechseln
+- ✅ **M8o Wand-Deko & Regale:** Wand-Deko darf über niedrigen Möbeln hängen (Höhenprüfung), Tassenbord statt langem Standregal (4 Tassen je Feld), Hellerau-Leiterregale (3 Stück, 4 Farben)
 - ✅ **M8n Sammeltassen:** 19 Tassen (Klassik, Saison, Städte) der ausgedachten Kette „Sternenbohne“, Tassenregal, Städte-Tassen von Jens' Reisen, Thalia & Oli
 - ⬜ Weitere Animationen & Partikel, Balancing
 

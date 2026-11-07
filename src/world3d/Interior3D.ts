@@ -3,7 +3,7 @@
  * Nebel versteckt das Dorf) – so bleiben Lina, Licht und Kamera dieselben.
  */
 import * as THREE from 'three';
-import { backWindows, blockedCells, footprint, itemsAt, type PlacedItem, type Room, type RoomLayout, type Rotation } from '../core/room';
+import { backWindows, blockedCells, footprint, itemsAt, type PlacedItem, type Room, type RoomLayout, type Rotation, riderOffset } from '../core/room';
 import { FURNITURE_BY_ITEM, furnitureInfo, SURFACE_BY_ID } from '../data/furniture';
 import { drawPattern } from '../gfx/interior';
 import { mesh, toon } from './materials';
@@ -191,7 +191,16 @@ export class Interior3D {
       model.group.position.set(item.x + w / 2, 0, item.y + d / 2);
       model.group.rotation.y = -item.rot * (Math.PI / 2);
       const base = item.on ? byUid.get(item.on) : undefined;
-      if (base) model.group.position.y = FURNITURE_BY_ITEM[base.itemId]?.def.surfaceHeight ?? 0;
+      if (base) {
+        model.group.position.y = FURNITURE_BY_ITEM[base.itemId]?.def.surfaceHeight ?? 0;
+        const bi = furnitureInfo(base.itemId);
+        if (bi) {
+          // Tassen stehen dicht an dicht auf ihrem Platz, an Wandregalen nah an der Wand
+          const off = riderOffset(bi, base.rot, item.slot ?? 0);
+          model.group.position.x += off.dx;
+          model.group.position.z += off.dz;
+        }
+      }
       if (f.def.rug) model.group.position.y = 0.002;
       this.furniture.add(model.group);
       this.placed.set(item.uid, { item, model });
@@ -291,7 +300,7 @@ export class Interior3D {
   // Vorschau beim Einrichten
   // -------------------------------------------------------------------------
 
-  showGhost(itemId: string, x: number, y: number, rot: Rotation, valid: boolean, onHeight = 0) {
+  showGhost(itemId: string, x: number, y: number, rot: Rotation, valid: boolean, onHeight = 0, onOffset = { dx: 0, dz: 0 }) {
     const f = FURNITURE_BY_ITEM[itemId];
     if (!f) return this.hideGhost();
     const k = `${itemId}:${valid}`;
@@ -302,7 +311,7 @@ export class Interior3D {
       this.group.add(this.ghost);
     }
     const { w, d } = footprint(f.def, rot);
-    this.ghost.position.set(x + w / 2, onHeight, y + d / 2);
+    this.ghost.position.set(x + w / 2 + onOffset.dx, onHeight, y + d / 2 + onOffset.dz);
     this.ghost.rotation.y = -rot * (Math.PI / 2);
     const marker = this.ghost.getObjectByName('marker');
     if (marker) {
