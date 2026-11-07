@@ -3,6 +3,7 @@
  * gibt dazu einen sanften Hinweis? (Ohne Abhängigkeit von gameplay/story.)
  */
 import { missingNeeds, type ProgressState } from '../core/progress';
+import { GARDEN_FLOWER } from '../data/items';
 import { type Milestone, MILESTONES } from '../data/progress';
 import type { Session } from './session';
 
@@ -12,7 +13,8 @@ export function progressState(session: Session): ProgressState | null {
   if (!data) return null;
   return {
     stats: data.stats,
-    collectionSize: Object.keys(data.collection).length,
+    // Blumenfarben zählen nicht mit (sonst wäre „Sammelbuch“ als Einzugs-Bedingung zu schnell erfüllt)
+    collectionSize: Object.keys(data.collection).filter((id) => !(id in GARDEN_FLOWER)).length,
     flags: { ...data.flags, checkupDone: !!data.flags.checkupDone || !!data.world.dates.checkup },
   };
 }

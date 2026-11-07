@@ -17,7 +17,8 @@ describe('Musik', () => {
     expect(moodFor(12, { ...base, place: 'bistro' })).toBe('bistro');
     expect(moodFor(12, { ...base, raining: true, place: 'oma' })).toBe('oma');
     expect(moodFor(23, { ...base, place: 'oma' })).toBe('nacht');
-    expect(moodFor(12, { ...base, nearSea: true })).toBe('strand');
+    // am Strand läuft dieselbe Musik wie sonst draußen (nur das Meeresrauschen kommt dazu)
+    expect(moodFor(12, { ...base })).toBe('tag');
   });
 
   it('Abschnitte sind reproduzierbar, bleiben in der Tonleiter und im Takt', () => {

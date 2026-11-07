@@ -111,6 +111,8 @@ export type GameEvents = {
   'home:yard': boolean;
   /** Sternenhimmel mit Sternschnuppen einblenden (Sterne gucken mit Oli) */
   'overlay:stars': boolean;
+  /** Kamera zoomen (Knöpfe in der Oberfläche): hinein oder hinaus */
+  'camera:zoom': 'in' | 'out';
   /** Lautstärke geändert */
   'settings:changed': { musicVolume: number; sfxVolume: number };
   /** Ein Geräusch abspielen (siehe audio/Audio.ts) */
@@ -154,6 +156,8 @@ export class Session {
   roomId = 'haupt';
   /** Einrichtungsmodus aktiv */
   decorActive = false;
+  /** Bis wann (Spielzeit in Sekunden, `playTime()`) Lina vom Kaffee-Kick flotter läuft – wird nicht gespeichert */
+  coffeeUntil = 0;
   /** Werkzeug in Linas Hand (wird nicht gespeichert) */
   tool: ToolId | null = null;
   /** Erzwungenes Wetter (`?wetter=regen`, zum Testen) */

@@ -47,6 +47,15 @@ export const JENS: NpcDef = {
       { text: ['Ein Regenbogen! 🌈', 'Na, wenn das mal kein Zeichen ist. Für uns Fabelhaften ist das ja quasi die Hausfahne.'], when: { tags: ['regenbogen'] }, weight: 5 },
     ],
     chat: [
+      { text: ['Dieser Dr. No aus deiner Sendung, chérie! Diese Augenbrauen!', 'Ich würde sie malen. Auf eine große Leinwand. Titel: „Autorität in Schwarz-Grau“. Und dann ein Rahmen aus Gold.'] },
+      { text: ['Lina, du lernst Japanisch! Sag mal was!', 'Ich versteh ja nur „Arigato“ und „Sushi“. Aber ich nicke sehr überzeugend. Hai, hai!'] },
+      { text: ['In Kyoto hab ich gelernt: „Ichi-go ichi-e“ – ein Moment, eine Begegnung, nie wieder genau so.', 'Das kennst du doch aus deinem Japanisch-Kurs, chérie? Erklär mir das mal richtig. Ich hab nur genickt und geweint.'] },
+      { text: ['Du und dein Japanisch, ma chérie.', 'Ich hab mir sagen lassen, „kawaii“ bedeutet „niedlich“. Dann bin ich ja quasi euer Ehrenbürger. Kawaii. Mit Glitzer.'] },
+      { text: ['Sayonara heißt Tschüss, nicht wahr?', 'Dann sag ich ab jetzt: „Sayonara, mei Gudste!“ … Oder wie mir in Sachsen sagen: „Dschüssi“. Ist ja fast das Gleiche. Gleiche Melodie!'] },
+      { text: ['Lina: „Nu gugge ma, Onkel Jens, was haste denn da wieder gekocht?“', 'Jens: „Mei Gudste sächselt! Ich bin gerührt! Jetzt noch ein „Ei verbibbsch“, und ich ernenn dich zur Ehren-Leipzscherin!“'], weight: 2 },
+      { text: ['Lina: „Scheener Gaffee, Onkel Jens!“', 'Jens: „Mit weichem G! Du sagst es genau richtig! Ich muss mich setzen. Ausnahmsweise nicht aus Eitelkeit.“'] },
+      { text: ['Lina: „Ei verbibbsch, Onkel Jens, da haste dich aber rausgeputzt!“', 'Jens: „Ma chérie, sächsisch aus deinem Mund – das is Musik! Mach noch mal! … Nee, warte, ich hol mei Telefon!“'], weight: 2 },
+      { text: ['Lina: „Nu freilich, Onkel Jens. Und tschüssssi!“', 'Jens: „Drei S! Mindestens! Ich bin so stolz, ich muss gleich ein Gemälde malen. Titel: „Die Nichte, sächselnd“.“'] },
       { text: ['Ma chérie, du und deine Gruselfilme!', 'Ich sach dir was: Das Gruseligste, was ich je gesehn hab, war ne Tapete in nem Hotel in Wien. Mon dieu, nee, nee, nee.'] },
       { text: ['Nu, mei Gudste, haste heute schon was Schönes erlebt?', 'Nee? Dann wird\'s aber Zeit! Gugge, die Sonne scheint – oder sie scheint bald. Irgendwann.'] },
       { text: ['Kaffee? Mir sagen dazu „Gaffee“. Mit weichem G.', 'Und wenn er gut is: „Scheener Gaffee!“ Na los, sag\'s mal nach! … Fast. Üben wir noch.'] },
@@ -86,6 +95,8 @@ export const JENS: NpcDef = {
     goodbye: ['Au revoir, chérie! 💋', 'Tschüssi, mei Gudste!', 'À bientôt – und bleib fabelhaft!'],
   },
   letters: [
+    { id: 'rosen-gelb', subject: 'Gelbe Rosen, ma chérie', body: 'Ma chérie,\n\ngelbe Rosen! In Paris stehen sie in jedem zweiten Fenster. Ich hab dir Samen eingepackt.\n\nStell sie neben deine roten, und mit etwas Glück wird daraus ein Orange wie ein Sonnenuntergang über der Seine. Sehr fotogen. Sehr Jens.\n\nBisous\nJens', gift: { itemId: 'samen-rose-gelb', count: 2 } },
+    { id: 'vergissmeinnicht-weiss', subject: 'Ein kleines Meer aus Weiß', body: 'Liebe Lina,\n\nweißes Vergissmeinnicht! Wie Schnee im Mai. Ich hab einen Haufen Samen bekommen und viel zu wenig Beet.\n\nNimm sie. Mit einem Hauch Rosa daneben wird daraus ein sehr schönes Lila. Probier es aus, ich bin gespannt.\n\nDein Onkel', gift: { itemId: 'samen-vergissmeinnicht-weiss', count: 2 } },
     { id: 'kunst', subject: 'Ein kleiner Gedanke', body: 'Ma chérie,\n\nheute hab ich ein Bild gemalt: blauer Himmel, eine rosa Wolke, und mittendrin ein kleiner Dackel.\n\nRate mal, wer das ist.\n\nBisous,\nOnkel Jens 🎨' },
     { id: 'coach', subject: 'Coaching-Tipp der Woche', body: 'Liebe Lina,\n\nmorgens in den Spiegel schauen und sagen: „Ich bin fabelhaft.“\n\nFunktioniert bei mir jeden Tag. Probier\'s aus!\n\nDein Jens 💫' },
   ],
@@ -150,7 +161,7 @@ export const DINNER_OPENERS: readonly (readonly string[])[] = [
 export const DINNER_LINES: Readonly<Record<string, readonly string[]>> = {
   oli: ['Oli: „Jens, das ist das beste Essen der Woche!“', 'Oli: „Ich hab schon dreimal nachgenommen. Proteine, Lini!“'],
   lars: ['Lars: „Ärztlich gesehen ist das hier sehr gesund.“ – Jens: „Nu sicher, da is Butter drin!“', 'Lars: „Wie nennt man einen Koch, der Witze erzählt? … Jens.“'],
-  olaf: ['Olaf: „Ich hab ausgerechnet: Pro Person 1,2 Klöße. Das geht nicht auf.“ – Jens: „Dann nimmste halt zwee, Brüderchen!“'],
+  olaf: ['Olaf: „Ich hab ausgerechnet: Pro Person 1,2 Klöße. Das geht nicht auf.“ – Jens: „Dann nimmste halt zwee, Brüderchen!“', 'Olaf rülpst herzhaft. – Olaf: „Was keine Miete zahlt, muss raus!“ – Christin: „OLAF.“ – Jens: „Mei Bruder! Der Mann hat einfach Stil.“'],
   christin: ['Christin hat die Servietten zu kleinen Schwänen gefaltet. Alle exakt gleich groß.'],
   gisela: ['Oma: „Zu wenig Salz.“ … *isst drei Portionen* … „Köstlich. Aber zu wenig Salz.“'],
 };

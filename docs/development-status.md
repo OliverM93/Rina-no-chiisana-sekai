@@ -87,7 +87,7 @@ Legende: ✅ erledigt · 🚧 in Arbeit · ⬜ geplant
 - ✅ Oma Gisela: Meinungen zu Fischen & Krabbeltieren („Pfui, eine Schnecke!“), Wetter-Sprüche
 - ✅ Spielstand Version 4 (Sammelbuch & Beet), Tests für Wetter, Fangen, Garten, Migration
 - ⬜ Museum → kommt mit Thalia (M7); Schaufel & Fossilien ebenfalls mit Thalia
-- ⬜ Blumen-Kreuzungen (neue Farben) → später
+- ✅ Blumen-Kreuzungen (neue Farben) → M8k
 
 ## ✅ M5 – Hauseinrichtung (Sims-Elemente, Teil 1)
 
@@ -252,6 +252,15 @@ Legende: ✅ erledigt · 🚧 in Arbeit · ⬜ geplant
   Schlitten), Bratapfel & Zimtsterne, Punschstand am Weihnachtsbaum, Fußspuren im Schnee, Atemwölkchen,
   Schneeflocken fangen · Modelle für Sparschwein, Weihnachtsstern & Kuscheldecke (waren rosa Würfel)
 - ✅ **M8m Poster & Bildbände:** Retro-Kaffee-Poster und drei Coffee-Table-Books (Kaffee, Dr. No, Kawaii), Stil „Lieblingsthemen“
+- ✅ **M8l Kaffee:** vier Siebträgermaschinen in Preisklassen (3 neue 3D-Modelle), 8 Getränke, Kaffee-Kick, Kaffee zu zweit mit Oli
+- 🚧 **M8k Beet & Samen** (Schritt für Schritt, jeder Schritt einzeln spielbar – Ideen werden verworfen, wenn sie sich im Spiel nicht lohnen)
+  - ✅ **Phase 1 – Kreuzungen:** Farbvarianten für Tulpe, Rose, Sonnenblume, Lavendel & Vergissmeinnicht (22 Blüten),
+    Misch-Samen beim Pflücken, wenn zwei Farben nebeneinander blühen, Sammelbuch-Reiter „Blumen“, Samen-Farben per Post,
+    gelbe Tulpen im Starterset
+  - ⬜ Phase 2 – Samen kaufen (Samenstand)
+  - ⬜ Phase 3 – Gemüse & Kräuter zum Kochen
+  - ⬜ Phase 4 – Sträuße & Blumendeko (Vase, Kranz, Geschenke)
+  - ⬜ Phase 5 – Gewächshaus für den Winter
 - ⬜ Weitere Animationen & Partikel, Balancing
 
 ## 💡 Ideen-Parkplatz

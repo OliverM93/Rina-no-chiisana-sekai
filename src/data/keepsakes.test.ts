@@ -4,6 +4,7 @@ import { GARDEN_FLOWERS, isKeepsake, itemDef, TOOLS } from './items';
 import { NPCS } from './npcs';
 import { CHECKUP_GIFTS } from './npcs/lars';
 import { DIG_FINDS } from './winston';
+import { ADVENT_DOORS } from './winter';
 
 describe('Nichts geht für immer verloren', () => {
   it('Werkzeuge sind unverkäuflich und Erinnerungsstücke', () => {
@@ -28,9 +29,11 @@ describe('Nichts geht für immer verloren', () => {
       'samen-vergissmeinnicht',
       ...DIG_FINDS.map((d) => d.itemId),
       ...CHECKUP_GIFTS,
-      ...NPCS.flatMap((n) => [...n.letters, ...Object.values(n.heartLetters)].map((l) => l.gift?.itemId ?? '')),
+      ...[...NPCS.flatMap((n) => [...n.letters, ...Object.values(n.heartLetters)]), ...ADVENT_DOORS].map((l) => l.gift?.itemId ?? ''),
+      'samen-tulpe-gelb', // von Oma zum Start
       ...NPCS.map((n) => n.dailyTreat?.itemId ?? ''),
     ]);
-    for (const g of GARDEN_FLOWERS) expect(sources.has(g.seed), `${g.seed} gibt es nirgends`).toBe(true);
+    // Mischfarben entstehen nur durch Kreuzen (siehe flowers.test.ts)
+    for (const g of GARDEN_FLOWERS.filter((x) => !x.crossOnly)) expect(sources.has(g.seed), `${g.seed} gibt es nirgends`).toBe(true);
   });
 });

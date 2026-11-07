@@ -85,6 +85,10 @@ export const FURNITURE: readonly FurnitureDef[] = [
   // Olis Sachen (bringt er beim Einzug mit bzw. schenkt sie per Brief) – nicht im Katalog
   { id: 'schreibtisch-pc', name: 'Olis Schreibtisch', style: 'basis', gift: true, price: 1600, w: 2, d: 1, description: 'Olis Schreibtisch mit Computer, zwei Bildschirmen und einer Tastatur, die in allen Farben leuchtet.' },
   { id: 'hantelbank', name: 'Hantelbank', style: 'basis', gift: true, price: 900, w: 2, d: 1, description: 'Olis Hantelbank mit Langhantel. „Nur ein Satz noch, Lini!“' },
+  // Kaffee: Siebträgermaschinen in vier Preisklassen (Olis `kaffeemaschine` ist die zweite) – Getränke in `data/coffee.ts`
+  { id: 'espresso-einsteiger', name: 'Einsteiger-Siebträger', style: 'basis', small: true, price: 650, w: 1, d: 1, description: 'Eine kleine, rote Siebträgermaschine. Kann Espresso und Lungo – und das gar nicht schlecht. Ein guter Anfang.' },
+  { id: 'espresso-profi', name: 'Zweikreiser-Siebträger', style: 'basis', small: true, price: 3200, w: 1, d: 1, description: 'Edelstahl, zwei Manometer, eine Mühle gleich nebenan. Kann Cappuccino, Latte Macchiato, Flat White und alles andere dazu.' },
+  { id: 'espresso-hebel', name: 'Messing-Handhebelmaschine', style: 'basis', small: true, price: 8800, w: 1, d: 1, description: 'Eine Handhebelmaschine aus glänzendem Messing mit Adler obendrauf. Kann alles – auch Latte-Art. Das Herz auf dem Milchschaum gelingt hier fast immer.' },
   { id: 'kaffeemaschine', name: 'Kaffeemaschine', style: 'basis', gift: true, small: true, price: 700, w: 1, d: 1, description: 'Eine glänzende Siebträgermaschine. Oli behandelt sie wie ein Familienmitglied.' },
   { id: 'plattenspieler', name: 'Plattenspieler', style: 'basis', gift: true, small: true, price: 800, w: 1, d: 1, description: 'Ein Plattenspieler mit Olis Lieblingsplatten. Laut aufdrehen erlaubt – meistens.' },
   { id: 'sternenlampe', name: 'Sternenlampe', style: 'basis', gift: true, small: true, light: true, price: 600, w: 1, d: 1, description: 'Eine kleine Lampe, die Sterne an die Wände malt. Von Oli, für gemütliche Abende.' },
@@ -142,6 +146,7 @@ export const FURNITURE: readonly FurnitureDef[] = [
   { id: 'huehnerstall', name: 'Hühnerstall', style: 'garten', outdoor: true, coop: 'huhn', price: 2800, w: 2, d: 2, description: 'Ein rotes Hühnerhaus mit Rampe – drei fröhliche Hühner ziehen gleich mit ein. Jeden Tag frische Eier!' },
   { id: 'wachtelstall', name: 'Wachtelstall', style: 'garten', outdoor: true, coop: 'wachtel', price: 1900, w: 2, d: 1, description: 'Ein kleines Häuschen mit Gitter für vier Wachteln. Sie legen winzige gesprenkelte Eier.' },
   // Wand-Deko (M8f): hängt an Rück- oder Seitenwand, darunter dürfen Möbel stehen
+  { id: 'bild-dr-no', name: 'Dr.-No-Porträt', style: 'basis', wall: true, price: 900, w: 1, d: 1, description: 'Ein gerahmtes Porträt von Dr. No aus „Schwerer Weg“. Strenger Blick, gütige Augen, buschige Brauen. Eine Ikone. Hängt am besten über dem Sofa.' },
   { id: 'bild-winston', name: 'Winston-Porträt', style: 'basis', wall: true, price: 600, w: 1, d: 1, description: 'Ein gerahmtes Porträt von Winston. Er guckt sehr würdevoll. Fast.' },
   { id: 'poster-grusel', name: 'Gruselfilm-Poster', style: 'basis', wall: true, price: 400, w: 1, d: 1, description: '„Die Nacht der Kürbisse“ – Linas liebster Gruselklassiker. Oli guckt lieber nicht so genau hin.' },
   { id: 'wandregal', name: 'Wandregal', style: 'basis', wall: true, price: 500, w: 2, d: 1, description: 'Ein schwebendes Brett mit Büchern, einem Pflänzchen und einer kleinen Kerze.' },

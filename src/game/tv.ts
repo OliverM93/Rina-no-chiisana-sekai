@@ -24,9 +24,10 @@ export function watchTv(session: Session, channelId: string, withOli: boolean): 
   const ch = TV_BY_ID[channelId];
   if (!data || !ch) return null;
   const ep = episodeToday(session, ch);
-  const lines = [...ep.lines];
+  const lines = [...ep.lines, ...(ep.lina ?? [])];
   if (withOli) {
-    lines.push(ch.oli[hashString(`tv-oli:${ch.id}:${session.today()}`) % ch.oli.length]);
+    const pool = ep.oli ?? ch.oli;
+    lines.push(pool[hashString(`tv-oli:${ch.id}:${session.today()}`) % pool.length]);
     if (data.world.dates['tv-oli'] !== session.today()) {
       data.world.dates['tv-oli'] = session.today();
       lines.push(...addFriendship(session, 'oli', 10));
