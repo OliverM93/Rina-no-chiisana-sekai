@@ -53,42 +53,120 @@ const MOTIFS: Record<PosterMotif, (ctx: C, w: number, h: number) => void> = {
     for (const [dx, dy, s] of [[-0.08, 0.32, 0.05], [0.03, 0.26, 0.06], [0.1, 0.33, 0.045]] as const) heart(ctx, cx + w * dx, h * dy, w * s, 'rgba(110, 70, 48, 0.55)');
   },
   'dr-no': (ctx, w, h) => {
-    // Schlichtes Porträt: Kittel, Kopf, Brille, buschige Brauen
+    // Porträt: dunkles, zur Seite gekämmtes Haar mit grauen Schläfen, buschige Brauen, runde Drahtbrille,
+    // leichtes Schmunzeln; weißer Kittel über dunkelblauem Polo, Stethoskop mit goldenem Kopf
     const cx = w / 2;
+    const hy = h * 0.5;
+    const rx = w * 0.2;
+    const ry = h * 0.16;
+    const ey = hy - ry * 0.02;
+    const ell = (x: number, y: number, a: number, b: number, color: string) => {
+      ctx.fillStyle = color;
+      ctx.beginPath();
+      ctx.ellipse(x, y, a, b, 0, 0, Math.PI * 2);
+      ctx.fill();
+    };
+    // Kittel, Polo-Ausschnitt, Hals, Kragen
     ctx.fillStyle = '#f4f1ea';
     ctx.beginPath();
-    ctx.ellipse(cx, h * 0.72, w * 0.32, h * 0.14, 0, Math.PI, 0);
+    ctx.moveTo(cx - w * 0.36, h * 0.88);
+    ctx.lineTo(cx - w * 0.36, h * 0.79);
+    ctx.quadraticCurveTo(cx - w * 0.34, h * 0.7, cx - w * 0.16, h * 0.67);
+    ctx.lineTo(cx + w * 0.16, h * 0.67);
+    ctx.quadraticCurveTo(cx + w * 0.34, h * 0.7, cx + w * 0.36, h * 0.79);
+    ctx.lineTo(cx + w * 0.36, h * 0.88);
+    ctx.closePath();
     ctx.fill();
-    ctx.fillRect(cx - w * 0.32, h * 0.72, w * 0.64, h * 0.14);
-    ctx.fillStyle = '#e8c4a0';
+    ctx.fillStyle = '#2c3150';
     ctx.beginPath();
-    ctx.ellipse(cx, h * 0.46, w * 0.17, h * 0.15, 0, 0, Math.PI * 2);
+    ctx.moveTo(cx - w * 0.12, h * 0.665);
+    ctx.lineTo(cx + w * 0.12, h * 0.665);
+    ctx.lineTo(cx, h * 0.88);
+    ctx.closePath();
     ctx.fill();
-    ctx.fillStyle = '#bdbdc4';
-    for (const x of [-1, 1]) {
+    ctx.fillStyle = '#c08a5f';
+    ctx.fillRect(cx - w * 0.07, h * 0.6, w * 0.14, h * 0.09);
+    ctx.fillStyle = '#3a4068';
+    for (const s of [-1, 1]) {
       ctx.beginPath();
-      ctx.ellipse(cx + x * w * 0.17, h * 0.46, w * 0.035, h * 0.07, 0, 0, Math.PI * 2);
+      ctx.moveTo(cx + s * w * 0.075, h * 0.665);
+      ctx.lineTo(cx + s * w * 0.12, h * 0.665);
+      ctx.lineTo(cx + s * w * 0.03, h * 0.73);
+      ctx.closePath();
       ctx.fill();
     }
-    ctx.fillStyle = '#4a4a52';
-    for (const x of [-1, 1]) ctx.fillRect(cx + x * w * 0.075 - w * 0.06, h * 0.385, w * 0.12, h * 0.018);
-    ctx.strokeStyle = '#2a2a30';
-    ctx.lineWidth = Math.max(1.5, w * 0.012);
-    for (const x of [-1, 1]) ctx.strokeRect(cx + x * w * 0.075 - w * 0.055, h * 0.42, w * 0.11, h * 0.07);
-    ctx.fillStyle = '#16100e';
-    for (const x of [-1, 1]) {
-      ctx.beginPath();
-      ctx.arc(cx + x * w * 0.075, h * 0.455, w * 0.012, 0, Math.PI * 2);
-      ctx.fill();
-    }
-    ctx.fillStyle = '#8a4a40';
-    ctx.fillRect(cx - w * 0.04, h * 0.54, w * 0.08, h * 0.01);
-    // Stethoskop
-    ctx.strokeStyle = '#2a2a30';
-    ctx.lineWidth = w * 0.015;
+    // Stethoskop (goldener Kopf links) und Abzeichen
+    ctx.strokeStyle = '#26262c';
+    ctx.lineWidth = Math.max(1.5, w * 0.016);
     ctx.beginPath();
-    ctx.arc(cx, h * 0.68, w * 0.12, 0.1, Math.PI - 0.1);
+    ctx.arc(cx, h * 0.66, w * 0.125, 0.15, Math.PI - 0.15);
+    ctx.lineTo(cx - w * 0.13, h * 0.8);
     ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(cx + w * 0.12, h * 0.68);
+    ctx.lineTo(cx + w * 0.13, h * 0.8);
+    ctx.stroke();
+    ell(cx - w * 0.13, h * 0.82, w * 0.035, w * 0.035, '#d9b45a');
+    ctx.fillStyle = '#d9b45a';
+    ctx.fillRect(cx + w * 0.2, h * 0.78, w * 0.09, h * 0.04);
+    // Ohren, Gesicht, Kiefer
+    for (const s of [-1, 1]) ell(cx + s * rx, hy + ry * 0.08, w * 0.03, h * 0.04, '#cf9a70');
+    ell(cx, hy, rx, ry, '#d9a47a');
+    ell(cx, hy + ry * 0.3, rx * 0.86, ry * 0.72, '#d9a47a');
+    // Haar: dunkelbraun, hohe Stirn, nach einer Seite gekämmt; graue Schläfen
+    ctx.fillStyle = '#4a3326';
+    ctx.beginPath();
+    ctx.ellipse(cx, hy, rx + w * 0.008, ry + h * 0.008, 0, Math.PI * 1.04, Math.PI * 1.96);
+    ctx.bezierCurveTo(cx + rx * 0.9, hy - ry * 0.55, cx + rx * 0.25, hy - ry * 0.72, cx - rx * 0.2, hy - ry * 0.55);
+    ctx.bezierCurveTo(cx - rx * 0.6, hy - ry * 0.4, cx - rx * 0.85, hy - ry * 0.3, cx - rx * 0.97, hy - ry * 0.2);
+    ctx.closePath();
+    ctx.fill();
+    ctx.strokeStyle = '#6a4c3a';
+    ctx.lineWidth = Math.max(1, w * 0.008);
+    ctx.beginPath();
+    ctx.moveTo(cx + rx * 0.6, hy - ry * 0.85);
+    ctx.quadraticCurveTo(cx, hy - ry * 0.95, cx - rx * 0.6, hy - ry * 0.65);
+    ctx.stroke();
+    for (const s of [-1, 1]) ell(cx + s * rx * 0.94, hy - ry * 0.22, w * 0.018, h * 0.05, '#a9a3a0');
+    // buschige Brauen (innen etwas höher)
+    ctx.strokeStyle = '#2e2220';
+    ctx.lineCap = 'round';
+    ctx.lineWidth = Math.max(2, h * 0.02);
+    ctx.beginPath();
+    ctx.moveTo(cx - w * 0.14, hy - ry * 0.26);
+    ctx.lineTo(cx - w * 0.03, hy - ry * 0.35);
+    ctx.moveTo(cx + w * 0.03, hy - ry * 0.35);
+    ctx.lineTo(cx + w * 0.14, hy - ry * 0.26);
+    ctx.stroke();
+    // Wangen, Nase, Augen, runde Drahtbrille
+    for (const s of [-1, 1]) ell(cx + s * w * 0.12, hy + ry * 0.4, w * 0.04, h * 0.018, 'rgba(220, 120, 100, 0.28)');
+    ell(cx, hy + ry * 0.28, w * 0.03, h * 0.02, '#c28a60');
+    for (const s of [-1, 1]) {
+      ell(cx + s * w * 0.085, ey, w * 0.012, w * 0.013, '#1c1412');
+      ell(cx + s * w * 0.085 + w * 0.004, ey - h * 0.004, w * 0.004, w * 0.004, '#ffffff');
+    }
+    ctx.strokeStyle = '#8a7a58';
+    ctx.lineWidth = Math.max(1.2, w * 0.01);
+    for (const s of [-1, 1]) {
+      ctx.beginPath();
+      ctx.arc(cx + s * w * 0.085, ey, w * 0.062, 0, Math.PI * 2);
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.moveTo(cx + s * w * 0.147, ey - h * 0.005);
+      ctx.lineTo(cx + s * (rx - w * 0.01), ey - h * 0.01);
+      ctx.stroke();
+    }
+    ctx.beginPath();
+    ctx.arc(cx, ey - h * 0.012, w * 0.024, Math.PI * 1.1, Math.PI * 1.9);
+    ctx.stroke();
+    // leichtes, ein wenig schiefes Schmunzeln
+    ctx.strokeStyle = '#8a4a40';
+    ctx.lineWidth = Math.max(1.5, w * 0.012);
+    ctx.beginPath();
+    ctx.moveTo(cx - w * 0.06, hy + ry * 0.58);
+    ctx.quadraticCurveTo(cx, hy + ry * 0.7, cx + w * 0.07, hy + ry * 0.52);
+    ctx.stroke();
+    ctx.lineCap = 'butt';
   },
   kawaii: (ctx, w, h) => {
     // Runde Kuschelwesen mit Herzbäckchen

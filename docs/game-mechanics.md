@@ -110,7 +110,9 @@ Wetter und Feste laufen nach echter Zeit.
   Tag (Zähler `world.dates.kaffee` = „Datum:Anzahl“).
 - **Dr. No (Hommage):** Linas Lieblingsarzt aus der Doku „Schwerer Weg“ ist eine **ausgedachte** Figur (keine echte Person, keine
   echte Sendung): strenger, ruhiger Chirurg mit buschigen Brauen und gütigen Augen, der Patienten ernst nimmt („Ein Schritt. Dann
-  noch einer.“). Drei Folgen (`data/tv.ts`, `lina`-Reaktion + eigene `oli`-Sprüche pro Folge), das **Dr.-No-Porträt** (`bild-dr-no`,
+  noch einer.“). Aussehen als Chibi (Wandporträt `bild-dr-no` in `world3d/models/furniture.ts`, Buchcover-Motiv `dr-no` in
+  `gfx/posters.ts`): dunkles, zur Seite gekämmtes Haar mit grauen Schläfen, runde Drahtbrille, warmer Teint, leichtes Schmunzeln,
+  weißer Kittel über dunkelblauem Polo, Stethoskop mit goldenem Kopf (Vorlage war ein Foto, das nicht im Repo liegt). Drei Folgen (`data/tv.ts`, `lina`-Reaktion + eigene `oli`-Sprüche pro Folge), das **Dr.-No-Porträt** (`bild-dr-no`,
   Wand-Deko im Möbelkatalog) und Kommentare von Oli, Lars, Jens und Oma.
 - **Sammeltassen:** Lina sammelt Becher der (ausgedachten) Kaffeehaus-Kette „Sternenbohne“ (`data/tassen.ts`, 19 Stück): 3 **Klassik-Tassen**
   und 4 **Saison-Tassen** (Frühling/Sommer/Herbst/Winter, im Katalog nur in ihrer Jahreszeit, `FurnitureDef.inSeason`) kauft sie im
