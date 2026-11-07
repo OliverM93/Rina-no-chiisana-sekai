@@ -53,6 +53,13 @@ export const GISELA: NpcDef = {
       { text: ['Kindchen! Mein Lieblingsbesuch.', '… Ja, ich weiß, du bist mein einziger Besuch. Trotzdem.'], when: { minHearts: 2 } },
     ],
     chat: [
+      { text: ['Du lernst ja Japanisch, Kind, hat Olaf erzählt.', 'Sag mal was. … Aha. Und was heißt das? … Klingt wie Niesen. Aber hübsch, hübsch.'] },
+      { text: ['Neulich hat mich der Briefträger mit „Konnichiwa“ begrüßt.', 'Ich hab gesagt: Hier sagt man „Guten Tag“, junger Mann. … Aber ich hab ihm zugenickt. Man will ja nicht so sein.'] },
+      { text: ['Mein Ludwig hat immer behauptet: „Wer Japanisch kann, kann auch Judo.“', 'Das stimmt nicht. Aber er hat es gern geglaubt. Er hat dann einmal den Gartenzaun „geworfen“. Der Zaun hat gewonnen.'], weight: 2 },
+      { text: ['Du sagst vor dem Essen immer so ein Wort. „Itadakimasu“, nicht?', 'Find ich reizend. Bei mir sagt man „Guten Appetit“ – und danach hat keiner mehr Zeit zum Reden. Und jetzt iss.'] },
+      { text: ['Was heißt „Oma“ auf Japanisch? … „Obaachan“?', 'Obaachan. Hm. Klingt, als hätte ich einen Hund, der Bachan heißt. Aber von dir lass ich\'s mir gefallen.'], when: { minHearts: 1 } },
+      { text: ['Du hast in der Uni Japanisch gelernt – und ich in der Küche Kuchenbacken.', 'Ich würde sagen, ich hab das Nützlichere erwischt. … Aber sag das Ding mit dem Kuchen mal auf Japanisch. Für mich.'] },
+      { text: ['Der Lars hat ja so viele Verehrerinnen im Krankenhaus.', 'Das hat er von seinem Großvater. Der hatte auch keine Ahnung, wie er dazu kam. Er hat nur freundlich gelächelt. Das reicht manchmal.'], when: { tags: ['lars-da'] } },
       { text: ['Du guckst immer noch diese Gruselfilme, Kind?', 'Pfui. Davon kriegt man Falten. … Erzähl mir trotzdem, wie er ausgeht.'] },
       { text: ['Du guckst immer diese Sendungen, wo sich fremde Leute zum Essen treffen.', 'Zu meiner Zeit hat man sich beim Tanztee kennengelernt. Ganz ohne Kamera. … Na gut, der Ludwig hatte eine dabei.'] },
       { text: ['Kindchen, du kochst so gern – das hast du von mir.', 'Nicht von deinem Vater. Der verbrennt sogar Wasser.'] },
