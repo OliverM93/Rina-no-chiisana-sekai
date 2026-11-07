@@ -251,6 +251,7 @@ Legende: ✅ erledigt · 🚧 in Arbeit · ⬜ geplant
   Adventskranz, Kaminofen, Lebkuchenhaus, Nussknacker, Schneeflocken-Teppich & -Tapete, Lichtervorhang, Strumpf,
   Schlitten), Bratapfel & Zimtsterne, Punschstand am Weihnachtsbaum, Fußspuren im Schnee, Atemwölkchen,
   Schneeflocken fangen · Modelle für Sparschwein, Weihnachtsstern & Kuscheldecke (waren rosa Würfel)
+- ✅ **Dr.-No-Porträt neu gestaltet:** Wandbild und Buchcover zeigen Dr. No jetzt mit Drahtbrille, grauen Schläfen, Polo & goldenem Stethoskop
 - ✅ **M8m Poster & Bildbände:** Retro-Kaffee-Poster und drei Coffee-Table-Books (Kaffee, Dr. No, Kawaii), Stil „Lieblingsthemen“
 - ✅ **M8l Kaffee:** vier Siebträgermaschinen in Preisklassen (3 neue 3D-Modelle), 8 Getränke, Kaffee-Kick, Kaffee zu zweit mit Oli
 - 🚧 **M8k Beet & Samen** (Schritt für Schritt, jeder Schritt einzeln spielbar – Ideen werden verworfen, wenn sie sich im Spiel nicht lohnen)

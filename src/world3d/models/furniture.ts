@@ -1142,40 +1142,64 @@ export function makeFurniture(itemId: string, links: FenceLinks = { n: false, e:
       break;
     }
     case 'bild-dr-no': {
-      // Dr. No: weißer Kittel, graue Schläfen, buschige Brauen, Brille, Stethoskop – ernst und gütig
+      // Dr. No: dunkles, zur Seite gekämmtes Haar mit grauen Schläfen, hohe Stirn, buschige Brauen,
+      // runde Drahtbrille, warmer Teint, leichtes Schmunzeln; weißer Kittel über dunkelblauem Polo,
+      // Stethoskop mit goldenem Kopf und Abzeichen
       const z = WALL_Z;
+      const skin = '#d9a47a';
+      const ring = (r: number, tube: number, arc: number, color: string, x: number, y: number, zz: number, rot = 0) => {
+        const t = new THREE.Mesh(new THREE.TorusGeometry(r, tube, 6, 20, arc), toon(color));
+        t.position.set(x, y, z + zz);
+        t.rotation.z = rot;
+        g.add(t);
+      };
       g.add(b(0.62, 0.74, 0.04, '#8a6a3a', 0, HANG, z));
-      g.add(b(0.54, 0.66, 0.01, '#3f5a66', 0, HANG, z + 0.022));
-      // Kittel & Schultern
-      g.add(s(0.2, 0.1, 0.01, '#f4f1ea', 0, HANG - 0.24, z + 0.03));
-      g.add(b(0.1, 0.08, 0.01, '#f4f1ea', 0, HANG - 0.2, z + 0.034));
-      // Hals, Kopf
-      g.add(b(0.06, 0.05, 0.01, '#e0b894', 0, HANG - 0.14, z + 0.032));
-      g.add(s(0.105, 0.125, 0.01, '#e8c4a0', 0, HANG + 0.02, z + 0.04));
-      // graue Haare an den Seiten, oben kahl
-      for (const x of [-0.1, 0.1]) g.add(s(0.03, 0.07, 0.01, '#bdbdc4', x, HANG + 0.03, z + 0.036));
-      g.add(s(0.07, 0.025, 0.01, '#bdbdc4', 0, HANG + 0.13, z + 0.034));
-      // buschige Brauen
-      for (const x of [-0.04, 0.04]) g.add(b(0.075, 0.028, 0.01, '#4a4a52', x, HANG + 0.088, z + 0.05));
-      // Augen & Brille
-      for (const x of [-0.04, 0.04]) {
-        g.add(s(0.012, 0.012, 0.005, '#2a2a30', x, HANG + 0.03, z + 0.054));
-        g.add(b(0.065, 0.004, 0.004, '#3a3a40', x, HANG + 0.052, z + 0.052));
-        g.add(b(0.004, 0.045, 0.004, '#3a3a40', x - 0.032, HANG + 0.03, z + 0.052));
-        g.add(b(0.004, 0.045, 0.004, '#3a3a40', x + 0.032, HANG + 0.03, z + 0.052));
-        g.add(b(0.065, 0.004, 0.004, '#3a3a40', x, HANG + 0.008, z + 0.052));
+      g.add(b(0.54, 0.66, 0.01, '#6a8a96', 0, HANG, z + 0.022));
+      // Kittel & Schultern, darin das dunkelblaue Polo (V-Ausschnitt mit Kragen)
+      g.add(s(0.2, 0.088, 0.01, '#f4f1ea', 0, HANG - 0.237, z + 0.03));
+      g.add(b(0.1, 0.12, 0.01, '#2c3150', 0, HANG - 0.2, z + 0.034));
+      for (const sx of [-1, 1]) {
+        const lapel = b(0.05, 0.13, 0.01, '#f4f1ea', sx * 0.075, HANG - 0.205, z + 0.036);
+        lapel.rotation.z = sx * 0.32;
+        g.add(lapel);
+        const collar = b(0.045, 0.02, 0.01, '#3a4068', sx * 0.04, HANG - 0.125, z + 0.038);
+        collar.rotation.z = -sx * 0.5;
+        g.add(collar);
       }
-      // Nase, fester Mund
-      g.add(b(0.014, 0.04, 0.012, '#d9ae88', 0, HANG - 0.01, z + 0.052));
-      g.add(b(0.06, 0.008, 0.005, '#8a4a40', 0, HANG - 0.06, z + 0.052));
-      // Stethoskop
-      const tor = new THREE.Mesh(new THREE.TorusGeometry(0.06, 0.008, 6, 16, Math.PI), toon('#3a3a40'));
-      tor.position.set(0, HANG - 0.15, z + 0.04);
-      tor.rotation.z = Math.PI;
-      g.add(tor);
-      g.add(s(0.018, 0.018, 0.008, '#b8bcc4', 0.0, HANG - 0.285, z + 0.042));
-      // Namensschild
-      g.add(b(0.12, 0.026, 0.004, '#d9b45a', 0, HANG - 0.31, z + 0.025));
+      // Hals
+      g.add(b(0.07, 0.06, 0.01, '#c08a5f', 0, HANG - 0.1, z + 0.032));
+      // Stethoskop: Schlaufe um den Hals, Schläuche, goldener Kopf links, Abzeichen rechts
+      ring(0.075, 0.006, Math.PI, '#26262c', 0, HANG - 0.14, 0.04, Math.PI);
+      for (const sx of [-1, 1]) g.add(b(0.011, 0.12, 0.006, '#26262c', sx * 0.075, HANG - 0.2, z + 0.042));
+      g.add(s(0.024, 0.024, 0.008, '#d9b45a', -0.075, HANG - 0.275, z + 0.044));
+      g.add(s(0.01, 0.01, 0.006, '#26262c', 0.075, HANG - 0.265, z + 0.044));
+      g.add(b(0.045, 0.032, 0.004, '#d9b45a', 0.14, HANG - 0.255, z + 0.036));
+      // Kopf: Ohren, Gesicht, etwas kräftigerer Kiefer
+      for (const sx of [-1, 1]) g.add(s(0.018, 0.032, 0.008, '#cf9a70', sx * 0.105, HANG + 0.045, z + 0.036));
+      g.add(s(0.1, 0.125, 0.01, skin, 0, HANG + 0.05, z + 0.04));
+      g.add(s(0.085, 0.07, 0.01, skin, 0, HANG - 0.005, z + 0.041));
+      // dunkelbraunes Haar, zur Seite gekämmt, graue Schläfen
+      g.add(s(0.105, 0.05, 0.011, '#4a3326', 0.004, HANG + 0.155, z + 0.043));
+      g.add(s(0.065, 0.03, 0.011, '#5a4132', -0.03, HANG + 0.132, z + 0.045));
+      for (const sx of [-1, 1]) g.add(s(0.016, 0.05, 0.011, '#a9a3a0', sx * 0.092, HANG + 0.1, z + 0.044));
+      // buschige dunkle Brauen (innen etwas höher – gütig)
+      for (const sx of [-1, 1]) {
+        const br = b(0.062, 0.02, 0.01, '#2e2220', sx * 0.045, HANG + 0.09, z + 0.05);
+        br.rotation.z = sx * -0.1;
+        g.add(br);
+      }
+      // Augen mit Glanzpunkt, runde Drahtbrille mit Steg und Bügeln
+      for (const sx of [-1, 1]) {
+        g.add(s(0.011, 0.012, 0.005, '#1c1412', sx * 0.04, HANG + 0.05, z + 0.053));
+        g.add(s(0.0035, 0.0035, 0.003, '#ffffff', sx * 0.04 + 0.004, HANG + 0.055, z + 0.057));
+        ring(0.032, 0.0035, Math.PI * 2, '#8a7a58', sx * 0.045, HANG + 0.05, 0.052);
+        g.add(b(0.02, 0.004, 0.004, '#8a7a58', sx * 0.087, HANG + 0.056, z + 0.05));
+        g.add(s(0.02, 0.012, 0.004, '#e0a088', sx * 0.06, HANG - 0.012, z + 0.05));
+      }
+      g.add(b(0.016, 0.004, 0.004, '#8a7a58', 0, HANG + 0.058, z + 0.052));
+      // Nase und leichtes, ein wenig schiefes Schmunzeln
+      g.add(s(0.015, 0.024, 0.008, '#c28a60', 0, HANG + 0.005, z + 0.052));
+      ring(0.034, 0.003, Math.PI * 0.6, '#8a4a40', 0, HANG - 0.034, 0.052, Math.PI * 1.2 + 0.08);
       break;
     }
     case 'poster-grusel': {
