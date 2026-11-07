@@ -251,6 +251,7 @@ Legende: ✅ erledigt · 🚧 in Arbeit · ⬜ geplant
   Adventskranz, Kaminofen, Lebkuchenhaus, Nussknacker, Schneeflocken-Teppich & -Tapete, Lichtervorhang, Strumpf,
   Schlitten), Bratapfel & Zimtsterne, Punschstand am Weihnachtsbaum, Fußspuren im Schnee, Atemwölkchen,
   Schneeflocken fangen · Modelle für Sparschwein, Weihnachtsstern & Kuscheldecke (waren rosa Würfel)
+- ✅ **M8l Kaffee:** vier Siebträgermaschinen in Preisklassen (3 neue 3D-Modelle), 8 Getränke, Kaffee-Kick, Kaffee zu zweit mit Oli
 - 🚧 **M8k Beet & Samen** (Schritt für Schritt, jeder Schritt einzeln spielbar – Ideen werden verworfen, wenn sie sich im Spiel nicht lohnen)
   - ✅ **Phase 1 – Kreuzungen:** Farbvarianten für Tulpe, Rose, Sonnenblume, Lavendel & Vergissmeinnicht (22 Blüten),
     Misch-Samen beim Pflücken, wenn zwei Farben nebeneinander blühen, Sammelbuch-Reiter „Blumen“, Samen-Farben per Post,

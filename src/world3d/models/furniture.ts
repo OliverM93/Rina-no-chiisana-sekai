@@ -370,6 +370,84 @@ export function makeFurniture(itemId: string, links: FenceLinks = { n: false, e:
       g.add(s(0.012, 0.012, 0.012, '#e8484f', 0.09, 0.22, 0.015));
       break;
     }
+    case 'espresso-einsteiger': {
+      // klein, rot, einfach: Wassertank hinten, Brühgruppe, Siebträger, eine Tasse
+      g.add(b(0.24, 0.03, 0.2, '#3a3a44', 0, 0.015, 0));
+      g.add(b(0.22, 0.26, 0.11, '#d8343c', 0, 0.16, -0.045));
+      g.add(b(0.22, 0.05, 0.19, '#d8343c', 0, 0.3, -0.01));
+      g.add(b(0.1, 0.12, 0.05, new THREE.MeshToonMaterial({ color: '#cfe8f4', transparent: true, opacity: 0.7 }), 0.06, 0.17, -0.12));
+      g.add(c(0.035, 0.03, '#c9cbd3', 0, 0.255, 0.05));
+      g.add(c(0.03, 0.02, '#2b2a31', 0, 0.235, 0.05));
+      g.add(b(0.016, 0.016, 0.1, '#2b2a31', 0, 0.235, 0.12));
+      g.add(c(0.035, 0.05, '#f7f5ec', 0, 0.055, 0.06));
+      g.add(s(0.012, 0.012, 0.012, '#7ad98a', 0.08, 0.22, 0.015));
+      break;
+    }
+    case 'espresso-profi': {
+      // Edelstahl, zwei Manometer, Dampflanze, daneben eine Mühle mit Bohnenbehälter
+      const steel = '#c9cbd3';
+      g.add(b(0.4, 0.03, 0.26, '#2b2a31', 0, 0.015, 0));
+      g.add(b(0.24, 0.3, 0.2, steel, -0.06, 0.18, -0.02));
+      g.add(b(0.25, 0.04, 0.21, darken(steel, 0.1), -0.06, 0.35, -0.02));
+      // Tassenwärmer-Reling
+      for (const x of [-0.14, 0.02]) g.add(c(0.006, 0.05, '#8a8a92', x, 0.39, -0.02));
+      g.add(b(0.18, 0.008, 0.01, '#8a8a92', -0.06, 0.415, -0.02));
+      // Manometer
+      for (const x of [-0.12, -0.02]) {
+        g.add(c(0.03, 0.01, '#f7f5ec', x, 0.28, 0.085).rotateX(Math.PI / 2));
+        g.add(b(0.003, 0.025, 0.004, '#d8343c', x, 0.285, 0.092));
+      }
+      // Brühgruppe, Siebträger, Tasse
+      g.add(c(0.04, 0.035, '#8a8a92', -0.06, 0.205, 0.085));
+      g.add(c(0.035, 0.025, '#2b2a31', -0.06, 0.185, 0.085));
+      g.add(b(0.016, 0.016, 0.11, '#2b2a31', -0.06, 0.185, 0.15));
+      g.add(c(0.035, 0.05, '#f7f5ec', -0.06, 0.065, 0.09));
+      // Dampflanze
+      g.add(c(0.007, 0.14, '#8a8a92', 0.07, 0.17, 0.05));
+      g.add(c(0.01, 0.03, '#2b2a31', 0.07, 0.25, 0.05));
+      // Mühle
+      g.add(b(0.1, 0.22, 0.12, '#2b2a31', 0.14, 0.14, -0.02));
+      g.add(c(0.05, 0.1, new THREE.MeshToonMaterial({ color: '#6e4630', transparent: true, opacity: 0.85 }), 0.14, 0.31, -0.02, cone));
+      g.add(c(0.012, 0.03, steel, 0.14, 0.085, 0.045));
+      g.add(s(0.012, 0.012, 0.012, '#7ad98a', 0.17, 0.2, 0.045));
+      break;
+    }
+    case 'espresso-hebel': {
+      // Messing & Kupfer: liegender Kessel, Handhebel mit Holzkugel, Adler obendrauf
+      const brass = '#c79a3d';
+      const copper = '#b87a4a';
+      g.add(b(0.34, 0.03, 0.24, '#5a3a22', 0, 0.015, 0));
+      g.add(b(0.28, 0.14, 0.2, brass, 0, 0.1, -0.01));
+      const boiler = c(0.085, 0.3, copper, 0, 0.27, -0.01);
+      boiler.rotation.z = Math.PI / 2;
+      g.add(boiler);
+      for (const x of [-0.15, 0.15]) g.add(s(0.09, 0.09, 0.09, copper, x, 0.27, -0.01));
+      g.add(b(0.28, 0.025, 0.2, brass, 0, 0.19, -0.01));
+      // Manometer vorn
+      g.add(c(0.035, 0.012, '#f7f5ec', -0.07, 0.27, 0.085).rotateX(Math.PI / 2));
+      g.add(c(0.04, 0.008, brass, -0.07, 0.27, 0.08).rotateX(Math.PI / 2));
+      // Brühgruppe & Siebträger mit Holzgriff
+      g.add(c(0.045, 0.05, brass, 0.06, 0.2, 0.09));
+      g.add(c(0.035, 0.025, '#2b2a31', 0.06, 0.165, 0.09));
+      g.add(b(0.016, 0.016, 0.11, '#6e4630', 0.06, 0.165, 0.155));
+      g.add(c(0.035, 0.05, '#f7f5ec', 0.06, 0.065, 0.1));
+      // Handhebel
+      const lever = b(0.014, 0.17, 0.014, brass, 0.06, 0.32, 0.095);
+      lever.rotation.z = -0.35;
+      g.add(lever);
+      g.add(s(0.025, 0.025, 0.025, '#6e4630', 0.1, 0.4, 0.095));
+      // Adler
+      g.add(s(0.025, 0.03, 0.02, brass, -0.02, 0.385, -0.01));
+      for (const sx of [-1, 1]) {
+        const wing = s(0.04, 0.012, 0.015, brass, -0.02 + sx * 0.04, 0.395, -0.01);
+        wing.rotation.z = sx * 0.4;
+        g.add(wing);
+      }
+      g.add(s(0.012, 0.012, 0.012, brass, -0.02, 0.425, -0.005));
+      // Tropfgitter
+      g.add(b(0.18, 0.008, 0.07, '#8a8a92', 0.02, 0.045, 0.1));
+      break;
+    }
     case 'plattenspieler': {
       g.add(b(0.36, 0.08, 0.3, '#8a5a3a', 0, 0.04, 0));
       g.add(c(0.12, 0.012, '#2b2a31', -0.04, 0.09, 0));

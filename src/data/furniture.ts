@@ -84,6 +84,10 @@ export const FURNITURE: readonly FurnitureDef[] = [
   // Olis Sachen (bringt er beim Einzug mit bzw. schenkt sie per Brief) – nicht im Katalog
   { id: 'schreibtisch-pc', name: 'Olis Schreibtisch', style: 'basis', gift: true, price: 1600, w: 2, d: 1, description: 'Olis Schreibtisch mit Computer, zwei Bildschirmen und einer Tastatur, die in allen Farben leuchtet.' },
   { id: 'hantelbank', name: 'Hantelbank', style: 'basis', gift: true, price: 900, w: 2, d: 1, description: 'Olis Hantelbank mit Langhantel. „Nur ein Satz noch, Lini!“' },
+  // Kaffee: Siebträgermaschinen in vier Preisklassen (Olis `kaffeemaschine` ist die zweite) – Getränke in `data/coffee.ts`
+  { id: 'espresso-einsteiger', name: 'Einsteiger-Siebträger', style: 'basis', small: true, price: 650, w: 1, d: 1, description: 'Eine kleine, rote Siebträgermaschine. Kann Espresso und Lungo – und das gar nicht schlecht. Ein guter Anfang.' },
+  { id: 'espresso-profi', name: 'Zweikreiser-Siebträger', style: 'basis', small: true, price: 3200, w: 1, d: 1, description: 'Edelstahl, zwei Manometer, eine Mühle gleich nebenan. Kann Cappuccino, Latte Macchiato, Flat White und alles andere dazu.' },
+  { id: 'espresso-hebel', name: 'Messing-Handhebelmaschine', style: 'basis', small: true, price: 8800, w: 1, d: 1, description: 'Eine Handhebelmaschine aus glänzendem Messing mit Adler obendrauf. Kann alles – auch Latte-Art. Das Herz auf dem Milchschaum gelingt hier fast immer.' },
   { id: 'kaffeemaschine', name: 'Kaffeemaschine', style: 'basis', gift: true, small: true, price: 700, w: 1, d: 1, description: 'Eine glänzende Siebträgermaschine. Oli behandelt sie wie ein Familienmitglied.' },
   { id: 'plattenspieler', name: 'Plattenspieler', style: 'basis', gift: true, small: true, price: 800, w: 1, d: 1, description: 'Ein Plattenspieler mit Olis Lieblingsplatten. Laut aufdrehen erlaubt – meistens.' },
   { id: 'sternenlampe', name: 'Sternenlampe', style: 'basis', gift: true, small: true, light: true, price: 600, w: 1, d: 1, description: 'Eine kleine Lampe, die Sterne an die Wände malt. Von Oli, für gemütliche Abende.' },

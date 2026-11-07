@@ -96,6 +96,13 @@ Wetter und Feste laufen nach echter Zeit.
   Gewaltdetails, niemand wird verspottet (die Doku nimmt ihre Protagonisten ernst). Regeln
   in `game/tv.ts` (Folge pro Tag, Oli schaut mit, Kochshow lehrt Rezepte mit `tv: true`). Linas Herd =
   `CraftPanel` mit `station="herd"` (Küchen-Rezepte zu Hause).
+- **Kaffee:** Siebträgermaschinen in vier Preisklassen (`data/coffee.ts`, Möbel in `data/furniture.ts`): Einsteiger (650 ⭐, Espresso &
+  Lungo), Olis `kaffeemaschine` (Geschenk, mit Dampflanze: + Americano & Cappuccino), Zweikreiser (3200 ⭐, eingebaute Mühle:
+  + Café Crème, Latte Macchiato, Flat White) und Messing-Handhebelmaschine (8800 ⭐: + Latte-Art „Latte mit Herz“). Maschine
+  anschauen → Klassiker oder Milchschaum → Getränk (`World3D.coffeeMenu`, Regeln in `game/coffee.ts`). Beigaben, alle freiwillig:
+  **Kaffee-Kick** (Lina läuft bis zu 5 Spielminuten 22 % flotter, `Session.coffeeUntil`, nicht gespeichert), **Kaffee zu zweit**
+  mit Oli (einmal am Tag Freundschaft, bessere Maschine = mehr Punkte, Latte-Art +4) und ein Spruch bei der fünften Tasse am
+  Tag (Zähler `world.dates.kaffee` = „Datum:Anzahl“).
 - **Dr. No (Hommage):** Linas Lieblingsarzt aus der Doku „Schwerer Weg“ ist eine **ausgedachte** Figur (keine echte Person, keine
   echte Sendung): strenger, ruhiger Chirurg mit buschigen Brauen und gütigen Augen, der Patienten ernst nimmt („Ein Schritt. Dann
   noch einer.“). Drei Folgen (`data/tv.ts`, `lina`-Reaktion + eigene `oli`-Sprüche pro Folge), das **Dr.-No-Porträt** (`bild-dr-no`,
