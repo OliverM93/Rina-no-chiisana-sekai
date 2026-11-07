@@ -48,7 +48,7 @@ src/
                house.ts (Ausbaustufen 0–6, Räume, Preise, Start-Haus, Start-Einrichtung neuer Räume,
                `HOUSE_ANNEX` = Kacheln, die Anbauten außen belegen),
                npcs/ (je Bewohner eine Datei)
-               wardrobe.ts (Aufdruck-Kleidung, Bandnamen), recipes.ts (Rezepte), festivals.ts, meetups.ts,
+               wardrobe.ts (Aufdruck-Kleidung, Bandnamen), recipes.ts (Rezepte), flowers.ts (Blumenfarben & Mischregeln), festivals.ts, meetups.ts,
                tv.ts, animals.ts, fossils.ts, winston.ts, winter.ts, art.ts, progress.ts (Meilensteine)
   style/       palette.ts – EINZIGE Quelle für Farben (auch CSS-Variablen der UI)
   gfx/         2D-Zeichnungen für Texturen & Symbole: terrain.ts (Gelände-Textur), items.ts (Symbole), prints.ts (Kleidungs-Aufdrucke),
@@ -63,6 +63,7 @@ src/
     home.ts        Katalog kaufen, Möbel aufstellen/verschieben/wegräumen, Tapete & Boden, Ausbau & Kredit
     story.ts       Rahmenhandlung: Einzüge per Meilenstein (`data/progress.ts`) → Brief → nach kurzer Spielzeit Einzug
     progress.ts    aktueller Meilenstein, Fortschritt, sanfte Hinweise der Bewohner
+    flowers.ts     Blumen-Kreuzungen (Same-Wurf beim Pflücken), Sammelbuch-Einträge
     christin.ts    Christins Gießrunde & Ordnungstipp · winter.ts Adventskalender, Schneebälle, Punschstand
     digging.ts     Grabstellen (Thalia) · festivals.ts Fest-Sprüche & -Geschenke · gallery.ts Jens' Galerie
     dinner.ts      Sonntagsessen · meetups.ts Treffen der Bewohner · party.ts Thalias Party · tv.ts Fernsehabend

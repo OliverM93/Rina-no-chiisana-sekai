@@ -4,14 +4,15 @@
  */
 import { useEffect, useState } from 'preact/hooks';
 import { MONTHS } from '../core/time';
-import { CURRENCY } from '../data/items';
+import { CURRENCY, itemDef } from '../data/items';
 import { FINDS } from '../data/fossils';
+import { COLORS, FLOWER_SPECIES, MIXES, paletteOf, variantId } from '../data/flowers';
 import { FISH, FISH_HABITAT_LABELS, type FishDef, INSECT_HABITAT_LABELS, INSECTS, type InsectDef } from '../data/species';
 import type { Session } from '../game/session';
 import { itemIconUrl } from '../gfx/items';
 import { ui, useSessionVersion } from './store';
 
-type Tab = 'fische' | 'insekten' | 'funde';
+type Tab = 'fische' | 'insekten' | 'funde' | 'blumen';
 type Species = FishDef | InsectDef;
 
 function monthsLabel(months: readonly number[]): string {
@@ -34,8 +35,8 @@ function hoursLabel(h: readonly [number, number]): string {
   return `${h[0]}–${h[1] % 24} Uhr`;
 }
 
-const TABS = ['fische', 'insekten', 'funde'] as const;
-const TAB_LABELS: Record<Tab, string> = { fische: '🐟 Fische', insekten: '🦋 Insekten', funde: '🦴 Funde' };
+const TABS = ['fische', 'insekten', 'funde', 'blumen'] as const;
+const TAB_LABELS: Record<Tab, string> = { fische: '🐟 Fische', insekten: '🦋 Insekten', funde: '🦴 Funde', blumen: '🌷 Blumen' };
 
 /** Reiter „Funde“: Fossilien & Kristalle aus dem Boden */
 function FindsBook({ session, tab, setTab, close }: { session: Session; tab: Tab; setTab: (t: Tab) => void; close: () => void }) {
@@ -100,6 +101,86 @@ function FindsBook({ session, tab, setTab, close }: { session: Session; tab: Tab
   );
 }
 
+/** Reiter „Blumen“: jede Art in jeder Farbe – Mischfarben verraten nach dem Entdecken ihr Rezept */
+function FlowerBook({ session, tab, setTab, close }: { session: Session; tab: Tab; setTab: (t: Tab) => void; close: () => void }) {
+  const [selected, setSelected] = useState<string | null>(null);
+  const collection = session.data?.collection ?? {};
+  const all = FLOWER_SPECIES.flatMap((sp) => paletteOf(sp).map((c) => ({ sp, color: c, id: variantId(sp, c) })));
+  const found = all.filter((f) => collection[f.id]).length;
+  const sel = all.find((f) => f.id === selected) ?? null;
+  const entry = sel ? collection[sel.id] : undefined;
+  const mix = sel ? MIXES.find((m) => m.result === sel.color && paletteOf(sel.sp).includes(m.a) && paletteOf(sel.sp).includes(m.b)) : undefined;
+  return (
+    <div class="modal-layer" onPointerUp={(e) => e.target === e.currentTarget && close()}>
+      <div class="card book pop-in">
+        <h2 class="card-title">📖 Sammelbuch</h2>
+        <div class="book-tabs">
+          {TABS.map((t) => (
+            <button key={t} class={`chip ${tab === t ? 'active' : ''}`} onClick={() => setTab(t)}>
+              {TAB_LABELS[t]}
+            </button>
+          ))}
+          <span class="soft book-progress">
+            {found} / {all.length} entdeckt
+          </span>
+        </div>
+        <div class="flower-rows">
+          {FLOWER_SPECIES.map((sp) => (
+            <div key={sp.id} class="flower-row">
+              <span class="flower-row-name">{itemDef(sp.id)?.name}</span>
+              <div class="flower-row-cells">
+                {paletteOf(sp).map((c) => {
+                  const id = variantId(sp, c);
+                  const known = !!collection[id];
+                  return (
+                    <button key={id} class={`book-cell ${known ? '' : 'unknown'} ${selected === id ? 'selected' : ''}`} onClick={() => setSelected(id)} aria-label={known ? itemDef(id)?.name : 'unbekannt'}>
+                      <img src={itemIconUrl(id)} alt="" draggable={false} />
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          ))}
+        </div>
+        <div class="item-detail">
+          {sel && entry ? (
+            <>
+              <img src={itemIconUrl(sel.id, 96)} alt="" />
+              <div>
+                <div class="item-name">{itemDef(sel.id)?.name}</div>
+                <div class="item-cat">{sel.color === sel.sp.base ? 'Standardfarbe' : sel.sp.seedColors.includes(sel.color) ? 'Gibt es als Samen' : 'Mischfarbe'}</div>
+                <div class="item-desc">
+                  {sel.sp.crossColors.includes(sel.color) && mix
+                    ? `Entstanden aus ${COLORS[mix.a].label} × ${COLORS[mix.b].label}${mix.rare ? ' – klappt nur manchmal.' : '.'}`
+                    : itemDef(sel.id)?.description}
+                </div>
+                <div class="item-price">
+                  Wert: {itemDef(sel.id)?.price} {CURRENCY.icon}
+                  {entry.firstDay ? ` · zuerst erblüht am ${entry.firstDay.split('-').reverse().join('.')}` : ''}
+                </div>
+              </div>
+            </>
+          ) : sel ? (
+            <p class="soft center">
+              ??? – noch nicht erblüht.{' '}
+              {sel.sp.crossColors.includes(sel.color)
+                ? 'Diese Farbe entsteht nur durch Kreuzen.'
+                : 'Diese Farbe gibt es als Samen – vielleicht kommt Post?'}
+            </p>
+          ) : (
+            <p class="soft center">Blühen zwei Farben einer Art nebeneinander im Beet, fällt beim Pflücken manchmal ein Misch-Same ab. 🌷</p>
+          )}
+        </div>
+        <div class="card-actions">
+          <button class="btn ghost" onClick={close}>
+            Schließen
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export function CollectionBook({ session }: { session: Session }) {
   useSessionVersion(session);
   const [tab, setTab] = useState<Tab>('fische');
@@ -119,6 +200,7 @@ export function CollectionBook({ session }: { session: Session }) {
 
   const collection = session.data?.collection ?? {};
   if (tab === 'funde') return <FindsBook session={session} tab={tab} setTab={setTab} close={close} />;
+  if (tab === 'blumen') return <FlowerBook session={session} tab={tab} setTab={setTab} close={close} />;
   const list: readonly Species[] = tab === 'fische' ? FISH : INSECTS;
   const caught = list.filter((s) => collection[s.id]).length;
   const sel = list.find((s) => s.id === selected) ?? null;
