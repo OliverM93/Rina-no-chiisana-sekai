@@ -53,6 +53,7 @@ export const GISELA: NpcDef = {
       { text: ['Kindchen! Mein Lieblingsbesuch.', '… Ja, ich weiß, du bist mein einziger Besuch. Trotzdem.'], when: { minHearts: 2 } },
     ],
     chat: [
+      { text: ['Der Doktor im Fernsehen, den du so gern guckst – der mit den Augenbrauen –', 'Der erinnert mich an Ludwig, wenn er den Zaun streichen wollte und keiner ihm helfen durfte. Ernst. Und dann ganz weich. Köstlich.'] },
       { text: ['Du guckst immer noch diese Gruselfilme, Kind?', 'Pfui. Davon kriegt man Falten. … Erzähl mir trotzdem, wie er ausgeht.'] },
       { text: ['Du guckst immer diese Sendungen, wo sich fremde Leute zum Essen treffen.', 'Zu meiner Zeit hat man sich beim Tanztee kennengelernt. Ganz ohne Kamera. … Na gut, der Ludwig hatte eine dabei.'] },
       { text: ['Kindchen, du kochst so gern – das hast du von mir.', 'Nicht von deinem Vater. Der verbrennt sogar Wasser.'] },

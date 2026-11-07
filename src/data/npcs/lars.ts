@@ -44,6 +44,7 @@ export const LARS: NpcDef = {
       { text: ['Schnee! Schal an, Mütze auf!', 'Ärztliche Anordnung. Und brüderliche auch.'], when: { tags: ['wetter-schnee'] }, weight: 3 },
     ],
     chat: [
+      { text: ['Dr. Nowak aus „Schwerer Weg“ – kennst du den?', 'Fachlich gesehen: streng, aber fair. Genau so einen Chefarzt hätte ich mir manchmal gewünscht. Ich würde mit ihm einen Kaffee trinken.'] },
       { text: ['Du hast wieder Horrorfilme geguckt, oder?', 'Medizinisch gesehen: Gruseln ist gut für den Kreislauf. Kein Rezept nötig. Aber Popcorn in Maßen!'] },
       { text: ['Du guckst so gern diese Dokus über Menschen, die abnehmen wollen, oder?', 'Ehrlich, als Arzt: Die Leute dort sind echte Helden. Das ist so harte Arbeit.'] },
       { text: ['Tanzen ist gesund!', 'Ärztliche Empfehlung. Ich zeig dir gleich meinen Robot. Patentiert.'], when: { tags: ['party'] }, weight: 8 },

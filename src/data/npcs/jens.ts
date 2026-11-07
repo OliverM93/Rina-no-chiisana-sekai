@@ -47,6 +47,7 @@ export const JENS: NpcDef = {
       { text: ['Ein Regenbogen! 🌈', 'Na, wenn das mal kein Zeichen ist. Für uns Fabelhaften ist das ja quasi die Hausfahne.'], when: { tags: ['regenbogen'] }, weight: 5 },
     ],
     chat: [
+      { text: ['Dieser Dr. Nowak aus deiner Sendung, chérie! Diese Augenbrauen!', 'Ich würde sie malen. Auf eine große Leinwand. Titel: „Autorität in Schwarz-Grau“. Und dann ein Rahmen aus Gold.'] },
       { text: ['Ma chérie, du und deine Gruselfilme!', 'Ich sach dir was: Das Gruseligste, was ich je gesehn hab, war ne Tapete in nem Hotel in Wien. Mon dieu, nee, nee, nee.'] },
       { text: ['Nu, mei Gudste, haste heute schon was Schönes erlebt?', 'Nee? Dann wird\'s aber Zeit! Gugge, die Sonne scheint – oder sie scheint bald. Irgendwann.'] },
       { text: ['Kaffee? Mir sagen dazu „Gaffee“. Mit weichem G.', 'Und wenn er gut is: „Scheener Gaffee!“ Na los, sag\'s mal nach! … Fast. Üben wir noch.'] },
