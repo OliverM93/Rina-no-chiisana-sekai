@@ -120,9 +120,12 @@ src/
 - **Tag & Nacht:** Sonne/Himmel/Nebel nach Uhrzeit, Fenster & Laternen leuchten (Emissive + Punktlichter
   an den nächstgelegenen Laternen).
 - **Klang:** `GameAudio` (`audio/Audio.ts`) startet nach der ersten Taste/Klick (Browser-Regel). **Musik:** draußen
-  Natur-Themen nach Tageszeit/Wetter (am Strand dieselbe Musik, nur mit Meeresrauschen), nahe an Häusern das Thema der Bewohner (`data/music.ts`:
+  Natur-Themen nach Tageszeit/Wetter (am Strand dieselbe Musik, nur mit Meeresrauschen). Jedes Natur-Thema ist eine
+  **Familie mit 3–5 Liedern** (`THEMES` in `core/music.ts`, z. B. Tag: Sonnenwiese, Plätscherbach, Picknickdecke …; am Tag kommt
+  ein Lied der Jahreszeit dazu, `themesFor`); bei jedem neuen Lied nimmt `pickTheme` reihum das nächste, `GameAudio` merkt sich
+  Familie (`family`) und laufendes Lied (`mood`). Nahe an Häusern das Thema der Bewohner (`data/music.ts`:
   Olaf & Christin, Oma, Bistro, Praxis, Thalia), zu Hause „Lini & Oli“ (ab Olis Einzug). Ortswechsel greift am
-  nächsten Taktende. Zum Anhören `?musik=bistro` an die URL hängen. **Stimmen:** `data/voices.ts` (Tonhöhe,
+  nächsten Taktende. Zum Anhören `?musik=bistro` (oder ein einzelnes Lied wie `?musik=tag-bach`) an die URL hängen. **Stimmen:** `data/voices.ts` (Tonhöhe,
   Kopfgröße/Formanten, Lebhaftigkeit, Hauch; Männer tiefer), Silben aus `core/babble.ts`. Geräusche
   laufen über das Bus-Event `sfx` (`session.bus.emit('sfx', 'muenzen')`), Lautstärke über `settings:changed`.
   `main.ts` setzt alle 2 s Stimmung (`moodFor`) und Umgebung. Hörprobe ohne Lautsprecher:
