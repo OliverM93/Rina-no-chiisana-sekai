@@ -238,7 +238,7 @@ export function composePhrase(mood: Mood, seed: number): NoteEvent[] {
 /** Stimmung aus Uhrzeit, Wetter & Ort (`place` = Thema des nahen Gebäudes, `home` = Thema zu Hause) */
 export function moodFor(
   hour: number,
-  opts: { raining: boolean; snowing: boolean; inside: boolean; party: boolean; place?: Mood | null; home?: Mood; nearSea?: boolean },
+  opts: { raining: boolean; snowing: boolean; inside: boolean; party: boolean; place?: Mood | null; home?: Mood },
 ): Mood {
   const night = hour >= 22 || hour < 5;
   if (opts.party) return 'party';
@@ -247,7 +247,6 @@ export function moodFor(
   if (opts.place) return opts.place;
   if (opts.raining) return 'regen';
   if (opts.snowing) return 'schnee';
-  if (opts.nearSea && hour >= 9 && hour < 18) return 'strand';
   if (hour < 9) return 'morgen';
   if (hour >= 18) return 'abend';
   return 'tag';

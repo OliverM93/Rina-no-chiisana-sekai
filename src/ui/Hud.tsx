@@ -10,7 +10,7 @@ import { currentWeather, ownedTools, toggleTool } from '../game/nature';
 import { itemIconUrl } from '../gfx/items';
 import type { Session } from '../game/session';
 import { formatMoney, hasUnreadMail } from '../game/gameplay';
-import { ui, useSessionVersion } from './store';
+import { ui, useSessionVersion, useUI } from './store';
 import { DecorBar, useHomeState } from './DecorBar';
 
 const PHASE_ICON: Record<string, string> = {
@@ -35,6 +35,10 @@ export function Hud({ session }: { session: Session }) {
   const weather = currentWeather(session);
   const tools = ownedTools(session);
   const { inside, inYard, decor } = useHomeState(session);
+  // Solange ein Dialog, Fenster oder eine Rückfrage offen ist, sind Menü & Knöpfe gesperrt
+  const ustate = useUI();
+  const busy = !!(ustate.dialog || ustate.panel || ustate.confirm);
+  const openPanel = (panel: NonNullable<typeof ustate.panel>) => !busy && ui.set({ panel });
   const [stars, setStars] = useState(false);
   useEffect(() => session.bus.on('overlay:stars', setStars), [session]);
   const [fade, setFade] = useState(false);
@@ -58,26 +62,34 @@ export function Hud({ session }: { session: Session }) {
           {weather.rainbow ? '🌈 Regenbogen!' : `${WEATHER_ICONS[weather.kind]} ${WEATHER_LABELS[weather.kind]}`}
         </div>
       </div>
-      <button class="hud-menu-button pop-in" aria-label="Menü öffnen" onClick={() => ui.set({ menuOpen: true })}>
+      <button class="hud-menu-button pop-in" aria-label="Menü öffnen" disabled={busy} onClick={() => !busy && ui.set({ menuOpen: true })}>
         <span />
         <span />
         <span />
       </button>
+      <div class="hud-zoom pop-in">
+        <button aria-label="Hineinzoomen" title="Hineinzoomen" disabled={busy} onClick={() => session.bus.emit('camera:zoom', 'in')}>
+          ＋
+        </button>
+        <button aria-label="Herauszoomen" title="Herauszoomen" disabled={busy} onClick={() => session.bus.emit('camera:zoom', 'out')}>
+          －
+        </button>
+      </div>
       <div class="hud-bottom pop-in">
         <div class="hud-money" aria-label="Sternchen">
           {formatMoney(session.data?.money ?? 0)}
         </div>
         {session.data?.flags.thaliaBegruesst && (
-          <button class="hud-bag hud-book" aria-label="Dorfkarte öffnen (M)" title="Dorfkarte (M)" onClick={() => ui.set({ panel: { kind: 'karte' } })}>
+          <button class="hud-bag hud-book" aria-label="Dorfkarte öffnen (M)" title="Dorfkarte (M)" disabled={busy} onClick={() => openPanel({ kind: 'karte' })}>
             🗺️
             <span class="hud-tool-key">M</span>
           </button>
         )}
-        <button class="hud-bag hud-book" aria-label="Sammelbuch öffnen (B)" title="Sammelbuch (B)" onClick={() => ui.set({ panel: { kind: 'book' } })}>
+        <button class="hud-bag hud-book" aria-label="Sammelbuch öffnen (B)" title="Sammelbuch (B)" disabled={busy} onClick={() => openPanel({ kind: 'book' })}>
           📖
           <span class="hud-tool-key">B</span>
         </button>
-        <button class="hud-bag" aria-label="Tasche öffnen (I)" title="Tasche (I)" onClick={() => ui.set({ panel: { kind: 'inventory' } })}>
+        <button class="hud-bag" aria-label="Tasche öffnen (I)" title="Tasche (I)" disabled={busy} onClick={() => openPanel({ kind: 'inventory' })}>
           🎒
           <span class="hud-tool-key">I</span>
         </button>

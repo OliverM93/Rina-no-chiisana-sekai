@@ -10,7 +10,7 @@ import { creditInterest } from '../core/bank';
 import { INTEREST_LETTERS } from '../data/npcs/olaf';
 import { dailySpawns, type DailySpawn, weightedPick } from '../core/daily';
 import { type DialogueContext, pickLine } from '../core/dialogue';
-import { claimHeartRewards, createNpcState, giveGift, type GiftReaction, heartsFor, type NpcState, talk } from '../core/friendship';
+import { claimHeartRewards, createNpcState, giveGift, type GiftReaction, heartsFor, type NpcState, type Preferences, talk } from '../core/friendship';
 import { addItem as invAdd, removeItem as invRemove, takeSlot } from '../core/inventory';
 import { deliver, mailDue, unreadCount } from '../core/mail';
 import { hashString, mulberry32 } from '../core/rng';
@@ -18,7 +18,7 @@ import { formatIsoDay, getDayPhase, getSeason, isSameDayMonth } from '../core/ti
 import { daysUntilBirthday, festivalsOn } from '../core/festivals';
 import { weatherAt } from '../core/weather';
 import { terrainAt } from '../core/worldmap';
-import { BEACH_FINDS, BEACH_FINDS_PER_DAY, CURRENCY, isKeepsake, itemCountLabel, itemDef, maxStackOf, ROCK_FINDS } from '../data/items';
+import { BEACH_FINDS, BEACH_FINDS_PER_DAY, CURRENCY, GARDEN_FLOWER, isKeepsake, itemCountLabel, itemDef, maxStackOf, ROCK_FINDS, speciesOfFlower } from '../data/items';
 import { fillPlaceholders } from '../data/interactions';
 import { FURNITURE_BY_ITEM } from '../data/furniture';
 import { NPC_BY_ID, NPCS } from '../data/npcs';
@@ -269,17 +269,32 @@ export interface GiftOutcome extends TalkOutcome {
   reaction: GiftReaction;
 }
 
+/**
+ * Vorlieben für Blumen in anderen Farben: Wer die Art mag, mag auch jede Farbe. Neue Mischfarben sind etwas
+ * Besonderes – sie kommen bei niemandem schlecht an.
+ */
+export function giftPreferences(prefs: Preferences, itemId: string): Preferences {
+  const gf = GARDEN_FLOWER[itemId];
+  if (!gf || gf.species === itemId) return prefs;
+  const listed = (l: readonly string[]) => l.includes(itemId) || l.includes(gf.species);
+  return {
+    loves: listed(prefs.loves) ? [itemId] : [],
+    likes: listed(prefs.likes) || (gf.crossOnly && !listed(prefs.loves)) ? [itemId] : [],
+    dislikes: listed(prefs.dislikes) && !gf.crossOnly ? [itemId] : [],
+  };
+}
+
 export function giftToNpc(session: Session, npcId: string, itemId: string): GiftOutcome | null {
   const npc = NPC_BY_ID[npcId];
   // Werkzeuge & Erinnerungsstücke behält Lina (sonst wären sie für immer weg)
   if (!npc || isKeepsake(itemId) || !takeItem(session, itemId, 1)) return null;
   const st = npcState(session, npcId);
-  const r = giveGift(st, npc.preferences, itemId, session.today());
+  const r = giveGift(st, giftPreferences(npc.preferences, itemId), itemId, session.today());
   const lines: string[] = [];
   if (r.repeatToday) {
     lines.push(...npc.dialogue.giftRepeat);
   } else {
-    const special = npc.dialogue.giftsByItem[itemId];
+    const special = npc.dialogue.giftsByItem[itemId] ?? npc.dialogue.giftsByItem[speciesOfFlower(itemId)];
     lines.push(...(special ?? pickByDay(session, `${npcId}:gift:${itemId}`, npc.dialogue.gifts[r.reaction])));
   }
   // Geburtstagsgeschenk: doppelte Freude
