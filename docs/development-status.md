@@ -262,6 +262,7 @@ Legende: ✅ erledigt · 🚧 in Arbeit · ⬜ geplant
   - ⬜ Phase 3 – Gemüse & Kräuter zum Kochen
   - ⬜ Phase 4 – Sträuße & Blumendeko (Vase, Kranz, Geschenke)
   - ⬜ Phase 5 – Gewächshaus für den Winter
+- ✅ **Mehr Musik draußen:** 23 neue Lieder (Tag, Morgen, Abend, Nacht, Regen, Schnee + je ein Tageslied pro Jahreszeit), die sich bei jedem neuen Lied reihum abwechseln
 - ✅ **M8o Wand-Deko & Regale:** Wand-Deko darf über niedrigen Möbeln hängen (Höhenprüfung), Tassenbord statt langem Standregal (4 Tassen je Feld), Hellerau-Leiterregale (3 Stück, 4 Farben)
 - ✅ **M8n Sammeltassen:** 19 Tassen (Klassik, Saison, Städte) der ausgedachten Kette „Sternenbohne“, Tassenregal, Städte-Tassen von Jens' Reisen, Thalia & Oli
 - ⬜ Weitere Animationen & Partikel, Balancing

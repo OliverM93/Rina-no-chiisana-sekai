@@ -6,6 +6,7 @@
  * Form A – A' – B – A' – Pause(C), danach beginnt ein neues Lied mit neuem Motiv.
  */
 import { mulberry32 } from './rng';
+import type { Season } from './time';
 
 export type Mood =
   | 'morgen'
@@ -22,7 +23,31 @@ export type Mood =
   | 'bistro'
   | 'praxis'
   | 'thalia'
-  | 'strand';
+  | 'strand'
+  // --- weitere Themen draußen: je Tageszeit/Wetter mehrere Lieder, die sich abwechseln (siehe THEMES)
+  | 'tag-bach'
+  | 'tag-picknick'
+  | 'tag-wolken'
+  | 'tag-schmetterling'
+  | 'tag-knospen'
+  | 'tag-eis'
+  | 'tag-laub'
+  | 'tag-frost'
+  | 'morgen-nebel'
+  | 'morgen-vogel'
+  | 'morgen-kaffee'
+  | 'abend-lagerfeuer'
+  | 'abend-grillen'
+  | 'abend-laterne'
+  | 'nacht-mond'
+  | 'nacht-eule'
+  | 'nacht-sternschnuppe'
+  | 'regen-pfuetze'
+  | 'regen-fenster'
+  | 'regen-schirm'
+  | 'schnee-schlitten'
+  | 'schnee-kamin'
+  | 'schnee-wald';
 
 export type Lead = 'spieluhr' | 'marimba' | 'floete' | 'epiano' | 'akkordeon' | 'zupf' | 'glocke';
 
@@ -59,6 +84,9 @@ const MINOR = [0, 2, 3, 5, 7, 8, 10];
 const HARMONIC_MINOR = [0, 2, 3, 5, 7, 8, 11];
 const MIXOLYDIAN = [0, 2, 4, 5, 7, 9, 10];
 const MAJOR_PENTA = [0, 2, 4, 7, 9];
+const MINOR_PENTA = [0, 3, 5, 7, 10];
+const DORIAN = [0, 2, 3, 5, 7, 9, 10];
+const LYDIAN = [0, 2, 4, 6, 7, 9, 11];
 
 const base = { sevenths: false, bass: true, drums: 'keine', swing: 0, beats: 8 } as const;
 
@@ -80,7 +108,67 @@ export const MOODS: Record<Mood, MoodDef> = {
   bistro: { ...base, name: 'Chez Jens', bpm: 126, root: 62, scale: HARMONIC_MINOR, progressions: [[0, 3, 4, 0], [5, 3, 4, 4], [0, 0, 3, 4]], beats: 6, density: 0.7, lead: 'akkordeon', lead2: 'akkordeon', accomp: 'walzer' },
   praxis: { ...base, name: 'Tief durchatmen', bpm: 82, root: 67, scale: MAJOR, progressions: [[0, 2, 3, 4], [0, 5, 3, 4]], density: 0.42, lead: 'marimba', lead2: 'glocke', accomp: 'arp' },
   thalia: { ...base, name: 'Auf zu neuen Funden', bpm: 108, root: 62, scale: MIXOLYDIAN, progressions: [[0, 6, 3, 0], [0, 3, 6, 4]], density: 0.62, lead: 'zupf', lead2: 'floete', accomp: 'zupf', drums: 'besen', swing: 0.1 },
+  // --- weitere Lieder draußen -------------------------------------------------
+  // Tag
+  'tag-bach': { ...base, name: 'Plätscherbach', bpm: 92, root: 62, scale: MAJOR_PENTA, progressions: [[0, 2, 3, 1], [0, 3, 2, 4], [1, 3, 0, 4]], beats: 6, density: 0.55, lead: 'floete', lead2: 'glocke', accomp: 'zupf' },
+  'tag-picknick': { ...base, name: 'Picknickdecke', bpm: 104, root: 60, scale: MIXOLYDIAN, progressions: [[0, 6, 3, 0], [0, 3, 4, 0]], density: 0.6, lead: 'zupf', lead2: 'marimba', accomp: 'zupf', drums: 'besen', swing: 0.2 },
+  'tag-wolken': { ...base, name: 'Wolkenschaukeln', bpm: 74, root: 65, scale: MAJOR, progressions: [[0, 4, 5, 3], [3, 0, 4, 5], [0, 2, 3, 4]], density: 0.38, lead: 'epiano', lead2: 'spieluhr', accomp: 'pad', sevenths: true },
+  'tag-schmetterling': { ...base, name: 'Schmetterlingstanz', bpm: 112, root: 67, scale: MAJOR_PENTA, progressions: [[0, 3, 4, 2], [0, 2, 3, 4]], density: 0.7, lead: 'marimba', lead2: 'glocke', accomp: 'arp' },
+  // Tag nach Jahreszeit
+  'tag-knospen': { ...base, name: 'Knospenzeit', bpm: 100, root: 66, scale: MAJOR, progressions: [[0, 3, 0, 4], [5, 4, 0, 3]], density: 0.55, lead: 'floete', lead2: 'marimba', accomp: 'arp' },
+  'tag-eis': { ...base, name: 'Eis am Stiel', bpm: 108, root: 60, scale: MIXOLYDIAN, progressions: [[0, 3, 6, 3], [0, 6, 3, 0]], density: 0.6, lead: 'marimba', lead2: 'zupf', accomp: 'zupf', drums: 'besen', swing: 0.18 },
+  'tag-laub': { ...base, name: 'Raschelndes Laub', bpm: 86, root: 57, scale: DORIAN, progressions: [[0, 3, 0, 4], [0, 6, 3, 0]], density: 0.5, lead: 'floete', lead2: 'epiano', accomp: 'zupf' },
+  'tag-frost': { ...base, name: 'Raureif', bpm: 76, root: 64, scale: MAJOR_PENTA, progressions: [[0, 3, 0, 4], [0, 2, 3, 0]], density: 0.35, lead: 'glocke', lead2: 'spieluhr', accomp: 'pad', bass: false },
+  // Morgen
+  'morgen-nebel': { ...base, name: 'Nebelwiese', bpm: 66, root: 60, scale: MAJOR_PENTA, progressions: [[0, 3, 2, 4], [0, 2, 4, 3]], density: 0.3, lead: 'spieluhr', lead2: 'floete', accomp: 'pad', bass: false },
+  'morgen-vogel': { ...base, name: 'Frühes Vogelkonzert', bpm: 100, root: 64, scale: LYDIAN, progressions: [[0, 1, 0, 4], [0, 1, 4, 0]], density: 0.6, lead: 'floete', lead2: 'marimba', accomp: 'zupf', swing: 0.08 },
+  'morgen-kaffee': { ...base, name: 'Erster Kaffee', bpm: 80, root: 63, scale: MAJOR, progressions: [[1, 4, 0, 5], [0, 5, 1, 4]], density: 0.45, lead: 'epiano', lead2: 'marimba', accomp: 'pad', sevenths: true, drums: 'besen', swing: 0.22 },
+  // Abend
+  'abend-lagerfeuer': { ...base, name: 'Lagerfeuer', bpm: 72, root: 57, scale: DORIAN, progressions: [[0, 3, 0, 4], [0, 6, 3, 0]], density: 0.42, lead: 'zupf', lead2: 'floete', accomp: 'zupf' },
+  'abend-grillen': { ...base, name: 'Grillenkonzert', bpm: 84, root: 62, scale: MAJOR_PENTA, progressions: [[0, 3, 4, 3], [0, 4, 2, 3]], density: 0.45, lead: 'marimba', lead2: 'spieluhr', accomp: 'arp' },
+  'abend-laterne': { ...base, name: 'Laternenweg', bpm: 96, root: 58, scale: MAJOR, progressions: [[0, 4, 0, 3], [5, 1, 4, 0]], beats: 6, density: 0.5, lead: 'floete', lead2: 'glocke', accomp: 'walzer' },
+  // Nacht
+  'nacht-mond': { ...base, name: 'Mondschein', bpm: 56, root: 62, scale: MINOR_PENTA, progressions: [[0, 3, 2, 4], [0, 2, 3, 0]], density: 0.25, lead: 'glocke', lead2: 'spieluhr', accomp: 'pad', bass: false },
+  'nacht-eule': { ...base, name: 'Eulenwacht', bpm: 60, root: 55, scale: DORIAN, progressions: [[0, 3, 0, 6], [0, 4, 3, 0]], density: 0.3, lead: 'epiano', lead2: 'glocke', accomp: 'pad', sevenths: true, swing: 0.15 },
+  'nacht-sternschnuppe': { ...base, name: 'Sternschnuppe', bpm: 66, root: 64, scale: MAJOR_PENTA, progressions: [[0, 4, 3, 2], [0, 2, 4, 0]], density: 0.35, lead: 'spieluhr', lead2: 'glocke', accomp: 'arp', bass: false },
+  // Regen
+  'regen-pfuetze': { ...base, name: 'Pfützenhüpfen', bpm: 98, root: 60, scale: MAJOR, progressions: [[0, 5, 3, 4], [0, 3, 4, 0]], density: 0.6, lead: 'marimba', lead2: 'zupf', accomp: 'zupf', drums: 'besen', swing: 0.15 },
+  'regen-fenster': { ...base, name: 'Am Fenster', bpm: 62, root: 58, scale: DORIAN, progressions: [[0, 3, 6, 3], [0, 4, 3, 0]], density: 0.3, lead: 'epiano', lead2: 'spieluhr', accomp: 'pad', sevenths: true },
+  'regen-schirm': { ...base, name: 'Regenschirmwalzer', bpm: 92, root: 57, scale: MINOR, progressions: [[0, 5, 3, 4], [0, 2, 5, 4]], beats: 6, density: 0.5, lead: 'glocke', lead2: 'floete', accomp: 'walzer' },
+  // Schnee
+  'schnee-schlitten': { ...base, name: 'Schlittenfahrt', bpm: 112, root: 62, scale: MAJOR, progressions: [[0, 3, 4, 0], [0, 5, 3, 4]], density: 0.65, lead: 'glocke', lead2: 'marimba', accomp: 'zupf', drums: 'besen' },
+  'schnee-kamin': { ...base, name: 'Warme Stube', bpm: 64, root: 60, scale: MAJOR, progressions: [[0, 5, 3, 4], [3, 0, 1, 4]], density: 0.35, lead: 'epiano', lead2: 'spieluhr', accomp: 'pad', sevenths: true },
+  'schnee-wald': { ...base, name: 'Verschneiter Wald', bpm: 58, root: 65, scale: MAJOR_PENTA, progressions: [[0, 2, 3, 0], [0, 3, 4, 3]], density: 0.28, lead: 'spieluhr', lead2: 'glocke', accomp: 'pad', bass: false },
 };
+
+/**
+ * Lieder-Familien draußen: Zu jeder Tageszeit/Wetterlage gehören mehrere Lieder. Zuerst das Hauptthema, dann die
+ * weiteren. Bei jedem neuen Lied kommt reihum das nächste dran (`pickTheme`), damit es nicht langweilig wird.
+ */
+export const THEMES: Partial<Record<Mood, readonly Mood[]>> = {
+  tag: ['tag', 'tag-bach', 'tag-picknick', 'tag-wolken', 'tag-schmetterling'],
+  morgen: ['morgen', 'morgen-nebel', 'morgen-vogel', 'morgen-kaffee'],
+  abend: ['abend', 'abend-lagerfeuer', 'abend-grillen', 'abend-laterne'],
+  nacht: ['nacht', 'nacht-mond', 'nacht-eule', 'nacht-sternschnuppe'],
+  regen: ['regen', 'regen-pfuetze', 'regen-fenster', 'regen-schirm'],
+  schnee: ['schnee', 'schnee-schlitten', 'schnee-kamin', 'schnee-wald'],
+};
+
+/** Zusätzliche Tageslieder je Jahreszeit */
+const SEASON_THEMES: Record<Season, Mood> = { fruehling: 'tag-knospen', sommer: 'tag-eis', herbst: 'tag-laub', winter: 'tag-frost' };
+
+/** Alle Lieder, die für ein Thema infrage kommen (Orts-Themen & Co. haben nur ihr eigenes) */
+export function themesFor(base: Mood, season?: Season): Mood[] {
+  const list = THEMES[base];
+  if (!list) return [base];
+  return base === 'tag' && season ? [...list, SEASON_THEMES[season]] : [...list];
+}
+
+/** Welches Lied beginnt als nächstes? Reihum durch die Familie, der Start hängt vom Zufallswert der Sitzung ab. */
+export function pickTheme(base: Mood, song: number, seed: number, season?: Season): Mood {
+  const list = themesFor(base, season);
+  return list[(((song + seed) % list.length) + list.length) % list.length];
+}
 
 export interface NoteEvent {
   /** Start in Achteln ab Beginn des Abschnitts */

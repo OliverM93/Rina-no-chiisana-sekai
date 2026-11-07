@@ -7,7 +7,8 @@
  * Zeitplanung in echter Zeit (setInterval + AudioContext-Zeit), damit die Musik
  * auch in Hintergrund-Tabs nicht stolpert.
  */
-import { composeSection, FORM, midiToHz, type Lead, type Mood, MOODS, type NoteEvent, sectionSteps } from '../core/music';
+import { composeSection, FORM, midiToHz, type Lead, type Mood, MOODS, type NoteEvent, pickTheme, sectionSteps } from '../core/music';
+import type { Season } from '../core/time';
 import { BABBLE_EVERY, type Voice } from '../data/voices';
 import { syllableAt, type Syllable } from '../core/babble';
 
@@ -43,8 +44,12 @@ export class GameAudio {
   private sfxBus!: GainNode;
   private ambBus!: GainNode;
   private noise!: AudioBuffer;
+  /** Das Lied, das gerade gespielt wird (ein Thema aus der Familie von `family`) */
   private mood: Mood = 'tag';
+  /** Das Thema, zu dem das laufende Lied gehört (Tageszeit/Wetter/Ort) */
+  private family: Mood = 'tag';
   private nextMood: Mood = 'tag';
+  private season: Season | undefined;
   private phrase: NoteEvent[] = [];
   private phraseStart = 0;
   private phraseEnd = 0;
@@ -149,8 +154,9 @@ export class GameAudio {
   }
 
   /** Stimmung wechseln – greift am Ende der aktuellen Phrase */
-  setMood(m: Mood) {
+  setMood(m: Mood, season?: Season) {
     this.nextMood = m;
+    this.season = season;
   }
 
   setAmbience(a: Ambience) {
@@ -176,7 +182,7 @@ export class GameAudio {
     const now = ctx.currentTime;
     const ahead = now + 0.4;
     // Ortswechsel: laufenden Abschnitt am nächsten Taktende beenden statt bis zu 20 s zu warten
-    if (this.phrase.length > 0 && this.nextMood !== this.mood && this.cutFor !== this.nextMood) {
+    if (this.phrase.length > 0 && this.nextMood !== this.family && this.cutFor !== this.nextMood) {
       this.cutFor = this.nextMood;
       const sd = this.stepDur();
       const barSteps = MOODS[this.mood].beats;
@@ -199,11 +205,13 @@ export class GameAudio {
       // nächster Abschnitt erst, wenn der laufende zu Ende ist (sonst rutscht die Startzeit weg)
       if (this.scheduled < this.phrase.length || this.phraseEnd > ahead) break;
       const start = Math.max(this.phraseEnd, now + 0.05);
-      if (this.mood !== this.nextMood) this.sectionIndex = Math.ceil(this.sectionIndex / FORM.length) * FORM.length; // neues Lied
-      this.mood = this.nextMood;
+      if (this.family !== this.nextMood) this.sectionIndex = Math.ceil(this.sectionIndex / FORM.length) * FORM.length; // neues Lied
+      this.family = this.nextMood;
       this.cutFor = null;
       const song = Math.floor(this.sectionIndex / FORM.length);
       const part = FORM[this.sectionIndex % FORM.length];
+      // Zu Beginn jedes Liedes kommt reihum das nächste Thema der Familie dran – so wiederholt sich draußen nichts
+      if (this.sectionIndex % FORM.length === 0) this.mood = pickTheme(this.family, song, this.seed, this.season);
       this.sectionIndex++;
       this.phrase = composeSection(this.mood, this.seed + song * 13, part);
       this.phraseStart = start;

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { composeSection, degreeToMidi, FORM, midiToHz, type Mood, MOODS, moodFor, placeMood, sectionSteps } from './music';
+import { composeSection, degreeToMidi, FORM, midiToHz, type Mood, MOODS, moodFor, pickTheme, placeMood, sectionSteps, THEMES, themesFor } from './music';
 
 const ALL = Object.keys(MOODS) as Mood[];
 
@@ -61,6 +61,29 @@ describe('Musik', () => {
     expect(placeMood(1, 0, places, (id) => centers[id])).toBe('oma');
     expect(placeMood(4, 0, places, (id) => centers[id])).toBe('bistro');
     expect(placeMood(20, 20, places, (id) => centers[id])).toBe(null);
+  });
+
+  it('draußen wechseln sich mehrere Lieder ab, jedes Lied hat sein eigenes Gesicht', () => {
+    for (const [base, list] of Object.entries(THEMES) as [Mood, readonly Mood[]][]) {
+      expect(list[0], base).toBe(base);
+      expect(list.length, base).toBeGreaterThanOrEqual(4);
+      expect(new Set(list).size).toBe(list.length);
+      for (const m of list) expect(MOODS[m], m).toBeTruthy();
+      // aufeinanderfolgende Lieder sind verschieden, nach einer Runde ist jedes einmal drangewesen
+      const songs = Array.from({ length: list.length }, (_, i) => pickTheme(base, i, 12345));
+      expect(new Set(songs).size).toBe(list.length);
+      for (let i = 1; i < 12; i++) expect(pickTheme(base, i, 99)).not.toBe(pickTheme(base, i - 1, 99));
+    }
+    // Namen und Klang unterscheiden sich
+    const names = Object.values(MOODS).map((m) => m.name);
+    expect(new Set(names).size).toBe(names.length);
+    // Tageslieder je Jahreszeit
+    expect(themesFor('tag', 'sommer')).toContain('tag-eis');
+    expect(themesFor('tag', 'winter')).toContain('tag-frost');
+    expect(themesFor('tag', 'winter')).not.toContain('tag-eis');
+    // Orts-Themen bleiben bei ihrem Lied
+    expect(themesFor('oma', 'sommer')).toEqual(['oma']);
+    expect(pickTheme('bistro', 7, 3)).toBe('bistro');
   });
 
   it('Hilfsfunktionen', () => {
