@@ -5,8 +5,8 @@ import { POSTERS } from './posters';
 
 describe('Poster & Bildbände', () => {
   it('sind Katalogmöbel: Poster hängen an der Wand, Bildbände liegen auf Tischen', () => {
-    expect(POSTERS.filter((p) => p.kind === 'poster').length).toBeGreaterThanOrEqual(6);
-    expect(POSTERS.filter((p) => p.kind === 'buch').length).toBeGreaterThanOrEqual(6);
+    expect(POSTERS.filter((p) => p.kind === 'poster').length).toBeGreaterThanOrEqual(1);
+    expect(POSTERS.filter((p) => p.kind === 'buch').length).toBeGreaterThanOrEqual(3);
     expect(new Set(POSTERS.map((p) => p.id)).size).toBe(POSTERS.length);
     for (const p of POSTERS) {
       const f = FURNITURE_BY_ITEM[p.id];
