@@ -6,8 +6,9 @@
  * Gegenständen (`zabuton-rosa`, `zabuton-indigo` …).
  */
 import { ARTWORKS } from './art';
+import { POSTERS } from './posters';
 
-export type FurnitureStyle = 'japanisch' | 'basis' | 'cottage' | 'retro' | 'modern' | 'midcentury' | 'handgemacht' | 'garten' | 'kunst' | 'winter';
+export type FurnitureStyle = 'japanisch' | 'basis' | 'cottage' | 'retro' | 'modern' | 'midcentury' | 'handgemacht' | 'garten' | 'kunst' | 'winter' | 'lieblinge';
 
 export interface FurnitureDef {
   /** Basis-ID (ohne Variante) */
@@ -230,10 +231,13 @@ export const FLOORS: readonly SurfaceDef[] = [
   { id: 'boden-teppich', name: 'Rosa Teppichboden', style: 'basis', price: 500, kind: 'boden', pattern: 'teppich', color: '#f7c6d4', accent: '#f4b3c6', description: 'Flauschig und weich unter den Füßen.' },
 ];
 
+// Poster (Wand) & Bildbände (Tisch) zu Linas Lieblingsthemen aus `posters.ts`
+for (const p of POSTERS) (FURNITURE as FurnitureDef[]).push({ id: p.id, name: p.name, style: 'lieblinge', wall: p.kind === 'poster' || undefined, small: p.kind === 'buch' || undefined, price: p.price, w: 1, d: 1, description: p.description });
+
 // Kunstwerke (Bild auf Staffelei) aus `art.ts` – nur über Jens erhältlich
 for (const a of ARTWORKS) (FURNITURE as FurnitureDef[]).push({ id: a.id, name: a.name, style: 'kunst', gift: true, price: a.price, w: 1, d: 1, description: `${a.description} – ${a.artist}` });
 
-export const STYLE_LABELS: Record<FurnitureStyle, string> = { japanisch: 'Japanisch', basis: 'Basis', cottage: 'Cottagecore', retro: 'Retro-Oma-Chic', modern: 'Modern', midcentury: 'Mid-Century & Bauhaus', handgemacht: 'Handgemacht', garten: 'Garten', kunst: 'Kunst', winter: 'Winterzauber' };
+export const STYLE_LABELS: Record<FurnitureStyle, string> = { japanisch: 'Japanisch', basis: 'Basis', cottage: 'Cottagecore', retro: 'Retro-Oma-Chic', modern: 'Modern', midcentury: 'Mid-Century & Bauhaus', handgemacht: 'Handgemacht', garten: 'Garten', kunst: 'Kunst', winter: 'Winterzauber', lieblinge: 'Lieblingsthemen' };
 
 /** Möbel-Gegenstand (mit Variante) → Basis + Farbe */
 export interface FurnitureItem {

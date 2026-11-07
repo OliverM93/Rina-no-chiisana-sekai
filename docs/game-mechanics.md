@@ -86,6 +86,12 @@ Wetter und Feste laufen nach echter Zeit.
   Gewaltdetails, niemand wird verspottet (die Doku nimmt ihre Protagonisten ernst). Regeln
   in `game/tv.ts` (Folge pro Tag, Oli schaut mit, Kochshow lehrt Rezepte mit `tv: true`). Linas Herd =
   `CraftPanel` mit `station="herd"` (Küchen-Rezepte zu Hause).
+- **Poster & Bildbände (Lieblingsthemen):** `data/posters.ts` – 7 Poster (Wand-Deko) und 7 Coffee-Table-Books (kleine Bildbände für
+  Tische) zu Linas Vorlieben: Horrorfilme, Gruselromane, Synthesizer-Gruselkino, Zauberschul-Abenteuer, Kaffee, Dr. Nowak, Kawaii.
+  **Alle Titel, Autoren und Regisseure sind ausgedacht** („Die Nacht der lachenden Puppen“, Stan Kingsbury, Jon Schreiner,
+  „Der Zauberlehrling von Hohenkrähe“ …) – Hommagen an Genres und Stimmungen, keine echten Werke oder Personen. Stil
+  „Lieblingsthemen“ im Möbelkatalog. Gemalt wird in `gfx/posters.ts` (Motiv + Titel), die 3D-Modelle (Poster mit Rahmen, Stapel
+  Bildbände mit Cover oben) in `models/furniture.ts`. Neue Poster: Eintrag in `POSTERS` genügt.
 - **Galerie:** Kunstwerke in `data/art.ts` (werden Möbel im Stil „kunst“, Bild auf Staffelei, gemalt in
   `gfx/art.ts`), Regeln in `game/gallery.ts`, gestiftete Bilder in `SaveData.gallery`.
 - **Sonntagsessen:** `game/dinner.ts` – Gäste gehen per `{ kind: 'zuhause', at: 'bistro-jens' }` zu Jens

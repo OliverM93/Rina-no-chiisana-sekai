@@ -251,6 +251,7 @@ Legende: ✅ erledigt · 🚧 in Arbeit · ⬜ geplant
   Adventskranz, Kaminofen, Lebkuchenhaus, Nussknacker, Schneeflocken-Teppich & -Tapete, Lichtervorhang, Strumpf,
   Schlitten), Bratapfel & Zimtsterne, Punschstand am Weihnachtsbaum, Fußspuren im Schnee, Atemwölkchen,
   Schneeflocken fangen · Modelle für Sparschwein, Weihnachtsstern & Kuscheldecke (waren rosa Würfel)
+- ✅ **M8m Poster & Bildbände:** 7 Poster und 7 Coffee-Table-Books zu Linas Lieblingsthemen (ausgedachte Titel), Stil „Lieblingsthemen“
 - ⬜ Weitere Animationen & Partikel, Balancing
 
 ## 💡 Ideen-Parkplatz
