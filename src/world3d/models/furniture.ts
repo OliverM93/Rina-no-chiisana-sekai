@@ -980,8 +980,8 @@ export function makeFurniture(itemId: string, links: FenceLinks = { n: false, e:
       g.add(b(0.2, 0.012, 0.01, '#d9b45a', 0, HANG + 0.22, z + 0.03));
       break;
     }
-    case 'bild-nowak': {
-      // Dr. Nowak: weißer Kittel, graue Schläfen, buschige Brauen, Brille, Stethoskop – ernst und gütig
+    case 'bild-dr-no': {
+      // Dr. No: weißer Kittel, graue Schläfen, buschige Brauen, Brille, Stethoskop – ernst und gütig
       const z = WALL_Z;
       g.add(b(0.62, 0.74, 0.04, '#8a6a3a', 0, HANG, z));
       g.add(b(0.54, 0.66, 0.01, '#3f5a66', 0, HANG, z + 0.022));
