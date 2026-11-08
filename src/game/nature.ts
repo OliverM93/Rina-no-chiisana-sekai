@@ -3,10 +3,12 @@
  * Linas Beet und das Wetter.
  */
 import { isAvailable, pickSpecies, registerCatch } from '../core/catching';
-import { growGarden, pickBloom, plantSeed, spotKey, water } from '../core/garden';
+import { growGarden, pickBloom, plantSeed, removePlant, spotKey, water } from '../core/garden';
 import { hashString, mulberry32 } from '../core/rng';
 import { isPrecipitation, weatherAt, type WeatherNow } from '../core/weather';
-import { FLOWER_BY_SEED, itemDef, STARTER_TOOLS, type ToolId, TOOLS } from '../data/items';
+import { CROP_BY_ID, harvestCount } from '../data/crops';
+import { FLOWER_BY_SEED, itemDef, maxStackOf, STARTER_TOOLS, type ToolId, TOOLS } from '../data/items';
+import { spaceFor } from '../core/inventory';
 import { type FishDef, type FishHabitat, FISH, type InsectDef, INSECTS } from '../data/species';
 import { countItem } from '../core/inventory';
 import { itemIconUrl } from '../gfx/items';
@@ -201,7 +203,7 @@ export function waterAt(session: Session, x: number, y: number): boolean {
  * Blüte pflücken – manchmal fällt dabei ein Samenkorn ab. Blühen daneben Blumen derselben Art in anderer
  * Farbe, kann es ein Misch-Same sein (siehe `game/flowers.ts`).
  */
-export function pickGardenFlower(session: Session, x: number, y: number): { flower: string; seed: boolean; seedId: string | null; crossed: boolean } | null {
+export function pickGardenFlower(session: Session, x: number, y: number): { flower: string; seed: boolean; seedId: string | null; crossed: boolean; count: number; crop: boolean } | null {
   const data = session.data;
   if (!data) return null;
   const key = spotKey(x, y);
@@ -209,16 +211,21 @@ export function pickGardenFlower(session: Session, x: number, y: number): { flow
   if (!plant) return null;
   // Same-Wurf mit dem Zustand vor dem Pflücken (die Nachbarn blühen noch)
   const drop = seedDrop(data.world.garden, key, plant.flower, seedRandom(session, key));
+  // Gemüse & Kräuter: mehrere Stück je Ernte, Wurzelgemüse räumt den Platz
+  const crop = CROP_BY_ID[plant.flower];
+  const count = crop ? harvestCount(crop, seedRandom(session, `${key}:ernte`)()) : 1;
+  if (spaceFor(data.inventory, plant.flower, maxStackOf) < count) {
+    session.bus.emit('toast', { text: 'Deine Tasche ist voll! 🎒' });
+    return null; // passt nicht in die Tasche – bleibt stehen
+  }
   const flower = pickBloom(data.world.garden, key, session.today());
   if (!flower) return null;
-  if (giveItem(session, flower, 1, false) > 0) {
-    data.world.garden[key].stage = 3; // passt nicht mehr in die Tasche – bleibt stehen
-    return null;
-  }
+  giveItem(session, flower, count, false);
+  if (crop?.once) removePlant(data.world.garden, key);
   if (drop.seedId) giveItem(session, drop.seedId, 1, false);
   session.changed();
   session.save();
-  return { flower, seed: !!drop.seedId, seedId: drop.seedId, crossed: drop.crossed };
+  return { flower, seed: !!drop.seedId, seedId: drop.seedId, crossed: drop.crossed, count, crop: !!crop };
 }
 
 export function seedsInBag(session: Session): string[] {

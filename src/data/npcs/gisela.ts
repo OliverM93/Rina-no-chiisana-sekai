@@ -29,8 +29,8 @@ export const GISELA: NpcDef = {
     { from: '22:00', label: 'schläft', activity: { kind: 'zuhause', sleeping: true } },
   ],
   preferences: {
-    loves: ['pfirsich', 'herzmuschel', 'wildblumen', 'rose', 'vergissmeinnicht', 'hering', 'ei', 'apfelkuchen', 'lavendelkekse', 'kamillentee', 'kraeutermischung'],
-    likes: ['wachtelei', 'apfel', 'jakobsmuschel', 'schneckenhaus', 'seestern', 'glitzerstein', 'tulpe', 'lavendel', 'sonnenblume', 'scholle', 'dorsch', 'marienkaefer', 'zitronenfalter'],
+    loves: ['pfirsich', 'herzmuschel', 'wildblumen', 'rose', 'vergissmeinnicht', 'hering', 'ei', 'apfelkuchen', 'lavendelkekse', 'kamillentee', 'kraeutermischung', 'kartoffelsuppe', 'kraeuterquark'],
+    likes: ['wachtelei', 'apfel', 'jakobsmuschel', 'schneckenhaus', 'seestern', 'glitzerstein', 'tulpe', 'lavendel', 'sonnenblume', 'scholle', 'dorsch', 'marienkaefer', 'zitronenfalter', 'kartoffel', 'petersilie', 'karottensuppe', 'kuerbissuppe', 'schnittlauch'],
     dislikes: ['birne', 'ast', 'stein', 'waldameise', 'weinbergschnecke', 'maikaefer', 'heupferd', 'grashuepfer', 'ohrenqualle', 'aal', 'wels', 'strandkrabbe'],
   },
 
@@ -53,6 +53,8 @@ export const GISELA: NpcDef = {
       { text: ['Kindchen! Mein Lieblingsbesuch.', '… Ja, ich weiß, du bist mein einziger Besuch. Trotzdem.'], when: { minHearts: 2 } },
     ],
     chat: [
+      { text: ['Kartoffelsuppe! Mit Schnittlauch und einem Würstchen.', 'So hat Ludwig sie geliebt. Nach dem Training, mit einem Brot. Ach, der Ludwig.'], weight: 3 },
+      { text: ['Pflanz Petersilie, Kind. Die braucht jede Suppe.', 'Und wenn jemand sagt, es geht auch ohne: Der hat keine Ahnung. Pfui!'] },
       { text: ['Der Doktor im Fernsehen, den du so gern guckst – der mit den Augenbrauen –', 'Der erinnert mich an Ludwig, wenn er den Zaun streichen wollte und keiner ihm helfen durfte. Ernst. Und dann ganz weich. Köstlich.'] },
       { text: ['Du lernst ja Japanisch, Kind, hat Olaf erzählt.', 'Sag mal was. … Aha. Und was heißt das? … Klingt wie Niesen. Aber hübsch, hübsch.'] },
       { text: ['Neulich hat mich der Briefträger mit „Konnichiwa“ begrüßt.', 'Ich hab gesagt: Hier sagt man „Guten Tag“, junger Mann. … Aber ich hab ihm zugenickt. Man will ja nicht so sein.'] },

@@ -37,11 +37,21 @@ Wetter und Feste laufen nach echter Zeit.
   pro Tag und Platz). Neu erblühte Farben tragen sich ins Sammelbuch ein (Reiter „Blumen“, `registerBlooms`), zählen aber
   nicht als Tier-Fund für Einzugs-Meilensteine. Geschenke: Wer die Art mag, mag jede Farbe, Mischfarben kommen nie
   schlecht an (`giftPreferences`). **Samenstand (Phase 2):** Christin betreibt in der oberen linken Ecke des Dorfplatzes (nicht auf dem Weg) einen Stand (`samenstand`, Karten-Objekt
-  `seedstall`, steht ab Olafs Einzug; `data/seedstand.ts`, `game/seedstand.ts`, Fenster `ui/SeedStandPanel.tsx`). Immer da:
-  Standard-Samen jeder Art und die Kräuter; dazu täglich drei wechselnde **Farb-Samen** (`dailyColorSeeds`, reproduzierbar pro Tag),
+  `seedstall`, steht ab Olafs Einzug; `data/seedstand.ts`, `game/seedstand.ts`, Fenster `ui/SeedStandPanel.tsx`). Reiter „Blumen“, immer da:
+  Standard-Samen jeder Blumenart (plus Kamille & Pfefferminze); dazu täglich drei wechselnde **Farb-Samen** (`dailyColorSeeds`, reproduzierbar pro Tag),
   damit Lina Kreuzungs-Partner bekommt. Misch-Farben gibt es nie zu kaufen. Preis = Verkaufswert × 2,5 (mind. 12 ⭐), Menge 1× oder 5×,
-  ganz oder gar nicht. Christin erzählt im Plausch davon. Geplant (jeweils eigener Schritt, nur wenn sinnvoll): Gemüse & Kräuter,
-  Sträuße & Blumendeko, Gewächshaus – siehe `development-status.md`.
+  ganz oder gar nicht. Christin erzählt im Plausch davon.
+  **Gemüse & Kräuter (Phase 3):** `data/crops.ts` – 6 Gemüse (Tomate, Karotte, Kartoffel, Kopfsalat, Zucchini, Kürbis) und 4 Kräuter
+  (Basilikum, Petersilie, Schnittlauch, Thymian). Sie sind ganz normale Beet-Pflanzen (Gießen → nächste Stufe, nichts vertrocknet,
+  Stufe 3 = erntereif; `GARDEN_FLOWERS` enthält sie, Pflanzen/Gießen/Hochbeet laufen unverändert), liefern aber mehrere Stück je
+  Ernte (`yield`, `harvestCount`, `pickGardenFlower`). **Wurzelgemüse & Co.** (`once`: Karotte, Kartoffel, Salat, Kürbis) räumen den
+  Platz nach der Ernte, **Tomate, Zucchini & Kräuter** treiben wieder aus. Am Samenstand (Reiter „Gemüse & Kräuter“) liegen sie ganzjährig,
+  nur Tomaten & Zucchini nicht im Winter und Kürbis nicht im Frühling/Winter (`CropDef.seasons`, `cropsAt`) – ein Anknüpfpunkt fürs
+  Gewächshaus. 7 neue **Gerichte** kocht Lina im Kochstudio oder am eigenen Herd (`recipes.ts`): Tomatensalat, Kartoffelsuppe, Pellkartoffeln
+  mit Kräuterquark, Karottensuppe, Ratatouille, Gemischter Salat, Kürbissuppe. Die meisten Rezepte lernt sie bei der **ersten Ernte**
+  (`fund`). Bewohner mögen sie (Vorlieben von Jens, Lars, Oma, Olaf, Oli, Christin, Thalia) und erzählen davon im Plausch.
+  3D-Pflanzen je Stufe: `makeCrop` in `world3d/models/critters.ts`; Symbole: `CROP_ICONS` in `gfx/nature-icons.ts`, Gerichte in `gfx/items.ts`.
+  Geplant (jeweils eigener Schritt, nur wenn sinnvoll): Sträuße & Blumendeko, Gewächshaus – siehe `development-status.md`.
 - **Zuhause:** Möbel in `data/furniture.ts` (Größe in Feldern, `surface`/`small`/`rug`/`sit`/`light`) werden
   automatisch Gegenstände (Varianten → `futon-rosa` …). Raumlogik in `core/room.ts`, Modelle in
   `world3d/models/furniture.ts`. Gespeichert wird immer draußen weitergespielt (Laden im Haus → vor der Tür).

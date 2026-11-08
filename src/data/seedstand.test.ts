@@ -12,7 +12,7 @@ describe('Samenstand', () => {
   });
 
   it('Misch-Farben gibt es nie zu kaufen – nur Standard- und Samen-Farben', () => {
-    for (const id of standStock('2026-07-10')) expect(FLOWER_BY_SEED[id].crossOnly, id).toBe(false);
+    for (const id of standStock('2026-07-10', 'sommer')) expect(FLOWER_BY_SEED[id].crossOnly, id).toBe(false);
     for (const id of COLOR_SEEDS) expect(GARDEN_FLOWER[FLOWER_BY_SEED[id].flower].crossOnly).toBe(false);
   });
 
@@ -30,6 +30,6 @@ describe('Samenstand', () => {
   });
 
   it('am Stand zu kaufen lohnt sich nie mehr als Weiterverkaufen (Aufschlag)', () => {
-    for (const id of standStock('2026-07-10')) expect(seedPrice(id)).toBeGreaterThan(itemDef(id)!.price!);
+    for (const id of standStock('2026-07-10', 'sommer')) expect(seedPrice(id)).toBeGreaterThan(itemDef(id)!.price!);
   });
 });

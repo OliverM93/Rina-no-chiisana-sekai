@@ -259,7 +259,7 @@ Legende: ✅ erledigt · 🚧 in Arbeit · ⬜ geplant
     Misch-Samen beim Pflücken, wenn zwei Farben nebeneinander blühen, Sammelbuch-Reiter „Blumen“, Samen-Farben per Post,
     gelbe Tulpen im Starterset
   - ✅ **Phase 2 – Samenstand:** Christins Stand auf dem Dorfplatz (ab Olafs Einzug), Standard-Samen immer, täglich drei wechselnde Farb-Samen, keine Misch-Farben
-  - ⬜ Phase 3 – Gemüse & Kräuter zum Kochen
+  - ✅ **Phase 3 – Gemüse & Kräuter:** 6 Gemüse + 4 Kräuter im Beet (mehrere Stück je Ernte, Wurzelgemüse räumt den Platz), Reiter am Samenstand (saisonal), 7 neue Gerichte, Rezepte bei der ersten Ernte
   - ⬜ Phase 4 – Sträuße & Blumendeko (Vase, Kranz, Geschenke)
   - ⬜ Phase 5 – Gewächshaus für den Winter
 - ✅ **Pfeiltasten in allen Fenstern & Menüs** (`ui/navigation.ts`)

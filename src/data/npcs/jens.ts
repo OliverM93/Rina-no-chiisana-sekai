@@ -30,8 +30,8 @@ export const JENS: NpcDef = {
     { from: '23:30', label: 'schläft', activity: { kind: 'zuhause', sleeping: true } },
   ],
   preferences: {
-    loves: ['lavendel', 'rose', 'seestern', 'glitzerstein', 'apfelkuchen', 'crepes'],
-    likes: ['pfirsich', 'apfel', 'birne', 'ei', 'wachtelei', 'hering', 'makrele', 'tulpe', 'sonnenblume', 'vergissmeinnicht', 'schneckenhaus', 'tagpfauenauge', 'ruehrei', 'obstsalat', 'fischbroetchen'],
+    loves: ['lavendel', 'rose', 'seestern', 'glitzerstein', 'apfelkuchen', 'crepes', 'ratatouille', 'basilikum', 'thymian', 'kraeuterquark'],
+    likes: ['pfirsich', 'apfel', 'birne', 'ei', 'wachtelei', 'hering', 'makrele', 'tulpe', 'sonnenblume', 'vergissmeinnicht', 'schneckenhaus', 'tagpfauenauge', 'ruehrei', 'obstsalat', 'fischbroetchen', 'tomatensalat', 'tomate', 'zucchini', 'petersilie', 'gruener-salat'],
     dislikes: ['ast', 'stein', 'weinbergschnecke', 'ohrenqualle'],
   },
   dialogue: {
@@ -47,6 +47,9 @@ export const JENS: NpcDef = {
       { text: ['Ein Regenbogen! 🌈', 'Na, wenn das mal kein Zeichen ist. Für uns Fabelhaften ist das ja quasi die Hausfahne.'], when: { tags: ['regenbogen'] }, weight: 5 },
     ],
     chat: [
+      { text: ['Chérie, hast du schon Basilikum im Beet?', 'Ohne Basilikum ist eine Tomate nur eine rote Kugel. Mit Basilikum ist sie Poesie.'], weight: 3 },
+      { text: ['Thymian, Chérie! Thymian!', 'Ein Zweig davon, und jede Soße riecht nach der Provence. Ratatouille ohne Thymian? Un crime.'], weight: 3 },
+      { text: ['Kartoffeln mit Quark – das isch eene Gaiststung, Lina!', 'Ich hab das als Junge in Sachsen gegessen und in Paris vermisst. Mit Schnittlauch. Un des is gud so!'], weight: 3 },
       { text: ['Dieser Dr. No aus deiner Sendung, chérie! Diese Augenbrauen!', 'Ich würde sie malen. Auf eine große Leinwand. Titel: „Autorität in Schwarz-Grau“. Und dann ein Rahmen aus Gold.'] },
       { text: ['Lina, du lernst Japanisch! Sag mal was!', 'Ich versteh ja nur „Arigato“ und „Sushi“. Aber ich nicke sehr überzeugend. Hai, hai!'] },
       { text: ['In Kyoto hab ich gelernt: „Ichi-go ichi-e“ – ein Moment, eine Begegnung, nie wieder genau so.', 'Das kennst du doch aus deinem Japanisch-Kurs, chérie? Erklär mir das mal richtig. Ich hab nur genickt und geweint.'] },

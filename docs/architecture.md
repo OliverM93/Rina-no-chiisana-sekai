@@ -49,7 +49,7 @@ src/
                `HOUSE_ANNEX` = Kacheln, die Anbauten außen belegen),
                npcs/ (je Bewohner eine Datei)
                wardrobe.ts (Aufdruck-Kleidung, Bandnamen), recipes.ts (Rezepte), coffee.ts (Siebträgermaschinen & Getränke), flowers.ts (Blumenfarben & Mischregeln), posters.ts (Poster & Bildbände), tassen.ts (Sammeltassen), furnitureHeights.ts (Möbelhöhen für die Wand-Deko-Prüfung, gemessen mit scripts/measure-heights.cjs), festivals.ts, meetups.ts,
-               tv.ts, animals.ts, fossils.ts, winston.ts, winter.ts, art.ts, progress.ts (Meilensteine), seedstand.ts (Samenstand-Angebot)
+               tv.ts, animals.ts, fossils.ts, winston.ts, winter.ts, art.ts, progress.ts (Meilensteine), seedstand.ts (Samenstand-Angebot), crops.ts (Gemüse & Kräuter fürs Beet)
   style/       palette.ts – EINZIGE Quelle für Farben (auch CSS-Variablen der UI)
   gfx/         2D-Zeichnungen für Texturen & Symbole: terrain.ts (Gelände-Textur), items.ts (Symbole), prints.ts (Kleidungs-Aufdrucke),
                canvas.ts (Hilfen)

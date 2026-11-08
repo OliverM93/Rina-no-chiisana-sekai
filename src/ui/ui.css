@@ -1991,6 +1991,12 @@ body:has(.dialog-layer) .decor-bar {
   gap: 4px 8px;
 }
 
+.seed-tabs {
+  display: flex;
+  gap: 8px;
+  padding: 8px 4px 0;
+}
+
 .seed-qty {
   display: flex;
   align-items: center;

@@ -23,7 +23,7 @@ describe('Samen kaufen', () => {
   it('zeigt das Tagesangebot mit Preisen', () => {
     const s = newSession();
     const offers = seedOffers(s);
-    expect(offers.map((o) => o.itemId)).toEqual(standStock(s.today()));
+    expect(offers.map((o) => o.itemId)).toEqual(standStock(s.today(), 'sommer'));
     for (const o of offers) expect(o.price).toBe(seedPrice(o.itemId));
   });
 

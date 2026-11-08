@@ -275,6 +275,138 @@ function seedIcon(color: string): Draw {
   };
 }
 
+/** Gemüse & Kräuter: Erntegut (siehe `data/crops.ts`) */
+const CROP_ICONS: Record<string, Draw> = {
+  tomate: (ctx) => {
+    blob(ctx, [{ x: 12.5, y: 18.5, r: 8 }, { x: 19.5, y: 18.5, r: 8 }, { x: 16, y: 20, r: 8 }], '#e8484f', darken('#e8484f', 0.3), 1.5);
+    for (let k = 0; k < 5; k++) {
+      const a = (k / 5) * Math.PI * 2 - Math.PI / 2;
+      ellipse(ctx, 16 + Math.cos(a) * 3.4, 11.5 + Math.sin(a) * 1.8, 3, 1.4, '#5fa85a', '#3f7a3a', 0.8);
+    }
+    ellipse(ctx, 16, 11, 1.2, 2, '#3f7a3a');
+    shine(ctx, 11, 16, 2, 0.6);
+  },
+  karotte: (ctx) => {
+    ctx.fillStyle = '#f59a3a';
+    ctx.beginPath();
+    ctx.moveTo(8, 12);
+    ctx.quadraticCurveTo(14, 8, 21, 11);
+    ctx.lineTo(25, 28);
+    ctx.closePath();
+    ctx.fill();
+    ctx.strokeStyle = darken('#f59a3a', 0.35);
+    ctx.lineWidth = 1.4;
+    ctx.stroke();
+    ctx.lineWidth = 0.9;
+    for (const [x1, y1, x2, y2] of [[11, 14, 15, 14], [13, 18, 17, 18], [16, 22, 19, 22]] as const) {
+      ctx.beginPath();
+      ctx.moveTo(x1, y1);
+      ctx.lineTo(x2, y2);
+      ctx.stroke();
+    }
+    for (const [x, y, r] of [[10, 7, -0.4], [14, 5, 0], [18, 7, 0.4]] as const) {
+      ctx.save();
+      ctx.translate(x, y);
+      ctx.rotate(r);
+      ellipse(ctx, 0, 0, 2, 4.5, '#6fbf5f', '#3f8f4a', 0.9);
+      ctx.restore();
+    }
+  },
+  kartoffel: (ctx) => {
+    blob(ctx, [{ x: 11, y: 18, r: 7.5 }, { x: 19, y: 17, r: 8 }, { x: 16, y: 20, r: 7 }], '#c9a36a', darken('#c9a36a', 0.3), 1.5);
+    for (const [x, y] of [[11, 17], [18, 14], [20, 20], [14, 22]] as const) ellipse(ctx, x, y, 1.1, 0.8, darken('#c9a36a', 0.25));
+    shine(ctx, 10, 14, 2.2, 0.5);
+  },
+  salat: (ctx) => {
+    for (const [x, y, rx, ry, c] of [[8, 20, 6, 8, '#6fbf5f'], [24, 20, 6, 8, '#6fbf5f'], [16, 22, 8, 7, '#8fd08a'], [16, 15, 7, 8, '#b8e6a0']] as const) ellipse(ctx, x, y, rx, ry, c, darken(c, 0.3), 1.2);
+    ctx.strokeStyle = '#6fbf5f';
+    ctx.lineWidth = 0.9;
+    for (const x of [13, 16, 19]) {
+      ctx.beginPath();
+      ctx.moveTo(x, 11);
+      ctx.lineTo(x + (x - 16) * 0.3, 26);
+      ctx.stroke();
+    }
+  },
+  zucchini: (ctx) => {
+    ctx.save();
+    ctx.translate(16, 17);
+    ctx.rotate(-0.7);
+    roundRect(ctx, -12, -4.2, 24, 8.4, 4.2, '#4f9a5a', darken('#4f9a5a', 0.35), 1.5);
+    ctx.fillStyle = '#7cc576';
+    ctx.fillRect(-9, -1.8, 17, 1.2);
+    roundRect(ctx, 10, -2, 4, 4, 1.5, '#3f7a3a', null);
+    ctx.restore();
+    ellipse(ctx, 25, 6, 2.6, 1.8, '#f7d26a', '#d9a83a', 0.8);
+  },
+  kuerbis: (ctx) => {
+    for (const x of [9, 23]) ellipse(ctx, x, 19, 6, 8.5, '#f08a2a', darken('#f08a2a', 0.3), 1.3);
+    for (const x of [13, 19]) ellipse(ctx, x, 19, 6, 9, '#f59a3a', darken('#f08a2a', 0.3), 1.3);
+    ellipse(ctx, 16, 19, 4.5, 9.2, '#f7a84a', darken('#f08a2a', 0.3), 1.3);
+    roundRect(ctx, 14.5, 5, 3, 5, 1.2, '#6fbf5f', '#3f7a3a', 1);
+    ctx.strokeStyle = '#6fbf5f';
+    ctx.lineWidth = 1.2;
+    ctx.beginPath();
+    ctx.moveTo(17, 8);
+    ctx.quadraticCurveTo(22, 4, 25, 8);
+    ctx.stroke();
+  },
+  basilikum: (ctx) => {
+    ctx.strokeStyle = '#4f8f4a';
+    ctx.lineWidth = 1.8;
+    ctx.beginPath();
+    ctx.moveTo(16, 29);
+    ctx.lineTo(16, 8);
+    ctx.stroke();
+    for (const [x, y, r] of [[11, 22, -0.8], [21, 21, 0.8], [11.5, 15, -0.7], [20.5, 14, 0.7], [16, 6, 0]] as const) {
+      ctx.save();
+      ctx.translate(x, y);
+      ctx.rotate(r);
+      ellipse(ctx, 0, 0, 4.6, 3.2, '#4fa84f', darken('#4fa84f', 0.3), 1);
+      ctx.restore();
+    }
+  },
+  petersilie: (ctx) => {
+    ctx.strokeStyle = '#4f8f4a';
+    ctx.lineWidth = 1.2;
+    for (const x of [11, 16, 21]) {
+      ctx.beginPath();
+      ctx.moveTo(16, 29);
+      ctx.quadraticCurveTo(x, 20, x, 12);
+      ctx.stroke();
+    }
+    for (const [x, y] of [[11, 10], [8.5, 14], [13.5, 13], [16, 8], [14, 5], [21, 10], [18.5, 13], [23.5, 14]] as const) ellipse(ctx, x, y, 3.2, 3, '#3f8f4a', darken('#3f8f4a', 0.3), 0.8);
+  },
+  schnittlauch: (ctx) => {
+    ctx.strokeStyle = '#5fa85a';
+    ctx.lineWidth = 1.8;
+    for (const [x, top] of [[9, 12], [12.5, 7], [16, 10], [19.5, 6], [23, 11]] as const) {
+      ctx.beginPath();
+      ctx.moveTo(x - (x - 16) * 0.5, 29);
+      ctx.lineTo(x, top);
+      ctx.stroke();
+    }
+    for (const [x, y] of [[12.5, 7], [19.5, 6], [23, 11]] as const) ellipse(ctx, x, y - 1, 2.6, 2.6, '#c9a0e0', darken('#c9a0e0', 0.3), 0.8);
+  },
+  thymian: (ctx) => {
+    ctx.strokeStyle = '#7a6a4a';
+    ctx.lineWidth = 1.4;
+    for (const x of [10, 16, 22]) {
+      ctx.beginPath();
+      ctx.moveTo(16, 29);
+      ctx.quadraticCurveTo(x, 20, x, 8);
+      ctx.stroke();
+    }
+    for (const x of [10, 16, 22]) {
+      for (let k = 0; k < 4; k++) {
+        ellipse(ctx, x - 1.6, 10 + k * 3.4, 1.7, 1.2, '#6a9a6a');
+        ellipse(ctx, x + 1.6, 11.5 + k * 3.4, 1.7, 1.2, '#6a9a6a');
+      }
+      ellipse(ctx, x, 7, 1.5, 1.5, '#f4c6e0');
+    }
+  },
+};
+
 const TOOL_ICONS: Record<string, Draw> = {
   angel: (ctx) => {
     ctx.strokeStyle = '#a97c56';
@@ -335,11 +467,12 @@ const TOOL_ICONS: Record<string, Draw> = {
 };
 
 export function natureIcons(): Record<string, Draw> {
-  const out: Record<string, Draw> = { ...TOOL_ICONS };
+  const out: Record<string, Draw> = { ...TOOL_ICONS, ...CROP_ICONS };
   for (const f of FISH) out[f.id] = fishIcon(f);
   for (const i of INSECTS) out[i.id] = insectIcon(i);
   for (const g of GARDEN_FLOWERS) {
-    out[g.flower] = flowerIcon(g.color, g.center, g.species);
+    // Gemüse & Kräuter haben ein eigenes Erntegut-Symbol (`CROP_ICONS`), nur ihr Same kommt von hier
+    if (!(g.flower in CROP_ICONS)) out[g.flower] = flowerIcon(g.color, g.center, g.species);
     out[g.seed] = seedIcon(g.color);
   }
   return out;

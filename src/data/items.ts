@@ -3,6 +3,7 @@ import { FURNITURE_BY_ITEM } from './furniture';
 import { RECIPE_ITEM_PREFIX, RECIPES } from './recipes';
 import { FISH, INSECTS } from './species';
 import { FINDS } from './fossils';
+import { CROPS } from './crops';
 import { COLORS, colorWord, FLOWER_SPECIES, type FlowerColor, paletteOf, SPECIES_BY_ID, variantId } from './flowers';
 
 /**
@@ -12,7 +13,7 @@ import { COLORS, colorWord, FLOWER_SPECIES, type FlowerColor, paletteOf, SPECIES
  * zeichnen (sonst erscheint ein Platzhalter). Preise in „Sternchen“ ⭐.
  */
 
-export type ItemCategory = 'obst' | 'muschel' | 'blume' | 'material' | 'fund' | 'essen' | 'geschenk' | 'werkzeug' | 'samen' | 'fisch' | 'insekt' | 'moebel' | 'tapete' | 'boden' | 'rezept' | 'fossil';
+export type ItemCategory = 'obst' | 'muschel' | 'blume' | 'material' | 'fund' | 'essen' | 'geschenk' | 'werkzeug' | 'samen' | 'fisch' | 'insekt' | 'moebel' | 'tapete' | 'boden' | 'rezept' | 'fossil' | 'gemuese' | 'kraut';
 
 export interface ItemDef {
   id: string;
@@ -89,6 +90,14 @@ const list: ItemDef[] = [
   { id: 'pfefferminztee', name: 'Pfefferminztee', plural: 'Tassen Pfefferminztee', category: 'essen', price: 80, description: 'Frisch und belebend. Lars trinkt ihn literweise.' },
   { id: 'lavendeltee', name: 'Lavendeltee', plural: 'Tassen Lavendeltee', category: 'essen', price: 90, description: 'Duftet nach Sommer in der Provence. Jens nennt ihn „Urlaub in der Tasse“.' },
   { id: 'kraeutermischung', name: 'Omas Kräutermischung', plural: 'Tassen Kräutermischung', category: 'essen', price: 160, description: 'Kamille, Minze und Lavendel. Omas Rezept. Lars gibt es zu.' },
+  // Gerichte aus eigenem Gemüse & Kräutern (Beet/Samen Phase 3)
+  { id: 'tomatensalat', name: 'Tomatensalat', plural: 'Schüsseln Tomatensalat', category: 'essen', price: 110, description: 'Tomaten, Basilikum und ein Hauch Olivenöl. Schmeckt nach Süden.' },
+  { id: 'kartoffelsuppe', name: 'Kartoffelsuppe', plural: 'Teller Kartoffelsuppe', category: 'essen', price: 120, description: 'Cremig, mit Schnittlauch obendrauf. Omas Kartoffelsuppe ist besser. Natürlich.' },
+  { id: 'kraeuterquark', name: 'Pellkartoffeln mit Kräuterquark', plural: 'Portionen Pellkartoffeln mit Kräuterquark', category: 'essen', price: 140, description: 'Wie in Sachsen: Kartoffeln mit Quark, dazu frische Kräuter. Jens: „Un des is gud so!“' },
+  { id: 'karottensuppe', name: 'Karottensuppe', plural: 'Teller Karottensuppe', category: 'essen', price: 110, description: 'Orange und samtig, mit einem Büschel Petersilie. Lars: „Gut für die Augen.“' },
+  { id: 'ratatouille', name: 'Ratatouille', plural: 'Portionen Ratatouille', category: 'essen', price: 190, description: 'Tomate, Zucchini, Basilikum und Thymian – wie in der Provence. Jens weint vor Glück.' },
+  { id: 'gruener-salat', name: 'Gemischter Salat', plural: 'Schüsseln gemischter Salat', category: 'essen', price: 100, description: 'Salat, Tomate und Schnittlauch. Knackig und frisch. Christin nickt anerkennend.' },
+  { id: 'kuerbissuppe', name: 'Kürbissuppe', plural: 'Teller Kürbissuppe', category: 'essen', price: 200, description: 'Cremig, orange, mit einem Zweig Thymian. Das Beste an kalten Tagen.' },
   // Aus der Kochshow
   { id: 'apfelpfannkuchen', name: 'Apfelpfannkuchen', plural: 'Apfelpfannkuchen', category: 'essen', price: 110, description: 'Fluffig, mit Apfelscheiben und einer Prise Zimt. Fast so gut wie bei Oma. Psst!' },
   { id: 'fischsuppe', name: 'Fischsuppe mit Minze', plural: 'Teller Fischsuppe', category: 'essen', price: 160, description: 'Klingt komisch, schmeckt himmlisch. Lars sagt: „Sehr gesund.“ Oli sagt: „Nochmal!“' },
@@ -164,6 +173,12 @@ for (const sp of FLOWER_SPECIES) {
       description: rare ? 'Ein ganz besonderer Same. Daraus wird etwas Schwarzes … 🖤' : cross ? 'Ein Misch-Same. Was wohl daraus wird? ✨' : `${seed.description} (Farbe: ${label})`,
     });
   }
+}
+
+// Gemüse & Kräuter fürs Beet (aus `crops.ts`): Erntegut & Samen
+for (const c of CROPS) {
+  list.push({ id: c.id, name: c.name, plural: c.plural, category: c.kind, price: c.price, description: c.description });
+  list.push({ id: `samen-${c.id}`, name: c.seedName, plural: c.seedPlural, category: 'samen', price: c.seedPrice, description: c.seedDescription });
 }
 
 export const ITEMS: Readonly<Record<string, ItemDef>> = Object.fromEntries(list.map((i) => [i.id, i]));
@@ -242,6 +257,7 @@ export const GARDEN_FLOWERS: readonly GardenFlower[] = [
     })),
   ),
   ...PLAIN_HERBS.map((h): GardenFlower => ({ ...h, species: h.flower, colorKey: null, crossOnly: false })),
+  ...CROPS.map((c): GardenFlower => ({ flower: c.id, seed: `samen-${c.id}`, color: c.color, center: c.center, species: c.id, colorKey: null, crossOnly: false })),
 ];
 
 /** Blumenart einer Blume/eines Samens (`tulpe-gelb` → `tulpe`), sonst die ID selbst */

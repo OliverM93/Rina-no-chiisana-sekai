@@ -4,7 +4,9 @@
  */
 import { useEffect, useState } from 'preact/hooks';
 import { countItem } from '../core/inventory';
-import { BASE_SEEDS } from '../data/seedstand';
+import { getSeason } from '../core/time';
+import { BASE_SEEDS, cropsAt } from '../data/seedstand';
+import { CROP_BY_ID } from '../data/crops';
 import { itemDef } from '../data/items';
 import { itemIconUrl } from '../gfx/items';
 import { formatMoney } from '../game/gameplay';
@@ -15,6 +17,7 @@ import { showToast, ui, useSessionVersion } from './store';
 export function SeedStandPanel({ session }: { session: Session }) {
   useSessionVersion(session);
   const [qty, setQty] = useState(1);
+  const [tab, setTab] = useState<'blumen' | 'gemuese'>('blumen');
   const close = () => ui.set({ panel: null });
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -29,8 +32,11 @@ export function SeedStandPanel({ session }: { session: Session }) {
   const data = session.data;
   if (!data) return null;
   const offers = seedOffers(session);
-  const standard = offers.filter((o) => BASE_SEEDS.includes(o.itemId));
-  const today = offers.filter((o) => !BASE_SEEDS.includes(o.itemId));
+  const flowerOffers = offers.filter((o) => BASE_SEEDS.includes(o.itemId) || !(o.itemId.slice(6) in CROP_BY_ID));
+  const standard = flowerOffers.filter((o) => BASE_SEEDS.includes(o.itemId));
+  const today = flowerOffers.filter((o) => !BASE_SEEDS.includes(o.itemId));
+  const crops = cropsAt(getSeason(session.clock()));
+  const cropRows = (kind: 'gemuese' | 'kraut') => offers.filter((o) => CROP_BY_ID[o.itemId.slice(6)]?.kind === kind);
 
   const buy = (itemId: string, n: number) => {
     const name = itemDef(itemId)?.name ?? itemId;
@@ -71,10 +77,30 @@ export function SeedStandPanel({ session }: { session: Session }) {
             </button>
           ))}
         </div>
-        <h3 class="bank-sub">Heute im Angebot</h3>
-        <div class="seed-list">{today.map(row)}</div>
-        <h3 class="bank-sub">Immer da</h3>
-        <div class="seed-list">{standard.map(row)}</div>
+        <div class="seed-tabs">
+          <button class={`btn ${tab === 'blumen' ? 'primary' : ''}`} onClick={() => setTab('blumen')}>
+            🌷 Blumen
+          </button>
+          <button class={`btn ${tab === 'gemuese' ? 'primary' : ''}`} onClick={() => setTab('gemuese')}>
+            🥕 Gemüse &amp; Kräuter
+          </button>
+        </div>
+        {tab === 'blumen' ? (
+          <>
+            <h3 class="bank-sub">Heute im Angebot</h3>
+            <div class="seed-list">{today.map(row)}</div>
+            <h3 class="bank-sub">Immer da</h3>
+            <div class="seed-list">{standard.map(row)}</div>
+          </>
+        ) : (
+          <>
+            <h3 class="bank-sub">Gemüse</h3>
+            <div class="seed-list">{cropRows('gemuese').map(row)}</div>
+            <h3 class="bank-sub">Kräuter</h3>
+            <div class="seed-list">{cropRows('kraut').map(row)}</div>
+            {crops.away.length > 0 && <p class="soft small-text">Gerade nicht da: {crops.away.map((c) => c.name).join(', ')} – die gibt es nur in anderen Jahreszeiten.</p>}
+          </>
+        )}
         <div class="card-actions">
           <button class="btn primary" onClick={close}>
             Fertig
