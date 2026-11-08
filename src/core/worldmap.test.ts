@@ -52,7 +52,7 @@ describe('Dorfkarte', () => {
     expect(isActive(m, 'bauplatz-1')).toBe(true);
     expect(isActive(m, 'haus-olaf')).toBe(false);
     expect(m.grid.isBlocked(17, 15)).toBe(false);
-    expect(applyMapFlags(m, { olafEingezogen: true }).sort()).toEqual(['bauplatz-1', 'haus-olaf']);
+    expect(applyMapFlags(m, { olafEingezogen: true }).sort()).toEqual(['bauplatz-1', 'haus-olaf', 'samenstand']);
     expect(isActive(m, 'haus-olaf')).toBe(true);
     expect(m.grid.isBlocked(17, 15)).toBe(true);
     expect(applyMapFlags(m, { olafEingezogen: true })).toEqual([]);

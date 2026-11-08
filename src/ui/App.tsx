@@ -17,6 +17,7 @@ import { MailPanel } from './MailPanel';
 import { CollectionBook } from './CollectionBook';
 import { CatalogPanel } from './CatalogPanel';
 import { BankPanel } from './BankPanel';
+import { SeedStandPanel } from './SeedStandPanel';
 import { CraftPanel } from './CraftPanel';
 import { MapPanel } from './MapPanel';
 import { GalleryPanel } from './GalleryPanel';
@@ -100,6 +101,7 @@ export function App({ session }: { session: Session }) {
       {state.panel?.kind === 'mail' && <MailPanel session={session} />}
       {state.panel?.kind === 'book' && <CollectionBook session={session} />}
       {state.panel?.kind === 'catalog' && <CatalogPanel session={session} />}
+      {state.panel?.kind === 'samenstand' && <SeedStandPanel session={session} />}
       {state.panel?.kind === 'bank' && <BankPanel session={session} panel={state.panel} />}
       {state.panel?.kind === 'werkbank' && <CraftPanel session={session} />}
       {state.panel?.kind === 'kochstudio' && <CraftPanel session={session} station="kueche" />}
@@ -108,7 +110,7 @@ export function App({ session }: { session: Session }) {
       {state.panel?.kind === 'galerie' && <GalleryPanel session={session} />}
       {state.panel?.kind === 'tv' && <TvPanel session={session} withOli={state.panel.withOli} />}
       {state.panel?.kind === 'herd' && <CraftPanel session={session} station="herd" />}
-      {state.panel && !['mail', 'book', 'catalog', 'bank', 'werkbank', 'kochstudio', 'apotheke', 'karte', 'galerie', 'tv', 'herd'].includes(state.panel.kind) && <InventoryPanel session={session} panel={state.panel} />}
+      {state.panel && !['mail', 'book', 'catalog', 'bank', 'werkbank', 'kochstudio', 'apotheke', 'karte', 'galerie', 'tv', 'herd', 'samenstand'].includes(state.panel.kind) && <InventoryPanel session={session} panel={state.panel} />}
       {state.dialog && (
         <DialogBox
           dialog={state.dialog}
