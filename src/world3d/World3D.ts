@@ -63,7 +63,8 @@ import { SPONTANEOUS_KISS_LINES, WELCOME_KISS_LINES } from '../data/npcs/oli';
 import { KISS } from './Character3D';
 import { isPartyTime } from '../game/party';
 import { makePartyLights, makePicnic } from './models/buildings';
-import { addFriendship } from '../game/gameplay';
+import { addFriendship, catchUpHeartLetters } from '../game/gameplay';
+import { OLAF_CALENDAR_JOKES } from '../data/npcs/olaf';
 import type { DecorCommand, FxKind } from '../game/session';
 import { Particles3D } from './Particles3D';
 import {
@@ -634,6 +635,7 @@ export class World3D {
     this.collectibles.refresh();
     checkDailyMail(this.session);
     checkAdvent(this.session);
+    catchUpHeartLetters(this.session);
     this.updateMailbox();
     this.fishing.stop();
     this.equip(this.session.tool);
@@ -2622,6 +2624,12 @@ export class World3D {
     }
     if (f.def.id === 'herd') {
       this.session.bus.emit('ui:open', { kind: 'herd' });
+      return;
+    }
+    if (item.itemId === 'witzkalender') {
+      const jokes = OLAF_CALENDAR_JOKES;
+      const joke = jokes[hashString(`${this.session.today()}:witz`) % jokes.length];
+      this.session.bus.emit('dialog:open', { title: 'Papas Witze-Kalender', lines: [`Das Blatt von heute: „${joke}“`, 'Darunter, in Papas Schrift: „Morgen wird\'s noch besser!“ 😄'] });
       return;
     }
     if (item.itemId === 'tassenregal' || item.itemId === 'tassenbord') {

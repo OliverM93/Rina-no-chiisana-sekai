@@ -65,6 +65,20 @@ Format: **Entscheidung** – Begründung – verworfene Alternative(n) – Auswi
 - **Warum:** Wunsch der Auftraggeber, dass neue Features vorher auf Spielerlebnis geprüft werden.
 - **Auswirkung:** 8-Fragen-Prüfung vor neuen Mechaniken; Pflege der Dokumente in `docs/game-design/`.
 
+### D15 · Jedes Herz bringt ein Geschenk (W2, Nov. 2026)
+- **Erlebnis:** Ein neues Herz fühlt sich bei jedem Bewohner wie ein kleiner Höhepunkt an, nicht nur bei Oma und Oli.
+- **Loop:** Freundschaft (Tage/Wochen) → Brief → Gestaltung (Säule 3) bzw. Beet/Kochen (Säule 4).
+- **Wahl der Geschenke:** überwiegend **persönliche Erinnerungsstücke** mit Platz in der Welt (Säulen 1 & 3), die eine kleine
+  Geschichte erzählen (Lars' erster „Patient“, Papas Foto). Dazu zwei Rezepte, die bestehende Systeme vertiefen
+  (Thymiantee nutzt Phase-3-Kräuter, Steinmännchen nutzt Glitzersteine), Farb-Samen mit Kreuzungs-Tipp (Kompetenz) und
+  ein Frühbeet (Funktion statt Zahl).
+- **Ökonomie:** neutral. Erinnerungsstücke sind unverkäuflich; Thymiantee liegt mit 85 ⭐ aus 2 × 16 ⭐ (≈ 2,7×) in der
+  Spanne; Steinmännchen ist Deko (¼-Regel). Das Frühbeet (sonst 1 800 ⭐) ist das einzige „wertvolle“ Geschenk – bewusst
+  als spätes 5-Herz-Geschenk.
+- **Neue Interaktion:** Papas Witze-Kalender zeigt beim Anschauen einen Witz pro Tag – kein Zähler, keine Pflicht,
+  verpasste Tage sind egal (Witz ist reproduzierbar pro Datum, nicht gesammelt).
+- **Verworfen:** zusätzliche Freundschaftspunkte oder Sternchen als Herz-Belohnung (Zahl statt Erlebnis); Herzen > 5 (offen, O3).
+
 ---
 
 ## Offene Designentscheidungen ❓

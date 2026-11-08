@@ -118,6 +118,15 @@ export const FURNITURE: readonly FurnitureDef[] = [
   { id: 'erste-hilfe', name: 'Erste-Hilfe-Schränkchen', style: 'basis', gift: true, small: true, price: 500, w: 1, d: 1, description: 'Weiß, mit grünem Kreuz und rosa Herzchen-Pflastern drin. Von Lars – „für alle Fälle“.' },
   { id: 'vitrine', name: 'Fossilien-Vitrine', style: 'basis', gift: true, price: 1500, w: 1, d: 1, description: 'Eine Glasvitrine mit Ammonit, Kristall und Bernstein. Von Thalia – „für deine Schätze“.' },
   { id: 'globus', name: 'Globus', style: 'basis', gift: true, price: 1200, w: 1, d: 1, description: 'Ein großer Globus mit lauter kleinen Herzchen drauf – überall dort, wo Thalia mit dir hinreisen will.' },
+  // ---- Herz-Geschenke (jedes Herz bringt etwas) ----
+  { id: 'setzkasten', name: 'Christins Setzkasten', style: 'basis', gift: true, wall: true, price: 900, w: 1, d: 1, description: 'Ein Holzkasten mit 9 Fächern – in jedem ein Samentütchen, ein Kiesel oder ein Fläschchen. Alles genau an seinem Platz. Von Christin.' },
+  { id: 'skelett-kalle', name: 'Knochen-Kalle', style: 'basis', gift: true, price: 1100, w: 1, d: 1, description: 'Lars\' altes Lern-Skelett aus dem Studium. Trägt jetzt eine Fliege. „Damit er nicht so nackt aussieht.“' },
+  { id: 'teddy-brummbaer', name: 'Dr. Brummbär', style: 'basis', gift: true, small: true, price: 600, w: 1, d: 1, description: 'Lars\' Teddy aus Kindertagen, mit Pflaster am Bauch. An ihm hat er als Siebenjähriger seine erste „Operation“ gemacht.' },
+  { id: 'wandkarte-thalia', name: 'Thalias Dorfkarte', style: 'basis', gift: true, wall: true, price: 1000, w: 2, d: 1, description: 'Von Hand gezeichnet: Fluss, Strand, alle Häuser – und ein Herz dort, wo Lina wohnt.' },
+  { id: 'ammonit-lina', name: 'Ammonit „Lina“', style: 'basis', gift: true, small: true, price: 800, w: 1, d: 1, description: 'Ein schimmernder Ammonit auf einem Holzsockel. Thalia hat ihn gefunden und nach dir benannt. Wissenschaftlich nicht ganz korrekt. Emotional absolut.' },
+  { id: 'witzkalender', name: 'Papas Witze-Kalender', style: 'basis', gift: true, wall: true, price: 500, w: 1, d: 1, description: 'Ein Abreißkalender mit einem Witz für jeden Tag. Selbst geschrieben von Papa. Anschauen auf eigene Gefahr.' },
+  { id: 'bilderrahmen-papa', name: 'Foto: Auf Papas Schultern', style: 'basis', gift: true, small: true, price: 700, w: 1, d: 1, description: 'Ein Bilderrahmen: Die kleine Lina auf Papas Schultern, beide lachen. Hinten drauf: „Meine beste Investition. Papa.“' },
+  { id: 'reisekoffer', name: 'Jens\' Reisekoffer', style: 'basis', gift: true, surface: true, surfaceHeight: 0.31, price: 1400, w: 1, d: 1, description: 'Ein alter Lederkoffer voller Aufkleber aus aller Welt. Jens: „Er war überall. Jetzt soll er bei dir ankommen.“' },
   // Fest-Geschenke
   { id: 'sparschwein', name: 'Sparschwein mit Mütze', style: 'basis', gift: true, small: true, price: 400, w: 1, d: 1, description: 'Von Papa Olaf. Rosa, rund und mit Weihnachtsmütze. „Kleinvieh macht auch Mist!“' },
   { id: 'weihnachtsstern', name: 'Weihnachtsstern', style: 'basis', gift: true, price: 400, w: 1, d: 1, description: 'Von Christin – rote Blätter im goldenen Topf. Bitte gerade hinstellen.' },
@@ -155,6 +164,7 @@ export const FURNITURE: readonly FurnitureDef[] = [
   { id: 'windlicht', name: 'Windlicht', style: 'garten', outdoor: true, small: true, light: true, price: 200, w: 1, d: 1, description: 'Ein Glas mit Kerze für den Gartentisch.' },
   { id: 'blumenkuebel', name: 'Blumenkübel', style: 'garten', outdoor: true, price: 250, w: 1, d: 1, description: 'Ein Terrakotta-Kübel voller Margeriten.' },
   { id: 'vogeltraenke', name: 'Vogeltränke', style: 'garten', outdoor: true, price: 500, w: 1, d: 1, description: 'Eine steinerne Schale für durstige Spatzen.' },
+  { id: 'steinmaennchen', name: 'Steinmännchen', style: 'garten', crafted: true, outdoor: true, price: 160, w: 1, d: 1, description: 'Flache Kiesel, vorsichtig aufeinandergestapelt, ganz oben ein Glitzerstein. Thalia sagt: Wanderer zeigen damit den Weg.' },
   { id: 'vogelhaus', name: 'Vogelhäuschen', style: 'garten', crafted: true, outdoor: true, price: 240, w: 1, d: 1, description: 'Ein Häuschen auf einem Pfahl. Bald ziehen bestimmt Meisen ein.' },
   { id: 'gartenwichtel', name: 'Gartenwichtel', style: 'garten', outdoor: true, price: 350, w: 1, d: 1, description: 'Ein kleiner Wichtel mit roter Mütze. Oma findet ihn „pfui“. Lina findet ihn toll.' },
   { id: 'fruehbeet', name: 'Frühbeet', style: 'garten', outdoor: true, bed: true, greenhouse: true, price: 1800, w: 3, d: 1, description: 'Ein Holzbeet mit Glasdeckel – drei geschützte Pflanzplätze. Hier wächst auch im Winter etwas weiter, wenn draußen alles ruht.' },

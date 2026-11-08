@@ -72,24 +72,14 @@ Quelle: `core/friendship.ts`. Schwellen `[0, 40, 100, 180, 280, 400]` → max. 5
 📏 **Tempo:** Gespräch + Lieblingsgeschenk = 38/Tag → 5 Herzen in ~11 Tagen. Nur plaudern → ~50 Tage.
 **Oli** hat so viele Quellen, dass er in wenigen Tagen bei 5 Herzen ist.
 
-**Herz-Briefe** (`heartLetters`, Belohnung per Post):
-
-| Bewohner | Briefe bei Herz |
-|---|---|
-| Oma Gisela | 1, 2, 3, 4, 5 |
-| Oli | 1, 2, 3, 4, 5 |
-| Jens | 1, 2, 3, 4 |
-| Olaf | 1, 2, 3 |
-| Lars | 1, 3 |
-| Christin | 1, 2 |
-| Thalia | 2, 4 |
+**Herz-Briefe** (`heartLetters`, Belohnung per Post): ✅ **Seit Nov. 2026 bringt jedes Herz (1–5) bei jedem
+Bewohner einen Brief mit Geschenk** (vorher fehlten 12 – siehe `DESIGN_DECISIONS.md` D15). Ein Test sichert das ab.
 
 **Bewertung**
 - ✅ Freundschaft sinkt nie, Geschenk-Reaktionen sind unterhaltsam (auch „pfui!“) – sehr gutes Cozy-Design.
 - ⚠️ **Plateau:** Nach 5 Herzen hat Freundschaft keine weitere Bedeutung. Bei Oli – der wichtigsten Figur –
   passiert das am schnellsten.
-- ⚠️ **Lücken:** Bei Christin (3–5), Lars (2, 4, 5), Thalia (1, 3, 5) und Olaf (4, 5) bringt ein neues Herz
-  nichts außer einer Dialogzeile. Gefühlt „leere“ Herzen.
+- ✅ ~~Lücken bei Christin, Lars, Thalia, Olaf, Jens~~ – geschlossen (W2).
 - ⚠️ Romantische Szenen mit Oli sind ab dem Einzug alle verfügbar – die Beziehung *entwickelt* sich mechanisch
   nicht.
 
@@ -133,6 +123,6 @@ Zeit ──► Jahreszeiten, Feste, Saisonware
 ## Empfehlungen 💡 (Details & Priorität in [`IMPROVEMENTS.md`](IMPROVEMENTS.md))
 
 - Spätspiel-Ziele nach dem letzten Einzug (z. B. kleine Wünsche/Projekte der Bewohner).
-- Leere Herzen füllen (Brief, Rezept, gemeinsamer Moment) – vor allem Christin, Lars, Thalia, Olaf.
+- ✅ Leere Herzen gefüllt (W2).
 - Oli-Beziehung in Stufen erzählen (Momente, die mit den Herzen nach und nach dazukommen).
 - Vollständige Sammlungen würdigen (Brief von Thalia/Oma, Deko-Objekt).

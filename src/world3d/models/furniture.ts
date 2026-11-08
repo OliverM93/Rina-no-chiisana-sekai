@@ -873,6 +873,145 @@ export function makeFurniture(itemId: string, links: FenceLinks = { n: false, e:
       g.add(globe);
       break;
     }
+    // ---- Herz-Geschenke ----
+    case 'setzkasten': {
+      const z = WALL_Z;
+      g.add(b(0.62, 0.62, 0.1, '#c9955f', 0, HANG, z + 0.03));
+      const cols = ['#f4a3b8', '#9ad8c0', '#ffe17a', '#a9c8ff', '#e8873a', '#d6b3ff', '#8fd08a', '#f7f5ec', '#e85a6a'];
+      for (let i = 0; i < 9; i++) {
+        const x = (i % 3 - 1) * 0.19;
+        const y = HANG + (1 - Math.floor(i / 3)) * 0.19;
+        g.add(b(0.16, 0.16, 0.02, '#e6c59c', x, y, z + 0.075));
+        // Inhalt: Samentütchen, Kiesel oder Fläschchen
+        if (i % 3 === 0) g.add(b(0.08, 0.1, 0.02, cols[i], x, y - 0.01, z + 0.095));
+        else if (i % 3 === 1) g.add(s(0.045, 0.03, 0.03, i === 4 ? '#a9a9b2' : cols[i], x, y - 0.04, z + 0.1));
+        else g.add(c(0.025, 0.09, cols[i], x, y - 0.02, z + 0.1));
+      }
+      break;
+    }
+    case 'skelett-kalle': {
+      const bone = '#f3ead8';
+      g.add(c(0.18, 0.03, '#3a3a44', 0, 0.015, 0));
+      g.add(c(0.015, 0.95, '#7a7a84', 0, 0.48, -0.08));
+      g.add(s(0.11, 0.12, 0.1, bone, 0, 1.2, 0));
+      for (const x of [-0.04, 0.04]) g.add(s(0.025, 0.028, 0.01, '#3a3440', x, 1.21, 0.085));
+      g.add(b(0.07, 0.02, 0.01, '#3a3440', 0, 1.13, 0.09));
+      g.add(c(0.02, 0.1, bone, 0, 1.04, 0));
+      for (let i = 0; i < 4; i++) g.add(s(0.12 - i * 0.012, 0.018, 0.07, bone, 0, 0.96 - i * 0.055, 0));
+      g.add(c(0.018, 0.3, bone, 0, 0.84, -0.02));
+      g.add(s(0.11, 0.05, 0.07, bone, 0, 0.66, 0));
+      for (const x of [-1, 1]) {
+        g.add(c(0.016, 0.28, bone, x * 0.15, 0.85, 0).rotateZ(x * 0.15));
+        g.add(c(0.014, 0.24, bone, x * 0.17, 0.6, 0.02).rotateZ(-x * 0.05));
+        g.add(c(0.02, 0.3, bone, x * 0.06, 0.48, 0));
+        g.add(c(0.018, 0.28, bone, x * 0.06, 0.2, 0));
+        g.add(s(0.03, 0.015, 0.05, bone, x * 0.06, 0.05, 0.02));
+      }
+      // Fliege in Rosa
+      for (const x of [-0.03, 0.03]) g.add(s(0.03, 0.02, 0.012, '#e85a8a', x, 1.07, 0.04));
+      g.add(s(0.012, 0.012, 0.012, '#c94a78', 0, 1.07, 0.045));
+      break;
+    }
+    case 'teddy-brummbaer': {
+      const fur = '#b8844e';
+      g.add(s(0.09, 0.1, 0.08, fur, 0, 0.1, 0));
+      g.add(s(0.06, 0.06, 0.04, '#e6c59c', 0, 0.09, 0.05));
+      g.add(s(0.075, 0.07, 0.07, fur, 0, 0.24, 0));
+      for (const x of [-0.055, 0.055]) {
+        g.add(s(0.028, 0.028, 0.018, fur, x, 0.31, 0));
+        g.add(s(0.03, 0.05, 0.03, fur, x * 1.6, 0.13, 0.01));
+        g.add(s(0.035, 0.03, 0.045, fur, x * 0.9, 0.03, 0.04));
+        g.add(s(0.008, 0.008, 0.006, '#2b2a31', x * 0.45, 0.255, 0.065));
+      }
+      g.add(s(0.03, 0.022, 0.02, '#e6c59c', 0, 0.225, 0.06));
+      g.add(s(0.01, 0.008, 0.006, '#2b2a31', 0, 0.232, 0.078));
+      // Pflaster am Bauch
+      const plaster = b(0.06, 0.02, 0.006, '#f7c6d4', 0.01, 0.1, 0.11);
+      plaster.rotation.z = 0.5;
+      g.add(plaster);
+      break;
+    }
+    case 'wandkarte-thalia': {
+      const z = WALL_Z;
+      g.add(b(1.3, 0.8, 0.03, '#8a5a3a', 0, HANG, z + 0.015));
+      g.add(b(1.22, 0.72, 0.01, '#f3ead8', 0, HANG, z + 0.035));
+      // Wiese, Wald, Strand, Meer, Fluss
+      g.add(b(0.86, 0.62, 0.005, '#bfe3a8', -0.13, HANG + 0.02, z + 0.042));
+      for (const [x, y] of [[-0.48, 0.2], [-0.4, 0.26], [-0.5, 0.06], [-0.34, 0.18]] as const) g.add(c(0.045, 0.01, '#6fa86a', x, HANG + y, z + 0.046, cone).rotateX(Math.PI / 2));
+      g.add(b(0.16, 0.62, 0.005, '#f3dfa6', 0.38, HANG + 0.02, z + 0.043));
+      g.add(b(0.12, 0.62, 0.005, '#8ac8f0', 0.52, HANG + 0.02, z + 0.043));
+      const river = b(0.06, 0.66, 0.005, '#7ab8f0', -0.02, HANG + 0.02, z + 0.047);
+      river.rotation.z = 0.25;
+      g.add(river);
+      // Häuser & ein Herz bei Lina
+      for (const [x, y, col] of [[-0.25, -0.12, '#f4a3b8'], [0.1, 0.12, '#a9c8ff'], [0.18, -0.16, '#ffe17a'], [-0.2, 0.15, '#d6b3ff']] as const) g.add(b(0.05, 0.04, 0.006, col, x, HANG + y, z + 0.05));
+      g.add(s(0.025, 0.022, 0.006, '#e8484f', -0.25, HANG - 0.06, z + 0.053));
+      // Windrose
+      g.add(c(0.04, 0.005, '#c9a24a', 0.5, HANG - 0.24, z + 0.05).rotateX(Math.PI / 2));
+      break;
+    }
+    case 'ammonit-lina': {
+      g.add(b(0.18, 0.04, 0.12, DARK_WOOD, 0, 0.02, 0));
+      const shell = mesh(new THREE.TorusGeometry(0.06, 0.03, 8, 18), toon('#c9a77a'));
+      shell.position.set(0, 0.13, 0);
+      g.add(shell);
+      const inner = mesh(new THREE.TorusGeometry(0.03, 0.018, 8, 14), toon('#e6c59c'));
+      inner.position.set(0.005, 0.13, 0.005);
+      g.add(inner);
+      g.add(s(0.015, 0.015, 0.015, '#a98ad8', 0.005, 0.13, 0.01));
+      g.add(b(0.08, 0.02, 0.005, '#e6c59c', 0, 0.025, 0.062));
+      break;
+    }
+    case 'witzkalender': {
+      const z = WALL_Z;
+      g.add(b(0.34, 0.06, 0.03, '#e8484f', 0, HANG + 0.2, z + 0.02));
+      g.add(b(0.32, 0.36, 0.02, '#fffaf2', 0, HANG, z + 0.02));
+      g.add(b(0.28, 0.07, 0.005, '#e8484f', 0, HANG + 0.1, z + 0.032));
+      g.add(b(0.12, 0.1, 0.005, '#3a3440', 0, HANG + 0.0, z + 0.032));
+      for (let i = 0; i < 3; i++) g.add(b(0.22 - i * 0.04, 0.012, 0.004, '#9a9aa4', 0, HANG - 0.09 - i * 0.03, z + 0.032));
+      g.add(c(0.012, 0.01, '#c9cbd3', 0, HANG + 0.25, z + 0.03).rotateX(Math.PI / 2));
+      break;
+    }
+    case 'bilderrahmen-papa': {
+      const frame = new THREE.Group();
+      frame.position.set(0, 0.11, 0);
+      frame.rotation.x = -0.15;
+      frame.add(b(0.2, 0.24, 0.02, '#8a5a3a'));
+      frame.add(b(0.16, 0.2, 0.005, '#bfe6f7', 0, 0, 0.012));
+      frame.add(b(0.16, 0.05, 0.005, '#f3dfa6', 0, -0.075, 0.014));
+      // Papa (weißes Hemd, dunkle Weste) mit der kleinen Lina auf den Schultern
+      frame.add(b(0.05, 0.06, 0.004, '#3a3a44', 0, -0.04, 0.017));
+      frame.add(s(0.02, 0.022, 0.003, '#f2c9a8', 0, 0.0, 0.018));
+      frame.add(s(0.016, 0.016, 0.003, '#f2c9a8', 0, 0.055, 0.019));
+      frame.add(s(0.024, 0.02, 0.003, '#7a4a2a', 0, 0.07, 0.018));
+      frame.add(b(0.03, 0.025, 0.003, '#e85a8a', 0, 0.03, 0.019));
+      g.add(frame);
+      g.add(b(0.02, 0.14, 0.02, '#8a5a3a', 0, 0.07, -0.06).rotateX(0.4));
+      break;
+    }
+    case 'reisekoffer': {
+      g.add(b(0.62, 0.28, 0.4, '#8a5a3a', 0, 0.14, 0));
+      g.add(b(0.64, 0.02, 0.42, '#6a4228', 0, 0.2, 0));
+      for (const x of [-0.2, 0.2]) g.add(b(0.03, 0.29, 0.41, '#5a3a22', x, 0.145, 0));
+      g.add(b(0.14, 0.03, 0.04, '#3a2a22', 0, 0.3, 0));
+      for (const x of [-0.08, 0.08]) g.add(b(0.04, 0.04, 0.02, '#c9a24a', x, 0.24, 0.205));
+      // Aufkleber aus aller Welt
+      const stickers: Array<[number, number, string]> = [[-0.1, 0.1, '#f4a3b8'], [0.08, 0.08, '#a9c8ff'], [0.25, 0.12, '#ffe17a'], [-0.27, 0.07, '#9ad8c0'], [0.0, 0.15, '#e85a6a']];
+      for (const [x, y, col] of stickers) g.add(c(0.04, 0.005, col, x, y, 0.203).rotateX(Math.PI / 2));
+      g.add(b(0.07, 0.05, 0.005, '#fbf6ec', 0.12, 0.16, 0.203));
+      break;
+    }
+    case 'steinmaennchen': {
+      const stones: Array<[number, number, number, string]> = [[0.16, 0.06, 0, '#9a9aa4'], [0.13, 0.05, 0.02, '#b0b0b8'], [0.1, 0.045, -0.01, '#8f8f99'], [0.075, 0.04, 0.01, '#a9a9b2'], [0.055, 0.035, 0, '#9a9aa4']];
+      let y = 0;
+      for (const [r, h, dx, col] of stones) {
+        y += h;
+        g.add(s(r, h, r * 0.9, col, dx, y, 0));
+        y += h * 0.8;
+      }
+      g.add(c(0.03, 0.08, '#c3a8ff', 0, y + 0.04, 0, cone));
+      break;
+    }
     // ---- Garten (draußen) ----
     case 'zaun-holz':
     case 'zaun-weiss':

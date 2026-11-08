@@ -108,6 +108,7 @@ export const JENS: NpcDef = {
     2: { id: 'herz-2', subject: 'Süßes für dich', body: 'Ma chérie,\n\nmein Apfelkuchen-Rezept. Deine Oma behauptet, ihres sei besser.\n\nSie irrt sich. Aber sag ihr das nicht – sie hat das letzte Wort.\n\nOnkel Jens', gift: { itemId: 'rezept-apfelkuchen', count: 1 } },
     3: { id: 'herz-3', subject: 'Ein Stück Paris', body: 'Lina, Darling,\n\nCrêpes! Hauchdünn, mit Liebe gefaltet. So wie in meiner kleinen Lieblingscrêperie am Montmartre.\n\nOnkel Jens', gift: { itemId: 'rezept-crepes', count: 1 } },
     4: { id: 'herz-4', subject: 'Für deine Wand', body: 'Ma chérie,\n\nich hab dir ein Bild gemalt. Ein echter Jens! Eines Tages ist das ein Vermögen wert.\n\n… Oder zumindest hübsch.\n\nOnkel Jens 🎨', gift: { itemId: 'gemaelde-jens', count: 1 } },
+    5: { id: 'herz-5', subject: 'Mon trésor', body: 'Ma chérie,\n\nmein alter Reisekoffer. Er war in Paris, Venedig, Kyoto, New York – und einmal aus Versehen in Wanne-Eickel.\n\nJeder Aufkleber ist eine Geschichte. Ich hab gemerkt: Die schönsten Geschichten passieren inzwischen hier. Bei dir. Bei uns.\n\nAlso soll er bei dir ankommen. Du kannst was draufstellen. Oder ihn packen und mitkommen. Gell?\n\nBisous, dein Onkel Jens 🌈', gift: { itemId: 'reisekoffer', count: 1 } },
   },
 };
 

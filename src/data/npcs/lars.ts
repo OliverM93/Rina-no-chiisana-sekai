@@ -27,7 +27,7 @@ export const LARS: NpcDef = {
     { from: '23:00', label: 'schläft', activity: { kind: 'zuhause', sleeping: true } },
   ],
   preferences: {
-    loves: ['pfefferminztee', 'fischbroetchen', 'apfelkuchen', 'dorsch', 'hecht', 'gruener-salat', 'karottensuppe', 'strauss-kraeuter'],
+    loves: ['thymiantee', 'pfefferminztee', 'fischbroetchen', 'apfelkuchen', 'dorsch', 'hecht', 'gruener-salat', 'karottensuppe', 'strauss-kraeuter'],
     likes: ['apfel', 'birne', 'ei', 'ruehrei', 'obstsalat', 'kamillentee', 'barsch', 'hering', 'pfefferminze', 'kamille', 'hirschkaefer', 'glitzerstein', 'karotte', 'salat', 'tomate', 'kuerbissuppe', 'kartoffelsuppe', 'petersilie', 'strauss-sonne', 'strauss-lavendel', 'strauss-bunt'],
     dislikes: ['weinbergschnecke', 'ohrenqualle', 'aal'],
   },
@@ -96,7 +96,10 @@ export const LARS: NpcDef = {
   ],
   heartLetters: {
     1: { id: 'herz-1', subject: 'Omas Lieblingstee', body: 'Lina,\n\nich hab dir aufgeschrieben, wie man eine richtig gute Kräutermischung macht. Kamille, Minze und Lavendel.\n\nOma sagt, das wäre ihr Rezept. Es ist ihr Rezept. Ich geb\'s zu.\n\nDein Lars', gift: { itemId: 'rezept-kraeutermischung', count: 1 } },
+    2: { id: 'herz-2', subject: 'Ärztlicher Rat', body: 'Schwesterherz,\n\nmein Hausmittel gegen Husten, Schnupfen und schlechte Laune: Thymiantee. Zwei Zweige Thymian, heißes Wasser, ein Löffel Honig.\n\nOma sagt, das hätte sie mir beigebracht. Das stimmt nicht.\n\n… Okay, das stimmt.\n\nDein Lars', gift: { itemId: 'rezept-thymiantee', count: 1 } },
     3: { id: 'herz-3', subject: 'Für dein Badezimmer', body: 'Schwesterherz,\n\nein kleiner Erste-Hilfe-Schrank. Mit Pflastern in Rosa. Mit Herzchen drauf.\n\nNicht, weil du sie brauchst. Sondern weil sie hübsch sind.\n\nDein großer Bruder', gift: { itemId: 'erste-hilfe', count: 1 } },
+    4: { id: 'herz-4', subject: 'Ein neuer Mitbewohner', body: 'Schwesterherz,\n\ndarf ich vorstellen: Knochen-Kalle. Er hat mich durchs ganze Studium begleitet und kennt jeden Knochen beim Namen. Seinen eigenen sowieso.\n\nIch hab ihm eine Fliege umgebunden, damit er bei dir nicht so nackt herumsteht.\n\nWenn Oli nachts erschrickt: Das ist Kalle. Der tut nix. Der ist ja nur Skelett. So, und nicht mit „Skelet“ – sonst fehlt ihm was.\n\nDein Lars', gift: { itemId: 'skelett-kalle', count: 1 } },
+    5: { id: 'herz-5', subject: 'Mein erster Patient', body: 'Lina,\n\nerinnerst du dich an Dr. Brummbär? Ich war sieben, er hatte „Bauchweh“, und ich hab ihn mit Omas Nähkästchen operiert. Du hast assistiert und das Pflaster gehalten.\n\nIch glaube, an dem Tag hab ich beschlossen, Arzt zu werden.\n\nEr soll jetzt bei dir wohnen. Pass gut auf ihn auf. Und auf dich.\n\nDein großer Bruder', gift: { itemId: 'teddy-brummbaer', count: 1 } },
   },
 };
 

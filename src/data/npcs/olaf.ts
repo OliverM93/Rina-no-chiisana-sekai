@@ -99,6 +99,8 @@ export const OLAF: NpcDef = {
     1: { id: 'herz-1', subject: 'Eine solide Investition', body: 'Liebe Lina,\n\nich hab dir eine Bauanleitung für eine Steinlaterne aufgeschrieben. Material: Steine. Kosten: null Sternchen. Rendite: Gemütlichkeit!\n\nDein Papa', gift: { itemId: 'rezept-steinlaterne', count: 1 } },
     2: { id: 'herz-2', subject: 'Für deine Teestunde', body: 'Liebe Lina,\n\nfür gemütliche Teestunden in deinem Häuschen. Christin hat es ausgesucht, ich hab bezahlt. Arbeitsteilung!\n\nDein Papa', gift: { itemId: 'teeservice', count: 1 } },
     3: { id: 'herz-3', subject: 'Kieselsteine sortiert', body: 'Liebe Lina,\n\nich hab am Wochenende Kieselsteine nach Größe sortiert. Christin sagt, das sei „ein Hobby“. Ich sage: Ordnung!\n\nDabei ist mir ein Muster eingefallen. Die Anleitung liegt bei.\n\nDein Papa', gift: { itemId: 'rezept-kieselmosaik', count: 1 } },
+    4: { id: 'herz-4', subject: 'Ein Witz am Tag', body: 'Liebe Lina,\n\nich hab dir einen Kalender gebastelt. Für jeden Tag ein Witz. Selbst geschrieben!\n\nChristin hat sie vorher gelesen und gesagt: „Olaf, nein.“ Ich habe das als Zustimmung gewertet.\n\nHäng ihn dir auf und schau jeden Tag mal drauf. Oder nicht. Steuerlich ist beides absetzbar.\n\nDein Papa', gift: { itemId: 'witzkalender', count: 1 } },
+    5: { id: 'herz-5', subject: 'Meine beste Investition', body: 'Liebe Lina,\n\nbeim Aufräumen hab ich dieses Foto gefunden. Du auf meinen Schultern, irgendwo am Meer. Du hast an meinen Haaren gezogen, damit ich schneller laufe.\n\nDamals war ich auch noch schneller. Heute würde ich nur noch gemütlich schlendern – mit dir aber immer noch gern.\n\nIch hab es dir rahmen lassen. Es ist das Wertvollste, was ich habe – nach dir.\n\nDein Papa', gift: { itemId: 'bilderrahmen-papa', count: 1 } },
   },
 };
 
@@ -122,4 +124,30 @@ export const INTEREST_LETTERS: readonly LetterTemplate[] = [
   { id: 'zinsen', subject: 'Dein Kontoauszug 📒', body: 'Liebe Lina,\n\nneuer Monat, neue Zinsen! Auf dein Sparbuch sind {zinsen} gekommen. Guthaben jetzt: {guthaben}.\n\nDas nennt man Zinseszins. Christin sagt, ich soll beim Abendessen nicht mehr davon anfangen. Aber es ist doch so schön!\n\nDein Papa' },
   { id: 'zinsen', subject: 'Zinsen sind da! 📈', body: 'Liebe Lina,\n\nich habe nachgerechnet – zweimal, sicher ist sicher: Diesen Monat gab es {zinsen} Zinsen. Neues Guthaben: {guthaben}.\n\nIch bin sehr stolz auf dich. Und ein bisschen auf mich, weil ich so gut rechnen kann.\n\nDein Papa' },
   { id: 'zinsen', subject: 'Post von der Dorfkasse', body: 'Liebe Lina,\n\ndein Geld hat fleißig für dich gearbeitet, während du geschlafen hast: {zinsen} Zinsen! Auf dem Sparbuch liegen jetzt {guthaben}.\n\nKleinvieh macht auch Mist. Großvieh übrigens auch.\n\nDein Papa' },
+];
+
+/** Papas Witze-Kalender (Herz-Geschenk): ein Witz pro Tag, reproduzierbar ausgewählt */
+export const OLAF_CALENDAR_JOKES: readonly string[] = [
+  'Was macht ein Steuerberater im Garten? Er pflanzt Abschreibungen.',
+  'Warum können Geister so schlecht lügen? Weil man durch sie hindurchsieht.',
+  'Treffen sich zwei Kiesel. Sagt der eine: „Na, alles glatt?“',
+  'Wie nennt man einen Bumerang, der nicht zurückkommt? Stock.',
+  'Was ist orange und läuft durch den Wald? Eine Wanderine.',
+  'Warum hat der Fisch so gute Noten? Weil er immer in der Schule ist.',
+  'Was sagt der große Stift zum kleinen Stift? „Wachs mal, Stift!“',
+  'Ich wollte einen Witz über Zinsen machen. Aber der hat sich noch nicht ausgezahlt.',
+  'Was ist grün und klopft an die Tür? Ein Klopfsalat.',
+  'Was ist rot und schlecht für die Zähne? Ein Ziegelstein.',
+  'Was macht ein Clown im Büro? Faxen. … Christin hat gelacht. Glaube ich.',
+  'Was macht ein Pirat am Computer? Er drückt die Enter-Taste.',
+  'Was ist braun, klebrig und läuft durch die Wüste? Ein Karamel.',
+  'Warum trägt der Mathematiker so selten Socken? Er hat immer schon genug Ungerades.',
+  'Was liegt am Strand und spricht undeutlich? Eine Nuschel.',
+  'Treffen sich zwei Magnete. Sagt der eine: „Was soll ich heute bloß anziehen?“',
+  'Was macht eine Wolke, wenn es juckt? Sie sucht sich einen Wolkenkratzer.',
+  'Wie heißt der Bruder von Elvis? Zwölfis.',
+  'Wo wohnen Katzen? Im Miezhaus.',
+  'Was ist ein Keks unter einem Baum? Ein schattiges Plätzchen.',
+  'Ich hab meiner Uhr gesagt, sie soll leiser ticken. Jetzt ist sie eingeschnappt. Sekündlich.',
+  'Warum ist das Finanzamt so ruhig? Weil dort jeder seine Ruhe abgibt. Freiwillig. Mehr oder weniger.',
 ];

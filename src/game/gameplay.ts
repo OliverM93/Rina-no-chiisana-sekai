@@ -205,6 +205,26 @@ function handleHeartUp(session: Session, npc: NpcDef, st: NpcState, out: string[
   for (const h of due) sendLetter(session, npc, npc.heartLetters[h], `${npc.id}-${npc.heartLetters[h].id}`);
 }
 
+/**
+ * Herz-Briefe nachliefern: Kamen Briefe für schon erreichte Herzen neu dazu (oder fehlen aus älteren Spielständen),
+ * schickt der Bewohner sie jetzt. Gibt die Anzahl der neuen Briefe zurück.
+ */
+export function catchUpHeartLetters(session: Session): number {
+  const data = session.data;
+  if (!data) return 0;
+  let sent = 0;
+  for (const npc of NPCS) {
+    const st = data.npcs[npc.id];
+    if (!st) continue;
+    for (const h of claimHeartRewards(st, Object.keys(npc.heartLetters).map(Number))) {
+      sendLetter(session, npc, npc.heartLetters[h], `${npc.id}-${npc.heartLetters[h].id}`);
+      sent++;
+    }
+  }
+  if (sent > 0) session.changed();
+  return sent;
+}
+
 /** Zusätzliche Freundschaft (z. B. nach einem gemeinsamen Moment). Gibt Herz-Zeilen zurück, falls ein Herz dazukam. */
 export function addFriendship(session: Session, npcId: string, points: number): string[] {
   const npc = NPC_BY_ID[npcId];
