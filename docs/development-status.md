@@ -9,6 +9,8 @@
   Request (Typecheck, Tests, Build); jeder Merge nach `main` wird automatisch auf GitHub Pages veröffentlicht.
 - **Als Nächstes denkbar:** Fotomodus & Tagebuch, Geburtstage der übrigen Bewohner (Daten fehlen), Blumen-Kreuzungen,
   Sternbilder, französisches Bistro-Möbelset – siehe „Ideen-Parkplatz“ und „Offene Fragen“ unten.
+- **Game Design:** Wissensbasis in [`game-design/`](game-design/README.md) mit Analyse und priorisierter
+  Verbesserungsliste ([`IMPROVEMENTS.md`](game-design/IMPROVEMENTS.md)) – vor neuen Mechaniken gilt die Designprüfung.
 - **Pflege:** Wird ein Feature fertig, wird es hier abgehakt (✅) – siehe Regeln in [`../CLAUDE.md`](../CLAUDE.md).
 
 Verwandte Doku: [`architecture.md`](architecture.md) (Technik) · [`game-mechanics.md`](game-mechanics.md) (Spielregeln).

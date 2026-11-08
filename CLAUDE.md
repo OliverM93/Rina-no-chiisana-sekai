@@ -89,6 +89,17 @@ Die Doku liegt in `docs/` – **bei Änderungen die passende Datei mitpflegen**:
 | [`docs/game-mechanics.md`](docs/game-mechanics.md) | Fortschritt, Bewohner, Natur, Zuhause, Garten, Feste, Winterzauber … mit Ort im Code | neue oder geänderte Spielregeln, Inhalte, Bewohner-Features |
 | [`docs/development-status.md`](docs/development-status.md) | Meilensteine (✅/🚧/⬜), aktueller Stand, Ideen-Parkplatz, offene Fragen | ein Feature fertig wird oder Pläne sich ändern |
 | [`README.md`](README.md) | Spielen, Steuerung, Entwickeln, Veröffentlichung | Steuerung/Befehle ändern sich |
+| [`docs/game-design/`](docs/game-design/README.md) | Game-Design-Wissensbasis: Vision, Designsäulen, Loops, Progression, Ökonomie, Balancing, Pacing, Psychologie, Playtesting, Entscheidungen, priorisierte Verbesserungen | neue Mechaniken, Balancing-Änderungen, Designentscheidungen |
+
+### Game Design (Rolle: Game Designer & Game Director)
+
+Technisch korrekt ist nicht automatisch gutes Design. Vor jeder **neuen Gameplay-Mechanik** oder grundlegenden
+Änderung eines Systems: kurze **Designprüfung** mit den 8 Fragen aus
+[`docs/game-design/README.md`](docs/game-design/README.md) (im PR beantworten), Abgleich mit den
+[Designsäulen](docs/game-design/DESIGN_PILLARS.md) und [Balancing-Leitlinien](docs/game-design/BALANCING_GUIDELINES.md).
+Problematische Ideen offen ansprechen und Alternativen vorschlagen – nicht jede Idee muss umgesetzt werden.
+Keine Mechanik nur für mehr Spielzeit oder Rückkehr (keine Streaks, kein FOMO, keine Strafe fürs Pausieren).
+In den Dokumenten klar trennen: ✅ implementiert · 🗓️ geplant · 💡 Empfehlung · ❓ offen.
 
 `docs/screenshots/` enthält die Bilder für README und Pull Requests (nie Fotos echter Personen).
 
