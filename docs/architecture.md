@@ -102,7 +102,11 @@ src/
 - **Menü & Fenster:** Dialoge, Fenster und Rückfragen sperren das Menü (`Hud`: `busy`), ein offenes Menü schließt sich,
   wenn ein Dialog oder Fenster aufgeht (`App`). Zoom-Knöpfe senden `camera:zoom` auf dem Bus (`World3D.zoomBy`).
   Tasche, Verkaufskiste, Geschenk- und Samenauswahl lassen sich mit Pfeiltasten durchlaufen (Leertaste wählt/markiert, Enter
-  verkauft bzw. schenkt/pflanzt).
+  verkauft bzw. schenkt/pflanzt). **Alle anderen Fenster & Menüs** (Menü, Post, Katalog, Werkbank, Küche, Apotheke, Sammelbuch,
+  Karte, Galerie, TV, Bank, Rückfragen, Titel, Charakter-Editor) navigiert `ui/navigation.ts`: ein Fang-Listener in `App`
+  schickt die Pfeile ans oberste Fenster (`.modal-layer`/`.title-layer`), `pickNext` wählt den nächsten Knopf in der Richtung
+  (geradeaus vor schräg, am Zeilenende in Leserichtung weiter), Enter/Leertaste drückt den Fokus-Knopf wie im Browser üblich.
+  Textfelder und Schieberegler behalten links/rechts. **Neues Fenster?** Einfach Knöpfe (`<button>`) benutzen – dann geht es von allein.
 - **Bewohner sind fest:** Stehende, sitzende und sprechende Bewohner blockieren Lina (`Npc.blocksPlayer`,
   `World3D.npcStands`); wer läuft oder in einer Szene mitspielt, nicht.
 - **Koordinaten:** Spiellogik & Spielstand rechnen in Welteinheiten (1 Kachel = `TILE` = 64). Three.js
