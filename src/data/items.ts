@@ -4,6 +4,7 @@ import { RECIPE_ITEM_PREFIX, RECIPES } from './recipes';
 import { FISH, INSECTS } from './species';
 import { FINDS } from './fossils';
 import { CROPS } from './crops';
+import { BOUQUETS } from './straeusse';
 import { COLORS, colorWord, FLOWER_SPECIES, type FlowerColor, paletteOf, SPECIES_BY_ID, variantId } from './flowers';
 
 /**
@@ -174,6 +175,9 @@ for (const sp of FLOWER_SPECIES) {
     });
   }
 }
+
+// Sträuße (aus `straeusse.ts`)
+for (const b of BOUQUETS) list.push({ id: b.id, name: b.name, plural: b.plural, category: 'blume', price: b.price, maxStack: 10, description: b.description });
 
 // Gemüse & Kräuter fürs Beet (aus `crops.ts`): Erntegut & Samen
 for (const c of CROPS) {

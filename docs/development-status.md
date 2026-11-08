@@ -260,7 +260,7 @@ Legende: ✅ erledigt · 🚧 in Arbeit · ⬜ geplant
     gelbe Tulpen im Starterset
   - ✅ **Phase 2 – Samenstand:** Christins Stand auf dem Dorfplatz (ab Olafs Einzug), Standard-Samen immer, täglich drei wechselnde Farb-Samen, keine Misch-Farben
   - ✅ **Phase 3 – Gemüse & Kräuter:** 6 Gemüse + 4 Kräuter im Beet (mehrere Stück je Ernte, Wurzelgemüse räumt den Platz), Reiter am Samenstand (saisonal), 7 neue Gerichte, Rezepte bei der ersten Ernte
-  - ⬜ Phase 4 – Sträuße & Blumendeko (Vase, Kranz, Geschenke)
+  - ✅ **Phase 4 – Sträuße & Blumendeko:** 7 Sträuße binden (Reiter „Blumen“ an der Werkbank), Glasvase im Katalog, Vasen mit Strauß & 4 Wandkränze, Strauß-Geschenke für alle Bewohner
   - ⬜ Phase 5 – Gewächshaus für den Winter
 - ✅ **Pfeiltasten in allen Fenstern & Menüs** (`ui/navigation.ts`)
 - ✅ **Mehr Musik draußen:** 23 neue Lieder (Tag, Morgen, Abend, Nacht, Regen, Schnee + je ein Tageslied pro Jahreszeit), die sich bei jedem neuen Lied reihum abwechseln
