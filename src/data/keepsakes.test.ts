@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { FURNITURE } from './furniture';
 import { GARDEN_FLOWERS, isKeepsake, itemDef, TOOLS } from './items';
 import { NPCS } from './npcs';
+import { ALL_STAND_SEEDS } from './seedstand';
 import { CHECKUP_GIFTS } from './npcs/lars';
 import { DIG_FINDS } from './winston';
 import { ADVENT_DOORS } from './winter';
@@ -32,6 +33,7 @@ describe('Nichts geht für immer verloren', () => {
       ...[...NPCS.flatMap((n) => [...n.letters, ...Object.values(n.heartLetters)]), ...ADVENT_DOORS].map((l) => l.gift?.itemId ?? ''),
       'samen-tulpe-gelb', // von Oma zum Start
       ...NPCS.map((n) => n.dailyTreat?.itemId ?? ''),
+      ...ALL_STAND_SEEDS, // Christins Samenstand
     ]);
     // Mischfarben entstehen nur durch Kreuzen (siehe flowers.test.ts)
     for (const g of GARDEN_FLOWERS.filter((x) => !x.crossOnly)) expect(sources.has(g.seed), `${g.seed} gibt es nirgends`).toBe(true);

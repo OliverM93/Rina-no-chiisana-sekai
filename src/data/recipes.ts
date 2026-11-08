@@ -40,6 +40,14 @@ export const RECIPES: readonly RecipeDef[] = [
   { id: 'fischbroetchen', station: 'kueche', result: 'fischbroetchen', ingredients: [{ itemId: 'hering', count: 1 }, { itemId: 'ei', count: 1 }], hint: 'Freunde dich mit Jens an.' },
   { id: 'apfelkuchen', station: 'kueche', result: 'apfelkuchen', ingredients: [{ itemId: 'apfel', count: 3 }, { itemId: 'ei', count: 2 }], hint: 'Jens verrät es bestimmt, wenn ihr euch näherkommt.' },
   { id: 'crepes', station: 'kueche', result: 'crepes', count: 2, ingredients: [{ itemId: 'ei', count: 2 }, { itemId: 'pfirsich', count: 1 }], hint: 'Ein Rezept aus Paris – von Jens.' },
+  // Aus dem eigenen Beet: Gemüse & Kräuter (die meisten Rezepte lernt Lina bei der ersten Ernte)
+  { id: 'tomatensalat', station: 'kueche', result: 'tomatensalat', ingredients: [{ itemId: 'tomate', count: 2 }, { itemId: 'basilikum', count: 1 }], fund: 'tomate', hint: 'Pflanz Tomaten im Beet …' },
+  { id: 'kartoffelsuppe', station: 'kueche', result: 'kartoffelsuppe', ingredients: [{ itemId: 'kartoffel', count: 3 }, { itemId: 'schnittlauch', count: 1 }], fund: 'kartoffel', hint: 'Pflanz Kartoffeln im Beet …' },
+  { id: 'kraeuterquark', station: 'kueche', result: 'kraeuterquark', ingredients: [{ itemId: 'kartoffel', count: 2 }, { itemId: 'schnittlauch', count: 1 }, { itemId: 'petersilie', count: 1 }], fund: 'petersilie', hint: 'Pflanz Petersilie im Beet …' },
+  { id: 'karottensuppe', station: 'kueche', result: 'karottensuppe', ingredients: [{ itemId: 'karotte', count: 3 }, { itemId: 'petersilie', count: 1 }], fund: 'karotte', hint: 'Pflanz Karotten im Beet …' },
+  { id: 'ratatouille', station: 'kueche', result: 'ratatouille', ingredients: [{ itemId: 'tomate', count: 1 }, { itemId: 'zucchini', count: 1 }, { itemId: 'basilikum', count: 1 }, { itemId: 'thymian', count: 1 }], fund: 'thymian', hint: 'Pflanz Thymian im Beet – Jens liebt ihn …' },
+  { id: 'gruener-salat', station: 'kueche', result: 'gruener-salat', ingredients: [{ itemId: 'salat', count: 2 }, { itemId: 'tomate', count: 1 }, { itemId: 'schnittlauch', count: 1 }], fund: 'salat', hint: 'Pflanz Salat im Beet …' },
+  { id: 'kuerbissuppe', station: 'kueche', result: 'kuerbissuppe', ingredients: [{ itemId: 'kuerbis', count: 1 }, { itemId: 'thymian', count: 1 }], fund: 'kuerbis', hint: 'Pflanz Kürbis im Beet …' },
   // Winter: Rezeptkarten aus Olis Adventskalender
   { id: 'bratapfel', station: 'kueche', result: 'bratapfel', ingredients: [{ itemId: 'apfel', count: 1 }, { itemId: 'keks', count: 1 }], hint: 'Steckt vielleicht in einem Türchen von Olis Adventskalender …' },
   { id: 'zimtsterne', station: 'kueche', result: 'zimtsterne', count: 3, ingredients: [{ itemId: 'ei', count: 1 }, { itemId: 'keks', count: 2 }], hint: 'Steckt vielleicht in einem Türchen von Olis Adventskalender …' },

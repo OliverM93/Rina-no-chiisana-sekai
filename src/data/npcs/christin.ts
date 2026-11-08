@@ -33,8 +33,8 @@ export const CHRISTIN: NpcDef = {
     { from: '22:00', label: 'schläft', activity: { kind: 'zuhause', sleeping: true } },
   ],
   preferences: {
-    loves: ['lavendel', 'vergissmeinnicht', 'rose', 'ikebana', 'obstsalat', 'lavendelkekse'],
-    likes: ['ei', 'wachtelei', 'tulpe', 'sonnenblume', 'wildblumen', 'jakobsmuschel', 'herzmuschel', 'pfirsich', 'apfel'],
+    loves: ['lavendel', 'vergissmeinnicht', 'rose', 'ikebana', 'obstsalat', 'lavendelkekse', 'gruener-salat'],
+    likes: ['ei', 'wachtelei', 'tulpe', 'sonnenblume', 'wildblumen', 'jakobsmuschel', 'herzmuschel', 'pfirsich', 'apfel', 'salat', 'schnittlauch', 'basilikum', 'petersilie', 'karottensuppe'],
     dislikes: ['ast', 'stein', 'weinbergschnecke', 'waldameise', 'strandkrabbe', 'aal'],
   },
   dialogue: {
@@ -49,6 +49,7 @@ export const CHRISTIN: NpcDef = {
       { text: ['Dieser Regen!', 'Jetzt tragen alle Matsch auf den Dorfplatz. Ich seh schon, was ich morgen mache.'], when: { tags: ['wetter-regen'] }, weight: 3 },
     ],
     chat: [
+      { text: ['Dein Gemüse steht übrigens in Reihen. Sehr schön.', 'Karotten links, Salat rechts, Kräuter vorn. Wer so sät, kann so ernten.'], weight: 3 },
       { text: ['Ich hab heute die Gewürze nach Alphabet sortiert.', 'Olaf hat gefragt, wo der Zimt ist. Ich hab gesagt: Zwischen Kurkuma und Zitronenpfeffer. Er hat mich angeschaut, als wär ich eine Zauberin.'] },
       { text: ['Weißt du, was beruhigend ist?', 'Ein frisch gefegter Weg. Ganz ohne Blätter. … Für ungefähr drei Minuten.'] },
       { text: ['Dein Winston hat heute vor unserer Tür gesessen und mich angeguckt.', 'Ich hab ihm die Pfoten abgewischt. Er hat es mit Würde getragen.'] },

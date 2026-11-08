@@ -3,6 +3,7 @@
  * Angel-Pose. Alles aus Grundformen, Ursprung = Bodenmitte.
  */
 import * as THREE from 'three';
+import { isCrop } from '../../data/crops';
 import type { InsectDef } from '../../data/species';
 import { darken, lighten } from '../../style/palette';
 import { mesh, toon } from '../materials';
@@ -220,6 +221,117 @@ export function makeCritter(def: InsectDef): CritterModel {
 // Pflanzen im Beet
 // ---------------------------------------------------------------------------
 
+/** Gemüse & Kräuter ab Stufe 2 (wächst) – Stufe 3 trägt das Erntegut (siehe `data/crops.ts`) */
+function makeCrop(stage: number, id: string, color: string, center: string): THREE.Group {
+  const g = new THREE.Group();
+  const ripe = stage === 3;
+  const green = '#5fb05a';
+  const tuft = (n: number, h: number, spread: number, col: string, w = 0.012) => {
+    for (let i = 0; i < n; i++) {
+      const a = (i / n) * Math.PI * 2;
+      const leaf = p(cone, col, w, h, w, Math.cos(a) * spread * 0.3, h / 2, Math.sin(a) * spread * 0.3);
+      leaf.rotation.z = -Math.cos(a) * spread;
+      leaf.rotation.x = Math.sin(a) * spread;
+      g.add(leaf);
+    }
+  };
+  const bush = (n: number, r: number, h: number, col: string, size = 0.045) => {
+    for (let i = 0; i < n; i++) {
+      const a = i * 2.4;
+      const rr = r * (0.4 + ((i * 37) % 10) / 14);
+      g.add(p(sphere, i % 2 ? col : lighten(col, 0.08), size, size * 0.8, size, Math.cos(a) * rr, h * (0.4 + ((i * 53) % 10) / 16), Math.sin(a) * rr));
+    }
+  };
+  switch (id) {
+    case 'tomate': {
+      const h = ripe ? 0.32 : 0.22;
+      g.add(p(cyl, '#cfa175', 0.007, h + 0.05, 0.007, 0.05, (h + 0.05) / 2, 0.03)); // Stab
+      g.add(p(cyl, darken(green, 0.15), 0.012, h, 0.012, 0, h / 2, 0));
+      bush(ripe ? 9 : 6, 0.07, h, green, 0.045);
+      if (ripe) for (const [x, y, z] of [[0.06, 0.14, 0.03], [-0.06, 0.2, -0.02], [0.03, 0.27, 0.06], [-0.03, 0.12, 0.06]] as const) g.add(p(sphere, '#e8484f', 0.04, 0.038, 0.04, x, y, z));
+      else g.add(p(sphere, '#f7d26a', 0.015, 0.015, 0.015, 0.04, h - 0.03, 0.03));
+      break;
+    }
+    case 'karotte':
+      tuft(ripe ? 9 : 6, ripe ? 0.24 : 0.15, 0.45, darken('#6fbf5f', 0.05), 0.014);
+      if (ripe) g.add(p(sphere, '#f59a3a', 0.05, 0.03, 0.05, 0, 0.012, 0));
+      break;
+    case 'kartoffel':
+      bush(ripe ? 10 : 7, 0.09, 0.22, '#5aa055', 0.05);
+      if (ripe) for (const [x, z] of [[0.05, 0.03], [-0.05, 0.05], [0.0, -0.06], [-0.07, -0.02]] as const) g.add(p(sphere, '#f1efe9', 0.018, 0.014, 0.018, x, 0.24, z));
+      break;
+    case 'salat': {
+      const n = ripe ? 8 : 5;
+      for (let i = 0; i < n; i++) {
+        const a = (i / n) * Math.PI * 2;
+        const l = p(sphere, i % 2 ? '#8fd08a' : '#6fbf5f', 0.07, 0.025, 0.05, Math.cos(a) * 0.05, 0.045 + (i % 2) * 0.012, Math.sin(a) * 0.05);
+        l.rotation.y = -a;
+        l.rotation.z = Math.cos(a) * 0.35;
+        g.add(l);
+      }
+      if (ripe) g.add(p(sphere, '#b8e6a0', 0.06, 0.06, 0.06, 0, 0.07, 0));
+      break;
+    }
+    case 'zucchini':
+      for (let i = 0; i < 5; i++) {
+        const a = (i / 5) * Math.PI * 2;
+        const l = p(sphere, '#4f9a5a', 0.09, 0.015, 0.06, Math.cos(a) * 0.08, 0.09 + (i % 2) * 0.03, Math.sin(a) * 0.08);
+        l.rotation.y = -a;
+        g.add(l);
+      }
+      g.add(p(cyl, darken(green, 0.15), 0.012, 0.1, 0.012, 0, 0.05, 0));
+      if (ripe) {
+        for (const [x, z, r] of [[0.1, 0.07, 0.5], [-0.09, 0.09, -0.6]] as const) {
+          const z1 = p(cyl, '#3f8a4a', 0.028, 0.18, 0.028, x, 0.03, z);
+          z1.rotation.z = Math.PI / 2;
+          z1.rotation.y = r;
+          g.add(z1);
+        }
+        g.add(p(sphere, '#f7d26a', 0.03, 0.025, 0.03, 0.02, 0.14, -0.06));
+      }
+      break;
+    case 'kuerbis':
+      for (let i = 0; i < 4; i++) {
+        const a = (i / 4) * Math.PI * 2 + 0.4;
+        g.add(p(sphere, '#4f9a5a', 0.08, 0.014, 0.06, Math.cos(a) * 0.1, 0.1 + (i % 2) * 0.03, Math.sin(a) * 0.1).rotateY(-a));
+      }
+      g.add(p(cyl, darken(green, 0.15), 0.012, 0.1, 0.012, 0, 0.05, 0));
+      if (ripe) {
+        g.add(p(sphere, '#f08a2a', 0.1, 0.075, 0.1, 0.02, 0.07, 0.1));
+        for (const dx of [-0.05, 0, 0.05]) g.add(p(sphere, '#f59a3a', 0.035, 0.07, 0.09, 0.02 + dx, 0.075, 0.1));
+        g.add(p(cyl, '#6a8a3a', 0.012, 0.04, 0.012, 0.02, 0.15, 0.1));
+      }
+      break;
+    case 'basilikum':
+      g.add(p(cyl, darken(color, 0.15), 0.01, 0.16, 0.01, 0, 0.08, 0));
+      bush(ripe ? 12 : 7, 0.07, ripe ? 0.26 : 0.18, color, 0.04);
+      break;
+    case 'petersilie':
+      bush(ripe ? 14 : 8, 0.07, ripe ? 0.2 : 0.14, color, 0.035);
+      break;
+    case 'schnittlauch': {
+      const n = ripe ? 12 : 8;
+      for (let i = 0; i < n; i++) {
+        const a = i * 2.1;
+        const h = (ripe ? 0.2 : 0.13) + ((i * 7) % 5) * 0.012;
+        const stalk = p(cyl, color, 0.006, h, 0.006, Math.cos(a) * 0.035, h / 2, Math.sin(a) * 0.035);
+        stalk.rotation.z = Math.cos(a) * 0.12;
+        stalk.rotation.x = -Math.sin(a) * 0.12;
+        g.add(stalk);
+        if (ripe && i % 3 === 0) g.add(p(sphere, center, 0.022, 0.022, 0.022, Math.cos(a) * 0.045, h + 0.01, Math.sin(a) * 0.045));
+      }
+      break;
+    }
+    case 'thymian':
+      bush(ripe ? 12 : 8, 0.06, 0.07, color, 0.03);
+      if (ripe) for (const [x, z] of [[0.03, 0.02], [-0.04, 0.03], [0.01, -0.05], [-0.02, 0.0]] as const) g.add(p(sphere, center, 0.011, 0.011, 0.011, x, 0.09, z));
+      break;
+    default:
+      bush(6, 0.06, 0.15, green, 0.04);
+  }
+  return g;
+}
+
 export function makePlant(stage: number, color: string, center: string, flower: string): THREE.Group {
   const g = new THREE.Group();
   const leaf = '#6fbf5f';
@@ -231,6 +343,7 @@ export function makePlant(stage: number, color: string, center: string, flower: 
     g.add(tag);
     return g;
   }
+  if (stage >= 2 && isCrop(flower)) return makeCrop(stage, flower, color, center);
   const h = stage === 1 ? 0.08 : flower === 'sonnenblume' ? 0.5 : 0.3;
   g.add(p(cyl, darken(leaf, 0.1), 0.012, h, 0.012, 0, h / 2, 0));
   for (const s of [-1, 1]) {

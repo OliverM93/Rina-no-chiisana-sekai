@@ -27,8 +27,8 @@ export const LARS: NpcDef = {
     { from: '23:00', label: 'schläft', activity: { kind: 'zuhause', sleeping: true } },
   ],
   preferences: {
-    loves: ['pfefferminztee', 'fischbroetchen', 'apfelkuchen', 'dorsch', 'hecht'],
-    likes: ['apfel', 'birne', 'ei', 'ruehrei', 'obstsalat', 'kamillentee', 'barsch', 'hering', 'pfefferminze', 'kamille', 'hirschkaefer', 'glitzerstein'],
+    loves: ['pfefferminztee', 'fischbroetchen', 'apfelkuchen', 'dorsch', 'hecht', 'gruener-salat', 'karottensuppe'],
+    likes: ['apfel', 'birne', 'ei', 'ruehrei', 'obstsalat', 'kamillentee', 'barsch', 'hering', 'pfefferminze', 'kamille', 'hirschkaefer', 'glitzerstein', 'karotte', 'salat', 'tomate', 'kuerbissuppe', 'kartoffelsuppe', 'petersilie'],
     dislikes: ['weinbergschnecke', 'ohrenqualle', 'aal'],
   },
   dialogue: {
@@ -44,6 +44,8 @@ export const LARS: NpcDef = {
       { text: ['Schnee! Schal an, Mütze auf!', 'Ärztliche Anordnung. Und brüderliche auch.'], when: { tags: ['wetter-schnee'] }, weight: 3 },
     ],
     chat: [
+      { text: ['Du baust Gemüse an? Sehr gut.', 'Karotten, Salat, Kräuter. Als Arzt sage ich: Das ist die beste Medizin. Als Bruder sage ich: Bitte nicht nur Pfannkuchen.'], weight: 3 },
+      { text: ['Petersilie, Schnittlauch, Thymian …', 'Ich hab das alles in der Apotheke getrocknet. Zählt als Hausmittel. Oma schwört drauf.'] },
       { text: ['Dr. No aus „Schwerer Weg“ – kennst du den?', 'Fachlich gesehen: streng, aber fair. Genau so einen Chefarzt hätte ich mir manchmal gewünscht. Ich würde mit ihm einen Kaffee trinken.'] },
       { text: ['Auf der Weihnachtsfeier im Krankenhaus wollte jede Kollegin neben mir sitzen.', 'Ich hab gesagt: „Platz ist genug für alle.“ … Das war, glaub ich, nicht die richtige Antwort.'] },
       { text: ['Eine Ärztin hat mich gefragt, ob ich mal „was Privates“ mit ihr besprechen will.', 'Ich hab gesagt: „Gern! Termin nächsten Dienstag.“ … Jetzt versteh ich, warum sie so komisch geguckt hat.'] },

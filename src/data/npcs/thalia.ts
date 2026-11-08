@@ -28,7 +28,7 @@ export const THALIA: NpcDef = {
   ],
   preferences: {
     loves: ['glitzerstein', 'ammonit', 'trilobit', 'bernstein', 'amethyst', 'crepes', 'kraeutermischung'],
-    likes: ['stein', 'seestern', 'schneckenhaus', 'haizahn', 'rosenquarz', 'bergkristall', 'achat', 'versteinertes-holz', 'pfirsich', 'apfelkuchen', 'sonnenblume', 'prachtlibelle', 'pfefferminztee'],
+    likes: ['stein', 'seestern', 'schneckenhaus', 'haizahn', 'rosenquarz', 'bergkristall', 'achat', 'versteinertes-holz', 'pfirsich', 'apfelkuchen', 'sonnenblume', 'prachtlibelle', 'pfefferminztee', 'tomatensalat', 'ratatouille', 'kuerbissuppe'],
     dislikes: ['ohrenqualle', 'weinbergschnecke'],
   },
   dialogue: {

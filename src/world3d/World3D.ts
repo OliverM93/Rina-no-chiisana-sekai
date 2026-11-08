@@ -18,6 +18,7 @@ import { pickIdleAct } from '../game/idle';
 import { isWatered, spotKey } from '../core/garden';
 import { isPrecipitation, WEATHER_LABELS } from '../core/weather';
 import { applyMapFlags, findInteraction, isActive, type MapObject, OBJECT_KINDS, objectById, terrainAt, tileOf } from '../core/worldmap';
+import { CROP_BY_ID } from '../data/crops';
 import { itemCountLabel, itemDef, type ToolId, TOOLS } from '../data/items';
 import { FISH_BY_ID, type FishHabitat } from '../data/species';
 import { fillPlaceholders, INTERACTIONS } from '../data/interactions';
@@ -1320,7 +1321,13 @@ export class World3D {
       const got = pickGardenFlower(this.session, t.x, t.y);
       if (got) {
         this.garden.bounce(t);
-        const text = got.crossed ? `${name} gepflückt – und ein Misch-Same ist abgefallen! ✨` : got.seed ? `${name} gepflückt – und ein paar Samen gefunden! 🌱` : `${name} gepflückt! 💐`;
+        const text = got.crop
+          ? `${itemCountLabel(got.flower, got.count)} geerntet${got.seed ? ' – und ein paar Samen gefunden! 🌱' : '! 🧺'}`
+          : got.crossed
+            ? `${name} gepflückt – und ein Misch-Same ist abgefallen! ✨`
+            : got.seed
+              ? `${name} gepflückt – und ein paar Samen gefunden! 🌱`
+              : `${name} gepflückt! 💐`;
         this.session.bus.emit('toast', { text, icon: itemIconUrl(got.crossed && got.seedId ? got.seedId : got.flower) });
         if (got.crossed) this.fxAt('funkeln', (t.x + 0.5) * TILE, (t.y + 0.5) * TILE, 0.3);
       }
@@ -1336,7 +1343,7 @@ export class World3D {
       }
       return;
     }
-    const stage = ['ist frisch eingepflanzt', 'keimt', 'hat eine Knospe'][plant.stage];
+    const stage = (CROP_BY_ID[plant.flower] ? ['ist frisch eingesät', 'keimt', 'wächst kräftig heran'] : ['ist frisch eingepflanzt', 'keimt', 'hat eine Knospe'])[plant.stage];
     const watered = isWatered(plant, day) ? 'Heute schon gegossen. 💧' : 'Mit der Gießkanne (Taste 3) gießen, dann wächst sie bis morgen. 💧';
     this.session.bus.emit('dialog:open', { title: name, lines: [`Die ${name} ${stage}.`, watered] });
   }

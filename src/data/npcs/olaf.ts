@@ -27,8 +27,8 @@ export const OLAF: NpcDef = {
     { from: '22:30', label: 'schläft', activity: { kind: 'zuhause', sleeping: true } },
   ],
   preferences: {
-    loves: ['hering', 'dorsch', 'glitzerstein', 'teeservice', 'fischbroetchen'],
-    likes: ['ei', 'wachtelei', 'apfel', 'birne', 'scholle', 'barsch', 'stein', 'tulpe', 'keks'],
+    loves: ['hering', 'dorsch', 'glitzerstein', 'teeservice', 'fischbroetchen', 'kartoffelsuppe'],
+    likes: ['ei', 'wachtelei', 'apfel', 'birne', 'scholle', 'barsch', 'stein', 'tulpe', 'keks', 'kartoffel', 'kraeuterquark', 'tomatensalat'],
     dislikes: ['waldameise', 'ohrenqualle', 'weinbergschnecke'],
   },
   dialogue: {
@@ -43,6 +43,7 @@ export const OLAF: NpcDef = {
       { text: ['Bei dem Regen arbeiten selbst die Enten im Homeoffice.', '… War ein Witz. Ein guter, finde ich.'], when: { tags: ['wetter-regen'] }, weight: 3 },
     ],
     chat: [
+      { text: ['Kartoffeln sind eine solide Anlage.', 'Man steckt eine in die Erde und bekommt vier zurück. Das ist eine Rendite von vierhundert Prozent. Ohne Risiko. Außer Kartoffelkäfer.'], weight: 3 },
       { text: ['Weißt du, was ein Pirat am Computer drückt?', '… Die Enter-Taste. Hehehe. Christin sagt, ich soll aufhören. Ich sage: Ich bin gerade erst warm geworden.'] },
       { text: ['Was ist grün und schaut durchs Schlüsselloch?', '… Ein Spionat. Hehe. Das ist von mir. Also nicht von mir. Aber ich hab es bei der Arbeit erzählt. Es gab zwei Lacher. Einen davon war Herr Meier.'] },
       { text: ['Was sagt der große Stift zum kleinen Stift?', '„Wachs-mal-stift!“ … Verstehst du? Wachs mal! Stift! Ich hab einmal wegen eines Witzes den Bus verpasst.'] },

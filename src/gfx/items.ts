@@ -251,6 +251,57 @@ const DRAW: Record<string, Draw> = {
     for (const [x, y, c] of [[11, 15, '#e8484f'], [16, 13, '#b8d86a'], [21, 15, '#f7b27a'], [14, 17, '#f7d26a'], [19, 17, '#e85a8a']] as const) ellipse(ctx, x, y, 3, 2.6, c, darken(c, 0.25), 0.8);
     roundRect(ctx, 4, 19, 24, 6, 3, '#8ac8ff', darken('#8ac8ff', 0.3), 1.2);
   },
+  // Gerichte aus eigenem Gemüse & Kräutern
+  tomatensalat: (ctx) => {
+    ellipse(ctx, 16, 21, 12, 6.5, '#fdf6e8', '#c9c4cf', 1.4);
+    for (const [x, y] of [[10, 17], [15, 15], [21, 17], [13, 20], [19, 20]] as const) ellipse(ctx, x, y, 3.2, 2.6, '#e8484f', darken('#e8484f', 0.3), 0.8);
+    for (const [x, y] of [[12, 16], [18, 17], [16, 19]] as const) ellipse(ctx, x, y, 2.2, 1.4, '#4fa84f', '#3f7a3a', 0.6);
+    roundRect(ctx, 4, 20, 24, 6, 3, '#fdf6e8', '#c9c4cf', 1.2);
+  },
+  kartoffelsuppe: (ctx) => {
+    ellipse(ctx, 16, 17, 12, 6.5, '#f7e9c0', '#c9a36a', 1.2);
+    for (const [x, y] of [[11, 16], [17, 15], [21, 18], [14, 19]] as const) ellipse(ctx, x, y, 2, 1.4, '#e6c98a');
+    for (const [x, y] of [[13, 15], [19, 17], [16, 18]] as const) ellipse(ctx, x, y, 1.1, 0.5, '#5fa85a');
+    roundRect(ctx, 4, 17, 24, 9, [1, 1, 9, 9], '#c9a36a', darken('#c9a36a', 0.35), 1.3);
+  },
+  kraeuterquark: (ctx) => {
+    ellipse(ctx, 16, 21, 12.5, 6.5, '#ffffff', '#c9c4cf', 1.4);
+    ellipse(ctx, 21, 19, 5.5, 3.4, '#fbf6ec', '#e6ddd0', 0.8);
+    for (const [x, y] of [[19, 18.5], [22, 19.5], [21, 17.8]] as const) ellipse(ctx, x, y, 1, 0.6, '#4fa84f');
+    for (const [x, y] of [[9, 18], [13, 20]] as const) ellipse(ctx, x, y, 3.6, 2.8, '#e6c98a', darken('#c9a36a', 0.2), 1);
+    ellipse(ctx, 8, 17, 1.3, 0.8, '#c9a36a');
+  },
+  karottensuppe: (ctx) => {
+    ellipse(ctx, 16, 17, 12, 6.5, '#f59a3a', darken('#f59a3a', 0.3), 1.2);
+    ellipse(ctx, 14, 16, 4, 1.4, '#f7b27a');
+    for (const [x, y] of [[17, 17], [21, 18], [12, 19]] as const) ellipse(ctx, x, y, 1.3, 0.7, '#3f8f4a');
+    roundRect(ctx, 4, 17, 24, 9, [1, 1, 9, 9], '#fdf6e8', '#c9c4cf', 1.3);
+    roundRect(ctx, 4, 17, 24, 2.5, 1, '#e8484f', null);
+  },
+  ratatouille: (ctx) => {
+    ellipse(ctx, 16, 20, 13, 7, '#d98a5f', darken('#d98a5f', 0.3), 1.4);
+    ellipse(ctx, 16, 18.5, 11, 5.5, '#fdf6e8', '#c9c4cf', 0.8);
+    for (let k = 0; k < 6; k++) {
+      const a = (k / 6) * Math.PI * 2;
+      const c = ['#e8484f', '#4f9a5a', '#7a3a8a'][k % 3];
+      ellipse(ctx, 16 + Math.cos(a) * 5, 18.5 + Math.sin(a) * 2.4, 2.6, 1.9, c, darken(c, 0.3), 0.6);
+    }
+    ellipse(ctx, 16, 18.5, 2.4, 1.7, '#f7d26a', '#d9a83a', 0.6);
+    ellipse(ctx, 16, 17.6, 1.2, 0.8, '#4fa84f');
+  },
+  'gruener-salat': (ctx) => {
+    ellipse(ctx, 16, 20, 12.5, 7, '#8ac8ff', darken('#8ac8ff', 0.3), 1.4);
+    for (const [x, y, c] of [[10, 15, '#8fd08a'], [16, 12.5, '#b8e6a0'], [22, 15, '#8fd08a'], [13, 17, '#6fbf5f'], [19, 17, '#6fbf5f']] as const) ellipse(ctx, x, y, 4, 3, c, darken(c, 0.25), 0.8);
+    for (const [x, y] of [[14, 14], [20, 15]] as const) ellipse(ctx, x, y, 2, 1.7, '#e8484f', '#a83038', 0.6);
+    roundRect(ctx, 4, 19, 24, 6, 3, '#8ac8ff', darken('#8ac8ff', 0.3), 1.2);
+  },
+  kuerbissuppe: (ctx) => {
+    ellipse(ctx, 16, 17, 12, 6.5, '#f59a3a', darken('#f08a2a', 0.3), 1.2);
+    ellipse(ctx, 13, 16, 5, 1.5, '#f7b27a');
+    for (const [x, y] of [[18, 17], [21, 18.5]] as const) ellipse(ctx, x, y, 1.3, 0.6, '#5fa85a');
+    roundRect(ctx, 4, 17, 24, 9, [1, 1, 9, 9], '#f08a2a', darken('#f08a2a', 0.35), 1.3);
+    for (const x of [10, 16, 22]) ctx.fillRect(x, 19, 0.8, 5);
+  },
   fischbroetchen: (ctx) => {
     ellipse(ctx, 16, 20, 12, 5, '#e6b06a', darken('#e6b06a', 0.3), 1.3);
     ellipse(ctx, 16, 16, 11, 3, '#b9c6cf', '#7a8a96', 1);

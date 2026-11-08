@@ -16,6 +16,8 @@ const CATEGORY_LABEL: Record<string, string> = {
   obst: 'Obst',
   muschel: 'Strandfund',
   blume: 'Blumen',
+  gemuese: 'Gemüse',
+  kraut: 'Kraut',
   material: 'Material',
   fund: 'Schatz',
   essen: 'Leckerei',

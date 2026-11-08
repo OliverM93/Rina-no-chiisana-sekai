@@ -38,8 +38,8 @@ export const OLI: NpcDef = {
     { from: '23:30', label: 'schläft', activity: { kind: 'zuhause', sleeping: true } },
   ],
   preferences: {
-    loves: ['ruehrei', 'fischbroetchen', 'ei', 'hering', 'dorsch', 'keks', 'glitzerstein'],
-    likes: ['wachtelei', 'apfel', 'birne', 'pfirsich', 'barsch', 'scholle', 'bachforelle', 'makrele', 'sonnenblume', 'rose', 'hirschkaefer', 'stein'],
+    loves: ['ruehrei', 'fischbroetchen', 'ei', 'hering', 'dorsch', 'keks', 'glitzerstein', 'kuerbissuppe'],
+    likes: ['wachtelei', 'apfel', 'birne', 'pfirsich', 'barsch', 'scholle', 'bachforelle', 'makrele', 'sonnenblume', 'rose', 'hirschkaefer', 'stein', 'tomate', 'tomatensalat', 'ratatouille', 'kartoffelsuppe'],
     dislikes: ['weinbergschnecke', 'ohrenqualle'],
   },
   dialogue: {
@@ -56,6 +56,7 @@ export const OLI: NpcDef = {
       { text: ['Schnee, Lini! ❄️', 'Wer zuerst einen Schneemann baut, kriegt einen Kakao. Ich verlier auch absichtlich.'], when: { tags: ['wetter-schnee'] }, weight: 3 },
     ],
     chat: [
+      { text: ['Ich hab im Netz gelesen, dass man aus einem Kürbis auch Suppe machen kann.', 'Also nicht nur Halloween-Gesicht. Wusste ich nicht. Lini, wollen wir?'], weight: 3 },
       { text: ['Lini, dein Doktor No läuft heute wieder.', 'Ich hab schon die Taschentücher hingelegt. Und deinen Platz auf dem Sofa freigehalten. Ich bin ein guter Freund.'] },
       { text: ['Wenn Dr. No „Ein Schritt. Dann noch einer.“ sagt, dann krieg ich auch Lust, was zu machen.', 'Aufräumen zum Beispiel. Oder Hanteln. Oder … nee, ich glaub, Hanteln.'] },
       { text: ['Lini, heute Abend Horrorfilm?', 'Ich such einen aus. Einen nicht ganz so gruseligen. … Okay, du suchst aus. Aber ich halte das Kissen.'], weight: 2 },
