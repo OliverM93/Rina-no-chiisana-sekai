@@ -1950,3 +1950,10 @@ body:has(.dialog-layer) .decor-bar {
   accent-color: var(--ui-accent);
   width: 100%;
 }
+
+/* Pfeiltasten-Navigation: der gewählte Knopf ist in jedem Fenster gut zu sehen */
+.modal-layer button:focus-visible,
+.title-layer button:focus-visible {
+  outline: 3px solid var(--ui-sky);
+  outline-offset: 2px;
+}

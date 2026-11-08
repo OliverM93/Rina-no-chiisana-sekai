@@ -24,6 +24,7 @@ Läuft in jedem modernen Browser auf Laptop oder PC. Der Spielstand wird automat
 | Sammelbuch | B | 📖 unten rechts |
 | Werkzeug nehmen / wegstecken | 1 Angel · 2 Kescher · 3 Gießkanne · Q weg | Werkzeugleiste unten |
 | Menü | Esc | ☰ oben rechts |
+| In Fenstern & Menüs wählen | Pfeiltasten (springen von Knopf zu Knopf), Enter/Leertaste drückt, Esc schließt | klicken |
 
 **Was es zu tun gibt:** Oma Gisela besuchen (sie sitzt gern auf ihrer Bank), plaudern und ihr etwas
 schenken, Bäume schütteln, Muscheln sammeln, Blumen pflücken, an Felsen klopfen, Gesammeltes in der

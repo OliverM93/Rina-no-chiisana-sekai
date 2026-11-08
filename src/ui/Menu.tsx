@@ -139,6 +139,9 @@ export function Menu({ session }: { session: Session }) {
               <b>Anschauen/Reden/Aufheben:</b> Leertaste, E oder Enter · <b>Tasche:</b> I oder Tab · <b>Menü:</b> Esc
             </p>
             <p>
+              <b>In Fenstern &amp; Menüs:</b> Pfeiltasten springen von Knopf zu Knopf, Enter oder Leertaste drückt, Esc schließt.
+            </p>
+            <p>
               <b>Sammeln:</b> Bäume schütteln, Muscheln am Strand, Blumen pflücken, an Felsen klopfen. Was du nicht
               brauchst, kommt in die Verkaufskiste vor deinem Haus. ⭐
             </p>

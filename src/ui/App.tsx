@@ -21,6 +21,7 @@ import { CraftPanel } from './CraftPanel';
 import { MapPanel } from './MapPanel';
 import { GalleryPanel } from './GalleryPanel';
 import { TvPanel } from './TvPanel';
+import { handleArrowKey } from './navigation';
 import { type ConfirmRequest, showToast, ui, useUI } from './store';
 
 export function App({ session }: { session: Session }) {
@@ -62,6 +63,21 @@ export function App({ session }: { session: Session }) {
     };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
+  }, []);
+
+  // Pfeiltasten springen in jedem Fenster/Menü von Knopf zu Knopf (Tasche & Verkaufen haben ihren eigenen Cursor)
+  useEffect(() => {
+    const OWN_CURSOR = ['inventory', 'sell', 'gift', 'seeds'];
+    const onKey = (e: KeyboardEvent) => {
+      const s = ui.state;
+      if (s.dialog) return;
+      if (s.panel && OWN_CURSOR.includes(s.panel.kind)) return;
+      const layers = document.querySelectorAll<HTMLElement>('#ui .modal-layer, #ui .title-layer');
+      const top = layers[layers.length - 1];
+      if (top) handleArrowKey(e, top);
+    };
+    window.addEventListener('keydown', onKey, true);
+    return () => window.removeEventListener('keydown', onKey, true);
   }, []);
 
   const closeDialog = () => {
