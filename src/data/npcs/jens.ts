@@ -30,8 +30,8 @@ export const JENS: NpcDef = {
     { from: '23:30', label: 'schläft', activity: { kind: 'zuhause', sleeping: true } },
   ],
   preferences: {
-    loves: ['lavendel', 'rose', 'seestern', 'glitzerstein', 'apfelkuchen', 'crepes', 'ratatouille', 'basilikum', 'thymian', 'kraeuterquark'],
-    likes: ['pfirsich', 'apfel', 'birne', 'ei', 'wachtelei', 'hering', 'makrele', 'tulpe', 'sonnenblume', 'vergissmeinnicht', 'schneckenhaus', 'tagpfauenauge', 'ruehrei', 'obstsalat', 'fischbroetchen', 'tomatensalat', 'tomate', 'zucchini', 'petersilie', 'gruener-salat'],
+    loves: ['lavendel', 'rose', 'seestern', 'glitzerstein', 'apfelkuchen', 'crepes', 'ratatouille', 'basilikum', 'thymian', 'kraeuterquark', 'strauss-mischfarben', 'strauss-lavendel', 'strauss-kraeuter', 'strauss-rosen'],
+    likes: ['pfirsich', 'apfel', 'birne', 'ei', 'wachtelei', 'hering', 'makrele', 'tulpe', 'sonnenblume', 'vergissmeinnicht', 'schneckenhaus', 'tagpfauenauge', 'ruehrei', 'obstsalat', 'fischbroetchen', 'tomatensalat', 'tomate', 'zucchini', 'petersilie', 'gruener-salat', 'strauss-bunt', 'strauss-sonne', 'strauss-schwarz'],
     dislikes: ['ast', 'stein', 'weinbergschnecke', 'ohrenqualle'],
   },
   dialogue: {

@@ -21,7 +21,10 @@ const TEXT = {
 };
 
 export function CraftPanel({ session, station = 'werkbank' }: { session: Session; station?: 'werkbank' | 'kueche' | 'apotheke' | 'herd' }) {
-  const WORKBENCH = RECIPES.filter((r) => (r.station ?? 'werkbank') === (station === 'herd' ? 'kueche' : station));
+  const [group, setGroup] = useState<'alle' | 'bauen' | 'blumen'>('alle');
+  const ALL = RECIPES.filter((r) => (r.station ?? 'werkbank') === (station === 'herd' ? 'kueche' : station));
+  // An der Werkbank gibt es zwei Reiter: Bauen & Blumen binden
+  const WORKBENCH = station === 'werkbank' && group !== 'alle' ? ALL.filter((r) => (r.group === 'blumen') === (group === 'blumen')) : ALL;
   const T = TEXT[station];
   useSessionVersion(session);
   const data = session.data;
@@ -52,7 +55,7 @@ export function CraftPanel({ session, station = 'werkbank' }: { session: Session
     if (!sel) return;
     const r = craftRecipe(session, sel.id);
     if (r === 'ok') {
-      showToast(`✨ ${recipeName(sel)} ${T.done}`);
+      showToast(`✨ ${recipeName(sel)} ${sel.group === 'blumen' ? 'gebunden! Ab in die Tasche.' : T.done}`);
       setBuilt(sel.id);
       window.setTimeout(() => setBuilt(null), 900);
     } else if (r === 'voll') showToast('Deine Tasche ist zu voll für das fertige Stück. 🎒');
@@ -63,6 +66,15 @@ export function CraftPanel({ session, station = 'werkbank' }: { session: Session
     <div class="modal-layer" onPointerUp={(e) => e.target === e.currentTarget && close()}>
       <div class="card book craft pop-in">
         <h2 class="card-title">{T.title}</h2>
+        {station === 'werkbank' && (
+          <div class="seed-tabs">
+            {([['alle', 'Alles'], ['bauen', '🔨 Bauen'], ['blumen', '💐 Blumen binden']] as const).map(([k, label]) => (
+              <button key={k} class={`btn ${group === k ? 'primary' : ''}`} onClick={() => setGroup(k)}>
+                {label}
+              </button>
+            ))}
+          </div>
+        )}
         <div class="book-tabs">
           <span class="soft small-text">{T.intro}</span>
           <span class="book-progress">
@@ -125,7 +137,7 @@ export function CraftPanel({ session, station = 'werkbank' }: { session: Session
             Schließen
           </button>
           <button class="btn primary" disabled={!ready} onClick={build}>
-            {T.button}
+            {sel?.group === 'blumen' ? '💐 Binden' : T.button}
           </button>
         </div>
       </div>

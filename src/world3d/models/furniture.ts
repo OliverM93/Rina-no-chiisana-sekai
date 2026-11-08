@@ -8,6 +8,7 @@ import { FURNITURE_BY_ITEM } from '../../data/furniture';
 import { ART_BY_ID } from '../../data/art';
 import { artCanvas } from '../../gfx/art';
 import { POSTER_BY_ID } from '../../data/posters';
+import { bouquetOfVase, WREATH_BY_ID } from '../../data/straeusse';
 import { TASSE_BY_ID } from '../../data/tassen';
 import { posterCanvas } from '../../gfx/posters';
 import { darken, lighten } from '../../style/palette';
@@ -234,6 +235,63 @@ export function makeFurniture(itemId: string, links: FenceLinks = { n: false, e:
         o.castShadow = true;
         o.receiveShadow = true;
       }
+    });
+    return { group: g, glow, lightAt, seatY };
+  }
+  // Vase mit Strauß (`vase-strauss-…`): Glasvase, Stiele, Blüten in den Farben des Straußes
+  const bouquet = f ? bouquetOfVase(f.def.id) : undefined;
+  if (bouquet) {
+    const green = '#5fa85a';
+    const glass = new THREE.MeshToonMaterial({ color: '#cfe8f4', transparent: true, opacity: 0.55 });
+    g.add(c(0.075, 0.2, glass, 0, 0.1, 0));
+    g.add(c(0.062, 0.14, '#9fd0ea', 0, 0.075, 0));
+    g.add(c(0.085, 0.015, glass, 0, 0.2, 0));
+    const n = bouquet.colors.length >= 3 ? 9 : 7;
+    for (let i = 0; i < n; i++) {
+      const a = i * 2.4;
+      const r = i === 0 ? 0 : 0.045 + (i % 3) * 0.015;
+      const x = Math.cos(a) * r;
+      const z = Math.sin(a) * r;
+      const top = 0.3 + (i % 3) * 0.04 + (i === 0 ? 0.05 : 0);
+      const stem = c(0.006, top - 0.1, green, x * 0.5, 0.1 + (top - 0.1) / 2, z * 0.5);
+      stem.rotation.z = -x * 2.5;
+      stem.rotation.x = z * 2.5;
+      g.add(stem);
+      const col = bouquet.colors[i % bouquet.colors.length];
+      const herb = bouquet.id === 'strauss-kraeuter';
+      g.add(s(herb ? 0.04 : 0.032, herb ? 0.025 : 0.032, herb ? 0.04 : 0.032, col, x, top, z));
+      if (!herb) g.add(s(0.012, 0.012, 0.012, i % 2 ? '#f7d26a' : lighten(col, 0.3), x, top + 0.022, z));
+    }
+    g.traverse((o) => {
+      if ((o as THREE.Mesh).isMesh) o.castShadow = true;
+    });
+    return { group: g, glow, lightAt, seatY };
+  }
+  // Wandkranz (`kranz-…`): Ring aus Zweigen mit Blüten und Schleife
+  const wreath = f ? WREATH_BY_ID[f.def.id] : undefined;
+  if (wreath) {
+    const z = WALL_Z + 0.03;
+    const ring = new THREE.Mesh(new THREE.TorusGeometry(0.22, 0.04, 8, 24), toon('#6a8a4a'));
+    ring.position.set(0, HANG, z);
+    g.add(ring);
+    for (let i = 0; i < 14; i++) {
+      const a = (i / 14) * Math.PI * 2 + 0.2;
+      g.add(s(0.05, 0.05, 0.03, i % 2 ? '#4f9a5a' : '#6fbf5f', Math.cos(a) * 0.22, HANG + Math.sin(a) * 0.22, z + 0.02));
+    }
+    for (let i = 0; i < 11; i++) {
+      const a = (i / 11) * Math.PI * 2 + 0.5;
+      const col = wreath.colors[i % wreath.colors.length];
+      g.add(s(0.034, 0.034, 0.02, col, Math.cos(a) * 0.22, HANG + Math.sin(a) * 0.22, z + 0.055));
+      g.add(s(0.012, 0.012, 0.012, '#f7d26a', Math.cos(a) * 0.22, HANG + Math.sin(a) * 0.22, z + 0.07));
+    }
+    for (const sx of [-1, 1]) {
+      const bow = b(0.08, 0.04, 0.012, '#f4a3b8', sx * 0.045, HANG - 0.23, z + 0.075);
+      bow.rotation.z = sx * -0.5;
+      g.add(bow);
+    }
+    g.add(s(0.025, 0.025, 0.015, '#e87a98', 0, HANG - 0.23, z + 0.08));
+    g.traverse((o) => {
+      if ((o as THREE.Mesh).isMesh) o.castShadow = true;
     });
     return { group: g, glow, lightAt, seatY };
   }
@@ -588,6 +646,14 @@ export function makeFurniture(itemId: string, links: FenceLinks = { n: false, e:
       g.add(s(0.012, 0.012, 0.012, brass, -0.02, 0.425, -0.005));
       // Tropfgitter
       g.add(b(0.18, 0.008, 0.07, '#8a8a92', 0.02, 0.045, 0.1));
+      break;
+    }
+    case 'glasvase': {
+      // schlichte Glasvase mit etwas Wasser
+      const glass = new THREE.MeshToonMaterial({ color: '#cfe8f4', transparent: true, opacity: 0.55 });
+      g.add(c(0.075, 0.2, glass, 0, 0.1, 0));
+      g.add(c(0.062, 0.1, '#9fd0ea', 0, 0.055, 0));
+      g.add(c(0.085, 0.015, glass, 0, 0.2, 0));
       break;
     }
     case 'tassenbord': {
