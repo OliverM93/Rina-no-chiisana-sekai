@@ -26,6 +26,7 @@ export type ObjectKind =
   | 'sellbox'
   | 'beet'
   | 'stall'
+  | 'seedstall'
   | NatureKind;
 
 export interface MapObjectDef {
@@ -73,6 +74,8 @@ export const OBJECT_KINDS: Record<ObjectKind, KindInfo> = {
   workbench: { w: 2, h: 1, blocks: 'all', interactFrom: [[0, 1], [1, 1], [-1, 0], [2, 0]] },
   // Punschstand (nur in der Adventszeit, siehe `requires: 'adventszeit'`)
   stall: { w: 2, h: 1, blocks: 'all', interactFrom: [[0, 1], [1, 1]] },
+  // Christins Samenstand auf dem Dorfplatz (`data/seedstand.ts`)
+  seedstall: { w: 2, h: 1, blocks: 'all', interactFrom: [[0, 1], [1, 1], [-1, 0], [2, 0]] },
   // Beet 4×2: jede Kachel ist ein Pflanzplatz, erreichbar von allen Seiten
   beet: {
     w: 4,

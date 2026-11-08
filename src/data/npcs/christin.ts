@@ -70,6 +70,8 @@ export const CHRISTIN: NpcDef = {
       { text: ['Ich hab in deinem Beet nach Unkraut gesucht.', 'Keins gefunden. Ich hab aber auch sehr genau geguckt. Mit Lupe.'], when: { tags: ['beet-gegossen'] }, weight: 2 },
       { text: ['Weißt du, was ich an Blumen mag?', 'Die wachsen ganz von allein in die richtige Richtung. Nach oben. Sehr vernünftig.'] },
       { text: ['Gießkanne leer machen, umgedreht hinstellen, fertig.', 'Dann kann sie trocknen. Kleiner Tipp. Ganz umsonst.'] },
+      { text: ['Ich hab auf dem Dorfplatz einen Samenstand aufgemacht!', 'Alles in Tütchen, alles beschriftet. Jeden Tag liegen drei andere Farben aus – frag nicht, wie lange ich die Reihenfolge überlegt habe.'], weight: 4 },
+      { text: ['Wenn du zwei Farben nebeneinander ins Beet setzt, kann was Neues entstehen.', 'Bei mir am Stand gibt es immer ein paar Farb-Samen. Zum Kreuzen. Ganz ordentlich, versteht sich.'], when: { minHearts: 1 }, weight: 3 },
       { text: ['Ich bin froh, dass Olaf und ich hier sind.', 'Und du hast so ein schönes, ordentliches Beet.'], when: { minHearts: 2 } },
     ],
     gifts: {

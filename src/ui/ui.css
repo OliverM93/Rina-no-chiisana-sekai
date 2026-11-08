@@ -1950,3 +1950,76 @@ body:has(.dialog-layer) .decor-bar {
   accent-color: var(--ui-accent);
   width: 100%;
 }
+
+/* ---------------------------------------------------------------- Samenstand */
+
+.card.seedstand {
+  width: min(780px, 100%);
+  padding: 14px 20px;
+}
+
+.card.seedstand .card-title {
+  margin-bottom: 4px;
+}
+
+.card.seedstand p {
+  margin: 0 0 4px;
+}
+
+.card.seedstand .bank-sub {
+  margin: 8px 0 2px;
+}
+
+.card.seedstand .card-actions {
+  margin-top: 10px;
+}
+
+.card.seedstand .seed-row .btn {
+  padding: 6px 14px;
+}
+
+.seed-list {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4px 8px;
+}
+
+.seed-qty {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 4px 0;
+}
+
+@media (max-width: 640px) {
+  .seed-list {
+    grid-template-columns: 1fr;
+  }
+}
+
+.seed-row {
+  display: grid;
+  grid-template-columns: 40px 1fr auto auto;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 6px;
+  border-radius: 14px;
+  background: var(--ui-bg);
+}
+
+.seed-row img {
+  width: 36px;
+  height: 36px;
+}
+
+.seed-name {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.2;
+  min-width: 0;
+}
+
+.seed-price {
+  font-weight: 800;
+  white-space: nowrap;
+}
