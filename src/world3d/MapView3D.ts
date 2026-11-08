@@ -12,6 +12,7 @@ import {
   makeBench,
   makeBoard,
   makePunschstand,
+  makeSamenstand,
   BRIDGE_DECK,
   makeBridge,
   makeFountain,
@@ -145,6 +146,9 @@ export function buildMapView3D(scene: THREE.Scene, map: WorldMap, season: Season
         break;
       case 'stall':
         node = makePunschstand();
+        break;
+      case 'seedstall':
+        node = makeSamenstand();
         break;
       case 'lantern':
         node = makeLantern();

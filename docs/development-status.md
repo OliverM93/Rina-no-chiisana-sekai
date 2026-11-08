@@ -258,7 +258,7 @@ Legende: ✅ erledigt · 🚧 in Arbeit · ⬜ geplant
   - ✅ **Phase 1 – Kreuzungen:** Farbvarianten für Tulpe, Rose, Sonnenblume, Lavendel & Vergissmeinnicht (22 Blüten),
     Misch-Samen beim Pflücken, wenn zwei Farben nebeneinander blühen, Sammelbuch-Reiter „Blumen“, Samen-Farben per Post,
     gelbe Tulpen im Starterset
-  - ⬜ Phase 2 – Samen kaufen (Samenstand)
+  - ✅ **Phase 2 – Samenstand:** Christins Stand auf dem Dorfplatz (ab Olafs Einzug), Standard-Samen immer, täglich drei wechselnde Farb-Samen, keine Misch-Farben
   - ⬜ Phase 3 – Gemüse & Kräuter zum Kochen
   - ⬜ Phase 4 – Sträuße & Blumendeko (Vase, Kranz, Geschenke)
   - ⬜ Phase 5 – Gewächshaus für den Winter

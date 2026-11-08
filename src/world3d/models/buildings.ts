@@ -810,6 +810,53 @@ export function makeBalloons(): THREE.Group {
   return g;
 }
 
+/** Christins Samenstand: Holztheke, grün-weiß gestreiftes Dach, Kisten mit Samentütchen und Töpfchen, Schild mit Keimling */
+export function makeSamenstand(): THREE.Group {
+  const g = new THREE.Group();
+  const wood = palette.wood.base;
+  // Theke mit Lattenblende
+  g.add(b(1.8, 0.85, 0.6, palette.wood.light, 0, 0.43, 0.05));
+  g.add(b(1.9, 0.07, 0.7, wood, 0, 0.88, 0.05));
+  for (let i = 0; i < 6; i++) g.add(b(0.02, 0.7, 0.01, darken(palette.wood.light, 0.12), -0.75 + i * 0.3, 0.42, 0.36));
+  // Pfosten & Dach mit grün-weißen Streifen
+  for (const x of [-0.88, 0.88]) for (const z of [-0.22, 0.32]) g.add(b(0.08, 1.95, 0.08, wood, x, 0.98, z));
+  const stripes = ['#6fb06a', '#fff8ee'];
+  for (let i = 0; i < 8; i++) {
+    const strip = b(0.25, 0.06, 0.95, stripes[i % 2], -0.875 + i * 0.25, 2.02, 0.1);
+    strip.rotation.x = 0.18;
+    g.add(strip);
+  }
+  // Schild mit Keimling
+  g.add(b(1.0, 0.3, 0.04, '#fff8ee', 0, 1.76, 0.42));
+  g.add(b(0.86, 0.035, 0.045, '#6fb06a', 0, 1.65, 0.43));
+  g.add(b(0.02, 0.12, 0.045, '#4f9a5a', 0, 1.76, 0.44));
+  for (const sx of [-1, 1]) {
+    const leaf = mesh(sphere, toon('#6fb06a'));
+    leaf.scale.set(0.07, 0.035, 0.03);
+    leaf.position.set(sx * 0.06, 1.81, 0.45);
+    leaf.rotation.z = sx * 0.5;
+    g.add(leaf);
+  }
+  // Auslage: Kisten mit Samentütchen in vielen Farben, dazu Töpfchen mit Setzlingen
+  const packet = ['#e8484f', '#f7c832', '#ffffff', '#f4a3c0', '#a98ad8', '#7ab8f0'];
+  for (const x of [-0.55, 0.0, 0.55]) {
+    g.add(b(0.46, 0.1, 0.26, darken(palette.wood.light, 0.05), x, 0.97, 0.2));
+    for (let i = 0; i < 5; i++) {
+      const card = b(0.07, 0.14, 0.012, packet[(i + Math.round(x * 4) + 6) % packet.length], x - 0.17 + i * 0.085, 1.07, 0.2 + (i % 2) * 0.03);
+      card.rotation.z = (i - 2) * 0.05;
+      g.add(card);
+    }
+  }
+  for (const [x, z] of [[-0.78, -0.05], [0.78, -0.05]] as const) {
+    g.add(c(0.07, 0.09, '#d98a5f', x, 0.97, z));
+    const bush = mesh(sphere, toon('#6fb06a'));
+    bush.scale.set(0.08, 0.07, 0.08);
+    bush.position.set(x, 1.07, z);
+    g.add(bush);
+  }
+  return g;
+}
+
 /** Punschstand am Weihnachtsbaum: Holztheke, rot-weißes Dach, Lichterkette, dampfende Töpfe (2 × 1 Kacheln) */
 export function makePunschstand(): THREE.Group {
   const g = new THREE.Group();

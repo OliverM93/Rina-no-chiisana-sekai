@@ -47,12 +47,64 @@ describe('Dorfkarte', () => {
     }
   });
 
+  it('nichts steht mitten im Weg: Sandwege bleiben frei, alles ist erreichbar (auch mit allen Gebäuden & Ständen)', () => {
+    const all = buildWorldMap(VILLAGE_LAYOUT, VILLAGE_OBJECTS, VILLAGE_SPAWN);
+    const flags: Record<string, boolean> = { adventszeit: true };
+    for (const o of VILLAGE_OBJECTS) if (o.requires) flags[o.requires] = true;
+    for (const o of VILLAGE_OBJECTS) if (o.until) flags[o.until] = true;
+    applyMapFlags(all, flags);
+    // 1. kein Objekt auf einem Sandweg
+    for (const o of all.objects) {
+      if (o.kind === 'bridge' || all.inactive.has(o.id)) continue;
+      for (let y = o.y; y < o.y + o.h; y++) for (let x = o.x; x < o.x + o.w; x++) expect(VILLAGE_LAYOUT[y][x], `${o.id} steht auf dem Weg bei (${x},${y})`).not.toBe('#');
+    }
+    // 2. von Linas Haustür kommt man zu allen Weg- und Platz-Kacheln und an jedes Objekt
+    const W = all.width;
+    const seen = new Set<number>([VILLAGE_SPAWN.y * W + VILLAGE_SPAWN.x]);
+    const queue = [VILLAGE_SPAWN.y * W + VILLAGE_SPAWN.x];
+    while (queue.length) {
+      const i = queue.pop() as number;
+      const x = i % W;
+      const y = Math.floor(i / W);
+      for (const [dx, dy] of [[1, 0], [-1, 0], [0, 1], [0, -1]]) {
+        const nx = x + dx;
+        const ny = y + dy;
+        if (nx < 0 || ny < 0 || nx >= W || ny >= all.height || all.grid.isBlocked(nx, ny)) continue;
+        const ni = ny * W + nx;
+        if (!seen.has(ni)) {
+          seen.add(ni);
+          queue.push(ni);
+        }
+      }
+    }
+    for (let y = 0; y < all.height; y++) {
+      for (let x = 0; x < W; x++) {
+        const ch = VILLAGE_LAYOUT[y][x];
+        if ((ch === '#' || ch === ':' || ch === '=') && !all.grid.isBlocked(x, y)) expect(seen.has(y * W + x), `Weg-Kachel (${x},${y}) ist abgeschnitten`).toBe(true);
+      }
+    }
+    for (const o of all.objects) {
+      const info = OBJECT_KINDS[o.kind];
+      if (all.inactive.has(o.id) || !info.interactFrom || ['tree', 'pine', 'bush', 'rock'].includes(o.kind)) continue;
+      const spots = info.interactFrom.map(([dx, dy]) => [o.x + dx, o.y + dy] as const).filter(([x, y]) => x >= 0 && y >= 0 && x < W && y < all.height && !all.grid.isBlocked(x, y));
+      expect(spots.some(([x, y]) => seen.has(y * W + x)), `${o.id} ist nicht erreichbar`).toBe(true);
+    }
+    // 3. auf dem Dorfplatz bleibt genug Platz zum Laufen (mindestens 70 % der Pflaster-Kacheln frei, auch mit Punschstand)
+    let plaza = 0;
+    let free = 0;
+    for (let y = 0; y < all.height; y++) for (let x = 0; x < W; x++) if (VILLAGE_LAYOUT[y][x] === ':') {
+      plaza++;
+      if (!all.grid.isBlocked(x, y)) free++;
+    }
+    expect(free / plaza).toBeGreaterThan(0.7);
+  });
+
   it('Story-Flags tauschen Bauplatz gegen Haus (mit Kollision)', () => {
     const m = buildWorldMap(VILLAGE_LAYOUT, VILLAGE_OBJECTS, VILLAGE_SPAWN);
     expect(isActive(m, 'bauplatz-1')).toBe(true);
     expect(isActive(m, 'haus-olaf')).toBe(false);
     expect(m.grid.isBlocked(17, 15)).toBe(false);
-    expect(applyMapFlags(m, { olafEingezogen: true }).sort()).toEqual(['bauplatz-1', 'haus-olaf']);
+    expect(applyMapFlags(m, { olafEingezogen: true }).sort()).toEqual(['bauplatz-1', 'haus-olaf', 'samenstand']);
     expect(isActive(m, 'haus-olaf')).toBe(true);
     expect(m.grid.isBlocked(17, 15)).toBe(true);
     expect(applyMapFlags(m, { olafEingezogen: true })).toEqual([]);

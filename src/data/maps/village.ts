@@ -100,6 +100,9 @@ export const VILLAGE_OBJECTS: readonly MapObjectDef[] = [
   // Punschstand neben dem Weihnachtsbaum – steht nur im Dezember bis Weihnachten (virtuelles Flag)
   { id: 'punschstand', kind: 'stall', x: 29, y: 19, requires: 'adventszeit' },
 
+  // Christins Samenstand (Samen für Linas Beet) – steht, sobald Olaf & Christin eingezogen sind
+  { id: 'samenstand', kind: 'seedstall', x: 23, y: 16, requires: 'olafEingezogen' },
+
   // Brücke über den Fluss
   { id: 'bruecke', kind: 'bridge', x: 37, y: 19 },
 

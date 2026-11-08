@@ -123,7 +123,7 @@ type Target =
   | { kind: 'winston' }
   | { kind: 'tier'; index: number };
 
-const SPECIAL_OBJECTS = ['verkaufskiste', 'haus-gisela', 'haus-olaf', 'briefkasten-lina', 'werkbank-lina', 'bistro-jens', 'praxis-lars', 'haus-thalia', 'punschstand'];
+const SPECIAL_OBJECTS = ['verkaufskiste', 'haus-gisela', 'haus-olaf', 'briefkasten-lina', 'werkbank-lina', 'bistro-jens', 'praxis-lars', 'haus-thalia', 'punschstand', 'samenstand'];
 const DIRS = { down: [0, 1], up: [0, -1], left: [-1, 0], right: [1, 0] } as const;
 
 /** Kamera-Versatz zum Blickziel (schräg von oben, wie im Vorbild) */
@@ -1423,6 +1423,10 @@ export class World3D {
     }
     if (id === 'punschstand') {
       this.visitPunsch();
+      return;
+    }
+    if (id === 'samenstand') {
+      this.session.bus.emit('ui:open', { kind: 'samenstand' });
       return;
     }
     if (id === 'werkbank-lina') {
