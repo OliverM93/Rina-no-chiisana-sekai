@@ -1,0 +1,82 @@
+# Designentscheidungen
+
+Getroffene Entscheidungen (aus Code, Doku und bisherigen Wünschen von Lina/Oli rekonstruiert) und offene Fragen.
+Neue Entscheidungen werden unten angehängt.
+
+Format: **Entscheidung** – Begründung – verworfene Alternative(n) – Auswirkungen.
+
+## Getroffene Entscheidungen ✅
+
+### D1 · Kein Scheitern, kein Zeitdruck, nichts Verpflichtendes
+- **Warum:** Das Spiel ist ein entspannendes Geschenk; Stress widerspricht dem Zweck.
+- **Verworfen:** Vertrocknen, Energie, Freundschaftsverlust, Kredit mit Zinsen/Frist.
+- **Auswirkung:** Herausforderung ist kein Motor → Motivation muss aus Verbundenheit, Gestaltung und Entdecken kommen.
+
+### D2 · Fortschritt über Meilensteine & Spielzeit statt Kalendertage (M8j)
+- **Warum:** Früher hingen Einzüge an echten Tagen → Warten ohne Handlungsmöglichkeit.
+- **Verworfen:** Herzen als Voraussetzung (steigen nur 1×/Tag → wieder Kalender-Warten).
+- **Auswirkung:** Story in wenigen Stunden erlebbar; Echtzeit bleibt für Atmosphäre und Abwechslung.
+
+### D3 · Echte Menschen als Bewohner, keine Tiere
+- **Warum:** Persönliches Geschenk; Wiedererkennen ist der emotionale Kern.
+- **Auswirkung:** Begrenzte Bewohnerzahl (7 + Winston), keine Bewohner-Rotation; Inhalte brauchen Wissen über
+  die echten Personen (offene Fragen unten).
+
+### D4 · Zinsloser Kredit für den Hausausbau
+- **Warum:** Sofortige Belohnung (Raum ist da), Rückzahlung als selbstgewähltes Ziel ohne Druck.
+- **Verworfen:** Erst sparen, dann bauen (verzögert Belohnung); Schulden mit Druck (Animal Crossing).
+- **Auswirkung:** Sternchen-Ziel über lange Zeit; ein Ausbau zur Zeit.
+
+### D5 · Möbel verkaufen sich für ¼
+- **Warum:** Keine Arbitrage, Einrichten bleibt Ausgabe, nicht Investition.
+- **Auswirkung:** Deko-Crafting ist bewusst keine Geldquelle.
+
+### D6 · Freundschaft sinkt nie; nur das erste Gespräch/Geschenk am Tag zählt
+- **Warum:** Keine Strafe fürs Pausieren; trotzdem kein Spam-Exploit (weitere Geschenke +1).
+- **Auswirkung:** Herzen wachsen gleichmäßig über Tage; Plateau bei 5 Herzen.
+
+### D7 · Fernsehen bewusst nicht „kuschelig“
+- **Warum:** Lina mag True Crime, Horror, Dokus – ironischer Bruch, Liebe zum Echten vor Genre-Konvention.
+- **Grenzen:** nichts Explizites, niemand wird verspottet.
+
+### D8 · Winterruhe statt Absterben (Beet Phase 5)
+- **Warum:** Jahreszeiten sollen spürbar sein, ohne Verlust.
+- **Auswirkung:** Gewächshaus/Frühbeet als sinnvolles, optionales Ziel; Winter fühlt sich anders, nicht schlechter an.
+
+### D9 · Misch-Farben nie käuflich
+- **Warum:** Kreuzen ist eine Entdeckung, die man nicht abkürzen soll (Kompetenz & Stolz).
+
+### D10 · Schritt-für-Schritt-Features mit Verwerfen-Option (Beet & Samen)
+- **Warum:** „Ideen werden verworfen, wenn sie sich im Spiel nicht lohnen.“ Jede Phase einzeln spielbar.
+- **Auswirkung:** Gute Basis für die hier eingeführte Designprüfung.
+
+### D11 · Erinnerungsstücke gehen nie verloren
+- **Warum:** Geschenke der Liebsten sind emotional wertvoll; Verkaufen/Verschenken aus Versehen wäre ein Verlust.
+
+### D12 · Inhalte, die Lina nicht mag, werden entfernt
+- **Beispiel:** Horror- und Zauberschul-Poster wieder entfernt.
+- **Warum:** Zielgruppe = eine Person; ihr Geschmack ist der Maßstab.
+
+### D13 · Keine Telemetrie
+- **Warum:** Privates Geschenk; Playtesting erfolgt durch Beobachtung (siehe `PLAYTESTING.md`).
+  *(Ableitung aus Architektur: keine externen Dienste zur Laufzeit.)*
+
+### D14 · Game-Design-Wissensbasis & Designprüfung (Nov. 2026)
+- **Warum:** Wunsch der Auftraggeber, dass neue Features vorher auf Spielerlebnis geprüft werden.
+- **Auswirkung:** 8-Fragen-Prüfung vor neuen Mechaniken; Pflege der Dokumente in `docs/game-design/`.
+
+---
+
+## Offene Designentscheidungen ❓
+
+| # | Frage | Warum wichtig | Optionen |
+|---|---|---|---|
+| O1 | **Wie soll das Spätspiel aussehen?** (nach Thalias Einzug) | größter Hebel für Langzeitmotivation | (a) Bewohner-Wünsche/kleine Geschichten, (b) Dorf-Projekte mit Sternchen, (c) neue Gebiete (Thalia), (d) bewusst „nur“ Sandbox |
+| O2 | Soll die Beziehung zu Oli **Stufen** haben, oder ist „alles ab Einzug“ gewollt? | Romantik ist zentral, Herzen sind schnell voll | Momente nach Herzen freischalten · neue Momente nach Jahrestagen · so lassen |
+| O3 | Bleibt es bei **max. 5 Herzen**? | Plateau | so lassen + Herzen füllen · „Erinnerungen“ statt Herzen danach |
+| O4 | Darf es eine **Vorratskiste** geben? | Inventar-Reibung | Truhe im Haus · Tasche erweitern (z. B. als Herz-Geschenk) · so lassen |
+| O5 | Sollen tägliche Ressourcen **ansammeln** (z. B. Eier bis 3 Tage)? | Pflichtrunde vs. Tagesritual | ansammeln · so lassen |
+| O6 | Geburtstage der übrigen Bewohner | Feierliche Höhepunkte | Daten fehlen (seit Langem offen) |
+| O7 | Fotomodus/Tagebuch – welche Form? | Besitz & Erinnerung | Screenshot-Modus · automatisches Tagebuch schöner Momente · beides |
+| O8 | Lieblingsessen/-farben/-hobbys der Bewohner | Glaubwürdige Geschenk-Vorlieben | Infos von Lina/Oli |
+| O9 | Soll Angeln mehr **Geschick** bekommen? | Kompetenz vs. Entspannung | (Empfehlung: nein – Entspannung ist hier Absicht) |
