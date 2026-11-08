@@ -3,7 +3,7 @@ import { VILLAGE_LAYOUT, VILLAGE_OBJECTS, VILLAGE_SPAWN } from '../data/maps/vil
 import { INTERACTIONS } from '../data/interactions';
 import { NPCS } from '../data/npcs';
 import { findPath, nearestWalkable } from './grid';
-import { applyMapFlags, buildWorldMap, findInteraction, isActive, KNOWN_CHARS, OBJECT_KINDS, objectById, terrainAt } from './worldmap';
+import { applyMapFlags, buildWorldMap, findInteraction, interactOffsets, isActive, KNOWN_CHARS, OBJECT_KINDS, objectById, terrainAt } from './worldmap';
 
 const map = buildWorldMap(VILLAGE_LAYOUT, VILLAGE_OBJECTS, VILLAGE_SPAWN);
 
@@ -29,11 +29,14 @@ describe('Dorfkarte', () => {
     const occupied = new Map<string, string>();
     // Objekte, die nur bis zu einem Einzug da sind (Bauplatz), überlappen das spätere Haus – das ist gewollt
     for (const obj of VILLAGE_OBJECTS) {
-      if (obj.kind === 'bridge') continue;
+      if (obj.kind === 'bridge' || obj.kind === 'steg') continue; // Brücke & Steg dürfen übers Wasser
       if (obj.until) continue;
       const info = OBJECT_KINDS[obj.kind];
-      for (let y = obj.y; y < obj.y + info.h; y++) {
-        for (let x = obj.x; x < obj.x + info.w; x++) {
+      const sized = obj.kind === 'landmark';
+      const w = sized ? (obj.w ?? info.w) : info.w;
+      const h = sized ? (obj.h ?? info.h) : info.h;
+      for (let y = obj.y; y < obj.y + h; y++) {
+        for (let x = obj.x; x < obj.x + w; x++) {
           const t = terrainAt(map, x, y);
           expect(t, `${obj.id} bei (${x},${y})`).not.toBeNull();
           expect(['water', 'sea', 'deep'], `${obj.id} steht im Wasser`).not.toContain(t);
@@ -84,9 +87,9 @@ describe('Dorfkarte', () => {
       }
     }
     for (const o of all.objects) {
-      const info = OBJECT_KINDS[o.kind];
-      if (all.inactive.has(o.id) || !info.interactFrom || ['tree', 'pine', 'bush', 'rock'].includes(o.kind)) continue;
-      const spots = info.interactFrom.map(([dx, dy]) => [o.x + dx, o.y + dy] as const).filter(([x, y]) => x >= 0 && y >= 0 && x < W && y < all.height && !all.grid.isBlocked(x, y));
+      const from = interactOffsets(o);
+      if (all.inactive.has(o.id) || !from || ['tree', 'pine', 'bush', 'rock'].includes(o.kind)) continue;
+      const spots = from.map(([dx, dy]) => [o.x + dx, o.y + dy] as const).filter(([x, y]) => x >= 0 && y >= 0 && x < W && y < all.height && !all.grid.isBlocked(x, y));
       expect(spots.some(([x, y]) => seen.has(y * W + x)), `${o.id} ist nicht erreichbar`).toBe(true);
     }
     // 3. auf dem Dorfplatz bleibt genug Platz zum Laufen (mindestens 70 % der Pflaster-Kacheln frei, auch mit Punschstand)
@@ -120,7 +123,7 @@ describe('Dorfkarte', () => {
     for (const id of Object.keys(INTERACTIONS)) {
       const obj = objectById(map, id);
       expect(obj, `Interaktion ohne Objekt: ${id}`).toBeDefined();
-      const from = OBJECT_KINDS[obj!.kind].interactFrom ?? [];
+      const from = interactOffsets(obj!) ?? [];
       const reachable = from.some(([dx, dy]) => {
         const target = { x: obj!.x + dx, y: obj!.y + dy };
         if (map.grid.isBlocked(target.x, target.y)) return false;

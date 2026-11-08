@@ -85,6 +85,16 @@ Wetter und Feste laufen nach echter Zeit.
   fehlt); ältere Spielstände laden ohne diese Prüfung (`PlaceHint.lenient`), es geht nichts verloren. Beim Einrichten zielt man
   auf die Wand (`Interior3D.walls`), die Drehung rastet von selbst ein (`wallRotationAt`). Modelle hängen bei
   `HANG`/`WALL_Z` in `models/furniture.ts`.
+- **Herzenswünsche (Spätspiel):** Sind alle eingezogen (`thaliaBegruesst`), schreibt Oma einen Brief, und jeder Bewohner hat
+  einen kleinen Wunsch fürs Dorf (`data/wishes.ts`, Regeln in `game/wishes.ts`). Zur Begrüßung deutet er ihn an, im Gespräch
+  „💭 Herzenswunsch“ erzählt er davon und zeigt, was Lina schon dabeihat (z. B. „Rosen (jede Farbe) 3/5“ – Farben, Arten
+  und Kategorien wie „jeder Fisch“ zählen). Hat sie alles, erfüllt „💝 Wunsch erfüllen“ ihn: Die Sachen (und ggf. ein kleiner
+  Sternchen-Beitrag) werden genommen, es gibt +30 Freundschaft, Konfetti – und ein **neuer Ort erscheint im Dorf**: Omas
+  Blumenbeet (für Opa Ludwig), Olafs Angelsteg (begehbar, von der Spitze aus angeln), Christins Kräuterspirale, Olis Herzbank am
+  Strand („L + O“), Jens' Aquarium vor dem Bistro, Lars' Insektenhotel, Thalias Aussichtspunkt mit Fernrohr (tags Meer,
+  nachts Sterne). Alles über Story-Flags (`wunsch-<id>`, `wunsch-erzaehlt-<id>`), kein neues Spielstand-Feld. Keine Frist,
+  keine Reihenfolge; Thalias Dorfkarte zeigt 💭 bei Bewohnern mit offenem Wunsch. Mehrere Wünsche je Bewohner sind
+  vorbereitet (`order`).
 - **Nichts geht für immer verloren:** Werkzeuge und einmalige Geschenke (Möbel mit `gift: true`, außer Kunst) sind
   Erinnerungsstücke (`isKeepsake`): unverkäuflich (`price: null`) und nicht verschenkbar. Fehlt beim Laden etwas, das
   Lina haben sollte (`missingKeepsakes`: Omas Werkzeuge, Thalias Schaufel, Olis Einzugsmöbel), kommt es zurück.

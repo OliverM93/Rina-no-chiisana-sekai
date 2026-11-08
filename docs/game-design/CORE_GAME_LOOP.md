@@ -64,7 +64,7 @@ Meilensteine → Ankündigungsbrief → ~10 Min Spielzeit → Einzug → neues G
 | Lars | Praxis/Apotheke, Tees, Gesundheits-Check |
 | Thalia | Schaufel & Funde, Dorfkarte, Samstagsparty |
 
-Danach: Hausausbau (6 Stufen) als längster Strang.
+Danach: **Herzenswünsche** ✅ (jeder Bewohner wünscht sich etwas fürs Dorf → neuer Ort) und Hausausbau (6 Stufen) als längster Strang.
 
 ## Wie die Loops ineinandergreifen (Systems Thinking)
 

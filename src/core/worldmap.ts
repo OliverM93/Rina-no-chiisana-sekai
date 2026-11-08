@@ -27,6 +27,8 @@ export type ObjectKind =
   | 'beet'
   | 'stall'
   | 'seedstall'
+  | 'landmark'
+  | 'steg'
   | NatureKind;
 
 export interface MapObjectDef {
@@ -40,6 +42,9 @@ export interface MapObjectDef {
   requires?: string;
   /** verschwindet, sobald dieses Flag gesetzt ist (z. B. Bauplatz) */
   until?: string;
+  /** Größe in Kacheln (nur `landmark` & `steg`, sonst gilt die Größe der Art) */
+  w?: number;
+  h?: number;
 }
 
 interface KindInfo {
@@ -76,6 +81,10 @@ export const OBJECT_KINDS: Record<ObjectKind, KindInfo> = {
   stall: { w: 2, h: 1, blocks: 'all', interactFrom: [[0, 1], [1, 1]] },
   // Christins Samenstand auf dem Dorfplatz (`data/seedstand.ts`)
   seedstall: { w: 2, h: 1, blocks: 'all', interactFrom: [[0, 1], [1, 1], [-1, 0], [2, 0]] },
+  // Orte aus den Herzenswünschen (`data/wishes.ts`): Größe je Objekt, ansehen von allen Seiten
+  landmark: { w: 1, h: 1, blocks: 'all', interactFrom: AROUND },
+  // Angelsteg: begehbar wie die Brücke, ragt ins Wasser (von der Spitze aus angeln)
+  steg: { w: 2, h: 1, blocks: 'none' },
   // Beet 4×2: jede Kachel ist ein Pflanzplatz, erreichbar von allen Seiten
   beet: {
     w: 4,
@@ -163,7 +172,8 @@ export function buildWorldMap(layout: readonly string[], defs: readonly MapObjec
 
   for (const def of defs) {
     const info = OBJECT_KINDS[def.kind];
-    objects.push({ ...def, w: info.w, h: info.h });
+    const sized = def.kind === 'landmark' || def.kind === 'steg';
+    objects.push({ ...def, w: sized ? (def.w ?? info.w) : info.w, h: sized ? (def.h ?? info.h) : info.h });
   }
 
   const baseBlocked = grid.blocked.slice();
@@ -173,7 +183,7 @@ export function buildWorldMap(layout: readonly string[], defs: readonly MapObjec
   // Interaktionspunkte
   const interactAt = new Map<number, string[]>();
   for (const obj of objects) {
-    const from = OBJECT_KINDS[obj.kind].interactFrom;
+    const from = interactOffsets(obj);
     if (!from) continue;
     for (const [dx, dy] of from) {
       const tx = obj.x + dx;
@@ -189,11 +199,24 @@ export function buildWorldMap(layout: readonly string[], defs: readonly MapObjec
   return { width, height, terrain, flowers, objects, grid, spawn, interactAt, inactive, baseBlocked, staticBlocked: grid.blocked.slice(), extra: new Set() };
 }
 
+/** Von wo aus man mit einem Objekt interagiert (relativ zur Grundfläche) */
+export function interactOffsets(obj: MapObject): ReadonlyArray<readonly [number, number]> | undefined {
+  return obj.kind === 'landmark' ? ringAround(obj.w, obj.h) : OBJECT_KINDS[obj.kind].interactFrom;
+}
+
+/** Alle Nachbarkacheln (ohne Ecken) rund um ein Rechteck */
+function ringAround(w: number, h: number): Array<[number, number]> {
+  const out: Array<[number, number]> = [];
+  for (let x = 0; x < w; x++) out.push([x, h], [x, -1]);
+  for (let y = 0; y < h; y++) out.push([-1, y], [w, y]);
+  return out;
+}
+
 function applyObjectCollision(grid: CollisionGrid, objects: readonly MapObject[], inactive: ReadonlySet<string>) {
   for (const obj of objects) {
     if (inactive.has(obj.id)) continue;
     const info = OBJECT_KINDS[obj.kind];
-    if (obj.kind === 'bridge') {
+    if (obj.kind === 'bridge' || obj.kind === 'steg') {
       grid.blockRect(obj.x, obj.y, obj.w, obj.h, false);
       continue;
     }

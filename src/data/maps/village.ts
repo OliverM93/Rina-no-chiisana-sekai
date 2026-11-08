@@ -103,6 +103,15 @@ export const VILLAGE_OBJECTS: readonly MapObjectDef[] = [
   // Christins Samenstand (Samen für Linas Beet) – steht, sobald Olaf & Christin eingezogen sind
   { id: 'samenstand', kind: 'seedstall', x: 23, y: 16, requires: 'olafEingezogen' },
 
+  // Orte aus den Herzenswünschen (`data/wishes.ts`) – erscheinen, wenn der Wunsch erfüllt ist
+  { id: 'beet-gisela', kind: 'landmark', variant: 'blumenbeet', x: 41, y: 17, w: 3, h: 1, requires: 'wunsch-oma-beet' },
+  { id: 'angelsteg', kind: 'steg', x: 39, y: 9, w: 2, h: 1, requires: 'wunsch-olaf-steg' },
+  { id: 'kraeuterspirale', kind: 'landmark', variant: 'kraeuterspirale', x: 20, y: 18, w: 2, h: 1, requires: 'wunsch-christin-kraeuter' },
+  { id: 'herzbank', kind: 'bench', variant: 'herz', x: 30, y: 32, requires: 'wunsch-oli-bank' },
+  { id: 'aquarium-jens', kind: 'landmark', variant: 'aquarium', x: 53, y: 17, w: 2, h: 1, requires: 'wunsch-jens-aquarium' },
+  { id: 'insektenhotel', kind: 'landmark', variant: 'insektenhotel', x: 28, y: 13, w: 1, h: 1, requires: 'wunsch-lars-insekten' },
+  { id: 'aussichtspunkt', kind: 'landmark', variant: 'aussichtspunkt', x: 50, y: 30, w: 2, h: 1, requires: 'wunsch-thalia-aussicht' },
+
   // Brücke über den Fluss
   { id: 'bruecke', kind: 'bridge', x: 37, y: 19 },
 

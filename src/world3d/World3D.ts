@@ -64,6 +64,7 @@ import { KISS } from './Character3D';
 import { isPartyTime } from '../game/party';
 import { makePartyLights, makePicnic } from './models/buildings';
 import { addFriendship, catchUpHeartLetters } from '../game/gameplay';
+import { activeWish, askWish, checkWishLetter, fulfillWish, wishTeaser } from '../game/wishes';
 import { OLAF_CALENDAR_JOKES } from '../data/npcs/olaf';
 import type { DecorCommand, FxKind } from '../game/session';
 import { Particles3D } from './Particles3D';
@@ -636,6 +637,7 @@ export class World3D {
     checkDailyMail(this.session);
     checkAdvent(this.session);
     catchUpHeartLetters(this.session);
+    checkWishLetter(this.session);
     this.updateMailbox();
     this.fishing.stop();
     this.equip(this.session.tool);
@@ -689,6 +691,7 @@ export class World3D {
     const data = this.session.data;
     if (!data || this.session.inside || this.session.uiBlocking || this.cutscene || this.kissBusy || this.session.decorActive) return;
     const pending = MILESTONE_FLAGS.some(([moved, greeted]) => data.flags[moved] && !data.flags[greeted]);
+    checkWishLetter(this.session);
     const events = checkStory(this.session);
     const stage = finishExpansion(this.session);
     if (events.length === 0 && stage === null && !pending) return;
@@ -1543,7 +1546,8 @@ export class World3D {
       return;
     }
     const out = talkToNpc(this.session, npc.def.id);
-    this.npcDialog(npc, out.lines, out.hearts);
+    const teaser = wishTeaser(this.session, npc.def.id);
+    this.npcDialog(npc, teaser ? [...out.lines, teaser] : out.lines, out.hearts);
   }
 
   private npcDialog(npc: Npc, lines: string[], hearts: number) {
@@ -1597,6 +1601,7 @@ export class World3D {
                 },
               }))
           : []),
+        ...(activeWish(this.session, id) ? [{ label: '💭 Herzenswunsch', onSelect: () => this.wishDialog(npc) }] : []),
         ...(id === 'thalia' && isPartyTime(this.session) && this.session.data?.world.dates.party !== this.session.today()
           ? [{ label: '💃 Tanzen!', onSelect: () => this.dance(npc) }]
           : []),
@@ -1652,6 +1657,43 @@ export class World3D {
             }),
         },
       ],
+    });
+  }
+
+  /** Herzenswunsch: erzählen lassen, Stand zeigen, erfüllen (`game/wishes.ts`) */
+  private wishDialog(npc: Npc) {
+    const id = npc.def.id;
+    const asked = askWish(this.session, id);
+    if (!asked) return this.npcDialog(npc, ['Ach, mir fehlt gerade gar nichts. Du bist ja da!'], npcHearts(this.session, id));
+    this.session.bus.emit('dialog:open', {
+      title: npc.def.name,
+      hearts: npcHearts(this.session, id),
+      lines: asked.lines.map((l) => fillPlaceholders(l, this.session.interactionContext())),
+      choices: [
+        ...(asked.canFulfill ? [{ label: '💝 Wunsch erfüllen', onSelect: () => this.fulfillWishScene(npc) }] : []),
+        { label: asked.canFulfill ? '⏳ Später' : '👍 Mach ich!', onSelect: () => this.npcDialog(npc, [asked.canFulfill ? 'Kein Problem – wann immer du magst.' : 'Danke, Lina! Ganz ohne Eile.'], npcHearts(this.session, id)) },
+      ],
+    });
+  }
+
+  private fulfillWishScene(npc: Npc) {
+    const id = npc.def.id;
+    const wish = activeWish(this.session, id);
+    const lines = fulfillWish(this.session, id);
+    if (!wish || !lines) return this.npcDialog(npc, ['Hm, da fehlt wohl doch noch was. Macht nichts!'], npcHearts(this.session, id));
+    this.syncMapObjects();
+    this.session.bus.emit('sfx', 'bauen');
+    this.session.bus.emit('fx', { kind: 'konfetti' });
+    this.session.bus.emit('fx', { kind: 'herzen', npc: id });
+    this.winston?.burst('herz');
+    this.session.bus.emit('dialog:open', {
+      title: npc.def.name,
+      hearts: npcHearts(this.session, id),
+      lines: lines.map((l) => fillPlaceholders(l, this.session.interactionContext())),
+      onClose: () => {
+        npc.endTalk();
+        this.session.bus.emit('toast', { text: `✨ Neu im Dorf: ${wish.title}! Schau doch gleich mal vorbei.` });
+      },
     });
   }
 

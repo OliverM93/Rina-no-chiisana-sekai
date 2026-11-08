@@ -79,13 +79,32 @@ Format: **Entscheidung** – Begründung – verworfene Alternative(n) – Auswi
   verpasste Tage sind egal (Witz ist reproduzierbar pro Datum, nicht gesammelt).
 - **Verworfen:** zusätzliche Freundschaftspunkte oder Sternchen als Herz-Belohnung (Zahl statt Erlebnis); Herzen > 5 (offen, O3).
 
+### D16 · Herzenswünsche als Spätspiel (W1, Nov. 2026)
+1. **Erlebnis:** „Ich mache meinen Liebsten eine Freude – und das Dorf wird dadurch schöner.“ Ein selbstgewähltes Projekt
+   für lange Sitzungen, mit einem sichtbaren, bleibenden Ergebnis.
+2. **Loop:** Neuer Meta-Loop nach den Einzügen: Wunsch hören → Sammeln/Fangen/Anbauen → Erfüllen → neuer Ort im Dorf.
+   Verbindet Freundschaft (Säule 1), Gestaltung der Welt (Säule 3/5) und alle Sammel-Systeme (Säule 4).
+3. **Dynamik:** Lina plant („Für Oma brauche ich noch zwei Vergissmeinnicht, für Jens Fische“) – Ziele ergeben sich aus den
+   Menschen, nicht aus einer Liste. Jede Farbe zählt → Kreuzungen werden nicht entwertet, aber nicht verlangt.
+4. **Langzeit:** Phase 1 = 1 Wunsch je Bewohner (7). Das System trägt mehrere Wünsche je Bewohner (`order`) für spätere Phasen.
+5. **Ökonomie:** Wünsche verbrauchen Materialien (Äste, Steine, Blumen, Fische, Insekten, Funde) und zusammen **5 000 ⭐**
+   (Olaf 3 000, Thalia 2 000) – eine kleine, *bedeutsame* Spätspiel-Senke. Fische/Insekten/Funde bekommen eine Verwendung
+   jenseits der Verkaufskiste (W6 teilweise). Belohnung: +30 Freundschaft + Ort, **keine** Sternchen.
+6. **Exploits/Risiken:** keine Geldquelle; Gegenstände werden erst beim Erfüllen genommen (nichts geht „verloren“, wenn
+   Lina es sich anders überlegt). Risiko „To-do-Liste“: bewusst *kein* Wunsch-Menü und kein Zähler – nur Gespräch und eine
+   dezente 💭 auf Thalias Karte.
+7. **Säulen:** 1, 3, 4, 5. **Leitplanken:** keine Frist, keine Reihenfolge, nichts verfällt.
+8. **Einfacher?** Reine Sternchen-Projekte (Dorfkasse) wären einfacher, aber nur eine Zahl. Neue Gebiete wären größer und
+   bräuchten mehr Inhalt. Wünsche nutzen Bestehendes und erzählen kleine Geschichten – bester Aufwand-Nutzen.
+- **Technik:** Zustand komplett in Story-Flags (kein `SAVE_VERSION`-Wechsel), Orte als `landmark`/`steg` mit `requires`.
+
 ---
 
 ## Offene Designentscheidungen ❓
 
 | # | Frage | Warum wichtig | Optionen |
 |---|---|---|---|
-| O1 | **Wie soll das Spätspiel aussehen?** (nach Thalias Einzug) | größter Hebel für Langzeitmotivation | (a) Bewohner-Wünsche/kleine Geschichten, (b) Dorf-Projekte mit Sternchen, (c) neue Gebiete (Thalia), (d) bewusst „nur“ Sandbox |
+| O1 | ✅ *entschieden (D16): Herzenswünsche – (a) + (b) kombiniert.* **Wie soll das Spätspiel aussehen?** (nach Thalias Einzug) | größter Hebel für Langzeitmotivation | (a) Bewohner-Wünsche/kleine Geschichten, (b) Dorf-Projekte mit Sternchen, (c) neue Gebiete (Thalia), (d) bewusst „nur“ Sandbox |
 | O2 | Soll die Beziehung zu Oli **Stufen** haben, oder ist „alles ab Einzug“ gewollt? | Romantik ist zentral, Herzen sind schnell voll | Momente nach Herzen freischalten · neue Momente nach Jahrestagen · so lassen |
 | O3 | Bleibt es bei **max. 5 Herzen**? | Plateau | so lassen + Herzen füllen · „Erinnerungen“ statt Herzen danach |
 | O4 | Darf es eine **Vorratskiste** geben? | Inventar-Reibung | Truhe im Haus · Tasche erweitern (z. B. als Herz-Geschenk) · so lassen |

@@ -29,6 +29,7 @@ import {
 } from './models/buildings';
 import { FLOWER_COLORS, makeBush, makeFlower, makePine, makeRock, makeTree, type TreeModel } from './models/nature';
 import { buildTerrain, type Terrain3D } from './terrain3d';
+import { makeHeartBench, makeLandmark, makeSteg } from './models/landmarks';
 
 const ROOF: Record<string, string> = {
   rose: palette.roof.rose,
@@ -68,7 +69,7 @@ export function buildMapView3D(scene: THREE.Scene, map: WorldMap, season: Season
   scene.add(terrain.ground, terrain.water);
   // Lauf-Höhe: auf Brücken stehen Figuren auf den Bohlen statt auf dem abgesenkten Flussbett
   // (sonst versinkt z. B. Winston halb in der Brücke). Das Gelände-Netz selbst bleibt unverändert.
-  const decks = map.objects.filter((o) => o.kind === 'bridge').map((o) => ({ x0: o.x, x1: o.x + o.w, z0: o.y, z1: o.y + o.h }));
+  const decks = map.objects.filter((o) => o.kind === 'bridge' || o.kind === 'steg').map((o) => ({ x0: o.x, x1: o.x + o.w, z0: o.y, z1: o.y + o.h }));
   const groundAt = terrain.heightAt;
   terrain.heightAt = (x, z) => {
     const h = groundAt(x, z);
@@ -155,7 +156,14 @@ export function buildMapView3D(scene: THREE.Scene, map: WorldMap, season: Season
         lanterns.push(new THREE.Vector3(c.x, 1.68, c.z));
         break;
       case 'bench':
-        node = makeBench();
+        node = o.variant === 'herz' ? makeHeartBench() : makeBench();
+        break;
+      case 'landmark':
+        node = makeLandmark(o.variant ?? '', o.w, o.h);
+        break;
+      case 'steg':
+        node = makeSteg(o.w);
+        node.position.y = BRIDGE_Y;
         break;
       case 'fountain':
         node = makeFountain();
