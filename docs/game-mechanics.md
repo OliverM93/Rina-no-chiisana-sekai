@@ -36,7 +36,7 @@ Wetter und Feste laufen nach echter Zeit.
   in den 8 Nachbarfeldern, kann beim Pflücken ein Misch-Same abfallen (`game/flowers.ts`, `seedDrop`; reproduzierbar
   pro Tag und Platz). Neu erblühte Farben tragen sich ins Sammelbuch ein (Reiter „Blumen“, `registerBlooms`), zählen aber
   nicht als Tier-Fund für Einzugs-Meilensteine. Geschenke: Wer die Art mag, mag jede Farbe, Mischfarben kommen nie
-  schlecht an (`giftPreferences`). **Samenstand (Phase 2):** Christin betreibt auf dem Dorfplatz einen Stand (`samenstand`, Karten-Objekt
+  schlecht an (`giftPreferences`). **Samenstand (Phase 2):** Christin betreibt in der oberen linken Ecke des Dorfplatzes (nicht auf dem Weg) einen Stand (`samenstand`, Karten-Objekt
   `seedstall`, steht ab Olafs Einzug; `data/seedstand.ts`, `game/seedstand.ts`, Fenster `ui/SeedStandPanel.tsx`). Immer da:
   Standard-Samen jeder Art und die Kräuter; dazu täglich drei wechselnde **Farb-Samen** (`dailyColorSeeds`, reproduzierbar pro Tag),
   damit Lina Kreuzungs-Partner bekommt. Misch-Farben gibt es nie zu kaufen. Preis = Verkaufswert × 2,5 (mind. 12 ⭐), Menge 1× oder 5×,
