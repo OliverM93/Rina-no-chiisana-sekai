@@ -52,6 +52,10 @@ export interface FurnitureDef {
   walk?: boolean;
   /** Hochbeet: jedes Feld ist ein Pflanzplatz */
   bed?: boolean;
+  /** Gewächshaus/Frühbeet: Pflanzen wachsen hier auch im Winter weiter */
+  greenhouse?: boolean;
+  /** Höhe der Erde in diesem Beet (Standard 0,39 = Hochbeet) */
+  soilHeight?: number;
   /** Stall mit Tieren (Hühner/Wachteln), legt täglich Eier */
   coop?: 'huhn' | 'wachtel';
   /** Hängt an der Wand (Rückwand oder Seitenwand) – darunter darf etwas stehen */
@@ -152,6 +156,8 @@ export const FURNITURE: readonly FurnitureDef[] = [
   { id: 'vogeltraenke', name: 'Vogeltränke', style: 'garten', outdoor: true, price: 500, w: 1, d: 1, description: 'Eine steinerne Schale für durstige Spatzen.' },
   { id: 'vogelhaus', name: 'Vogelhäuschen', style: 'garten', crafted: true, outdoor: true, price: 240, w: 1, d: 1, description: 'Ein Häuschen auf einem Pfahl. Bald ziehen bestimmt Meisen ein.' },
   { id: 'gartenwichtel', name: 'Gartenwichtel', style: 'garten', outdoor: true, price: 350, w: 1, d: 1, description: 'Ein kleiner Wichtel mit roter Mütze. Oma findet ihn „pfui“. Lina findet ihn toll.' },
+  { id: 'fruehbeet', name: 'Frühbeet', style: 'garten', outdoor: true, bed: true, greenhouse: true, price: 1800, w: 3, d: 1, description: 'Ein Holzbeet mit Glasdeckel – drei geschützte Pflanzplätze. Hier wächst auch im Winter etwas weiter, wenn draußen alles ruht.' },
+  { id: 'gewaechshaus', name: 'Gewächshaus', style: 'garten', outdoor: true, bed: true, greenhouse: true, soilHeight: 0.12, price: 4200, w: 3, d: 2, description: 'Ein kleines Glashaus mit sechs Pflanzplätzen. Drinnen bleibt es auch im Winter warm genug – Tomaten im Dezember, wer hätte das gedacht? Christin ist schwer beeindruckt.' },
   { id: 'hochbeet', name: 'Hochbeet', style: 'garten', outdoor: true, bed: true, price: 1200, w: 2, d: 1, description: 'Ein Beet aus Holz auf Kniehöhe – zwei neue Pflanzplätze!' },
   { id: 'huehnerstall', name: 'Hühnerstall', style: 'garten', outdoor: true, coop: 'huhn', price: 2800, w: 2, d: 2, description: 'Ein rotes Hühnerhaus mit Rampe – drei fröhliche Hühner ziehen gleich mit ein. Jeden Tag frische Eier!' },
   { id: 'wachtelstall', name: 'Wachtelstall', style: 'garten', outdoor: true, coop: 'wachtel', price: 1900, w: 2, d: 1, description: 'Ein kleines Häuschen mit Gitter für vier Wachteln. Sie legen winzige gesprenkelte Eier.' },

@@ -49,6 +49,7 @@ export const CHRISTIN: NpcDef = {
       { text: ['Dieser Regen!', 'Jetzt tragen alle Matsch auf den Dorfplatz. Ich seh schon, was ich morgen mache.'], when: { tags: ['wetter-regen'] }, weight: 3 },
     ],
     chat: [
+      { text: ['Im Winter ruht die Erde. Sie hat sich das verdient.', 'Wer trotzdem etwas ernten will, braucht ein Frühbeet oder ein Gewächshaus. Ordentlich, geschützt, mit Tür. Ich träume schon davon.'], when: { seasons: ['winter'] }, weight: 4 },
       { text: ['Dein Gemüse steht übrigens in Reihen. Sehr schön.', 'Karotten links, Salat rechts, Kräuter vorn. Wer so sät, kann so ernten.'], weight: 3 },
       { text: ['Ich hab heute die Gewürze nach Alphabet sortiert.', 'Olaf hat gefragt, wo der Zimt ist. Ich hab gesagt: Zwischen Kurkuma und Zitronenpfeffer. Er hat mich angeschaut, als wär ich eine Zauberin.'] },
       { text: ['Weißt du, was beruhigend ist?', 'Ein frisch gefegter Weg. Ganz ohne Blätter. … Für ungefähr drei Minuten.'] },

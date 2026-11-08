@@ -48,11 +48,13 @@ export function isWatered(p: Plant, day: string): boolean {
 
 /**
  * Lässt Pflanzen wachsen, die an einem früheren Tag gegossen wurden.
- * `rainedToday`: Regen gießt alle Beete. Gibt zurück, ob sich etwas geändert hat.
+ * `rainedToday`: Regen gießt alle Beete. `frozen`: Plätze, auf denen gerade nichts wächst (Winter draußen,
+ * Gewächshäuser sind davon ausgenommen). Gibt zurück, ob sich etwas geändert hat.
  */
-export function growGarden(garden: Garden, today: string, rainedToday = false): boolean {
+export function growGarden(garden: Garden, today: string, rainedToday = false, frozen?: (key: string) => boolean): boolean {
   let changed = false;
-  for (const p of Object.values(garden)) {
+  for (const [key, p] of Object.entries(garden)) {
+    if (frozen?.(key)) continue;
     if (p.stage < BLOOM && p.wateredDay && daysBetween(p.grewDay, p.wateredDay) >= 0 && daysBetween(p.wateredDay, today) >= 1) {
       p.stage = (p.stage + 1) as GrowthStage;
       p.grewDay = today;

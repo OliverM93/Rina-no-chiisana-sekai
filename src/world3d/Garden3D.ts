@@ -8,7 +8,8 @@ import type { Tile } from '../core/grid';
 import type { MapObject } from '../core/worldmap';
 import { GARDEN_FLOWER } from '../data/items';
 import type { Session } from '../game/session';
-import { makePlant, makeWetPatch } from './models/critters';
+import { isFrozen } from '../game/nature';
+import { makeFrostPatch, makePlant, makeWetPatch } from './models/critters';
 import type { Tweens } from './tweens';
 
 export class Garden3D {
@@ -51,7 +52,12 @@ export class Garden3D {
           const gf = GARDEN_FLOWER[p.flower];
           const node = new THREE.Group();
           node.position.set(x + 0.5, h, y + 0.5);
-          if (isWatered(p, day)) {
+          // Winter draußen: die Erde ruht (Raureif), im Gewächshaus nicht
+          if (isFrozen(this.session, x, y)) {
+            const frost = makeFrostPatch();
+            frost.position.y = 0.005;
+            node.add(frost);
+          } else if (isWatered(p, day)) {
             const wet = makeWetPatch();
             wet.position.y = 0.005;
             node.add(wet);
