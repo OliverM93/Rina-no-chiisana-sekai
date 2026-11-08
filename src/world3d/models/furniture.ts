@@ -1079,6 +1079,82 @@ export function makeFurniture(itemId: string, links: FenceLinks = { n: false, e:
       for (const x of [-0.45, 0.45]) g.add(b(0.7, 0.025, 0.66, '#5e3e2a', x, 0.385, 0));
       break;
     }
+    case 'fruehbeet': {
+      // Holzbeet (3 × 1) mit schräg aufgelegtem Glasdeckel: hinten hoch, vorn niedrig
+      const wood = '#b98a5e';
+      const glass = new THREE.MeshToonMaterial({ color: '#cfe8f4', transparent: true, opacity: 0.32, depthWrite: false });
+      g.add(b(2.86, 0.36, 0.86, wood, 0, 0.18, 0));
+      g.add(b(2.9, 0.04, 0.9, '#c9955f', 0, 0.37, 0));
+      g.add(b(2.74, 0.02, 0.74, '#6e4a32', 0, 0.38, 0));
+      // Rahmen & Glas
+      for (const x of [-1.42, 1.42]) {
+        g.add(b(0.04, 0.6, 0.04, '#f7f5ec', x, 0.7, -0.4));
+        g.add(b(0.04, 0.22, 0.04, '#f7f5ec', x, 0.5, 0.4));
+      }
+      const lid = b(2.86, 0.02, 0.92, glass, 0, 0.88, 0);
+      lid.rotation.x = 0.4;
+      lid.position.set(0, 0.84, 0);
+      g.add(lid);
+      for (const x of [-1.42, 0, 1.42]) {
+        const rib = b(0.035, 0.03, 0.93, '#f7f5ec', x, 0.84, 0);
+        rib.rotation.x = 0.4;
+        g.add(rib);
+      }
+      g.add(b(2.86, 0.4, 0.02, glass, 0, 0.58, -0.43));
+      break;
+    }
+    case 'gewaechshaus': {
+      // kleines Glashaus (3 × 2): Holzsockel, Glaswände, Satteldach, Tür vorn – Pflanzen innen bleiben sichtbar
+      const wood = '#b98a5e';
+      const glass = new THREE.MeshToonMaterial({ color: '#cfe8f4', transparent: true, opacity: 0.28, depthWrite: false });
+      const white = '#f7f5ec';
+      const W = 2.9;
+      const D = 1.9;
+      const wallH = 1.1;
+      g.add(b(W, 0.16, D, wood, 0, 0.08, 0));
+      g.add(b(W - 0.2, 0.02, D - 0.2, '#6e4a32', 0, 0.17, 0));
+      // Glaswände
+      g.add(b(W, wallH, 0.02, glass, 0, 0.16 + wallH / 2, -D / 2));
+      for (const sx of [-1, 1]) g.add(b(0.02, wallH, D, glass, sx * (W / 2), 0.16 + wallH / 2, 0));
+      g.add(b(W, wallH, 0.02, glass, 0, 0.16 + wallH / 2, D / 2));
+      // Pfosten & Querstreben
+      for (const x of [-W / 2, -W / 6, W / 6, W / 2]) for (const z of [-D / 2, D / 2]) g.add(b(0.05, wallH, 0.05, white, x, 0.16 + wallH / 2, z));
+      for (const sx of [-1, 1]) g.add(b(0.05, wallH, 0.05, white, sx * (W / 2), 0.16 + wallH / 2, 0));
+      for (const y of [0.16 + wallH * 0.5, 0.16 + wallH]) {
+        g.add(b(W, 0.04, 0.04, white, 0, y, D / 2));
+        g.add(b(W, 0.04, 0.04, white, 0, y, -D / 2));
+        for (const sx of [-1, 1]) g.add(b(0.04, 0.04, D, white, sx * (W / 2), y, 0));
+      }
+      // Satteldach aus zwei Glasflächen, First oben
+      const ridge = 0.16 + wallH + 0.55;
+      for (const sz of [-1, 1]) {
+        const pane = b(W, 0.02, D / 2 / Math.cos(0.5), glass, 0, 0.16 + wallH + 0.27, sz * D / 4);
+        pane.rotation.x = sz * -0.5;
+        g.add(pane);
+        for (const x of [-W / 2, -W / 6, W / 6, W / 2]) {
+          const rafter = b(0.04, 0.04, D / 2 / Math.cos(0.5), white, x, 0.16 + wallH + 0.27, sz * D / 4);
+          rafter.rotation.x = sz * -0.5;
+          g.add(rafter);
+        }
+      }
+      g.add(b(W + 0.04, 0.05, 0.05, white, 0, ridge, 0));
+      // Giebel (Dreiecke aus Glas) vorn & hinten
+      for (const sx of [-1, 1]) {
+        const tri = new THREE.Shape();
+        tri.moveTo(-D / 2, 0);
+        tri.lineTo(D / 2, 0);
+        tri.lineTo(0, 0.55);
+        const mesh1 = new THREE.Mesh(new THREE.ShapeGeometry(tri), glass);
+        mesh1.rotation.y = Math.PI / 2;
+        mesh1.position.set(sx * (W / 2), 0.16 + wallH, 0);
+        g.add(mesh1);
+      }
+      // Tür vorn mit Griff
+      g.add(b(0.62, 0.9, 0.03, white, -0.05, 0.16 + 0.45, D / 2 + 0.02));
+      g.add(b(0.52, 0.8, 0.032, glass, -0.05, 0.16 + 0.45, D / 2 + 0.02));
+      g.add(s(0.025, 0.025, 0.025, '#d9b45a', 0.18, 0.62, D / 2 + 0.05));
+      break;
+    }
     case 'huehnerstall': {
       // Haus auf Stelzen (hinten), Auslauf-Rampe vorne
       for (const x of [-0.55, 0.55]) for (const z of [-0.75, -0.05]) g.add(b(0.07, 0.42, 0.07, '#8a5a3a', x, 0.21, z));

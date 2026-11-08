@@ -78,6 +78,7 @@ import {
   plantAt,
   seedsInBag,
   toggleTool,
+  isFrozen,
   updateGarden,
   waterAt,
   missingKeepsakes,
@@ -1309,7 +1310,7 @@ export class World3D {
         onPick: (seedId) => {
           if (plantAt(this.session, t.x, t.y, seedId)) {
             this.garden.bounce(t);
-            this.session.bus.emit('toast', { text: 'Eingepflanzt! Jetzt noch gießen. 💧' });
+            this.session.bus.emit('toast', { text: isFrozen(this.session, t.x, t.y) ? 'Eingepflanzt! Im Winter ruht das Beet – im Frühling oder im Gewächshaus geht es los. ❄️' : 'Eingepflanzt! Jetzt noch gießen. 💧' });
           }
         },
         onCancel: () => undefined,
@@ -1333,6 +1334,10 @@ export class World3D {
       }
       return;
     }
+    if (this.session.tool === 'giesskanne' && isFrozen(this.session, t.x, t.y)) {
+      this.session.bus.emit('toast', { text: 'Die Erde ist gefroren – im Winter ruht das Beet. Im Gewächshaus wächst es weiter. ❄️' });
+      return;
+    }
     if (this.session.tool === 'giesskanne') {
       this.tweens.add(600, (k) => this.player && (this.player.armForward = -0.6 - Math.sin(k * Math.PI) * 0.5), () => this.player && (this.player.armForward = -0.35));
       if (waterAt(this.session, t.x, t.y)) {
@@ -1344,7 +1349,11 @@ export class World3D {
       return;
     }
     const stage = (CROP_BY_ID[plant.flower] ? ['ist frisch eingesät', 'keimt', 'wächst kräftig heran'] : ['ist frisch eingepflanzt', 'keimt', 'hat eine Knospe'])[plant.stage];
-    const watered = isWatered(plant, day) ? 'Heute schon gegossen. 💧' : 'Mit der Gießkanne (Taste 3) gießen, dann wächst sie bis morgen. 💧';
+    const watered = isFrozen(this.session, t.x, t.y)
+      ? 'Im Winter ruht das Beet. Erst im Frühling wächst sie weiter – oder in einem Frühbeet oder Gewächshaus. ❄️'
+      : isWatered(plant, day)
+        ? 'Heute schon gegossen. 💧'
+        : 'Mit der Gießkanne (Taste 3) gießen, dann wächst sie bis morgen. 💧';
     this.session.bus.emit('dialog:open', { title: name, lines: [`Die ${name} ${stage}.`, watered] });
   }
 
@@ -2465,7 +2474,7 @@ export class World3D {
   private yardBedSpots(): Array<{ x: number; y: number; h: number }> {
     const yard = this.session.data?.yard;
     if (!yard) return [];
-    return yard.items.filter((i) => FURNITURE_BY_ITEM[i.itemId]?.def.bed).flatMap((i) => bedTiles(this.session, i.uid).map((t) => ({ ...t, h: 0.39 })));
+    return yard.items.filter((i) => FURNITURE_BY_ITEM[i.itemId]?.def.bed).flatMap((i) => bedTiles(this.session, i.uid).map((t) => ({ ...t, h: FURNITURE_BY_ITEM[i.itemId].def.soilHeight ?? 0.39 })));
   }
 
   private setInYard(on: boolean) {

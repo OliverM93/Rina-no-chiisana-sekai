@@ -77,6 +77,7 @@ export function SeedStandPanel({ session }: { session: Session }) {
             </button>
           ))}
         </div>
+        {getSeason(session.clock()) === 'winter' && <p class="soft small-text">❄️ Im Winter ruht das Beet draußen. Nur im Frühbeet oder Gewächshaus (Möbelkatalog, Reiter Garten) wächst etwas weiter.</p>}
         <div class="seed-tabs">
           <button class={`btn ${tab === 'blumen' ? 'primary' : ''}`} onClick={() => setTab('blumen')}>
             🌷 Blumen

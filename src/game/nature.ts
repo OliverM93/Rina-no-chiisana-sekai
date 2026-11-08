@@ -3,6 +3,9 @@
  * Linas Beet und das Wetter.
  */
 import { isAvailable, pickSpecies, registerCatch } from '../core/catching';
+import { getSeason } from '../core/time';
+import { FURNITURE_BY_ITEM } from '../data/furniture';
+import { bedTiles } from './home';
 import { growGarden, pickBloom, plantSeed, removePlant, spotKey, water } from '../core/garden';
 import { hashString, mulberry32 } from '../core/rng';
 import { isPrecipitation, weatherAt, type WeatherNow } from '../core/weather';
@@ -166,10 +169,33 @@ function adj(name: string, ending: 'e' | 'en'): string {
 export function updateGarden(session: Session): boolean {
   const data = session.data;
   if (!data) return false;
-  const changed = growGarden(data.world.garden, session.today(), currentWeather(session).rainedToday);
+  const changed = growGarden(data.world.garden, session.today(), currentWeather(session).rainedToday, (key) => isFrozenKey(session, key));
   if (changed) session.changed();
   registerBlooms(session);
   return changed;
+}
+
+/** Ist gerade Winter? (Dezember bis Februar) – draußen ruht das Beet */
+export function isWinter(session: Session): boolean {
+  return getSeason(session.clock()) === 'winter';
+}
+
+/** Pflanzplätze (Schlüssel) in Gewächshäusern & Frühbeeten – dort wächst auch im Winter etwas */
+export function greenhouseKeys(session: Session): Set<string> {
+  const out = new Set<string>();
+  const yard = session.data?.yard;
+  if (!yard) return out;
+  for (const i of yard.items) if (FURNITURE_BY_ITEM[i.itemId]?.def.greenhouse) for (const t of bedTiles(session, i.uid)) out.add(spotKey(t.x, t.y));
+  return out;
+}
+
+function isFrozenKey(session: Session, key: string): boolean {
+  return isWinter(session) && !greenhouseKeys(session).has(key);
+}
+
+/** Ruht dieser Pflanzplatz gerade (Winter, nicht im Gewächshaus)? */
+export function isFrozen(session: Session, x: number, y: number): boolean {
+  return isFrozenKey(session, spotKey(x, y));
 }
 
 export function plantAt(session: Session, x: number, y: number, seedId: string): boolean {
@@ -190,7 +216,7 @@ export function plantAt(session: Session, x: number, y: number, seedId: string):
 
 export function waterAt(session: Session, x: number, y: number): boolean {
   const data = session.data;
-  if (!data) return false;
+  if (!data || isFrozen(session, x, y)) return false;
   const ok = water(data.world.garden, spotKey(x, y), session.today());
   if (ok) {
     session.changed();

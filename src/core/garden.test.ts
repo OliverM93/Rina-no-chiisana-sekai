@@ -37,3 +37,18 @@ describe('Garten', () => {
     });
   });
 });
+
+describe('Winterruhe', () => {
+  it('eingefrorene Plätze wachsen nicht, die anderen schon', () => {
+    const g: Garden = {
+      '1,1': { flower: 'tulpe', stage: 0, wateredDay: '2026-01-09', grewDay: '2026-01-08' },
+      '2,1': { flower: 'tulpe', stage: 0, wateredDay: '2026-01-09', grewDay: '2026-01-08' },
+    };
+    expect(growGarden(g, '2026-01-10', false, (key) => key === '1,1')).toBe(true);
+    expect(g['1,1'].stage).toBe(0);
+    expect(g['2,1'].stage).toBe(1);
+    // nach dem Tauen wächst auch der erste Platz weiter
+    expect(growGarden(g, '2026-03-01', false)).toBe(true);
+    expect(g['1,1'].stage).toBe(1);
+  });
+});

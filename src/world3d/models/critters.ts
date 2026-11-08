@@ -383,6 +383,23 @@ export function makePlant(stage: number, color: string, center: string, flower: 
   return g;
 }
 
+/** Raureif auf ruhender Erde im Winter (Beet draußen) */
+export function makeFrostPatch(): THREE.Group {
+  const g = new THREE.Group();
+  const disc = new THREE.Mesh(new THREE.CircleGeometry(0.4, 18).rotateX(-Math.PI / 2), new THREE.MeshBasicMaterial({ color: '#eef6ff', transparent: true, opacity: 0.55, depthWrite: false }));
+  disc.position.y = 0.01;
+  g.add(disc);
+  for (const [x, z, r] of [[0.18, 0.1, 0.4], [-0.15, 0.16, 1.1], [0.02, -0.2, 0.2], [-0.22, -0.08, 0.8]] as const) {
+    const flake = p(new THREE.BoxGeometry(1, 1, 1), '#ffffff', 0.05, 0.012, 0.012, x, 0.02, z);
+    flake.rotation.y = r;
+    g.add(flake);
+    const cross = p(new THREE.BoxGeometry(1, 1, 1), '#ffffff', 0.05, 0.012, 0.012, x, 0.02, z);
+    cross.rotation.y = r + Math.PI / 2;
+    g.add(cross);
+  }
+  return g;
+}
+
 /** Wassertropfen-Glitzer auf gegossener Erde */
 export function makeWetPatch(): THREE.Mesh {
   const m = new THREE.Mesh(new THREE.CircleGeometry(0.36, 16).rotateX(-Math.PI / 2), new THREE.MeshBasicMaterial({ color: '#3e2a20', transparent: true, opacity: 0.35, depthWrite: false }));
