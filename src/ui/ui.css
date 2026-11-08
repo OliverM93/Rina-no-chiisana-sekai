@@ -1956,6 +1956,8 @@ body:has(.dialog-layer) .decor-bar {
 .title-layer button:focus-visible {
   outline: 3px solid var(--ui-sky);
   outline-offset: 2px;
+}
+
 /* ---------------------------------------------------------------- Samenstand */
 
 .card.seedstand {
