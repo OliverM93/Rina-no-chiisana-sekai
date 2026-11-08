@@ -32,7 +32,7 @@ describe('Gemüse & Kräuter', () => {
     const used = new Set<string>();
     for (const r of RECIPES.filter((x) => x.group !== 'blumen' && x.ingredients.some((i) => i.itemId in CROP_BY_ID))) {
       expect(itemDef(r.result), r.id).toBeTruthy();
-      expect(r.station, r.id).toBe('kueche');
+      expect(['kueche', 'apotheke'], r.id).toContain(r.station);
       for (const i of r.ingredients) {
         expect(itemDef(i.itemId), `${r.id}: ${i.itemId}`).toBeTruthy();
         if (i.itemId in CROP_BY_ID) used.add(i.itemId);

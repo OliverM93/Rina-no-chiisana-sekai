@@ -87,8 +87,11 @@ export const THALIA: NpcDef = {
     { id: 'party', subject: 'Party-Erinnerung!', body: 'Süße,\n\nSamstag ist wieder Party auf dem Dorfplatz! Ab 19 Uhr. Bring gute Laune mit. Und Winston. Winston tanzt am besten.\n\nThalia 💃' },
   ],
   heartLetters: {
+    1: { id: 'herz-1', subject: 'Wegweiser aus Stein', body: 'Lina!\n\nWeißt du, wie Wanderer in den Bergen den Weg markieren? Mit Steinmännchen! Flache Kiesel übereinander – und ganz oben etwas Funkelndes.\n\nIch hab dir aufgeschrieben, wie man eins baut. Für deinen Garten. Damit ich immer zu dir finde.\n\nDeine Thalia', gift: { itemId: 'rezept-steinmaennchen', count: 1 } },
     2: { id: 'herz-2', subject: 'Für deine Sammlung', body: 'Lina,\n\neine kleine Vitrine für deine Funde! Damit deine Fossilien auch so schön ausgestellt sind wie meine.\n\nNa gut, fast so schön.\n\nDeine Thalia', gift: { itemId: 'vitrine', count: 1 } },
+    3: { id: 'herz-3', subject: 'Kartiert!', body: 'Lina,\n\nich hab unser Dorf vermessen. Ganz unwissenschaftlich, mit Schritten und Bauchgefühl. Fluss, Strand, Brücke, alle Häuser.\n\nUnd da, wo du wohnst, ist ein Herz. Das ist kein offizielles Kartensymbol.\n\nSollte es aber sein.\n\nDeine Thalia 🗺️', gift: { itemId: 'wandkarte-thalia', count: 1 } },
     4: { id: 'herz-4', subject: 'Unsere Welt', body: 'Lina,\n\nich hab dir einen Globus geschenkt. Auf dem hab ich alle Orte markiert, an die ich mit dir noch reisen will.\n\nEs sind ziemlich viele Markierungen. Fast alle.\n\nDeine Thalia 🌍', gift: { itemId: 'globus', count: 1 } },
+    5: { id: 'herz-5', subject: 'Benannt nach dir', body: 'Lina,\n\nich hab am Strand einen Ammoniten gefunden. Den schönsten, den ich je gesehen hab – er schimmert in allen Farben.\n\nIch hab ihn „Lina“ getauft. Wissenschaftlich darf man das so nicht machen. Ist mir egal.\n\nEr ist 150 Millionen Jahre alt. Unsere Freundschaft fühlt sich manchmal genauso an. Im guten Sinn!\n\nDeine Thalia', gift: { itemId: 'ammonit-lina', count: 1 } },
   },
 };
 

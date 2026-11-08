@@ -264,6 +264,7 @@ Legende: ✅ erledigt · 🚧 in Arbeit · ⬜ geplant
   - ✅ **Phase 3 – Gemüse & Kräuter:** 6 Gemüse + 4 Kräuter im Beet (mehrere Stück je Ernte, Wurzelgemüse räumt den Platz), Reiter am Samenstand (saisonal), 7 neue Gerichte, Rezepte bei der ersten Ernte
   - ✅ **Phase 4 – Sträuße & Blumendeko:** 7 Sträuße binden (Reiter „Blumen“ an der Werkbank), Glasvase im Katalog, Vasen mit Strauß & 4 Wandkränze, Strauß-Geschenke für alle Bewohner
   - ✅ **Phase 5 – Gewächshaus:** Winterruhe im Beet draußen (Raureif), Frühbeet & Gewächshaus lassen es ganzjährig wachsen
+- ✅ **Jedes Herz zählt:** 12 neue Herz-Briefe – jetzt bringt jedes Herz bei jedem Bewohner ein Geschenk (9 neue Erinnerungsstücke, Thymiantee & Steinmännchen, Papas Witze-Kalender) – aus der Game-Design-Analyse (W2)
 - ✅ **Pfeiltasten in allen Fenstern & Menüs** (`ui/navigation.ts`)
 - ✅ **Mehr Musik draußen:** 23 neue Lieder (Tag, Morgen, Abend, Nacht, Regen, Schnee + je ein Tageslied pro Jahreszeit), die sich bei jedem neuen Lied reihum abwechseln
 - ✅ **M8o Wand-Deko & Regale:** Wand-Deko darf über niedrigen Möbeln hängen (Höhenprüfung), Tassenbord statt langem Standregal (4 Tassen je Feld), Hellerau-Leiterregale (3 Stück, 4 Farben)

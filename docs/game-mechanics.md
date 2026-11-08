@@ -21,7 +21,12 @@ Wetter und Feste laufen nach echter Zeit.
   Briefe). Ein neuer Bewohner braucht: Datei + Eintrag in `npcs/index.ts` + Haus/Bank in `VILLAGE_OBJECTS`.
   Dialogzeilen haben Bedingungen (`when`) und Gewichte; ausgewählt wird reproduzierbar pro Tag.
 - **Freundschaft:** sinkt nie. Erstes Gespräch am Tag und erstes Geschenk am Tag zählen; Herz-Belohnungen
-  kommen per Brief.
+  kommen per Brief – **jedes Herz (1–5) bringt bei jedem Bewohner einen Brief mit Geschenk** (`heartLetters`, Test in
+  `data/gifts.test.ts`). Meist persönliche Erinnerungsstücke mit Platz im Zimmer (Christins Setzkasten, Lars' Lern-Skelett
+  „Knochen-Kalle“ und Teddy „Dr. Brummbär“, Thalias Dorfkarte & Ammonit „Lina“, Papas Witze-Kalender – Anschauen zeigt den
+  Witz des Tages, `OLAF_CALENDAR_JOKES` – und das Foto auf Papas Schultern, Jens' Reisekoffer), dazu Rezepte (Thymiantee,
+  Steinmännchen), Farb-Samen mit Kreuzungs-Tipp und ein Frühbeet von Christin. Fehlen Briefe für schon erreichte Herzen
+  (ältere Spielstände), liefert `catchUpHeartLetters` sie beim Laden nach.
 - **Tägliches:** Muscheln (reproduzierbar pro Datum), Obst wächst nach 3 Tagen nach, Felsen & Blumen 1×/Tag.
   Heruntergefallenes bleibt liegen (gespeichert in `world.ground`).
 - **Natur:** Fische/Insekten in `data/species.ts` werden automatisch zu Gegenständen, Symbolen

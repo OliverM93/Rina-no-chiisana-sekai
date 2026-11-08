@@ -101,6 +101,9 @@ export const CHRISTIN: NpcDef = {
   heartLetters: {
     1: { id: 'herz-1', subject: 'Alles an seinen Platz!', body: 'Liebe Lina,\n\nwer viele Sachen hat, braucht ein Regal. So einfach ist das.\n\nIch hab dir aufgeschrieben, wie man eins aus Ästen baut. Und dann sammelst du gleich die Äste vom Weg auf – zwei Fliegen mit einer Klappe!\n\nChristin', gift: { itemId: 'rezept-treibholzregal', count: 1 } },
     2: { id: 'herz-2', subject: 'Für dein Zimmer', body: 'Liebe Lina,\n\ndamit es bei dir noch ein bisschen schöner aussieht: eine Ikebana-Vase. Schlicht und ordentlich – so mag ich das.\n\nChristin', gift: { itemId: 'ikebana', count: 1 } },
+    3: { id: 'herz-3', subject: 'Ein kleiner Tipp fürs Beet', body: 'Liebe Lina,\n\nich hab gesehen, dein Beet ist gut in Schuss. Sehr ordentlich!\n\nHier drei weiße Tulpenzwiebeln. Setz sie direkt neben deine roten Tulpen – Rot und Weiß nebeneinander, und mit etwas Glück blüht bald etwas in Rosa.\n\nIn Reihen pflanzen, bitte. Nicht durcheinander.\n\nChristin', gift: { itemId: 'samen-tulpe-weiss', count: 3 } },
+    4: { id: 'herz-4', subject: 'Alles hat seinen Platz', body: 'Liebe Lina,\n\nich hab einen alten Setzkasten aufgearbeitet. Neun Fächer, und in jedem liegt etwas Kleines: Samen, ein Kiesel vom Fluss, ein Fläschchen Lavendelöl.\n\nDu musst nichts einsortieren. Ist schon alles an seinem Platz. Ich konnte nicht anders.\n\nChristin', gift: { itemId: 'setzkasten', count: 1 } },
+    5: { id: 'herz-5', subject: 'Damit es auch im Winter wächst', body: 'Liebe Lina,\n\nOlaf und ich haben dir am Wochenende ein Frühbeet gebaut. Er hat gemessen, ich hab gesägt. Frag nicht, warum es so herum war.\n\nDarin wächst es auch im Winter weiter. Stell es dir in den Garten, wohin du magst.\n\nIch hab dich sehr gern, weißt du das?\n\nChristin', gift: { itemId: 'fruehbeet', count: 1 } },
   },
 };
 

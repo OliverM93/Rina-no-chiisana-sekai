@@ -15,6 +15,18 @@ describe('Geschenk-Möbel', () => {
     for (const f of FURNITURE_ITEMS.filter((x) => x.def.gift)) expect(fromLetters.has(f.itemId) || MOVE_IN_GIFTS.includes(f.itemId) || TRAVELS.some((t) => t.souvenir === f.itemId || t.mug === f.itemId) || !!ART_BY_ID[f.itemId] || Object.values(FEST_GIFTS).some((g) => Object.values(g ?? {}).some((x) => x.itemId === f.itemId)), f.itemId).toBe(true);
   });
 
+  it('jedes Herz bringt bei jedem Bewohner einen Brief mit Geschenk', async () => {
+    const { MAX_HEARTS } = await import('../core/friendship');
+    const { isKnownItem } = await import('./items');
+    for (const n of NPCS) {
+      for (let h = 1; h <= MAX_HEARTS; h++) {
+        const l = n.heartLetters[h];
+        expect(l, `${n.id} Herz ${h}`).toBeTruthy();
+        expect(l.gift && isKnownItem(l.gift.itemId), `${n.id} Herz ${h}: ${l.gift?.itemId}`).toBe(true);
+      }
+    }
+  });
+
   it('Oli wohnt bei Lina und nennt sie Lini', () => {
     const oli = NPCS.find((n) => n.id === 'oli');
     expect(oli?.home).toBe('haus-lina');

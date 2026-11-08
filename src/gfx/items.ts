@@ -575,7 +575,7 @@ for (const r of RECIPES) {
 }
 
 // Tees aus Lars' Apotheke: Tasse in der Farbe des Tees
-for (const [id, tea, leaf] of [['kamillentee', '#f2d36a', '#ffffff'], ['pfefferminztee', '#8fcf7a', '#4f9a5a'], ['lavendeltee', '#c3a8e8', '#8a6ad8'], ['kraeutermischung', '#d9b86a', '#6fbf73']] as const) {
+for (const [id, tea, leaf] of [['kamillentee', '#f2d36a', '#ffffff'], ['thymiantee', '#c9a65a', '#6f8f4a'], ['pfefferminztee', '#8fcf7a', '#4f9a5a'], ['lavendeltee', '#c3a8e8', '#8a6ad8'], ['kraeutermischung', '#d9b86a', '#6fbf73']] as const) {
   DRAW[id] = (ctx) => {
     ellipse(ctx, 16, 26, 11, 3, '#f7f5ec', '#c9c4cf', 1);
     roundRect(ctx, 7, 12, 16, 13, [2, 2, 6, 6], '#ffffff', '#c9c4cf', 1.3);
