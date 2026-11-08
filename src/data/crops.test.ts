@@ -30,7 +30,7 @@ describe('Gemüse & Kräuter', () => {
 
   it('Gerichte brauchen nur Gegenstände, die es gibt – und jedes Gemüse kommt in einem Gericht vor', () => {
     const used = new Set<string>();
-    for (const r of RECIPES.filter((x) => x.ingredients.some((i) => i.itemId in CROP_BY_ID))) {
+    for (const r of RECIPES.filter((x) => x.group !== 'blumen' && x.ingredients.some((i) => i.itemId in CROP_BY_ID))) {
       expect(itemDef(r.result), r.id).toBeTruthy();
       expect(r.station, r.id).toBe('kueche');
       for (const i of r.ingredients) {

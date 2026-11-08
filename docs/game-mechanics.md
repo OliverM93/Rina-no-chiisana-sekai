@@ -51,11 +51,18 @@ Wetter und Feste laufen nach echter Zeit.
   mit Kräuterquark, Karottensuppe, Ratatouille, Gemischter Salat, Kürbissuppe. Die meisten Rezepte lernt sie bei der **ersten Ernte**
   (`fund`). Bewohner mögen sie (Vorlieben von Jens, Lars, Oma, Olaf, Oli, Christin, Thalia) und erzählen davon im Plausch.
   3D-Pflanzen je Stufe: `makeCrop` in `world3d/models/critters.ts`; Symbole: `CROP_ICONS` in `gfx/nature-icons.ts`, Gerichte in `gfx/items.ts`.
+  **Sträuße & Blumendeko (Phase 4):** `data/straeusse.ts` – an Opas Werkbank gibt es den Reiter „💐 Blumen binden“ (`RecipeDef.group:
+  'blumen'`). **7 Sträuße** (Rosen, Sonnenblumen, Bunter Frühling, Lavendel, Kräuterbund, Mischfarben, Schwarz) aus Blumen/Kräutern vom
+  eigenen Beet; die seltenen (Mischfarben `tulpe-orange`, Schwarz `rose-schwarz`) lernt Lina beim ersten Erhalt der Mischfarbe. Sträuße sind
+  verkäuflich und **Geschenke** (Vorlieben bei allen Bewohnern, Oli liebt Rosen & Schwarz, Jens Mischfarben & Lavendel …). Mit der leeren
+  **Glasvase** (Möbelkatalog, 180 ⭐) wird aus jedem Strauß eine **Vase fürs Zimmer** (`vase-strauss-…`, kleines Möbel für Tische) und aus
+  Blumen + Ästen ein **Wandkranz** (`kranz-lavendel/-rosen/-wiese/-kraeuter`, Wand-Deko). Modelle: Vasen & Kränze in `models/furniture.ts`,
+  Strauß-Symbole in `gfx/items.ts`.
   **Winterruhe & Gewächshaus (Phase 5):** Von Dezember bis Februar ruht jedes Beet draußen – Pflanzen wachsen nicht weiter, Gießen geht nicht
   (`isWinter`, `isFrozen`, `growGarden(…, frozen)`; Raureif-Ring unter der Pflanze, `makeFrostPatch`), Ernten und Pflanzen schon. Ausgenommen
   sind **Frühbeet** (3 Plätze, 1800 ⭐) und **Gewächshaus** (6 Plätze, 4200 ⭐) aus dem Möbelkatalog (Stil Garten, `FurnitureDef.greenhouse`,
   `soilHeight`): Dort wächst es ganzjährig (`greenhouseKeys`). Das Samenstand-Fenster weist im Winter darauf hin. Kein Zeitdruck: nichts
-  vertrocknet, im Frühling geht es draußen von selbst weiter. Geplant (nur wenn sinnvoll): Sträuße & Blumendeko – siehe `development-status.md`.
+  vertrocknet, im Frühling geht es draußen von selbst weiter. Damit ist das Thema Beet & Samen (Phasen 1–5) komplett.
 - **Zuhause:** Möbel in `data/furniture.ts` (Größe in Feldern, `surface`/`small`/`rug`/`sit`/`light`) werden
   automatisch Gegenstände (Varianten → `futon-rosa` …). Raumlogik in `core/room.ts`, Modelle in
   `world3d/models/furniture.ts`. Gespeichert wird immer draußen weitergespielt (Laden im Haus → vor der Tür).

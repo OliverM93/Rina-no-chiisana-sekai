@@ -8,6 +8,7 @@
 import { ARTWORKS } from './art';
 import { POSTERS } from './posters';
 import { FURNITURE_HEIGHTS } from './furnitureHeights';
+import { BOUQUETS, EMPTY_VASE, vaseId, WREATHS } from './straeusse';
 import { TASSEN } from './tassen';
 
 export type FurnitureStyle = 'japanisch' | 'basis' | 'cottage' | 'retro' | 'modern' | 'midcentury' | 'handgemacht' | 'garten' | 'kunst' | 'winter' | 'lieblinge';
@@ -267,6 +268,13 @@ for (const t of TASSEN) {
 // bleibt für alle, die es schon haben, ist aber nicht mehr im Katalog.
 (FURNITURE as FurnitureDef[]).push({ id: 'tassenbord', name: 'Tassenbord', style: 'lieblinge', wall: true, surface: true, surfaceHeight: 1.15, slots: 4, price: 700, w: 2, d: 1, description: 'Ein schmales Wandbord aus hellem Holz, auf dem Linas Sammeltassen dicht an dicht stehen – bis zu acht Stück. Darunter darf ruhig noch ein Möbelstück stehen.' });
 (FURNITURE as FurnitureDef[]).push({ id: 'tassenregal', name: 'Langes Tassenregal', style: 'lieblinge', retired: true, surface: true, surfaceHeight: 0.95, price: 900, w: 4, d: 1, description: 'Das erste Tassenregal: lang, aus hellem Holz, mit vier Brettern. Das schmale Tassenbord an der Wand ist platzsparender.' });
+
+// Blumendeko (Beet/Samen Phase 4): leere Glasvase im Katalog, Vasen mit Strauß und Wandkränze werden gebunden
+(FURNITURE as FurnitureDef[]).push({ id: EMPTY_VASE, name: 'Glasvase', style: 'basis', small: true, price: 180, w: 1, d: 1, description: 'Eine schlichte Glasvase mit etwas Wasser. Es fehlen nur noch Blumen – einen Strauß bindest du an Opas Werkbank.' });
+for (const b of BOUQUETS) {
+  (FURNITURE as FurnitureDef[]).push({ id: vaseId(b.id), name: `Vase: ${b.name}`, style: 'handgemacht', crafted: true, small: true, price: (b.price + 40) * 4, w: 1, d: 1, description: `${b.name} in der Glasvase. Frische Blumen machen jeden Tisch gemütlich.` });
+}
+for (const w of WREATHS) (FURNITURE as FurnitureDef[]).push({ id: w.id, name: w.name, style: 'handgemacht', crafted: true, wall: true, price: w.price, w: 1, d: 1, description: w.description });
 
 // Kunstwerke (Bild auf Staffelei) aus `art.ts` – nur über Jens erhältlich
 for (const a of ARTWORKS) (FURNITURE as FurnitureDef[]).push({ id: a.id, name: a.name, style: 'kunst', gift: true, price: a.price, w: 1, d: 1, description: `${a.description} – ${a.artist}` });

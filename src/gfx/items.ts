@@ -13,6 +13,7 @@ import { ARTWORKS } from '../data/art';
 import { artCanvas } from './art';
 import { POSTERS } from '../data/posters';
 import { TASSEN } from '../data/tassen';
+import { BOUQUETS } from '../data/straeusse';
 import { posterCanvas } from './posters';
 
 export const ICON = 32;
@@ -765,6 +766,46 @@ for (const p of POSTERS) {
     ctx.translate(8.5, 4.5);
     ctx.drawImage(posterCanvas(p, 60, 84), 0, 0, 15, 21);
     ctx.restore();
+  };
+}
+
+// Sträuße: Papiertüte mit Schleife, oben Blüten in den Farben des Straußes (`data/straeusse.ts`)
+for (const b of BOUQUETS) {
+  DRAW[b.id] = (ctx) => {
+    const green = b.id === 'strauss-kraeuter';
+    ctx.strokeStyle = '#5fa85a';
+    ctx.lineWidth = 1.2;
+    for (const x of [11, 16, 21]) {
+      ctx.beginPath();
+      ctx.moveTo(16, 21);
+      ctx.lineTo(x, 12);
+      ctx.stroke();
+    }
+    ctx.fillStyle = '#fdf6e8';
+    ctx.beginPath();
+    ctx.moveTo(6, 15);
+    ctx.lineTo(26, 15);
+    ctx.lineTo(18, 30);
+    ctx.lineTo(14, 30);
+    ctx.closePath();
+    ctx.fill();
+    ctx.strokeStyle = '#d9c9a8';
+    ctx.lineWidth = 1.2;
+    ctx.stroke();
+    roundRect(ctx, 12.5, 20, 7, 3, 1.2, '#f4a3b8', darken('#f4a3b8', 0.25), 0.8);
+    const spots: Array<[number, number]> = [[10, 11], [16, 8], [22, 11], [13, 14], [19, 14]];
+    spots.forEach(([x, y], i) => {
+      const c = b.colors[i % b.colors.length];
+      if (green) {
+        ellipse(ctx, x, y, 3.4, 2.4, c, darken(c, 0.3), 0.8);
+        return;
+      }
+      for (let k = 0; k < 6; k++) {
+        const a = (k / 6) * Math.PI * 2;
+        ellipse(ctx, x + Math.cos(a) * 2.4, y + Math.sin(a) * 2.4, 1.9, 1.9, c, darken(c, 0.25), 0.5);
+      }
+      ellipse(ctx, x, y, 1.6, 1.6, i % 2 ? '#f7d26a' : lighten(c, 0.3));
+    });
   };
 }
 

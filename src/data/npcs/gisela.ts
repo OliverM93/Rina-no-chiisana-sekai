@@ -29,8 +29,8 @@ export const GISELA: NpcDef = {
     { from: '22:00', label: 'schläft', activity: { kind: 'zuhause', sleeping: true } },
   ],
   preferences: {
-    loves: ['pfirsich', 'herzmuschel', 'wildblumen', 'rose', 'vergissmeinnicht', 'hering', 'ei', 'apfelkuchen', 'lavendelkekse', 'kamillentee', 'kraeutermischung', 'kartoffelsuppe', 'kraeuterquark'],
-    likes: ['wachtelei', 'apfel', 'jakobsmuschel', 'schneckenhaus', 'seestern', 'glitzerstein', 'tulpe', 'lavendel', 'sonnenblume', 'scholle', 'dorsch', 'marienkaefer', 'zitronenfalter', 'kartoffel', 'petersilie', 'karottensuppe', 'kuerbissuppe', 'schnittlauch'],
+    loves: ['pfirsich', 'herzmuschel', 'wildblumen', 'rose', 'vergissmeinnicht', 'hering', 'ei', 'apfelkuchen', 'lavendelkekse', 'kamillentee', 'kraeutermischung', 'kartoffelsuppe', 'kraeuterquark', 'strauss-bunt', 'strauss-lavendel'],
+    likes: ['wachtelei', 'apfel', 'jakobsmuschel', 'schneckenhaus', 'seestern', 'glitzerstein', 'tulpe', 'lavendel', 'sonnenblume', 'scholle', 'dorsch', 'marienkaefer', 'zitronenfalter', 'kartoffel', 'petersilie', 'karottensuppe', 'kuerbissuppe', 'schnittlauch', 'strauss-rosen', 'strauss-sonne', 'strauss-mischfarben', 'strauss-kraeuter'],
     dislikes: ['birne', 'ast', 'stein', 'waldameise', 'weinbergschnecke', 'maikaefer', 'heupferd', 'grashuepfer', 'ohrenqualle', 'aal', 'wels', 'strandkrabbe'],
   },
 

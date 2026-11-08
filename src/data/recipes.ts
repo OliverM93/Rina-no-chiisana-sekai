@@ -7,6 +7,7 @@
  * - als Brief-Geschenk (`rezept-<id>`, siehe `RECIPE_ITEM_PREFIX`) von Bewohnern
  */
 import type { Recipe } from '../core/crafting';
+import { BOUQUETS, EMPTY_VASE, vaseId, WREATHS } from './straeusse';
 
 export interface RecipeDef extends Recipe {
   /** Wo gebaut/gekocht wird (Standard: Werkbank) */
@@ -18,6 +19,8 @@ export interface RecipeDef extends Recipe {
   fund?: string;
   /** Gelernt in der Kochshow im Fernsehen */
   tv?: boolean;
+  /** Reiter an der Werkbank: Blumenbinderei */
+  group?: 'blumen';
 }
 
 export const RECIPES: readonly RecipeDef[] = [
@@ -63,6 +66,13 @@ export const RECIPES: readonly RecipeDef[] = [
   { id: 'seestern-deko', result: 'seestern-deko', ingredients: [{ itemId: 'seestern', count: 1 }, { itemId: 'jakobsmuschel', count: 2 }], fund: 'seestern', hint: 'Finde einen Seestern am Strand.' },
   { id: 'glitzerlampe', result: 'glitzerlampe', ingredients: [{ itemId: 'glitzerstein', count: 1 }, { itemId: 'stein', count: 2 }, { itemId: 'ast', count: 1 }], fund: 'glitzerstein', hint: 'Klopf an Felsen – vielleicht glitzert es.' },
 ];
+
+// Blumenbinderei (Beet/Samen Phase 4): Sträuße, Vasen & Kränze – `data/straeusse.ts`
+(RECIPES as RecipeDef[]).push(
+  ...BOUQUETS.map((b): RecipeDef => ({ id: b.id, group: 'blumen', result: b.id, ingredients: b.ingredients, ...(b.fund ? { fund: b.fund } : { start: true }), hint: b.hint })),
+  ...BOUQUETS.map((b): RecipeDef => ({ id: vaseId(b.id), group: 'blumen', result: vaseId(b.id), ingredients: [{ itemId: b.id, count: 1 }, { itemId: EMPTY_VASE, count: 1 }], start: true, hint: '' })),
+  ...WREATHS.map((w): RecipeDef => ({ id: w.id, group: 'blumen', result: w.id, ingredients: w.ingredients, start: true, hint: '' })),
+);
 
 export const RECIPE_BY_ID: Readonly<Record<string, RecipeDef>> = Object.fromEntries(RECIPES.map((r) => [r.id, r]));
 export const START_RECIPES: readonly string[] = RECIPES.filter((r) => r.start).map((r) => r.id);

@@ -33,8 +33,8 @@ export const CHRISTIN: NpcDef = {
     { from: '22:00', label: 'schläft', activity: { kind: 'zuhause', sleeping: true } },
   ],
   preferences: {
-    loves: ['lavendel', 'vergissmeinnicht', 'rose', 'ikebana', 'obstsalat', 'lavendelkekse', 'gruener-salat'],
-    likes: ['ei', 'wachtelei', 'tulpe', 'sonnenblume', 'wildblumen', 'jakobsmuschel', 'herzmuschel', 'pfirsich', 'apfel', 'salat', 'schnittlauch', 'basilikum', 'petersilie', 'karottensuppe'],
+    loves: ['lavendel', 'vergissmeinnicht', 'rose', 'ikebana', 'obstsalat', 'lavendelkekse', 'gruener-salat', 'strauss-lavendel', 'strauss-kraeuter'],
+    likes: ['ei', 'wachtelei', 'tulpe', 'sonnenblume', 'wildblumen', 'jakobsmuschel', 'herzmuschel', 'pfirsich', 'apfel', 'salat', 'schnittlauch', 'basilikum', 'petersilie', 'karottensuppe', 'strauss-sonne', 'strauss-bunt', 'strauss-rosen'],
     dislikes: ['ast', 'stein', 'weinbergschnecke', 'waldameise', 'strandkrabbe', 'aal'],
   },
   dialogue: {
