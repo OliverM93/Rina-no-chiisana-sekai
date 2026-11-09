@@ -264,6 +264,7 @@ Legende: ✅ erledigt · 🚧 in Arbeit · ⬜ geplant
   - ✅ **Phase 3 – Gemüse & Kräuter:** 6 Gemüse + 4 Kräuter im Beet (mehrere Stück je Ernte, Wurzelgemüse räumt den Platz), Reiter am Samenstand (saisonal), 7 neue Gerichte, Rezepte bei der ersten Ernte
   - ✅ **Phase 4 – Sträuße & Blumendeko:** 7 Sträuße binden (Reiter „Blumen“ an der Werkbank), Glasvase im Katalog, Vasen mit Strauß & 4 Wandkränze, Strauß-Geschenke für alle Bewohner
   - ✅ **Phase 5 – Gewächshaus:** Winterruhe im Beet draußen (Raureif), Frühbeet & Gewächshaus lassen es ganzjährig wachsen
+- ✅ **Herzenswünsche für Oli:** Mitternachtskino (Kinoplakat „Verlorene Autobahn“) und seltenes Tourshirt (Band „Letzte Ruhestätte“ im Kleiderschrank)
 - ✅ **Pater Matteo:** Thalias Brieffreund aus Italien (ausgedachte Figur) – Päckchen verschicken, danach vier Briefe mit kleinen Geschenken
 - ✅ **Herzenswünsche Phase 2:** sechs persönliche Wünsche (Omas Eierlikör, Olafs Flugzeugmodell, Christins Volkstanz, Jens' Urlaub mit Wahl, Lars' Wolframit, Thalias Party) mit Szene und Geschenk
 - ✅ **Fotomodus:** Taste F / 📷 – Schnappschuss mit Rahmen (Polaroid, Herzchen, Blümchen, Schlicht) zum Speichern als PNG

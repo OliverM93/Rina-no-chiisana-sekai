@@ -45,6 +45,8 @@ export function memoryTags(session: Session): string[] {
   if (Object.keys(data.collection).some((id) => GARDEN_FLOWER[id]?.crossOnly && id.includes('schwarz'))) tags.push('schwarze-blume');
   if (lastTravelCity(session)) tags.push('jens-reise');
   if (data.flags['wunsch-thalia-matteo']) tags.push('matteo');
+  if (data.flags['wunsch-oli-kino']) tags.push('kino');
+  if (data.flags['wunsch-oli-bandshirt']) tags.push('tourshirt');
   const days = daysBetween(data.createdAt.slice(0, 10), session.today());
   if (days >= 30) tags.push('monat-1');
   if (days >= 365) tags.push('jahr-1');

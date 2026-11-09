@@ -175,11 +175,11 @@ function band(ctx: CanvasRenderingContext2D, name: string) {
 }
 
 /** Zeichnet ein Brust-Motiv. `variant` wählt bei Bandshirts die Band. */
-export function drawPrint(kind: PrintKind, variant = 0): HTMLCanvasElement {
+export function drawPrint(kind: PrintKind, variant = 0, bandName?: string): HTMLCanvasElement {
   const [c, ctx] = canvas();
   if (kind === 'hawaii') hawaii(ctx);
   else if (kind === 'sport') sport(ctx);
   else if (kind === 'radierkopf') radierkopf(ctx);
-  else band(ctx, BAND_NAMES[variant % BAND_NAMES.length]);
+  else band(ctx, bandName ?? BAND_NAMES[variant % BAND_NAMES.length]);
   return c;
 }

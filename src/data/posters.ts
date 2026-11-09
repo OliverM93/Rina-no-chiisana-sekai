@@ -2,11 +2,11 @@
  * Poster (Wand-Deko) und Coffee-Table-Books (kleine Bildbände für Tische) zu Linas Lieblingsthemen: Kaffee, Dr. No, Kawaii.
  * (Horror- und Zauberschul-Poster gab es kurz, Lina mochte sie nicht – siehe Git-Verlauf.)
  *
- * Alles ist ausgedacht – Titel und Motive sind keine echten Werke oder Personen (siehe CLAUDE.md). Gemalt wird in
+ * Titel und Motive sind ausgedacht (siehe CLAUDE.md) – Ausnahme: das Kinoplakat „Verlorene Autobahn“, dessen Titel Lina sich für Olis Kino-Wunsch gewünscht hat. Gemalt wird in
  * `gfx/posters.ts`, die 3D-Modelle in `models/furniture.ts`. Neue Poster: Eintrag in `POSTERS` + Motiv in `MOTIFS`.
  */
 
-export type PosterMotif = 'kaffee' | 'dr-no' | 'kawaii' | 'sandsterne';
+export type PosterMotif = 'kaffee' | 'dr-no' | 'kawaii' | 'sandsterne' | 'kultfilm';
 
 export interface PosterDef {
   id: string;
@@ -31,6 +31,7 @@ export interface PosterDef {
 export const POSTERS: readonly PosterDef[] = [
   // ---------------------------------------------------------------- Poster (Wand)
   { id: 'poster-kaffee', name: 'Retro-Poster „Café Fabuleux“', kind: 'poster', title: 'CAFÉ\nFABULEUX', sub: 'Das Leben ist zu kurz für schlechten Kaffee.', colors: ['#f3dcb8', '#d9a86a'], ink: '#4a2a1c', motif: 'kaffee', price: 200, description: 'Ein Kaffee-Poster im Stil alter Café-Werbung. Mit Dampfherzchen. Jens will es auch haben.' },
+  { id: 'poster-verlorene-autobahn', name: 'Kinoplakat „Verlorene Autobahn“', kind: 'poster', title: 'VERLORENE\nAUTOBAHN', sub: 'Mitternachtsvorstellung', colors: ['#3a3a40', '#16161a'], ink: '#e9e7e3', motif: 'kultfilm', price: 420, gift: true, description: 'Das Plakat vom Mitternachtskino mit Oli: ein Schwarz-Weiß-Kultfilm, den keiner versteht. Oli rätselt nachts im Vorbeigehen weiter.' },
   // ---------------------------------------------------------------- Bildbände (Tisch)
   { id: 'buch-kaffee', name: 'Bildband „Kaffee – eine Liebeserklärung“', kind: 'buch', title: 'KAFFEE', sub: 'Eine Liebeserklärung', colors: ['#f3dcb8', '#d9a86a'], ink: '#4a2a1c', motif: 'kaffee', price: 360, description: 'Ein Bildband über Bohnen, Röstungen und Siebträger. Er riecht seltsamerweise nach Kaffee. Beim Blättern hat man Durst.' },
   { id: 'buch-dr-no', name: 'Buch „Ein Schritt. Dann noch einer.“', kind: 'buch', title: 'EIN SCHRITT.\nDANN NOCH\nEINER.', sub: 'Dr. No', colors: ['#3f5a66', '#6a8a96'], ink: '#fdf6e8', motif: 'dr-no', price: 400, description: 'Die Erinnerungen von Dr. No aus „Schwerer Weg“. Streng im Ton, warm im Herzen. Das Lieblingsbuch auf Linas Couchtisch.' },

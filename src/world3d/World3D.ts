@@ -64,7 +64,7 @@ import { KISS } from './Character3D';
 import { isPartyTime } from '../game/party';
 import { makePartyLights, makePicnic } from './models/buildings';
 import { addFriendship, catchUpHeartLetters } from '../game/gameplay';
-import { activeWish, askWish, canFolkDance, checkWishLetter, folkDance, fulfillWish, wishTeaser } from '../game/wishes';
+import { activeWish, askWish, canFolkDance, checkWishLetter, folkDance, fulfillWish, wardrobeFor, wishTeaser } from '../game/wishes';
 import { OLAF_CALENDAR_JOKES } from '../data/npcs/olaf';
 import type { DecorCommand, FxKind } from '../game/session';
 import { Particles3D } from './Particles3D';
@@ -1932,7 +1932,7 @@ export class World3D {
     }
     if (!this.homeOli) {
       const day = this.session.today();
-      this.homeOli = new Character(this.scene, dressFor(oli.def.appearance, oli.def.wardrobe, day, oli.def.id), 0, 0, 'down', () => 0, this.session.season, day);
+      this.homeOli = new Character(this.scene, dressFor(oli.def.appearance, wardrobeFor(this.session, oli.def), day, oli.def.id), 0, 0, 'down', () => 0, this.session.season, day);
       this.homeOli.speedFactor = 0.7;
     }
     const c = this.homeOli;

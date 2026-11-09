@@ -9,6 +9,9 @@
 import { removeItem } from '../core/inventory';
 import { itemDef, speciesOfFlower } from '../data/items';
 import { NPC_BY_ID } from '../data/npcs';
+import { OLI_RARE_WARDROBE } from '../data/npcs/looks';
+import type { NpcDef } from '../data/npcs/types';
+import type { WardrobeItem } from '../core/appearance';
 import { ALL_WISHES, FOLKDANCE_LINES, FOLKDANCE_POINTS, WISH_FRIENDSHIP, WISH_LETTER, WISHES_UNLOCK_FLAG, wishFlag, wishOptionFlag, wishToldFlag, type WishDef, type WishNeed } from '../data/wishes';
 import { hashString } from '../core/rng';
 import { learnRecipe } from './crafting';
@@ -132,6 +135,12 @@ export function fulfillWish(session: Session, npcId: string, optionId?: string):
   session.changed();
   session.save();
   return { lines, rewards };
+}
+
+/** Kleiderschrank eines Bewohners – Olis seltenes Tourshirt kommt dazu, sobald sein Wunsch erfüllt ist */
+export function wardrobeFor(session: Session, def: NpcDef): readonly WardrobeItem[] | undefined {
+  if (def.id === 'oli' && def.wardrobe && isWishDone(session, 'oli-bandshirt')) return [...def.wardrobe, ...OLI_RARE_WARDROBE];
+  return def.wardrobe;
 }
 
 /** Sobald alle eingezogen sind: einmal Omas Brief über die Herzenswünsche */

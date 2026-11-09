@@ -195,6 +195,65 @@ const MOTIFS: Record<PosterMotif, (ctx: C, w: number, h: number) => void> = {
       ctx.fill();
     }
   },
+  kultfilm: (ctx, w, h) => {
+    // Schwarz-Weiß: Autobahn bei Nacht, Mittelstreifen laufen zum Fluchtpunkt, Scheinwerferkegel im Nebel
+    const vx = w * 0.5;
+    const vy = h * 0.38;
+    ctx.fillStyle = '#2a2a30';
+    ctx.beginPath();
+    ctx.moveTo(vx - w * 0.02, vy);
+    ctx.lineTo(vx + w * 0.02, vy);
+    ctx.lineTo(w * 1.05, h * 0.9);
+    ctx.lineTo(-w * 0.05, h * 0.9);
+    ctx.closePath();
+    ctx.fill();
+    // Randlinien
+    ctx.strokeStyle = '#d8d6d1';
+    ctx.lineWidth = Math.max(2, w * 0.012);
+    for (const s of [-1, 1]) {
+      ctx.beginPath();
+      ctx.moveTo(vx + s * w * 0.02, vy);
+      ctx.lineTo(vx + s * w * 0.5, h * 0.9);
+      ctx.stroke();
+    }
+    // Mittelstreifen (Striche werden nach vorn größer)
+    ctx.fillStyle = '#e9e7e3';
+    for (let i = 0; i < 7; i++) {
+      const t0 = Math.pow(i / 7, 1.8);
+      const t1 = Math.pow((i + 0.55) / 7, 1.8);
+      const y0 = vy + (h * 0.9 - vy) * t0;
+      const y1 = vy + (h * 0.9 - vy) * t1;
+      ctx.beginPath();
+      ctx.moveTo(vx - (0.004 + 0.02 * t0) * w, y0);
+      ctx.lineTo(vx + (0.004 + 0.02 * t0) * w, y0);
+      ctx.lineTo(vx + (0.004 + 0.02 * t1) * w, y1);
+      ctx.lineTo(vx - (0.004 + 0.02 * t1) * w, y1);
+      ctx.fill();
+    }
+    // Scheinwerferkegel von unten
+    const cone = ctx.createLinearGradient(0, h * 0.9, 0, vy);
+    cone.addColorStop(0, 'rgba(255,255,245,0.55)');
+    cone.addColorStop(1, 'rgba(255,255,245,0)');
+    ctx.fillStyle = cone;
+    ctx.beginPath();
+    ctx.moveTo(w * 0.2, h * 0.9);
+    ctx.lineTo(w * 0.8, h * 0.9);
+    ctx.lineTo(vx + w * 0.04, vy);
+    ctx.lineTo(vx - w * 0.04, vy);
+    ctx.closePath();
+    ctx.fill();
+    // Mond und Nebel am Horizont
+    ctx.fillStyle = '#e9e7e3';
+    ctx.beginPath();
+    ctx.arc(w * 0.8, h * 0.3, w * 0.05, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = 'rgba(233,231,227,0.22)';
+    for (const [x, y, rx] of [[0.3, vy / h, 0.26], [0.72, vy / h + 0.03, 0.24], [0.5, vy / h - 0.02, 0.18]] as const) {
+      ctx.beginPath();
+      ctx.ellipse(w * x, h * y, w * rx, h * 0.03, 0, 0, Math.PI * 2);
+      ctx.fill();
+    }
+  },
   kawaii: (ctx, w, h) => {
     // Runde Kuschelwesen mit Herzbäckchen
     const face = (x: number, y: number, r: number, c: string) => {
@@ -256,7 +315,8 @@ export function drawPoster(ctx: C, p: PosterDef, w: number, h: number) {
   ctx.fillStyle = p.ink;
   ctx.textAlign = 'center';
   ctx.textBaseline = 'top';
-  const titleSize = Math.round(w * (p.title.length > 16 ? 0.105 : 0.14));
+  const longest = Math.max(...p.title.split('\n').map((l) => l.length));
+  const titleSize = Math.round(w * (p.title.length > 16 || longest > 9 ? 0.105 : 0.14));
   ctx.font = `900 ${titleSize}px Nunito, system-ui, sans-serif`;
   const lines = wrap(ctx, p.title, w * 0.9);
   lines.forEach((l, i) => ctx.fillText(l, w / 2, h * 0.04 + i * titleSize * 1.05));
