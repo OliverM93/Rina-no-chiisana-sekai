@@ -324,6 +324,7 @@ export class World3D {
     canvas.addEventListener('pointermove', this.onPointerMove);
     canvas.addEventListener('wheel', this.onWheel, { passive: false });
     window.addEventListener('resize', this.resize);
+    this.unsubscribers.push(this.session.bus.on('foto:aufnehmen', () => this.takePhoto()));
     this.unsubscribers.push(this.session.bus.on('camera:zoom', (dir) => this.zoomBy(dir === 'in' ? 0.85 : 1 / 0.85)));
     this.unsubscribers.push(
       this.keys.onAction(() => this.tryInteract()),
@@ -473,6 +474,16 @@ export class World3D {
     }
     this.updateCamera();
     this.renderer.render(this.scene, this.camera);
+  }
+
+  /** Fotomodus: die Welt einmal zeichnen und das Bild ans Foto-Fenster geben (ohne Oberfläche) */
+  private takePhoto() {
+    if (!this.session.playing || this.cutscene) return;
+    this.updateCamera();
+    this.renderer.render(this.scene, this.camera); // direkt davor zeichnen, sonst ist der Puffer leer
+    const image = this.canvas.toDataURL('image/png');
+    this.session.bus.emit('sfx', 'foto');
+    this.session.bus.emit('ui:open', { kind: 'foto', image });
   }
 
   private updateCamera() {

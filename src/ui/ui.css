@@ -2072,3 +2072,29 @@ body:has(.dialog-layer) .decor-bar {
     grid-template-columns: 1fr;
   }
 }
+
+/* Fotomodus */
+.card.photo-card {
+  width: min(760px, 94vw);
+}
+
+.photo-frame {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 12px;
+}
+
+.photo-preview {
+  max-width: 100%;
+  max-height: 52vh;
+  border-radius: 6px;
+  box-shadow: 0 6px 18px rgba(106, 77, 90, 0.25);
+}
+
+.photo-styles {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-bottom: 8px;
+}
