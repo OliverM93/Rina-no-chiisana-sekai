@@ -17,6 +17,7 @@ import { countItem } from '../core/inventory';
 import { itemIconUrl } from '../gfx/items';
 import { giveItem, takeItem } from './gameplay';
 import { registerBlooms, seedDrop, seedRandom } from './flowers';
+import { checkSammlungen } from './sammlungen';
 import type { Session } from './session';
 
 // ---------------------------------------------------------------------------
@@ -56,6 +57,7 @@ export function ownsAnywhere(session: Session, itemId: string): boolean {
   const data = session.data;
   if (!data) return false;
   if (data.inventory.slots.some((s) => s?.itemId === itemId)) return true;
+  if (data.storage.slots.some((s) => s?.itemId === itemId)) return true; // Vorratstruhe
   if (data.house.rooms.some((r) => r.items.some((i) => i.itemId === itemId))) return true;
   if (data.yard.items.some((i) => i.itemId === itemId)) return true;
   if (data.world.ground.some((g) => g.itemId === itemId)) return true;
@@ -104,6 +106,7 @@ function registerAndGive(session: Session, id: string): CatchResult {
   if (!data) return { isNew: false, released: true };
   const isNew = registerCatch(data.collection, id, session.today());
   const left = giveItem(session, id, 1, false);
+  if (isNew) checkSammlungen(session);
   session.changed();
   session.save();
   return { isNew, released: left > 0 };

@@ -9,6 +9,7 @@ import { ART_BY_ID } from '../../data/art';
 import { artCanvas } from '../../gfx/art';
 import { POSTER_BY_ID } from '../../data/posters';
 import { bouquetOfVase, WREATH_BY_ID } from '../../data/straeusse';
+import { SAMMLUNG_BY_ID } from '../../data/sammlungen';
 import { TASSE_BY_ID } from '../../data/tassen';
 import { posterCanvas } from '../../gfx/posters';
 import { darken, lighten } from '../../style/palette';
@@ -236,6 +237,18 @@ export function makeFurniture(itemId: string, links: FenceLinks = { n: false, e:
         o.receiveShadow = true;
       }
     });
+    return { group: g, glow, lightAt, seatY };
+  }
+  // Urkunde (`urkunde-…`): Rahmen in der Farbe der Sammlung, Pergament, Schleife & Siegel
+  if (f && f.def.id.startsWith('urkunde-')) {
+    const z = WALL_Z;
+    const frameCol = SAMMLUNG_BY_ID[f.def.id.slice(8)]?.color ?? '#c9955f';
+    g.add(b(0.62, 0.48, 0.04, frameCol, 0, HANG, z + 0.02));
+    g.add(b(0.54, 0.4, 0.01, '#fbf3dc', 0, HANG, z + 0.045));
+    g.add(b(0.34, 0.03, 0.004, '#4a3a30', 0, HANG + 0.1, z + 0.052));
+    for (const [w, y] of [[0.42, 0.03], [0.38, -0.02], [0.3, -0.07]] as const) g.add(b(w, 0.014, 0.004, '#8a7a6a', 0, HANG + y, z + 0.052));
+    g.add(c(0.045, 0.01, '#d9534f', 0.17, HANG - 0.13, z + 0.056).rotateX(Math.PI / 2));
+    for (const x of [0.15, 0.19]) g.add(b(0.025, 0.07, 0.004, '#d9534f', x, HANG - 0.18, z + 0.054));
     return { group: g, glow, lightAt, seatY };
   }
   // Vase mit Strauß (`vase-strauss-…`): Glasvase, Stiele, Blüten in den Farben des Straußes

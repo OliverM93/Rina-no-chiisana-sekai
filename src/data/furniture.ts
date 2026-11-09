@@ -9,6 +9,7 @@ import { ARTWORKS } from './art';
 import { POSTERS } from './posters';
 import { FURNITURE_HEIGHTS } from './furnitureHeights';
 import { BOUQUETS, EMPTY_VASE, vaseId, WREATHS } from './straeusse';
+import { SAMMLUNGEN, urkundeId } from './sammlungen';
 import { TASSEN } from './tassen';
 
 export type FurnitureStyle = 'japanisch' | 'basis' | 'cottage' | 'retro' | 'modern' | 'midcentury' | 'handgemacht' | 'garten' | 'kunst' | 'winter' | 'lieblinge';
@@ -306,6 +307,13 @@ export interface FurnitureItem {
   variant: string | null;
   color: string | null;
 }
+
+// Urkunden für vollständige Sammlungen (Wand-Deko, Erinnerungsstücke) – siehe `sammlungen.ts`
+(FURNITURE as FurnitureDef[]).push(
+  ...SAMMLUNGEN.map(
+    (c): FurnitureDef => ({ id: urkundeId(c.id), name: `Urkunde: ${c.title}`, style: 'basis', gift: true, wall: true, price: 400, w: 1, d: 1, description: `Die Urkunde „${c.title}“ – mit Siegel. Ein Brief hat sie begleitet. 🏆` }),
+  ),
+);
 
 export const FURNITURE_ITEMS: readonly FurnitureItem[] = FURNITURE.flatMap((def): FurnitureItem[] =>
   def.variants

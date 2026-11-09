@@ -265,6 +265,7 @@ Legende: ✅ erledigt · 🚧 in Arbeit · ⬜ geplant
   - ✅ **Phase 4 – Sträuße & Blumendeko:** 7 Sträuße binden (Reiter „Blumen“ an der Werkbank), Glasvase im Katalog, Vasen mit Strauß & 4 Wandkränze, Strauß-Geschenke für alle Bewohner
   - ✅ **Phase 5 – Gewächshaus:** Winterruhe im Beet draußen (Raureif), Frühbeet & Gewächshaus lassen es ganzjährig wachsen
 - ✅ **Herzenswünsche Phase 2:** sechs persönliche Wünsche (Omas Eierlikör, Olafs Flugzeugmodell, Christins Volkstanz, Jens' Urlaub mit Wahl, Lars' Wolframit, Thalias Party) mit Szene und Geschenk
+- ✅ **Sammlungen würdigen:** Brief + Wand-Urkunde für alle Fische, Krabbeltiere, Funde, Blumenfarben und Tassen (Audit F10)
 - ✅ **Oli in Stufen:** „Zeit zu zweit“-Szenen (eine je Herz), „Zur Herzbank“ mit Jahreszeiten-Zeilen, Jubiläums-Briefe nach 100 Tagen und einem Jahr (Audit F6)
 - ✅ **Erinnerungen im Gespräch:** 38 Zeilen, in denen Bewohner auf Hausausbau, Sammelbuch, Garten, Tassen, Jens' Reisen und die gemeinsame Zeit Bezug nehmen (Audit F8)
 - ✅ **Tagesfunde sammeln sich an:** Eier (bis 3 Tage im Nest) und Winstons Buddelfunde (bis 3 Fundstellen) – wer einen Tag auslässt, verpasst nichts (Audit F4)
