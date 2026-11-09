@@ -61,6 +61,9 @@ import { hashString } from '../core/rng';
 import { canDate, canKiss, type DateKind, giveKiss, haveDate, nextStageScene, playStageScene } from '../game/romance';
 import { SPONTANEOUS_KISS_LINES, WELCOME_KISS_LINES } from '../data/npcs/oli';
 import { KISS } from './Character3D';
+
+/** Abstand der Figurenmitten beim Küsschen (in Kacheln): Köpfe ~0,52 breit, beim Vorbeugen rücken sie je ~0,14 näher */
+const KISS_DISTANCE = 0.84;
 import { isPartyTime } from '../game/party';
 import { makePartyLights, makePicnic } from './models/buildings';
 import { addFriendship, catchUpHeartLetters } from '../game/gameplay';
@@ -115,7 +118,7 @@ import { makeBush } from './models/nature';
 import { lampGlass, makeHouse, windowGlass } from './models/buildings';
 import { buildMapView3D, footprintCenter, type MapView3D } from './MapView3D';
 import { Npc } from './Npc';
-import { Tweens } from './tweens';
+import { easeOutBack, Tweens } from './tweens';
 
 type Target =
   | { kind: 'pickup'; id: string }
@@ -2020,11 +2023,12 @@ export class World3D {
     const dx = player.x - oli.x;
     const dy = player.y - oli.y;
     const d = Math.hypot(dx, dy) || 1;
-    const want = TILE * 0.56;
+    // Abstand so, dass sich nur die Gesichter fast berühren (beide beugen sich vor, die Köpfe dürfen nicht ineinander stecken)
+    const want = TILE * KISS_DISTANCE;
     const sx = player.x;
     const sy = player.y;
-    const tx = d > want ? oli.x + (dx / d) * want : sx;
-    const ty = d > want ? oli.y + (dy / d) * want : sy;
+    const tx = oli.x + (dx / d) * want;
+    const ty = oli.y + (dy / d) * want;
     this.tweens.add(260, (k) => player.teleport(sx + (tx - sx) * k, sy + (ty - sy) * k), () => {
       player.faceTowards(oli.x, oli.y);
       oli.faceTowards(player.x, player.y);
@@ -2377,7 +2381,7 @@ export class World3D {
     });
   }
 
-  /** Picknick oder Sterne gucken mit Oli */
+  /** Picknick, Sterne gucken oder Herzbank mit Oli – mit Abblenden, Decke zum Ausbreiten und sanftem Ende */
   private dateScene(kind: DateKind) {
     const player = this.player;
     const oli = this.npcs.get('oli');
@@ -2385,8 +2389,40 @@ export class World3D {
     if (this.session.inside) this.exitHome();
     this.stopFishing();
     this.cutscene = true;
-    const grid = this.session.map.grid;
+    player.cancelPath();
+    this.marker.visible = false;
     let blanket: THREE.Object3D | null = null;
+
+    // 1) Abblenden, hinter dem Schwarz alles an Ort und Stelle bringen, 2) Einblenden, Decke breitet sich aus
+    this.session.bus.emit('overlay:fade', true);
+    window.setTimeout(() => {
+      blanket = this.placeDate(kind, oli);
+      if (blanket) blanket.scale.setScalar(0.01);
+      this.camTarget.set(player.x * UNIT, 0, player.y * UNIT);
+      this.dogFollow();
+      if (kind === 'sterne') this.session.bus.emit('overlay:stars', true);
+      window.setTimeout(() => {
+        this.session.bus.emit('overlay:fade', false);
+        const rug = blanket;
+        if (rug) this.tweens.add(600, (k) => rug.scale.setScalar(Math.max(0.01, easeOutBack(k))));
+        window.setTimeout(() => {
+          const lines = haveDate(this.session, kind);
+          this.winston?.burst('herz');
+          this.session.bus.emit('dialog:open', {
+            title: oli.def.name,
+            lines,
+            onClose: () => this.endDate(kind, oli, blanket),
+          });
+        }, 900);
+      }, 250);
+    }, 480);
+  }
+
+  /** Lina und Oli an den Platz setzen (hinter dem Abblenden); gibt die Picknickdecke zurück, falls es eine gibt */
+  private placeDate(kind: DateKind, oli: Npc): THREE.Object3D | null {
+    const player = this.player;
+    if (!player) return null;
+    const grid = this.session.map.grid;
     if (kind === 'herzbank') {
       // Eure Bank am Strand: nebeneinander auf der Sitzfläche, Blick aufs Meer
       const bench = objectById(this.session.map, 'herzbank');
@@ -2405,47 +2441,49 @@ export class World3D {
       oli.char.face('down');
       oli.char.setSitting(true);
       oli.char.seatHeight = seatY;
-    } else {
-      const want = kind === 'picknick' ? { x: 9, y: 22 } : { x: 33, y: 31 };
-      let a = nearestWalkable(grid, want) ?? player.tile;
-      let b = { x: a.x + 1, y: a.y };
-      if (grid.isBlocked(b.x, b.y)) {
-        b = a;
-        a = { x: a.x - 1, y: a.y };
-      }
-      blanket = makePicnic();
-      const gy = Math.max(0, this.view.terrain.heightAt(a.x + 1, a.y + 0.5));
-      blanket.position.set(a.x + 1, gy, a.y + 0.55);
-      this.scene.add(blanket);
-      const seat = gy + 0.04;
-      player.teleport((a.x + 0.5) * TILE, (a.y + 0.5) * TILE + 10);
-      player.setSitting(true);
-      player.seatHeight = seat;
-      oli.scriptPlace(b);
-      oli.char.teleport((b.x + 0.5) * TILE, (b.y + 0.5) * TILE + 10);
-      oli.char.setSitting(true);
-      oli.char.seatHeight = seat;
+      return null;
     }
-    this.camTarget.set(player.x * UNIT, 0, player.y * UNIT);
-    this.dogFollow();
-    if (kind === 'sterne') this.session.bus.emit('overlay:stars', true);
+    const want = kind === 'picknick' ? { x: 9, y: 22 } : { x: 33, y: 31 };
+    let a = nearestWalkable(grid, want) ?? player.tile;
+    let b = { x: a.x + 1, y: a.y };
+    if (grid.isBlocked(b.x, b.y)) {
+      b = a;
+      a = { x: a.x - 1, y: a.y };
+    }
+    const blanket = makePicnic();
+    const gy = Math.max(0, this.view.terrain.heightAt(a.x + 1, a.y + 0.5));
+    blanket.position.set(a.x + 1, gy, a.y + 0.55);
+    this.scene.add(blanket);
+    const seat = gy + 0.04;
+    player.teleport((a.x + 0.5) * TILE, (a.y + 0.5) * TILE + 10);
+    player.setSitting(true);
+    player.seatHeight = seat;
+    oli.scriptPlace(b);
+    oli.char.teleport((b.x + 0.5) * TILE, (b.y + 0.5) * TILE + 10);
+    oli.char.setSitting(true);
+    oli.char.seatHeight = seat;
+    return blanket;
+  }
+
+  /** Ende: aufstehen, die Decke wird eingerollt, dann geht es weiter – nichts verschwindet einfach */
+  private endDate(kind: DateKind, oli: Npc, blanket: THREE.Object3D | null) {
+    const player = this.player;
+    if (!player) return;
+    this.session.bus.emit('overlay:stars', false);
+    player.setSitting(false);
+    oli.char.setSitting(false);
+    oli.char.faceTowards(player.x, player.y);
+    player.faceTowards(oli.char.x, oli.char.y);
     window.setTimeout(() => {
-      const lines = haveDate(this.session, kind);
-      this.winston?.burst('herz');
-      this.session.bus.emit('dialog:open', {
-        title: oli.def.name,
-        lines,
-        onClose: () => {
-          blanket?.removeFromParent();
-          player.setSitting(false);
-          oli.char.setSitting(false);
-          oli.scriptDone();
-          this.session.bus.emit('overlay:stars', false);
-          this.session.bus.emit('toast', { text: kind === 'picknick' ? 'Was für ein schönes Picknick! 💕' : kind === 'herzbank' ? 'Euer Platz am Meer. 🌅' : 'Was für ein Sternenhimmel … 💫' });
-          this.cutscene = false;
-        },
-      });
-    }, 900);
+      const finish = () => {
+        blanket?.removeFromParent();
+        oli.scriptDone();
+        this.session.bus.emit('toast', { text: kind === 'picknick' ? 'Was für ein schönes Picknick! 💕' : kind === 'herzbank' ? 'Euer Platz am Meer. 🌅' : 'Was für ein Sternenhimmel … 💫' });
+        this.cutscene = false;
+      };
+      if (blanket) this.tweens.add(520, (k) => blanket.scale.setScalar(Math.max(0.01, 1 - k * k)), finish);
+      else window.setTimeout(finish, 300);
+    }, 700);
   }
 
   // -------------------------------------------------------------------------

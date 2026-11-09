@@ -29,14 +29,6 @@ function c(r: number, h: number, color: string | THREE.Material, x = 0, y = 0, z
   return m;
 }
 
-function heartShape(s: number): THREE.Shape {
-  const sh = new THREE.Shape();
-  sh.moveTo(0, -0.9 * s);
-  sh.bezierCurveTo(-1.4 * s, 0, -0.6 * s, 1.1 * s, 0, 0.45 * s);
-  sh.bezierCurveTo(0.6 * s, 1.1 * s, 1.4 * s, 0, 0, -0.9 * s);
-  return sh;
-}
-
 export interface HouseModel {
   group: THREE.Group;
   /** Lokale Positionen der Fenster (für Lichtschein) */
@@ -82,7 +74,6 @@ export function makeHouse(roofColor: string, stage = 0): HouseModel {
   ridge.position.set(0, 0.22 + wallH + roofH + 0.02, 0);
   g.add(ridge);
   // Ziegelreihen auf beiden Dachseiten (Rundziegel-Optik)
-  const slope = Math.atan2(roofH, D / 2 + over);
   const tileMat = toon(darken(roofColor, 0.06));
   for (const side of [1, -1]) {
     for (let i = 0; i < 6; i++) {
@@ -97,12 +88,6 @@ export function makeHouse(roofColor: string, stage = 0): HouseModel {
   // Schornstein
   g.add(b(0.36, 0.8, 0.36, '#e9a28f', 1.3, 0.22 + wallH + roofH * 0.7, -0.35));
   g.add(b(0.46, 0.12, 0.46, '#f2b8a6', 1.3, 0.22 + wallH + roofH * 0.7 + 0.45, -0.35));
-
-  // Herzfenster im Dach (vorne)
-  const heart = mesh(new THREE.ExtrudeGeometry(heartShape(0.22), { depth: 0.08, bevelEnabled: false }), windowGlass, false);
-  heart.position.set(0, 0.22 + wallH + roofH * 0.48, (D / 2 + over) * 0.52 + 0.06);
-  heart.rotation.x = -slope;
-  g.add(heart);
 
   // Tür
   const zf = D / 2;
