@@ -71,6 +71,11 @@ export const MEMORIES: readonly Memory[] = [
   { id: 'thalia-dach', npc: 'thalia', tag: 'haus-dach', text: ['Von deinem Dachfenster aus sieht man bestimmt bis zum Meer. Ich muss das mal kartieren.'] },
   { id: 'thalia-schwarz', npc: 'thalia', tag: 'schwarze-blume', text: ['Eine schwarze Blume im Beet? Das ist biologisch fast unmöglich. Ich liebe es!'] },
   { id: 'thalia-monat', npc: 'thalia', tag: 'monat-1', text: ['Ein Monat {dorf}! Ich hab schon einen Plan, wohin wir als Nächstes wandern. Ich hab immer einen Plan.'] },
+  { id: 'oli-kino', npc: 'oli', tag: 'kino', text: ['Ich denke immer noch an das Nebelzimmer, Lini. Ich glaube, ich habe es jetzt zu 4 Prozent verstanden.', 'Der Rest ist Vorhang.'] },
+  { id: 'thalia-kino', npc: 'thalia', tag: 'kino', text: ['Ihr wart im Mitternachtskino? Mit dem Film, den keiner versteht? Ich bin stolz auf euch.', 'Ich hab ihn dreimal gesehen und bin heute noch Fan der Treppe. Frag nicht.'] },
+  { id: 'lars-kino', npc: 'lars', tag: 'kino', text: ['Oli hat mir vom Nebelzimmer erzählt. Medizinisch klingt das nach Schlafmangel. Aber ein schöner.'] },
+  { id: 'oli-tourshirt', npc: 'oli', tag: 'tourshirt', text: ['Das NACHTSCHICHT-Shirt hängt über dem Stuhl. Ich trau mich gar nicht, es zu waschen.', 'Du bist die Beste, Lini. Und Thalia mit ihrem Sammler auch ein bisschen.'] },
+  { id: 'thalia-tourshirt', npc: 'thalia', tag: 'tourshirt', text: ['Der Sammler hat mir noch eine Postkarte geschickt: „Der Bernstein ist in guten Händen.“ Schön, oder?', 'Wissenschaftlich ein guter Tausch. Emotional sowieso.'] },
   { id: 'thalia-matteo', npc: 'thalia', tag: 'matteo', text: ['Pater Matteo hat wieder geschrieben! Er nennt mich „liebe Thalia“. Er nennt auch dich „liebe Lina“. Wir sind beide gleich lieb. Ich analysiere das noch.'] },
   { id: 'thalia-tassen', npc: 'thalia', tag: 'tassen-viele', text: ['Deine Tassensammlung ist eine kleine Weltkarte. Fehlt nur noch Reykjavík. Ich hab eine, falls du magst.'] },
 ];

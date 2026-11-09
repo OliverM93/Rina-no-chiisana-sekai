@@ -9,7 +9,9 @@ import { ALL_WISHES, WISHES, WISHES_2, wishFlag } from '../data/wishes';
 import { RECIPE_BY_ID } from '../data/recipes';
 import { FURNITURE_BY_ITEM } from '../data/furniture';
 import { FINDS } from '../data/fossils';
-import { activeWish, askWish, canFolkDance, checkWishLetter, folkDance, fulfillWish, matchesNeed, wishProgress, wishTeaser } from './wishes';
+import { NPC_BY_ID } from '../data/npcs';
+import { RARE_BAND } from '../data/wardrobe';
+import { activeWish, askWish, canFolkDance, checkWishLetter, folkDance, fulfillWish, matchesNeed, wardrobeFor, wishProgress, wishTeaser } from './wishes';
 import { Session } from './session';
 
 vi.mock('../gfx/items', () => ({ itemIconUrl: () => '' }));
@@ -185,6 +187,37 @@ describe('Herzenswünsche – Phase 2', () => {
     expect(wishProgress(s, activeWish(s, 'lars')!).complete).toBe(false);
     addItem(s.data!.inventory, 'wolframit', 1, maxStackOf);
     expect(fulfillWish(s, 'lars')!.rewards).toEqual([{ itemId: 'buch-sandsterne', count: 1 }]);
+  });
+
+  it('Oli: Mitternachtskino (Snacks + Sternchen) gibt das Filmplakat, danach kommt der Tourshirt-Wunsch', () => {
+    const s = newSession();
+    s.data!.flags[wishFlag('oli-bank')] = true;
+    expect(activeWish(s, 'oli')?.id).toBe('oli-kino');
+    expect(wishTeaser(s, 'oli')).toBeTruthy();
+    expect(fulfillWish(s, 'oli')).toBeNull(); // ohne Snacks & Sternchen nicht
+    s.data!.money = 500;
+    addItem(s.data!.inventory, 'ruehrei', 1, maxStackOf);
+    addItem(s.data!.inventory, 'obstsalat', 1, maxStackOf);
+    const r = fulfillWish(s, 'oli')!;
+    expect(r.rewards).toEqual([{ itemId: 'poster-nebelzimmer', count: 1 }]);
+    expect(s.data!.money).toBe(380);
+    expect(activeWish(s, 'oli')?.id).toBe('oli-bandshirt');
+  });
+
+  it('Oli: das seltene Tourshirt landet erst nach dem Wunsch im Kleiderschrank', () => {
+    const s = newSession();
+    const oli = NPC_BY_ID.oli;
+    expect(wardrobeFor(s, oli)).toBe(oli.wardrobe);
+    s.data!.flags[wishFlag('oli-bank')] = true;
+    s.data!.flags[wishFlag('oli-kino')] = true;
+    s.data!.money = 1000;
+    addItem(s.data!.inventory, 'bernstein', 1, maxStackOf);
+    expect(fulfillWish(s, 'oli')).not.toBeNull();
+    expect(s.data!.money).toBe(700);
+    const wardrobe = wardrobeFor(s, oli)!;
+    expect(wardrobe.length).toBe(oli.wardrobe!.length + 2);
+    expect(wardrobe.filter((w) => w.band === RARE_BAND).length).toBe(2);
+    expect(oli.wardrobe!.some((w) => w.band)).toBe(false);
   });
 
   it('Volkstanz: erst nach Christins Wunsch, einmal am Tag, Freundschaft für beide', () => {

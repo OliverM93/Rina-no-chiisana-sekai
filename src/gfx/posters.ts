@@ -195,6 +195,62 @@ const MOTIFS: Record<PosterMotif, (ctx: C, w: number, h: number) => void> = {
       ctx.fill();
     }
   },
+  kultfilm: (ctx, w, h) => {
+    // Schwarz-Weiß: Zimmer mit Zickzack-Boden, Vorhang und Lichtkegel im Nebel
+    ctx.fillStyle = '#d8d6d1';
+    ctx.beginPath();
+    ctx.moveTo(w * 0.3, h * 0.62);
+    ctx.lineTo(w * 0.7, h * 0.62);
+    ctx.lineTo(w * 0.95, h * 0.9);
+    ctx.lineTo(w * 0.05, h * 0.9);
+    ctx.closePath();
+    ctx.fill();
+    ctx.strokeStyle = '#1a1a1e';
+    ctx.lineWidth = Math.max(2, w * 0.016);
+    ctx.beginPath();
+    for (let i = 0; i <= 8; i++) {
+      const t = i / 8;
+      ctx.lineTo(w * (0.3 + 0.4 * t) + (i % 2 ? w * 0.02 : -w * 0.02), h * 0.62 + (i % 2 ? h * 0.02 : 0));
+    }
+    ctx.stroke();
+    ctx.beginPath();
+    for (let i = 0; i <= 8; i++) {
+      const t = i / 8;
+      ctx.lineTo(w * (0.18 + 0.64 * t), h * (0.76 + (i % 2 ? 0.04 : -0.04)));
+    }
+    ctx.stroke();
+    // Vorhänge
+    ctx.fillStyle = '#8f8c88';
+    for (const s of [0, 1]) {
+      for (let i = 0; i < 4; i++) {
+        ctx.beginPath();
+        ctx.moveTo(s * w * 0.8 + i * w * 0.05, h * 0.3);
+        ctx.quadraticCurveTo(s * w * 0.8 + i * w * 0.05 + w * 0.025, h * 0.46, s * w * 0.8 + i * w * 0.05, h * 0.62);
+        ctx.lineTo(s * w * 0.8 + (i + 1) * w * 0.05, h * 0.62);
+        ctx.lineTo(s * w * 0.8 + (i + 1) * w * 0.05, h * 0.3);
+        ctx.fill();
+      }
+    }
+    // Lichtkegel
+    const cone = ctx.createLinearGradient(0, h * 0.28, 0, h * 0.62);
+    cone.addColorStop(0, 'rgba(255,255,245,0.85)');
+    cone.addColorStop(1, 'rgba(255,255,245,0.05)');
+    ctx.fillStyle = cone;
+    ctx.beginPath();
+    ctx.moveTo(w * 0.46, h * 0.28);
+    ctx.lineTo(w * 0.54, h * 0.28);
+    ctx.lineTo(w * 0.7, h * 0.62);
+    ctx.lineTo(w * 0.3, h * 0.62);
+    ctx.closePath();
+    ctx.fill();
+    // Nebel
+    ctx.fillStyle = 'rgba(233,231,227,0.25)';
+    for (const [x, y, rx] of [[0.25, 0.58, 0.2], [0.7, 0.66, 0.24], [0.5, 0.5, 0.16]] as const) {
+      ctx.beginPath();
+      ctx.ellipse(w * x, h * y, w * rx, h * 0.035, 0, 0, Math.PI * 2);
+      ctx.fill();
+    }
+  },
   kawaii: (ctx, w, h) => {
     // Runde Kuschelwesen mit Herzbäckchen
     const face = (x: number, y: number, r: number, c: string) => {
@@ -256,7 +312,8 @@ export function drawPoster(ctx: C, p: PosterDef, w: number, h: number) {
   ctx.fillStyle = p.ink;
   ctx.textAlign = 'center';
   ctx.textBaseline = 'top';
-  const titleSize = Math.round(w * (p.title.length > 16 ? 0.105 : 0.14));
+  const longest = Math.max(...p.title.split('\n').map((l) => l.length));
+  const titleSize = Math.round(w * (p.title.length > 16 || longest > 9 ? 0.105 : 0.14));
   ctx.font = `900 ${titleSize}px Nunito, system-ui, sans-serif`;
   const lines = wrap(ctx, p.title, w * 0.9);
   lines.forEach((l, i) => ctx.fillText(l, w / 2, h * 0.04 + i * titleSize * 1.05));

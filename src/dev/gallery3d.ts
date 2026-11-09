@@ -6,7 +6,7 @@ import * as THREE from 'three';
 import type { Season } from '../core/time';
 import { DEFAULT_LINA, type Appearance } from '../core/appearance';
 import { GISELA } from '../data/npcs/gisela';
-import { LOOKS, OLI_WARDROBE } from '../data/npcs/looks';
+import { LOOKS, OLI_RARE_WARDROBE, OLI_WARDROBE } from '../data/npcs/looks';
 import { palette } from '../style/palette';
 import { makeBench, makeBoard, makeBridge, makeFountain, makeHouse, makeLantern, makeMailbox, makePlotMarks, makeSellbox, makeSign, makeWorkbench } from '../world3d/models/buildings';
 import { Chibi3D } from '../world3d/models/chibi3d';
@@ -62,6 +62,7 @@ function build() {
     // Linas Lieblingsteile und Olis Kleiderschrank
     const outfits: Array<[Appearance, string]> = [
       ...(['hawaii', 'sport', 'radierkopf', 'sweatshirt'] as const).map((o): [Appearance, string] => [{ ...DEFAULT_LINA, outfit: o }, '']),
+      ...OLI_RARE_WARDROBE.slice(0, 1).map((w): [Appearance, string] => [{ ...LOOKS.oli, ...w }, '2026-03-09']),
       ...OLI_WARDROBE.filter((_, i) => i % 2 === 0 || i === 5).map((w, i): [Appearance, string] => [{ ...LOOKS.oli, ...w }, `2026-03-0${i + 1}`]),
     ];
     outfits.forEach(([a, day], i) => {

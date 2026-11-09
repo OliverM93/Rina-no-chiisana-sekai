@@ -713,7 +713,7 @@ export class Chibi3D {
     const printKind: PrintKind | null = printed ? printed.print : o === 'bandshirt' ? 'band' : null;
     if (printKind) {
       const variant = this.day ? hashDay(this.day) % BAND_NAMES.length : 0;
-      const tex = new THREE.CanvasTexture(drawPrint(printKind, variant));
+      const tex = new THREE.CanvasTexture(drawPrint(printKind, variant, a.band));
       tex.colorSpace = THREE.SRGBColorSpace;
       tex.anisotropy = 4;
       this.extraTextures.push(tex);

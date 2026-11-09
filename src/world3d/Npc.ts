@@ -11,6 +11,7 @@ import { type Activity, activityAt, type ScheduleEntry } from '../core/schedule'
 import { OBJECT_KINDS, objectById, tileOf, type WorldMap } from '../core/worldmap';
 import type { NpcDef } from '../data/npcs/types';
 import type { Session } from '../game/session';
+import { wardrobeFor } from '../game/wishes';
 import { isPartyTime, PARTY_ENTRY } from '../game/party';
 import { dinnerEntry } from '../game/dinner';
 import { meetupEntry } from '../game/meetups';
@@ -38,7 +39,7 @@ export class Npc {
     const door = this.doorTile();
     const start = door ? tileCenterFeet(door) : { x: 0, y: 0 };
     const day = session.today();
-    this.char = new Character(parent, dressFor(def.appearance, def.wardrobe, day, def.id), start.x, start.y, 'down', heightAt, session.season, day);
+    this.char = new Character(parent, dressFor(def.appearance, wardrobeFor(session, def), day, def.id), start.x, start.y, 'down', heightAt, session.season, day);
     this.char.speedFactor = NPC_SPEED;
     // Gleich an die richtige Stelle setzen (ohne Laufen)
     this.applyEntry(this.wantedEntry(), true);

@@ -165,6 +165,14 @@ Format: **Entscheidung** – Begründung – verworfene Alternative(n) – Auswi
 - **Ökonomie:** Wunsch kostet 100 ⭐, Geschenke klein; die Tasse „Montecielo“ erweitert die Sammlung „Alle Tassen“ auf 22.
 - **Bitte gegenlesen:** `data/matteo.ts` und Thalias Wunsch in `data/wishes.ts`.
 
+### D25 · Olis Wünsche: Kino und seltenes Bandshirt (Nov. 2026)
+- **Anlass:** Olis Wunschliste von Lina: gemeinsam ins Kino zu einem Kultfilm ihres Lieblingsregisseurs, ein seltenes Bandshirt.
+- **Keine echten Namen:** Regisseur, Film und Band sind ausgedacht („Das Nebelzimmer“, NACHTSCHICHT); der Bezug zu Linas „Radierkopf“-Pulli ist die einzige Verbeugung.
+- **Designprüfung:** Beide Wünsche sind optional, ohne Frist und ohne Streak. Kino ist eine **gemeinsame Szene** (Verbundenheit), das Shirt eine **sichtbare Veränderung**
+  an Oli (Besitz/Persönlichkeit). Kosten bescheiden: 120 ⭐ + 2 Snacks bzw. 300 ⭐ + 1 Bernstein (Thalias Sammler tauscht) – Sternchen-Senke ohne Grind.
+- **Technik:** `Appearance.band` (optional) und `wardrobeFor(session, def)`; kein neues Spielstand-Feld (Flags), kein `SAVE_VERSION`-Wechsel.
+- **Bitte gegenlesen:** Wunschtexte und Erinnerungszeilen (`data/wishes.ts` `oli-kino`/`oli-bandshirt`, `data/erinnerungen.ts` Tags `kino`/`tourshirt`).
+
 ---
 
 ## Offene Designentscheidungen ❓

@@ -44,6 +44,8 @@ export interface Appearance {
   earrings: boolean;
   shoes: Shoes;
   faceShape: FaceShape;
+  /** Bandshirt: fester Bandname statt der Tages-Band (z. B. Olis seltenes Tourshirt) */
+  band?: string;
 }
 
 export interface Option<T> {
@@ -110,7 +112,7 @@ export function outfitFor(a: Appearance, season: Season, day = ''): Exclude<Outf
 }
 
 /** Ein Kleiderschrank-Eintrag: Outfit + Farben (der Rest des Aussehens bleibt) */
-export type WardrobeItem = Pick<Appearance, 'outfit' | 'outfitColor' | 'accentColor'> & Partial<Pick<Appearance, 'shoes'>>;
+export type WardrobeItem = Pick<Appearance, 'outfit' | 'outfitColor' | 'accentColor'> & Partial<Pick<Appearance, 'shoes' | 'band'>>;
 
 /** Aussehen für einen Tag: wählt reproduzierbar ein Teil aus dem Kleiderschrank (falls vorhanden) */
 export function dressFor(a: Appearance, wardrobe: readonly WardrobeItem[] | undefined, day: string, salt: string): Appearance {

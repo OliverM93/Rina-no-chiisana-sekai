@@ -71,6 +71,7 @@ export const FURNITURE_HEIGHTS: Readonly<Record<string, number>> = {
   'nierentisch': 0.46,
   'ohrensessel': 1.06,
   'poster-grusel': 0.93,
+  'poster-nebelzimmer': 0.95,
   'poster-kaffee': 0.95,
   'regal': 0.95,
   'reisekoffer': 0.32,
