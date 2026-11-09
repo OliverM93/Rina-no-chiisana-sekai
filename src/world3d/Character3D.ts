@@ -129,12 +129,15 @@ export class Character {
       this.angle = this.targetAngle;
     } else {
       this.seatHeight = 0;
+      this.work = undefined;
     }
     this.sync(0);
   }
 
   /** Rechter Arm nach vorn (z. B. Angel halten); undefined = normal */
   armForward: number | undefined = undefined;
+  /** Tätigkeit im Sitzen (Oli am Rechner / an der Hantelbank) */
+  work: 'tippen' | 'stemmen' | undefined = undefined;
   /** Freudensprung / Winken: verbleibende Zeit (s) */
   private cheerLeft = 0;
   private waveLeft = 0;
@@ -282,7 +285,7 @@ export class Character {
   }
 
   /** Überträgt Position, Drehung und Pose auf das 3D-Modell. */
-  private sync(dt: number) {
+  sync(dt: number) {
     // weich zur Zielrichtung drehen (kürzester Weg)
     let diff = this.targetAngle - this.angle;
     diff = Math.atan2(Math.sin(diff), Math.cos(diff));
@@ -293,7 +296,7 @@ export class Character {
     this.chibi.root.position.set(px, ground + this.seatHeight, pz);
     this.chibi.root.rotation.y = this.angle;
     const actK = this.act ? { id: this.act.id, k: 1 - this.act.left / this.act.dur } : undefined;
-    this.chibi.pose({ step: this.stepPhase, moving: this.moving, running: this.running, sitting: this.sitting, blink: this.blinkLeft > 0 || (this.kissLeft > 0.25 && this.kissLeft < KISS - 0.25) || (!!actK && actClosesEyes(actK.id, actK.k)), t: this.time, armForward: this.armForward, cheer: this.cheerLeft > 0 ? 1 - this.cheerLeft / CHEER : undefined, wave: this.waveLeft > 0 ? 1 - this.waveLeft / WAVE : undefined, idle: this.idleTime, kiss: this.kissLeft > 0 ? 1 - this.kissLeft / KISS : undefined, tiptoe: this.kissTiptoe, act: actK });
+    this.chibi.pose({ step: this.stepPhase, moving: this.moving, running: this.running, sitting: this.sitting, blink: this.blinkLeft > 0 || (this.kissLeft > 0.25 && this.kissLeft < KISS - 0.25) || (!!actK && actClosesEyes(actK.id, actK.k)), t: this.time, armForward: this.armForward, work: this.sitting ? this.work : undefined, cheer: this.cheerLeft > 0 ? 1 - this.cheerLeft / CHEER : undefined, wave: this.waveLeft > 0 ? 1 - this.waveLeft / WAVE : undefined, idle: this.idleTime, kiss: this.kissLeft > 0 ? 1 - this.kissLeft / KISS : undefined, tiptoe: this.kissTiptoe, act: actK });
   }
 
   destroy() {

@@ -616,6 +616,11 @@ export function makeFurniture(itemId: string, links: FenceLinks = { n: false, e:
       g.add(s(0.04, 0.02, 0.055, '#3a3a44', 0.38, 0.76, 0.1));
       // Kaffeetasse
       g.add(c(0.04, 0.08, '#f7f5ec', -0.65, 0.79, 0.08));
+      // Bürostuhl davor (Oli sitzt hier beim Programmieren)
+      g.add(c(0.2, 0.06, '#2b2a31', 0, 0.42, 0.66));
+      g.add(b(0.34, 0.34, 0.05, '#2b2a31', 0, 0.66, 0.84));
+      g.add(c(0.03, 0.4, '#8a8a96', 0, 0.2, 0.66));
+      g.add(c(0.2, 0.03, '#2b2a31', 0, 0.02, 0.66));
       // Tower unterm Tisch
       g.add(b(0.22, 0.48, 0.48, '#2b2a31', 0.62, 0.24, -0.05));
       g.add(b(0.01, 0.4, 0.02, new THREE.MeshToonMaterial({ color: '#c87af0', emissive: '#c87af0', emissiveIntensity: 0.8 }), 0.51, 0.26, 0.18));
@@ -627,11 +632,11 @@ export function makeFurniture(itemId: string, links: FenceLinks = { n: false, e:
       g.add(b(0.3, 0.04, 0.5, '#8a8a96', -0.35, 0.02, 0));
       g.add(b(0.3, 0.04, 0.5, '#8a8a96', 0.5, 0.02, 0));
       // Ablage + Langhantel
-      for (const z of [-0.32, 0.32]) g.add(b(0.05, 0.85, 0.05, '#8a8a96', -0.55, 0.43, z));
-      const bar = c(0.018, 1.5, '#c9cbd3', -0.55, 0.86, 0);
+      for (const z of [-0.22, 0.22]) g.add(b(0.05, 0.85, 0.05, '#8a8a96', -0.55, 0.43, z));
+      const bar = c(0.018, 0.92, '#c9cbd3', -0.55, 0.86, 0);
       bar.rotation.x = Math.PI / 2;
       g.add(bar);
-      for (const z of [-0.6, 0.6]) {
+      for (const z of [-0.4, 0.4]) {
         const plate = c(0.2, 0.05, '#2b2a31', -0.55, 0.86, z);
         plate.rotation.x = Math.PI / 2;
         g.add(plate);

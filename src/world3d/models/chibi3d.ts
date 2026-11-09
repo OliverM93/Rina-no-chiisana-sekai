@@ -482,6 +482,8 @@ export interface ChibiPose {
   kiss?: number;
   /** beim Küsschen auf die Zehenspitzen */
   tiptoe?: boolean;
+  /** Tätigkeit im Sitzen: am Rechner tippen bzw. auf der Hantelbank stemmen (Oli) */
+  work?: 'tippen' | 'stemmen';
   /** Leerlauf-Animation (Strecken, Gähnen, Summen …), Fortschritt 0..1 */
   act?: { id: IdleAct; k: number };
 }
@@ -982,6 +984,21 @@ export class Chibi3D {
     const want = p.blink ? this.faceBlink : this.faceOpen;
     if (fm.map !== want) fm.map = want;
 
+    if (p.sitting && p.work === 'stemmen') {
+      // auf der Hantelbank: Rücken liegt, Knie angewinkelt, die Arme drücken die Stange gleichmäßig nach oben
+      const k = (Math.sin(p.t * 2.2) + 1) / 2;
+      this.body.rotation.x = -Math.PI / 2;
+      this.body.position.y = -this.hipY + 0.02;
+      for (const leg of this.legs) leg.rotation.x = -Math.PI / 2.6;
+      for (const arm of this.arms) {
+        arm.rotation.x = -Math.PI * 0.5 - 0.15 + k * 0.5;
+        arm.rotation.z = 0;
+      }
+      this.head.rotation.x = Math.PI / 2 - 0.1;
+      this.head.rotation.z = 0;
+      this.body.scale.y = 1 + (1 - k) * 0.01;
+      return;
+    }
     if (p.sitting) {
       this.body.rotation.x = 0;
       this.body.position.y = -this.hipY + 0.02;
@@ -992,6 +1009,15 @@ export class Chibi3D {
       }
       this.head.rotation.z = Math.sin(p.t * 0.7) * 0.04;
       this.body.scale.y = 1 + Math.sin(p.t * 2) * 0.01;
+      if (p.work === 'tippen') {
+        // Unterarme vor, Finger flitzen abwechselnd; Kopf leicht gesenkt, ab und zu ein Blick
+        for (const [i, arm] of this.arms.entries()) {
+          arm.rotation.x = -1.25 + Math.sin(p.t * 16 + i * Math.PI) * 0.1;
+          arm.rotation.z = (i === 0 ? -1 : 1) * 0.1;
+        }
+        this.head.rotation.x = 0.12 + Math.sin(p.t * 0.6) * 0.03;
+        this.head.rotation.y = Math.sin(p.t * 0.35) * 0.12;
+      }
       return;
     }
     this.head.rotation.z = 0;
