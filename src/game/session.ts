@@ -65,6 +65,7 @@ export type UiPanel =
   | { kind: 'herd' }
   | { kind: 'samenstand' }
   | { kind: 'truhe' }
+  | { kind: 'foto'; image: string }
   | { kind: 'bank'; onClose?: () => void }
   | { kind: 'gift'; npcId: string; onPick: (itemId: string) => void; onCancel: () => void }
   | { kind: 'seeds'; onPick: (itemId: string) => void; onCancel: () => void };
@@ -115,10 +116,12 @@ export type GameEvents = {
   'overlay:stars': boolean;
   /** Kamera zoomen (Knöpfe in der Oberfläche): hinein oder hinaus */
   'camera:zoom': 'in' | 'out';
+  /** Fotomodus: Schnappschuss der Welt aufnehmen (öffnet danach das Foto-Fenster) */
+  'foto:aufnehmen': undefined;
   /** Lautstärke geändert */
   'settings:changed': { musicVolume: number; sfxVolume: number };
   /** Ein Geräusch abspielen (siehe audio/Audio.ts) */
-  sfx: 'kuss' | 'schritt' | 'schritt-holz' | 'aufheben' | 'tuer' | 'platsch' | 'biss' | 'fang' | 'kescher' | 'dialog' | 'klick' | 'muenzen' | 'bauen' | 'bellen' | 'gackern' | 'graben' | 'herz' | 'post';
+  sfx: 'kuss' | 'schritt' | 'schritt-holz' | 'aufheben' | 'tuer' | 'platsch' | 'biss' | 'fang' | 'kescher' | 'dialog' | 'klick' | 'muenzen' | 'bauen' | 'bellen' | 'gackern' | 'graben' | 'herz' | 'post' | 'foto';
   /**
    * Partikel-Effekt (siehe world3d/Particles3D.ts). Ort in Welteinheiten, `npc` = über diesem Bewohner,
    * ohne Ort = bei Lina.
