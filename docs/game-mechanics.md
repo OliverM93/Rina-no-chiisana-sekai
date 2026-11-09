@@ -144,6 +144,10 @@ Wetter und Feste laufen nach echter Zeit.
 - **Winston:** läuft auf Linas eigener Spur hinterher (bleibt nie an Ecken hängen), setzt sich neben sie,
   wenn sie stehen bleibt. Texte & Funde in `data/winston.ts`. Er buddelt, wenn Lina kurz stehen bleibt – **verpasste Tage sammeln sich bis zu
   3 Fundstellen an** (`DIG_DAYS_MAX`, `core/pet.ts`).
+- **Sammlung ausstellen (Audit F2/W6):** Drei Schaukästen zeigen, was Lina schon gefangen oder gefunden hat – **Insektenkasten** (Wand, 24 Plätze, 1 200 ⭐),
+  **Fischtafel** (Wand, 17 Plätze, 1 000 ⭐) und die **Fossilien-Vitrine** (Thalias Geschenk, 12 Plätze). Jede Art hat einen festen Platz: gesammelt = kleines Präparat,
+  noch offen = leerer Punkt. Es gibt nichts zu bedienen; `Interior3D.collected` (Sammelbuch-Einträge) fließt in `makeFurniture(…, collected)` ein, das Zimmer baut sich
+  beim Betreten bzw. bei geänderter Sammlung neu auf.
 - **Fischgerichte (Audit F2/W6):** Sieben Gerichte nutzen Fänge – Forelle mit Kräutern, Karpfen mit Kartoffeln, Scholle mit Bratkartoffeln, Geräucherte Makrele (mit Ästen),
   Dorsch auf Gemüsebett, Aal grün und Steinbutt aus dem Ofen. Das Rezept fällt Lina **beim ersten Fang** der Art ein (`fund`); Margen 1,6–1,8×. Bewohner mögen sie
   (Olaf, Lars, Jens, Oma, Oli). Jedes Essen hat ein eigenes Symbol (Test `fischgerichte.test.ts`).

@@ -10,6 +10,8 @@ import { artCanvas } from '../../gfx/art';
 import { POSTER_BY_ID } from '../../data/posters';
 import { bouquetOfVase, WREATH_BY_ID } from '../../data/straeusse';
 import { SAMMLUNG_BY_ID } from '../../data/sammlungen';
+import { FINDS } from '../../data/fossils';
+import { FISH, INSECTS } from '../../data/species';
 import { TASSE_BY_ID } from '../../data/tassen';
 import { posterCanvas } from '../../gfx/posters';
 import { darken, lighten } from '../../style/palette';
@@ -181,7 +183,79 @@ function hellerauShelf(g: THREE.Group, col: string, n: number, opts: { floor?: b
   }
 }
 
-export function makeFurniture(itemId: string, links: FenceLinks = { n: false, e: true, s: false, w: true }): FurnitureModel {
+const NOTHING: ReadonlySet<string> = new Set();
+
+/**
+ * Schaukasten für Linas Sammlung: jede Art hat ihren festen Platz. Gefangenes/Gefundenes (`collected`) steckt
+ * als kleines Präparat darin, der Rest ist ein leerer Platz mit Punkt. Raster `cols` × `rows`, Mitte bei (0, HANG).
+ */
+function specimenGrid(g: THREE.Group, ids: readonly string[], collected: ReadonlySet<string>, cols: number, rows: number, cell: [number, number], draw: (id: string, x: number, y: number, z: number) => THREE.Object3D, y0 = HANG, z = WALL_Z + 0.075) {
+  ids.forEach((id, i) => {
+    const x = ((i % cols) - (cols - 1) / 2) * cell[0];
+    const y = y0 + ((rows - 1) / 2 - Math.floor(i / cols)) * cell[1];
+    if (collected.has(id)) g.add(draw(id, x, y, z));
+    else g.add(b(0.03, 0.03, 0.006, '#d6c5a4', x, y, z + 0.004));
+  });
+}
+
+function insectSpecimen(id: string, x: number, y: number, z: number): THREE.Object3D {
+  const def = INSECTS.find((i) => i.id === id);
+  const grp = new THREE.Group();
+  grp.position.set(x, y, z);
+  if (!def) return grp;
+  const wings = def.shape === 'falter' || def.shape === 'nachtfalter';
+  if (wings) {
+    for (const sx of [-1, 1]) grp.add(s(0.055, 0.045, 0.006, def.accent, sx * 0.055, 0.01, 0.0).rotateZ(sx * -0.3));
+    for (const sx of [-1, 1]) grp.add(s(0.04, 0.035, 0.006, def.color, sx * 0.045, -0.025, 0.004));
+    grp.add(s(0.012, 0.04, 0.012, '#3a3034', 0, -0.005, 0.01));
+  } else if (def.shape === 'libelle' || def.shape === 'biene') {
+    for (const sx of [-1, 1]) grp.add(s(0.05, 0.016, 0.004, '#dff0ff', sx * 0.04, 0.02, 0.004));
+    grp.add(s(0.014, 0.055, 0.014, def.color, 0, -0.005, 0.01));
+    grp.add(s(0.014, 0.012, 0.014, def.accent, 0, 0.055, 0.01));
+  } else {
+    const long = def.shape === 'heuschrecke' || def.shape === 'ameise' || def.shape === 'wasserlaeufer';
+    grp.add(s(long ? 0.03 : 0.05, long ? 0.05 : 0.05, 0.022, def.color, 0, 0, 0.01));
+    grp.add(s(long ? 0.012 : 0.02, 0.014, 0.014, def.accent, 0, long ? 0.05 : 0.05, 0.012));
+    if (def.shape === 'kaefer') grp.add(b(0.004, 0.09, 0.004, darken(def.color, 0.4), 0, 0, 0.034));
+  }
+  grp.add(c(0.004, 0.02, '#8a8a96', 0, -0.055, 0.0));
+  return grp;
+}
+
+function fishSpecimen(id: string, x: number, y: number, z: number): THREE.Object3D {
+  const def = FISH.find((i) => i.id === id);
+  const grp = new THREE.Group();
+  grp.position.set(x, y, z);
+  if (!def) return grp;
+  const len = 0.04 + def.size * 0.008;
+  grp.add(s(len, 0.026, 0.012, def.color, 0, 0, 0.01));
+  const tail = c(0.026, 0.05, def.accent, len + 0.015, 0, 0.01, cone);
+  tail.rotation.z = Math.PI / 2;
+  grp.add(tail);
+  grp.add(s(0.006, 0.006, 0.006, '#2f2f38', -len * 0.6, 0.006, 0.022));
+  return grp;
+}
+
+function findSpecimen(id: string, x: number, y: number, z: number): THREE.Object3D {
+  const def = FINDS.find((i) => i.id === id);
+  const grp = new THREE.Group();
+  grp.position.set(x, y, z);
+  if (!def) return grp;
+  if (def.kind === 'fossil') {
+    const d = c(0.045, 0.02, def.color, 0, 0, 0);
+    d.rotation.x = Math.PI / 2;
+    grp.add(d);
+    const ring = mesh(new THREE.TorusGeometry(0.022, 0.006, 6, 14), toon(def.accent));
+    ring.position.z = 0.012;
+    grp.add(ring);
+  } else {
+    grp.add(c(0.03, 0.08, def.color, 0, 0.03, 0, cone));
+    grp.add(s(0.032, 0.026, 0.03, def.accent, 0, 0.0, 0));
+  }
+  return grp;
+}
+
+export function makeFurniture(itemId: string, links: FenceLinks = { n: false, e: true, s: false, w: true }, collected: ReadonlySet<string> = NOTHING): FurnitureModel {
   const f = FURNITURE_BY_ITEM[itemId];
   const g = new THREE.Group();
   let glow: THREE.MeshToonMaterial | null = null;
@@ -862,13 +936,29 @@ export function makeFurniture(itemId: string, links: FenceLinks = { n: false, e:
       const glass = new THREE.MeshToonMaterial({ color: '#dff0ff', transparent: true, opacity: 0.28 });
       g.add(b(0.66, 1.0, 0.46, glass, 0, 0.62, 0));
       for (const y of [0.42, 0.78]) g.add(b(0.62, 0.02, 0.42, '#e6c59c', 0, y, 0));
-      // Funde in der Vitrine
-      const amm = c(0.08, 0.04, '#c9a77a', -0.15, 0.47, 0.05);
-      amm.rotation.x = Math.PI / 2;
-      g.add(amm);
-      g.add(c(0.04, 0.12, '#a98ad8', 0.15, 0.49, 0, cone));
-      g.add(s(0.05, 0.04, 0.04, '#f2a83a', 0.05, 0.82, 0.05));
-      g.add(c(0.03, 0.1, '#e6f4ff', -0.15, 0.84, 0, cone));
+      // Funde: jede Art hat ihren Platz (zwölf, zwei Regalbretter); gezeigt wird, was Lina schon gefunden hat
+      const finds = FINDS.map((f) => f.id);
+      finds.forEach((id, i) => {
+        const row = Math.floor(i / 6);
+        const x = ((i % 6) - 2.5) * 0.105;
+        const y = row === 0 ? 0.47 : 0.83;
+        if (collected.has(id)) g.add(findSpecimen(id, x, y, 0.02));
+        else g.add(b(0.03, 0.012, 0.03, '#d6c5a4', x, y - 0.03, 0.02));
+      });
+      break;
+    }
+    case 'insektenkasten': {
+      const z = WALL_Z;
+      g.add(b(1.3, 0.86, 0.1, '#8a5a3a', 0, HANG, z + 0.03));
+      g.add(b(1.22, 0.78, 0.02, '#f6efdc', 0, HANG, z + 0.07));
+      specimenGrid(g, INSECTS.map((i) => i.id), collected, 6, 4, [0.195, 0.185], insectSpecimen);
+      break;
+    }
+    case 'fischtafel': {
+      const z = WALL_Z;
+      g.add(b(1.3, 0.7, 0.08, '#6e4630', 0, HANG, z + 0.03));
+      g.add(b(1.22, 0.62, 0.02, '#cfe6ef', 0, HANG, z + 0.065));
+      specimenGrid(g, FISH.map((i) => i.id), collected, 6, 3, [0.2, 0.19], fishSpecimen);
       break;
     }
     case 'globus': {

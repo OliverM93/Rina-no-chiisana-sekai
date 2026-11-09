@@ -27,6 +27,8 @@ export class Interior3D {
   private floorMat = new THREE.MeshToonMaterial();
   private wallMat = new THREE.MeshToonMaterial();
   private signature = '';
+  /** Was Lina gefangen/gefunden hat (Sammelbuch-Einträge) – Vitrine, Insektenkasten & Fischtafel zeigen es */
+  collected: ReadonlySet<string> = new Set();
   private lamps: THREE.PointLight[] = [];
   private roomLight = new THREE.PointLight('#ffe2b8', 0, 12, 1.4);
   private ghost: THREE.Group | null = null;
@@ -175,7 +177,7 @@ export class Interior3D {
       force = true;
       this.floorMat.userData.surface = this.wallMat.userData.surface = '';
     }
-    const sig = JSON.stringify(home) + [...this.lit].join();
+    const sig = JSON.stringify(home) + [...this.lit].join() + '|' + this.collected.size;
     if (!force && sig === this.signature) return;
     this.signature = sig;
     this.applySurface(this.floorMat, home.floor, layout.w / 2, layout.h / 2);
@@ -186,7 +188,7 @@ export class Interior3D {
     for (const item of home.items) {
       const f = FURNITURE_BY_ITEM[item.itemId];
       if (!f) continue;
-      const model = makeFurniture(item.itemId);
+      const model = makeFurniture(item.itemId, undefined, this.collected);
       const { w, d } = footprint(f.def, item.rot);
       model.group.position.set(item.x + w / 2, 0, item.y + d / 2);
       model.group.rotation.y = -item.rot * (Math.PI / 2);

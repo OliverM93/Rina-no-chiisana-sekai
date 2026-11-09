@@ -100,6 +100,8 @@ export const FURNITURE_HEIGHTS: Readonly<Record<string, number>> = {
   'trockenkranz': 1.10,
   'tsukubai': 0.78,
   'vitrine': 1.15,
+  'insektenkasten': 0.87,
+  'fischtafel': 0.95,
   'discokugel': 0.8,
   'urkunde-blumen': 1.06,
   'urkunde-fische': 1.06,

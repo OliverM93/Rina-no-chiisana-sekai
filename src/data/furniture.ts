@@ -120,7 +120,7 @@ export const FURNITURE: readonly FurnitureDef[] = [
   { id: 'daruma', name: 'Daruma', style: 'japanisch', gift: true, small: true, price: 400, w: 1, d: 1, description: 'Ein roter Glücksbringer aus Kyoto. Wenn ein Wunsch in Erfüllung geht, malt man ihm das zweite Auge.' },
   { id: 'gemaelde-jens', name: 'Gemälde von Jens', style: 'basis', gift: true, price: 2000, w: 1, d: 1, description: 'Ein echter Jens! Ein Dackel unter einem rosa Himmel. Signiert mit Herzchen.' },
   { id: 'erste-hilfe', name: 'Erste-Hilfe-Schränkchen', style: 'basis', gift: true, small: true, price: 500, w: 1, d: 1, description: 'Weiß, mit grünem Kreuz und rosa Herzchen-Pflastern drin. Von Lars – „für alle Fälle“.' },
-  { id: 'vitrine', name: 'Fossilien-Vitrine', style: 'basis', gift: true, price: 1500, w: 1, d: 1, description: 'Eine Glasvitrine mit Ammonit, Kristall und Bernstein. Von Thalia – „für deine Schätze“.' },
+  { id: 'vitrine', name: 'Fossilien-Vitrine', style: 'basis', gift: true, price: 1500, w: 1, d: 1, description: 'Eine Glasvitrine mit zwölf Plätzen für Fossilien und Steine. Was du ausgräbst, steht darin. Von Thalia – „für deine Schätze“.' },
   { id: 'globus', name: 'Globus', style: 'basis', gift: true, price: 1200, w: 1, d: 1, description: 'Ein großer Globus mit lauter kleinen Herzchen drauf – überall dort, wo Thalia mit dir hinreisen will.' },
   // ---- Herz-Geschenke (jedes Herz bringt etwas) ----
   { id: 'setzkasten', name: 'Christins Setzkasten', style: 'basis', gift: true, wall: true, price: 900, w: 1, d: 1, description: 'Ein Holzkasten mit 9 Fächern – in jedem ein Samentütchen, ein Kiesel oder ein Fläschchen. Alles genau an seinem Platz. Von Christin.' },
@@ -185,6 +185,8 @@ export const FURNITURE: readonly FurnitureDef[] = [
   { id: 'bild-dr-no', name: 'Dr.-No-Porträt', style: 'basis', wall: true, price: 900, w: 1, d: 1, description: 'Ein gerahmtes Porträt von Dr. No aus „Schwerer Weg“. Strenger Blick, gütige Augen, buschige Brauen. Eine Ikone. Hängt am besten über dem Sofa.' },
   { id: 'bild-winston', name: 'Winston-Porträt', style: 'basis', wall: true, price: 600, w: 1, d: 1, description: 'Ein gerahmtes Porträt von Winston. Er guckt sehr würdevoll. Fast.' },
   { id: 'poster-grusel', name: 'Gruselfilm-Poster', style: 'basis', wall: true, price: 400, w: 1, d: 1, description: '„Die Nacht der Kürbisse“ – Linas liebster Gruselklassiker. Oli guckt lieber nicht so genau hin.' },
+  { id: 'insektenkasten', name: 'Insektenkasten', style: 'basis', wall: true, price: 1200, w: 2, d: 1, description: 'Ein Schaukasten mit 24 Plätzen für alle Krabbeltiere. Was du fängst, steckt dann darin. Lars: „Wissenschaftlich einwandfrei.“' },
+  { id: 'fischtafel', name: 'Fischtafel', style: 'basis', wall: true, price: 1000, w: 2, d: 1, description: 'Eine Tafel mit 17 Plätzen für Fische. Jeder Fang bekommt seinen Platz. Olaf hat schon nachgezählt: Es fehlen noch einige.' },
   { id: 'wandregal', name: 'Wandregal', style: 'basis', wall: true, price: 500, w: 2, d: 1, description: 'Ein schwebendes Brett mit Büchern, einem Pflänzchen und einer kleinen Kerze.' },
   { id: 'wanduhr', name: 'Wanduhr', style: 'basis', wall: true, price: 450, w: 1, d: 1, description: 'Eine runde Uhr. Sie geht genau richtig – Papa hat sie gestellt.', variants: { rosa: '#f4a3b8', mint: '#9ad8c0', schwarz: '#2a2a30' } },
   { id: 'rollbild', name: 'Rollbild', style: 'japanisch', wall: true, price: 700, w: 1, d: 1, description: 'Ein Kakejiku mit einem Kranich über den Bergen. Ganz still und schön.' },
