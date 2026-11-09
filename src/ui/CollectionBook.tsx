@@ -63,7 +63,7 @@ function FindsBook({ session, tab, setTab, close }: { session: Session; tab: Tab
           {FINDS.map((f) => {
             const known = !!collection[f.id];
             return (
-              <button key={f.id} class={`book-cell ${known ? '' : 'unknown'} ${selected === f.id ? 'selected' : ''}`} onClick={() => setSelected(f.id)} aria-label={known ? f.name : 'unbekannt'}>
+              <button key={f.id} class={`book-cell ${known ? '' : 'unknown'} ${selected === f.id ? 'selected' : ''}`} onClick={() => setSelected(f.id)} onFocus={() => setSelected(f.id)} aria-label={known ? f.name : 'unbekannt'}>
                 <img src={itemIconUrl(f.id)} alt="" draggable={false} />
               </button>
             );
@@ -133,7 +133,7 @@ function FlowerBook({ session, tab, setTab, close }: { session: Session; tab: Ta
                   const id = variantId(sp, c);
                   const known = !!collection[id];
                   return (
-                    <button key={id} class={`book-cell ${known ? '' : 'unknown'} ${selected === id ? 'selected' : ''}`} onClick={() => setSelected(id)} aria-label={known ? itemDef(id)?.name : 'unbekannt'}>
+                    <button key={id} class={`book-cell ${known ? '' : 'unknown'} ${selected === id ? 'selected' : ''}`} onClick={() => setSelected(id)} onFocus={() => setSelected(id)} aria-label={known ? itemDef(id)?.name : 'unbekannt'}>
                       <img src={itemIconUrl(id)} alt="" draggable={false} />
                     </button>
                   );
@@ -232,7 +232,7 @@ export function CollectionBook({ session }: { session: Session }) {
           {list.map((s) => {
             const known = !!collection[s.id];
             return (
-              <button key={s.id} class={`book-cell ${known ? '' : 'unknown'} ${selected === s.id ? 'selected' : ''}`} onClick={() => setSelected(s.id)} aria-label={known ? s.name : 'unbekannt'}>
+              <button key={s.id} class={`book-cell ${known ? '' : 'unknown'} ${selected === s.id ? 'selected' : ''}`} onClick={() => setSelected(s.id)} onFocus={() => setSelected(s.id)} aria-label={known ? s.name : 'unbekannt'}>
                 <img src={itemIconUrl(s.id)} alt="" draggable={false} />
               </button>
             );

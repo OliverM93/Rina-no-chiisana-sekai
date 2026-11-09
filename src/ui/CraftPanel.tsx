@@ -90,6 +90,7 @@ export function CraftPanel({ session, station = 'werkbank' }: { session: Session
                 key={r.id}
                 class={`book-cell catalog-cell ${k ? '' : 'unknown'} ${selected === r.id ? 'selected' : ''} ${built === r.id ? 'craft-pop' : ''}`}
                 onClick={() => setSelected(r.id)}
+                onFocus={() => setSelected(r.id)}
                 aria-label={k ? recipeName(r) : 'Unbekanntes Rezept'}
               >
                 <img src={itemIconUrl(r.result)} alt="" draggable={false} />

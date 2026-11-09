@@ -118,6 +118,13 @@ export function CatalogPanel({ session }: { session: Session }) {
                 setSelected(e.id);
                 setVariant(0);
               }}
+              onFocus={() => {
+                // Pfeiltasten springen nur den Fokus weiter – die Auswahl (und die Anzeige rechts) folgt
+                if (selected !== e.id) {
+                  setSelected(e.id);
+                  setVariant(0);
+                }
+              }}
               aria-label={e.name}
             >
               <img src={itemIconUrl(e.variants[0].itemId)} alt="" draggable={false} />
