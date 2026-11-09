@@ -30,7 +30,7 @@ abgesichert. Die folgenden Punkte betreffen Langzeitmotivation und Feinschliff.
 |---|---|---|
 | E1 | Fotomodus / Tagebuch (🗓️ bereits geplant) | starker Besitz-Hebel, gut kombinierbar mit W5 (Tagebuch liefert „Erinnerungen“) |
 | E2 | Geburtstage der übrigen Bewohner (🗓️) | wartet auf Daten (❓ O6) |
-| E3 | Sternbilder am Nachthimmel (🗓️) | verknüpfbar mit „Sterne gucken“ (W3) |
+| E3 | ✅ erledigt (Nov. 2026): Sternbilder beim Sterne gucken | je Jahreszeit eins, Oli erklärt es |
 | E4 | Französisches Bistro-Möbelset (🗓️) | Inhalt, keine Systemänderung |
 | E5 | ✅ erledigt (Nov. 2026): Eier & Winstons Fund bis 3 Tage ansammeln lassen (❓ O5) | entschärft die Pflichtrunde ohne neue Mechanik |
 | E6 | Automatische Balancing-Tests (siehe `PLAYTESTING.md` §5) | schützt Spannen bei neuen Inhalten |
