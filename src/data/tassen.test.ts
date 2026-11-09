@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { FURNITURE_BY_ITEM } from './furniture';
 import { NPCS } from './npcs';
+import { MATTEO_LETTERS } from './matteo';
 import { TRAVELS, travelMugLetter, travelPostcard } from './npcs/jens';
 import { TASSEN } from './tassen';
 
@@ -21,7 +22,7 @@ describe('Sammeltassen', () => {
 
   it('jede Städte-Tasse hat eine Quelle: Jens’ Reisen, Thalias oder Olis Briefe', () => {
     const fromTravels = new Set(TRAVELS.flatMap((t) => [t.souvenir, t.mug ?? '']));
-    const fromLetters = new Set(NPCS.flatMap((n) => [...n.letters, ...Object.values(n.heartLetters)]).map((l) => l.gift?.itemId ?? ''));
+    const fromLetters = new Set([...NPCS.flatMap((n) => [...n.letters, ...Object.values(n.heartLetters)]), ...MATTEO_LETTERS].map((l) => l.gift?.itemId ?? ''));
     for (const t of TASSEN.filter((x) => x.kind === 'stadt')) expect(fromTravels.has(t.id) || fromLetters.has(t.id), t.id).toBe(true);
   });
 

@@ -156,6 +156,15 @@ Format: **Entscheidung** – Begründung – verworfene Alternative(n) – Auswi
 - **Technik:** Absender muss eingezogen sein (sonst kommt der Brief später). Nebenbei behoben: `ownsAnywhere` kannte die Vorratstruhe nicht.
 - **Offen:** Kunstwerke/Rezepte/Sträuße als weitere Sammlungen; Urkunden-Anzeige im Sammelbuch.
 
+### D24 · Pater Matteo als Brieffreund (Nov. 2026)
+- **Anlass:** Thalias Wunsch „einen italienischen, katholischen, gutaussehenden Priester als Freund“ (Antwort auf Rückfrage: Ja).
+- **Umsetzung respektvoll und ohne neue Figur im Dorf:** Pater Matteo existiert nur als **Briefschreiber** (ausgedachte Figur, keine echte Person).
+  Die Pointe „gutaussehend“ ist ein leiser Insider von Thalia („wissenschaftlich irrelevant, aber nicht uninteressant“); er selbst bleibt bescheiden, humorvoll, fromm
+  ohne Predigt. Kein Flirt, kein Spott über Glauben.
+- **Loop:** Päckchen schicken (Fund + Gebäck + Sternchen) → vier Briefe über 50 Tage mit kleinen Geschenken (Samen, Stein, Tasse) – ein ruhiger, optionaler Nachklang.
+- **Ökonomie:** Wunsch kostet 100 ⭐, Geschenke klein; die Tasse „Montecielo“ erweitert die Sammlung „Alle Tassen“ auf 22.
+- **Bitte gegenlesen:** `data/matteo.ts` und Thalias Wunsch in `data/wishes.ts`.
+
 ---
 
 ## Offene Designentscheidungen ❓

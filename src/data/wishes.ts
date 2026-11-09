@@ -382,7 +382,32 @@ export const WISHES_2: readonly WishDef[] = [
   },
 ];
 
-export const ALL_WISHES: readonly WishDef[] = [...WISHES, ...WISHES_2];
+export const WISHES_3: readonly WishDef[] = [
+  {
+    id: 'thalia-matteo',
+    npc: 'thalia',
+    order: 3,
+    title: 'Ein Brieffreund aus Italien',
+    intro: [
+      'Lina, ich muss dir was gestehen. Ich hätte gern einen Brieffreund. Genauer: Pater Matteo, Pfarrer in einem Bergdorf in Italien. Er hat in einem Magazin einen Artikel über die Steine seiner Gegend geschrieben – und ich bewundere seine Ausdrucksweise.',
+      'Und auf dem Foto zum Artikel sieht er außerdem sehr nett aus. Wissenschaftlich gesehen irrelevant. Aber nicht uninteressant.',
+      'Ich möchte ihm ein Päckchen schicken: einen Bergkristall aus unseren Funden, Lavendelkekse und 100 Sternchen für Porto. Aber allein trau ich mich nicht. Hilfst du mir? Du hast die schönere Handschrift.',
+    ],
+    reminder: ['Der Brief an Pater Matteo? Ich hab schon dreimal angefangen. Und dreimal „Sehr geehrter“ durchgestrichen.'],
+    needs: [
+      { item: 'bergkristall', count: 1, label: 'Bergkristall' },
+      { item: 'lavendelkekse', count: 1, label: 'Lavendelkekse' },
+    ],
+    stars: 100,
+    done: [
+      'Wir schreiben gemeinsam. „Sehr geehrter Pater Matteo“ – zu steif. „Lieber Pater Matteo“ – zu vertraut. Wir nehmen „Buongiorno“.',
+      'Das Päckchen ist unterwegs! Ich war so nervös, dass ich die Adresse zweimal geschrieben habe. Aber einmal richtig.',
+      'Wenn er antwortet, lese ich dir den Brief vor. Mit Betonung. Und mit Wörterbuch.',
+    ],
+  },
+];
+
+export const ALL_WISHES: readonly WishDef[] = [...WISHES, ...WISHES_2, ...WISHES_3];
 export const WISH_BY_ID: Readonly<Record<string, WishDef>> = Object.fromEntries(ALL_WISHES.map((w) => [w.id, w]));
 
 /** Omas Brief, sobald alle eingezogen sind: Es gibt Herzenswünsche */

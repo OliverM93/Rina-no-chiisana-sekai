@@ -120,6 +120,10 @@ Wetter und Feste laufen nach echter Zeit.
   & Olaf, einmal am Tag), **Jens** lädt zum **Urlaub** ein – **Hawaii oder Japan zur Wahl** (1.500 ⭐ + zwei Gerichte; Dank: die Tasse „Honolulu“ bzw. „Nara“),
   **Lars** wünscht sich einen **Wolframit** (neuer seltener Fund mit der Schaufel; Dank: sein Lieblingsbuch „Die Sandsterne“) und **Thalia** eine **große Party**
   (vier Gerichte, bunter Strauß, 400 ⭐; Dank: die Discokugel). Geschenke kommen über `WishResult.rewards` (`giveOrDrop`), Wünsche mit Wahl über `options`.
+- **Pater Matteo – Thalias Brieffreund** (`WISHES_3`, `data/matteo.ts`, `game/matteo.ts`): Nach der Party wünscht sich Thalia einen Brieffreund: **Pater Matteo**, eine
+  **ausgedachte** Figur (Pfarrer in einem Bergdorf, schreibt über Steine und Wanderwege, bescheiden und humorvoll). Lina hilft beim Päckchen (Bergkristall, Lavendelkekse, 100 ⭐
+  Porto). Danach schreibt er an Lina & Thalia, **2, 10, 25 und 50 Tage später** (je einmal), mit Basilikum- und Tomatensamen, einem Rosenquarz und zuletzt der Tasse „Montecielo“.
+  Er erscheint nie im Dorf. Thalia, Oma, Jens und Lars kommentieren das im Gespräch (Erinnerungen, Tag `matteo`).
 - **Nichts geht für immer verloren:** Werkzeuge und einmalige Geschenke (Möbel mit `gift: true`, außer Kunst) sind
   Erinnerungsstücke (`isKeepsake`): unverkäuflich (`price: null`) und nicht verschenkbar. Fehlt beim Laden etwas, das
   Lina haben sollte (`missingKeepsakes`: Omas Werkzeuge, Thalias Schaufel, Olis Einzugsmöbel), kommt es zurück.
