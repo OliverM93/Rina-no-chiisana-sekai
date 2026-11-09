@@ -113,7 +113,8 @@ Wetter und Feste laufen nach echter Zeit.
   „Winston“ nennen, kommen erst dran, wenn er da ist (Tag `winston-da`, `core/dialogue.ts`). Ältere Spielstände haben Winston
   weiter von Anfang an (`winstonState` setzt das Flag nach).
 - **Winston:** läuft auf Linas eigener Spur hinterher (bleibt nie an Ecken hängen), setzt sich neben sie,
-  wenn sie stehen bleibt. Texte & Funde in `data/winston.ts`.
+  wenn sie stehen bleibt. Texte & Funde in `data/winston.ts`. Er buddelt, wenn Lina kurz stehen bleibt – **verpasste Tage sammeln sich bis zu
+  3 Fundstellen an** (`DIG_DAYS_MAX`, `core/pet.ts`).
 - **Werkbank:** Rezepte in `data/recipes.ts` (`start`, `fund` = beim ersten Fund, sonst als Brief-Geschenk
   `rezept-<id>` – Rezeptkarten werden beim Annehmen sofort gelernt). Ergebnisse sind Möbel mit
   `crafted: true` (nicht im Katalog). Ein Test prüft, dass jedes Rezept erreichbar ist.
@@ -204,4 +205,5 @@ Wetter und Feste laufen nach echter Zeit.
   **Kleine Freuden:** Fußspuren im Schnee (`Footprints3D`, auch Winstons Pfoten), Atemwölkchen bei Kälte
   (Fx `atem`), Leerlauf „Flocken fangen“, wenn es schneit.
 - **Tiere:** Ställe sind Gartenmöbel mit `coop: 'huhn' | 'wachtel'`, die Tiere kommen mit (`data/animals.ts`).
-  Abholtage in `world.coopDay`; Logik in `core/coop.ts` & `game/animals.ts`.
+  Abholtage in `world.coopDay`; Logik in `core/coop.ts` & `game/animals.ts`. **Eier sammeln sich bis zu 3 Tage im Nest an**
+  (`EGG_DAYS_MAX`, `eggsWaiting`): Wer einen Tag auslässt, verpasst nichts; ein neuer Stall hat nur die Eier von heute.

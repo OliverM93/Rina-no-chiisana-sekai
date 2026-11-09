@@ -98,6 +98,14 @@ Format: **Entscheidung** – Begründung – verworfene Alternative(n) – Auswi
    bräuchten mehr Inhalt. Wünsche nutzen Bestehendes und erzählen kleine Geschichten – bester Aufwand-Nutzen.
 - **Technik:** Zustand komplett in Story-Flags (kein `SAVE_VERSION`-Wechsel), Orte als `landmark`/`steg` mit `requires`.
 
+### D19 · Tagesfunde sammeln sich an (F4/E5, Nov. 2026)
+- **Erlebnis:** Pausen fühlen sich nicht nach Verlust an; keine „ich muss heute noch zu den Hühnern“-Pflichtrunde.
+- **Entscheidung:** Eier (Hühner 2–3, Wachteln 3–4 pro Tag) und Winstons Buddelfunde sammeln sich bis zu **3 Tage** an. Keine weiteren
+  Quellen geändert (Felsen, Muscheln, Grabstellen bleiben Tagesritual).
+- **Ökonomie:** Obergrenze 3 Tage → kein Belohnen von Fernbleiben (nach 3 Tagen Pause gleich viel wie nach 3 Tagen Spielen), Eier ≈ 20 ⭐ ×
+  Stall → höchstens ~9 Eier pro Besuch, unkritisch.
+- **Alternative verworfen:** unbegrenzt ansammeln (würde Pausen „lukrativer“ machen) oder alle Tagesquellen ansammeln (verwässert den Tagesrhythmus).
+- **Playtest:** „Muss-noch“-Aussagen zählen (siehe PLAYTESTING).
 ### D18 · Vorratstruhe (W4/F5, Nov. 2026)
 - **Erlebnis:** Sammeln und Beetpflege ohne Inventar-Tetris; längere Sitzungen werden nicht durch Heimwege unterbrochen.
 - **Entscheidung:** Ein gemeinsamer Vorrat (60 Plätze) für alle Truhen statt Inhalt pro Truhe → nichts geht verloren, kein Aufräumen vor dem Verschieben.
