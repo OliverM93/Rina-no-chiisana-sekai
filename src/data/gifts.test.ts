@@ -14,8 +14,7 @@ const MOVE_IN_GIFTS = ['schreibtisch-pc', 'hantelbank'];
 describe('Geschenk-Möbel', () => {
   it('jedes Möbel „nur als Geschenk“ kommt irgendwoher', () => {
     const fromLetters = new Set([...NPCS.flatMap((n) => [...n.letters, ...Object.values(n.heartLetters)]), ...ADVENT_DOORS].map((l) => l.gift?.itemId));
-    for (const f of FURNITURE_ITEMS.filter((x) => x.def.gift && !x.def.retired)) expect(fromLetters.has(f.itemId) || MOVE_IN_GIFTS.includes(f.itemId) || TRAVELS.some((t) => t.souvenir === f.itemId || t.mug === f.itemId) || WISHES_2.some((w) => [...(w.rewardItems ?? []), ...(w.options?.flatMap((o) => o.rewardItems) ?? [])].some((r) => r.itemId === f.itemId)) || !!ART_BY_ID[f.itemId] || Object.values(FEST_GIFTS).some((g) => Object.values(g ?? {}).some((x) => x.itemId === f.itemId)), f.itemId).toBe(true);
-    for (const f of FURNITURE_ITEMS.filter((x) => x.def.gift && !x.def.retired)) expect(fromLetters.has(f.itemId) || MOVE_IN_GIFTS.includes(f.itemId) || TRAVELS.some((t) => t.souvenir === f.itemId || t.mug === f.itemId) || SAMMLUNGEN.some((c) => urkundeId(c.id) === f.itemId) || !!ART_BY_ID[f.itemId] || Object.values(FEST_GIFTS).some((g) => Object.values(g ?? {}).some((x) => x.itemId === f.itemId)), f.itemId).toBe(true);
+    for (const f of FURNITURE_ITEMS.filter((x) => x.def.gift && !x.def.retired)) expect(fromLetters.has(f.itemId) || MOVE_IN_GIFTS.includes(f.itemId) || TRAVELS.some((t) => t.souvenir === f.itemId || t.mug === f.itemId) || WISHES_2.some((w) => [...(w.rewardItems ?? []), ...(w.options?.flatMap((o) => o.rewardItems) ?? [])].some((r) => r.itemId === f.itemId)) || SAMMLUNGEN.some((c) => urkundeId(c.id) === f.itemId) || !!ART_BY_ID[f.itemId] || Object.values(FEST_GIFTS).some((g) => Object.values(g ?? {}).some((x) => x.itemId === f.itemId)), f.itemId).toBe(true);
   });
 
   it('jedes Herz bringt bei jedem Bewohner einen Brief mit Geschenk', async () => {
