@@ -133,6 +133,12 @@ Wetter und Feste laufen nach echter Zeit.
   (Gesprächswahl „😘 Küsschen geben“, erstes am Tag zählt): `World3D.kissScene` – beide beugen sich vor, Augen zu,
   Lina auf Zehenspitzen, „Mwah“ (`sfx: 'kuss'`), Herzchen. Kommt Lina heim, holt Oli sie mit einem Begrüßungsküsschen
   ab (`homeOliComes`, läuft im Zimmer zu ihr); zu Hause gibt's ab und zu auch spontan eins.
+- **Oli in Stufen:** (`data/oliStufen.ts`, `game/romance.ts`) Die Beziehung entwickelt sich mit den Herzen – mit **Inhalt statt Punkten**:
+  „💬 Zeit zu zweit“ im Gespräch spielt **eine Szene je Herz** (1–5: Ankommen, Pläne fürs Zimmer, Kochen zu zweit, Am Fenster, Danke Lini),
+  nacheinander und je einmal, ohne Freundschaftspunkte (`nextStageScene`/`playStageScene`). Ist Olis Herzenswunsch erfüllt, gibt es **„🌅 Zur Herzbank“**
+  (einmal am Tag, 8–23 Uhr, kein Regen): Lina und Oli sitzen nebeneinander auf der Bank am Strand, Zeilen je **Jahreszeit und Tageszeit** (`BENCH_LINES`), +8 Punkte.
+  **Jubiläen:** Briefe mit Strauß 100 Tage und 1 Jahr nach Olis Einzug (`checkOliAnniversaries`, gezählt ab `world.dates['oli-einzug']`; ältere Spielstände ab dem ersten Aufruf).
+  Picknick, Sterne gucken, Küsschen & Co. bleiben wie sie waren.
 - **Jens:** Bistro = Kartenobjekt `bistro` (`bistro-jens`, ersetzt `bauplatz-3`). Kochen nutzt dieselben Rezepte
   wie die Werkbank (`station: 'kueche'` in `data/recipes.ts`, Fenster `CraftPanel` mit `station="kueche"`).
   `NpcDef.away(day)` = verreist (dann Postkarte mit Andenken, `travelPostcard`, in `game/story.ts`).
