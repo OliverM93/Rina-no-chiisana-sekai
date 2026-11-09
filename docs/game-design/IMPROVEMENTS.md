@@ -30,7 +30,7 @@ abgesichert. Die folgenden Punkte betreffen Langzeitmotivation und Feinschliff.
 | E2 | Geburtstage der übrigen Bewohner (🗓️) | wartet auf Daten (❓ O6) |
 | E3 | Sternbilder am Nachthimmel (🗓️) | verknüpfbar mit „Sterne gucken“ (W3) |
 | E4 | Französisches Bistro-Möbelset (🗓️) | Inhalt, keine Systemänderung |
-| E5 | Eier & Co. bis 2–3 Tage ansammeln lassen (❓ O5) | entschärft die Pflichtrunde ohne neue Mechanik |
+| E5 | ✅ erledigt (Nov. 2026): Eier & Winstons Fund bis 3 Tage ansammeln lassen (❓ O5) | entschärft die Pflichtrunde ohne neue Mechanik |
 | E6 | Automatische Balancing-Tests (siehe `PLAYTESTING.md` §5) | schützt Spannen bei neuen Inhalten |
 | E7 | Wegfindung um stehende Bewohner (technische Altlast) | Game Feel |
 | E8 | Kein weiteres 1×/Tag-Abholsystem ohne Not | Leitlinie, kein Feature |
