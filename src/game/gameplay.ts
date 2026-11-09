@@ -28,6 +28,7 @@ import { itemIconUrl } from '../gfx/items';
 import { onItemObtained } from './crafting';
 import { festTalk } from './festivals';
 import { isPartyTime } from './party';
+import { winstonOmaLines } from './pet';
 
 // ---------------------------------------------------------------------------
 // Tasche & Sternchen
@@ -159,6 +160,7 @@ function dialogueContext(session: Session, npcId: string, firstToday: boolean): 
   const w = weatherAt(now, session.weatherOverride);
   tags.push(`wetter-${w.kind}`);
   if (session.data?.flags.olafEingezogen) tags.push('olaf-da');
+  if (session.data?.flags.winstonGefunden) tags.push('winston-da');
   if (session.data?.world.dates.christinGiesst === session.today()) tags.push('beet-gegossen');
   if (session.data?.flags.oliEingezogen) tags.push('oli-da');
   if (session.data?.flags.jensEingezogen) tags.push('jens-da');
@@ -255,6 +257,7 @@ export function talkToNpc(session: Session, npcId: string): TalkOutcome {
     if (npc.birthday && npc.birthdayLines && isSameDayMonth(session.clock(), npc.birthday)) lines.push(...npc.birthdayLines.greeting);
     else if (fest.length > 0) lines.push(...fest);
     else lines.push(...pickLine(npc.dialogue.greetings, ctx));
+    lines.push(...winstonOmaLines(session, npcId));
     // sanfter Hinweis, was für den nächsten Einzug noch fehlt (einmal am Tag zur Begrüßung)
     const hint = progressHint(session, npcId);
     if (hint && session.data) {
