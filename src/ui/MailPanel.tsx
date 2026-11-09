@@ -46,7 +46,7 @@ export function MailPanel({ session }: { session: Session }) {
           <ul class="letter-list">
             {letters.map((l) => (
               <li key={l.id}>
-                <button class={`letter-item ${l.id === openId ? 'active' : ''}`} onClick={() => setOpenId(l.id)}>
+                <button class={`letter-item ${l.id === openId ? 'active' : ''}`} onClick={() => setOpenId(l.id)} onFocus={() => setOpenId(l.id)}>
                   {isOpen(l) && <span class="dot" aria-label="neu" />}
                   <span class="letter-subject">{l.subject}</span>
                   <span class="letter-from">

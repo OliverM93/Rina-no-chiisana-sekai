@@ -50,6 +50,21 @@ describe('Dorfkarte', () => {
     }
   });
 
+  it('Vor Gebäuden und Bauplätzen stehen keine hohen Stände oder Schilder, die die Fassade verdecken', () => {
+    // Die Kamera schaut schräg von Süden: hohe Stände verdecken, was bis ~7 Reihen nördlich hinter ihnen steht
+    const tall = ['stall', 'seedstall', 'board', 'workbench'];
+    const fronts = VILLAGE_OBJECTS.filter((o) => ['house', 'bistro', 'praxis', 'plot'].includes(o.kind));
+    for (const o of VILLAGE_OBJECTS.filter((x) => tall.includes(x.kind))) {
+      const info = OBJECT_KINDS[o.kind];
+      for (const f of fronts) {
+        const finfo = OBJECT_KINDS[f.kind];
+        // bis zu 7 Reihen südlich des Gebäudes, ein Feld breiter als das Gebäude
+        const inFront = o.x + info.w - 1 >= f.x - 1 && o.x <= f.x + finfo.w && o.y >= f.y + finfo.h && o.y <= f.y + finfo.h + 7;
+        expect(inFront, `${o.id} steht vor ${f.id}`).toBe(false);
+      }
+    }
+  });
+
   it('nichts steht mitten im Weg: Sandwege bleiben frei, alles ist erreichbar (auch mit allen Gebäuden & Ständen)', () => {
     const all = buildWorldMap(VILLAGE_LAYOUT, VILLAGE_OBJECTS, VILLAGE_SPAWN);
     const flags: Record<string, boolean> = { adventszeit: true };

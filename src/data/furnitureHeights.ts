@@ -102,6 +102,7 @@ export const FURNITURE_HEIGHTS: Readonly<Record<string, number>> = {
   'vogelhaus': 1.38,
   'vogeltraenke': 0.73,
   'wachtelstall': 0.71,
+  'spruchtafel-lars': 1.13,
   'wandkarte-thalia': 0.9,
   'wandregal': 1.07,
   'wanduhr': 1.10,

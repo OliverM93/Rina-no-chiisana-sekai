@@ -989,6 +989,33 @@ export function makeFurniture(itemId: string, links: FenceLinks = { n: false, e:
       g.add(b(0.02, 0.14, 0.02, '#8a5a3a', 0, 0.07, -0.06).rotateX(0.4));
       break;
     }
+    case 'spruchtafel-lars': {
+      const z = WALL_Z;
+      g.add(b(0.8, 0.34, 0.04, '#8a5a3a', 0, HANG, z + 0.02));
+      g.add(b(0.74, 0.28, 0.01, '#e6c59c', 0, HANG, z + 0.045));
+      for (const [w, y] of [[0.5, 0.07], [0.6, 0.0], [0.36, -0.07]] as const) g.add(b(w, 0.025, 0.004, '#4a3a30', 0, HANG + y, z + 0.052));
+      g.add(s(0.02, 0.018, 0.004, '#e85a8a', 0.3, HANG - 0.1, z + 0.054));
+      break;
+    }
+    case 'familienbild': {
+      const frame = new THREE.Group();
+      frame.position.set(0, 0.11, 0);
+      frame.rotation.x = -0.15;
+      frame.add(b(0.34, 0.24, 0.02, '#8a5a3a'));
+      frame.add(b(0.3, 0.2, 0.005, '#bfe6f7', 0, 0, 0.012));
+      frame.add(b(0.3, 0.06, 0.005, '#8fd08a', 0, -0.07, 0.014));
+      // Bank und sechs kleine Figuren (Jens in der Mitte)
+      frame.add(b(0.2, 0.025, 0.004, '#c9955f', 0, -0.03, 0.018));
+      const cols = ['#3a5fc8', '#f48a7a', '#4a4a56', '#d9534f', '#2f6a4a', '#6a5a8a'];
+      cols.forEach((c2, i) => {
+        const x = -0.11 + i * 0.044;
+        frame.add(b(0.03, 0.04, 0.004, c2, x, -0.005, 0.02));
+        frame.add(s(0.014, 0.014, 0.003, '#f2c9a8', x, 0.03, 0.021));
+      });
+      g.add(frame);
+      g.add(b(0.02, 0.14, 0.02, '#8a5a3a', 0, 0.07, -0.06).rotateX(0.4));
+      break;
+    }
     case 'reisekoffer': {
       g.add(b(0.62, 0.28, 0.4, '#8a5a3a', 0, 0.14, 0));
       g.add(b(0.64, 0.02, 0.42, '#6a4228', 0, 0.2, 0));
