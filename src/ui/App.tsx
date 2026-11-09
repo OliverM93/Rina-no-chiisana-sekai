@@ -17,6 +17,7 @@ import { MailPanel } from './MailPanel';
 import { CollectionBook } from './CollectionBook';
 import { CatalogPanel } from './CatalogPanel';
 import { BankPanel } from './BankPanel';
+import { StoragePanel } from './StoragePanel';
 import { SeedStandPanel } from './SeedStandPanel';
 import { CraftPanel } from './CraftPanel';
 import { MapPanel } from './MapPanel';
@@ -75,7 +76,16 @@ export function App({ session }: { session: Session }) {
       if (s.panel && OWN_CURSOR.includes(s.panel.kind)) return;
       const layers = document.querySelectorAll<HTMLElement>('#ui .modal-layer, #ui .title-layer');
       const top = layers[layers.length - 1];
-      if (top) handleArrowKey(e, top);
+      if (!top) return;
+      // Leertaste drückt den fokussierten Knopf (das Spiel schluckt sie sonst für „Anschauen“)
+      const active = document.activeElement;
+      if (e.code === 'Space' && !e.repeat && active instanceof HTMLButtonElement && top.contains(active) && !active.disabled) {
+        e.preventDefault();
+        e.stopPropagation();
+        active.click();
+        return;
+      }
+      handleArrowKey(e, top);
     };
     window.addEventListener('keydown', onKey, true);
     return () => window.removeEventListener('keydown', onKey, true);
@@ -118,6 +128,7 @@ export function App({ session }: { session: Session }) {
       {state.panel?.kind === 'book' && <CollectionBook session={session} />}
       {state.panel?.kind === 'catalog' && <CatalogPanel session={session} />}
       {state.panel?.kind === 'samenstand' && <SeedStandPanel session={session} />}
+      {state.panel?.kind === 'truhe' && <StoragePanel session={session} />}
       {state.panel?.kind === 'bank' && <BankPanel session={session} panel={state.panel} />}
       {state.panel?.kind === 'werkbank' && <CraftPanel session={session} />}
       {state.panel?.kind === 'kochstudio' && <CraftPanel session={session} station="kueche" />}
@@ -126,7 +137,7 @@ export function App({ session }: { session: Session }) {
       {state.panel?.kind === 'galerie' && <GalleryPanel session={session} />}
       {state.panel?.kind === 'tv' && <TvPanel session={session} withOli={state.panel.withOli} />}
       {state.panel?.kind === 'herd' && <CraftPanel session={session} station="herd" />}
-      {state.panel && !['mail', 'book', 'catalog', 'bank', 'werkbank', 'kochstudio', 'apotheke', 'karte', 'galerie', 'tv', 'herd', 'samenstand'].includes(state.panel.kind) && <InventoryPanel session={session} panel={state.panel} />}
+      {state.panel && !['mail', 'book', 'catalog', 'bank', 'werkbank', 'kochstudio', 'apotheke', 'karte', 'galerie', 'tv', 'herd', 'samenstand', 'truhe'].includes(state.panel.kind) && <InventoryPanel session={session} panel={state.panel} />}
       {state.dialog && (
         <DialogBox
           dialog={state.dialog}

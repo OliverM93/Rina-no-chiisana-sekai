@@ -64,6 +64,8 @@ export class Winston {
   /** Platz neben Lina, wenn sie stehen bleibt (damit er nicht hinter ihr verschwindet) */
   private settle: { x: number; y: number } | null = null;
   sleeping = false;
+  /** Hat sich verfangen und wartet hier auf Hilfe (Fund-Ereignis) – folgt Lina noch nicht */
+  private lostAt: { x: number; y: number } | null = null;
 
   constructor(
     private readonly scene: THREE.Scene,
@@ -112,6 +114,31 @@ export class Winston {
   setVisible(on: boolean) {
     this.dog.root.visible = on;
     if (!on) this.zzz.visible = false;
+  }
+
+  get stranded(): boolean {
+    return this.lostAt !== null;
+  }
+
+  /** Hier sitzt er zitternd fest und wartet auf Lina (Fund-Ereignis) */
+  strand(x: number, y: number) {
+    this.lostAt = { x, y };
+    this.x = x;
+    this.y = y;
+    this.trail = [];
+    this.angle = Math.PI * 0.8;
+    this.idle = 3;
+    this.cancelDig();
+    this.sync(0);
+  }
+
+  /** Befreit: ab jetzt läuft er Lina hinterher */
+  release(lina: { x: number; y: number }) {
+    this.lostAt = null;
+    this.last = { x: lina.x, y: lina.y };
+    this.trail = [];
+    this.wag = 1;
+    this.idle = 0;
   }
 
   /** Neben Lina absetzen (Spielstart, Raumwechsel) */
@@ -193,6 +220,18 @@ export class Winston {
   update(dtMs: number, lina: { x: number; y: number; moving: boolean }, night: boolean, solid: (tx: number, ty: number) => boolean) {
     const dt = Math.min(0.05, dtMs / 1000);
     this.time += dt;
+
+    // Verfangen: bleibt sitzen, zittert, schaut zu Lina
+    if (this.lostAt) {
+      this.moving = false;
+      this.idle += dt;
+      this.angle = turn(this.angle, Math.atan2(lina.x - this.x, lina.y - this.y), dt * 3);
+      this.tilt = Math.sin(this.time * 11) * 0.12;
+      this.wag = 0.1;
+      this.sleeping = false;
+      this.sync(dt);
+      return;
+    }
 
     // Großer Sprung (Teleport) → direkt hinterher
     if (Math.hypot(lina.x - this.last.x, lina.y - this.last.y) > TILE * 3) this.placeNear(lina.x, lina.y, 0, 1);

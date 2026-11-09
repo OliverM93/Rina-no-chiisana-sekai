@@ -1,9 +1,9 @@
 /**
  * Hühner & Wachteln: Eier abholen, Tiere streicheln (Regeln ohne Darstellung).
  */
-import { collectEggs, eggsFor, hasEggs } from '../core/coop';
+import { collectEggs, eggDaysWaiting, eggsWaiting, hasEggs } from '../core/coop';
 import { spaceFor } from '../core/inventory';
-import { COOPS, EGG_LINES, NO_EGGS } from '../data/animals';
+import { COOPS, EGG_LINES, MORE_EGGS, NO_EGGS } from '../data/animals';
 import { FURNITURE_BY_ITEM } from '../data/furniture';
 import { itemCountLabel, maxStackOf } from '../data/items';
 import { giveItem } from './gameplay';
@@ -31,13 +31,14 @@ export function collectCoop(session: Session, uid: string): number {
     session.bus.emit('toast', { text: NO_EGGS[kind] });
     return 0;
   }
-  if (spaceFor(data.inventory, def.egg, maxStackOf) < eggsFor(def, uid, day)) {
+  const waitingDays = eggDaysWaiting(data.world.coopDay, uid, day);
+  if (spaceFor(data.inventory, def.egg, maxStackOf) < eggsWaiting(data.world.coopDay, def, uid, day)) {
     session.bus.emit('toast', { text: 'Deine Tasche ist zu voll für die Eier! 🎒' });
     return 0;
   }
   const got = collectEggs(data.world.coopDay, def, uid, day);
   giveItem(session, def.egg, got, false);
-  const line = EGG_LINES[kind][day.length % EGG_LINES[kind].length];
+  const line = waitingDays > 1 ? MORE_EGGS[kind] : EGG_LINES[kind][day.length % EGG_LINES[kind].length];
   session.bus.emit('toast', { text: `${line} ${itemCountLabel(def.egg, got)} eingesteckt.`, icon: itemIconUrl(def.egg) });
   session.changed();
   session.save();

@@ -199,7 +199,7 @@ export const GISELA_WELCOME: readonly string[] = [
   'Ich bin nämlich auch gerade eingezogen. Das lila Häuschen hinter der Brücke – mit der Bank davor.',
   'Die Bank ist meine. Nur, damit das klar ist.',
   'Du bist ja ganz dünn! Hier, ein Keks. Keine Widerrede.',
-  'Und da ist ja auch Winston! Na, du kleine Wurst? Pass schön auf mein Enkelkind auf.',
+  'Und hör gut hin, Kind: Hier fiept und raschelt es manchmal. Vielleicht findet dich jemand. Oder du ihn.',
 ];
 
 export const GISELA_WELCOME_2: readonly string[] = [

@@ -108,9 +108,10 @@ import { YARD_AREA } from '../data/yard';
 import { makeCan, makeNet, makeRod, makeShovel, type ToolModel } from './models/critters';
 import { Weather3D } from './Weather3D';
 import { Winston } from './Winston';
-import { petWinston, winstonDig, winstonMayDig } from '../game/pet';
-import { DIG_LINES } from '../data/winston';
+import { petWinston, winstonAppeared, winstonDig, winstonDue, winstonFound, winstonMayDig, winstonState } from '../game/pet';
+import { DIG_LINES, WINSTON_APPEARS_TOAST, WINSTON_FIND_LINES, WINSTON_FREED_LINES, WINSTON_SPOT } from '../data/winston';
 import { setModelSeason } from './models/furniture';
+import { makeBush } from './models/nature';
 import { lampGlass, makeHouse, windowGlass } from './models/buildings';
 import { buildMapView3D, footprintCenter, type MapView3D } from './MapView3D';
 import { Npc } from './Npc';
@@ -197,6 +198,8 @@ export class World3D {
   /** erst nach dem Verlassen eines Ausgangs-Feldes darf er wieder auslösen */
   private exitArmed = true;
   private winston: Winston | null = null;
+  /** Das Gestrüpp, in dem sich Winston verfangen hat (bis Lina ihn befreit) */
+  private winstonBush: THREE.Object3D | null = null;
   private stepAcc = 0;
   /** Fußspuren im Schnee */
   private footprints: Footprints3D;
@@ -628,9 +631,7 @@ export class World3D {
     this.session.decorActive = false;
     const p = data.player;
     this.player = new Character(this.scene, p.appearance, p.x, p.y, p.facing, this.view.terrain.heightAt, this.session.season, this.session.today());
-    if (!this.winston) this.winston = new Winston(this.scene, this.tweens, this.view.terrain.heightAt);
-    this.winston.heightAt = this.view.terrain.heightAt;
-    this.dogFollow();
+    this.syncWinston();
     this.camTarget.set(p.x * UNIT, 0, p.y * UNIT);
 
     this.collectibles.refresh();
@@ -690,6 +691,7 @@ export class World3D {
   private progressTick() {
     const data = this.session.data;
     if (!data || this.session.inside || this.session.uiBlocking || this.cutscene || this.kissBusy || this.session.decorActive) return;
+    if (winstonDue(this.session)) this.winstonAppears();
     const pending = MILESTONE_FLAGS.some(([moved, greeted]) => data.flags[moved] && !data.flags[greeted]);
     checkWishLetter(this.session);
     const events = checkStory(this.session);
@@ -1382,7 +1384,8 @@ export class World3D {
         this.session.bus.emit('ui:open', { kind: 'catalog' });
         return;
       case 'winston':
-        this.petDog();
+        if (this.winston?.stranded) this.rescueWinston();
+        else this.petDog();
         return;
       case 'tier': {
         const kind = this.animals.pet(target.index, player.x * UNIT, player.y * UNIT);
@@ -2372,10 +2375,92 @@ export class World3D {
   // Winston
   // -------------------------------------------------------------------------
 
+  /** Winston je nach Stand: noch nicht da · sitzt verfangen im Gestrüpp · folgt Lina */
+  private syncWinston() {
+    const state = winstonState(this.session);
+    if (state !== 'verfangen' && this.winstonBush) {
+      this.winstonBush.removeFromParent();
+      this.winstonBush = null;
+    }
+    if (state === 'fehlt') {
+      this.winston?.dispose();
+      this.winston = null;
+      return;
+    }
+    if (!this.winston) this.winston = new Winston(this.scene, this.tweens, this.view.terrain.heightAt);
+    this.winston.heightAt = this.view.terrain.heightAt;
+    if (state === 'verfangen') {
+      this.winston.strand(WINSTON_SPOT.x * TILE, WINSTON_SPOT.y * TILE);
+      if (!this.winstonBush) {
+        this.winstonBush = makeBush(this.session.season, 7);
+        this.winstonBush.position.set(WINSTON_SPOT.x + 0.15, 0, WINSTON_SPOT.y - 0.3);
+        this.winstonBush.scale.setScalar(1.25);
+        this.scene.add(this.winstonBush);
+      }
+    }
+    else this.dogFollow();
+  }
+
+  /** Ein paar Minuten nach Omas Werkzeugen: leises Fiepen, Winston sitzt im Gestrüpp (Lina geht hin, wann sie mag) */
+  private winstonAppears() {
+    winstonAppeared(this.session);
+    this.syncWinston();
+    this.session.bus.emit('toast', { text: WINSTON_APPEARS_TOAST });
+    this.session.bus.emit('sfx', 'bellen');
+    this.session.save();
+  }
+
+  /** Lina befreit den verfangenen Dackel – er folgt ihr ab jetzt */
+  private rescueWinston() {
+    const w = this.winston;
+    const player = this.player;
+    if (!w || !player || !w.stranded) return;
+    player.faceTowards(w.x, w.y);
+    this.cutscene = true;
+    this.session.bus.emit('dialog:open', {
+      title: 'Ein kleiner Dackel',
+      lines: [...WINSTON_FIND_LINES],
+      choices: [
+        {
+          label: '🤲 Vorsichtig befreien',
+          onSelect: () => {
+            winstonFound(this.session);
+            this.winstonBush?.removeFromParent();
+            this.winstonBush = null;
+            w.release({ x: player.x, y: player.y });
+            this.fxAt('herzen', w.x, w.y, -0.45);
+            this.session.bus.emit('sfx', 'bellen');
+            this.session.bus.emit('dialog:open', {
+              title: 'Winston',
+              lines: [...WINSTON_FREED_LINES],
+              onClose: () => {
+                this.cutscene = false;
+                w.burst('herz');
+                this.dogFollow();
+              },
+            });
+          },
+        },
+        {
+          label: '👋 Gleich wieder',
+          onSelect: () => {
+            this.cutscene = false;
+            this.session.bus.emit('toast', { text: 'Das Fiepen wird leiser … er wartet auf dich. 🥺' });
+          },
+        },
+      ],
+    });
+  }
+
   /** Winston direkt hinter Lina absetzen (nach Start/Raumwechsel) */
   private dogFollow() {
     const player = this.player;
     if (!player || !this.winston) return;
+    // Noch verfangen: bleibt draußen im Gestrüpp (drinnen unsichtbar), kommt nicht mit
+    if (this.winston.stranded) {
+      this.winston.setVisible(!this.session.inside);
+      return;
+    }
     const [fx, fy] = DIRS[player.facing];
     this.winston.placeNear(player.x, player.y, fx, fy);
     this.linaIdle = 0;
@@ -2424,7 +2509,7 @@ export class World3D {
     w.update(dtMs, { x: player.x, y: player.y, moving: player.moving }, night, solid);
 
     // Draußen buddelt er einmal am Tag, wenn Lina kurz stehen bleibt
-    if (!this.session.inside && !blocked && !night && this.linaIdle > 3 && w.resting && winstonMayDig(this.session)) {
+    if (!this.session.inside && !blocked && !night && this.linaIdle > 3 && w.resting && !w.stranded && winstonMayDig(this.session)) {
       const t = w.tile;
       if (terrainAt(this.session.map, t.x, t.y) === 'grass' && !this.session.map.grid.isBlocked(t.x, t.y)) {
         w.dig(player.x, player.y, () => {
@@ -2662,6 +2747,10 @@ export class World3D {
     if (!item || !f || !player || !home) return;
     if (f.def.id === 'fernseher') {
       this.session.bus.emit('ui:open', { kind: 'tv', withOli: !!this.homeOli?.visible });
+      return;
+    }
+    if (f.def.storage) {
+      this.session.bus.emit('ui:open', { kind: 'truhe' });
       return;
     }
     if (f.def.id === 'herd') {
