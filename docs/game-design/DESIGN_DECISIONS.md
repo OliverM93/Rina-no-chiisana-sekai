@@ -98,6 +98,16 @@ Format: **Entscheidung** – Begründung – verworfene Alternative(n) – Auswi
    bräuchten mehr Inhalt. Wünsche nutzen Bestehendes und erzählen kleine Geschichten – bester Aufwand-Nutzen.
 - **Technik:** Zustand komplett in Story-Flags (kein `SAVE_VERSION`-Wechsel), Orte als `landmark`/`steg` mit `requires`.
 
+### D17 · Winston wird gefunden statt von Anfang an dabei zu sein (Nov. 2026)
+- **Erlebnis:** Ein erstes kleines Abenteuer in den ersten Minuten; die Bindung zu Winston entsteht durch Hilfe statt durch Vorgabe
+  (Verbundenheit, Kompetenz: „Ich habe ihn gerettet“).
+- **Loop:** Onboarding: Oma → Werkzeuge → Fiepen → Winston → weiter mit den Einzügen. Das Ereignis ist ein Meilenstein vor Olafs
+  Ankündigung, damit niemand ohne Winston in die Szenen mit seinem Namen stolpert.
+- **Autonomie:** Das Fiepen ist ein Anreiz, keine Pflicht-Quest: kein Zeitlimit, Lina geht hin, wann sie mag; „Gleich wieder“ ist
+  möglich. Oma gibt in-character einen Hinweis („Hörst du das auch?“).
+- **Nebenwirkungen:** Ältere Spielstände behalten Winston (kein Verlust). Dialoge mit seinem Namen sind bis zum Fund gesperrt (Tag).
+- **Playtest:** Findet Lina das Fiepen ohne Hinweis? Wie lange dauert es bis zum Fund?
+
 ---
 
 ## Offene Designentscheidungen ❓

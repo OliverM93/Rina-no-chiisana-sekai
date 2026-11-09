@@ -26,9 +26,11 @@ export const MILESTONES: readonly Milestone[] = [
     needs: [
       { kind: 'sammelbuch', n: 3 },
       { kind: 'verkauft', n: 200 },
+      { kind: 'flag', n: 1, flag: 'winstonGefunden' },
     ],
     hintBy: 'gisela',
     hints: {
+      flag: ['Hörst du das auch, Kind? Dieses leise Fiepen von der Wiese hinter deinem Haus?', 'Geh doch mal nachsehen. Irgendwer braucht Hilfe. Ich hör sowas. Ich hab ein Gehör wie ein Luchs.'],
       sammelbuch: ['Dein Papa ruft mich jeden Abend an, Kind. „Lebt sie sich gut ein?“', 'Fang ihm doch ein paar Fische oder Käfer fürs Sammelbuch. Dann kann ich ihm was erzählen. Er glaubt mir sonst nie.'],
       verkauft: ['Olaf fragt, ob du schon dein eigenes Geld verdienst. Typisch Finanzamt.', 'Leg ein paar Funde in die Verkaufskiste. Dann hat er Ruhe. Und ich auch.'],
     },

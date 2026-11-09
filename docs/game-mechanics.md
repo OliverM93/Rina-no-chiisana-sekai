@@ -101,6 +101,13 @@ Wetter und Feste laufen nach echter Zeit.
   Lina haben sollte (`missingKeepsakes`: Omas Werkzeuge, Thalias Schaufel, Olis Einzugsmöbel), kommt es zurück.
   Wichtige Übergaben laufen über `World3D.giveOrDrop` – bei voller Tasche landet es vor Linas Füßen. Jede Samensorte
   braucht eine Quelle außer der eigenen Blüte (Test in `data/keepsakes.test.ts`).
+- **Winston wird gefunden:** Neue Spiele starten ohne Winston (`winstonNochNicht`). Etwa 2½ Minuten Spielzeit nach Omas Werkzeugen
+  (`WINSTON_DELAY_SECONDS`, `game/pet.ts → winstonDue`) fiept es von der Wiese hinter Linas Haus; dort sitzt ein kleiner Dackel im
+  Gestrüpp verfangen (`WINSTON_SPOT`, `Winston.strand`). Lina geht hin, wann sie mag, und befreit ihn („🤲 Vorsichtig befreien“);
+  das Schildchen am Halsband verrät den Namen, und er folgt ihr ab jetzt (`winstonGefunden`). Oma kommentiert es beim nächsten
+  Gespräch einmal. **Olafs Ankündigung braucht diesen Fund** (Meilenstein, Omas Hinweis: „Hörst du das Fiepen?“). Zeilen, die
+  „Winston“ nennen, kommen erst dran, wenn er da ist (Tag `winston-da`, `core/dialogue.ts`). Ältere Spielstände haben Winston
+  weiter von Anfang an (`winstonState` setzt das Flag nach).
 - **Winston:** läuft auf Linas eigener Spur hinterher (bleibt nie an Ecken hängen), setzt sich neben sie,
   wenn sie stehen bleibt. Texte & Funde in `data/winston.ts`.
 - **Werkbank:** Rezepte in `data/recipes.ts` (`start`, `fund` = beim ersten Fund, sonst als Brief-Geschenk

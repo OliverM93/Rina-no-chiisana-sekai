@@ -42,6 +42,16 @@ export interface DialogueContext {
   turn: number;
 }
 
+/**
+ * Zeilen, die einen Namen nennen, kommen erst dran, wenn es ihn (oder sie) im Spiel gibt: Winston wird
+ * erst kurz nach Spielbeginn gefunden. Der Kontext trägt dann das Tag `winston-da`.
+ */
+const NAME_TAGS: Readonly<Record<string, string>> = { Winston: 'winston-da' };
+
+function linesMention(l: DialogueLine): string {
+  return typeof l.text === 'string' ? l.text : l.text.join(' ');
+}
+
 export function matches(cond: LineCondition | undefined, ctx: DialogueContext): boolean {
   if (!cond) return true;
   if (cond.phases && !cond.phases.includes(ctx.phase)) return false;
@@ -60,7 +70,11 @@ export function matches(cond: LineCondition | undefined, ctx: DialogueContext): 
  * pro Tag gemischten Reihenfolge. So wiederholt sich beim Plaudern nichts, bis alles einmal dran war.
  */
 export function pickLine(pool: readonly DialogueLine[], ctx: DialogueContext): string[] {
-  const candidates = pool.filter((l) => matches(l.when, ctx));
+  const candidates = pool.filter((l) => {
+    if (!matches(l.when, ctx)) return false;
+    const text = linesMention(l);
+    return Object.entries(NAME_TAGS).every(([name, tag]) => !text.includes(name) || ctx.tags.includes(tag));
+  });
   if (candidates.length === 0) return [];
   const key = (l: DialogueLine, i: number) => hashString(`${ctx.day}:${i}:${typeof l.text === 'string' ? l.text : l.text[0]}`);
   const order = candidates
