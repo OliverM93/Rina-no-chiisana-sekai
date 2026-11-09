@@ -2258,6 +2258,141 @@ export function makeFurniture(itemId: string, links: FenceLinks = { n: false, e:
       g.add(b(0.4, 0.02, 0.01, '#2a2a30', 0.02, HANG + 0.0, z + 0.03).rotateZ(0.5));
       break;
     }
+    // ---------------------------------------------------------------- Französisches Bistro
+    case 'bistrotisch': {
+      g.add(c(0.34, 0.04, '#f4f2ee', 0, 0.7, 0));
+      for (const [x, z, r] of [[-0.1, 0.05, 0.4], [0.1, -0.1, -0.6]] as const) g.add(b(0.3, 0.004, 0.01, '#b9b6c0', x, 0.722, z).rotateY(r));
+      g.add(c(0.37, 0.016, '#2a2a30', 0, 0.676, 0));
+      g.add(c(0.035, 0.64, '#2a2a30', 0, 0.34, 0));
+      g.add(c(0.2, 0.025, '#2a2a30', 0, 0.0125, 0));
+      for (const a2 of [0, 2.1, 4.2]) g.add(b(0.24, 0.025, 0.03, '#2a2a30', Math.cos(a2) * 0.1, 0.03, Math.sin(a2) * 0.1).rotateY(-a2));
+      break;
+    }
+    case 'bistrostuhl': {
+      const wood = '#7a4a2e';
+      g.add(c(0.24, 0.04, '#c99a68', 0, 0.45, 0.02));
+      for (const [x, z] of [[-0.18, -0.12], [0.18, -0.12], [-0.17, 0.2], [0.17, 0.2]] as const) {
+        const leg = c(0.018, 0.46, wood, x, 0.22, z);
+        leg.rotation.z = -x * 0.25;
+        g.add(leg);
+      }
+      g.add(c(0.22, 0.012, wood, 0, 0.25, 0.04));
+      // geschwungene Lehne: Bogen und Stäbe
+      const arc = mesh(new THREE.TorusGeometry(0.2, 0.017, 6, 16, Math.PI), toon(wood));
+      arc.position.set(0, 0.72, -0.2);
+      arc.rotation.x = -0.1;
+      g.add(arc);
+      for (const x of [-0.12, 0, 0.12]) g.add(c(0.012, 0.28, wood, x, 0.6, -0.2));
+      seatY = 0.47;
+      break;
+    }
+    case 'barhocker': {
+      g.add(c(0.2, 0.05, '#b8484f', 0, 0.64, 0));
+      g.add(c(0.2, 0.012, '#c9a24a', 0, 0.61, 0));
+      g.add(c(0.025, 0.58, '#2a2a30', 0, 0.3, 0));
+      g.add(c(0.17, 0.02, '#2a2a30', 0, 0.01, 0));
+      const ring = mesh(new THREE.TorusGeometry(0.12, 0.012, 6, 18), toon('#c9a24a'));
+      ring.rotation.x = Math.PI / 2;
+      ring.position.y = 0.22;
+      g.add(ring);
+      seatY = 0.66;
+      break;
+    }
+    case 'zinktheke': {
+      g.add(b(1.85, 0.9, 0.5, '#7a4a2e', 0, 0.45, 0));
+      for (const x of [-0.6, 0, 0.6]) g.add(b(0.52, 0.7, 0.01, '#8d5a38', x, 0.45, 0.255));
+      g.add(b(1.92, 0.04, 0.56, '#c3c8d0', 0, 0.92, 0));
+      g.add(b(1.92, 0.018, 0.04, '#9aa0a8', 0, 0.955, 0.27));
+      g.add(c(0.025, 0.04, '#c9a24a', -0.3, 0.97, -0.12));
+      // Messing-Fußleiste
+      g.add(c(0.012, 1.85, '#c9a24a', 0, 0.12, 0.27).rotateZ(Math.PI / 2));
+      break;
+    }
+    case 'kreidetafel': {
+      const z = WALL_Z;
+      g.add(b(0.8, 0.62, 0.04, '#7a4a2e', 0, HANG, z + 0.02));
+      g.add(b(0.72, 0.54, 0.01, '#2f3a36', 0, HANG, z + 0.047));
+      for (const [y, w] of [[0.15, 0.4], [0.05, 0.5], [-0.05, 0.34], [-0.15, 0.44]] as const) g.add(b(w, 0.014, 0.004, '#f4f2ee', -0.05, HANG + y, z + 0.054));
+      g.add(s(0.03, 0.026, 0.004, '#f4a3b8', 0.28, HANG - 0.17, z + 0.054));
+      g.add(b(0.3, 0.02, 0.004, '#f4f2ee', 0, HANG + 0.22, z + 0.054));
+      break;
+    }
+    case 'weinregal': {
+      const wood = '#8a5a3a';
+      g.add(b(0.8, 1.0, 0.05, wood, 0, 0.5, -0.2));
+      for (const x of [-0.38, 0.38]) g.add(b(0.04, 1.0, 0.42, wood, x, 0.5, 0));
+      for (const y of [0.02, 0.36, 0.7, 1.0]) g.add(b(0.8, 0.03, 0.42, wood, 0, y, 0));
+      const cols = ['#3f5a3a', '#5a2a34', '#3f5a3a', '#2f4a30'];
+      for (let row = 0; row < 3; row++) for (let i = 0; i < 4; i++) {
+        const bottle = c(0.045, 0.3, cols[(i + row) % 4], -0.27 + i * 0.18, 0.15 + row * 0.34 + 0.06, 0.0).rotateX(Math.PI / 2);
+        bottle.position.z = 0;
+        g.add(bottle);
+        g.add(c(0.018, 0.04, '#c9a24a', -0.27 + i * 0.18, 0.19 + row * 0.34, 0.17).rotateX(Math.PI / 2));
+      }
+      break;
+    }
+    case 'bistrolampe': {
+      g.add(c(0.08, 0.02, '#c9a24a', 0, 0.01, 0));
+      g.add(c(0.012, 0.2, '#c9a24a', 0, 0.12, 0));
+      glow = glowMat('#fff0b8');
+      const shade = mesh(new THREE.CylinderGeometry(0.05, 0.12, 0.1, 14, 1, true), toon('#3f8a5a', { side: THREE.DoubleSide }));
+      shade.position.set(0, 0.26, 0);
+      g.add(shade);
+      g.add(s(0.045, 0.035, 0.045, glow, 0, 0.23, 0));
+      lightAt = new THREE.Vector3(0, 0.3, 0);
+      break;
+    }
+    case 'goldspiegel': {
+      const z = WALL_Z + 0.02;
+      const frame = mesh(new THREE.TorusGeometry(0.26, 0.03, 8, 28), toon('#d9b45a'));
+      frame.scale.set(0.7, 1, 1);
+      frame.position.set(0, HANG, z + 0.02);
+      g.add(frame);
+      const glass = c(0.26, 0.012, new THREE.MeshToonMaterial({ color: '#cfe4ee', emissive: '#bfe0f0', emissiveIntensity: 0.25 }), 0, HANG, z + 0.012);
+      glass.rotation.x = Math.PI / 2;
+      glass.scale.x = 0.18;
+      glass.scale.z = 0.26;
+      g.add(glass);
+      g.add(s(0.04, 0.04, 0.02, '#d9b45a', 0, HANG + 0.3, z + 0.03));
+      break;
+    }
+    case 'etagere': {
+      g.add(c(0.17, 0.012, '#f4f2ee', 0, 0.02, 0));
+      g.add(c(0.012, 0.3, '#c9a24a', 0, 0.17, 0));
+      g.add(c(0.12, 0.012, '#f4f2ee', 0, 0.3, 0));
+      g.add(c(0.045, 0.012, '#c9a24a', 0, 0.34, 0));
+      for (const [x, z] of [[-0.08, 0.03], [0.08, -0.02], [0, 0.08]] as const) {
+        const croissant = mesh(new THREE.TorusGeometry(0.035, 0.022, 7, 12, Math.PI * 1.35), toon('#e6a557'));
+        croissant.position.set(x, 0.054, z);
+        croissant.rotation.x = Math.PI / 2;
+        croissant.rotation.z = x * 6;
+        g.add(croissant);
+      }
+      for (const x of [-0.04, 0.04]) {
+        const t = mesh(new THREE.TorusGeometry(0.03, 0.018, 7, 12, Math.PI * 1.35), toon('#e6a557'));
+        t.position.set(x, 0.325, 0);
+        t.rotation.x = Math.PI / 2;
+        g.add(t);
+      }
+      break;
+    }
+    case 'eiffelmodell': {
+      const iron = '#4a4f58';
+      g.add(b(0.2, 0.02, 0.2, DARK_WOOD, 0, 0.01, 0));
+      g.add(c(0.08, 0.14, iron, 0, 0.09, 0, cone));
+      g.add(b(0.14, 0.012, 0.14, iron, 0, 0.1, 0));
+      g.add(c(0.045, 0.14, iron, 0, 0.2, 0, cone));
+      g.add(b(0.08, 0.01, 0.08, iron, 0, 0.21, 0));
+      g.add(c(0.02, 0.17, iron, 0, 0.3, 0, cone));
+      break;
+    }
+    case 'bistrolaeufer': {
+      g.add(b(1.9, 0.02, 0.9, '#a83a44', 0, 0.01, 0));
+      g.add(b(1.92, 0.021, 0.06, '#f3e6cf', 0, 0.0105, -0.42));
+      g.add(b(1.92, 0.021, 0.06, '#f3e6cf', 0, 0.0105, 0.42));
+      for (let i = 0; i < 6; i++) g.add(b(0.22, 0.022, 0.05, '#c9565e', -0.78 + i * 0.31, 0.011, 0));
+      break;
+    }
     case 'sonnenspiegel': {
       const z = WALL_Z + 0.02;
       for (let i = 0; i < 20; i++) {

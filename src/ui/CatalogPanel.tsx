@@ -7,7 +7,7 @@ import { CURRENCY } from '../data/items';
 import { FLOORS, FURNITURE, type FurnitureStyle, STYLE_LABELS, VARIANT_LABELS, WALLPAPERS } from '../data/furniture';
 import { getSeason } from '../core/time';
 import { formatMoney } from '../game/gameplay';
-import { buyFromCatalog } from '../game/home';
+import { buyFromCatalog, styleUnlocked } from '../game/home';
 import type { Session } from '../game/session';
 import { itemIconUrl } from '../gfx/items';
 import { showToast, ui, useSessionVersion } from './store';
@@ -75,7 +75,7 @@ export function CatalogPanel({ session }: { session: Session }) {
   const money = session.data?.money ?? 0;
   const season = getSeason(session.clock());
   const winter = season === 'winter';
-  const list = entries(tab, winter, season).filter((e) => style === 'alle' || e.style === style);
+  const list = entries(tab, winter, season).filter((e) => styleUnlocked(session, e.style) && (style === 'alle' || e.style === style));
   const sel = list.find((e) => e.id === selected) ?? null;
   const v = sel ? sel.variants[Math.min(variant, sel.variants.length - 1)] : null;
 
@@ -116,7 +116,7 @@ export function CatalogPanel({ session }: { session: Session }) {
           <span class="money book-progress">{formatMoney(money)}</span>
         </div>
         <div class="book-tabs">
-          {(['alle', 'japanisch', 'basis', 'cottage', 'retro', 'modern', 'midcentury', 'garten', 'lieblinge', ...(winter || tab !== 'moebel' ? (['winter'] as const) : [])] as const).map((s) => (
+          {(['alle', 'japanisch', 'basis', 'cottage', 'retro', 'modern', 'midcentury', ...(styleUnlocked(session, 'bistro') ? (['bistro'] as const) : []), 'garten', 'lieblinge', ...(winter || tab !== 'moebel' ? (['winter'] as const) : [])] as const).map((s) => (
             <button key={s} class={`chip small ${style === s ? 'active' : ''}`} onClick={() => setStyle(s)}>
               {s === 'alle' ? 'Alle Stile' : STYLE_LABELS[s]}
             </button>

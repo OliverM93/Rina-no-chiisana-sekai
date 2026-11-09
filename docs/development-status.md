@@ -8,7 +8,7 @@
 - **Qualitätssicherung:** 36 Testdateien (217 Tests) inkl. Durchlauf-Test der ganzen Geschichte; CI prüft jeden Pull
   Request (Typecheck, Tests, Build); jeder Merge nach `main` wird automatisch auf GitHub Pages veröffentlicht.
 - **Als Nächstes denkbar:** Fotomodus & Tagebuch, Geburtstage der übrigen Bewohner (Daten fehlen), Blumen-Kreuzungen,
-  Sternbilder, französisches Bistro-Möbelset – siehe „Ideen-Parkplatz“ und „Offene Fragen“ unten.
+  siehe „Ideen-Parkplatz“ und „Offene Fragen“ unten.
 - **Game Design:** Wissensbasis in [`game-design/`](game-design/README.md) mit Analyse und priorisierter
   Verbesserungsliste ([`IMPROVEMENTS.md`](game-design/IMPROVEMENTS.md)) – vor neuen Mechaniken gilt die Designprüfung.
 - **Pflege:** Wird ein Feature fertig, wird es hier abgehakt (✅) – siehe Regeln in [`../CLAUDE.md`](../CLAUDE.md).
@@ -101,7 +101,7 @@ Legende: ✅ erledigt · 🚧 in Arbeit · ⬜ geplant
 - ✅ Möbelkatalog am Pult – der erste Ort zum Sternchen-Ausgeben
 - ✅ Sitzen auf Kissen & Futon, Lampen leuchten abends (an-/ausknipsbar)
 - ✅ 3D-Vorschaubilder der Möbel in Katalog & Tasche; Spielstand Version 5
-- ✅ Weitere Stile: Cottagecore, Retro-Oma-Chic, Modern (M8g), Mid-Century & Bauhaus (M8h) · ⬜ französisches Bistro → später
+- ✅ Weitere Stile: Cottagecore, Retro-Oma-Chic, Modern (M8g), Mid-Century & Bauhaus (M8h) · ✅ Französisches Bistro (Nov. 2026, kommt mit Jens)
 - ✅ Wand-Deko (Bilder, Rollbilder, Regale an der Wand) → M8f
 
 ## ✅ M6 – Hausausbau, Außengestaltung, Crafting
@@ -271,6 +271,7 @@ Legende: ✅ erledigt · 🚧 in Arbeit · ⬜ geplant
 - ✅ **Fotomodus:** Taste F / 📷 – Schnappschuss mit Rahmen (Polaroid, Herzchen, Blümchen, Schlicht) zum Speichern als PNG
 - ✅ **Sammlungen würdigen:** Brief + Wand-Urkunde für alle Fische, Krabbeltiere, Funde, Blumenfarben und Tassen (Audit F10)
 - ✅ **Oli in Stufen:** „Zeit zu zweit“-Szenen (eine je Herz), „Zur Herzbank“ mit Jahreszeiten-Zeilen, Jubiläums-Briefe nach 100 Tagen und einem Jahr (Audit F6)
+- ✅ **Französisches Bistro:** neuer Stil mit elf Möbeln (Bistrotisch, Bugholzstuhl, Barhocker, Zinktresen, Kreidetafel, Weinregal, Bistro-Lampe, Café-Spiegel, Croissant-Etagere, Turm-Modell, Läufer), zwei Tapeten und Bistro-Fliesen – im Katalog ab Jens' Einzug (Audit F13)
 - ✅ **Sternbilder:** beim Sterne gucken zeigt der Himmel das Sternbild der Jahreszeit (Großer Wagen, Schwan, Kassiopeia, Orion), Oli erklärt es
 - ✅ **Sammlung ausstellen:** Insektenkasten, Fischtafel und Fossilien-Vitrine zeigen als Präparate, was Lina gefangen/gefunden hat (Audit F2/W6)
 - ✅ **Fischgerichte:** sieben neue Gerichte aus Fängen (Rezept beim ersten Fang), fehlende Symbole für Fischsuppe, Apfelpfannkuchen und Blumensalat ergänzt (Audit F2/W6)
