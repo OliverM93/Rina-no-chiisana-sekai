@@ -2730,7 +2730,10 @@ export class World3D {
 
   private refreshRoom(force = false) {
     const c = currentRoom(this.session);
-    if (this.session.inside && c) this.interior.refresh(c.room, c.layout, force);
+    if (this.session.inside && c) {
+      this.interior.collected = new Set(Object.keys(this.session.data?.collection ?? {}));
+      this.interior.refresh(c.room, c.layout, force);
+    }
   }
 
   /** Lina betritt Raum `roomId` durch den Ausgang, der zu `from` führt */

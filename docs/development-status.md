@@ -271,6 +271,7 @@ Legende: ✅ erledigt · 🚧 in Arbeit · ⬜ geplant
 - ✅ **Fotomodus:** Taste F / 📷 – Schnappschuss mit Rahmen (Polaroid, Herzchen, Blümchen, Schlicht) zum Speichern als PNG
 - ✅ **Sammlungen würdigen:** Brief + Wand-Urkunde für alle Fische, Krabbeltiere, Funde, Blumenfarben und Tassen (Audit F10)
 - ✅ **Oli in Stufen:** „Zeit zu zweit“-Szenen (eine je Herz), „Zur Herzbank“ mit Jahreszeiten-Zeilen, Jubiläums-Briefe nach 100 Tagen und einem Jahr (Audit F6)
+- ✅ **Sammlung ausstellen:** Insektenkasten, Fischtafel und Fossilien-Vitrine zeigen als Präparate, was Lina gefangen/gefunden hat (Audit F2/W6)
 - ✅ **Fischgerichte:** sieben neue Gerichte aus Fängen (Rezept beim ersten Fang), fehlende Symbole für Fischsuppe, Apfelpfannkuchen und Blumensalat ergänzt (Audit F2/W6)
 - ✅ **Feedback-Runde (Nov. 2026):** Enter kauft im Möbelkatalog, Katalog hat feste Fenstergröße, Herzfenster von den Hausdächern entfernt, Picknick/Sterne/Herzbank mit Abblenden, aufgehender Decke und sanftem Ende, Küsschen mit Abstand (Köpfe stecken nicht mehr ineinander)
 - ✅ **Abend-Erreichbarkeit:** reine Tagarten (11) bis 20 Uhr verfügbar, neues Abendtreffen am Strand (Audit F1/F18)
