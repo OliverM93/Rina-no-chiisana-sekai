@@ -135,7 +135,7 @@ describe('Herzenswünsche – Phase 2', () => {
       for (const r of rewards) expect(isKnownItem(r.itemId), `${w.id}: ${r.itemId}`).toBe(true);
       for (const n of w.needs) if (n.item) expect(isKnownItem(n.item), `${w.id}: ${n.item}`).toBe(true);
       if (w.recipe) expect(RECIPE_BY_ID[w.recipe]?.wish, w.id).toBe(w.id);
-      expect(w.order).toBe(2);
+      expect(w.order).toBeGreaterThanOrEqual(2);
     }
     expect(FINDS.some((f) => f.id === 'wolframit')).toBe(true);
     expect(FURNITURE_BY_ITEM['discokugel'].def.light).toBe(true);

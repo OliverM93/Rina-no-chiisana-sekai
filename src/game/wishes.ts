@@ -125,6 +125,7 @@ export function fulfillWish(session: Session, npcId: string, optionId?: string):
   if (w.stars) data.money -= w.stars;
   data.flags[wishFlag(w.id)] = true;
   data.flags[wishToldFlag(w.id)] = true;
+  data.world.dates[`wunsch-datum-${w.id}`] = session.today(); // z. B. für Pater Matteos Briefe
   if (option) data.flags[wishOptionFlag(w.id, option.id)] = true;
   const lines = [...(option ? option.done : w.done), ...addFriendship(session, npcId, WISH_FRIENDSHIP)];
   const rewards = [...(option ? option.rewardItems : (w.rewardItems ?? []))].map((r) => ({ ...r }));

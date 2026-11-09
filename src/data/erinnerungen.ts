@@ -63,10 +63,14 @@ export const MEMORIES: readonly Memory[] = [
   { id: 'lars-schwarz', npc: 'lars', tag: 'schwarze-blume', text: ['Eine schwarze Blume? Als Arzt sage ich: Das ist gesundheitlich unbedenklich. Als Bruder: Zeig her!'] },
   { id: 'lars-gewaechshaus', npc: 'lars', tag: 'gewaechshaus', text: ['Ein Gewächshaus: Kräuter im Winter. Gegen Husten, Schnupfen und schlechte Laune. Gute Investition!'] },
 
+  { id: 'gisela-matteo', npc: 'gisela', tag: 'matteo', text: ['Ein Pfarrer als Brieffreund für Thalia? Na, das ist wenigstens ein anständiger Mensch.', 'Ich will den Brief sehen. Ich les ihn gegen. Mit meiner Brille. Die ich nicht habe. Egal.'] },
+  { id: 'jens-matteo', npc: 'jens', tag: 'matteo', text: ['Ein Italiener! Ein Pater! Thalia schreibt Briefe in die Berge – quelle romance, ma chérie!', 'Ich schicke ihm eine Postkarte aus Paris. Nur zur Konkurrenz. Mit Herz, natürlich.'] },
+  { id: 'lars-matteo', npc: 'lars', tag: 'matteo', text: ['Thalia und Pater Matteo. Ich hab ärztlich nichts einzuwenden – außer, dass sie ihm zu viele Kekse schickt. Zucker, Schwesterherz.'] },
   // ---- Thalia ----
   { id: 'thalia-buch-10', npc: 'thalia', tag: 'buch-10', text: ['Zehn Arten im Sammelbuch! Du bist offiziell Feldforscherin. Ich hab einen Stempel dafür. Fast.'] },
   { id: 'thalia-dach', npc: 'thalia', tag: 'haus-dach', text: ['Von deinem Dachfenster aus sieht man bestimmt bis zum Meer. Ich muss das mal kartieren.'] },
   { id: 'thalia-schwarz', npc: 'thalia', tag: 'schwarze-blume', text: ['Eine schwarze Blume im Beet? Das ist biologisch fast unmöglich. Ich liebe es!'] },
   { id: 'thalia-monat', npc: 'thalia', tag: 'monat-1', text: ['Ein Monat {dorf}! Ich hab schon einen Plan, wohin wir als Nächstes wandern. Ich hab immer einen Plan.'] },
+  { id: 'thalia-matteo', npc: 'thalia', tag: 'matteo', text: ['Pater Matteo hat wieder geschrieben! Er nennt mich „liebe Thalia“. Er nennt auch dich „liebe Lina“. Wir sind beide gleich lieb. Ich analysiere das noch.'] },
   { id: 'thalia-tassen', npc: 'thalia', tag: 'tassen-viele', text: ['Deine Tassensammlung ist eine kleine Weltkarte. Fehlt nur noch Reykjavík. Ich hab eine, falls du magst.'] },
 ];
