@@ -4,6 +4,7 @@
  * neu erblühte Farbe ins Sammelbuch (Reiter „Blumen“) ein.
  */
 import { registerCatch } from '../core/catching';
+import { checkSammlungen } from './sammlungen';
 import { BLOOM, type Plant } from '../core/garden';
 import { hashString, mulberry32 } from '../core/rng';
 import { COLORS, crossResult, SPECIES_BY_ID, variantId } from '../data/flowers';
@@ -85,6 +86,7 @@ export function registerBlooms(session: Session): string[] {
     fresh.push(p.flower);
   }
   if (fresh.length > 0) {
+    checkSammlungen(session);
     session.changed();
     for (const id of fresh.slice(0, 3)) {
       const gf = GARDEN_FLOWER[id];

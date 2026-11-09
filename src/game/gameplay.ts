@@ -29,6 +29,7 @@ import { onItemObtained } from './crafting';
 import { festTalk } from './festivals';
 import { isPartyTime } from './party';
 import { checkOliAnniversaries } from './romance';
+import { checkSammlungen } from './sammlungen';
 import { memoryLinesFor, memoryTags, takeMemory } from './erinnerungen';
 import { winstonOmaLines } from './pet';
 
@@ -388,6 +389,7 @@ export function checkDailyMail(session: Session) {
   data.mail.lastCheckDay = day;
   creditMonthlyInterest(session);
   checkOliAnniversaries(session);
+  checkSammlungen(session);
   if (firstCheck) return; // Am Einzugstag gibt es den Willkommensbrief (siehe welcomeLetter)
   for (const npc of NPCS) {
     if (npc.letters.length === 0 || !hasMovedIn(session, npc.id) || !mailDue(day, npc.id)) continue;
