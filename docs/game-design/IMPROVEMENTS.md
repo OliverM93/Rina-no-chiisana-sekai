@@ -17,7 +17,7 @@ abgesichert. Die folgenden Punkte betreffen Langzeitmotivation und Feinschliff.
 | W2 | ✅ **erledigt (Nov. 2026)** · **Leere Herzen füllen**: Jedes Herz bringt etwas (Brief, Rezept, Möbel, neues Gesprächsthema) – Christin 3–5, Lars 2/4/5, Thalia 1/3/5, Olaf 4/5 | ●● | ●● | ● (nur Daten) | ● | ●● |
 | W3 | **Oli-Beziehung in Stufen**: neue gemeinsame Momente mit steigenden Herzen bzw. Jahrestagen statt alles ab Einzug | ●●● | ●●● | ●● | ●● | ●● |
 | W4 | **Vorratskiste** im Haus (Lagerplätze außerhalb der Tasche) gegen Inventar-Reibung durch die vielen neuen Gegenstände | ●● | ●● | ● | ● | ●● |
-| W5 | **Dialog-Frische**: Zeilen, die auf Linas Erlebtes Bezug nehmen (erster Fang einer seltenen Art, neue Hausstufe, Jens' letzte Reise) + gezielt mehr Zeilen für Bewohner mit kleinen Pools (Thalia, Olaf, Lars) | ●●● | ●●● | ● | ●● | ●● |
+| W5 | 🔶 **Erinnerungen erledigt (Nov. 2026, 38 Zeilen)**, Pools für Thalia/Oli aufstocken offen · **Dialog-Frische**: Zeilen, die auf Linas Erlebtes Bezug nehmen (erster Fang einer seltenen Art, neue Hausstufe, Jens' letzte Reise) + gezielt mehr Zeilen für Bewohner mit kleinen Pools (Thalia, Olaf, Lars) | ●●● | ●●● | ● | ●● | ●● |
 | W6 | **Fänge mit Verwendung**: weitere Fisch-Gerichte im Bistro, Funde/Insekten ausstellen (Vitrine/Terrarium oder Museum-Ecke bei Thalia) – mehr Systemtiefe für die häufigste Aktivität | ●● | ●● | ●● | ●● | ● |
 | W7 | **Erfolge würdigen**: vollständige Sammelbuch-Seiten, alle Tassen, alle Farben → Brief + kleines Deko-Objekt (keine Plaketten-Liste) | ●● | ●● | ● | ● | ● |
 | W8 | **Playtest S1–S9** mit Lina/Stellvertretung durchführen, ⭐/h je Aktivität messen | – | ●● | – | ● | ●●● (vor W1/W6) |

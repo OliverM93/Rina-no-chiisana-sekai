@@ -28,6 +28,7 @@ import { itemIconUrl } from '../gfx/items';
 import { onItemObtained } from './crafting';
 import { festTalk } from './festivals';
 import { isPartyTime } from './party';
+import { memoryLinesFor, memoryTags, takeMemory } from './erinnerungen';
 
 // ---------------------------------------------------------------------------
 // Tasche & Sternchen
@@ -175,6 +176,7 @@ function dialogueContext(session: Session, npcId: string, firstToday: boolean): 
   if (session.data?.yard.items.some((i) => FURNITURE_BY_ITEM[i.itemId]?.def.coop === 'huhn')) tags.push('huehner');
   if (session.data?.yard.items.some((i) => FURNITURE_BY_ITEM[i.itemId]?.def.coop === 'wachtel')) tags.push('wachteln');
   if (w.rainbow) tags.push('regenbogen');
+  tags.push(...memoryTags(session));
   return {
     phase: getDayPhase(now),
     season: getSeason(now),
@@ -255,6 +257,7 @@ export function talkToNpc(session: Session, npcId: string): TalkOutcome {
     if (npc.birthday && npc.birthdayLines && isSameDayMonth(session.clock(), npc.birthday)) lines.push(...npc.birthdayLines.greeting);
     else if (fest.length > 0) lines.push(...fest);
     else lines.push(...pickLine(npc.dialogue.greetings, ctx));
+    lines.push(...takeMemory(session, npcId));
     // sanfter Hinweis, was für den nächsten Einzug noch fehlt (einmal am Tag zur Begrüßung)
     const hint = progressHint(session, npcId);
     if (hint && session.data) {
@@ -267,7 +270,7 @@ export function talkToNpc(session: Session, npcId: string): TalkOutcome {
       giveItem(session, treat.itemId, 1);
     }
   } else {
-    lines.push(...pickLine(npc.dialogue.chat, ctx));
+    lines.push(...pickLine([...npc.dialogue.chat, ...memoryLinesFor(session, npcId)], ctx));
   }
   if (result.heartUp) handleHeartUp(session, npc, st, lines);
   session.changed();
@@ -281,7 +284,7 @@ export function chatWithNpc(session: Session, npcId: string): TalkOutcome {
   st.talksToday += 1;
   // beim Weiterplaudern ab und zu (jedes dritte Mal) wieder ein Hinweis
   const hint = st.talksToday % 3 === 0 ? progressHint(session, npcId) : null;
-  const lines = hint ? [...hint] : pickLine(npc.dialogue.chat, dialogueContext(session, npcId, false));
+  const lines = hint ? [...hint] : pickLine([...npc.dialogue.chat, ...memoryLinesFor(session, npcId)], dialogueContext(session, npcId, false));
   return { lines: fill(session, lines), hearts: heartsFor(st.points) };
 }
 
