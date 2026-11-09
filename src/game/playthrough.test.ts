@@ -13,10 +13,12 @@ import { WAIT_SECONDS } from '../core/progress';
 import { FISH, INSECTS } from '../data/species';
 import { HOUSE_STAGES } from '../data/house';
 import { MILESTONES } from '../data/progress';
+import { WINSTON_DELAY_SECONDS } from '../data/winston';
 import { craftRecipe } from './crafting';
 import { giveItem, sellSlots } from './gameplay';
 import { buyFromCatalog, finishExpansion, orderExpansion, repayLoan } from './home';
 import { catchFish, catchInsect, giveStarterTools } from './nature';
+import { winstonAppeared, winstonDue, winstonFound, winstonState } from './pet';
 import { currentMilestone, progressHint } from './progress';
 import { Session } from './session';
 import { checkStory } from './story';
@@ -76,11 +78,22 @@ describe('Durchlauf der Rahmenhandlung', () => {
     // Oma gibt Hinweise, solange noch etwas fehlt
     expect(progressHint(s, 'gisela')).not.toBeNull();
 
-    // Olaf: Sammelbuch 3 + 200 Sternchen verkauft
+    // Olaf: Sammelbuch 3 + 200 Sternchen verkauft + Winston gefunden
     catchSome(s, 4);
     giveItem(s, 'apfel', 10, false);
     giveItem(s, 'stein', 10, false);
     sellAll(s);
+    // Winston ist nicht von Anfang an da: Kurz nach Omas Werkzeugen fiept es, Lina befreit ihn
+    expect(winstonState(s)).toBe('fehlt');
+    expect(winstonDue(s)).toBe(false); // die Uhr beginnt zu zählen
+    s.data!.playTimeSec += WINSTON_DELAY_SECONDS + 1;
+    expect(winstonDue(s)).toBe(true);
+    winstonAppeared(s);
+    expect(winstonState(s)).toBe('verfangen');
+    expect(checkStory(s), 'ohne Winston keine Ankündigung').not.toContain('olaf-angekuendigt');
+    expect(progressHint(s, 'gisela')?.join(' ')).toContain('Fiepen');
+    winstonFound(s);
+    expect(winstonState(s)).toBe('da');
     moveIn(s, 'olaf');
     s.setFlag('christinBegruesst');
 

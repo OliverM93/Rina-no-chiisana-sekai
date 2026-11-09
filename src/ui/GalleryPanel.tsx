@@ -89,7 +89,7 @@ export function GalleryPanel({ session }: { session: Session }) {
           {ARTWORKS.map((a) => {
             const hung = data.gallery.includes(a.id);
             return (
-              <button key={a.id} class={`gallery-frame ${hung ? '' : 'empty'} ${selected === a.id ? 'selected' : ''}`} onClick={() => setSelected(a.id)} aria-label={hung ? a.name : 'leerer Rahmen'}>
+              <button key={a.id} class={`gallery-frame ${hung ? '' : 'empty'} ${selected === a.id ? 'selected' : ''}`} onClick={() => setSelected(a.id)} onFocus={() => setSelected(a.id)} aria-label={hung ? a.name : 'leerer Rahmen'}>
                 {hung ? <Painting art={a} /> : <span>?</span>}
               </button>
             );

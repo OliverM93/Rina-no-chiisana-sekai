@@ -13,6 +13,8 @@ export interface Inventory {
 }
 
 export const INVENTORY_SIZE = 20;
+/** Plätze in der Vorratstruhe (alle Truhen im Haus teilen sich denselben Vorrat) */
+export const STORAGE_SIZE = 60;
 export const DEFAULT_MAX_STACK = 30;
 
 /** Liefert die maximale Stapelgröße eines Gegenstands. */

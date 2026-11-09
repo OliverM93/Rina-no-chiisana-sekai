@@ -29,6 +29,8 @@ import { onItemObtained } from './crafting';
 import { festTalk } from './festivals';
 import { isPartyTime } from './party';
 import { checkOliAnniversaries } from './romance';
+import { memoryLinesFor, memoryTags, takeMemory } from './erinnerungen';
+import { winstonOmaLines } from './pet';
 
 // ---------------------------------------------------------------------------
 // Tasche & Sternchen
@@ -160,6 +162,7 @@ function dialogueContext(session: Session, npcId: string, firstToday: boolean): 
   const w = weatherAt(now, session.weatherOverride);
   tags.push(`wetter-${w.kind}`);
   if (session.data?.flags.olafEingezogen) tags.push('olaf-da');
+  if (session.data?.flags.winstonGefunden) tags.push('winston-da');
   if (session.data?.world.dates.christinGiesst === session.today()) tags.push('beet-gegossen');
   if (session.data?.flags.oliEingezogen) tags.push('oli-da');
   if (session.data?.flags.jensEingezogen) tags.push('jens-da');
@@ -176,6 +179,7 @@ function dialogueContext(session: Session, npcId: string, firstToday: boolean): 
   if (session.data?.yard.items.some((i) => FURNITURE_BY_ITEM[i.itemId]?.def.coop === 'huhn')) tags.push('huehner');
   if (session.data?.yard.items.some((i) => FURNITURE_BY_ITEM[i.itemId]?.def.coop === 'wachtel')) tags.push('wachteln');
   if (w.rainbow) tags.push('regenbogen');
+  tags.push(...memoryTags(session));
   return {
     phase: getDayPhase(now),
     season: getSeason(now),
@@ -216,7 +220,7 @@ export function catchUpHeartLetters(session: Session): number {
   let sent = 0;
   for (const npc of NPCS) {
     const st = data.npcs[npc.id];
-    if (!st) continue;
+    if (!st || !hasMovedIn(session, npc.id)) continue;
     for (const h of claimHeartRewards(st, Object.keys(npc.heartLetters).map(Number))) {
       sendLetter(session, npc, npc.heartLetters[h], `${npc.id}-${npc.heartLetters[h].id}`);
       sent++;
@@ -256,6 +260,8 @@ export function talkToNpc(session: Session, npcId: string): TalkOutcome {
     if (npc.birthday && npc.birthdayLines && isSameDayMonth(session.clock(), npc.birthday)) lines.push(...npc.birthdayLines.greeting);
     else if (fest.length > 0) lines.push(...fest);
     else lines.push(...pickLine(npc.dialogue.greetings, ctx));
+    lines.push(...takeMemory(session, npcId));
+    lines.push(...winstonOmaLines(session, npcId));
     // sanfter Hinweis, was für den nächsten Einzug noch fehlt (einmal am Tag zur Begrüßung)
     const hint = progressHint(session, npcId);
     if (hint && session.data) {
@@ -268,7 +274,7 @@ export function talkToNpc(session: Session, npcId: string): TalkOutcome {
       giveItem(session, treat.itemId, 1);
     }
   } else {
-    lines.push(...pickLine(npc.dialogue.chat, ctx));
+    lines.push(...pickLine([...npc.dialogue.chat, ...memoryLinesFor(session, npcId)], ctx));
   }
   if (result.heartUp) handleHeartUp(session, npc, st, lines);
   session.changed();
@@ -282,7 +288,7 @@ export function chatWithNpc(session: Session, npcId: string): TalkOutcome {
   st.talksToday += 1;
   // beim Weiterplaudern ab und zu (jedes dritte Mal) wieder ein Hinweis
   const hint = st.talksToday % 3 === 0 ? progressHint(session, npcId) : null;
-  const lines = hint ? [...hint] : pickLine(npc.dialogue.chat, dialogueContext(session, npcId, false));
+  const lines = hint ? [...hint] : pickLine([...npc.dialogue.chat, ...memoryLinesFor(session, npcId)], dialogueContext(session, npcId, false));
   return { lines: fill(session, lines), hearts: heartsFor(st.points) };
 }
 
@@ -360,6 +366,18 @@ export function sendLetter(session: Session, npc: NpcDef, tmpl: LetterTemplate, 
   }
 }
 
+/**
+ * Ist der Bewohner wirklich da? Erst nach dem Einzug **und** der Begrüßungsszene (`…Begruesst`) – nach der
+ * Ankündigung ist er noch nicht im Dorf, und es kommt auch keine weitere Post von ihm.
+ */
+export function hasMovedIn(session: Session, npcId: string): boolean {
+  const npc = NPC_BY_ID[npcId];
+  const flags = session.data?.flags;
+  if (!npc || !flags) return false;
+  if (!npc.movesIn) return true;
+  return !!flags[npc.movesIn] && !!flags[npc.movesIn.replace('Eingezogen', 'Begruesst')];
+}
+
 /** Einmal pro Tag: kommt neue Post? */
 export function checkDailyMail(session: Session) {
   const data = session.data;
@@ -372,7 +390,7 @@ export function checkDailyMail(session: Session) {
   checkOliAnniversaries(session);
   if (firstCheck) return; // Am Einzugstag gibt es den Willkommensbrief (siehe welcomeLetter)
   for (const npc of NPCS) {
-    if (npc.letters.length === 0 || !mailDue(day, npc.id)) continue;
+    if (npc.letters.length === 0 || !hasMovedIn(session, npc.id) || !mailDue(day, npc.id)) continue;
     const tmpl = pickByDay(session, `${npc.id}:brief`, npc.letters);
     sendLetter(session, npc, tmpl, `${npc.id}-${tmpl.id}-${day}`);
   }
@@ -382,8 +400,9 @@ export function checkDailyMail(session: Session) {
 export function creditMonthlyInterest(session: Session): number {
   const data = session.data;
   if (!data) return 0;
-  const z = creditInterest(data.bank, session.today());
   const olaf = NPC_BY_ID.olaf;
+  if (!hasMovedIn(session, 'olaf')) return 0;
+  const z = creditInterest(data.bank, session.today());
   if (z > 0 && olaf) {
     const tmpl = pickByDay(session, 'olaf:zinsen', INTEREST_LETTERS);
     sendLetter(

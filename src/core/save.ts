@@ -18,11 +18,11 @@ import { createBank, type Bank, normalizeBank } from './bank';
 import { normalizeRecipeBook, type RecipeBook } from './crafting';
 import { createPet, normalizePet, type PetState } from './pet';
 import { type House, type HouseRules, type InfoFn, normalizeHouse, normalizeRoom, type Room, type RoomLayout } from './room';
-import { createInventory, type Inventory, normalizeInventory } from './inventory';
+import { createInventory, type Inventory, normalizeInventory, STORAGE_SIZE } from './inventory';
 import { createMailbox, type Mailbox, normalizeMailbox } from './mail';
 import { type DayMonth, DEFAULT_LINA_BIRTHDAY, formatIsoDay } from './time';
 
-export const SAVE_VERSION = 13;
+export const SAVE_VERSION = 14;
 export const SAVE_KEY = 'rina-no-chiisana-sekai.save';
 export const BACKUP_KEY = 'rina-no-chiisana-sekai.save.backup';
 
@@ -96,6 +96,8 @@ export interface SaveData {
   world: WorldState;
   /** Sammelbuch: gefangene Fische & Insekten */
   collection: Collection;
+  /** Vorratstruhe: Lagerplätze außerhalb der Tasche */
+  storage: Inventory;
   /** Linas Haus: Ausbaustufe, Räume, Möbel */
   house: House;
   /** Olafs Dorfkasse */
@@ -171,6 +173,7 @@ export function createNewSave(opts: NewGameOptions): SaveData {
     settings: { ...DEFAULT_SETTINGS },
     flags: {},
     inventory: createInventory(),
+    storage: createInventory(STORAGE_SIZE),
     money: 0,
     npcs: {},
     mail: createMailbox(),
@@ -238,6 +241,8 @@ export const MIGRATIONS: Record<number, (old: RawSave) => RawSave> = {
     const money = typeof old.money === 'number' ? old.money : 0;
     return { ...old, stats: { sold: Math.max(0, Math.floor(money)), bought: Math.max(0, furniture - 3), crafted: 0, cooked: 0 }, story: {} };
   },
+  // v13 → v14 (Vorratstruhe): Lagerplätze außerhalb der Tasche. `normalizeSave` legt sie leer an.
+  13: (old) => ({ ...old }),
 };
 
 export function migrate(raw: RawSave, migrations = MIGRATIONS, target = SAVE_VERSION): RawSave {
@@ -354,6 +359,7 @@ export function normalizeSave(raw: RawSave, spawn: { x: number; y: number }, now
     },
     flags,
     inventory: normalizeInventory(raw.inventory, isKnownItem),
+    storage: normalizeInventory(raw.storage, isKnownItem, STORAGE_SIZE),
     money: Math.max(0, Math.floor(finite(raw.money, 0))),
     npcs,
     mail: normalizeMailbox(raw.mail),

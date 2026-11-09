@@ -40,6 +40,12 @@ export const EGG_LINES: Record<CoopKind, readonly string[]> = {
   wachtel: ['Winzige gesprenkelte Wachteleier! 🥚', 'Die Wachteln haben fleißig gelegt.'],
 };
 
+/** Wenn mehrere Tage Eier im Nest lagen */
+export const MORE_EGGS: Record<CoopKind, string> = {
+  huhn: 'Die Hühner waren fleißig – das Nest ist voll! 🥚',
+  wachtel: 'Die Wachteln waren fleißig – da liegen gleich mehrere Tage Eier! 🥚',
+};
+
 export const NO_EGGS: Record<CoopKind, string> = {
   huhn: 'Die Hühner dösen. Morgen gibt es wieder frische Eier.',
   wachtel: 'Die Wachteln kuscheln sich zusammen. Morgen gibt es wieder Eier.',

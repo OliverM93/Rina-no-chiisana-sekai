@@ -17,6 +17,8 @@ abgesichert. Die folgenden Punkte betreffen Langzeitmotivation und Feinschliff.
 | W2 | ✅ **erledigt (Nov. 2026)** · **Leere Herzen füllen**: Jedes Herz bringt etwas (Brief, Rezept, Möbel, neues Gesprächsthema) – Christin 3–5, Lars 2/4/5, Thalia 1/3/5, Olaf 4/5 | ●● | ●● | ● (nur Daten) | ● | ●● |
 | W3 | ✅ **erledigt (Nov. 2026)** · **Oli-Beziehung in Stufen**: neue gemeinsame Momente mit steigenden Herzen bzw. Jahrestagen statt alles ab Einzug | ●●● | ●●● | ●● | ●● | ●● |
 | W4 | **Vorratskiste** im Haus (Lagerplätze außerhalb der Tasche) gegen Inventar-Reibung durch die vielen neuen Gegenstände | ●● | ●● | ● | ● | ●● |
+| W5 | 🔶 **Erinnerungen erledigt (Nov. 2026, 38 Zeilen)**, Pools für Thalia/Oli aufstocken offen · **Dialog-Frische**: Zeilen, die auf Linas Erlebtes Bezug nehmen (erster Fang einer seltenen Art, neue Hausstufe, Jens' letzte Reise) + gezielt mehr Zeilen für Bewohner mit kleinen Pools (Thalia, Olaf, Lars) | ●●● | ●●● | ● | ●● | ●● |
+| W4 | ✅ **erledigt (Nov. 2026)** · **Vorratskiste** im Haus (Lagerplätze außerhalb der Tasche) gegen Inventar-Reibung durch die vielen neuen Gegenstände | ●● | ●● | ● | ● | ●● |
 | W5 | **Dialog-Frische**: Zeilen, die auf Linas Erlebtes Bezug nehmen (erster Fang einer seltenen Art, neue Hausstufe, Jens' letzte Reise) + gezielt mehr Zeilen für Bewohner mit kleinen Pools (Thalia, Olaf, Lars) | ●●● | ●●● | ● | ●● | ●● |
 | W6 | **Fänge mit Verwendung**: weitere Fisch-Gerichte im Bistro, Funde/Insekten ausstellen (Vitrine/Terrarium oder Museum-Ecke bei Thalia) – mehr Systemtiefe für die häufigste Aktivität | ●● | ●● | ●● | ●● | ● |
 | W7 | **Erfolge würdigen**: vollständige Sammelbuch-Seiten, alle Tassen, alle Farben → Brief + kleines Deko-Objekt (keine Plaketten-Liste) | ●● | ●● | ● | ● | ● |
@@ -30,7 +32,7 @@ abgesichert. Die folgenden Punkte betreffen Langzeitmotivation und Feinschliff.
 | E2 | Geburtstage der übrigen Bewohner (🗓️) | wartet auf Daten (❓ O6) |
 | E3 | Sternbilder am Nachthimmel (🗓️) | verknüpfbar mit „Sterne gucken“ (W3) |
 | E4 | Französisches Bistro-Möbelset (🗓️) | Inhalt, keine Systemänderung |
-| E5 | Eier & Co. bis 2–3 Tage ansammeln lassen (❓ O5) | entschärft die Pflichtrunde ohne neue Mechanik |
+| E5 | ✅ erledigt (Nov. 2026): Eier & Winstons Fund bis 3 Tage ansammeln lassen (❓ O5) | entschärft die Pflichtrunde ohne neue Mechanik |
 | E6 | Automatische Balancing-Tests (siehe `PLAYTESTING.md` §5) | schützt Spannen bei neuen Inhalten |
 | E7 | Wegfindung um stehende Bewohner (technische Altlast) | Game Feel |
 | E8 | Kein weiteres 1×/Tag-Abholsystem ohne Not | Leitlinie, kein Feature |

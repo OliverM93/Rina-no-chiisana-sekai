@@ -15,16 +15,22 @@ Wetter und Feste laufen nach echter Zeit.
   paar Sekunden (`progressTick`, nur draußen & ohne offene Fenster). Hinweise gibt der Bewohner `hintBy` im
   Gespräch. **Echtzeit bleibt** für Tag/Nacht, Jahreszeiten, Wetter, Feste, Geburtstage, Tägliches, Treffen,
   Party, Sonntagsessen und Jens' Reisen.
+- **Post nur von Bewohnern, die da sind:** Nach der Ankündigung (Brief) kommt keine weitere Post, keine Herz-Briefe und keine Kontoauszüge, bis der Bewohner eingezogen **und** begrüßt ist (`hasMovedIn` in `game/gameplay.ts`).
 - **Einzüge:** `NpcDef.movesIn` = Story-Flag; Kartenobjekte mit `requires`/`until` erscheinen/verschwinden
   per Flag (`applyMapFlags`, z. B. Bauplatz → Haus). Ablauf in `game/story.ts`.
 - **Bewohner:** Daten in `src/data/npcs/<id>.ts` (Aussehen, Haus, Tagesablauf, Vorlieben, Dialog-Pools,
   Briefe). Ein neuer Bewohner braucht: Datei + Eintrag in `npcs/index.ts` + Haus/Bank in `VILLAGE_OBJECTS`.
   Dialogzeilen haben Bedingungen (`when`) und Gewichte; ausgewählt wird reproduzierbar pro Tag.
+- **Erinnerungen im Gespräch:** Die Bewohner nehmen Bezug auf das, was Lina erlebt hat (`data/erinnerungen.ts`, 38 Zeilen, `game/erinnerungen.ts`):
+  Hausausbau (Anbau, Dachzimmer, Wohnküche, Keller), Sammelbuch (10/20/30 Arten), Hühner, Gewächshaus, Tassensammlung, Sparbuch, schwarze
+  Blumen, Jens' letzte Reise (`{stadt}`), 1 Monat / 1 Jahr im Dorf. Wird eine Erinnerung neu wahr, erwähnt der Bewohner sie **einmal von sich aus**
+  beim ersten Gespräch des Tages (`takeMemory`, gemerkt in `world.dates['erinnerung:<id>']`); danach kommt die Zeile gelegentlich beim Plaudern
+  wieder dran. Es werden nur Dinge aus dem Spiel erwähnt, keine erfundenen Familiengeschichten.
 - **Freundschaft:** sinkt nie. Erstes Gespräch am Tag und erstes Geschenk am Tag zählen; Herz-Belohnungen
   kommen per Brief – **jedes Herz (1–5) bringt bei jedem Bewohner einen Brief mit Geschenk** (`heartLetters`, Test in
   `data/gifts.test.ts`). Meist persönliche Erinnerungsstücke mit Platz im Zimmer (Christins Setzkasten, Lars' Lern-Skelett
-  „Knochen-Kalle“ und Teddy „Dr. Brummbär“, Thalias Dorfkarte & Ammonit „Lina“, Papas Witze-Kalender – Anschauen zeigt den
-  Witz des Tages, `OLAF_CALENDAR_JOKES` – und das Foto auf Papas Schultern, Jens' Reisekoffer), dazu Rezepte (Thymiantee,
+  „Knochen-Kalle“ und Spruchtafel, Thalias Dorfkarte & Ammonit „Lina“, Papas Witze-Kalender – Anschauen zeigt den
+  Witz des Tages, `OLAF_CALENDAR_JOKES` – und das Familienbild, Jens' Reisekoffer), dazu Rezepte (Thymiantee,
   Steinmännchen), Farb-Samen mit Kreuzungs-Tipp und ein Frühbeet von Christin. Fehlen Briefe für schon erreichte Herzen
   (ältere Spielstände), liefert `catchUpHeartLetters` sie beim Laden nach.
 - **Tägliches:** Muscheln (reproduzierbar pro Datum), Obst wächst nach 3 Tagen nach, Felsen & Blumen 1×/Tag.
@@ -41,7 +47,7 @@ Wetter und Feste laufen nach echter Zeit.
   in den 8 Nachbarfeldern, kann beim Pflücken ein Misch-Same abfallen (`game/flowers.ts`, `seedDrop`; reproduzierbar
   pro Tag und Platz). Neu erblühte Farben tragen sich ins Sammelbuch ein (Reiter „Blumen“, `registerBlooms`), zählen aber
   nicht als Tier-Fund für Einzugs-Meilensteine. Geschenke: Wer die Art mag, mag jede Farbe, Mischfarben kommen nie
-  schlecht an (`giftPreferences`). **Samenstand (Phase 2):** Christin betreibt in der oberen linken Ecke des Dorfplatzes (nicht auf dem Weg) einen Stand (`samenstand`, Karten-Objekt
+  schlecht an (`giftPreferences`). **Samenstand (Phase 2):** Christin betreibt auf der Ostseite des Dorfplatzes (nicht auf dem Weg und nicht vor einem Gebäude – ein Test in `worldmap.test.ts` hält Stände & Schilder von Fassaden fern) einen Stand (`samenstand`, Karten-Objekt
   `seedstall`, steht ab Olafs Einzug; `data/seedstand.ts`, `game/seedstand.ts`, Fenster `ui/SeedStandPanel.tsx`). Reiter „Blumen“, immer da:
   Standard-Samen jeder Blumenart (plus Kamille & Pfefferminze); dazu täglich drei wechselnde **Farb-Samen** (`dailyColorSeeds`, reproduzierbar pro Tag),
   damit Lina Kreuzungs-Partner bekommt. Misch-Farben gibt es nie zu kaufen. Preis = Verkaufswert × 2,5 (mind. 12 ⭐), Menge 1× oder 5×,
@@ -95,13 +101,25 @@ Wetter und Feste laufen nach echter Zeit.
   nachts Sterne). Alles über Story-Flags (`wunsch-<id>`, `wunsch-erzaehlt-<id>`), kein neues Spielstand-Feld. Keine Frist,
   keine Reihenfolge; Thalias Dorfkarte zeigt 💭 bei Bewohnern mit offenem Wunsch. Mehrere Wünsche je Bewohner sind
   vorbereitet (`order`).
+- **Vorratstruhe:** Möbel `vorratstruhe` (Katalog, 650 ⭐, 2×1, Dinge dürfen oben drauf stehen) öffnet ein Lager mit **60 Plätzen**
+  (`SaveData.storage`, `game/storage.ts`, Fenster `ui/StoragePanel.tsx`). Klick (oder Enter/Leertaste, Pfeiltasten) legt einen ganzen
+  Stapel von der Tasche in die Truhe und zurück; Werkzeuge bleiben in der Tasche; „↕ Sortieren“ ordnet die Truhe. **Alle Truhen teilen sich
+  denselben Vorrat** – nichts geht verloren, wenn Lina eine verschiebt oder wegräumt. Was nicht mehr passt, bleibt, wo es war.
 - **Nichts geht für immer verloren:** Werkzeuge und einmalige Geschenke (Möbel mit `gift: true`, außer Kunst) sind
   Erinnerungsstücke (`isKeepsake`): unverkäuflich (`price: null`) und nicht verschenkbar. Fehlt beim Laden etwas, das
   Lina haben sollte (`missingKeepsakes`: Omas Werkzeuge, Thalias Schaufel, Olis Einzugsmöbel), kommt es zurück.
   Wichtige Übergaben laufen über `World3D.giveOrDrop` – bei voller Tasche landet es vor Linas Füßen. Jede Samensorte
   braucht eine Quelle außer der eigenen Blüte (Test in `data/keepsakes.test.ts`).
+- **Winston wird gefunden:** Neue Spiele starten ohne Winston (`winstonNochNicht`). Etwa 2½ Minuten Spielzeit nach Omas Werkzeugen
+  (`WINSTON_DELAY_SECONDS`, `game/pet.ts → winstonDue`) fiept es von der Wiese hinter Linas Haus; dort sitzt ein kleiner Dackel im
+  Gestrüpp verfangen (`WINSTON_SPOT`, `Winston.strand`). Lina geht hin, wann sie mag, und befreit ihn („🤲 Vorsichtig befreien“);
+  das Schildchen am Halsband verrät den Namen, und er folgt ihr ab jetzt (`winstonGefunden`). Oma kommentiert es beim nächsten
+  Gespräch einmal. **Olafs Ankündigung braucht diesen Fund** (Meilenstein, Omas Hinweis: „Hörst du das Fiepen?“). Zeilen, die
+  „Winston“ nennen, kommen erst dran, wenn er da ist (Tag `winston-da`, `core/dialogue.ts`). Ältere Spielstände haben Winston
+  weiter von Anfang an (`winstonState` setzt das Flag nach).
 - **Winston:** läuft auf Linas eigener Spur hinterher (bleibt nie an Ecken hängen), setzt sich neben sie,
-  wenn sie stehen bleibt. Texte & Funde in `data/winston.ts`.
+  wenn sie stehen bleibt. Texte & Funde in `data/winston.ts`. Er buddelt, wenn Lina kurz stehen bleibt – **verpasste Tage sammeln sich bis zu
+  3 Fundstellen an** (`DIG_DAYS_MAX`, `core/pet.ts`).
 - **Werkbank:** Rezepte in `data/recipes.ts` (`start`, `fund` = beim ersten Fund, sonst als Brief-Geschenk
   `rezept-<id>` – Rezeptkarten werden beim Annehmen sofort gelernt). Ergebnisse sind Möbel mit
   `crafted: true` (nicht im Katalog). Ein Test prüft, dass jedes Rezept erreichbar ist.
@@ -198,4 +216,5 @@ Wetter und Feste laufen nach echter Zeit.
   **Kleine Freuden:** Fußspuren im Schnee (`Footprints3D`, auch Winstons Pfoten), Atemwölkchen bei Kälte
   (Fx `atem`), Leerlauf „Flocken fangen“, wenn es schneit.
 - **Tiere:** Ställe sind Gartenmöbel mit `coop: 'huhn' | 'wachtel'`, die Tiere kommen mit (`data/animals.ts`).
-  Abholtage in `world.coopDay`; Logik in `core/coop.ts` & `game/animals.ts`.
+  Abholtage in `world.coopDay`; Logik in `core/coop.ts` & `game/animals.ts`. **Eier sammeln sich bis zu 3 Tage im Nest an**
+  (`EGG_DAYS_MAX`, `eggsWaiting`): Wer einen Tag auslässt, verpasst nichts; ein neuer Stall hat nur die Eier von heute.
