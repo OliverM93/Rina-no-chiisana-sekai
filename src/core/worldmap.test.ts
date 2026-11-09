@@ -121,11 +121,18 @@ describe('Dorfkarte', () => {
     const m = buildWorldMap(VILLAGE_LAYOUT, VILLAGE_OBJECTS, VILLAGE_SPAWN);
     expect(isActive(m, 'bauplatz-1')).toBe(true);
     expect(isActive(m, 'haus-olaf')).toBe(false);
-    expect(m.grid.isBlocked(17, 15)).toBe(false);
+    expect(m.grid.isBlocked(18, 15)).toBe(false);
     expect(applyMapFlags(m, { olafEingezogen: true }).sort()).toEqual(['bauplatz-1', 'haus-olaf', 'samenstand']);
     expect(isActive(m, 'haus-olaf')).toBe(true);
-    expect(m.grid.isBlocked(17, 15)).toBe(true);
+    expect(m.grid.isBlocked(18, 15)).toBe(true);
     expect(applyMapFlags(m, { olafEingezogen: true })).toEqual([]);
+  });
+
+  it('zwischen Linas und Olafs Haus bleibt ein Durchgang nach Osten frei (nicht nur diagonal)', () => {
+    const m = buildWorldMap(VILLAGE_LAYOUT, VILLAGE_OBJECTS, VILLAGE_SPAWN);
+    applyMapFlags(m, { olafEingezogen: true });
+    expect(findPath(m.grid, { x: 15, y: 14 }, { x: 17, y: 14 })).not.toBeNull();
+    expect(findPath(m.grid, VILLAGE_SPAWN, { x: 25, y: 14 })).not.toBeNull();
   });
 
   it('macht die Brücke begehbar und den Fluss daneben nicht', () => {

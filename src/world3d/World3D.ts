@@ -236,6 +236,8 @@ export class World3D {
   /** Oli drinnen (wenn er zu Hause ist und Lina auch) */
   private homeOli: Character | null = null;
   private homeOliKey = '';
+  /** uid der Hantelbank, auf der Oli gerade trainiert (für die Langhantel) */
+  private homeOliBench = '';
   /** Wie lange Lina schon stillsteht (für Winstons Buddeln & Körbchen) */
   private linaIdle = 0;
   private basketCheck = 0;
@@ -1954,10 +1956,21 @@ export class World3D {
       if (spot.lie !== undefined) {
         c.setSitting(true);
         c.seatHeight = spot.lie;
+        this.homeOliBench = spot.work === 'stemmen' ? spot.uid ?? '' : '';
+        if (spot.work) {
+          c.work = spot.work;
+          c.face(spot.facing);
+          c.sync(0);
+        }
       } else c.face(spot.facing);
     }
     const walkSolid = (tx: number, ty: number) => this.interior.isBlocked(room, tx - ROOM_X, ty - ROOM_Y);
     if (c.visible) c.update(dtMs, { dx: 0, dy: 0, run: false }, this.homeOliWalk ? walkSolid : () => true);
+    // Bankdrücken: die Langhantel geht mit Olis Armen auf und ab (gleicher Takt wie die Pose)
+    if (this.homeOliBench && c.work === 'stemmen') {
+      const bell = this.interior.model(this.homeOliBench)?.group.getObjectByName('langhantel');
+      if (bell) bell.position.y = 0.86 - (1 - (Math.sin(c.clock * 2.2) + 1) / 2) * 0.13;
+    }
     // ab und zu einfach so ein Küsschen, wenn Lina in der Nähe herumsteht
     const player = this.player;
     const now = performance.now();
@@ -2050,7 +2063,7 @@ export class World3D {
   }
 
   /** Wo steht Oli gerade im Zimmer? (Zimmerkoordinaten, Feldmitte = +0.5) */
-  private homeOliSpot(room: Room, label: string, sleeping: boolean): { x: number; y: number; facing: 'up' | 'down' | 'left' | 'right'; lie?: number } | null {
+  private homeOliSpot(room: Room, label: string, sleeping: boolean): { x: number; y: number; facing: 'up' | 'down' | 'left' | 'right'; lie?: number; work?: 'tippen' | 'stemmen'; uid?: string } | null {
     const find = (pred: (id: string) => boolean) => room.items.find((i) => pred(FURNITURE_BY_ITEM[i.itemId]?.def.id ?? ''));
     if (sleeping) {
       const futon = find((id) => id === 'futon');
@@ -2061,6 +2074,28 @@ export class World3D {
     const anchorIds = /Kaffee|kocht/.test(label) ? ['herd', 'kaffeemaschine', 'kotatsu', 'chabudai'] : /programmiert/.test(label) ? ['schreibtisch-pc'] : /trainiert/.test(label) ? ['hantelbank'] : [];
     const grid = this.roomGrid();
     const free = (x: number, y: number) => x >= 0 && y >= 0 && x < this.lay.w && y < this.lay.h && !grid.isBlocked(x, y) && !exitAt(this.lay, x, y);
+    // Programmieren: Oli sitzt auf dem Bürostuhl vor dem Rechner; Trainieren: er liegt auf der Hantelbank und stemmt
+    const job = /programmiert/.test(label) ? 'schreibtisch-pc' : /trainiert/.test(label) ? 'hantelbank' : null;
+    const jobItem = job ? find((x) => x === job) : undefined;
+    if (jobItem) {
+      const fp0 = footprint(FURNITURE_BY_ITEM[jobItem.itemId].def, jobItem.rot);
+      const cx0 = jobItem.x + fp0.w / 2;
+      const cy0 = jobItem.y + fp0.d / 2;
+      const front: Array<[number, number]> = [[0, 1], [-1, 0], [0, -1], [1, 0]];
+      const faces = ['up', 'right', 'down', 'left'] as const;
+      const [fx, fy] = front[jobItem.rot];
+      if (job === 'schreibtisch-pc') {
+        const sx = cx0 + fx * 0.66;
+        const sy = cy0 + fy * 0.66;
+        if (free(Math.floor(sx), Math.floor(sy))) return { x: sx, y: sy, facing: faces[jobItem.rot], lie: 0.45, work: 'tippen' };
+      } else {
+        // Bank liegt entlang der Möbel-X-Achse, der Kopf zeigt zur Hantel (links, −x)
+        const ax: Array<[number, number]> = [[1, 0], [0, 1], [-1, 0], [0, -1]];
+        const [ux, uy] = ax[jobItem.rot];
+        const facesAlong = ['right', 'down', 'left', 'up'] as const;
+        return { x: cx0 + ux * 0.2, y: cy0 + uy * 0.2, facing: facesAlong[jobItem.rot], lie: 0.58, work: 'stemmen', uid: jobItem.uid };
+      }
+    }
     for (const id of anchorIds) {
       const a = find((x) => x === id);
       if (!a) continue;

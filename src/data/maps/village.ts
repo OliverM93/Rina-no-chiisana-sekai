@@ -76,9 +76,9 @@ export const VILLAGE_OBJECTS: readonly MapObjectDef[] = [
   { id: 'bank-gisela', kind: 'bench', x: 45, y: 17 },
 
   // Bauplätze für zukünftige Bewohner
-  { id: 'bauplatz-1', kind: 'plot', x: 17, y: 15, until: 'olafEingezogen' },
+  { id: 'bauplatz-1', kind: 'plot', x: 18, y: 15, until: 'olafEingezogen' },
   // Olaf & Christin (ziehen in M6 ein) – mit der Dorfkasse
-  { id: 'haus-olaf', kind: 'house', x: 17, y: 15, variant: 'mint', requires: 'olafEingezogen' },
+  { id: 'haus-olaf', kind: 'house', x: 18, y: 15, variant: 'mint', requires: 'olafEingezogen' },
   { id: 'bauplatz-3', kind: 'plot', x: 48, y: 14, until: 'jensEingezogen' },
   // Lars' Praxis mit Apotheke am Dorfplatz (M7c)
   { id: 'bauplatz-2', kind: 'plot', x: 22, y: 12, until: 'larsEingezogen' },
@@ -92,7 +92,7 @@ export const VILLAGE_OBJECTS: readonly MapObjectDef[] = [
   // Dorfplatz
   { id: 'brunnen', kind: 'fountain', x: 26, y: 18 },
   { id: 'schwarzes-brett', kind: 'board', x: 28, y: 21 }, // bewusst nicht vor einem Gebäude (nördlich davon steht nichts, das es verdeckt)
-  { id: 'laterne-platz-1', kind: 'lantern', x: 22, y: 16 },
+  { id: 'laterne-platz-1', kind: 'lantern', x: 23, y: 16 },
   { id: 'laterne-platz-2', kind: 'lantern', x: 31, y: 16 },
   { id: 'laterne-platz-3', kind: 'lantern', x: 23, y: 22 },
   { id: 'laterne-platz-4', kind: 'lantern', x: 31, y: 22 },
