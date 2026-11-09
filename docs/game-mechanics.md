@@ -15,6 +15,7 @@ Wetter und Feste laufen nach echter Zeit.
   paar Sekunden (`progressTick`, nur draußen & ohne offene Fenster). Hinweise gibt der Bewohner `hintBy` im
   Gespräch. **Echtzeit bleibt** für Tag/Nacht, Jahreszeiten, Wetter, Feste, Geburtstage, Tägliches, Treffen,
   Party, Sonntagsessen und Jens' Reisen.
+- **Post nur von Bewohnern, die da sind:** Nach der Ankündigung (Brief) kommt keine weitere Post, keine Herz-Briefe und keine Kontoauszüge, bis der Bewohner eingezogen **und** begrüßt ist (`hasMovedIn` in `game/gameplay.ts`).
 - **Einzüge:** `NpcDef.movesIn` = Story-Flag; Kartenobjekte mit `requires`/`until` erscheinen/verschwinden
   per Flag (`applyMapFlags`, z. B. Bauplatz → Haus). Ablauf in `game/story.ts`.
 - **Bewohner:** Daten in `src/data/npcs/<id>.ts` (Aussehen, Haus, Tagesablauf, Vorlieben, Dialog-Pools,
@@ -23,8 +24,8 @@ Wetter und Feste laufen nach echter Zeit.
 - **Freundschaft:** sinkt nie. Erstes Gespräch am Tag und erstes Geschenk am Tag zählen; Herz-Belohnungen
   kommen per Brief – **jedes Herz (1–5) bringt bei jedem Bewohner einen Brief mit Geschenk** (`heartLetters`, Test in
   `data/gifts.test.ts`). Meist persönliche Erinnerungsstücke mit Platz im Zimmer (Christins Setzkasten, Lars' Lern-Skelett
-  „Knochen-Kalle“ und Teddy „Dr. Brummbär“, Thalias Dorfkarte & Ammonit „Lina“, Papas Witze-Kalender – Anschauen zeigt den
-  Witz des Tages, `OLAF_CALENDAR_JOKES` – und das Foto auf Papas Schultern, Jens' Reisekoffer), dazu Rezepte (Thymiantee,
+  „Knochen-Kalle“ und Spruchtafel, Thalias Dorfkarte & Ammonit „Lina“, Papas Witze-Kalender – Anschauen zeigt den
+  Witz des Tages, `OLAF_CALENDAR_JOKES` – und das Familienbild, Jens' Reisekoffer), dazu Rezepte (Thymiantee,
   Steinmännchen), Farb-Samen mit Kreuzungs-Tipp und ein Frühbeet von Christin. Fehlen Briefe für schon erreichte Herzen
   (ältere Spielstände), liefert `catchUpHeartLetters` sie beim Laden nach.
 - **Tägliches:** Muscheln (reproduzierbar pro Datum), Obst wächst nach 3 Tagen nach, Felsen & Blumen 1×/Tag.
@@ -41,7 +42,7 @@ Wetter und Feste laufen nach echter Zeit.
   in den 8 Nachbarfeldern, kann beim Pflücken ein Misch-Same abfallen (`game/flowers.ts`, `seedDrop`; reproduzierbar
   pro Tag und Platz). Neu erblühte Farben tragen sich ins Sammelbuch ein (Reiter „Blumen“, `registerBlooms`), zählen aber
   nicht als Tier-Fund für Einzugs-Meilensteine. Geschenke: Wer die Art mag, mag jede Farbe, Mischfarben kommen nie
-  schlecht an (`giftPreferences`). **Samenstand (Phase 2):** Christin betreibt in der oberen linken Ecke des Dorfplatzes (nicht auf dem Weg) einen Stand (`samenstand`, Karten-Objekt
+  schlecht an (`giftPreferences`). **Samenstand (Phase 2):** Christin betreibt auf der Ostseite des Dorfplatzes (nicht auf dem Weg und nicht vor einem Gebäude – ein Test in `worldmap.test.ts` hält Stände & Schilder von Fassaden fern) einen Stand (`samenstand`, Karten-Objekt
   `seedstall`, steht ab Olafs Einzug; `data/seedstand.ts`, `game/seedstand.ts`, Fenster `ui/SeedStandPanel.tsx`). Reiter „Blumen“, immer da:
   Standard-Samen jeder Blumenart (plus Kamille & Pfefferminze); dazu täglich drei wechselnde **Farb-Samen** (`dailyColorSeeds`, reproduzierbar pro Tag),
   damit Lina Kreuzungs-Partner bekommt. Misch-Farben gibt es nie zu kaufen. Preis = Verkaufswert × 2,5 (mind. 12 ⭐), Menge 1× oder 5×,
@@ -104,6 +105,13 @@ Wetter und Feste laufen nach echter Zeit.
   Lina haben sollte (`missingKeepsakes`: Omas Werkzeuge, Thalias Schaufel, Olis Einzugsmöbel), kommt es zurück.
   Wichtige Übergaben laufen über `World3D.giveOrDrop` – bei voller Tasche landet es vor Linas Füßen. Jede Samensorte
   braucht eine Quelle außer der eigenen Blüte (Test in `data/keepsakes.test.ts`).
+- **Winston wird gefunden:** Neue Spiele starten ohne Winston (`winstonNochNicht`). Etwa 2½ Minuten Spielzeit nach Omas Werkzeugen
+  (`WINSTON_DELAY_SECONDS`, `game/pet.ts → winstonDue`) fiept es von der Wiese hinter Linas Haus; dort sitzt ein kleiner Dackel im
+  Gestrüpp verfangen (`WINSTON_SPOT`, `Winston.strand`). Lina geht hin, wann sie mag, und befreit ihn („🤲 Vorsichtig befreien“);
+  das Schildchen am Halsband verrät den Namen, und er folgt ihr ab jetzt (`winstonGefunden`). Oma kommentiert es beim nächsten
+  Gespräch einmal. **Olafs Ankündigung braucht diesen Fund** (Meilenstein, Omas Hinweis: „Hörst du das Fiepen?“). Zeilen, die
+  „Winston“ nennen, kommen erst dran, wenn er da ist (Tag `winston-da`, `core/dialogue.ts`). Ältere Spielstände haben Winston
+  weiter von Anfang an (`winstonState` setzt das Flag nach).
 - **Winston:** läuft auf Linas eigener Spur hinterher (bleibt nie an Ecken hängen), setzt sich neben sie,
   wenn sie stehen bleibt. Texte & Funde in `data/winston.ts`.
 - **Werkbank:** Rezepte in `data/recipes.ts` (`start`, `fund` = beim ersten Fund, sonst als Brief-Geschenk

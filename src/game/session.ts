@@ -229,6 +229,7 @@ export class Session {
   startNewGame(appearance: Appearance, villageName: string) {
     const data = createNewSave({ appearance, villageName, spawn: this.spawnPoint(), now: this.clock(), house: STARTER_HOUSE, recipes: START_RECIPES });
     for (const npc of NPCS) data.npcs[npc.id] = createNpcState();
+    data.flags.winstonNochNicht = true; // Winston wird erst kurz nach Spielbeginn gefunden
     this.begin(data);
     this.save();
   }

@@ -57,3 +57,41 @@ export const DIG_LINES: readonly string[] = [
   'Wuff! Winston hat ein Loch gebuddelt und präsentiert stolz seinen Fund.',
   'Winston buddelt wie ein Weltmeister. Da liegt etwas!',
 ];
+
+// ---------------------------------------------------------------------------
+// Winston wird gefunden (kurz nach Spielbeginn, statt von Anfang an dabei zu sein)
+// ---------------------------------------------------------------------------
+
+/** Spielzeit (Sekunden) nach Omas Werkzeugen, bis ein leises Fiepen zu hören ist */
+export const WINSTON_DELAY_SECONDS = 150;
+/** Wo er sich im Gestrüpp verfangen hat (Kachel, neben der Bank auf der Wiese) */
+export const WINSTON_SPOT = { x: 10.5, y: 18.5 };
+/** Story-Flags */
+export const WINSTON_FLAGS = {
+  /** Neues Spiel: Winston kommt erst noch (ältere Spielstände haben ihn schon) */
+  pending: 'winstonNochNicht',
+  appeared: 'winstonErschienen',
+  found: 'winstonGefunden',
+  omaTold: 'winstonOmaGesagt',
+} as const;
+
+export const WINSTON_APPEARS_TOAST = 'Von der Wiese hinter dem Haus kommt ein leises Fiepen … 🐾';
+
+export const WINSTON_FIND_LINES: readonly string[] = [
+  'Im Gestrüpp hat sich ein kleiner Dackel verheddert. Sein rosa Halsband hängt an einer Ranke fest.',
+  'Er winselt leise und schaut dich mit riesigen Augen an. 🥺',
+];
+
+export const WINSTON_FREED_LINES: readonly string[] = [
+  'Ritsch – das Halsband ist frei!',
+  'Der Kleine schüttelt sich, schnuppert an deiner Hand und leckt dir einmal über die Finger. 💕',
+  'An seinem Halsband hängt ein goldenes Schildchen: „Winston“.',
+  'Er weicht dir nicht mehr von der Seite. Und jetzt hast du wohl einen Dackel. 🐾',
+];
+
+/** Oma beim ersten Gespräch danach */
+export const GISELA_WINSTON_LINES: readonly string[] = [
+  'Na, wer ist denn der Kleine da neben dir?',
+  'Winston? Den kenn ich! Der hat schon die ganze Woche an meiner Bank geschnuppert. Ich hab ihm ein Stück Leberwurstbrot gegeben. Er hat es sehr ernst genommen.',
+  'Gegen so einen Blick ist man machtlos, Kind. Er hat sich dich ausgesucht. Und ich hab immer das letzte Wort – also: Er bleibt.',
+];
