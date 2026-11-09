@@ -30,7 +30,7 @@ export const GISELA: NpcDef = {
   ],
   preferences: {
     loves: ['pfirsich', 'herzmuschel', 'wildblumen', 'rose', 'vergissmeinnicht', 'hering', 'ei', 'apfelkuchen', 'lavendelkekse', 'kamillentee', 'kraeutermischung', 'kartoffelsuppe', 'kraeuterquark', 'strauss-bunt', 'strauss-lavendel'],
-    likes: ['wachtelei', 'apfel', 'jakobsmuschel', 'schneckenhaus', 'seestern', 'glitzerstein', 'tulpe', 'lavendel', 'sonnenblume', 'scholle', 'dorsch', 'marienkaefer', 'zitronenfalter', 'kartoffel', 'petersilie', 'karottensuppe', 'kuerbissuppe', 'schnittlauch', 'strauss-rosen', 'strauss-sonne', 'strauss-mischfarben', 'strauss-kraeuter'],
+    likes: ['wachtelei', 'apfel', 'jakobsmuschel', 'schneckenhaus', 'seestern', 'glitzerstein', 'tulpe', 'lavendel', 'sonnenblume', 'scholle', 'dorsch', 'marienkaefer', 'zitronenfalter', 'kartoffel', 'petersilie', 'karottensuppe', 'kuerbissuppe', 'schnittlauch', 'strauss-rosen', 'strauss-sonne', 'strauss-mischfarben', 'strauss-kraeuter', 'raeuchermakrele'],
     dislikes: ['birne', 'ast', 'stein', 'waldameise', 'weinbergschnecke', 'maikaefer', 'heupferd', 'grashuepfer', 'ohrenqualle', 'aal', 'wels', 'strandkrabbe'],
   },
 
