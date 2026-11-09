@@ -28,7 +28,7 @@ export const LARS: NpcDef = {
   ],
   preferences: {
     loves: ['thymiantee', 'pfefferminztee', 'fischbroetchen', 'apfelkuchen', 'dorsch', 'hecht', 'gruener-salat', 'karottensuppe', 'strauss-kraeuter'],
-    likes: ['apfel', 'birne', 'ei', 'ruehrei', 'obstsalat', 'kamillentee', 'barsch', 'hering', 'pfefferminze', 'kamille', 'hirschkaefer', 'glitzerstein', 'karotte', 'salat', 'tomate', 'kuerbissuppe', 'kartoffelsuppe', 'petersilie', 'strauss-sonne', 'strauss-lavendel', 'strauss-bunt'],
+    likes: ['apfel', 'birne', 'ei', 'ruehrei', 'obstsalat', 'kamillentee', 'barsch', 'hering', 'pfefferminze', 'kamille', 'hirschkaefer', 'glitzerstein', 'karotte', 'salat', 'tomate', 'kuerbissuppe', 'kartoffelsuppe', 'petersilie', 'strauss-sonne', 'strauss-lavendel', 'strauss-bunt', 'dorsch-gemuese', 'forelle-kraeuter'],
     dislikes: ['weinbergschnecke', 'ohrenqualle', 'aal'],
   },
   dialogue: {

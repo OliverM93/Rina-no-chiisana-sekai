@@ -53,7 +53,7 @@ und Galerie.
 
 | Station | Spanne | Auffällig |
 |---|---|---|
-| Küche (19) | 1,3 – 3,3× | `bratapfel` **6,3×** (Winter, Rezept per Adventskalender), `kuerbissuppe` 3,3× |
+| Küche (26, davon 7 Fischgerichte 1,6–1,8×) | 1,3 – 3,3× | `bratapfel` **6,3×** (Winter, Rezept per Adventskalender), `kuerbissuppe` 3,3× |
 | Apotheke (4) | 1,5 – 2,2× | – |
 | Werkbank-Möbel | 0,8 – 3,2× | Möbelwert zählt nur ¼ → Verkaufen lohnt nicht; sie sind **Deko**, keine Einnahme |
 | Sträuße | 1,2 – 1,8× | Schwarz-Strauß 700 ⭐ (seltene Mischfarbe) |

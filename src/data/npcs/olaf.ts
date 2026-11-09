@@ -28,7 +28,7 @@ export const OLAF: NpcDef = {
   ],
   preferences: {
     loves: ['hering', 'dorsch', 'glitzerstein', 'teeservice', 'fischbroetchen', 'kartoffelsuppe'],
-    likes: ['ei', 'wachtelei', 'apfel', 'birne', 'scholle', 'barsch', 'stein', 'tulpe', 'keks', 'kartoffel', 'kraeuterquark', 'tomatensalat', 'strauss-bunt', 'strauss-rosen', 'strauss-kraeuter'],
+    likes: ['ei', 'wachtelei', 'apfel', 'birne', 'scholle', 'barsch', 'stein', 'tulpe', 'keks', 'kartoffel', 'kraeuterquark', 'tomatensalat', 'strauss-bunt', 'strauss-rosen', 'strauss-kraeuter', 'karpfen-kartoffeln', 'scholle-kartoffel'],
     dislikes: ['waldameise', 'ohrenqualle', 'weinbergschnecke'],
   },
   dialogue: {

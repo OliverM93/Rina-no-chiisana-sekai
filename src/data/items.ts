@@ -104,6 +104,13 @@ const list: ItemDef[] = [
   // Aus der Kochshow
   { id: 'apfelpfannkuchen', name: 'Apfelpfannkuchen', plural: 'Apfelpfannkuchen', category: 'essen', price: 110, description: 'Fluffig, mit Apfelscheiben und einer Prise Zimt. Fast so gut wie bei Oma. Psst!' },
   { id: 'fischsuppe', name: 'Fischsuppe mit Minze', plural: 'Teller Fischsuppe', category: 'essen', price: 160, description: 'Klingt komisch, schmeckt himmlisch. Lars sagt: „Sehr gesund.“ Oli sagt: „Nochmal!“' },
+  { id: 'forelle-kraeuter', name: 'Forelle mit Kräutern', plural: 'Forellen mit Kräutern', category: 'essen', price: 310, description: 'Knusprig gebraten, mit Petersilie und Thymian. Duftet nach Bach, Sommer und Butter.' },
+  { id: 'karpfen-kartoffeln', name: 'Karpfen mit Kartoffeln', plural: 'Portionen Karpfen mit Kartoffeln', category: 'essen', price: 270, description: 'Ein Klassiker zum Jahresende. Olaf sagt: „Solide.“ Das ist bei ihm das höchste Lob.' },
+  { id: 'scholle-kartoffel', name: 'Scholle mit Bratkartoffeln', plural: 'Portionen Scholle mit Bratkartoffeln', category: 'essen', price: 175, description: 'Die flache Scholle, goldgelb gebraten. Dazu knusprige Kartoffeln. Einfach und herrlich.' },
+  { id: 'raeuchermakrele', name: 'Geräucherte Makrele', plural: 'Geräucherte Makrelen', category: 'essen', price: 200, description: 'Mit ein paar Ästen im Rauch gegart. Riecht nach Lagerfeuer und Meer. Oma: „Pfui.“ Und dann: „Gib mal ein Stück.“' },
+  { id: 'dorsch-gemuese', name: 'Dorsch auf Gemüsebett', plural: 'Portionen Dorsch auf Gemüsebett', category: 'essen', price: 340, description: 'Zarter Dorsch auf Zucchini und Tomate, ganz leicht und sommerlich. Lars sagt: „Ärztlich empfohlen.“' },
+  { id: 'aal-gruen', name: 'Aal grün', plural: 'Portionen Aal grün', category: 'essen', price: 760, description: 'Ein Festessen mit viel frischem Grün. Jens: „Ma chérie, das ist Kunst mit Gräten.“' },
+  { id: 'steinbutt-ofen', name: 'Steinbutt aus dem Ofen', plural: 'Portionen Steinbutt aus dem Ofen', category: 'essen', price: 900, description: 'Der König der Plattfische, im Ofen mit Thymian gegart. Nur für besondere Anlässe. Oder einfach für Dienstag.' },
   { id: 'blumensalat', name: 'Blumensalat', plural: 'Schüsseln Blumensalat', category: 'essen', price: 140, description: 'Ein bunter Salat mit essbaren Blüten. Zu schön zum Essen. Fast.' },
   // Feste
   { id: 'plaetzchen', name: 'Omas Plätzchen', plural: 'Omas Plätzchen', category: 'essen', price: 15, description: 'Zimtsterne, Vanillekipferl, Butterplätzchen. Weihnachten in Keksform.' },

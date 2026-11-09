@@ -144,6 +144,9 @@ Wetter und Feste laufen nach echter Zeit.
 - **Winston:** läuft auf Linas eigener Spur hinterher (bleibt nie an Ecken hängen), setzt sich neben sie,
   wenn sie stehen bleibt. Texte & Funde in `data/winston.ts`. Er buddelt, wenn Lina kurz stehen bleibt – **verpasste Tage sammeln sich bis zu
   3 Fundstellen an** (`DIG_DAYS_MAX`, `core/pet.ts`).
+- **Fischgerichte (Audit F2/W6):** Sieben Gerichte nutzen Fänge – Forelle mit Kräutern, Karpfen mit Kartoffeln, Scholle mit Bratkartoffeln, Geräucherte Makrele (mit Ästen),
+  Dorsch auf Gemüsebett, Aal grün und Steinbutt aus dem Ofen. Das Rezept fällt Lina **beim ersten Fang** der Art ein (`fund`); Margen 1,6–1,8×. Bewohner mögen sie
+  (Olaf, Lars, Jens, Oma, Oli). Jedes Essen hat ein eigenes Symbol (Test `fischgerichte.test.ts`).
 - **Werkbank:** Rezepte in `data/recipes.ts` (`start`, `fund` = beim ersten Fund, sonst als Brief-Geschenk
   `rezept-<id>` – Rezeptkarten werden beim Annehmen sofort gelernt). Ergebnisse sind Möbel mit
   `crafted: true` (nicht im Katalog). Ein Test prüft, dass jedes Rezept erreichbar ist.

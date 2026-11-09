@@ -597,6 +597,88 @@ for (const [id, tea, leaf] of [['kamillentee', '#f2d36a', '#ffffff'], ['thymiant
   };
 }
 
+// Gerichte aus der Kochshow: Fischsuppe, Apfelpfannkuchen, Blumensalat
+DRAW.fischsuppe = (ctx) => {
+  ellipse(ctx, 16, 17, 12, 6.5, '#e9a24a', darken('#e9a24a', 0.3), 1.2);
+  ellipse(ctx, 13, 16.5, 4.5, 2, '#f2c27a');
+  ellipse(ctx, 19, 17.5, 3, 1.5, '#b9c6cf', '#7a8a96', 0.8);
+  for (const [x, y] of [[10, 18], [22, 16.2]] as const) ellipse(ctx, x, y, 1.6, 0.8, '#5fa85a');
+  roundRect(ctx, 4, 17, 24, 9, [1, 1, 9, 9], '#8ac8ff', darken('#8ac8ff', 0.35), 1.3);
+  ctx.strokeStyle = 'rgba(180,180,190,0.75)';
+  ctx.lineWidth = 1.2;
+  for (const x of [12, 19]) {
+    ctx.beginPath();
+    ctx.moveTo(x, 11);
+    ctx.quadraticCurveTo(x + 2, 8, x, 5);
+    ctx.stroke();
+  }
+};
+DRAW.apfelpfannkuchen = (ctx) => {
+  ellipse(ctx, 16, 22, 12.5, 5, '#ffffff', '#c9c4cf', 1.2);
+  ellipse(ctx, 16, 20, 11, 4.5, '#e6b06a', darken('#e6b06a', 0.3), 1.2);
+  ellipse(ctx, 16, 15.5, 10, 4, '#f2c27a', darken('#f2c27a', 0.3), 1.2);
+  for (const [x, y] of [[12, 14.5], [17, 15.5], [21, 14.5]] as const) ellipse(ctx, x, y, 2.2, 1.2, '#f7f2c8', '#c9b87a', 0.5);
+  for (const [x, y] of [[14, 15.8], [19, 14.2]] as const) ellipse(ctx, x, y, 0.9, 0.5, '#a8603a');
+};
+DRAW.blumensalat = (ctx) => {
+  roundRect(ctx, 5, 15, 22, 11, [1, 1, 9, 9], '#ffffff', '#c9c4cf', 1.3);
+  ellipse(ctx, 16, 15.5, 11, 3.2, '#9fd884', darken('#9fd884', 0.3), 1);
+  for (const [x, y, c] of [[11, 13.5, '#f39ab0'], [16, 12.5, '#f5cf3f'], [21, 13.5, '#a8c8ff'], [13.5, 16, '#f5cf3f'], [19, 16, '#f39ab0']] as const) {
+    for (let i = 0; i < 5; i++) {
+      const t = (i / 5) * Math.PI * 2;
+      ellipse(ctx, x + Math.cos(t) * 1.8, y + Math.sin(t) * 1.8, 1.4, 1, c);
+    }
+    ellipse(ctx, x, y, 1, 1, '#fff6d8');
+  }
+};
+
+// Fischgerichte: Teller, Fisch in der Art-Farbe, Beilage (Kartoffeln / Grün / Gemüse)
+type Side = 'kartoffel' | 'gruen' | 'gemuese' | 'rauch' | 'kraeuter';
+for (const [id, fish, spot, side, len] of [
+  ['forelle-kraeuter', '#b59a6a', '#d9534f', 'kraeuter', 1],
+  ['karpfen-kartoffeln', '#c9a25a', '#8a6a3a', 'kartoffel', 1.1],
+  ['scholle-kartoffel', '#c2a878', '#d9843a', 'kartoffel', 1.15],
+  ['raeuchermakrele', '#a86a3a', '#6f8fae', 'rauch', 1],
+  ['dorsch-gemuese', '#e3d3ac', '#a89a74', 'gemuese', 1],
+  ['aal-gruen', '#7a9a5a', '#c9d98a', 'gruen', 1.25],
+  ['steinbutt-ofen', '#cdb98f', '#8a7a58', 'kraeuter', 1.2],
+] as const satisfies ReadonlyArray<readonly [string, string, string, Side, number]>) {
+  DRAW[id] = (ctx) => {
+    ellipse(ctx, 16, 19, 13, 8, '#ffffff', '#c9c4cf', 1.3);
+    ellipse(ctx, 16, 19, 9.5, 5.5, '#f7f5ec', '#e3dfe8', 0.8);
+    const w = 6.5 * len;
+    // Fisch: Körper, Schwanz, Auge, Tupfen
+    ctx.fillStyle = fish;
+    ctx.strokeStyle = darken(fish, 0.3);
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(23, 19);
+    ctx.lineTo(27, 15.5);
+    ctx.lineTo(27, 22.5);
+    ctx.closePath();
+    ctx.fill();
+    ctx.stroke();
+    ellipse(ctx, 16.5 - (len - 1) * 3, 19, w, 3.6, fish, darken(fish, 0.3), 1);
+    ellipse(ctx, 11 - (len - 1) * 3, 18.2, 0.9, 0.9, '#2f2f38');
+    for (const x of [15, 18, 21]) ellipse(ctx, x - (len - 1) * 3, 19.5, 0.7, 0.7, spot);
+    if (side === 'kartoffel') for (const [x, y] of [[8, 22.5], [11.5, 23.6], [22, 23.5]] as const) ellipse(ctx, x, y, 2.2, 1.6, '#f2cf72', darken('#f2cf72', 0.3), 0.7);
+    if (side === 'gruen' || side === 'kraeuter') for (const [x, y] of [[9, 14.5], [13, 14], [20, 14.2], [23, 23]] as const) ellipse(ctx, x, y, 1.9, 1.1, '#6fbf5f', darken('#6fbf5f', 0.3), 0.6);
+    if (side === 'gemuese') {
+      for (const [x, y, c] of [[9, 22.5, '#e8484f'], [13.5, 23.6, '#7fbf5a'], [21, 23.4, '#e8484f'], [24, 22, '#7fbf5a']] as const) ellipse(ctx, x, y, 2, 1.5, c, darken(c, 0.3), 0.6);
+    }
+    if (side === 'rauch') {
+      ctx.strokeStyle = 'rgba(180,180,190,0.75)';
+      ctx.lineWidth = 1.2;
+      for (const x of [11, 17, 22]) {
+        ctx.beginPath();
+        ctx.moveTo(x, 12.5);
+        ctx.quadraticCurveTo(x + 2, 9, x, 5.5);
+        ctx.stroke();
+      }
+    }
+  };
+}
+
 // Fossilien & Kristalle
 const FIND_DRAW: Record<string, (ctx: Ctx, c: string, a: string) => void> = {
   ammonit: (ctx, c, a) => {

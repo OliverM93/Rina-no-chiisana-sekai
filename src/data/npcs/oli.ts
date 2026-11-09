@@ -39,7 +39,7 @@ export const OLI: NpcDef = {
   ],
   preferences: {
     loves: ['ruehrei', 'fischbroetchen', 'ei', 'hering', 'dorsch', 'keks', 'glitzerstein', 'kuerbissuppe', 'strauss-rosen', 'strauss-schwarz'],
-    likes: ['wachtelei', 'apfel', 'birne', 'pfirsich', 'barsch', 'scholle', 'bachforelle', 'makrele', 'sonnenblume', 'rose', 'hirschkaefer', 'stein', 'tomate', 'tomatensalat', 'ratatouille', 'kartoffelsuppe', 'strauss-bunt', 'strauss-sonne'],
+    likes: ['wachtelei', 'apfel', 'birne', 'pfirsich', 'barsch', 'scholle', 'bachforelle', 'makrele', 'sonnenblume', 'rose', 'hirschkaefer', 'stein', 'tomate', 'tomatensalat', 'ratatouille', 'kartoffelsuppe', 'strauss-bunt', 'strauss-sonne', 'raeuchermakrele', 'dorsch-gemuese'],
     dislikes: ['weinbergschnecke', 'ohrenqualle'],
   },
   dialogue: {

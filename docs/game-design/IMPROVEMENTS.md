@@ -20,7 +20,7 @@ abgesichert. Die folgenden Punkte betreffen Langzeitmotivation und Feinschliff.
 | W5 | ✅ **erledigt (Nov. 2026): Erinnerungen (Bezug auf Erlebtes) + Plauder-Pools für Thalia, Oli, Olaf, Lars und Christin aufgestockt (mind. 30 Zeilen, Jahreszeiten-/Wetter-/Herzen-Zeilen)** · **Dialog-Frische**: Zeilen, die auf Linas Erlebtes Bezug nehmen (erster Fang einer seltenen Art, neue Hausstufe, Jens' letzte Reise) + gezielt mehr Zeilen für Bewohner mit kleinen Pools (Thalia, Olaf, Lars) | ●●● | ●●● | ● | ●● | ●● |
 | W4 | ✅ **erledigt (Nov. 2026)** · **Vorratskiste** im Haus (Lagerplätze außerhalb der Tasche) gegen Inventar-Reibung durch die vielen neuen Gegenstände | ●● | ●● | ● | ● | ●● |
 | W5 | **Dialog-Frische**: Zeilen, die auf Linas Erlebtes Bezug nehmen (erster Fang einer seltenen Art, neue Hausstufe, Jens' letzte Reise) + gezielt mehr Zeilen für Bewohner mit kleinen Pools (Thalia, Olaf, Lars) | ●●● | ●●● | ● | ●● | ●● |
-| W6 | **Fänge mit Verwendung**: weitere Fisch-Gerichte im Bistro, Funde/Insekten ausstellen (Vitrine/Terrarium oder Museum-Ecke bei Thalia) – mehr Systemtiefe für die häufigste Aktivität | ●● | ●● | ●● | ●● | ● |
+| W6 | 🔶 **Fischgerichte erledigt (Nov. 2026, 7 neue Gerichte)**, Funde/Insekten ausstellen offen · **Fänge mit Verwendung**: weitere Fisch-Gerichte im Bistro, Funde/Insekten ausstellen (Vitrine/Terrarium oder Museum-Ecke bei Thalia) – mehr Systemtiefe für die häufigste Aktivität | ●● | ●● | ●● | ●● | ● |
 | W7 | ✅ **erledigt (Nov. 2026)** · **Erfolge würdigen**: vollständige Sammelbuch-Seiten, alle Tassen, alle Farben → Brief + kleines Deko-Objekt (keine Plaketten-Liste) | ●● | ●● | ● | ● | ● |
 | W8 | **Playtest S1–S9** mit Lina/Stellvertretung durchführen, ⭐/h je Aktivität messen | – | ●● | – | ● | ●●● (vor W1/W6) |
 
