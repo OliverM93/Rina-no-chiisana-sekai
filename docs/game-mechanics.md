@@ -177,7 +177,9 @@ Wetter und Feste laufen nach echter Zeit.
   Tags `geburtstag-<id>` / `bald-geburtstag-<id>` (7 Tage vorher).
 - **Treffen der Bewohner:** `data/meetups.ts` (Wochentage, Uhrzeit, Plätze, Gespräche), Regeln in
   `game/meetups.ts`; `Npc` ersetzt den Tagesablauf (Reihenfolge: Party → Sonntagsessen → Treffen → Plan).
-  `Npc.snap()` setzt alle beim Laden sofort an den richtigen Platz.
+  `Npc.snap()` setzt alle beim Laden sofort an den richtigen Platz. Fünf Treffen, darunter ein **Abendtreffen** (Thalia & Lars: *Sonnenuntergang am Strand*, Mo/Do 18–20 Uhr).
+- **Abend-Erreichbarkeit (Audit F1):** Jede Fisch-/Insektenart ist zwischen 18 und 22 Uhr irgendwann zu finden (Test `species.evening.test.ts`). Die elf reinen Tagarten
+  (Tagfalter, Honigbiene, Grashüpfer, Prachtlibelle, Seepferdchen, Rosenkäfer, Winterhaft) sind bis **20 Uhr** da („Abendsonne“).
 - **Kleidung:** `outfitFor(a, season, day)` – bei `'saison'` im Frühling/Herbst täglich ein anderes Teil aus
   `STREETWEAR_ROTATION`. Bewohner mit `NpcDef.wardrobe` ziehen sich per `dressFor` jeden Tag reproduzierbar um.
   `Chibi3D(appearance, season, day)`; Aufdrucke als gebogene Fläche vor dem Oberteil (`printDecal`), Galerie

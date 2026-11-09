@@ -173,6 +173,12 @@ Format: **Entscheidung** – Begründung – verworfene Alternative(n) – Auswi
 - **Technik:** `Appearance.band` (optional) und `wardrobeFor(session, def)`; kein neues Spielstand-Feld (Flags), kein `SAVE_VERSION`-Wechsel.
 - **Bitte gegenlesen:** Wunschtexte und Erinnerungszeilen (`data/wishes.ts` `oli-kino`/`oli-bandshirt`, `data/erinnerungen.ts` Tags `kino`/`tourshirt`).
 
+### D26 · Abend-Erreichbarkeit statt Zeit verschieben (Nov. 2026)
+- **Anlass:** Audit F1/F18 – Lina spielt tagsüber **und** abends; Inhalte, die nur tagsüber da sind, sollen für sie nicht dauerhaft unerreichbar sein.
+- **Entscheidung:** Kleinste Lösung (Audit-Empfehlung b): elf reine Tagarten bis **20 Uhr** („Abendsonne“), plus ein **Abendtreffen** (Thalia & Lars am Strand, Mo/Do 18–20).
+  Die größere Alternative (c) „Spieluhr verschieben“ bleibt 💡 offen.
+- **Kosten/Nutzen:** Verwässert die Tageszeit-Unterschiede nur um zwei Abendstunden; kein neues System, kein Zwang. Test sichert: jede Art ist abends erreichbar.
+
 ---
 
 ## Offene Designentscheidungen ❓
