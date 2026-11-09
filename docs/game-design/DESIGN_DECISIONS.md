@@ -138,6 +138,16 @@ Format: **Entscheidung** – Begründung – verworfene Alternative(n) – Auswi
 - **Nebenwirkungen:** Ältere Spielstände behalten Winston (kein Verlust). Dialoge mit seinem Namen sind bis zum Fund gesperrt (Tag).
 - **Playtest:** Findet Lina das Fiepen ohne Hinweis? Wie lange dauert es bis zum Fund?
 
+### D23 · Herzenswünsche Phase 2 – Wünsche von Lina/Oli (Nov. 2026)
+- **Erlebnis:** Wünsche, die zu den echten Menschen passen (Oma: Eierlikör; Olaf: Flugzeugmodelle; Christin: Volkstanz im Verein; Jens: Fernweh;
+  Lars: Steine & Science-Fiction; Thalia: Partys) statt erfundener Wünsche – Antwort auf Audit-Frage Q7 und Feedback („keine erfundenen Details“).
+- **Auswahl aus Linas Liste:** je Bewohner der Wunsch, der mit den bestehenden Systemen am besten verknüpft ist (Hühner → Küche → Oma; Werkbank-Material → Olaf;
+  Beet-Strauß & Kuchen → Christin; Schaufel-Funde → Lars; Gerichte & Strauß → Thalia). **Nicht umgesetzt** (bewusst): Whiskey, Shoppen, Sommerkleid, Käse, Hummer,
+  Konzert und Thalias Priester-Wunsch – Letzterer ließe sich nur mit einer neuen Figur respektvoll umsetzen; bei Bedarf als Brieffreund („Pater Matteo“) später.
+- **F7 (Entscheidungen):** Jens' Urlaub ist der erste Wunsch mit echter **Wahl** (Hawaii/Japan); beide Tassen sind später auch über seine Reisen erreichbar.
+- **Ökonomie:** Sternchen-Beiträge 600 / 1.500 / 400 (Spätspiel-Senke); Geschenke sind unverkäufliche Erinnerungsstücke. **Dezent:** Omas Likör bleibt eine
+  humorvolle Randbemerkung (CLAUDE.md).
+- **Bitte gegenlesen:** Texte der sechs Wünsche in `data/wishes.ts`.
 ### D22 · Vollständige Sammlungen werden gewürdigt (W7/F10, Nov. 2026)
 - **Erlebnis:** Ein langfristiges Sammelziel bekommt einen emotionalen Abschluss – von einem Menschen, nicht von einem Pop-up.
 - **Entscheidung:** Brief (im Ton des Bewohners) + **Urkunde** als Wand-Erinnerungsstück statt Erfolge-Menü oder Zahl-Belohnung

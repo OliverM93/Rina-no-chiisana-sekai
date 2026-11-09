@@ -1050,6 +1050,64 @@ export function makeFurniture(itemId: string, links: FenceLinks = { n: false, e:
       g.add(b(0.02, 0.14, 0.02, '#8a5a3a', 0, 0.07, -0.06).rotateX(0.4));
       break;
     }
+    case 'likoer-set': {
+      g.add(c(0.2, 0.015, '#c9cbd3', 0, 0.008, 0));
+      g.add(c(0.2, 0.012, '#fbf6ec', 0, 0.02, 0));
+      // Flasche (cremig-gelber Likör) mit Etikett & Korken
+      g.add(c(0.055, 0.17, '#f2d36a', -0.06, 0.1, 0));
+      g.add(c(0.025, 0.07, '#f2d36a', -0.06, 0.215, 0));
+      g.add(c(0.03, 0.025, '#8a5a3a', -0.06, 0.26, 0));
+      g.add(b(0.07, 0.06, 0.005, '#fbf6ec', -0.06, 0.1, 0.057));
+      g.add(s(0.012, 0.012, 0.004, '#e85a8a', -0.06, 0.1, 0.061));
+      // zwei winzige Gläser
+      for (const x of [0.06, 0.12]) {
+        g.add(c(0.018, 0.012, '#e6f4ff', x, 0.025, 0.04));
+        g.add(c(0.008, 0.05, '#e6f4ff', x, 0.05, 0.04));
+        g.add(c(0.022, 0.035, new THREE.MeshToonMaterial({ color: '#f2d36a', transparent: true, opacity: 0.85 }), x, 0.09, 0.04));
+      }
+      break;
+    }
+    case 'modellflugzeug': {
+      // Holzsockel mit Stange, darauf die zweimotorige Propellermaschine (Doppeldecker-Flügel, Rundmotoren)
+      g.add(b(0.34, 0.03, 0.22, DARK_WOOD, 0, 0.015, 0));
+      g.add(c(0.012, 0.12, '#8a8a96', 0, 0.09, 0));
+      const plane = new THREE.Group();
+      plane.position.set(0, 0.22, 0);
+      plane.rotation.set(0.1, -0.5, 0);
+      plane.add(c(0.03, 0.34, '#e8e4d8', 0, 0, 0).rotateX(Math.PI / 2));
+      plane.add(s(0.032, 0.028, 0.05, '#e8e4d8', 0, 0, 0.15));
+      for (const y of [0.025, -0.022]) plane.add(b(0.4, 0.008, 0.075, '#d9534f', 0, y, 0.02));
+      for (const x of [-0.07, 0.07]) {
+        plane.add(b(0.006, 0.05, 0.006, '#8a8a96', x, 0, 0.02));
+        plane.add(c(0.02, 0.035, '#5a5a66', x, 0.0, 0.07).rotateX(Math.PI / 2));
+        plane.add(b(0.07, 0.006, 0.006, '#3a3a44', x, 0, 0.09));
+      }
+      plane.add(b(0.14, 0.006, 0.05, '#d9534f', 0, 0.01, -0.17));
+      plane.add(b(0.006, 0.07, 0.05, '#d9534f', 0, 0.035, -0.17));
+      plane.add(b(0.025, 0.01, 0.02, '#2a5a8a', 0.13, 0.025, 0.02));
+      g.add(plane);
+      break;
+    }
+    case 'discokugel': {
+      g.add(c(0.14, 0.03, '#4a4a56', 0, 0.015, 0));
+      g.add(c(0.018, 0.45, '#8a8a96', 0, 0.25, 0));
+      glow = glowMat('#dfe8ff');
+      const ball = new THREE.Group();
+      ball.position.y = 0.62;
+      ball.add(s(0.17, 0.17, 0.17, glow));
+      const cols = ['#ffffff', '#ffd6e6', '#cfe8ff', '#fff3b0', '#d6c3ff'];
+      for (let i = 0; i < 56; i++) {
+        const t = Math.acos(1 - (2 * (i + 0.5)) / 56);
+        const p = Math.PI * (1 + Math.sqrt(5)) * i;
+        const m = b(0.05, 0.05, 0.012, cols[i % cols.length]);
+        m.position.set(Math.sin(t) * Math.cos(p) * 0.172, Math.cos(t) * 0.172, Math.sin(t) * Math.sin(p) * 0.172);
+        m.lookAt(m.position.clone().multiplyScalar(2));
+        ball.add(m);
+      }
+      g.add(ball);
+      lightAt = new THREE.Vector3(0, 0.65, 0);
+      break;
+    }
     case 'reisekoffer': {
       g.add(b(0.62, 0.28, 0.4, '#8a5a3a', 0, 0.14, 0));
       g.add(b(0.64, 0.02, 0.42, '#6a4228', 0, 0.2, 0));

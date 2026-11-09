@@ -5,8 +5,11 @@ import { addItem } from '../core/inventory';
 import { applyMapFlags, isActive, objectById } from '../core/worldmap';
 import { isKnownItem, itemDef, maxStackOf } from '../data/items';
 import { VILLAGE_OBJECTS } from '../data/maps/village';
-import { WISHES, wishFlag } from '../data/wishes';
-import { activeWish, askWish, checkWishLetter, fulfillWish, matchesNeed, wishProgress, wishTeaser } from './wishes';
+import { ALL_WISHES, WISHES, WISHES_2, wishFlag } from '../data/wishes';
+import { RECIPE_BY_ID } from '../data/recipes';
+import { FURNITURE_BY_ITEM } from '../data/furniture';
+import { FINDS } from '../data/fossils';
+import { activeWish, askWish, canFolkDance, checkWishLetter, folkDance, fulfillWish, matchesNeed, wishProgress, wishTeaser } from './wishes';
 import { Session } from './session';
 
 vi.mock('../gfx/items', () => ({ itemIconUrl: () => '' }));
@@ -24,7 +27,7 @@ function newSession(unlocked = true) {
 }
 
 describe('Herzenswünsche – Daten', () => {
-  it('jeder Bewohner hat einen Wunsch, jeder Wunsch einen Ort auf der Karte', () => {
+  it('jeder Bewohner hat einen Wunsch, jeder Wunsch aus Phase 1 einen Ort auf der Karte', () => {
     for (const npc of ['gisela', 'olaf', 'christin', 'oli', 'jens', 'lars', 'thalia']) expect(WISHES.some((w) => w.npc === npc), npc).toBe(true);
     for (const w of WISHES) {
       const obj = VILLAGE_OBJECTS.find((o) => o.id === w.place);
@@ -45,7 +48,7 @@ describe('Herzenswünsche – Daten', () => {
   });
 
   it('Sternchen-Beiträge bleiben bescheiden (Spätspiel-Senke, kein Grind)', () => {
-    for (const w of WISHES) expect(w.stars ?? 0).toBeLessThanOrEqual(5000);
+    for (const w of ALL_WISHES) expect(w.stars ?? 0).toBeLessThanOrEqual(5000);
   });
 });
 
@@ -83,10 +86,10 @@ describe('Herzenswünsche – Ablauf', () => {
     addItem(inv, 'wildblumen', 4, maxStackOf);
     addItem(inv, 'samen-rose', 3, maxStackOf); // Samen zählen nicht als Blume
     expect(wishProgress(s, activeWish(s, 'gisela')!).complete).toBe(true);
-    const lines = fulfillWish(s, 'gisela')!;
+    const lines = fulfillWish(s, 'gisela')!.lines;
     expect(lines.join(' ')).toContain('Ludwig');
     expect(s.data!.flags[wishFlag('oma-beet')]).toBe(true);
-    expect(activeWish(s, 'gisela')).toBeNull();
+    expect(activeWish(s, 'gisela')?.id).toBe('oma-likoer'); // der zweite Wunsch folgt
     // genommen wurde nur, was gebraucht wurde
     const left = Object.fromEntries(inv.slots.filter(Boolean).map((x) => [x!.itemId, x!.count]));
     expect(left).toEqual({ wildblumen: 1, 'samen-rose': 3 });
@@ -122,5 +125,79 @@ describe('Herzenswünsche – Ablauf', () => {
     applyMapFlags(s.map, s.data!.flags);
     expect(objectById(s.map, 'herzbank')).toBeTruthy();
     expect(isActive(s.map, 'herzbank')).toBe(true);
+  });
+});
+
+describe('Herzenswünsche – Phase 2', () => {
+  it('jede Geschenkart gibt es als Gegenstand, das Rezept und der Fund existieren', () => {
+    for (const w of WISHES_2) {
+      const rewards = [...(w.rewardItems ?? []), ...(w.options?.flatMap((o) => o.rewardItems) ?? [])];
+      for (const r of rewards) expect(isKnownItem(r.itemId), `${w.id}: ${r.itemId}`).toBe(true);
+      for (const n of w.needs) if (n.item) expect(isKnownItem(n.item), `${w.id}: ${n.item}`).toBe(true);
+      if (w.recipe) expect(RECIPE_BY_ID[w.recipe]?.wish, w.id).toBe(w.id);
+      expect(w.order).toBe(2);
+    }
+    expect(FINDS.some((f) => f.id === 'wolframit')).toBe(true);
+    expect(FURNITURE_BY_ITEM['discokugel'].def.light).toBe(true);
+  });
+
+  it('der zweite Wunsch kommt erst, wenn der erste erfüllt ist', () => {
+    const s = newSession();
+    expect(activeWish(s, 'gisela')?.id).toBe('oma-beet');
+    s.data!.flags[wishFlag('oma-beet')] = true;
+    expect(activeWish(s, 'gisela')?.id).toBe('oma-likoer');
+    expect(wishTeaser(s, 'gisela')).toBeTruthy();
+  });
+
+  it('Omas Likörrezept wird beim ersten Erzählen gelernt, der Likör erfüllt den Wunsch', () => {
+    const s = newSession();
+    s.data!.flags[wishFlag('oma-beet')] = true;
+    expect(s.data!.recipes).not.toContain('eierlikoer-premium');
+    const a = askWish(s, 'gisela')!;
+    expect(a.lines.join(' ')).toContain('Likör');
+    expect(s.data!.recipes).toContain('eierlikoer-premium');
+    addItem(s.data!.inventory, 'eierlikoer-premium', 1, maxStackOf);
+    const r = fulfillWish(s, 'gisela')!;
+    expect(r.rewards).toEqual([{ itemId: 'likoer-set', count: 1 }]);
+    expect(r.lines.join(' ')).toContain('Köstlich');
+  });
+
+  it('Jens: Hawaii oder Japan – die Wahl bestimmt Szene und Tasse, ohne Wahl geht es nicht', () => {
+    const s = newSession();
+    s.data!.flags[wishFlag('jens-aquarium')] = true;
+    s.data!.money = 2000;
+    addItem(s.data!.inventory, 'ruehrei', 1, maxStackOf);
+    addItem(s.data!.inventory, 'obstsalat', 1, maxStackOf);
+    const a = askWish(s, 'jens')!;
+    expect(a.canFulfill).toBe(true);
+    expect(a.options.map((o) => o.id)).toEqual(['hawaii', 'japan']);
+    expect(fulfillWish(s, 'jens')).toBeNull(); // ohne Wahl nicht
+    const r = fulfillWish(s, 'jens', 'japan')!;
+    expect(r.rewards).toEqual([{ itemId: 'tasse-stadt-nara', count: 1 }]);
+    expect(r.lines.join(' ')).toContain('Matcha');
+    expect(s.data!.money).toBe(500);
+    expect(s.data!.flags['wunsch-jens-urlaub-japan']).toBe(true);
+  });
+
+  it('Lars: Wolframit gegen sein Lieblingsbuch', () => {
+    const s = newSession();
+    s.data!.flags[wishFlag('lars-insekten')] = true;
+    expect(wishProgress(s, activeWish(s, 'lars')!).complete).toBe(false);
+    addItem(s.data!.inventory, 'wolframit', 1, maxStackOf);
+    expect(fulfillWish(s, 'lars')!.rewards).toEqual([{ itemId: 'buch-sandsterne', count: 1 }]);
+  });
+
+  it('Volkstanz: erst nach Christins Wunsch, einmal am Tag, Freundschaft für beide', () => {
+    const s = newSession();
+    expect(canFolkDance(s)).toBe(false);
+    s.data!.flags[wishFlag('christin-kraeuter')] = true;
+    addItem(s.data!.inventory, 'strauss-bunt', 1, maxStackOf);
+    addItem(s.data!.inventory, 'apfelkuchen', 1, maxStackOf);
+    expect(fulfillWish(s, 'christin')).not.toBeNull();
+    expect(canFolkDance(s)).toBe(true);
+    const before = s.data!.npcs.olaf?.points ?? 0;
+    expect(folkDance(s).join(' ')).toMatch(/Christin|Olaf/);
+    expect(s.data!.npcs.olaf.points).toBeGreaterThan(before);
+    expect(canFolkDance(s)).toBe(false);
   });
 });

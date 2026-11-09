@@ -727,6 +727,22 @@ for (const f of FINDS) {
     (FIND_DRAW[f.id] ?? crystal)(ctx, f.color, f.accent);
   };
 }
+// Omas Premium-Eierlikör: Flasche mit cremig-gelbem Inhalt, Etikett und Herz
+DRAW['eierlikoer-premium'] = (ctx) => {
+  roundRect(ctx, 11, 11, 10, 17, 3.5, '#f2d36a', '#b8942a', 1.3);
+  roundRect(ctx, 14, 5, 4, 7, 1.2, '#f2d36a', '#b8942a', 1);
+  roundRect(ctx, 13.2, 3, 5.6, 3.4, 1.2, '#8a5a3a', '#5a3a22', 0.8);
+  roundRect(ctx, 12.5, 16.5, 7, 6, 1, '#fbf6ec', '#c9c4cf', 0.7);
+  ctx.fillStyle = '#e85a8a';
+  ctx.beginPath();
+  ctx.arc(15, 19, 1.1, 0, Math.PI * 2);
+  ctx.arc(17, 19, 1.1, 0, Math.PI * 2);
+  ctx.moveTo(14, 19.6);
+  ctx.lineTo(16, 22);
+  ctx.lineTo(18, 19.6);
+  ctx.fill();
+  shine(ctx, 13.5, 14, 1.6);
+};
 // Schaufel
 DRAW.schaufel = (ctx) => {
   ctx.save();

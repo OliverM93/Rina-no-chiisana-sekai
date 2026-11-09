@@ -64,7 +64,7 @@ import { KISS } from './Character3D';
 import { isPartyTime } from '../game/party';
 import { makePartyLights, makePicnic } from './models/buildings';
 import { addFriendship, catchUpHeartLetters } from '../game/gameplay';
-import { activeWish, askWish, checkWishLetter, fulfillWish, wishTeaser } from '../game/wishes';
+import { activeWish, askWish, canFolkDance, checkWishLetter, folkDance, fulfillWish, wishTeaser } from '../game/wishes';
 import { OLAF_CALENDAR_JOKES } from '../data/npcs/olaf';
 import type { DecorCommand, FxKind } from '../game/session';
 import { Particles3D } from './Particles3D';
@@ -1648,6 +1648,7 @@ export class World3D {
               },
             ]
           : []),
+        ...(id === 'christin' && canFolkDance(this.session) ? [{ label: '🪗 Volkstanz tanzen', onSelect: () => this.folkDanceScene(npc) }] : []),
         ...(id === 'christin'
           ? [{ label: '💡 Ordnungstipp?', onSelect: () => this.npcDialog(npc, [...christinTip(this.session)], npcHearts(this.session, id)) }]
           : []),
@@ -1701,17 +1702,22 @@ export class World3D {
       hearts: npcHearts(this.session, id),
       lines: asked.lines.map((l) => fillPlaceholders(l, this.session.interactionContext())),
       choices: [
-        ...(asked.canFulfill ? [{ label: '💝 Wunsch erfüllen', onSelect: () => this.fulfillWishScene(npc) }] : []),
+        ...(asked.canFulfill
+          ? asked.options.length > 0
+            ? asked.options.map((o) => ({ label: `💝 ${o.label}`, onSelect: () => this.fulfillWishScene(npc, o.id) }))
+            : [{ label: '💝 Wunsch erfüllen', onSelect: () => this.fulfillWishScene(npc) }]
+          : []),
         { label: asked.canFulfill ? '⏳ Später' : '👍 Mach ich!', onSelect: () => this.npcDialog(npc, [asked.canFulfill ? 'Kein Problem – wann immer du magst.' : 'Danke, Lina! Ganz ohne Eile.'], npcHearts(this.session, id)) },
       ],
     });
   }
 
-  private fulfillWishScene(npc: Npc) {
+  private fulfillWishScene(npc: Npc, optionId?: string) {
     const id = npc.def.id;
     const wish = activeWish(this.session, id);
-    const lines = fulfillWish(this.session, id);
-    if (!wish || !lines) return this.npcDialog(npc, ['Hm, da fehlt wohl doch noch was. Macht nichts!'], npcHearts(this.session, id));
+    const result = fulfillWish(this.session, id, optionId);
+    const lines = result?.lines;
+    if (!wish || !result || !lines) return this.npcDialog(npc, ['Hm, da fehlt wohl doch noch was. Macht nichts!'], npcHearts(this.session, id));
     this.syncMapObjects();
     this.session.bus.emit('sfx', 'bauen');
     this.session.bus.emit('fx', { kind: 'konfetti' });
@@ -1723,7 +1729,11 @@ export class World3D {
       lines: lines.map((l) => fillPlaceholders(l, this.session.interactionContext())),
       onClose: () => {
         npc.endTalk();
-        this.session.bus.emit('toast', { text: `✨ Neu im Dorf: ${wish.title}! Schau doch gleich mal vorbei.` });
+        for (const r of result.rewards) for (let i = 0; i < r.count; i++) this.giveOrDrop(r.itemId);
+        const gift = result.rewards.map((r) => itemDef(r.itemId)?.name ?? r.itemId).join(', ');
+        this.session.bus.emit('toast', {
+          text: wish.place ? `✨ Neu im Dorf: ${wish.title}! Schau doch gleich mal vorbei.` : gift ? `🎁 ${gift} – als Dank für „${wish.title}“!` : `✨ Wunsch erfüllt: ${wish.title}!`,
+        });
       },
     });
   }
@@ -2248,6 +2258,24 @@ export class World3D {
       this.session.bus.emit('dialog:open', { title: npc.def.name, hearts: npcHearts(this.session, 'thalia'), lines, onClose: () => npc.endTalk() });
     });
     this.session.save();
+  }
+
+  /** Volkstanz mit Christin & Olaf: Lina dreht sich im Kreis, danach gibt es Kuchen */
+  private folkDanceScene(npc: Npc) {
+    const player = this.player;
+    if (!player) return;
+    const lines = folkDance(this.session);
+    const start = player.facing;
+    this.tweens.add(2400, (k) => {
+      player.seatHeight = Math.abs(Math.sin(k * Math.PI * 6)) * 0.1;
+      player.face((['down', 'right', 'up', 'left'] as const)[Math.floor(k * 12) % 4]);
+    }, () => {
+      player.seatHeight = 0;
+      player.face(start);
+      this.winston?.burst('herz');
+      this.session.bus.emit('fx', { kind: 'konfetti' });
+      this.session.bus.emit('dialog:open', { title: npc.def.name, hearts: npcHearts(this.session, 'christin'), lines, onClose: () => npc.endTalk() });
+    });
   }
 
   /** Treffen: Symbole über den Köpfen, Angeln in der Hand */

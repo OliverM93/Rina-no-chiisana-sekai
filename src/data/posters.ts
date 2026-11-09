@@ -6,7 +6,7 @@
  * `gfx/posters.ts`, die 3D-Modelle in `models/furniture.ts`. Neue Poster: Eintrag in `POSTERS` + Motiv in `MOTIFS`.
  */
 
-export type PosterMotif = 'kaffee' | 'dr-no' | 'kawaii';
+export type PosterMotif = 'kaffee' | 'dr-no' | 'kawaii' | 'sandsterne';
 
 export interface PosterDef {
   id: string;
@@ -24,6 +24,8 @@ export interface PosterDef {
   motif: PosterMotif;
   price: number;
   description: string;
+  /** Nur als Geschenk (nicht im Katalog) */
+  gift?: boolean;
 }
 
 export const POSTERS: readonly PosterDef[] = [
@@ -32,6 +34,7 @@ export const POSTERS: readonly PosterDef[] = [
   // ---------------------------------------------------------------- Bildbände (Tisch)
   { id: 'buch-kaffee', name: 'Bildband „Kaffee – eine Liebeserklärung“', kind: 'buch', title: 'KAFFEE', sub: 'Eine Liebeserklärung', colors: ['#f3dcb8', '#d9a86a'], ink: '#4a2a1c', motif: 'kaffee', price: 360, description: 'Ein Bildband über Bohnen, Röstungen und Siebträger. Er riecht seltsamerweise nach Kaffee. Beim Blättern hat man Durst.' },
   { id: 'buch-dr-no', name: 'Buch „Ein Schritt. Dann noch einer.“', kind: 'buch', title: 'EIN SCHRITT.\nDANN NOCH\nEINER.', sub: 'Dr. No', colors: ['#3f5a66', '#6a8a96'], ink: '#fdf6e8', motif: 'dr-no', price: 400, description: 'Die Erinnerungen von Dr. No aus „Schwerer Weg“. Streng im Ton, warm im Herzen. Das Lieblingsbuch auf Linas Couchtisch.' },
+  { id: 'buch-sandsterne', name: 'Roman „Die Sandsterne“', kind: 'buch', title: 'DIE\nSANDSTERNE', sub: 'Ein Science-Fiction-Roman', colors: ['#c98a4a', '#6a3a2a'], ink: '#fff0cf', motif: 'sandsterne', price: 380, gift: true, description: 'Lars\' Lieblingsbuch: ein sehr dicker Science-Fiction-Roman über einen Planeten aus Sand, Politik und sehr langen Namen. Ärztlich: nicht auf den Fuß fallen lassen.' },
   { id: 'buch-kawaii', name: 'Bildband „Kawaii – die Kunst der Niedlichkeit“', kind: 'buch', title: 'KAWAII', sub: 'Die Kunst der Niedlichkeit', colors: ['#ffd6e6', '#f7a8c8'], ink: '#7a2a4a', motif: 'kawaii', price: 340, description: 'Ein Bildband voller runder, weicher, niedlicher Dinge. Auf dem Vorsatzblatt steht „Für meine Japanisch-Hausaufgaben“ – und ein Smiley.' },
 ];
 

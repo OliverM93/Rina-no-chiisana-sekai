@@ -17,6 +17,8 @@ export interface RecipeDef extends Recipe {
   start?: boolean;
   /** Gelernt beim ersten Fund dieses Gegenstands */
   fund?: string;
+  /** Gelernt, sobald ein Bewohner seinen Herzenswunsch erzählt (Wunsch-ID, siehe `data/wishes.ts`) */
+  wish?: string;
   /** Gelernt in der Kochshow im Fernsehen */
   tv?: boolean;
   /** Reiter an der Werkbank: Blumenbinderei */
@@ -27,6 +29,7 @@ export const RECIPES: readonly RecipeDef[] = [
   { id: 'ast-hocker', result: 'ast-hocker', ingredients: [{ itemId: 'ast', count: 5 }], start: true, hint: '' },
   { id: 'blumenvase', result: 'blumenvase', ingredients: [{ itemId: 'wildblumen', count: 3 }, { itemId: 'stein', count: 1 }], start: true, hint: '' },
   // Lars' Apotheke
+  { id: 'eierlikoer-premium', station: 'kueche', result: 'eierlikoer-premium', ingredients: [{ itemId: 'ei', count: 6 }, { itemId: 'keks', count: 3 }], wish: 'oma-likoer', hint: 'Oma Gisela hütet ein Likörrezept … vielleicht erzählt sie dir davon.' },
   { id: 'kamillentee', station: 'apotheke', result: 'kamillentee', ingredients: [{ itemId: 'kamille', count: 2 }], start: true, hint: '' },
   { id: 'pfefferminztee', station: 'apotheke', result: 'pfefferminztee', ingredients: [{ itemId: 'pfefferminze', count: 2 }], start: true, hint: '' },
   { id: 'lavendeltee', station: 'apotheke', result: 'lavendeltee', ingredients: [{ itemId: 'lavendel', count: 2 }], start: true, hint: '' },
