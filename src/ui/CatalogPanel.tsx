@@ -2,7 +2,7 @@
  * Möbelkatalog: Möbel, Tapeten und Böden für Sternchen kaufen.
  * Gekauftes landet sofort in der Tasche.
  */
-import { useEffect, useState } from 'preact/hooks';
+import { useEffect, useRef, useState } from 'preact/hooks';
 import { CURRENCY } from '../data/items';
 import { FLOORS, FURNITURE, type FurnitureStyle, STYLE_LABELS, VARIANT_LABELS, WALLPAPERS } from '../data/furniture';
 import { getSeason } from '../core/time';
@@ -51,11 +51,21 @@ export function CatalogPanel({ session }: { session: Session }) {
   const [variant, setVariant] = useState(0);
   const close = () => ui.set({ panel: null });
 
+  const buyRef = useRef<() => void>(() => {});
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if (e.code === 'Escape') {
         e.preventDefault();
         close();
+      }
+      // Enter kauft den ausgewählten Gegenstand (Knöpfe, Reiter & Farbpunkte behalten ihr eigenes Enter)
+      if (e.code === 'Enter' && !e.repeat) {
+        const active = document.activeElement;
+        const ownEnter = active instanceof HTMLElement && active.matches('.btn, .chip, .swatch');
+        if (!ownEnter) {
+          e.preventDefault();
+          buyRef.current();
+        }
       }
     };
     window.addEventListener('keydown', onKey);
@@ -71,11 +81,14 @@ export function CatalogPanel({ session }: { session: Session }) {
 
   const buy = () => {
     if (!sel || !v) return;
+    if (money < sel.price) return showToast('Dafür reichen deine Sternchen noch nicht. ⭐');
     const r = buyFromCatalog(session, v.itemId);
     if (r === 'ok') showToast(`${sel.name} gekauft! Liegt jetzt in deiner Tasche. 🎁`, itemIconUrl(v.itemId));
     else if (r === 'zu-teuer') showToast('Dafür reichen deine Sternchen noch nicht. ⭐');
     else if (r === 'tasche-voll') showToast('Deine Tasche ist voll! 🎒');
   };
+
+  buyRef.current = buy;
 
   return (
     <div class="modal-layer" onPointerUp={(e) => e.target === e.currentTarget && close()}>
@@ -154,6 +167,7 @@ export function CatalogPanel({ session }: { session: Session }) {
                 <div class="item-price">
                   Preis: {sel.price} {CURRENCY.icon}
                 </div>
+                <div class="soft small-text">Enter kauft</div>
               </div>
             </>
           ) : (
