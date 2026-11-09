@@ -25,6 +25,7 @@ export type Sfx =
   | 'dialog'
   | 'klick'
   | 'muenzen'
+  | 'foto'
   | 'bauen'
   | 'bellen'
   | 'gackern'
@@ -698,6 +699,11 @@ export class GameAudio {
         break;
       case 'klick':
         this.tone(t, 1200, 0.04, 0.06, 'triangle');
+        break;
+      case 'foto':
+        this.noiseBurst(out, t, 0.03, 3000, 0.25);
+        this.noiseBurst(out, t + 0.09, 0.05, 1800, 0.3);
+        this.tone(t + 0.14, 1568, 0.05, 0.05, 'triangle');
         break;
       case 'muenzen':
         [1318, 1568, 1976].forEach((f, i) => this.tone(t + i * 0.06, f, 0.22, 0.08, 'square'));

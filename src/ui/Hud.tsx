@@ -85,6 +85,10 @@ export function Hud({ session }: { session: Session }) {
             <span class="hud-tool-key">M</span>
           </button>
         )}
+        <button class="hud-bag hud-book" aria-label="Foto machen (F)" title="Foto machen (F)" disabled={busy} onClick={() => session.bus.emit('foto:aufnehmen', undefined)}>
+          📷
+          <span class="hud-tool-key">F</span>
+        </button>
         <button class="hud-bag hud-book" aria-label="Sammelbuch öffnen (B)" title="Sammelbuch (B)" disabled={busy} onClick={() => openPanel({ kind: 'book' })}>
           📖
           <span class="hud-tool-key">B</span>

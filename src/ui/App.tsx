@@ -17,6 +17,7 @@ import { MailPanel } from './MailPanel';
 import { CollectionBook } from './CollectionBook';
 import { CatalogPanel } from './CatalogPanel';
 import { BankPanel } from './BankPanel';
+import { PhotoPanel } from './PhotoPanel';
 import { StoragePanel } from './StoragePanel';
 import { SeedStandPanel } from './SeedStandPanel';
 import { CraftPanel } from './CraftPanel';
@@ -57,6 +58,7 @@ export function App({ session }: { session: Session }) {
         ui.set({ panel: { kind: 'inventory' } });
       }
       if (e.code === 'KeyB' && free && !typing) ui.set({ panel: { kind: 'book' } });
+      if (e.code === 'KeyF' && free && !typing) session.bus.emit('foto:aufnehmen', undefined);
       if (e.code === 'KeyM' && free && !typing && session.data?.flags.thaliaBegruesst) ui.set({ panel: { kind: 'karte' } });
       // G: Einrichten (drinnen) bzw. Garten gestalten (im Garten) – nochmal G = fertig
       if (e.code === 'KeyG' && free && !typing && (session.inside || session.inYard || session.decorActive)) {
@@ -129,6 +131,7 @@ export function App({ session }: { session: Session }) {
       {state.panel?.kind === 'catalog' && <CatalogPanel session={session} />}
       {state.panel?.kind === 'samenstand' && <SeedStandPanel session={session} />}
       {state.panel?.kind === 'truhe' && <StoragePanel session={session} />}
+      {state.panel?.kind === 'foto' && <PhotoPanel session={session} image={state.panel.image} />}
       {state.panel?.kind === 'bank' && <BankPanel session={session} panel={state.panel} />}
       {state.panel?.kind === 'werkbank' && <CraftPanel session={session} />}
       {state.panel?.kind === 'kochstudio' && <CraftPanel session={session} station="kueche" />}
@@ -137,7 +140,7 @@ export function App({ session }: { session: Session }) {
       {state.panel?.kind === 'galerie' && <GalleryPanel session={session} />}
       {state.panel?.kind === 'tv' && <TvPanel session={session} withOli={state.panel.withOli} />}
       {state.panel?.kind === 'herd' && <CraftPanel session={session} station="herd" />}
-      {state.panel && !['mail', 'book', 'catalog', 'bank', 'werkbank', 'kochstudio', 'apotheke', 'karte', 'galerie', 'tv', 'herd', 'samenstand', 'truhe'].includes(state.panel.kind) && <InventoryPanel session={session} panel={state.panel} />}
+      {state.panel && !['mail', 'book', 'catalog', 'bank', 'werkbank', 'kochstudio', 'apotheke', 'karte', 'galerie', 'tv', 'herd', 'samenstand', 'truhe', 'foto'].includes(state.panel.kind) && <InventoryPanel session={session} panel={state.panel} />}
       {state.dialog && (
         <DialogBox
           dialog={state.dialog}

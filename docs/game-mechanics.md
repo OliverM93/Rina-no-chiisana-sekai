@@ -26,6 +26,10 @@ Wetter und Feste laufen nach echter Zeit.
   Blumen, Jens' letzte Reise (`{stadt}`), 1 Monat / 1 Jahr im Dorf. Wird eine Erinnerung neu wahr, erwähnt der Bewohner sie **einmal von sich aus**
   beim ersten Gespräch des Tages (`takeMemory`, gemerkt in `world.dates['erinnerung:<id>']`); danach kommt die Zeile gelegentlich beim Plaudern
   wieder dran. Es werden nur Dinge aus dem Spiel erwähnt, keine erfundenen Familiengeschichten.
+- **Fotomodus:** Taste **F** (oder 📷 unten rechts) macht einen Schnappschuss der Welt (ohne Oberfläche, `World3D.takePhoto`) und öffnet das Foto-Fenster
+  (`ui/PhotoPanel.tsx`): vier Rahmen zur Wahl (Polaroid, Herzchen, Blümchen, Schlicht – gemalt in `gfx/photoFrame.ts`), Beschriftung „Linas kleine Welt ·
+  Dorf · Jahreszeit“ mit Datum, **💾 Speichern** lädt ein PNG herunter, **🔄 Neues Foto** macht ein neues. Das Bild bleibt auf dem Gerät – nichts wird hochgeladen
+  oder im Spielstand abgelegt. Zugehörig: Kameraklick (`sfx: 'foto'`).
 - **Freundschaft:** sinkt nie. Erstes Gespräch am Tag und erstes Geschenk am Tag zählen; Herz-Belohnungen
   kommen per Brief – **jedes Herz (1–5) bringt bei jedem Bewohner einen Brief mit Geschenk** (`heartLetters`, Test in
   `data/gifts.test.ts`). Meist persönliche Erinnerungsstücke mit Platz im Zimmer (Christins Setzkasten, Lars' Lern-Skelett
