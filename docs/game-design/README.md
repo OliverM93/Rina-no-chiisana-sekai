@@ -33,6 +33,7 @@ Stand der Bestandsaufnahme: November 2026 (nach Merge von Beet & Samen, Phasen 1
 | [`DESIGN_DECISIONS.md`](DESIGN_DECISIONS.md) | Getroffene Entscheidungen (mit Begründung) + offene Fragen |
 | [`IMPROVEMENTS.md`](IMPROVEMENTS.md) | Priorisierte Verbesserungsliste & Abschlussbericht der Analyse |
 | [`GAME_DESIGN_AUDIT.md`](GAME_DESIGN_AUDIT.md) | Unabhängiger, kritischer Audit des tatsächlich implementierten Spiels (Findings F1–F18, Roadmap) |
+| [`GAME_DESIGN_AUDIT_2.md`](GAME_DESIGN_AUDIT_2.md) | Nachprüfung (Nov. 2026): Status von F1–F18, neue Findings N1–N8, Empfehlung: Playtest vor neuen Features |
 
 ## Designprüfung vor jedem neuen Feature
 
