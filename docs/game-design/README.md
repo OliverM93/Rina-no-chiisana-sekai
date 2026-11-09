@@ -32,6 +32,7 @@ Stand der Bestandsaufnahme: November 2026 (nach Merge von Beet & Samen, Phasen 1
 | [`PLAYTESTING.md`](PLAYTESTING.md) | Wie wir prüfen, ob es sich gut anfühlt |
 | [`DESIGN_DECISIONS.md`](DESIGN_DECISIONS.md) | Getroffene Entscheidungen (mit Begründung) + offene Fragen |
 | [`IMPROVEMENTS.md`](IMPROVEMENTS.md) | Priorisierte Verbesserungsliste & Abschlussbericht der Analyse |
+| [`GAME_DESIGN_AUDIT.md`](GAME_DESIGN_AUDIT.md) | Unabhängiger, kritischer Audit des tatsächlich implementierten Spiels (Findings F1–F18, Roadmap) |
 
 ## Designprüfung vor jedem neuen Feature
 
@@ -49,3 +50,24 @@ kurz beantwortet (im PR-Text oder in `DESIGN_DECISIONS.md`):
 
 Nicht jede Idee muss umgesetzt werden. „Lohnt sich im Spiel nicht“ ist ein legitimes Ergebnis
 (so wurde es schon bei Beet & Samen gehandhabt).
+
+## Unabhängiger Game-Design-Audit (Ergänzung zu den Prinzipien)
+
+Neben der Designprüfung *vor* einem Feature wird das Spiel regelmäßig *als Ganzes* kritisch geprüft – wie ein fremdes Spiel,
+unabhängig davon, wer es gebaut hat. Ergebnis: [`GAME_DESIGN_AUDIT.md`](GAME_DESIGN_AUDIT.md).
+
+**Wann:** nach größeren Meilensteinen, vor dem Planen der nächsten Roadmap, oder wenn sich etwas „zu viel“ oder „zu leer“ anfühlt.
+
+**Regeln für einen Audit**
+1. **Unabhängig & selbstkritisch:** eigene frühere Entscheidungen ausdrücklich hinterfragen, nichts nachträglich rechtfertigen.
+   Mehr Features ≠ mehr Spaß. Vereinfachen, ändern oder entfernen ist erlaubt (als Empfehlung).
+2. **Am tatsächlichen Spiel prüfen:** Code, Daten, Tests, wenn möglich das laufende Spiel – nicht die Absicht.
+3. **Belastbarkeit kennzeichnen:** [N] Nachweis · [V] begründete Vermutung · [P] nur durch Playtest prüfbar.
+4. **Fragen beantworten:** Macht es Spaß? Tragen die Loops langfristig? Gibt es echte Entscheidungen? Ist die Progression
+   befriedigend? Sind Belohnungen/Ökonomie sinnvoll? Wo ist es monoton oder frustrierend? Gibt es gesunde Gründe zurückzukehren?
+   Entsteht Emergenz? Tragen alle Systeme die Säulen? Wo fehlen Ziele? Was verliert seinen Reiz?
+5. **Findings priorisieren** (Kritisch · Hoch · Mittel · Niedrig) – jeweils mit Problem, Mechanik, Auswirkung, Begründung,
+   Empfehlung, Nebenwirkungen und Playtest-Prüfung. Nach Einfluss auf den Spielspaß, nicht nach technischer Attraktivität.
+   Einfache, wirkungsvolle Lösungen vor neuen Features.
+6. **Während eines Audits wird nichts am Spiel geändert** – keine Features, kein Balancing, keine Quelldateien, keine Refactorings.
+   Erlaubt sind nur Analyse, Spiel/Tests ausführen und der Bericht. Fehlende Informationen und nötiges Playtesting werden notiert.

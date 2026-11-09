@@ -100,6 +100,9 @@ Technisch korrekt ist nicht automatisch gutes Design. Vor jeder **neuen Gameplay
 Problematische Ideen offen ansprechen und Alternativen vorschlagen – nicht jede Idee muss umgesetzt werden.
 Keine Mechanik nur für mehr Spielzeit oder Rückkehr (keine Streaks, kein FOMO, keine Strafe fürs Pausieren).
 In den Dokumenten klar trennen: ✅ implementiert · 🗓️ geplant · 💡 Empfehlung · ❓ offen.
+Regelmäßig (nach größeren Meilensteinen) zusätzlich ein **unabhängiger Game-Design-Audit** des ganzen Spiels nach den Regeln in
+[`docs/game-design/README.md`](docs/game-design/README.md) → [`GAME_DESIGN_AUDIT.md`](docs/game-design/GAME_DESIGN_AUDIT.md):
+kritisch auch gegenüber eigenen Entscheidungen, Belastbarkeit kennzeichnen ([N]/[V]/[P]), **während des Audits nichts am Spiel ändern**.
 
 `docs/screenshots/` enthält die Bilder für README und Pull Requests (nie Fotos echter Personen).
 
