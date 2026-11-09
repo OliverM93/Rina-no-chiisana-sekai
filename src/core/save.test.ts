@@ -313,9 +313,27 @@ describe('Version 13 (M8j Fortschritt)', () => {
     delete v12.story;
     (v12.house as { rooms: Array<{ items: unknown[] }> }).rooms[0].items = [1, 2, 3, 4, 5].map((i) => ({ uid: `u${i}`, itemId: 'zabuton-rosa', x: i, y: 4, rot: 0 }));
     const r = parseSave(JSON.stringify(v12), SPAWN, NOW);
-    expect(r.ok && r.data.version).toBe(13);
+    expect(r.ok && r.data.version).toBe(SAVE_VERSION);
     expect(r.ok && r.data.stats).toEqual({ sold: 1234, bought: 2, crafted: 0, cooked: 0 });
     expect(r.ok && r.data.story).toEqual({});
+  });
+});
+
+describe('Version 14 (Vorratstruhe)', () => {
+  it('ältere Spielstände bekommen eine leere Truhe', () => {
+    const v13 = { ...freshSave(), version: 13 } as Record<string, unknown>;
+    delete v13.storage;
+    const r = parseSave(JSON.stringify(v13), SPAWN, NOW);
+    expect(r.ok && r.data.version).toBe(SAVE_VERSION);
+    expect(r.ok && r.data.storage.slots.length).toBe(60);
+    expect(r.ok && r.data.storage.slots.every((x) => x === null)).toBe(true);
+  });
+
+  it('Inhalt der Truhe übersteht Speichern & Laden', () => {
+    const save = freshSave();
+    save.storage.slots[3] = { itemId: 'apfel', count: 7 };
+    const r = parseSave(JSON.stringify(save), SPAWN, NOW);
+    expect(r.ok && r.data.storage.slots[3]).toEqual({ itemId: 'apfel', count: 7 });
   });
 });
 

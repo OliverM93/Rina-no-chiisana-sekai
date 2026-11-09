@@ -106,6 +106,21 @@ Format: **Entscheidung** – Begründung – verworfene Alternative(n) – Auswi
   Stall → höchstens ~9 Eier pro Besuch, unkritisch.
 - **Alternative verworfen:** unbegrenzt ansammeln (würde Pausen „lukrativer“ machen) oder alle Tagesquellen ansammeln (verwässert den Tagesrhythmus).
 - **Playtest:** „Muss-noch“-Aussagen zählen (siehe PLAYTESTING).
+### D18 · Vorratstruhe (W4/F5, Nov. 2026)
+- **Erlebnis:** Sammeln und Beetpflege ohne Inventar-Tetris; längere Sitzungen werden nicht durch Heimwege unterbrochen.
+- **Entscheidung:** Ein gemeinsamer Vorrat (60 Plätze) für alle Truhen statt Inhalt pro Truhe → nichts geht verloren, kein Aufräumen vor dem Verschieben.
+- **Ökonomie:** Möbel für 650 ⭐ (Katalog-Mitte) – keine neue Einnahmequelle, nur Komfort. Werkzeuge sind ausgeschlossen (griffbereit).
+- **Risiko:** Horten (unkritisch, nichts verfällt). Verkauf bleibt vor Linas Haus (zweite Verkaufsstelle weiter offen).
+- **Playtest:** Heimwege pro 30 Minuten zählen (Ziel ≤ 3, siehe PLAYTESTING).
+### D17 · Winston wird gefunden statt von Anfang an dabei zu sein (Nov. 2026)
+- **Erlebnis:** Ein erstes kleines Abenteuer in den ersten Minuten; die Bindung zu Winston entsteht durch Hilfe statt durch Vorgabe
+  (Verbundenheit, Kompetenz: „Ich habe ihn gerettet“).
+- **Loop:** Onboarding: Oma → Werkzeuge → Fiepen → Winston → weiter mit den Einzügen. Das Ereignis ist ein Meilenstein vor Olafs
+  Ankündigung, damit niemand ohne Winston in die Szenen mit seinem Namen stolpert.
+- **Autonomie:** Das Fiepen ist ein Anreiz, keine Pflicht-Quest: kein Zeitlimit, Lina geht hin, wann sie mag; „Gleich wieder“ ist
+  möglich. Oma gibt in-character einen Hinweis („Hörst du das auch?“).
+- **Nebenwirkungen:** Ältere Spielstände behalten Winston (kein Verlust). Dialoge mit seinem Namen sind bis zum Fund gesperrt (Tag).
+- **Playtest:** Findet Lina das Fiepen ohne Hinweis? Wie lange dauert es bis zum Fund?
 
 ---
 

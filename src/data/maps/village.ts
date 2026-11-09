@@ -91,7 +91,7 @@ export const VILLAGE_OBJECTS: readonly MapObjectDef[] = [
 
   // Dorfplatz
   { id: 'brunnen', kind: 'fountain', x: 26, y: 18 },
-  { id: 'schwarzes-brett', kind: 'board', x: 25, y: 16 },
+  { id: 'schwarzes-brett', kind: 'board', x: 28, y: 21 }, // bewusst nicht vor einem Gebäude (nördlich davon steht nichts, das es verdeckt)
   { id: 'laterne-platz-1', kind: 'lantern', x: 22, y: 16 },
   { id: 'laterne-platz-2', kind: 'lantern', x: 31, y: 16 },
   { id: 'laterne-platz-3', kind: 'lantern', x: 23, y: 22 },
@@ -100,13 +100,14 @@ export const VILLAGE_OBJECTS: readonly MapObjectDef[] = [
   // Punschstand neben dem Weihnachtsbaum – steht nur im Dezember bis Weihnachten (virtuelles Flag)
   { id: 'punschstand', kind: 'stall', x: 29, y: 19, requires: 'adventszeit' },
 
-  // Christins Samenstand (Samen für Linas Beet) – steht, sobald Olaf & Christin eingezogen sind
-  { id: 'samenstand', kind: 'seedstall', x: 23, y: 16, requires: 'olafEingezogen' },
+  // Christins Samenstand (Samen für Linas Beet) – steht, sobald Olaf & Christin eingezogen sind. Er steht auf der
+  // Ostseite des Dorfplatzes: Die Kamera schaut schräg von Süden, hohe Stände würden sonst die Fassade dahinter (Praxis!) verdecken.
+  { id: 'samenstand', kind: 'seedstall', x: 29, y: 17, requires: 'olafEingezogen' },
 
   // Orte aus den Herzenswünschen (`data/wishes.ts`) – erscheinen, wenn der Wunsch erfüllt ist
   { id: 'beet-gisela', kind: 'landmark', variant: 'blumenbeet', x: 41, y: 17, w: 3, h: 1, requires: 'wunsch-oma-beet' },
   { id: 'angelsteg', kind: 'steg', x: 39, y: 9, w: 2, h: 1, requires: 'wunsch-olaf-steg' },
-  { id: 'kraeuterspirale', kind: 'landmark', variant: 'kraeuterspirale', x: 20, y: 18, w: 2, h: 1, requires: 'wunsch-christin-kraeuter' },
+  { id: 'kraeuterspirale', kind: 'landmark', variant: 'kraeuterspirale', x: 15, y: 16, w: 2, h: 1, requires: 'wunsch-christin-kraeuter' },
   { id: 'herzbank', kind: 'bench', variant: 'herz', x: 30, y: 32, requires: 'wunsch-oli-bank' },
   { id: 'aquarium-jens', kind: 'landmark', variant: 'aquarium', x: 53, y: 17, w: 2, h: 1, requires: 'wunsch-jens-aquarium' },
   { id: 'insektenhotel', kind: 'landmark', variant: 'insektenhotel', x: 28, y: 13, w: 1, h: 1, requires: 'wunsch-lars-insekten' },

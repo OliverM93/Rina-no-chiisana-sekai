@@ -16,6 +16,7 @@ describe('Herz-Briefe nachliefern', () => {
   it('ältere Spielstände bekommen fehlende Briefe für schon erreichte Herzen – genau einmal', () => {
     const s = new Session(memoryStorage(), () => new Date('2026-11-08T12:00:00'));
     s.startNewGame(DEFAULT_LINA, 'Testdorf');
+    Object.assign(s.data!.flags, { olafEingezogen: true, olafBegruesst: true });
     // Christin hatte schon 5 Herzen, aber nur die alten Briefe (1 & 2) bekommen
     s.data!.npcs.christin = { ...createNpcState(), points: 400, rewards: [1, 2] };
     const before = JSON.stringify(s.data!.mail).length;
@@ -30,7 +31,17 @@ describe('Herz-Briefe nachliefern', () => {
   it('Bewohner ohne Herzen bekommen nichts', () => {
     const s = new Session(memoryStorage(), () => new Date('2026-11-08T12:00:00'));
     s.startNewGame(DEFAULT_LINA, 'Testdorf');
+    Object.assign(s.data!.flags, { larsEingezogen: true, larsBegruesst: true });
     s.data!.npcs.lars = createNpcState();
+    expect(catchUpHeartLetters(s)).toBe(0);
+  });
+});
+
+describe('Herz-Briefe nur von Bewohnern, die da sind', () => {
+  it('noch nicht eingezogen → kein Nachliefern', () => {
+    const s = new Session(memoryStorage(), () => new Date('2026-11-08T12:00:00'));
+    s.startNewGame(DEFAULT_LINA, 'Testdorf');
+    s.data!.npcs.jens = { ...createNpcState(), points: 400 };
     expect(catchUpHeartLetters(s)).toBe(0);
   });
 });
