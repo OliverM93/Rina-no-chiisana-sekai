@@ -96,6 +96,10 @@ Wetter und Feste laufen nach echter Zeit.
   nachts Sterne). Alles über Story-Flags (`wunsch-<id>`, `wunsch-erzaehlt-<id>`), kein neues Spielstand-Feld. Keine Frist,
   keine Reihenfolge; Thalias Dorfkarte zeigt 💭 bei Bewohnern mit offenem Wunsch. Mehrere Wünsche je Bewohner sind
   vorbereitet (`order`).
+- **Vorratstruhe:** Möbel `vorratstruhe` (Katalog, 650 ⭐, 2×1, Dinge dürfen oben drauf stehen) öffnet ein Lager mit **60 Plätzen**
+  (`SaveData.storage`, `game/storage.ts`, Fenster `ui/StoragePanel.tsx`). Klick (oder Enter/Leertaste, Pfeiltasten) legt einen ganzen
+  Stapel von der Tasche in die Truhe und zurück; Werkzeuge bleiben in der Tasche; „↕ Sortieren“ ordnet die Truhe. **Alle Truhen teilen sich
+  denselben Vorrat** – nichts geht verloren, wenn Lina eine verschiebt oder wegräumt. Was nicht mehr passt, bleibt, wo es war.
 - **Nichts geht für immer verloren:** Werkzeuge und einmalige Geschenke (Möbel mit `gift: true`, außer Kunst) sind
   Erinnerungsstücke (`isKeepsake`): unverkäuflich (`price: null`) und nicht verschenkbar. Fehlt beim Laden etwas, das
   Lina haben sollte (`missingKeepsakes`: Omas Werkzeuge, Thalias Schaufel, Olis Einzugsmöbel), kommt es zurück.

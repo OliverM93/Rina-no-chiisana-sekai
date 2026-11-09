@@ -264,6 +264,7 @@ Legende: ✅ erledigt · 🚧 in Arbeit · ⬜ geplant
   - ✅ **Phase 3 – Gemüse & Kräuter:** 6 Gemüse + 4 Kräuter im Beet (mehrere Stück je Ernte, Wurzelgemüse räumt den Platz), Reiter am Samenstand (saisonal), 7 neue Gerichte, Rezepte bei der ersten Ernte
   - ✅ **Phase 4 – Sträuße & Blumendeko:** 7 Sträuße binden (Reiter „Blumen“ an der Werkbank), Glasvase im Katalog, Vasen mit Strauß & 4 Wandkränze, Strauß-Geschenke für alle Bewohner
   - ✅ **Phase 5 – Gewächshaus:** Winterruhe im Beet draußen (Raureif), Frühbeet & Gewächshaus lassen es ganzjährig wachsen
+- ✅ **Vorratstruhe:** 60 Lagerplätze außerhalb der Tasche (Möbel im Katalog), Spielstand v14; Leertaste drückt in allen Fenstern den fokussierten Knopf – aus der Game-Design-Analyse (W4/F5)
 - ✅ **Feedback-Runde:** Auswahl folgt den Pfeiltasten (Werkbank, Katalog, Sammelbuch, Galerie, Post), Post erst nach Einzug, Samenstand & Schwarzes Brett nicht mehr vor Gebäuden, Lars'/Olafs Herz-5-Geschenke ohne erfundene Kindheitsgeschichten
 - ✅ **Herzenswünsche (Phase 1):** Nach dem letzten Einzug hat jeder Bewohner einen Wunsch fürs Dorf – erfüllt mit Gesammeltem, Gefangenem & Angebautem; danach steht ein neuer Ort im Dorf (Blumenbeet, Angelsteg, Kräuterspirale, Herzbank, Aquarium, Insektenhotel, Aussichtspunkt) – aus der Game-Design-Analyse (W1)
 - ✅ **Jedes Herz zählt:** 12 neue Herz-Briefe – jetzt bringt jedes Herz bei jedem Bewohner ein Geschenk (9 neue Erinnerungsstücke, Thymiantee & Steinmännchen, Papas Witze-Kalender) – aus der Game-Design-Analyse (W2)

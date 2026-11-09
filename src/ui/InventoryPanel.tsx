@@ -10,26 +10,8 @@ import { toggleTool } from '../game/nature';
 import { applySurface, isSurface } from '../game/home';
 import type { Session, UiPanel } from '../game/session';
 import { itemIconUrl } from '../gfx/items';
+import { CATEGORY_LABEL } from './categories';
 import { showToast, ui, useSessionVersion } from './store';
-
-const CATEGORY_LABEL: Record<string, string> = {
-  obst: 'Obst',
-  muschel: 'Strandfund',
-  blume: 'Blumen',
-  gemuese: 'Gemüse',
-  kraut: 'Kraut',
-  material: 'Material',
-  fund: 'Schatz',
-  essen: 'Leckerei',
-  geschenk: 'Erinnerungsstück',
-  werkzeug: 'Werkzeug',
-  moebel: 'Möbel',
-  tapete: 'Tapete',
-  boden: 'Boden',
-  samen: 'Samen',
-  fisch: 'Fisch',
-  insekt: 'Insekt',
-};
 
 export function InventoryPanel({ session, panel }: { session: Session; panel: UiPanel }) {
   useSessionVersion(session);
