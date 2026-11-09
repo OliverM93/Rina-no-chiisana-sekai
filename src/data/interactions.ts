@@ -138,6 +138,52 @@ export const INTERACTIONS: Record<string, Interaction> = {
     ],
   },
 
+  // ---- Orte aus den Herzenswünschen (data/wishes.ts) ----
+  'beet-gisela': {
+    title: 'Omas Blumenbeet',
+    lines: (ctx) =>
+      ctx.season === 'winter'
+        ? ['Omas Blumenbeet schläft unter einer dünnen Schneedecke.', 'Ein kleines Schild: „Für Ludwig. Im Frühling geht’s weiter.“ ❄️']
+        : ['Rosen und Vergissmeinnicht, dicht an dicht. Es duftet herrlich.', 'Auf dem kleinen Schild steht in Omas Schrift: „Für Ludwig. Gepflanzt von Lina.“ 💙'],
+  },
+  kraeuterspirale: {
+    title: 'Christins Kräuterspirale',
+    lines: (ctx) => [
+      'Basilikum, Schnittlauch, Petersilie und ganz oben Thymian – jede Sorte genau an ihrem Platz.',
+      daily(ctx, ['Ein Stein liegt ein winziges bisschen schief. Du lässt ihn lieber so. Oder? … Nein. Du rückst ihn gerade. 😄', 'Es riecht nach Sommerküche. 🌿', 'Ein Zettel: „Bitte nur von außen pflücken. Danke! C.“']),
+    ],
+  },
+  herzbank: {
+    title: 'Eure Bank',
+    lines: (ctx) =>
+      ctx.phase === 'abend' || ctx.phase === 'abenddaemmerung'
+        ? ['Eure Bank am Strand. Das Muschelherz glänzt im Abendlicht. 🌅', 'Unten, ganz klein eingeritzt: „L + O“. 💕']
+        : isNight(ctx)
+          ? ['Eure Bank im Mondlicht. Die Wellen rauschen leise.', 'Unten, ganz klein eingeritzt: „L + O“. 💕']
+          : ['Eure Bank am Strand – mit einem Herz aus Muscheln in der Lehne.', 'Unten, ganz klein eingeritzt: „L + O“. 💕'],
+  },
+  'aquarium-jens': {
+    title: 'Jens’ Aquarium',
+    lines: (ctx) => [
+      'Drei Fische ziehen gemächlich ihre Runden um den Seestern.',
+      daily(ctx, ['Der größte heißt Gérard. Die anderen auch.', 'Ein Fisch schaut dich an. Du schaust zurück. Ihr versteht euch.', 'Jens hat ein Schild drangeklebt: „Bitte nicht füttern. Außer mit Komplimenten.“ 🌈']),
+    ],
+  },
+  insektenhotel: {
+    title: 'Insektenhotel',
+    lines: (ctx) =>
+      ctx.season === 'winter'
+        ? ['Das Insektenhotel ist still. Alle Gäste halten Winterschlaf.', 'Lars hat ein Schild aufgehängt: „Bitte nicht stören. Ärztliche Anordnung.“ 💤']
+        : ['Es summt und brummt. Eine Wildbiene schaut kurz aus einem Loch und verschwindet wieder.', daily(ctx, ['Ein Schild: „Hotel Brummbär – keine freien Zimmer.“ 🐝', 'Ein Schild: „Check-in: jederzeit. Check-out: nie.“ 🐝'])],
+  },
+  aussichtspunkt: {
+    title: 'Thalias Aussichtspunkt',
+    lines: (ctx) =>
+      isNight(ctx)
+        ? ['Du schaust durchs Fernrohr in den Nachthimmel.', daily(ctx, ['Der Mond ist ganz nah – man sieht sogar die Krater. 🌙', 'Ein Sternenhaufen funkelt wie verschütteter Zucker. ✨', 'Eine Sternschnuppe! Schnell was wünschen … 🌠'])]
+        : ['Du schaust durchs Fernrohr aufs Meer.', daily(ctx, ['Weit draußen tuckert ein kleines Fischerboot. ⛵', 'Möwen kreisen über den Wellen. Eine schaut genau zurück.', 'Ganz links, wenn du dich anstrengst: Omas Bank. Sie winkt. Natürlich.']), 'Auf der Tafel daneben: „Fundstücke aus {dorf} – gesammelt von Lina & Thalia.“'],
+  },
+
   'bank-wiese': {
     title: 'Bank',
     lines: () => ['Du setzt dich zwischen die Blumen. Es summt und brummt überall. 🌼'],

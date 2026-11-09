@@ -25,8 +25,13 @@ Spielzeit**, nicht an Kalendertagen (Entscheidung M8j). Nach erfülltem Meilenst
 - ✅ Stark: Jeder Meilenstein *führt* in ein neues System ein (Sammelbuch → Katalog → Werkbank → Küche → Praxis).
   Das ist gutes Onboarding ohne Tutorial-Zwang.
 - ✅ Stark: Hinweise kommen in-character im Gespräch statt als Aufgabenliste.
-- ⚠️ Schwäche: Die Geschichte ist **früh zu Ende**. Danach gibt es keine erzählerischen Meilensteine mehr – die
-  Langzeitmotivation hängt allein an Hausausbau, Sammeln und Jahreszeiten.
+- ⚠️ Schwäche: Die Geschichte ist **früh zu Ende**. → 🔶 teilweise gelöst durch die Herzenswünsche (1b); weitere Phasen offen.
+
+### 1b. Herzenswünsche ✅ (seit Nov. 2026, Phase 1)
+
+Nach Thalias Einzug: Omas Brief „Herzenswünsche“, jeder Bewohner hat einen Wunsch fürs Dorf (`data/wishes.ts`). Erfüllt mit
+Gesammeltem → neuer Ort im Dorf, +30 Freundschaft. Schließt die Lücke „Geschichte endet früh“ zum Teil; weitere Wünsche je
+Bewohner sind vorbereitet. Details: `DESIGN_DECISIONS.md` D16.
 
 ## 2. Hausausbau ✅
 

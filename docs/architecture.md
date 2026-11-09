@@ -116,7 +116,10 @@ src/
 - **Gelände:** Höhenraster (Fluss/Meer abgesenkt) + Textur, die per „Dual-Grid“-Autotiling mit runden Kanten
   gemalt wird (`gfx/terrain.ts`, `world3d/terrain3d.ts`). Karte = ASCII in `data/maps/village.ts`.
 - **Objekte** (Häuser, Schilder, Laternen …) stehen in `VILLAGE_OBJECTS`; Größe, Kollision und
-  Interaktionspunkte pro Art in `OBJECT_KINDS` (`core/worldmap.ts`).
+  Interaktionspunkte pro Art in `OBJECT_KINDS` (`core/worldmap.ts`). Ausnahmen mit eigener Größe (`w`/`h` am Objekt):
+  `landmark` (Orte aus den Herzenswünschen, ansehbar von allen Seiten – `interactOffsets`, Modelle in
+  `world3d/models/landmarks.ts` je `variant`) und `steg` (begehbar übers Wasser wie die Brücke). Objekte mit `requires`
+  erscheinen erst mit dem Story-Flag (`applyMapFlags`).
 - **Interaktionen:** Texte in `data/interactions.ts`, abhängig von Tageszeit/Jahreszeit/Tag. `{dorf}` wird
   ersetzt. Ein Test prüft, dass jedes interaktive Objekt zu Fuß erreichbar ist.
 - **Figuren:** `world3d/models/chibi3d.ts` baut jede Figur aus `Appearance` (Frisur, Farben, Größe, Statur,

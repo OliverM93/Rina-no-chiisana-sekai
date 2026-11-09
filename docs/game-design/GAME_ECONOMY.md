@@ -43,6 +43,7 @@ realistisch **~10–15 k ⭐/h**. **Im Playtest messen!**
 | Gewächshaus / Frühbeet | 4 200 / 1 800 |
 | Galerie | 900–2 200 je Bild, 1 Angebot/Tag |
 | Samen | 12–20 ⭐ je Tüte |
+| Herzenswünsche ✅ | Materialien + 5 000 ⭐ (Olafs Steg 3 000, Thalias Aussichtspunkt 2 000) |
 | Saisonware (Winter, Saison-Tassen) | wiederkehrend |
 
 **Gesamtbedarf** für „alles einmal besitzen“: grob **~380 k ⭐**. Danach gibt es kaum noch Senken außer Samen

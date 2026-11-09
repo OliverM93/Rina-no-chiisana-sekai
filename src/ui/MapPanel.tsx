@@ -6,6 +6,7 @@ import { useEffect, useRef } from 'preact/hooks';
 import { isActive, type Terrain, terrainAt } from '../core/worldmap';
 import { NPCS } from '../data/npcs';
 import type { Session } from '../game/session';
+import { activeWish } from '../game/wishes';
 import { palette } from '../style/palette';
 import { ui } from './store';
 
@@ -29,6 +30,14 @@ const LABELS: Record<string, string> = {
   'haus-thalia': 'Thalia',
   brunnen: '⛲',
   'werkbank-lina': '🔨',
+  // Orte aus den Herzenswünschen
+  'beet-gisela': '🌹',
+  angelsteg: '🎣',
+  kraeuterspirale: '🌿',
+  herzbank: '💕',
+  'aquarium-jens': '🐠',
+  insektenhotel: '🐝',
+  aussichtspunkt: '🔭',
 };
 
 const CELL = 12;
@@ -77,7 +86,7 @@ export function MapPanel({ session }: { session: Session }) {
       } else if (o.kind === 'rock') {
         ctx.fillStyle = palette.stone.dark;
         ctx.fillRect(cx - 4, cy - 3, 8, 6);
-      } else if (o.kind === 'bridge') {
+      } else if (o.kind === 'bridge' || o.kind === 'steg' || o.kind === 'landmark') {
         ctx.fillStyle = palette.wood.base;
         ctx.fillRect(o.x * CELL, o.y * CELL + 2, o.w * CELL, CELL - 4);
       }
@@ -107,6 +116,11 @@ export function MapPanel({ session }: { session: Session }) {
       ctx.arc((p.x / 64) * CELL, (p.y / 64) * CELL, 4.5, 0, Math.PI * 2);
       ctx.fill();
       ctx.stroke();
+      // offener Herzenswunsch: kleine Gedankenblase (nur ein Hinweis, keine Aufgabe)
+      if (activeWish(session, n.id)) {
+        ctx.font = '11px sans-serif';
+        ctx.fillText('💭', (p.x / 64) * CELL + 8, (p.y / 64) * CELL - 5);
+      }
     }
     const lina = pos.lina;
     if (lina) {
@@ -120,7 +134,7 @@ export function MapPanel({ session }: { session: Session }) {
       <div class="card map-card pop-in">
         <h2 class="card-title">🗺️ Thalias Karte von {session.data?.villageName}</h2>
         <canvas ref={canvas} class="village-map" />
-        <p class="soft small-text center">💗 = du · Punkte = Bewohner · gezeichnet von Thalia mit viel Liebe (und Lineal)</p>
+        <p class="soft small-text center">💗 = du · Punkte = Bewohner · 💭 = hat einen Herzenswunsch · gezeichnet von Thalia mit viel Liebe (und Lineal)</p>
         <div class="card-actions">
           <button class="btn ghost" onClick={close}>
             Schließen (M)
