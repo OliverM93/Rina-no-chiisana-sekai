@@ -2,10 +2,11 @@
  * Anzeige oben: Uhrzeit, Datum, Jahreszeit und Menü-Knopf.
  */
 import { useEffect, useState } from 'preact/hooks';
-import { formatDate, formatTime, getDayPhase, getSeason, SEASON_ICONS, SEASON_LABELS } from '../core/time';
+import { formatDate, formatTime, getDayPhase, getSeason, type Season, SEASON_ICONS, SEASON_LABELS } from '../core/time';
 import { WEATHER_ICONS, WEATHER_LABELS } from '../core/weather';
 import { isFireworkTime } from '../core/festivals';
 import { itemDef } from '../data/items';
+import { CONSTELLATION_BY_SEASON } from '../data/sternbilder';
 import { currentWeather, ownedTools, toggleTool } from '../game/nature';
 import { itemIconUrl } from '../gfx/items';
 import type { Session } from '../game/session';
@@ -46,7 +47,7 @@ export function Hud({ session }: { session: Session }) {
   return (
     <>
       {weather.rainbow && <div class="rainbow-overlay" aria-hidden="true" />}
-      {stars && <StarsOverlay />}
+      {stars && <StarsOverlay season={season} />}
       <div class={`door-fade ${fade ? 'on' : ''}`} aria-hidden="true" />
       {isFireworkTime(now) && !inside && <FireworksOverlay />}
       <div class="hud-clock pop-in">
@@ -120,13 +121,25 @@ export function Hud({ session }: { session: Session }) {
 }
 
 /** Sternenhimmel oben im Bild mit ein paar Sternschnuppen (die Kamera zeigt keinen echten Himmel) */
-function StarsOverlay() {
+function StarsOverlay({ season }: { season: Season }) {
+  const sign = CONSTELLATION_BY_SEASON[season];
   const stars = Array.from({ length: 46 }, (_, i) => ({ x: (i * 37.7) % 100, y: ((i * 53.3) % 40) + (i % 3) * 2, s: 1 + (i % 3), d: (i % 7) * 0.4 }));
   return (
     <div class="stars-overlay" aria-hidden="true">
       {stars.map((st, i) => (
         <span key={i} class="star" style={{ left: `${st.x}%`, top: `${st.y}%`, width: `${st.s}px`, height: `${st.s}px`, animationDelay: `${st.d}s` }} />
       ))}
+      <div class="constellation">
+        <svg viewBox="0 0 100 60" role="presentation">
+          {sign.lines.map(([a, b], i) => (
+            <line key={i} x1={sign.stars[a][0]} y1={sign.stars[a][1]} x2={sign.stars[b][0]} y2={sign.stars[b][1]} style={{ animationDelay: `${1.6 + i * 0.35}s` }} />
+          ))}
+          {sign.stars.map(([x, y, m], i) => (
+            <circle key={i} cx={x} cy={y} r={0.9 + m * 0.7} />
+          ))}
+        </svg>
+        <span class="constellation-name">{sign.name}</span>
+      </div>
       {[0, 1, 2].map((i) => (
         <span key={`s${i}`} class="shooting-star" style={{ top: `${8 + i * 9}%`, left: `${20 + i * 25}%`, animationDelay: `${1 + i * 2.3}s` }} />
       ))}

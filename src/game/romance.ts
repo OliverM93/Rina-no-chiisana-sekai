@@ -4,6 +4,7 @@
  */
 import { heartsFor } from '../core/friendship';
 import { hashString } from '../core/rng';
+import { CONSTELLATION_BY_SEASON } from '../data/sternbilder';
 import { KISS_LINES, PICNIC_LINES, STARS_LINES } from '../data/npcs/oli';
 import { daysBetween } from '../core/daily';
 import { getDayPhase, getSeason } from '../core/time';
@@ -50,7 +51,9 @@ export function haveDate(session: Session, kind: DateKind): string[] {
     return lines;
   }
   const pool = kind === 'picknick' ? PICNIC_LINES : STARS_LINES;
-  const lines = [...pool[hashString(`${session.today()}:${kind}`) % pool.length]];
+  // Beim Sterne gucken zeigt Oli zuerst das Sternbild der Jahreszeit (es leuchtet im Himmels-Overlay)
+  const lines = kind === 'sterne' ? [...CONSTELLATION_BY_SEASON[getSeason(session.clock())].lines_] : [];
+  lines.push(...pool[hashString(`${session.today()}:${kind}`) % pool.length]);
   lines.push(...addFriendship(session, 'oli', DATE_POINTS));
   session.save();
   return lines;

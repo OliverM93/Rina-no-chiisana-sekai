@@ -170,6 +170,9 @@ Wetter und Feste laufen nach echter Zeit.
   (einmal am Tag, 8–23 Uhr, kein Regen): Lina und Oli sitzen nebeneinander auf der Bank am Strand, Zeilen je **Jahreszeit und Tageszeit** (`BENCH_LINES`), +8 Punkte.
   **Jubiläen:** Briefe mit Strauß 100 Tage und 1 Jahr nach Olis Einzug (`checkOliAnniversaries`, gezählt ab `world.dates['oli-einzug']`; ältere Spielstände ab dem ersten Aufruf).
   Picknick, Sterne gucken, Küsschen & Co. bleiben wie sie waren.
+- **Sternbilder (E3):** Beim Sterne gucken (Date mit Oli) leuchtet im Himmels-Overlay das **Sternbild der Jahreszeit** auf – Frühling Großer Wagen, Sommer Schwan,
+  Herbst Kassiopeia, Winter Orion (`data/sternbilder.ts`, Sterne erscheinen, dann ziehen sich die Linien, zuletzt der Name). Oli erklärt es mit zwei Zeilen vor dem
+  bisherigen Gespräch (`game/romance.ts`).
 - **Jens:** Bistro = Kartenobjekt `bistro` (`bistro-jens`, ersetzt `bauplatz-3`). Kochen nutzt dieselben Rezepte
   wie die Werkbank (`station: 'kueche'` in `data/recipes.ts`, Fenster `CraftPanel` mit `station="kueche"`).
   `NpcDef.away(day)` = verreist (dann Postkarte mit Andenken, `travelPostcard`, in `game/story.ts`).

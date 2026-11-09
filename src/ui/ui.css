@@ -1721,6 +1721,51 @@ body:has(.dialog-layer) .decor-bar {
   animation: twinkle 2.4s ease-in-out infinite;
 }
 
+/* Sternbild der Jahreszeit: Sterne erscheinen, dann ziehen sich die Linien nach und nach */
+.stars-overlay .constellation {
+  position: absolute;
+  top: 7%;
+  right: 8%;
+  width: min(30vw, 340px);
+  text-align: center;
+}
+
+.constellation svg {
+  width: 100%;
+  overflow: visible;
+}
+
+.constellation circle {
+  fill: var(--night-star);
+  filter: drop-shadow(0 0 2px var(--night-star));
+  animation: twinkle 2.8s ease-in-out infinite;
+}
+
+.constellation line {
+  stroke: var(--night-star);
+  stroke-width: 0.5;
+  stroke-linecap: round;
+  opacity: 0;
+  animation: constellation-line 1.2s ease-out forwards;
+}
+
+.constellation-name {
+  display: inline-block;
+  margin-top: 4px;
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  color: var(--night-star);
+  opacity: 0;
+  animation: fade-in 1.6s ease-out 3s forwards;
+}
+
+@keyframes constellation-line {
+  to {
+    opacity: 0.7;
+  }
+}
+
 @keyframes twinkle {
   50% {
     opacity: 0.35;
