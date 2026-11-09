@@ -98,6 +98,14 @@ Format: **Entscheidung** – Begründung – verworfene Alternative(n) – Auswi
    bräuchten mehr Inhalt. Wünsche nutzen Bestehendes und erzählen kleine Geschichten – bester Aufwand-Nutzen.
 - **Technik:** Zustand komplett in Story-Flags (kein `SAVE_VERSION`-Wechsel), Orte als `landmark`/`steg` mit `requires`.
 
+### D20 · Erinnerungen im Gespräch (W5/F8, Nov. 2026)
+- **Erlebnis:** „Sie haben das bemerkt!“ – Bewohner reagieren auf Linas Spielstand; Gespräche wiederholen sich nach Wochen weniger.
+- **Entscheidung:** Neue Erinnerungen werden **einmal von sich aus** erzählt (damit sie auffallen), danach nur noch gelegentlich im Plaudern
+  (kein tägliches Wiederholen derselben Zeile).
+- **Grenze (Säule 1 / Feedback):** Nur Ereignisse aus dem Spiel, **keine erfundenen Kindheits- oder Familiengeschichten** der echten Personen.
+  Echte Insider können später von Lina/Oli kommen (siehe offene Frage Q7 im Audit).
+- **Technik:** Tags aus dem Spielstand (`memoryTags`), keine neuen Spielstandfelder außer `world.dates['erinnerung:<id>']`.
+- **Offen:** Pools für Thalia/Oli/Olaf weiter aufstocken; weitere Tags (Wünsche, Kreuzungen, Kaffee).
 ### D19 · Tagesfunde sammeln sich an (F4/E5, Nov. 2026)
 - **Erlebnis:** Pausen fühlen sich nicht nach Verlust an; keine „ich muss heute noch zu den Hühnern“-Pflichtrunde.
 - **Entscheidung:** Eier (Hühner 2–3, Wachteln 3–4 pro Tag) und Winstons Buddelfunde sammeln sich bis zu **3 Tage** an. Keine weiteren
