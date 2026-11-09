@@ -411,7 +411,7 @@ export const WISHES_3: readonly WishDef[] = [
     order: 2,
     title: 'Mitternachtskino mit Lini',
     intro: [
-      'Lini, in der Stadt läuft eine Mitternachtsvorstellung. Ein alter Schwarz-Weiß-Kultfilm, „Das Nebelzimmer“. Von deinem Lieblingsregisseur – du weißt schon, der mit dem Radierkopf auf deinem Pulli.',
+      'Lini, in der Stadt läuft eine Mitternachtsvorstellung. Ein alter Schwarz-Weiß-Kultfilm, „Verlorene Autobahn“. Von deinem Lieblingsregisseur – du weißt schon, der mit dem Radierkopf auf deinem Pulli.',
       'Ich hab ehrlich gesagt keine Ahnung, worum es geht. Soll ja keiner verstehen. Aber ich würde es so gern mit dir sehen. Du erklärst mir hinterher alles. Oder auch nichts. Das ist ja der Witz.',
       'Zwei Karten und ein bisschen Kinogeld: 120 Sternchen. Und zwei Snacks, die man im Dunkeln leise essen kann. Nicht zu knusprig, bitte. Die Leute zischen sonst.',
     ],
@@ -419,11 +419,11 @@ export const WISHES_3: readonly WishDef[] = [
     needs: [{ category: 'essen', count: 2, label: 'Snacks (zwei Gerichte)' }],
     stars: 120,
     done: [
-      'Das war … ich habe wirklich kein Wort verstanden. Es gab ein Zimmer, Nebel, einen Mann mit sehr langsamer Stimme und einen Vorhang. Viel Vorhang.',
+      'Das war … ich habe wirklich kein Wort verstanden. Es gab eine Autobahn bei Nacht, einen Mann mit sehr langsamer Stimme und ungefähr elf Mal dieselbe Tür. Ich glaube, es war wichtig.',
       'Aber du hast die ganze Zeit gestrahlt. Und ich hab die ganze Zeit dich angeguckt. Das war der beste Film meines Lebens, Lini. 💕',
       'Ich hab uns zur Erinnerung das Plakat mitgenommen. Hängt es irgendwo auf, wo ich es nachts im Vorbeigehen sehe. Dann rätsle ich weiter.',
     ],
-    rewardItems: [{ itemId: 'poster-nebelzimmer', count: 1 }],
+    rewardItems: [{ itemId: 'poster-verlorene-autobahn', count: 1 }],
   },
   {
     id: 'oli-bandshirt',
@@ -431,11 +431,11 @@ export const WISHES_3: readonly WishDef[] = [
     order: 3,
     title: 'Das seltene Tourshirt',
     intro: [
-      'Lini, darf ich dir was Nerdiges beichten? Es gibt ein Shirt von NACHTSCHICHT, von der allerletzten Tour. Nur hundert Stück gedruckt. Die Band gibt es nicht mehr. Ich hab es mal in einer Sammlerkiste gesehen und es nicht gekauft. Ich ärgere mich bis heute.',
+      'Lini, darf ich dir was Nerdiges beichten? Es gibt ein Shirt von „Letzte Ruhestätte“, von der allerletzten Tour. Nur hundert Stück gedruckt. Die Band gibt es nicht mehr. Ich hab es mal in einer Sammlerkiste gesehen und es nicht gekauft. Ich ärgere mich bis heute.',
       'Thalia kennt einen Sammler, der tauscht. Er will einen Bernstein und, na ja, Sammlerpreis: 300 Sternchen. Ich weiß, ich weiß. Ein Shirt. Aber es ist EIN Shirt.',
       'Ich würde es nur zu besonderen Anlässen tragen. Also ungefähr alle paar Tage. Besondere Anlässe gibt es ja ständig.',
     ],
-    reminder: ['Das NACHTSCHICHT-Shirt? Ich hab die Größe schon dreimal nachgeprüft. Es ist M. Es war immer M.'],
+    reminder: ['Das „Letzte Ruhestätte“-Shirt? Ich hab die Größe schon dreimal nachgeprüft. Es ist M. Es war immer M.'],
     needs: [{ item: 'bernstein', count: 1, label: 'Bernstein (zum Tauschen)' }],
     stars: 300,
     done: [

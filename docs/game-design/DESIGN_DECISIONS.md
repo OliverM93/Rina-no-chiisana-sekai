@@ -167,7 +167,7 @@ Format: **Entscheidung** – Begründung – verworfene Alternative(n) – Auswi
 
 ### D25 · Olis Wünsche: Kino und seltenes Bandshirt (Nov. 2026)
 - **Anlass:** Olis Wunschliste von Lina: gemeinsam ins Kino zu einem Kultfilm ihres Lieblingsregisseurs, ein seltenes Bandshirt.
-- **Keine echten Namen:** Regisseur, Film und Band sind ausgedacht („Das Nebelzimmer“, NACHTSCHICHT); der Bezug zu Linas „Radierkopf“-Pulli ist die einzige Verbeugung.
+- **Namen (auf Linas Wunsch):** Der Film heißt „Verlorene Autobahn“ (Titel eines echten Kultfilms, bewusst von Lina gewählt; der Regisseur wird nicht genannt, nur der Bezug zu Linas „Radierkopf“-Pulli). Die Bands auf Olis Shirts sind ausgedacht: „Kaltbrand“ und „Sieben Schwerter“ im Wechsel, „Letzte Ruhestätte“ als seltenes Tourshirt (Wunsch).
 - **Designprüfung:** Beide Wünsche sind optional, ohne Frist und ohne Streak. Kino ist eine **gemeinsame Szene** (Verbundenheit), das Shirt eine **sichtbare Veränderung**
   an Oli (Besitz/Persönlichkeit). Kosten bescheiden: 120 ⭐ + 2 Snacks bzw. 300 ⭐ + 1 Bernstein (Thalias Sammler tauscht) – Sternchen-Senke ohne Grind.
 - **Technik:** `Appearance.band` (optional) und `wardrobeFor(session, def)`; kein neues Spielstand-Feld (Flags), kein `SAVE_VERSION`-Wechsel.

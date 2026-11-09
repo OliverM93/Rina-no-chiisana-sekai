@@ -196,58 +196,61 @@ const MOTIFS: Record<PosterMotif, (ctx: C, w: number, h: number) => void> = {
     }
   },
   kultfilm: (ctx, w, h) => {
-    // Schwarz-Weiß: Zimmer mit Zickzack-Boden, Vorhang und Lichtkegel im Nebel
-    ctx.fillStyle = '#d8d6d1';
+    // Schwarz-Weiß: Autobahn bei Nacht, Mittelstreifen laufen zum Fluchtpunkt, Scheinwerferkegel im Nebel
+    const vx = w * 0.5;
+    const vy = h * 0.38;
+    ctx.fillStyle = '#2a2a30';
     ctx.beginPath();
-    ctx.moveTo(w * 0.3, h * 0.62);
-    ctx.lineTo(w * 0.7, h * 0.62);
-    ctx.lineTo(w * 0.95, h * 0.9);
-    ctx.lineTo(w * 0.05, h * 0.9);
+    ctx.moveTo(vx - w * 0.02, vy);
+    ctx.lineTo(vx + w * 0.02, vy);
+    ctx.lineTo(w * 1.05, h * 0.9);
+    ctx.lineTo(-w * 0.05, h * 0.9);
     ctx.closePath();
     ctx.fill();
-    ctx.strokeStyle = '#1a1a1e';
-    ctx.lineWidth = Math.max(2, w * 0.016);
-    ctx.beginPath();
-    for (let i = 0; i <= 8; i++) {
-      const t = i / 8;
-      ctx.lineTo(w * (0.3 + 0.4 * t) + (i % 2 ? w * 0.02 : -w * 0.02), h * 0.62 + (i % 2 ? h * 0.02 : 0));
+    // Randlinien
+    ctx.strokeStyle = '#d8d6d1';
+    ctx.lineWidth = Math.max(2, w * 0.012);
+    for (const s of [-1, 1]) {
+      ctx.beginPath();
+      ctx.moveTo(vx + s * w * 0.02, vy);
+      ctx.lineTo(vx + s * w * 0.5, h * 0.9);
+      ctx.stroke();
     }
-    ctx.stroke();
-    ctx.beginPath();
-    for (let i = 0; i <= 8; i++) {
-      const t = i / 8;
-      ctx.lineTo(w * (0.18 + 0.64 * t), h * (0.76 + (i % 2 ? 0.04 : -0.04)));
+    // Mittelstreifen (Striche werden nach vorn größer)
+    ctx.fillStyle = '#e9e7e3';
+    for (let i = 0; i < 7; i++) {
+      const t0 = Math.pow(i / 7, 1.8);
+      const t1 = Math.pow((i + 0.55) / 7, 1.8);
+      const y0 = vy + (h * 0.9 - vy) * t0;
+      const y1 = vy + (h * 0.9 - vy) * t1;
+      ctx.beginPath();
+      ctx.moveTo(vx - (0.004 + 0.02 * t0) * w, y0);
+      ctx.lineTo(vx + (0.004 + 0.02 * t0) * w, y0);
+      ctx.lineTo(vx + (0.004 + 0.02 * t1) * w, y1);
+      ctx.lineTo(vx - (0.004 + 0.02 * t1) * w, y1);
+      ctx.fill();
     }
-    ctx.stroke();
-    // Vorhänge
-    ctx.fillStyle = '#8f8c88';
-    for (const s of [0, 1]) {
-      for (let i = 0; i < 4; i++) {
-        ctx.beginPath();
-        ctx.moveTo(s * w * 0.8 + i * w * 0.05, h * 0.3);
-        ctx.quadraticCurveTo(s * w * 0.8 + i * w * 0.05 + w * 0.025, h * 0.46, s * w * 0.8 + i * w * 0.05, h * 0.62);
-        ctx.lineTo(s * w * 0.8 + (i + 1) * w * 0.05, h * 0.62);
-        ctx.lineTo(s * w * 0.8 + (i + 1) * w * 0.05, h * 0.3);
-        ctx.fill();
-      }
-    }
-    // Lichtkegel
-    const cone = ctx.createLinearGradient(0, h * 0.28, 0, h * 0.62);
-    cone.addColorStop(0, 'rgba(255,255,245,0.85)');
-    cone.addColorStop(1, 'rgba(255,255,245,0.05)');
+    // Scheinwerferkegel von unten
+    const cone = ctx.createLinearGradient(0, h * 0.9, 0, vy);
+    cone.addColorStop(0, 'rgba(255,255,245,0.55)');
+    cone.addColorStop(1, 'rgba(255,255,245,0)');
     ctx.fillStyle = cone;
     ctx.beginPath();
-    ctx.moveTo(w * 0.46, h * 0.28);
-    ctx.lineTo(w * 0.54, h * 0.28);
-    ctx.lineTo(w * 0.7, h * 0.62);
-    ctx.lineTo(w * 0.3, h * 0.62);
+    ctx.moveTo(w * 0.2, h * 0.9);
+    ctx.lineTo(w * 0.8, h * 0.9);
+    ctx.lineTo(vx + w * 0.04, vy);
+    ctx.lineTo(vx - w * 0.04, vy);
     ctx.closePath();
     ctx.fill();
-    // Nebel
-    ctx.fillStyle = 'rgba(233,231,227,0.25)';
-    for (const [x, y, rx] of [[0.25, 0.58, 0.2], [0.7, 0.66, 0.24], [0.5, 0.5, 0.16]] as const) {
+    // Mond und Nebel am Horizont
+    ctx.fillStyle = '#e9e7e3';
+    ctx.beginPath();
+    ctx.arc(w * 0.8, h * 0.3, w * 0.05, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = 'rgba(233,231,227,0.22)';
+    for (const [x, y, rx] of [[0.3, vy / h, 0.26], [0.72, vy / h + 0.03, 0.24], [0.5, vy / h - 0.02, 0.18]] as const) {
       ctx.beginPath();
-      ctx.ellipse(w * x, h * y, w * rx, h * 0.035, 0, 0, Math.PI * 2);
+      ctx.ellipse(w * x, h * y, w * rx, h * 0.03, 0, 0, Math.PI * 2);
       ctx.fill();
     }
   },

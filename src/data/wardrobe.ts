@@ -31,8 +31,8 @@ export const PRINT_COLORS = {
   band: { text: '#f1efe9', accent: '#c94a3a' },
 } as const;
 
-/** Das seltene Tourshirt aus Olis Wunsch (Band ausgedacht, Letzte Tour) – er trägt es nur ab und zu */
-export const RARE_BAND = 'NACHTSCHICHT';
+/** Das seltene Tourshirt aus Olis Wunsch (Band „Letzte Ruhestätte“, letzte Tour) – er trägt es nur ab und zu */
+export const RARE_BAND = 'LETZTE RUHESTÄTTE';
 
-/** Olis Bands – ausgedacht. Welches Shirt er trägt, wechselt mit dem Tag. */
-export const BAND_NAMES: readonly string[] = ['BETONHERZ', 'KAFFEESATZ', 'LÄRMSCHUTZ', 'STAHLWOLLE', 'KRACH & KAKAO', 'FAUSTREGEL'];
+/** Olis Bands (ohne „Letzte Ruhestätte“, das gibt es nur als seltenes Tourshirt – `RARE_BAND`). Welches Shirt er trägt, wechselt mit dem Tag. */
+export const BAND_NAMES: readonly string[] = ['KALTBRAND', 'SIEBEN SCHWERTER'];

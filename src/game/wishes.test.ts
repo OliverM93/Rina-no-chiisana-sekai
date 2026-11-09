@@ -199,7 +199,7 @@ describe('Herzenswünsche – Phase 2', () => {
     addItem(s.data!.inventory, 'ruehrei', 1, maxStackOf);
     addItem(s.data!.inventory, 'obstsalat', 1, maxStackOf);
     const r = fulfillWish(s, 'oli')!;
-    expect(r.rewards).toEqual([{ itemId: 'poster-nebelzimmer', count: 1 }]);
+    expect(r.rewards).toEqual([{ itemId: 'poster-verlorene-autobahn', count: 1 }]);
     expect(s.data!.money).toBe(380);
     expect(activeWish(s, 'oli')?.id).toBe('oli-bandshirt');
   });

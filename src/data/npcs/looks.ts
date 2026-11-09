@@ -162,7 +162,7 @@ export const OLI_WARDROBE: readonly WardrobeItem[] = [
   { outfit: 'jacke', outfitColor: '#222228', accentColor: OLI_PANTS.jeans, shoes: 'chunky-schwarz' },
 ];
 
-/** Dazu, sobald Lina Olis Wunsch erfüllt hat: das seltene NACHTSCHICHT-Tourshirt (siehe `data/wishes.ts`) */
+/** Dazu, sobald Lina Olis Wunsch erfüllt hat: das seltene Tourshirt „Letzte Ruhestätte“ (siehe `data/wishes.ts`) */
 export const OLI_RARE_WARDROBE: readonly WardrobeItem[] = [
   { outfit: 'bandshirt', outfitColor: OLI_BLACK, accentColor: OLI_PANTS.schwarz, shoes: 'chunky-schwarz', band: RARE_BAND },
   { outfit: 'bandshirt', outfitColor: OLI_BLACK, accentColor: OLI_PANTS.jeans, shoes: 'chunky', band: RARE_BAND },

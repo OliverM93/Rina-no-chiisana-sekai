@@ -124,9 +124,9 @@ Wetter und Feste laufen nach echter Zeit.
   **ausgedachte** Figur (Pfarrer in einem Bergdorf, schreibt über Steine und Wanderwege, bescheiden und humorvoll). Lina hilft beim Päckchen (Bergkristall, Lavendelkekse, 100 ⭐
   Porto). Danach schreibt er an Lina & Thalia, **2, 10, 25 und 50 Tage später** (je einmal), mit Basilikum- und Tomatensamen, einem Rosenquarz und zuletzt der Tasse „Montecielo“.
   Er erscheint nie im Dorf. Thalia, Oma, Jens und Lars kommentieren das im Gespräch (Erinnerungen, Tag `matteo`).
-- **Olis Wünsche** (`WISHES_3`, `order` 2 und 3): **„Mitternachtskino mit Lini“** (zwei Snacks + 120 ⭐; Szene: ein ausgedachter Schwarz-Weiß-Kultfilm „Das Nebelzimmer“,
+- **Olis Wünsche** (`WISHES_3`, `order` 2 und 3): **„Mitternachtskino mit Lini“** (zwei Snacks + 120 ⭐; Szene: ein ausgedachter Schwarz-Weiß-Kultfilm „Verlorene Autobahn“,
   den keiner versteht; Dank: das **Kinoplakat** als Wanddeko) und danach **„Das seltene Tourshirt“** (Bernstein + 300 ⭐; Dank: das Shirt der ausgedachten Band
-  **NACHTSCHICHT**). Ab dann kommt das Tourshirt in Olis **Kleiderschrank** (`OLI_RARE_WARDROBE`, `wardrobeFor` in `game/wishes.ts`) und er trägt es ab und zu – `Appearance.band`
+  **„Letzte Ruhestätte“**). Ab dann kommt das Tourshirt in Olis **Kleiderschrank** (`OLI_RARE_WARDROBE`, `wardrobeFor` in `game/wishes.ts`) und er trägt es ab und zu – `Appearance.band`
   legt den Bandnamen fest statt der Tages-Band. Gespräche: Erinnerungen mit den Tags `kino` und `tourshirt` (Oli, Thalia, Lars).
 - **Nichts geht für immer verloren:** Werkzeuge und einmalige Geschenke (Möbel mit `gift: true`, außer Kunst) sind
   Erinnerungsstücke (`isKeepsake`): unverkäuflich (`price: null`) und nicht verschenkbar. Fehlt beim Laden etwas, das
