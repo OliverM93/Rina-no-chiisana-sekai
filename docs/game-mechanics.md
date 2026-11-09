@@ -30,6 +30,10 @@ Wetter und Feste laufen nach echter Zeit.
   (`ui/PhotoPanel.tsx`): vier Rahmen zur Wahl (Polaroid, Herzchen, Blümchen, Schlicht – gemalt in `gfx/photoFrame.ts`), Beschriftung „Linas kleine Welt ·
   Dorf · Jahreszeit“ mit Datum, **💾 Speichern** lädt ein PNG herunter, **🔄 Neues Foto** macht ein neues. Das Bild bleibt auf dem Gerät – nichts wird hochgeladen
   oder im Spielstand abgelegt. Zugehörig: Kameraklick (`sfx: 'foto'`).
+- **Vollständige Sammlungen werden gewürdigt:** (`data/sammlungen.ts`, `game/sammlungen.ts`) Sind alle **Fische**, **Krabbeltiere**, **Funde**,
+  **Blumenfarben** (22) oder **Tassen** (19) beisammen, kommt ein Brief von jemandem, der sich dafür interessiert (Jens, Lars, Thalia, Christin, Oli –
+  erst, wenn er im Dorf wohnt) mit einer **Urkunde** für die Wand (`urkunde-<sammlung>`, Erinnerungsstück). Geprüft beim Fang/Fund/Erblühen und
+  täglich; jede Sammlung nur einmal (`world.dates['sammlung:<id>']`). Tassen in der Vorratstruhe zählen mit. Kein Erfolge-Menü.
 - **Freundschaft:** sinkt nie. Erstes Gespräch am Tag und erstes Geschenk am Tag zählen; Herz-Belohnungen
   kommen per Brief – **jedes Herz (1–5) bringt bei jedem Bewohner einen Brief mit Geschenk** (`heartLetters`, Test in
   `data/gifts.test.ts`). Meist persönliche Erinnerungsstücke mit Platz im Zimmer (Christins Setzkasten, Lars' Lern-Skelett

@@ -138,6 +138,14 @@ Format: **Entscheidung** – Begründung – verworfene Alternative(n) – Auswi
 - **Nebenwirkungen:** Ältere Spielstände behalten Winston (kein Verlust). Dialoge mit seinem Namen sind bis zum Fund gesperrt (Tag).
 - **Playtest:** Findet Lina das Fiepen ohne Hinweis? Wie lange dauert es bis zum Fund?
 
+### D22 · Vollständige Sammlungen werden gewürdigt (W7/F10, Nov. 2026)
+- **Erlebnis:** Ein langfristiges Sammelziel bekommt einen emotionalen Abschluss – von einem Menschen, nicht von einem Pop-up.
+- **Entscheidung:** Brief (im Ton des Bewohners) + **Urkunde** als Wand-Erinnerungsstück statt Erfolge-Menü oder Zahl-Belohnung
+  (Säulen 1 & 3). Keine Sternchen, keine Statistik-Seite.
+- **Ökonomie:** neutral (unverkäufliche Urkunde). **Pacing:** Ganzjahresziele (Fische/Insekten/Saison-Tassen) bekommen ein Ende, das man sich aufhängt.
+- **Technik:** Absender muss eingezogen sein (sonst kommt der Brief später). Nebenbei behoben: `ownsAnywhere` kannte die Vorratstruhe nicht.
+- **Offen:** Kunstwerke/Rezepte/Sträuße als weitere Sammlungen; Urkunden-Anzeige im Sammelbuch.
+
 ---
 
 ## Offene Designentscheidungen ❓

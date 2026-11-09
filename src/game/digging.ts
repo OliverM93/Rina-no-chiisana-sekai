@@ -3,6 +3,7 @@
  * (reproduzierbar pro Datum). Funde kommen in die Tasche und ins Sammelbuch.
  */
 import { registerCatch } from '../core/catching';
+import { checkSammlungen } from './sammlungen';
 import { dailySpawns, type DailySpawn } from '../core/daily';
 import { terrainAt } from '../core/worldmap';
 import { DIG_SPOTS_PER_DAY, FINDS } from '../data/fossils';
@@ -52,6 +53,7 @@ export function digSpot(session: Session, spot: DailySpawn): DigResult | null {
   if (giveItem(session, spot.itemId, 1, false) > 0) return { itemId: spot.itemId, isNew: false, full: true };
   markPicked(session, spot.id);
   const isNew = registerCatch(data.collection, spot.itemId, session.today());
+  if (isNew) checkSammlungen(session);
   session.changed();
   session.save();
   return { itemId: spot.itemId, isNew, full: false };
