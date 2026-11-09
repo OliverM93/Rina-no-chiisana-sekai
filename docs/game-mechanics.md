@@ -20,7 +20,8 @@ Wetter und Feste laufen nach echter Zeit.
   per Flag (`applyMapFlags`, z. B. Bauplatz → Haus). Ablauf in `game/story.ts`.
 - **Bewohner:** Daten in `src/data/npcs/<id>.ts` (Aussehen, Haus, Tagesablauf, Vorlieben, Dialog-Pools,
   Briefe). Ein neuer Bewohner braucht: Datei + Eintrag in `npcs/index.ts` + Haus/Bank in `VILLAGE_OBJECTS`.
-  Dialogzeilen haben Bedingungen (`when`) und Gewichte; ausgewählt wird reproduzierbar pro Tag.
+  Dialogzeilen haben Bedingungen (`when`) und Gewichte; ausgewählt wird reproduzierbar pro Tag. Jeder Bewohner hat mind. 30 Plauderzeilen (Test `dialoguePools.test.ts`), die
+  kleineren Pools zusätzlich Zeilen je Jahreszeit.
 - **Erinnerungen im Gespräch:** Die Bewohner nehmen Bezug auf das, was Lina erlebt hat (`data/erinnerungen.ts`, 38 Zeilen, `game/erinnerungen.ts`):
   Hausausbau (Anbau, Dachzimmer, Wohnküche, Keller), Sammelbuch (10/20/30 Arten), Hühner, Gewächshaus, Tassensammlung, Sparbuch, schwarze
   Blumen, Jens' letzte Reise (`{stadt}`), 1 Monat / 1 Jahr im Dorf. Wird eine Erinnerung neu wahr, erwähnt der Bewohner sie **einmal von sich aus**
