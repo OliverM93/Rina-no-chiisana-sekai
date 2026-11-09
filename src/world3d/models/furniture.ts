@@ -631,19 +631,23 @@ export function makeFurniture(itemId: string, links: FenceLinks = { n: false, e:
       for (const x of [-0.35, 0.5]) g.add(b(0.06, 0.4, 0.06, '#8a8a96', x, 0.2, 0));
       g.add(b(0.3, 0.04, 0.5, '#8a8a96', -0.35, 0.02, 0));
       g.add(b(0.3, 0.04, 0.5, '#8a8a96', 0.5, 0.02, 0));
-      // Ablage + Langhantel
-      for (const z of [-0.22, 0.22]) g.add(b(0.05, 0.85, 0.05, '#8a8a96', -0.55, 0.43, z));
-      const bar = c(0.018, 0.92, '#c9cbd3', -0.55, 0.86, 0);
+      // Ablage + Langhantel (über der Brust, bewegt sich mit Olis Armen: Gruppe „langhantel“)
+      for (const z of [-0.22, 0.22]) g.add(b(0.05, 0.85, 0.05, '#8a8a96', -0.08, 0.43, z));
+      const bell = new THREE.Group();
+      bell.name = 'langhantel';
+      bell.position.set(-0.08, 0.86, 0);
+      const bar = c(0.018, 0.92, '#c9cbd3', 0, 0, 0);
       bar.rotation.x = Math.PI / 2;
-      g.add(bar);
+      bell.add(bar);
       for (const z of [-0.4, 0.4]) {
-        const plate = c(0.2, 0.05, '#2b2a31', -0.55, 0.86, z);
+        const plate = c(0.2, 0.05, '#2b2a31', 0, 0, z);
         plate.rotation.x = Math.PI / 2;
-        g.add(plate);
-        const plate2 = c(0.15, 0.04, '#d9534f', -0.55, 0.86, z * 1.1);
+        bell.add(plate);
+        const plate2 = c(0.15, 0.04, '#d9534f', 0, 0, z * 1.1);
         plate2.rotation.x = Math.PI / 2;
-        g.add(plate2);
+        bell.add(plate2);
       }
+      g.add(bell);
       // Kurzhanteln am Boden
       for (const z of [-0.15, 0.1]) {
         g.add(c(0.012, 0.18, '#8a8a96', 0.75, 0.05, z).rotateZ(Math.PI / 2));

@@ -51,6 +51,10 @@ export class Character {
   private blinkIn = 2.5;
   private blinkLeft = 0;
   private time = Math.random() * 10;
+  /** Laufende Zeit der Figur (s) – für Bewegungen, die zur Pose passen sollen (Langhantel) */
+  get clock(): number {
+    return this.time;
+  }
   private path: Tile[] | null = null;
   private onArrive: (() => void) | null = null;
   private stuckTime = 0;

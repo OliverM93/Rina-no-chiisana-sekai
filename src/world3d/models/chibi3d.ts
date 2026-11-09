@@ -984,19 +984,26 @@ export class Chibi3D {
     const want = p.blink ? this.faceBlink : this.faceOpen;
     if (fm.map !== want) fm.map = want;
 
-    if (p.sitting && p.work === 'stemmen') {
-      // auf der Hantelbank: Rücken liegt, Knie angewinkelt, die Arme drücken die Stange gleichmäßig nach oben
+    const bench = p.sitting && p.work === 'stemmen';
+    if (!bench) {
+      this.body.position.z = 0;
+      for (const arm of this.arms) arm.scale.y = 1;
+    }
+    if (bench) {
+      // Bankdrücken: auf dem Rücken, gedreht um die Hüfte (nicht um die Füße), Arme drücken nach oben
       const k = (Math.sin(p.t * 2.2) + 1) / 2;
       this.body.rotation.x = -Math.PI / 2;
-      this.body.position.y = -this.hipY + 0.02;
-      for (const leg of this.legs) leg.rotation.x = -Math.PI / 2.6;
+      this.body.position.y = 0;
+      this.body.position.z = this.hipY;
+      for (const leg of this.legs) leg.rotation.x = -0.35;
       for (const arm of this.arms) {
-        arm.rotation.x = -Math.PI * 0.5 - 0.15 + k * 0.5;
+        arm.rotation.x = -Math.PI / 2;
         arm.rotation.z = 0;
+        arm.scale.y = 0.55 + 0.45 * k;
       }
-      this.head.rotation.x = Math.PI / 2 - 0.1;
+      this.head.rotation.x = 0;
       this.head.rotation.z = 0;
-      this.body.scale.y = 1 + (1 - k) * 0.01;
+      this.body.scale.y = 1;
       return;
     }
     if (p.sitting) {
