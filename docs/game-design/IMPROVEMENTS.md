@@ -15,7 +15,7 @@ abgesichert. Die folgenden Punkte betreffen Langzeitmotivation und Feinschliff.
 |---|---|---|---|---|---|---|
 | W1 | 🔶 **Phase 1 erledigt (Nov. 2026: Herzenswünsche, 1 je Bewohner)** · **Spätspiel-Strang**: kleine Wünsche/Geschichten der Bewohner nach dem letzten Einzug (z. B. Oma möchte ein Beet am Haus, Thalia einen Aussichtspunkt, Jens eine Ausstellung) – erfüllbar mit vorhandenen Aktivitäten, mit Szene & Belohnung, die das Dorf sichtbar verändert | ●●● | ●●● | ●● (nutzt Bestehendes) | ●● | ●●● |
 | W2 | ✅ **erledigt (Nov. 2026)** · **Leere Herzen füllen**: Jedes Herz bringt etwas (Brief, Rezept, Möbel, neues Gesprächsthema) – Christin 3–5, Lars 2/4/5, Thalia 1/3/5, Olaf 4/5 | ●● | ●● | ● (nur Daten) | ● | ●● |
-| W3 | **Oli-Beziehung in Stufen**: neue gemeinsame Momente mit steigenden Herzen bzw. Jahrestagen statt alles ab Einzug | ●●● | ●●● | ●● | ●● | ●● |
+| W3 | ✅ **erledigt (Nov. 2026)** · **Oli-Beziehung in Stufen**: neue gemeinsame Momente mit steigenden Herzen bzw. Jahrestagen statt alles ab Einzug | ●●● | ●●● | ●● | ●● | ●● |
 | W4 | **Vorratskiste** im Haus (Lagerplätze außerhalb der Tasche) gegen Inventar-Reibung durch die vielen neuen Gegenstände | ●● | ●● | ● | ● | ●● |
 | W5 | **Dialog-Frische**: Zeilen, die auf Linas Erlebtes Bezug nehmen (erster Fang einer seltenen Art, neue Hausstufe, Jens' letzte Reise) + gezielt mehr Zeilen für Bewohner mit kleinen Pools (Thalia, Olaf, Lars) | ●●● | ●●● | ● | ●● | ●● |
 | W6 | **Fänge mit Verwendung**: weitere Fisch-Gerichte im Bistro, Funde/Insekten ausstellen (Vitrine/Terrarium oder Museum-Ecke bei Thalia) – mehr Systemtiefe für die häufigste Aktivität | ●● | ●● | ●● | ●● | ● |

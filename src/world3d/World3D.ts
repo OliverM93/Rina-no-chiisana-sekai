@@ -58,7 +58,7 @@ import { dinnerGuests, isDinnerTime } from '../game/dinner';
 import { activeMeetups, joinMeetup, meetupOf } from '../game/meetups';
 import { CHECKUP_GIFTS, CHECKUP_LINES, LARS_WELCOME } from '../data/npcs/lars';
 import { hashString } from '../core/rng';
-import { canDate, canKiss, type DateKind, giveKiss, haveDate } from '../game/romance';
+import { canDate, canKiss, type DateKind, giveKiss, haveDate, nextStageScene, playStageScene } from '../game/romance';
 import { SPONTANEOUS_KISS_LINES, WELCOME_KISS_LINES } from '../data/npcs/oli';
 import { KISS } from './Character3D';
 import { isPartyTime } from '../game/party';
@@ -1591,10 +1591,10 @@ export class World3D {
             ]
           : []),
         ...(id === 'oli'
-          ? (['picknick', 'sterne'] as const)
+          ? (['picknick', 'sterne', 'herzbank'] as const)
               .filter((k) => canDate(this.session, k))
               .map((k) => ({
-                label: k === 'picknick' ? '🧺 Picknick machen' : '🌠 Sterne gucken',
+                label: k === 'picknick' ? '🧺 Picknick machen' : k === 'herzbank' ? '🌅 Zur Herzbank' : '🌠 Sterne gucken',
                 onSelect: () => {
                   npc.endTalk();
                   this.dateScene(k);
@@ -1602,6 +1602,23 @@ export class World3D {
               }))
           : []),
         ...(activeWish(this.session, id) ? [{ label: '💭 Herzenswunsch', onSelect: () => this.wishDialog(npc) }] : []),
+        ...(id === 'oli' && nextStageScene(this.session)
+          ? [
+              {
+                label: '💬 Zeit zu zweit',
+                onSelect: () => {
+                  const scene = playStageScene(this.session);
+                  if (!scene) return this.npcDialog(npc, ['Ich bin gleich bei dir, Lini.'], npcHearts(this.session, id));
+                  this.session.bus.emit('dialog:open', {
+                    title: scene.title,
+                    hearts: npcHearts(this.session, id),
+                    lines: scene.lines,
+                    onClose: () => this.npcDialog(npc, ['Das war schön, Lini. 💕'], npcHearts(this.session, id)),
+                  });
+                },
+              },
+            ]
+          : []),
         ...(id === 'thalia' && isPartyTime(this.session) && this.session.data?.world.dates.party !== this.session.today()
           ? [{ label: '💃 Tanzen!', onSelect: () => this.dance(npc) }]
           : []),
@@ -2327,25 +2344,46 @@ export class World3D {
     this.stopFishing();
     this.cutscene = true;
     const grid = this.session.map.grid;
-    const want = kind === 'picknick' ? { x: 9, y: 22 } : { x: 33, y: 31 };
-    let a = nearestWalkable(grid, want) ?? player.tile;
-    let b = { x: a.x + 1, y: a.y };
-    if (grid.isBlocked(b.x, b.y)) {
-      b = a;
-      a = { x: a.x - 1, y: a.y };
+    let blanket: THREE.Object3D | null = null;
+    if (kind === 'herzbank') {
+      // Eure Bank am Strand: nebeneinander auf der Sitzfläche, Blick aufs Meer
+      const bench = objectById(this.session.map, 'herzbank');
+      const bx = bench ? bench.x : 30;
+      const by = bench ? bench.y : 32;
+      const seatY = Math.max(0, this.view.terrain.heightAt(bx + 1, by + 0.5)) + 0.35;
+      const seatWorld = (dx: number) => ({ x: (bx + dx) * TILE, y: (by + 0.55) * TILE });
+      const l = seatWorld(0.55);
+      const o = seatWorld(1.45);
+      player.teleport(l.x, l.y);
+      player.face('down');
+      player.setSitting(true);
+      player.seatHeight = seatY;
+      oli.scriptPlace({ x: bx + 1, y: by + 1 });
+      oli.char.teleport(o.x, o.y);
+      oli.char.face('down');
+      oli.char.setSitting(true);
+      oli.char.seatHeight = seatY;
+    } else {
+      const want = kind === 'picknick' ? { x: 9, y: 22 } : { x: 33, y: 31 };
+      let a = nearestWalkable(grid, want) ?? player.tile;
+      let b = { x: a.x + 1, y: a.y };
+      if (grid.isBlocked(b.x, b.y)) {
+        b = a;
+        a = { x: a.x - 1, y: a.y };
+      }
+      blanket = makePicnic();
+      const gy = Math.max(0, this.view.terrain.heightAt(a.x + 1, a.y + 0.5));
+      blanket.position.set(a.x + 1, gy, a.y + 0.55);
+      this.scene.add(blanket);
+      const seat = gy + 0.04;
+      player.teleport((a.x + 0.5) * TILE, (a.y + 0.5) * TILE + 10);
+      player.setSitting(true);
+      player.seatHeight = seat;
+      oli.scriptPlace(b);
+      oli.char.teleport((b.x + 0.5) * TILE, (b.y + 0.5) * TILE + 10);
+      oli.char.setSitting(true);
+      oli.char.seatHeight = seat;
     }
-    const blanket = makePicnic();
-    const gy = Math.max(0, this.view.terrain.heightAt(a.x + 1, a.y + 0.5));
-    blanket.position.set(a.x + 1, gy, a.y + 0.55);
-    this.scene.add(blanket);
-    const seat = gy + 0.04;
-    player.teleport((a.x + 0.5) * TILE, (a.y + 0.5) * TILE + 10);
-    player.setSitting(true);
-    player.seatHeight = seat;
-    oli.scriptPlace(b);
-    oli.char.teleport((b.x + 0.5) * TILE, (b.y + 0.5) * TILE + 10);
-    oli.char.setSitting(true);
-    oli.char.seatHeight = seat;
     this.camTarget.set(player.x * UNIT, 0, player.y * UNIT);
     this.dogFollow();
     if (kind === 'sterne') this.session.bus.emit('overlay:stars', true);
@@ -2356,12 +2394,12 @@ export class World3D {
         title: oli.def.name,
         lines,
         onClose: () => {
-          blanket.removeFromParent();
+          blanket?.removeFromParent();
           player.setSitting(false);
           oli.char.setSitting(false);
           oli.scriptDone();
           this.session.bus.emit('overlay:stars', false);
-          this.session.bus.emit('toast', { text: kind === 'picknick' ? 'Was für ein schönes Picknick! 💕' : 'Was für ein Sternenhimmel … 💫' });
+          this.session.bus.emit('toast', { text: kind === 'picknick' ? 'Was für ein schönes Picknick! 💕' : kind === 'herzbank' ? 'Euer Platz am Meer. 🌅' : 'Was für ein Sternenhimmel … 💫' });
           this.cutscene = false;
         },
       });

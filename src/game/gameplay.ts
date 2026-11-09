@@ -28,6 +28,7 @@ import { itemIconUrl } from '../gfx/items';
 import { onItemObtained } from './crafting';
 import { festTalk } from './festivals';
 import { isPartyTime } from './party';
+import { checkOliAnniversaries } from './romance';
 
 // ---------------------------------------------------------------------------
 // Tasche & Sternchen
@@ -368,6 +369,7 @@ export function checkDailyMail(session: Session) {
   const firstCheck = data.mail.lastCheckDay === '';
   data.mail.lastCheckDay = day;
   creditMonthlyInterest(session);
+  checkOliAnniversaries(session);
   if (firstCheck) return; // Am Einzugstag gibt es den Willkommensbrief (siehe welcomeLetter)
   for (const npc of NPCS) {
     if (npc.letters.length === 0 || !mailDue(day, npc.id)) continue;

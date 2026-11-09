@@ -98,6 +98,15 @@ Format: **Entscheidung** – Begründung – verworfene Alternative(n) – Auswi
    bräuchten mehr Inhalt. Wünsche nutzen Bestehendes und erzählen kleine Geschichten – bester Aufwand-Nutzen.
 - **Technik:** Zustand komplett in Story-Flags (kein `SAVE_VERSION`-Wechsel), Orte als `landmark`/`steg` mit `requires`.
 
+### D21 · Oli-Beziehung in Stufen (W3/F6, Nov. 2026)
+- **Erlebnis:** Die wichtigste Beziehung hat einen Bogen: Mit jedem Herz kommt etwas Neues dazu, statt nach wenigen Tagen „fertig“ zu sein.
+- **Entscheidung (Antwort auf O2):** Nichts Bestehendes wird eingeschränkt (kein Nerf für laufende Spielstände). Neu kommen
+  **Inhalte** dazu: eine „Zeit zu zweit“-Szene je Herz (ohne Punkte), die Herzbank-Szene mit Jahreszeiten-Zeilen und Jubiläums-Briefe.
+- **Ökonomie/Progression:** Szenen ohne Punkte, Herzbank +8 (Picknick/Sterne 24), Jubiläumsgeschenke je ein Strauß (150/700 ⭐, einmalig).
+- **Grenze:** Szenen spielen nur im gemeinsamen Spiel-Alltag (Haus, Küche, Dorf) – keine erfundene Vorgeschichte der echten Personen.
+  **Bitte gegenlesen**, ob Olis Sätze zu ihm passen.
+- **Offen:** Weitere Stufen jenseits von 5 Herzen (O3), Jahrestag jedes Jahr statt nur das erste Mal.
+
 ---
 
 ## Offene Designentscheidungen ❓

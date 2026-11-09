@@ -264,6 +264,7 @@ Legende: ✅ erledigt · 🚧 in Arbeit · ⬜ geplant
   - ✅ **Phase 3 – Gemüse & Kräuter:** 6 Gemüse + 4 Kräuter im Beet (mehrere Stück je Ernte, Wurzelgemüse räumt den Platz), Reiter am Samenstand (saisonal), 7 neue Gerichte, Rezepte bei der ersten Ernte
   - ✅ **Phase 4 – Sträuße & Blumendeko:** 7 Sträuße binden (Reiter „Blumen“ an der Werkbank), Glasvase im Katalog, Vasen mit Strauß & 4 Wandkränze, Strauß-Geschenke für alle Bewohner
   - ✅ **Phase 5 – Gewächshaus:** Winterruhe im Beet draußen (Raureif), Frühbeet & Gewächshaus lassen es ganzjährig wachsen
+- ✅ **Oli in Stufen:** „Zeit zu zweit“-Szenen (eine je Herz), „Zur Herzbank“ mit Jahreszeiten-Zeilen, Jubiläums-Briefe nach 100 Tagen und einem Jahr (Audit F6)
 - ✅ **Herzenswünsche (Phase 1):** Nach dem letzten Einzug hat jeder Bewohner einen Wunsch fürs Dorf – erfüllt mit Gesammeltem, Gefangenem & Angebautem; danach steht ein neuer Ort im Dorf (Blumenbeet, Angelsteg, Kräuterspirale, Herzbank, Aquarium, Insektenhotel, Aussichtspunkt) – aus der Game-Design-Analyse (W1)
 - ✅ **Jedes Herz zählt:** 12 neue Herz-Briefe – jetzt bringt jedes Herz bei jedem Bewohner ein Geschenk (9 neue Erinnerungsstücke, Thymiantee & Steinmännchen, Papas Witze-Kalender) – aus der Game-Design-Analyse (W2)
 - ✅ **Pfeiltasten in allen Fenstern & Menüs** (`ui/navigation.ts`)
