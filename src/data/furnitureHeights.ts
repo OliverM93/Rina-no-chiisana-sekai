@@ -99,6 +99,7 @@ export const FURNITURE_HEIGHTS: Readonly<Record<string, number>> = {
   'trockenkranz': 1.10,
   'tsukubai': 0.78,
   'vitrine': 1.15,
+  'discokugel': 0.8,
   'vogelhaus': 1.38,
   'vogeltraenke': 0.73,
   'wachtelstall': 0.71,

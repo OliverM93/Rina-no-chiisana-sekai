@@ -147,6 +147,8 @@ export const TRAVELS: ReadonlyArray<{ city: string; text: string; souvenir: stri
   { city: 'Tokio', text: 'Alles blinkt, alles ist niedlich, und die Katzen winken! Ich hab in einem Café fünf Stunden gesessen und nur geguckt. Lina, du musst da mal hin. Du sprichst ja sogar ein bisschen Japanisch!', souvenir: 'tasse-stadt-tokio' },
   { city: 'Wien', text: 'Kaffeehaus, Torte, Walzer. Ich hab drei Stunden an einem einzigen Kaffee gesessen und der Kellner hat sich nicht beschwert. Das nenne ich Kultur!', souvenir: 'tasse-stadt-wien' },
   { city: 'Lissabon', text: 'Blaue Fliesen, gelbe Straßenbahnen und ein Fado-Sänger, der mich zum Weinen gebracht hat. Dann hab ich Sardinen gegessen. Auch schön.', souvenir: 'tasse-stadt-lissabon' },
+  { city: 'Honolulu', text: 'Aloha! Blumenketten, Brandung und ein Sonnenuntergang, der aussieht wie von mir gemalt. Ich hab mich sofort verbrannt – stilvoll natürlich.', souvenir: 'tasse-stadt-honolulu' },
+  { city: 'Nara', text: 'Hier laufen Rehe frei durch den Park und verbeugen sich, wenn man ihnen was gibt. Ich hab drei Stunden Matcha getrunken und kein einziges Wort gesagt. Ein Wunder.', souvenir: 'tasse-stadt-nara' },
   { city: 'Leipzig', text: 'Ich war mal in der alten Heimat! Nu, die Thomaskirche steht noch, und ich hab drei Eierschecke gegessen. Ich hab so ein Heimweh gekriegt, dass ich dir gleich was mitgebracht hab.', souvenir: 'tasse-stadt-leipzig' },
 ];
 

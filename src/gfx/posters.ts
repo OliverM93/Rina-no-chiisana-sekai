@@ -168,6 +168,33 @@ const MOTIFS: Record<PosterMotif, (ctx: C, w: number, h: number) => void> = {
     ctx.stroke();
     ctx.lineCap = 'butt';
   },
+  sandsterne: (ctx, w, h) => {
+    // Wüstenplanet: Dünen, zwei Monde, ein Stern
+    ctx.fillStyle = '#f2c46a';
+    ctx.beginPath();
+    ctx.arc(w * 0.68, h * 0.34, w * 0.12, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = '#fff0cf';
+    ctx.beginPath();
+    ctx.arc(w * 0.3, h * 0.28, w * 0.06, 0, Math.PI * 2);
+    ctx.fill();
+    for (const [dy, col] of [[0.62, '#a8602e'], [0.72, '#8a4a24'], [0.82, '#5e3018']] as const) {
+      ctx.fillStyle = col;
+      ctx.beginPath();
+      ctx.moveTo(0, h);
+      ctx.lineTo(0, h * dy);
+      ctx.quadraticCurveTo(w * 0.3, h * (dy - 0.12), w * 0.55, h * dy);
+      ctx.quadraticCurveTo(w * 0.8, h * (dy + 0.08), w, h * (dy - 0.04));
+      ctx.lineTo(w, h);
+      ctx.fill();
+    }
+    ctx.fillStyle = '#fff0cf';
+    for (const [x, y, s] of [[0.15, 0.4, 0.012], [0.45, 0.2, 0.01], [0.85, 0.2, 0.012], [0.55, 0.45, 0.008]] as const) {
+      ctx.beginPath();
+      ctx.arc(w * x, h * y, w * s, 0, Math.PI * 2);
+      ctx.fill();
+    }
+  },
   kawaii: (ctx, w, h) => {
     // Runde Kuschelwesen mit Herzbäckchen
     const face = (x: number, y: number, r: number, c: string) => {

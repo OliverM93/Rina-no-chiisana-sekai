@@ -15,7 +15,7 @@ describe('Poster & Bildbände', () => {
       expect(f.def.style).toBe('lieblinge');
       expect(!!f.def.wall, p.id).toBe(p.kind === 'poster');
       expect(!!f.def.small, p.id).toBe(p.kind === 'buch');
-      expect(f.def.gift).toBeFalsy();
+      expect(!!f.def.gift, p.id).toBe(!!p.gift);
       expect(f.def.crafted).toBeFalsy();
       expect(p.title.length).toBeGreaterThan(0);
     }

@@ -131,6 +131,9 @@ export const FURNITURE: readonly FurnitureDef[] = [
   { id: 'bilderrahmen-papa', name: 'Foto: Auf Papas Schultern', style: 'basis', gift: true, retired: true, small: true, price: 700, w: 1, d: 1, description: 'Ein Bilderrahmen: Die kleine Lina auf Papas Schultern, beide lachen. Hinten drauf: „Meine beste Investition. Papa.“' },
   { id: 'spruchtafel-lars', name: 'Lars\' Spruchtafel', style: 'basis', gift: true, wall: true, price: 600, w: 1, d: 1, description: 'Ein Holzschild mit Lars\' Lieblingsspruch: „So, und nicht mit e, sonst ist es ein See.“ Oma nennt es einen Rechtschreibfehler.' },
   { id: 'familienbild', name: 'Familienbild', style: 'basis', gift: true, small: true, price: 700, w: 1, d: 1, description: 'Ein gerahmtes Bild von euch allen vor Omas Bank. Jens steht in der Mitte. Er hat darauf bestanden.' },
+  { id: 'likoer-set', name: 'Omas Likörchen-Set', style: 'basis', gift: true, small: true, price: 500, w: 1, d: 1, description: 'Eine Flasche Eierlikör und zwei winzige Gläser auf einem Tablett. Oma: „Für den Kaffeeklatsch. Rein medizinisch.“' },
+  { id: 'modellflugzeug', name: 'Olafs Flugzeugmodell', style: 'basis', gift: true, small: true, price: 900, w: 1, d: 1, description: 'Eine zweimotorige Propellermaschine im Maßstab eins zu zweiundsiebzig, mit Rundmotoren und Doppeldecker-Flügeln. Olaf hat jede Niete einzeln gesetzt. (Aufgemalt.)' },
+  { id: 'discokugel', name: 'Thalias Discokugel', style: 'basis', gift: true, light: true, price: 1100, w: 1, d: 1, description: 'Eine glitzernde Discokugel auf einem Ständer. Abends wirft sie bunte Lichtpunkte durchs Zimmer. Thalia: „Frag nicht, woher.“' },
   { id: 'reisekoffer', name: 'Jens\' Reisekoffer', style: 'basis', gift: true, surface: true, surfaceHeight: 0.31, price: 1400, w: 1, d: 1, description: 'Ein alter Lederkoffer voller Aufkleber aus aller Welt. Jens: „Er war überall. Jetzt soll er bei dir ankommen.“' },
   // Fest-Geschenke
   { id: 'sparschwein', name: 'Sparschwein mit Mütze', style: 'basis', gift: true, small: true, price: 400, w: 1, d: 1, description: 'Von Papa Olaf. Rosa, rund und mit Weihnachtsmütze. „Kleinvieh macht auch Mist!“' },
@@ -273,7 +276,7 @@ export const FLOORS: readonly SurfaceDef[] = [
 ];
 
 // Poster (Wand) & Bildbände (Tisch) zu Linas Lieblingsthemen aus `posters.ts`
-for (const p of POSTERS) (FURNITURE as FurnitureDef[]).push({ id: p.id, name: p.name, style: 'lieblinge', wall: p.kind === 'poster' || undefined, small: p.kind === 'buch' || undefined, price: p.price, w: 1, d: 1, description: p.description });
+for (const p of POSTERS) (FURNITURE as FurnitureDef[]).push({ id: p.id, name: p.name, style: 'lieblinge', wall: p.kind === 'poster' || undefined, small: p.kind === 'buch' || undefined, gift: p.gift || undefined, price: p.price, w: 1, d: 1, description: p.description });
 
 // Sammeltassen (Klassik & Saison im Katalog, Städte-Tassen als Geschenke) aus `tassen.ts`; dazu das Tassenregal
 for (const t of TASSEN) {

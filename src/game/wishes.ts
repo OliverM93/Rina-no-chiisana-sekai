@@ -9,7 +9,9 @@
 import { removeItem } from '../core/inventory';
 import { itemDef, speciesOfFlower } from '../data/items';
 import { NPC_BY_ID } from '../data/npcs';
-import { WISH_FRIENDSHIP, WISH_LETTER, WISHES, WISHES_UNLOCK_FLAG, wishFlag, wishToldFlag, type WishDef, type WishNeed } from '../data/wishes';
+import { ALL_WISHES, FOLKDANCE_LINES, FOLKDANCE_POINTS, WISH_FRIENDSHIP, WISH_LETTER, WISHES_UNLOCK_FLAG, wishFlag, wishOptionFlag, wishToldFlag, type WishDef, type WishNeed } from '../data/wishes';
+import { hashString } from '../core/rng';
+import { learnRecipe } from './crafting';
 import { addFriendship, formatMoney, sendLetter } from './gameplay';
 import type { Session } from './session';
 
@@ -24,7 +26,7 @@ export function isWishDone(session: Session, id: string): boolean {
 /** Der nächste offene Wunsch eines Bewohners (oder null) */
 export function activeWish(session: Session, npcId: string): WishDef | null {
   if (!wishesUnlocked(session)) return null;
-  const list = WISHES.filter((w) => w.npc === npcId).sort((a, b) => a.order - b.order);
+  const list = ALL_WISHES.filter((w) => w.npc === npcId).sort((a, b) => a.order - b.order);
   return list.find((w) => !isWishDone(session, w.id)) ?? null;
 }
 
@@ -78,26 +80,38 @@ export function wishTeaser(session: Session, npcId: string): string | null {
 }
 
 /** Lina fragt nach dem Wunsch: beim ersten Mal erzählt der Bewohner davon, danach Stand der Dinge */
-export function askWish(session: Session, npcId: string): { lines: string[]; canFulfill: boolean } | null {
+export function askWish(session: Session, npcId: string): { lines: string[]; canFulfill: boolean; options: ReadonlyArray<{ id: string; label: string }> } | null {
   const data = session.data;
   const w = activeWish(session, npcId);
   if (!data || !w) return null;
   const first = !data.flags[wishToldFlag(w.id)];
   if (first) {
     data.flags[wishToldFlag(w.id)] = true;
+    if (w.recipe) learnRecipe(session, w.recipe); // z. B. Omas Likörrezept
     session.changed();
   }
   const p = wishProgress(session, w);
   const lines = [...(first ? w.intro : w.reminder), progressLine(session, w)];
   if (p.complete) lines.push('Du hast ja schon alles dabei! 💝');
-  return { lines, canFulfill: p.complete };
+  return { lines, canFulfill: p.complete, options: w.options?.map((o) => ({ id: o.id, label: o.label })) ?? [] };
 }
 
-/** Wunsch erfüllen: nimmt die Sachen, setzt das Flag (der Ort erscheint) und gibt die Danke-Zeilen zurück */
-export function fulfillWish(session: Session, npcId: string): string[] | null {
+export interface WishResult {
+  lines: string[];
+  /** Geschenke des Bewohners (World3D legt sie in die Tasche oder vor Linas Füße) */
+  rewards: Array<{ itemId: string; count: number }>;
+}
+
+/**
+ * Wunsch erfüllen: nimmt die Sachen, setzt das Flag (der Ort erscheint) und gibt die Danke-Zeilen und Geschenke zurück.
+ * Bei Wünschen mit Wahl (`options`) gehört die gewählte Option dazu.
+ */
+export function fulfillWish(session: Session, npcId: string, optionId?: string): WishResult | null {
   const data = session.data;
   const w = activeWish(session, npcId);
   if (!data || !w || !wishProgress(session, w).complete) return null;
+  const option = w.options ? w.options.find((o) => o.id === optionId) : undefined;
+  if (w.options && !option) return null;
   for (const n of w.needs) {
     let rest = n.count;
     for (const s of [...data.inventory.slots]) {
@@ -111,10 +125,12 @@ export function fulfillWish(session: Session, npcId: string): string[] | null {
   if (w.stars) data.money -= w.stars;
   data.flags[wishFlag(w.id)] = true;
   data.flags[wishToldFlag(w.id)] = true;
-  const lines = [...w.done, ...addFriendship(session, npcId, WISH_FRIENDSHIP)];
+  if (option) data.flags[wishOptionFlag(w.id, option.id)] = true;
+  const lines = [...(option ? option.done : w.done), ...addFriendship(session, npcId, WISH_FRIENDSHIP)];
+  const rewards = [...(option ? option.rewardItems : (w.rewardItems ?? []))].map((r) => ({ ...r }));
   session.changed();
   session.save();
-  return lines;
+  return { lines, rewards };
 }
 
 /** Sobald alle eingezogen sind: einmal Omas Brief über die Herzenswünsche */
@@ -128,5 +144,26 @@ export function checkWishLetter(session: Session): boolean {
 
 /** Alle Wünsche (für Karte & Doku): offen, erzählt, erfüllt */
 export function wishOverview(session: Session) {
-  return WISHES.map((w) => ({ wish: w, told: !!session.data?.flags[wishToldFlag(w.id)], done: isWishDone(session, w.id) }));
+  return ALL_WISHES.map((w) => ({ wish: w, told: !!session.data?.flags[wishToldFlag(w.id)], done: isWishDone(session, w.id) }));
+}
+
+// ---------------------------------------------------------------------------
+// Volkstanz (Christins zweiter Wunsch erfüllt)
+// ---------------------------------------------------------------------------
+
+export function canFolkDance(session: Session): boolean {
+  const data = session.data;
+  return !!data && isWishDone(session, 'christin-volkstanz') && data.world.dates.volkstanz !== session.today();
+}
+
+/** Mit Christin & Olaf tanzen: einmal am Tag, Freundschaft für beide (Olaf, wenn er da ist) */
+export function folkDance(session: Session): string[] {
+  const data = session.data;
+  if (!data) return [];
+  data.world.dates.volkstanz = session.today();
+  const lines = [...FOLKDANCE_LINES[hashString(session.today()) % FOLKDANCE_LINES.length]];
+  lines.push(...addFriendship(session, 'christin', FOLKDANCE_POINTS));
+  addFriendship(session, 'olaf', FOLKDANCE_POINTS);
+  session.save();
+  return lines;
 }

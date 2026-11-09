@@ -105,6 +105,13 @@ Wetter und Feste laufen nach echter Zeit.
   (`SaveData.storage`, `game/storage.ts`, Fenster `ui/StoragePanel.tsx`). Klick (oder Enter/Leertaste, Pfeiltasten) legt einen ganzen
   Stapel von der Tasche in die Truhe und zurück; Werkzeuge bleiben in der Tasche; „↕ Sortieren“ ordnet die Truhe. **Alle Truhen teilen sich
   denselben Vorrat** – nichts geht verloren, wenn Lina eine verschiebt oder wegräumt. Was nicht mehr passt, bleibt, wo es war.
+- **Herzenswünsche, Phase 2** (`WISHES_2` in `data/wishes.ts`): Hat ein Bewohner seinen ersten Wunsch erfüllt gesehen, kommt ein zweiter (`order: 2`),
+  persönlicher und ohne neuen Ort – stattdessen eine Szene und ein Geschenk: **Oma** wünscht sich einen **Premium-Eierlikör** (Rezept lernt Lina, sobald
+  Oma davon erzählt; 6 Eier + 3 Kekse am Herd/im Kochstudio; Dank: Likörchen-Set), **Olaf** baut mit Lina ein **Flugzeugmodell** (Äste, Kiesel, Muscheln,
+  600 ⭐; Dank: sein Modell), **Christin** führt einen **Volkstanz** auf dem Dorfplatz auf (bunter Strauß + Apfelkuchen; danach „🪗 Volkstanz tanzen“ mit Christin
+  & Olaf, einmal am Tag), **Jens** lädt zum **Urlaub** ein – **Hawaii oder Japan zur Wahl** (1.500 ⭐ + zwei Gerichte; Dank: die Tasse „Honolulu“ bzw. „Nara“),
+  **Lars** wünscht sich einen **Wolframit** (neuer seltener Fund mit der Schaufel; Dank: sein Lieblingsbuch „Die Sandsterne“) und **Thalia** eine **große Party**
+  (vier Gerichte, bunter Strauß, 400 ⭐; Dank: die Discokugel). Geschenke kommen über `WishResult.rewards` (`giveOrDrop`), Wünsche mit Wahl über `options`.
 - **Nichts geht für immer verloren:** Werkzeuge und einmalige Geschenke (Möbel mit `gift: true`, außer Kunst) sind
   Erinnerungsstücke (`isKeepsake`): unverkäuflich (`price: null`) und nicht verschenkbar. Fehlt beim Laden etwas, das
   Lina haben sollte (`missingKeepsakes`: Omas Werkzeuge, Thalias Schaufel, Olis Einzugsmöbel), kommt es zurück.

@@ -91,6 +91,7 @@ const list: ItemDef[] = [
   { id: 'pfefferminztee', name: 'Pfefferminztee', plural: 'Tassen Pfefferminztee', category: 'essen', price: 80, description: 'Frisch und belebend. Lars trinkt ihn literweise.' },
   { id: 'lavendeltee', name: 'Lavendeltee', plural: 'Tassen Lavendeltee', category: 'essen', price: 90, description: 'Duftet nach Sommer in der Provence. Jens nennt ihn „Urlaub in der Tasse“.' },
   { id: 'thymiantee', name: 'Thymiantee', plural: 'Tassen Thymiantee', category: 'essen', price: 85, description: 'Warm, würzig, mit einem Löffel Honig. Lars: „Hustentee. Und wenn man nicht hustet: Gemütlichkeitstee.“' },
+  { id: 'eierlikoer-premium', name: 'Omas Premium-Eierlikör', plural: 'Flaschen Premium-Eierlikör', category: 'essen', price: 260, description: 'Cremig, goldgelb, mit Charakter – selbst gemacht aus den Eiern der eigenen Hühner. Oma: „Dezent. Aber mit Haltung.“' },
   { id: 'kraeutermischung', name: 'Omas Kräutermischung', plural: 'Tassen Kräutermischung', category: 'essen', price: 160, description: 'Kamille, Minze und Lavendel. Omas Rezept. Lars gibt es zu.' },
   // Gerichte aus eigenem Gemüse & Kräutern (Beet/Samen Phase 3)
   { id: 'tomatensalat', name: 'Tomatensalat', plural: 'Schüsseln Tomatensalat', category: 'essen', price: 110, description: 'Tomaten, Basilikum und ein Hauch Olivenöl. Schmeckt nach Süden.' },

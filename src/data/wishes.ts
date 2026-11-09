@@ -40,9 +40,18 @@ export interface WishDef {
   stars?: number;
   /** Danke-Szene beim Erfüllen */
   done: readonly string[];
-  /** Kartenobjekt, das danach erscheint */
-  place: string;
+  /** Kartenobjekt, das danach erscheint (Phase 1); die zweiten Wünsche haben stattdessen `rewardItems` oder `options` */
+  place?: string;
+  /** Geschenk des Bewohners zum Dank */
+  rewardItems?: ReadonlyArray<{ itemId: string; count: number }>;
+  /** Rezept, das Lina lernt, sobald der Bewohner von seinem Wunsch erzählt */
+  recipe?: string;
+  /** Wunsch mit Wahl (z. B. Hawaii oder Japan): Danke-Szene und Geschenk hängen von der Wahl ab */
+  options?: ReadonlyArray<{ id: string; label: string; done: readonly string[]; rewardItems: ReadonlyArray<{ itemId: string; count: number }> }>;
 }
+
+/** Flag einer gewählten Option */
+export const wishOptionFlag = (id: string, option: string) => `wunsch-${id}-${option}`;
 
 /** Story-Flag eines erfüllten Wunsches (steuert auch das Kartenobjekt) */
 export const wishFlag = (id: string) => `wunsch-${id}`;
@@ -221,7 +230,160 @@ export const WISHES: readonly WishDef[] = [
   },
 ];
 
-export const WISH_BY_ID: Readonly<Record<string, WishDef>> = Object.fromEntries(WISHES.map((w) => [w.id, w]));
+/**
+ * Zweite Runde (Phase 2): persönlichere Wünsche, die mehr als „sammeln“ verlangen – selbst Gemachtes, Gekochtes,
+ * Gebasteltes, Gefundenes und Gefeiertes. Kommen nach dem ersten Wunsch des Bewohners (`order: 2`).
+ * Belohnung: eine Szene und ein Geschenk (Möbel/Tasse/Buch) statt eines Ortes auf der Karte.
+ */
+export const WISHES_2: readonly WishDef[] = [
+  {
+    id: 'oma-likoer',
+    npc: 'gisela',
+    order: 2,
+    title: 'Omas Premium-Eierlikör',
+    recipe: 'eierlikoer-premium',
+    intro: [
+      'Kind, ich hab eine Bitte. Eine kleine. Für den Kaffeeklatsch hätte ich gern ein Likörchen – aber diesmal keinen gekauften.',
+      'Ein richtiger Eierlikör, selbst gemacht, mit den Eiern deiner Hühner. Premium, sag ich dir! Ich hab dir das Rezept aufgeschrieben.',
+      '(Es ist nur fürs Gespräch. Ich trinke höchstens ein winziges Gläschen. Eins. Vielleicht zwei.)',
+    ],
+    reminder: ['Mein Likörchen? Lass dir Zeit, Kind. Der Kaffeeklatsch läuft nicht weg. Er ist nur etwas durstig.'],
+    needs: [{ item: 'eierlikoer-premium', count: 1, label: 'Premium-Eierlikör (Rezept im Kochstudio / am Herd)' }],
+    done: [
+      'Na, dann wollen wir mal probieren … Mmh. Hmm. MMH!',
+      'Köstlich! Das ist Likör mit Charakter. Dezent – aber mit Haltung. So wie ich.',
+      'Ein Gläschen für mich, eins für dich. … Na gut, für dich nur ein Schlückchen. Du bist ja noch ein Kind. Mit zig Jahren.',
+      'Das hast du fein gemacht, Kindchen. Und sag keinem, dass ich nachgeschenkt hab.',
+    ],
+    rewardItems: [{ itemId: 'likoer-set', count: 1 }],
+  },
+  {
+    id: 'olaf-flugzeug',
+    npc: 'olaf',
+    order: 2,
+    title: 'Ein Flugzeugmodell zum Nachbauen',
+    intro: [
+      'Lina, ich muss dir was gestehen: Ich baue seit Jahren Flugzeugmodelle. Maßstab eins zu zweiundsiebzig. Mit Pinzette. Und viel Geduld.',
+      'Ich hab eins im Auge: eine zweimotorige Propellermaschine mit Doppeldecker-Flügeln und Rundmotoren. Ein Prachtstück! Das möchte ich mit dir zusammen bauen.',
+      'Wir brauchen zwölf Äste für die Tragflächen, sechs Kiesel als Ballast, zwei Jakobsmuscheln für die Propeller und 600 Sternchen für den Premium-Bausatz. Das ist eine Investition, mein Schatz.',
+    ],
+    reminder: ['Das Flugzeug? Es steht im Hangar, bildlich gesprochen. Es hat keine Eile. Ich habe die Anleitung schon dreimal gelesen.'],
+    needs: [
+      { item: 'ast', count: 12, label: 'Äste' },
+      { item: 'stein', count: 6, label: 'Kieselsteine' },
+      { item: 'jakobsmuschel', count: 2, label: 'Jakobsmuscheln' },
+    ],
+    stars: 600,
+    done: [
+      'Und – Fahrwerk eingerastet! Siehst du das? Die Spannweite, die Verstrebungen, die Seilzüge!',
+      'Ich habe die Nieten einzeln gesetzt. Okay, aufgemalt. Aber einzeln!',
+      'Das Schönste an Flugzeugen: Man muss sie nicht fliegen, um sie zu lieben.',
+      'Das hier gehört dir, mein Schatz. Stell es irgendwohin, wo es Aufwind hat. Zum Beispiel auf die Kommode.',
+    ],
+    rewardItems: [{ itemId: 'modellflugzeug', count: 1 }],
+  },
+  {
+    id: 'christin-volkstanz',
+    npc: 'christin',
+    order: 2,
+    title: 'Ein Volkstanz auf dem Dorfplatz',
+    intro: [
+      'Lina, Olaf und ich tanzen ja regelmäßig im Tanzverein. Volkstänze. Mit Figuren, Kreuzungen und Takt. Alles hat seine Ordnung.',
+      'Ich möchte einmal bei uns im Dorf einen aufführen – auf dem Dorfplatz, mit Blumen und Kuchen. Du darfst mittanzen. Du musst nur den Takt halten.',
+      'Dafür bräuchte ich einen bunten Strauß für die Tanzfläche und einen Apfelkuchen für hinterher. Ein Tanz ohne Kuchen ist nur Gymnastik.',
+    ],
+    reminder: ['Der Volkstanz hat keine Eile, Lina. Wir üben ohnehin noch die Aufstellung. Olaf kennt links und rechts nicht immer genau.'],
+    needs: [
+      { item: 'strauss-bunt', count: 1, label: 'Bunter Strauß' },
+      { item: 'apfelkuchen', count: 1, label: 'Apfelkuchen' },
+    ],
+    done: [
+      'Und – Schritt, Schritt, Drehung, Klatschen! Olaf, du bist links! Links!',
+      'Es war nicht perfekt. Olaf hat einmal die Seite gewechselt. Aber es war ordentlich genug.',
+      'Der Dorfplatz sieht schön aus, wenn getanzt wird. Danke, Lina. Du darfst ab jetzt immer bei uns mittanzen.',
+    ],
+  },
+  {
+    id: 'jens-urlaub',
+    npc: 'jens',
+    order: 2,
+    title: 'Urlaub mit Onkel Jens',
+    intro: [
+      'Ma chérie, ich hab Fernweh. Und weil Fernweh ansteckend ist, hab ich beschlossen: Du kommst mit!',
+      'Zwei Wochen Urlaub. Ich übernehme den Charme, du Flug und Hotel: 1.500 Sternchen. Dazu etwas Reiseproviant, zwei Gerichte, damit wir nicht verhungern.',
+      'Und jetzt die große Frage, die ich seit Tagen nicht beantworten kann: Hawaii oder Japan? Du darfst wählen!',
+    ],
+    reminder: ['Unser Urlaub! Der Koffer steht schon bereit – der Koffer steht immer bereit. Wähl in Ruhe, ma chérie.'],
+    needs: [{ category: 'essen', count: 2, label: 'Reiseproviant (zwei Gerichte)' }],
+    stars: 1500,
+    done: [],
+    options: [
+      {
+        id: 'hawaii',
+        label: '🌺 Hawaii',
+        done: [
+          'Aloha! Blumenketten, Brandung, ein Sonnenuntergang wie von mir gemalt – und ich hab mich sofort verbrannt. Stilvoll natürlich!',
+          'Du hast im Meer geplanscht, ich hab Skizzen gemacht. Und ein Kellner hat „Lina“ auf deinen Becher geschrieben. Mit Herz.',
+          'Ich hab dir eine Tasse mitgebracht. Und mir ein Hemd gekauft, das nie wieder jemand sehen darf. Merci, ma chérie!',
+        ],
+        rewardItems: [{ itemId: 'tasse-stadt-honolulu', count: 1 }],
+      },
+      {
+        id: 'japan',
+        label: '🗾 Japan',
+        done: [
+          'Konnichiwa! Du hast tatsächlich ein bisschen Japanisch gesprochen. Ich hab nur genickt und gelächelt. Das reicht meistens.',
+          'Tempel, Tee und Rehe, die sich verbeugen. Wir haben stundenlang Matcha getrunken und kein Wort gesagt. Ein Wunder!',
+          'Ich hab dir eine Tasse mitgebracht. Arigatō, ma chérie – das war der schönste Urlaub seit Langem.',
+        ],
+        rewardItems: [{ itemId: 'tasse-stadt-nara', count: 1 }],
+      },
+    ],
+  },
+  {
+    id: 'lars-wolfram',
+    npc: 'lars',
+    order: 2,
+    title: 'Ein Wolfram-Stein',
+    intro: [
+      'Schwesterherz, ich hab ein Hobby, über das ich nie rede: Steine. Genauer: Wolframit. Dunkel, schwer, fast schwarz. Sieht aus wie ein verschluckter Schatten.',
+      'Thalia sagt, so einen findet man mit der Schaufel – aber sehr, sehr selten. Wenn du einen ausgräbst, bring ihn mir. Ich revanchiere mich, versprochen.',
+    ],
+    reminder: ['Der Wolframit? Geduld. Das ist Geologie, keine Ungeduld. Er liegt seit Millionen Jahren dort und wartet.'],
+    needs: [{ item: 'wolframit', count: 1, label: 'Wolframit (mit der Schaufel ausgraben, selten)' }],
+    done: [
+      'Wolframit! Wirklich! Wiegt ein Kilo auf zehn Zentimetern. Das ist Physik, kein Zauber.',
+      'Weißt du, wofür man Wolfram nimmt? Für Glühfäden, Bohrer, Dartpfeile. Ich nehme ihn für meinen Schreibtisch.',
+      'Als Dank bekommst du mein Lieblingsbuch: ein sehr dicker Science-Fiction-Roman über einen Planeten aus Sand und Politik. Lies es im Sessel mit Tee. Und nicht auf den Fuß fallen lassen – ärztlich nicht empfohlen.',
+    ],
+    rewardItems: [{ itemId: 'buch-sandsterne', count: 1 }],
+  },
+  {
+    id: 'thalia-party',
+    npc: 'thalia',
+    order: 2,
+    title: 'Eine richtig große Party',
+    intro: [
+      'Lina! Unsere Samstagspartys sind schön, aber ich will eine, über die das Dorf noch in einem Jahr redet. Mit allem: Essen, Blumen, Musik, Lichterketten und einer Discokugel!',
+      'Du bringst vier Leckereien mit, einen bunten Strauß für die Tanzfläche und 400 Sternchen für Getränke und Musik. Die Discokugel besorge ich. Ich weiß schon, wo. Frag nicht.',
+    ],
+    reminder: ['Die Party! Ich hab schon eine Playlist. Und einen Plan B für die Playlist. Und einen Plan C: Oma singt.'],
+    needs: [
+      { category: 'essen', count: 4, label: 'Leckereien (vier Gerichte)' },
+      { item: 'strauss-bunt', count: 1, label: 'Bunter Strauß' },
+    ],
+    stars: 400,
+    done: [
+      'Die Lichterketten leuchten! Die Musik läuft! Und da – schau, die Discokugel!',
+      'Alle sind gekommen. Sogar Oma. Sogar Olaf. Er hat getanzt. Ich hab es für die Nachwelt festgehalten.',
+      'Das war die beste Party aller Zeiten. Und ich hab Erfahrung. Danke, Lina! Die Discokugel gehört dir.',
+    ],
+    rewardItems: [{ itemId: 'discokugel', count: 1 }],
+  },
+];
+
+export const ALL_WISHES: readonly WishDef[] = [...WISHES, ...WISHES_2];
+export const WISH_BY_ID: Readonly<Record<string, WishDef>> = Object.fromEntries(ALL_WISHES.map((w) => [w.id, w]));
 
 /** Omas Brief, sobald alle eingezogen sind: Es gibt Herzenswünsche */
 export const WISH_LETTER = {
@@ -232,3 +394,12 @@ export const WISH_LETTER = {
     'Ich hab mir sagen lassen, dass jeder hier noch so einen kleinen Herzenswunsch hat. Ich auch, ehrlich gesagt.\n\n' +
     'Frag doch mal nach, wenn du jemanden triffst. Ganz ohne Eile. Wünsche haben Zeit.\n\nDeine Oma',
 } as const;
+
+/** Volkstanz mit Christin & Olaf (nach Christins zweitem Wunsch): einmal am Tag */
+export const FOLKDANCE_POINTS = 10;
+export const FOLKDANCE_LINES: readonly (readonly string[])[] = [
+  ['Christin zählt an: „Eins, zwei, drei – und Drehung!“ Olaf dreht sich in die richtige Richtung. Meistens.', 'Ihr tanzt im Kreis, klatscht in die Hände und tauscht die Plätze. Es ist erstaunlich ordentlich.'],
+  ['„Und Seitenwechsel!“ ruft Christin. Olaf und Lina wechseln. Winston wechselt auch. Aus Prinzip.', 'Am Ende verbeugen sich alle voreinander. Christin nickt anerkennend. Das ist ihr höchstes Lob.'],
+  ['Ein neuer Tanz! „Der Schrittwechsel ist leicht“, sagt Christin. Er ist nicht leicht. Aber er macht Spaß.', 'Olaf zählt laut mit. Christin zählt leise mit. Du zählst gar nicht, du tanzt einfach.'],
+  ['Christin hakt sich bei dir unter: „Und eine Runde im Kreis!“ Alle drehen sich, die Röcke fliegen, Olaf verliert fast die Brille.', 'Danach gibt es für alle ein Stück Kuchen. Ein Tanz ohne Kuchen ist schließlich nur Gymnastik.'],
+];
