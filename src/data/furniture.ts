@@ -57,6 +57,8 @@ export interface FurnitureDef {
   greenhouse?: boolean;
   /** Höhe der Erde in diesem Beet (Standard 0,39 = Hochbeet) */
   soilHeight?: number;
+  /** Vorratstruhe: öffnet das Lager (Tasche ↔ Truhe) */
+  storage?: boolean;
   /** Stall mit Tieren (Hühner/Wachteln), legt täglich Eier */
   coop?: 'huhn' | 'wachtel';
   /** Hängt an der Wand (Rückwand oder Seitenwand) – darunter darf etwas stehen */
@@ -86,6 +88,7 @@ export const FURNITURE: readonly FurnitureDef[] = [
   { id: 'winkekatze', name: 'Winkekatze', style: 'japanisch', price: 500, w: 1, d: 1, small: true, description: 'Winkt fröhlich und soll Glück bringen. Oma findet sie „ein bisschen unheimlich“.' },
   { id: 'kokeshi', name: 'Kokeshi-Puppe', style: 'japanisch', price: 260, w: 1, d: 1, small: true, description: 'Eine kleine bemalte Holzpuppe mit rundem Kopf.' },
   { id: 'regal', name: 'Holzregal', style: 'basis', price: 500, w: 2, d: 1, surface: true, surfaceHeight: 0.9, description: 'Ein schlichtes Regal aus hellem Holz.' },
+  { id: 'vorratstruhe', name: 'Vorratstruhe', style: 'basis', storage: true, surface: true, surfaceHeight: 0.68, price: 650, w: 2, d: 1, description: 'Eine große Holztruhe mit Eisenbeschlägen. Hier ist Platz für 60 Dinge, die nicht in die Tasche müssen. Alle Truhen teilen sich denselben Vorrat.' },
   { id: 'stehlampe', name: 'Stehlampe', style: 'basis', price: 400, w: 1, d: 1, light: true, description: 'Eine Lampe mit rundem Schirm für gemütliches Licht.' },
   // Handgemacht an Opas Werkbank (siehe `recipes.ts`) – Preis = Verkaufswert × 4
   { id: 'ast-hocker', name: 'Ast-Hocker', style: 'handgemacht', crafted: true, price: 120, w: 1, d: 1, sit: 'sitzen', description: 'Ein kleiner Hocker aus Ästen. Wackelt ein bisschen – das gehört so.' },

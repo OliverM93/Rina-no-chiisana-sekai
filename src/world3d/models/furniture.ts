@@ -873,6 +873,27 @@ export function makeFurniture(itemId: string, links: FenceLinks = { n: false, e:
       g.add(globe);
       break;
     }
+    case 'vorratstruhe': {
+      const wood = '#a0693f';
+      const dark = '#6e4630';
+      const iron = '#4a4a56';
+      g.add(b(1.5, 0.36, 0.62, wood, 0, 0.18, 0));
+      const lid = mesh(new THREE.CylinderGeometry(0.31, 0.31, 1.5, 16, 1, false, 0, Math.PI), toon(wood));
+      lid.rotation.z = Math.PI / 2;
+      lid.position.set(0, 0.36, 0);
+      g.add(lid);
+      for (const x of [-0.5, 0.5]) {
+        g.add(b(0.1, 0.38, 0.66, iron, x, 0.19, 0));
+        const band = mesh(new THREE.CylinderGeometry(0.325, 0.325, 0.1, 16, 1, false, 0, Math.PI), toon(iron));
+        band.rotation.z = Math.PI / 2;
+        band.position.set(x, 0.36, 0);
+        g.add(band);
+      }
+      g.add(b(0.14, 0.14, 0.04, '#e0b04a', 0, 0.3, 0.33));
+      g.add(b(0.04, 0.05, 0.02, dark, 0, 0.29, 0.355));
+      for (const [x, z] of [[-0.68, -0.26], [0.68, -0.26], [-0.68, 0.26], [0.68, 0.26]] as const) g.add(b(0.08, 0.04, 0.08, dark, x, 0.02, z));
+      break;
+    }
     // ---- Herz-Geschenke ----
     case 'setzkasten': {
       const z = WALL_Z;

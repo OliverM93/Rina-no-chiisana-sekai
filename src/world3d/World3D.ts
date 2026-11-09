@@ -2664,6 +2664,10 @@ export class World3D {
       this.session.bus.emit('ui:open', { kind: 'tv', withOli: !!this.homeOli?.visible });
       return;
     }
+    if (f.def.storage) {
+      this.session.bus.emit('ui:open', { kind: 'truhe' });
+      return;
+    }
     if (f.def.id === 'herd') {
       this.session.bus.emit('ui:open', { kind: 'herd' });
       return;

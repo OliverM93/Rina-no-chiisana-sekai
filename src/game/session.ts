@@ -64,6 +64,7 @@ export type UiPanel =
   | { kind: 'tv'; withOli: boolean }
   | { kind: 'herd' }
   | { kind: 'samenstand' }
+  | { kind: 'truhe' }
   | { kind: 'bank'; onClose?: () => void }
   | { kind: 'gift'; npcId: string; onPick: (itemId: string) => void; onCancel: () => void }
   | { kind: 'seeds'; onPick: (itemId: string) => void; onCancel: () => void };

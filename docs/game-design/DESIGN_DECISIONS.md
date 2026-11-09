@@ -98,6 +98,13 @@ Format: **Entscheidung** – Begründung – verworfene Alternative(n) – Auswi
    bräuchten mehr Inhalt. Wünsche nutzen Bestehendes und erzählen kleine Geschichten – bester Aufwand-Nutzen.
 - **Technik:** Zustand komplett in Story-Flags (kein `SAVE_VERSION`-Wechsel), Orte als `landmark`/`steg` mit `requires`.
 
+### D18 · Vorratstruhe (W4/F5, Nov. 2026)
+- **Erlebnis:** Sammeln und Beetpflege ohne Inventar-Tetris; längere Sitzungen werden nicht durch Heimwege unterbrochen.
+- **Entscheidung:** Ein gemeinsamer Vorrat (60 Plätze) für alle Truhen statt Inhalt pro Truhe → nichts geht verloren, kein Aufräumen vor dem Verschieben.
+- **Ökonomie:** Möbel für 650 ⭐ (Katalog-Mitte) – keine neue Einnahmequelle, nur Komfort. Werkzeuge sind ausgeschlossen (griffbereit).
+- **Risiko:** Horten (unkritisch, nichts verfällt). Verkauf bleibt vor Linas Haus (zweite Verkaufsstelle weiter offen).
+- **Playtest:** Heimwege pro 30 Minuten zählen (Ziel ≤ 3, siehe PLAYTESTING).
+
 ---
 
 ## Offene Designentscheidungen ❓
