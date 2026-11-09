@@ -2093,7 +2093,7 @@ export class World3D {
         const ax: Array<[number, number]> = [[1, 0], [0, 1], [-1, 0], [0, -1]];
         const [ux, uy] = ax[jobItem.rot];
         const facesAlong = ['right', 'down', 'left', 'up'] as const;
-        return { x: cx0 + ux * 0.2, y: cy0 + uy * 0.2, facing: facesAlong[jobItem.rot], lie: 0.58, work: 'stemmen', uid: jobItem.uid };
+        return { x: cx0 + ux * 0.28, y: cy0 + uy * 0.28, facing: facesAlong[jobItem.rot], lie: 0.58, work: 'stemmen', uid: jobItem.uid };
       }
     }
     for (const id of anchorIds) {
