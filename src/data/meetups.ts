@@ -103,6 +103,24 @@ export const MEETUPS: readonly MeetupDef[] = [
       ['Thalia: „Dieser Stein ist 300 Millionen Jahre alt!“', 'Jens: „Und trotzdem sieht er besser aus als Olaf morgens.“ – Thalia prustet los.'],
     ],
   },
+  {
+    id: 'sonnenuntergang',
+    name: 'Sonnenuntergang am Strand',
+    weekdays: [1, 4],
+    hours: [18, 20],
+    members: ['thalia', 'lars'],
+    spots: {
+      thalia: { x: 28, y: 31, facing: 'down' },
+      lars: { x: 29, y: 31, facing: 'down' },
+    },
+    emotes: ['🌅', '🪨', '💬', '✨'],
+    talks: [
+      ['Thalia: „Der Sonnenuntergang ist heute 0,3 Prozent schöner als gestern. Ich hab nachgemessen.“', 'Lars: „Als Arzt sage ich: Genieß ihn einfach.“ – Thalia: „Ich genieße ihn ja. Mit Messwerten.“'],
+      ['Lars: „Feierabend. Sieben Patienten, davon fünf mit Schnupfen.“', 'Thalia: „Und die zwei anderen?“ – Lars: „Wollten nur reden. Das ist auch Medizin.“'],
+      ['Thalia hat einen Stein gefunden, der aussieht wie ein kleines Herz.', 'Lars: „Das ist Quarz mit Einschlüssen.“ – Thalia: „Das ist ein Herz.“ – Lars: „… Das ist ein Herz.“'],
+      ['Die beiden sitzen einfach da und gucken aufs Meer.', 'Lars: „Weißt du, warum ich das so gern mag?“ – Thalia: „Weil es nichts kostet?“ – Lars: „Weil es mich nichts fragt.“'],
+    ],
+  },
 ];
 
 export const MEETUP_BY_ID: Readonly<Record<string, MeetupDef>> = Object.fromEntries(MEETUPS.map((m) => [m.id, m]));

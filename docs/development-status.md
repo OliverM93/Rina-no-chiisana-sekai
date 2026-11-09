@@ -202,6 +202,7 @@ Legende: ✅ erledigt · 🚧 in Arbeit · ⬜ geplant
 **M7g ✅ Treffen der Bewohner & Linas Streetwear**
 - ✅ Kaffeeklatsch an Omas Bank (Mo/Mi/Fr 15–17), Angeln am Fluss (Olaf & Christin, Di/Do/Sa 16–18),
   Training auf der Wiese (Oli & Lars, Mi/Sa 8–10), Steine & Skizzen am Strand (Thalia & Jens, Di/Fr 13–15)
+- ✅ **Abendtreffen:** Sonnenuntergang am Strand (Thalia & Lars, Mo/Do 18–20 Uhr)
 - ✅ Lina gesellt sich dazu und hört mit (Freundschaft für alle), Emojis über den Köpfen, Angeln in der Hand
 - ✅ Lina: Oversize-Sweatshirt, kurze Hose im Sommer, Fleece-Jacke im Winter („Streetwear je nach Jahreszeit“)
 - ✅ Feste: Weihnachten, Silvester, Linas Geburtstag (16.06.) → M7e · ⬜ Geburtstage der übrigen Bewohner (siehe oben)
@@ -270,6 +271,7 @@ Legende: ✅ erledigt · 🚧 in Arbeit · ⬜ geplant
 - ✅ **Fotomodus:** Taste F / 📷 – Schnappschuss mit Rahmen (Polaroid, Herzchen, Blümchen, Schlicht) zum Speichern als PNG
 - ✅ **Sammlungen würdigen:** Brief + Wand-Urkunde für alle Fische, Krabbeltiere, Funde, Blumenfarben und Tassen (Audit F10)
 - ✅ **Oli in Stufen:** „Zeit zu zweit“-Szenen (eine je Herz), „Zur Herzbank“ mit Jahreszeiten-Zeilen, Jubiläums-Briefe nach 100 Tagen und einem Jahr (Audit F6)
+- ✅ **Abend-Erreichbarkeit:** reine Tagarten (11) bis 20 Uhr verfügbar, neues Abendtreffen am Strand (Audit F1/F18)
 - ✅ **Dialog-Pools aufgestockt:** Thalia, Oli, Olaf, Lars und Christin haben jetzt mindestens 30 Plauderzeilen, darunter Zeilen für jede Jahreszeit, Gewitter/Regen/Wolken und mehr Herzen-Stufen (Test `dialoguePools.test.ts`)
 - ✅ **Erinnerungen im Gespräch:** 38 Zeilen, in denen Bewohner auf Hausausbau, Sammelbuch, Garten, Tassen, Jens' Reisen und die gemeinsame Zeit Bezug nehmen (Audit F8)
 - ✅ **Tagesfunde sammeln sich an:** Eier (bis 3 Tage im Nest) und Winstons Buddelfunde (bis 3 Fundstellen) – wer einen Tag auslässt, verpasst nichts (Audit F4)
