@@ -12,7 +12,7 @@ import { BOUQUETS, EMPTY_VASE, vaseId, WREATHS } from './straeusse';
 import { SAMMLUNGEN, urkundeId } from './sammlungen';
 import { TASSEN } from './tassen';
 
-export type FurnitureStyle = 'japanisch' | 'basis' | 'cottage' | 'retro' | 'modern' | 'midcentury' | 'handgemacht' | 'garten' | 'kunst' | 'winter' | 'lieblinge';
+export type FurnitureStyle = 'japanisch' | 'basis' | 'cottage' | 'retro' | 'modern' | 'midcentury' | 'handgemacht' | 'garten' | 'kunst' | 'winter' | 'lieblinge' | 'bistro';
 
 export interface FurnitureDef {
   /** Basis-ID (ohne Variante) */
@@ -187,6 +187,18 @@ export const FURNITURE: readonly FurnitureDef[] = [
   { id: 'poster-grusel', name: 'Gruselfilm-Poster', style: 'basis', wall: true, price: 400, w: 1, d: 1, description: '„Die Nacht der Kürbisse“ – Linas liebster Gruselklassiker. Oli guckt lieber nicht so genau hin.' },
   { id: 'insektenkasten', name: 'Insektenkasten', style: 'basis', wall: true, price: 1200, w: 2, d: 1, description: 'Ein Schaukasten mit 24 Plätzen für alle Krabbeltiere. Was du fängst, steckt dann darin. Lars: „Wissenschaftlich einwandfrei.“' },
   { id: 'fischtafel', name: 'Fischtafel', style: 'basis', wall: true, price: 1000, w: 2, d: 1, description: 'Eine Tafel mit 17 Plätzen für Fische. Jeder Fang bekommt seinen Platz. Olaf hat schon nachgezählt: Es fehlen noch einige.' },
+  // ---- Französisches Bistro (Jens' Stil) ----
+  { id: 'bistrotisch', name: 'Bistrotisch', style: 'bistro', surface: true, surfaceHeight: 0.7, price: 600, w: 1, d: 1, description: 'Rund, mit Marmorplatte und gusseisernem Fuß. Zwei Croissants passen drauf, ein Kaffee sowieso. Jens: „Très chic!“' },
+  { id: 'bistrostuhl', name: 'Bugholzstuhl', style: 'bistro', sit: 'sitzen', price: 380, w: 1, d: 1, description: 'Geschwungenes Holz, runder Sitz. In jedem guten Pariser Café steht ein Dutzend davon. Bei dir immerhin einer.' },
+  { id: 'barhocker', name: 'Barhocker', style: 'bistro', sit: 'sitzen', price: 320, w: 1, d: 1, description: 'Hoch, drehbar und perfekt für einen schnellen Espresso am Tresen.' },
+  { id: 'zinktheke', name: 'Zinktresen', style: 'bistro', surface: true, surfaceHeight: 0.95, price: 1400, w: 2, d: 1, description: 'Ein echter Bistro-Tresen mit schimmernder Zinkplatte. Hier wird geplaudert, gelacht und die Rechnung „aufgeschrieben“.' },
+  { id: 'kreidetafel', name: 'Kreidetafel „Tagesgericht“', style: 'bistro', wall: true, price: 450, w: 1, d: 1, description: 'Heute: Fischbrötchen à la Jens. Und ein Herzchen. Die Schrift ist von Hand – leicht sächsisch.' },
+  { id: 'weinregal', name: 'Weinregal', style: 'bistro', price: 700, w: 1, d: 1, description: 'Ein schmales Holzregal, in dem die Flaschen liegen. Lars sagt: „In Maßen.“ Oma: „Wo sind die Gläser?“' },
+  { id: 'bistrolampe', name: 'Bistro-Tischlampe', style: 'bistro', small: true, light: true, price: 380, w: 1, d: 1, description: 'Eine Messinglampe mit grünem Glasschirm. Macht jeden Abend gemütlich und ein bisschen nach Paris.' },
+  { id: 'goldspiegel', name: 'Café-Spiegel', style: 'bistro', wall: true, price: 800, w: 1, d: 1, description: 'Ein ovaler Spiegel mit goldenem Rahmen. Der sieht jeden Gast und lächelt zurück.' },
+  { id: 'etagere', name: 'Croissant-Etagere', style: 'bistro', small: true, price: 280, w: 1, d: 1, description: 'Zwei Etagen, ein Hauch Puderzucker und genau drei Croissants. Eins ist für Winston. Fast.' },
+  { id: 'eiffelmodell', name: 'Turm-Modell', style: 'bistro', small: true, price: 350, w: 1, d: 1, description: 'Ein kleiner eiserner Turm aus Paris. Jens: „Da war ich schon. Und dort. Und dort.“' },
+  { id: 'bistrolaeufer', name: 'Bordeaux-Läufer', style: 'bistro', rug: true, price: 600, w: 2, d: 1, description: 'Ein roter Läufer mit schmaler cremefarbener Borte. Ein Gang wie im Bistro.' },
   { id: 'wandregal', name: 'Wandregal', style: 'basis', wall: true, price: 500, w: 2, d: 1, description: 'Ein schwebendes Brett mit Büchern, einem Pflänzchen und einer kleinen Kerze.' },
   { id: 'wanduhr', name: 'Wanduhr', style: 'basis', wall: true, price: 450, w: 1, d: 1, description: 'Eine runde Uhr. Sie geht genau richtig – Papa hat sie gestellt.', variants: { rosa: '#f4a3b8', mint: '#9ad8c0', schwarz: '#2a2a30' } },
   { id: 'rollbild', name: 'Rollbild', style: 'japanisch', wall: true, price: 700, w: 1, d: 1, description: 'Ein Kakejiku mit einem Kranich über den Bergen. Ganz still und schön.' },
@@ -262,6 +274,8 @@ export const WALLPAPERS: readonly SurfaceDef[] = [
   { id: 'tapete-glas', name: 'Glaswand', style: 'basis', price: 1200, kind: 'tapete', pattern: 'glas', color: '#d9eef2', accent: '#8fb08a', description: 'Große Glasscheiben mit weißen Sprossen – draußen grünt der Garten.' },
   { id: 'tapete-backstein', name: 'Backstein', style: 'basis', price: 700, kind: 'tapete', pattern: 'backstein', color: '#c9775a', accent: '#e9d8c4', description: 'Rote Backsteine mit hellen Fugen. Gemütlich wie ein alter Gewölbekeller.' },
   { id: 'tapete-flocken', name: 'Schneeflocken-Tapete', style: 'winter', price: 600, kind: 'tapete', pattern: 'flocken', color: '#dfeef6', accent: '#ffffff', description: 'Eisblau mit weißen Schneeflocken – gemütlich-kalt, aber nur an der Wand.' },
+  { id: 'tapete-bistro', name: 'Bordeaux-Streifen', style: 'bistro', price: 700, kind: 'tapete', pattern: 'streifen', color: '#f3e6cf', accent: '#b8484f', description: 'Cremefarbene Wand mit weinroten Streifen – wie die Markise vor Jens\' Bistro.' },
+  { id: 'tapete-metro', name: 'Pariser Kacheln', style: 'bistro', price: 750, kind: 'tapete', pattern: 'kacheln', color: '#f6f2e8', accent: '#9bb5c9', description: 'Glänzende weiße Kacheln mit blaugrauen Fugen. Typisch Metro und Bistro.' },
   { id: 'tapete-rosa', name: 'Pastellrosa Tapete', style: 'basis', price: 400, kind: 'tapete', pattern: 'streifen', color: '#fbe0e8', accent: '#f6cfdb', description: 'Ganz zarte Streifen in Rosa.' },
 ];
 
@@ -273,6 +287,7 @@ export const FLOORS: readonly SurfaceDef[] = [
   { id: 'boden-fischgraet', name: 'Fischgrät-Parkett', style: 'retro', price: 900, kind: 'boden', pattern: 'fischgraet', color: '#c98f5a', accent: '#a5703f', description: 'Kleine Holzstäbe im Zickzack. Glänzt nach dem Bohnern.' },
   { id: 'boden-beton', name: 'Betonoptik', style: 'modern', price: 800, kind: 'boden', pattern: 'beton', color: '#c9c7c4', accent: '#b3b0ad', description: 'Glatter, hellgrauer Boden in Betonoptik. Schön kühl im Sommer.' },
   { id: 'boden-nussbaum', name: 'Nussbaum-Parkett', style: 'midcentury', price: 900, kind: 'boden', pattern: 'dielen', color: '#7a5236', accent: '#5e3e28', description: 'Dunkles, warmes Nussbaumholz.' },
+  { id: 'boden-bistro', name: 'Bistro-Fliesen', style: 'bistro', price: 850, kind: 'boden', pattern: 'schach', color: '#f4eee0', accent: '#b8484f', description: 'Cremefarbene und weinrote Fliesen im Schachbrettmuster. Der Boden, auf dem man „Bonjour“ sagt.' },
   { id: 'boden-schach', name: 'Schachbrett-Fliesen', style: 'midcentury', price: 800, kind: 'boden', pattern: 'schach', color: '#f2efe8', accent: '#2a2a30', description: 'Schwarze und weiße Fliesen im Wechsel. Klar, grafisch, zeitlos.' },
   { id: 'boden-terrakotta', name: 'Terrakotta-Fliesen', style: 'basis', price: 700, kind: 'boden', pattern: 'terrakotta', color: '#d9895f', accent: '#b8693f', description: 'Warme, rötliche Tonfliesen. Fühlen sich nach Urlaub an.' },
   { id: 'boden-teppich', name: 'Rosa Teppichboden', style: 'basis', price: 500, kind: 'boden', pattern: 'teppich', color: '#f7c6d4', accent: '#f4b3c6', description: 'Flauschig und weich unter den Füßen.' },
@@ -300,7 +315,7 @@ for (const w of WREATHS) (FURNITURE as FurnitureDef[]).push({ id: w.id, name: w.
 // Kunstwerke (Bild auf Staffelei) aus `art.ts` – nur über Jens erhältlich
 for (const a of ARTWORKS) (FURNITURE as FurnitureDef[]).push({ id: a.id, name: a.name, style: 'kunst', gift: true, price: a.price, w: 1, d: 1, description: `${a.description} – ${a.artist}` });
 
-export const STYLE_LABELS: Record<FurnitureStyle, string> = { japanisch: 'Japanisch', basis: 'Basis', cottage: 'Cottagecore', retro: 'Retro-Oma-Chic', modern: 'Modern', midcentury: 'Mid-Century & Bauhaus', handgemacht: 'Handgemacht', garten: 'Garten', kunst: 'Kunst', winter: 'Winterzauber', lieblinge: 'Lieblingsthemen' };
+export const STYLE_LABELS: Record<FurnitureStyle, string> = { japanisch: 'Japanisch', basis: 'Basis', cottage: 'Cottagecore', retro: 'Retro-Oma-Chic', modern: 'Modern', midcentury: 'Mid-Century & Bauhaus', handgemacht: 'Handgemacht', garten: 'Garten', kunst: 'Kunst', winter: 'Winterzauber', lieblinge: 'Lieblingsthemen', bistro: 'Französisches Bistro' };
 
 /** Möbel-Gegenstand (mit Variante) → Basis + Farbe */
 export interface FurnitureItem {

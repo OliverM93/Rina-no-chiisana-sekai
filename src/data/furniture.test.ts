@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { FURNITURE } from './furniture';
+import { FLOORS, FURNITURE, WALLPAPERS } from './furniture';
 import { FURNITURE_HEIGHTS } from './furnitureHeights';
 
 describe('Möbel-Höhen (für die Wand-Deko-Prüfung)', () => {
@@ -20,5 +20,20 @@ describe('Möbel-Höhen (für die Wand-Deko-Prüfung)', () => {
       expect(f!.style).toBe('midcentury');
       expect(Object.keys(f!.variants ?? {}).length).toBe(4);
     }
+  });
+});
+
+describe('Französisches Bistro (Jens\' Stil)', () => {
+  it('hat Möbel, Tapeten und einen Boden, alle im Stil „bistro“ und ohne doppelte IDs', () => {
+    const bistro = FURNITURE.filter((f) => f.style === 'bistro');
+    expect(bistro.length).toBeGreaterThanOrEqual(10);
+    expect(bistro.some((f) => f.sit)).toBe(true);
+    expect(bistro.some((f) => f.surface)).toBe(true);
+    expect(bistro.some((f) => f.wall)).toBe(true);
+    expect(bistro.some((f) => f.small && f.light)).toBe(true);
+    expect(bistro.some((f) => f.rug)).toBe(true);
+    expect(new Set(FURNITURE.map((f) => f.id)).size).toBe(FURNITURE.length);
+    expect(WALLPAPERS.filter((w) => w.style === 'bistro').length).toBeGreaterThanOrEqual(2);
+    expect(FLOORS.filter((w) => w.style === 'bistro').length).toBeGreaterThanOrEqual(1);
   });
 });

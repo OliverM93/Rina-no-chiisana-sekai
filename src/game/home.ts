@@ -11,7 +11,7 @@ import { YARD_AREA } from '../data/yard';
 import { spotKey } from '../core/garden';
 import { cellsOf, checkPlacement, footprint, misfits, moveItem, placeItem, type Room, type RoomLayout, type Rotation, removeItem } from '../core/room';
 import { waitOver } from '../core/progress';
-import { FURNITURE_BY_ITEM, furnitureInfo, SURFACE_BY_ID } from '../data/furniture';
+import { FURNITURE_BY_ITEM, furnitureInfo, type FurnitureStyle, SURFACE_BY_ID } from '../data/furniture';
 import { emptyRoom, HOUSE_STAGES, layoutOf, MAX_STAGE, roomLayouts } from '../data/house';
 import { itemDef, maxStackOf } from '../data/items';
 import { giveItem, takeItem } from './gameplay';
@@ -24,12 +24,23 @@ export function catalogPrice(itemId: string): number | null {
   return SURFACE_BY_ID[itemId]?.price ?? null;
 }
 
+/**
+ * Ist dieser Stil im Katalog freigeschaltet? Das Französische Bistro bringt Jens mit (ab seinem Einzug) – alle
+ * anderen Stile gibt es von Anfang an (Game Design F13: nichts wegnehmen, nur Neues später bringen).
+ */
+export function styleUnlocked(session: Session, style: FurnitureStyle): boolean {
+  if (style === 'bistro') return !!session.data?.flags.jensBegruesst;
+  return true;
+}
+
 export type BuyResult = 'ok' | 'zu-teuer' | 'tasche-voll' | 'unbekannt';
 
 export function buyFromCatalog(session: Session, itemId: string): BuyResult {
   const data = session.data;
   const price = catalogPrice(itemId);
   if (!data || price === null || !itemDef(itemId)) return 'unbekannt';
+  const style = FURNITURE_BY_ITEM[itemId]?.def.style ?? SURFACE_BY_ID[itemId]?.style;
+  if (style && !styleUnlocked(session, style)) return 'unbekannt';
   if (data.money < price) return 'zu-teuer';
   if (spaceFor(data.inventory, itemId, maxStackOf) < 1) return 'tasche-voll';
   data.money -= price;
