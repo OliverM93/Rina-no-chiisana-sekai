@@ -270,6 +270,7 @@ Legende: ✅ erledigt · 🚧 in Arbeit · ⬜ geplant
 - ✅ **Fotomodus:** Taste F / 📷 – Schnappschuss mit Rahmen (Polaroid, Herzchen, Blümchen, Schlicht) zum Speichern als PNG
 - ✅ **Sammlungen würdigen:** Brief + Wand-Urkunde für alle Fische, Krabbeltiere, Funde, Blumenfarben und Tassen (Audit F10)
 - ✅ **Oli in Stufen:** „Zeit zu zweit“-Szenen (eine je Herz), „Zur Herzbank“ mit Jahreszeiten-Zeilen, Jubiläums-Briefe nach 100 Tagen und einem Jahr (Audit F6)
+- ✅ **Dialog-Pools aufgestockt:** Thalia, Oli, Olaf, Lars und Christin haben jetzt mindestens 30 Plauderzeilen, darunter Zeilen für jede Jahreszeit, Gewitter/Regen/Wolken und mehr Herzen-Stufen (Test `dialoguePools.test.ts`)
 - ✅ **Erinnerungen im Gespräch:** 38 Zeilen, in denen Bewohner auf Hausausbau, Sammelbuch, Garten, Tassen, Jens' Reisen und die gemeinsame Zeit Bezug nehmen (Audit F8)
 - ✅ **Tagesfunde sammeln sich an:** Eier (bis 3 Tage im Nest) und Winstons Buddelfunde (bis 3 Fundstellen) – wer einen Tag auslässt, verpasst nichts (Audit F4)
 - ✅ **Vorratstruhe:** 60 Lagerplätze außerhalb der Tasche (Möbel im Katalog), Spielstand v14; Leertaste drückt in allen Fenstern den fokussierten Knopf – aus der Game-Design-Analyse (W4/F5)

@@ -75,6 +75,12 @@ export const CHRISTIN: NpcDef = {
       { text: ['Ich hab auf dem Dorfplatz einen Samenstand aufgemacht!', 'Alles in Tütchen, alles beschriftet. Jeden Tag liegen drei andere Farben aus – frag nicht, wie lange ich die Reihenfolge überlegt habe.'], weight: 4 },
       { text: ['Wenn du zwei Farben nebeneinander ins Beet setzt, kann was Neues entstehen.', 'Bei mir am Stand gibt es immer ein paar Farb-Samen. Zum Kreuzen. Ganz ordentlich, versteht sich.'], when: { minHearts: 1 }, weight: 3 },
       { text: ['Ich bin froh, dass Olaf und ich hier sind.', 'Und du hast so ein schönes, ordentliches Beet.'], when: { minHearts: 2 } },
+      { text: ['Frühjahrsputz ist mein Lieblingsfest.', 'Fenster, Schränke, Gewürzregal. Und danach ein Kaffee auf der frisch gewischten Terrasse. Ohne Blätter. Noch.'], when: { seasons: ['fruehling'] } },
+      { text: ['Im Sommer geht die Sonne früh auf – da gieße ich zuerst.', 'Morgens verdunstet weniger. Und es sieht ordentlich aus, wenn alles gleichzeitig nass ist.'], when: { seasons: ['sommer'] } },
+      { text: ['Herbst heißt: Laub fegen, jeden Tag.', 'Man darf sich dabei nicht ärgern. Man sagt sich: Es ist ein Kreislauf. Und fegt trotzdem.'], when: { seasons: ['herbst'] } },
+      { text: ['Wenn es so kalt ist, mach ich uns einen Tee und räum nebenbei die Küche auf.', 'Warm und ordentlich: Das ist mein Winter.'], when: { seasons: ['winter'] } },
+      { text: ['Regen ist ungefähr wie ein Gießplan, den ich nicht selbst gemacht habe.', 'Ich vertraue ihm. Aber ich kontrolliere sicherheitshalber die Beete.'], when: { tags: ['wetter-regen'] }, weight: 2 },
+      { text: ['Ich mag es, wenn Ordnung nicht streng, sondern gemütlich ist.', 'Eine Decke gefaltet, eine Tasse auf dem Tisch. So reicht es völlig.'] },
     ],
     gifts: {
       liebt: [['Oh, wie schön! 💜', 'Das bekommt einen ganz besonderen Platz. Ganz gerade ausgerichtet.']],

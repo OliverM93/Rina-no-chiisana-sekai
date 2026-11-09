@@ -71,6 +71,12 @@ export const LARS: NpcDef = {
       { text: ['Oli hat mich gefragt, ob ich mit ins Gym komme.', 'Ich hab Ja gesagt. Ich bin Arzt – ich weiß, wo die Muskelkater wohnen.'], when: { tags: ['oli-da'] } },
       { text: ['Weißt du noch, wie ich dir früher Pflaster auf jedes Knie geklebt hab?', 'Auch wenn gar nichts war. Hauptsache, du hast gelacht.', 'Mach ich heute noch so. Nur mit mehr Ahnung.'], when: { minHearts: 2 } },
       { text: ['Ich bin froh, dass ich hier bin, Schwesterherz.', 'Ein Dorf mit dir drin – das ist das beste Rezept, das ich kenne.'], when: { minHearts: 3 } },
+      { text: ['Im Frühling kommen die Heuschnupfen-Patienten in die Praxis.', 'Ich verschreibe Taschentücher und Geduld. Beides ist selten vorrätig.'], when: { seasons: ['fruehling'] } },
+      { text: ['Sonnenschutz, Lina! Zwei Stunden in der Sonne ohne Creme – und du siehst aus wie ein Hummer.', 'Ich sag das als Bruder und als Arzt. Beides mit Nachdruck.'], when: { seasons: ['sommer'] } },
+      { text: ['Der Herbst bringt Schnupfen und Kürbisse.', 'Medizinisch gesehen: Kürbissuppe ist die bessere Behandlung. Und kostet weniger Zuzahlung.'], when: { seasons: ['herbst'] } },
+      { text: ['Im Winter sage ich meinen Patienten immer dasselbe:', 'Warm anziehen, viel trinken, genug schlafen. Und dann sagen sie: „Gibt’s dafür keine Tablette?“ Nein. Aber Tee.'], when: { seasons: ['winter'] } },
+      { text: ['Bei dem Wetter bleibt man am besten drin.', 'Ich hab gerade zwei Stunden in der Praxis gesessen und niemand ist krank geworden. Medizinisch ein perfekter Tag.'], when: { tags: ['wetter-regen'] }, weight: 2 },
+      { text: ['Abends versuche ich, keinen Fachkram mehr zu lesen.', 'Heute Abend zum Beispiel: Kochbuch. Ich lerne also noch immer – nur an Zwiebeln statt an Organen.'], when: { phases: ['abend', 'abenddaemmerung'] } },
     ],
     gifts: {
       liebt: [['Oh, Lina! Das ist ja großartig!', 'Das verschreib ich mir ab sofort selbst. Dreimal täglich.']],

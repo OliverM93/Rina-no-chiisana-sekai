@@ -73,6 +73,12 @@ export const OLAF: NpcDef = {
       { text: ['Christin und ich wollen bald mal angeln gehen.', 'Ich zähle die Fische, sie räumt die Angelsachen auf. Arbeitsteilung.'] },
       { text: ['Ich bin so stolz auf dich, Lina.', 'Dein eigenes Haus, dein eigenes Beet … Das hast du toll gemacht.'], when: { minHearts: 2 } },
       { text: ['Weißt du noch, wie du als Kind dein Taschengeld in Muscheln umgerechnet hast?', 'Du warst schon immer gut mit Zahlen. Das hast du von mir.', '… Sag das bloß nicht deiner Oma.'], when: { minHearts: 3 } },
+      { text: ['Im Frühling kommen bei mir die Steuererklärungen herein wie Frühblüher.', 'Nur ohne Duft. Dafür mit Anlagen A bis Z. Hehe.'], when: { seasons: ['fruehling'] } },
+      { text: ['Sommerzeit ist Beleg-Zeit im Urlaub: Man sammelt Quittungen wie Muscheln.', 'Am Strand hab ich neulich eine Eisrechnung gefunden. Seitdem esse ich bargeldlos.'], when: { seasons: ['sommer'] } },
+      { text: ['Der Herbst ist wunderbar. Die Blätter fallen – und die Zahlen stimmen trotzdem.', 'Nur mein Bart wird in der Zeit etwas grauer. Aber das ist eine Wertsteigerung. Hehe.'], when: { seasons: ['herbst'] } },
+      { text: ['Im Winter plane ich gern. Kalender, Tabellen, Heizkosten …', 'Christin plant Kekse. Ich glaube, ihr Plan ist besser.'], when: { seasons: ['winter'] } },
+      { text: ['Regen? Sehr gut für den Haushalt. Wir müssen nicht gießen.', 'Ich spar Wasser und Zeit. Und die Zeit leg ich fürs Flugzeugmodell an.'], when: { tags: ['wetter-regen'] }, weight: 2 },
+      { text: ['Wenn ein Flugzeug über den Himmel zieht, bleibe ich immer kurz stehen.', 'Bauart, Triebwerke, Spannweite. Ich muss das mal nachschlagen. Hehe, ich weiß natürlich alles. Aber nachschlagen macht Spaß.'] },
     ],
     gifts: {
       liebt: [['Oh, Lina! Das ist ja wunderbar!', 'Das trag ich gleich in mein Haushaltsbuch ein. Unter „Glück“.']],
