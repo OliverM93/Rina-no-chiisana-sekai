@@ -67,6 +67,7 @@ export function CraftPanel({ session, station = 'werkbank' }: { session: Session
     <div class="modal-layer" onPointerUp={(e) => e.target === e.currentTarget && close()}>
       <div class="card book craft pop-in">
         <h2 class="card-title">{T.title}</h2>
+        {station !== 'werkbank' && <div class="craft-spacer" />}
         {station === 'werkbank' && (
           <div class="seed-tabs">
             {([['alle', 'Alles'], ['bauen', '🔨 Bauen'], ['blumen', '💐 Blumen binden']] as const).map(([k, label]) => (

@@ -61,7 +61,7 @@ export function App({ session }: { session: Session }) {
       if (e.code === 'KeyF' && free && !typing) session.bus.emit('foto:aufnehmen', undefined);
       if (e.code === 'KeyM' && free && !typing && session.data?.flags.thaliaBegruesst) ui.set({ panel: { kind: 'karte' } });
       // G: Einrichten (drinnen) bzw. Garten gestalten (im Garten) – nochmal G = fertig
-      if (e.code === 'KeyG' && free && !typing && (session.inside || session.inYard || session.decorActive)) {
+      if (e.code === 'KeyG' && free && !typing && !session.visiting && (session.inside || session.inYard || session.decorActive)) {
         session.bus.emit('decor:command', { kind: session.decorActive ? 'stop' : 'start' });
       }
     };

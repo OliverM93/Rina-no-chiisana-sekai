@@ -271,6 +271,7 @@ Legende: ✅ erledigt · 🚧 in Arbeit · ⬜ geplant
 - ✅ **Fotomodus:** Taste F / 📷 – Schnappschuss mit Rahmen (Polaroid, Herzchen, Blümchen, Schlicht) zum Speichern als PNG
 - ✅ **Sammlungen würdigen:** Brief + Wand-Urkunde für alle Fische, Krabbeltiere, Funde, Blumenfarben und Tassen (Audit F10)
 - ✅ **Oli in Stufen:** „Zeit zu zweit“-Szenen (eine je Herz), „Zur Herzbank“ mit Jahreszeiten-Zeilen, Jubiläums-Briefe nach 100 Tagen und einem Jahr (Audit F6)
+- ✅ **Besuch bei den Bewohnern:** Omas Haus, Olaf & Christins Haus und Thalias Häuschen von innen, mit Linas Kommentaren zur Einrichtung · **Werkbank/Küche/Apotheke:** zweispaltiges Fenster mit fester Größe (Bauen-Knopf immer sichtbar)
 - ✅ **Winter-Insekten:** Wintermotte (Nov–Jan), Wintermücke (Nov–Mär) und Schneeschnake (Dez–Feb) – im Winter gibt es jetzt fünf statt zwei Arten (inkl. Winterhaft, Strandkrabbe); Insektenkasten mit 30 Plätzen
 - ✅ **Spontane Gespräche zwischen Bewohnern:** Sprechblasen, 13 Paare, Lina kann mithören oder unterbrechen
 - ✅ **Feedback-Runde Nov. 2026 (3):** Jens ohne rosa Bäckchen, Christin & Thalia mit schmalerem (ovalem) Gesicht, Schwarzes Brett unten links auf dem Pflaster, Bäume/Kiefern/Büsche im eigenen Garten fällbar (Garten gestalten), Bewohner gehen bei Treffen auf das Gespräch mit den anderen ein, Jens wuchs nicht in Leipzig auf, Taste T = „In die Tasche“ beim Einrichten
