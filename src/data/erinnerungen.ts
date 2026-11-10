@@ -77,5 +77,13 @@ export const MEMORIES: readonly Memory[] = [
   { id: 'oli-tourshirt', npc: 'oli', tag: 'tourshirt', text: ['Das „Letzte Ruhestätte“-Shirt hängt über dem Stuhl. Ich trau mich gar nicht, es zu waschen.', 'Du bist die Beste, Lini. Und Thalia mit ihrem Sammler auch ein bisschen.'] },
   { id: 'thalia-tourshirt', npc: 'thalia', tag: 'tourshirt', text: ['Der Sammler hat mir noch eine Postkarte geschickt: „Der Bernstein ist in guten Händen.“ Schön, oder?', 'Wissenschaftlich ein guter Tausch. Emotional sowieso.'] },
   { id: 'thalia-matteo', npc: 'thalia', tag: 'matteo', text: ['Pater Matteo hat wieder geschrieben! Er nennt mich „liebe Thalia“. Er nennt auch dich „liebe Lina“. Wir sind beide gleich lieb. Ich analysiere das noch.'] },
+  // ---- Linas Lieblinge: Pflanzen, Bett, Wärmflasche ----
+  { id: 'oli-pflanzen', npc: 'oli', tag: 'pflanzen-viele', text: ['Wir haben wieder eine neue Pflanze, Lini. Ich hab zu den Sukkulenten gesagt, dass sie hier bleiben dürfen.', 'Sie haben nicht widersprochen. Das nehme ich als Ja.'] },
+  { id: 'christin-pflanzen', npc: 'christin', tag: 'pflanzen-viele', text: ['Bei dir stehen viele Pflanzen. Gut. Sind die Töpfe alle gleich ausgerichtet?', '… Sie sind sehr lebendig. Das ist ein Kompromiss, den ich akzeptiere.'] },
+  { id: 'gisela-pflanzen', npc: 'gisela', tag: 'pflanzen-viele', text: ['Wie viele Pflanzen hast du eigentlich, Kind? Hier sieht es aus wie im Gewächshaus.', 'Ich find es schön. Aber gieß nicht zu viel. Zu viel Wasser ist auch nicht gut.'] },
+  { id: 'oli-bett', npc: 'oli', tag: 'bett', text: ['Das neue Bett mit der schweren Decke … ich hab seit Tagen nicht so gut geschlafen. Und du erst.', 'Du bist wie eine zufriedene Katze, Lini. Ich liebe das.'] },
+  { id: 'lars-bett', npc: 'lars', tag: 'bett', text: ['Schweres Deckchen, viel Schlaf, ausgeruhte Schwester? Medizinisch ein Volltreffer.', 'Ich verschreibe dir hiermit: weiterschlafen. Dreimal täglich, wenn nötig.'] },
+  { id: 'oli-waermflasche', npc: 'oli', tag: 'waermflasche', text: ['Deine Wärmflasche liegt schon wieder auf meiner Seite. Ich beschwere mich nicht. Sie ist eine sehr gute Bettgenossin.'] },
+  { id: 'gisela-waermflasche', npc: 'gisela', tag: 'waermflasche', text: ['Die Wärmflasche hab ich selbst eingestrickt. Das ist die Farbe, die dir steht. Rosa. Bitte nicht neu streichen.'] },
   { id: 'thalia-tassen', npc: 'thalia', tag: 'tassen-viele', text: ['Deine Tassensammlung ist eine kleine Weltkarte. Fehlt nur noch Reykjavík. Ich hab eine, falls du magst.'] },
 ];

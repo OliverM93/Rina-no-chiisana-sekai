@@ -597,6 +597,63 @@ for (const [id, tea, leaf] of [['kamillentee', '#f2d36a', '#ffffff'], ['thymiant
   };
 }
 
+// Linas Lieblingsessen: Käse, Käse-Gerichte und die Bento-Box
+DRAW.kaese = (ctx) => {
+  ctx.fillStyle = '#f7d35a';
+  ctx.strokeStyle = darken('#f7d35a', 0.35);
+  ctx.lineWidth = 1.3;
+  ctx.beginPath();
+  ctx.moveTo(4, 22);
+  ctx.lineTo(28, 22);
+  ctx.lineTo(28, 13);
+  ctx.lineTo(4, 22);
+  ctx.closePath();
+  ctx.fill();
+  ctx.stroke();
+  roundRect(ctx, 4, 22, 24, 5, 1.5, '#f2c23a', darken('#f2c23a', 0.35), 1.2);
+  for (const [x, y, r] of [[18, 20, 1.8], [24, 18.5, 1.2], [12, 24.4, 1.2], [21, 24.6, 1.4]] as const) ellipse(ctx, x, y, r, r, '#c99a1a');
+};
+DRAW.kaeseomelett = (ctx) => {
+  ellipse(ctx, 16, 20, 13, 7, '#ffffff', '#c9c4cf', 1.3);
+  ellipse(ctx, 16, 18.5, 11, 5.5, '#f7d35a', darken('#f2c23a', 0.3), 1.2);
+  ellipse(ctx, 16, 17.5, 8, 2.8, '#fbe58a');
+  for (const [x, y] of [[12, 18.5], [18, 17], [21, 19.2]] as const) ellipse(ctx, x, y, 1.4, 0.9, '#f2a83a');
+  for (const [x, y] of [[10, 15], [22, 15.5]] as const) ellipse(ctx, x, y, 1.6, 0.9, '#6fbf5f');
+};
+DRAW['ueberbackene-kartoffeln'] = (ctx) => {
+  roundRect(ctx, 3, 15, 26, 11, [2, 2, 5, 5], '#d9d4dd', '#a8a2b0', 1.3);
+  ellipse(ctx, 16, 15.5, 11.5, 4, '#f2cf72', darken('#f2cf72', 0.3), 1);
+  for (const [x, y, r] of [[10, 15, 2], [16, 14, 2.4], [21.5, 15.5, 1.8]] as const) ellipse(ctx, x, y, r, r * 0.7, '#fbe58a', '#e0a83a', 0.7);
+  for (const [x, y] of [[13, 15.8], [19, 15]] as const) ellipse(ctx, x, y, 1.2, 0.6, '#c97a2a');
+};
+DRAW.kaesebrett = (ctx) => {
+  roundRect(ctx, 3, 7, 26, 19, 3, '#b98a5e', darken('#b98a5e', 0.3), 1.3);
+  ctx.fillStyle = '#f7d35a';
+  ctx.beginPath();
+  ctx.moveTo(7, 20);
+  ctx.lineTo(18, 20);
+  ctx.lineTo(18, 14);
+  ctx.closePath();
+  ctx.fill();
+  ctx.strokeStyle = darken('#f7d35a', 0.35);
+  ctx.lineWidth = 1;
+  ctx.stroke();
+  roundRect(ctx, 20, 10, 6, 6, 1.5, '#f2c23a', darken('#f2c23a', 0.35), 1);
+  for (const [x, y] of [[10, 12], [14, 10]] as const) ellipse(ctx, x, y, 2.2, 1.6, '#e8484f', '#a83038', 0.7);
+  for (const [x, y] of [[21, 20], [25, 22]] as const) ellipse(ctx, x, y, 1.7, 1.7, '#e6b06a', '#b98a5e', 0.6);
+};
+DRAW.bento = (ctx) => {
+  roundRect(ctx, 3, 8, 26, 18, 3, '#3a3036', '#1f1a1d', 1.3);
+  roundRect(ctx, 5, 10, 11, 7, 1.5, '#f7d35a');
+  roundRect(ctx, 17, 10, 10, 7, 1.5, '#f39a4a');
+  roundRect(ctx, 5, 18, 11, 6, 1.5, '#f7f5ec');
+  roundRect(ctx, 17, 18, 10, 6, 1.5, '#fbe0e8');
+  ellipse(ctx, 22, 21, 2.6, 2, '#e8484f');
+  ellipse(ctx, 22, 20.2, 1, 0.8, '#fff6d8');
+  ellipse(ctx, 10.5, 13.5, 3, 1.5, '#fbe58a');
+  for (const x of [20, 22, 24]) ellipse(ctx, x, 13.5, 0.9, 2, '#fbb06a');
+};
+
 // Gerichte aus der Kochshow: Fischsuppe, Apfelpfannkuchen, Blumensalat
 DRAW.fischsuppe = (ctx) => {
   ellipse(ctx, 16, 17, 12, 6.5, '#e9a24a', darken('#e9a24a', 0.3), 1.2);

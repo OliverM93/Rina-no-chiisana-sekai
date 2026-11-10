@@ -53,6 +53,8 @@ export const GISELA: NpcDef = {
       { text: ['Kindchen! Mein Lieblingsbesuch.', '… Ja, ich weiß, du bist mein einziger Besuch. Trotzdem.'], when: { minHearts: 2 } },
     ],
     chat: [
+      { text: ['Du magst Käse, Kind? Das hast du von mir.', 'Käse geht bei mir immer. Köstlich! Nur der Schimmelkäse – pfui.'] },
+      { text: ['Schlaf ruhig lang, Kind. Wer ausgeschlafen ist, hat weniger Ärger. Meistens.', 'Und iss was Ordentliches danach.'] },
       { text: ['Kartoffelsuppe! Mit Schnittlauch und einem Würstchen.', 'So hat Ludwig sie geliebt. Nach dem Training, mit einem Brot. Ach, der Ludwig.'], weight: 3 },
       { text: ['Pflanz Petersilie, Kind. Die braucht jede Suppe.', 'Und wenn jemand sagt, es geht auch ohne: Der hat keine Ahnung. Pfui!'] },
       { text: ['Der Doktor im Fernsehen, den du so gern guckst – der mit den Augenbrauen –', 'Der erinnert mich an Ludwig, wenn er den Zaun streichen wollte und keiner ihm helfen durfte. Ernst. Und dann ganz weich. Köstlich.'] },
@@ -174,6 +176,7 @@ export const GISELA: NpcDef = {
   },
 
   letters: [
+    { id: 'waermflasche', subject: 'Gegen kalte Füße', body: 'Liebes Kind,\n\ndu hast bestimmt wieder kalte Füße. Das haben junge Leute heutzutage. Ich hab dir eine Wärmflasche gestrickt – also einen Bezug. Die Flasche ist von der Drogerie.\n\nBitte füll sie mit heißem, nicht kochendem Wasser. Und geh früh schlafen.\n\nDeine Oma', gift: { itemId: 'waermflasche', count: 1 } },
     { id: 'tulpen-gelb', subject: 'Gelbe Tulpen', body: 'Liebes Kind,\n\nich hab im Schrank noch Zwiebeln von gelben Tulpen gefunden. Rote hast du ja schon.\n\nPflanz die gelben daneben. Wenn beide blühen und du sie pflückst, fällt manchmal ein Samen heraus, aus dem etwas Orangenes wächst. Das hat schon Opa Ludwig gemacht. Der alte Zauberer.\n\nOma\n\nP. S. Nicht ausgraben, um nachzuschauen!', gift: { itemId: 'samen-tulpe-gelb', count: 3 } },
     { id: 'lavendel-weiss', subject: 'Weißer Lavendel', body: 'Liebes Kind,\n\nweißen Lavendel gibt es kaum. Den hab ich von einer Dame, die ihn nur an Menschen abgibt, die sie mag. Ich hab ihr gesagt, du bist eine.\n\nNeben den lila gepflanzt, wird er mit etwas Glück rosa. Frag nicht, wie das geht. Ich weiß nur, dass es geht.\n\nOma', gift: { itemId: 'samen-lavendel-weiss', count: 2 } },
     { id: 'kekse', subject: 'Zu viele Kekse', body: 'Liebe Lina,\n\nich hab zu viele Kekse gebacken. Also eigentlich genau richtig viele – für dich. Iss nicht alle auf einmal!\n\nDeine Oma', gift: { itemId: 'keks', count: 3 } },

@@ -2267,6 +2267,80 @@ export function makeFurniture(itemId: string, links: FenceLinks = { n: false, e:
       g.add(b(0.4, 0.02, 0.01, '#2a2a30', 0.02, HANG + 0.0, z + 0.03).rotateZ(0.5));
       break;
     }
+    // ---------------------------------------------------------------- Linas Lieblinge
+    case 'bett': {
+      // 2 × 2: Rahmen, Matratze, Kissen und eine dicke, gesteppte Gewichtsdecke
+      g.add(b(1.9, 0.2, 1.9, '#a98b6a', 0, 0.1, 0));
+      g.add(b(1.9, 0.6, 0.1, '#8a6a4a', 0, 0.45, -0.9));
+      g.add(b(1.8, 0.16, 1.8, '#f7f5ec', 0, 0.28, 0.02));
+      for (const x of [-0.45, 0.45]) g.add(s(0.34, 0.09, 0.2, '#ffffff', x, 0.4, -0.68));
+      g.add(b(1.76, 0.17, 1.2, col, 0, 0.42, 0.28));
+      // Steppnähte und Wulst am Fußende
+      for (let i = 0; i < 4; i++) g.add(b(1.74, 0.006, 0.02, lighten(col, 0.3), 0, 0.515, -0.24 + i * 0.3));
+      for (let i = 0; i < 5; i++) g.add(b(0.02, 0.006, 1.18, lighten(col, 0.3), -0.7 + i * 0.35, 0.516, 0.28));
+      g.add(c(0.09, 1.76, darken(col, 0.1), 0, 0.46, 0.86).rotateZ(Math.PI / 2));
+      seatY = 0.5;
+      break;
+    }
+    case 'kaktus': {
+      g.add(c(0.1, 0.12, '#e8a07a', 0, 0.06, 0));
+      g.add(s(0.08, 0.14, 0.08, '#4f9a5a', 0, 0.2, 0));
+      g.add(s(0.03, 0.06, 0.03, '#4f9a5a', 0.09, 0.2, 0));
+      g.add(s(0.022, 0.014, 0.022, '#f4a3b8', 0, 0.33, 0));
+      break;
+    }
+    case 'sukkulenten': {
+      g.add(b(0.4, 0.09, 0.26, '#e6e1d8', 0, 0.045, 0));
+      for (const [x, z, col2] of [[-0.12, 0, '#7fc08a'], [0.04, -0.04, '#9ad0a8'], [0.14, 0.04, '#6fb07a'], [-0.04, 0.06, '#b0d8a0'], [0.1, -0.07, '#8fc0b0']] as const) {
+        for (let i = 0; i < 6; i++) {
+          const a2 = (i / 6) * Math.PI * 2;
+          g.add(s(0.02, 0.015, 0.03, col2, x + Math.cos(a2) * 0.03, 0.12, z + Math.sin(a2) * 0.03).rotateY(-a2));
+        }
+        g.add(s(0.02, 0.02, 0.02, col2, x, 0.125, z));
+      }
+      break;
+    }
+    case 'yucca': {
+      g.add(c(0.2, 0.36, '#c9a24a', 0, 0.18, 0));
+      g.add(c(0.05, 0.62, '#8a6a4a', 0, 0.62, 0));
+      for (let i = 0; i < 14; i++) {
+        const a2 = (i / 14) * Math.PI * 2;
+        const lean = 0.5 + (i % 3) * 0.2;
+        const leaf = c(0.015, 0.5, '#4f9a5a', Math.cos(a2) * 0.1, 1.15, Math.sin(a2) * 0.1, cone);
+        leaf.rotation.set(Math.sin(a2) * lean, 0, -Math.cos(a2) * lean);
+        g.add(leaf);
+      }
+      break;
+    }
+    case 'haengepflanze': {
+      const z = WALL_Z + 0.12;
+      g.add(b(0.04, 0.1, 0.18, DARK_WOOD, 0, HANG + 0.1, WALL_Z + 0.06));
+      g.add(c(0.1, 0.14, '#f3ead8', 0, HANG + 0.12, z));
+      for (let i = 0; i < 7; i++) {
+        const x = (i - 3) * 0.04;
+        const len = 0.35 + (i % 3) * 0.2;
+        g.add(b(0.012, len, 0.012, '#4f9a5a', x, HANG + 0.05 - len / 2, z + 0.05));
+        for (let k = 0; k < 3; k++) g.add(s(0.035, 0.012, 0.025, '#5fb06a', x, HANG + 0.0 - k * len / 3.2, z + 0.06));
+      }
+      break;
+    }
+    case 'waermflasche': {
+      const knit = '#e8a0b8';
+      g.add(b(0.26, 0.04, 0.34, knit, 0, 0.03, 0));
+      g.add(b(0.26, 0.04, 0.34, lighten(knit, 0.15), 0, 0.075, 0));
+      g.add(s(0.14, 0.05, 0.19, knit, 0, 0.055, 0));
+      g.add(c(0.035, 0.05, '#c9cbd3', 0, 0.09, -0.19));
+      for (let i = 0; i < 5; i++) g.add(b(0.24, 0.006, 0.012, lighten(knit, 0.4), 0, 0.08, -0.12 + i * 0.06));
+      break;
+    }
+    case 'bento-box': {
+      g.add(b(0.34, 0.1, 0.24, '#3a3036', 0, 0.05, 0));
+      g.add(b(0.34, 0.012, 0.012, '#c9a24a', 0, 0.105, -0.12));
+      g.add(b(0.34, 0.012, 0.012, '#c9a24a', 0, 0.105, 0.12));
+      for (const [x, z, col2] of [[-0.09, -0.05, '#f7d35a'], [0.09, -0.05, '#f39a4a'], [-0.09, 0.06, '#f7f5ec'], [0.09, 0.06, '#fbe0e8']] as const) g.add(b(0.14, 0.02, 0.09, col2, x, 0.105, z));
+      g.add(s(0.025, 0.015, 0.025, '#e8484f', 0.09, 0.125, 0.06));
+      break;
+    }
     // ---------------------------------------------------------------- Französisches Bistro
     case 'bistrotisch': {
       g.add(c(0.34, 0.04, '#f4f2ee', 0, 0.7, 0));

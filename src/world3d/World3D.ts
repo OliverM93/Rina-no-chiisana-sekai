@@ -2065,7 +2065,7 @@ export class World3D {
   private homeOliSpot(room: Room, label: string, sleeping: boolean): { x: number; y: number; facing: 'up' | 'down' | 'left' | 'right'; lie?: number; work?: 'tippen' | 'stemmen'; uid?: string } | null {
     const find = (pred: (id: string) => boolean) => room.items.find((i) => pred(FURNITURE_BY_ITEM[i.itemId]?.def.id ?? ''));
     if (sleeping) {
-      const futon = find((id) => id === 'futon');
+      const futon = find((id) => id === 'futon' || id === 'bett');
       if (!futon) return null;
       const fp = footprint(FURNITURE_BY_ITEM[futon.itemId].def, futon.rot);
       return { x: futon.x + fp.w / 2, y: futon.y + fp.d / 2 + 0.15, facing: 'down', lie: (this.interior.model(futon.uid)?.seatY ?? 0.1) + 0.02 };
@@ -2947,7 +2947,7 @@ export class World3D {
       player.face((['down', 'left', 'up', 'right'] as const)[item.rot]);
       const ground = this.session.inside ? 0 : Math.max(0, this.view.terrain.heightAt(cx, cy));
       player.seatHeight = (this.dv.model(uid)?.seatY ?? 0.1) + ground;
-      this.session.bus.emit('toast', { text: f.def.sit === 'liegen' ? 'Ach, ist das gemütlich … 💤' : 'Lina macht es sich gemütlich. ☕' });
+      this.session.bus.emit('toast', { text: f.def.sit === 'liegen' ? ['Ach, ist das gemütlich … 💤', 'Schwere Decke, warme Füße, nichts zu tun. Perfekt. 💤', 'Lina rollt sich ein. Nur noch fünf Minuten … 🌙', 'Mmmh. Die Decke drückt genau richtig. 💤'][Math.floor(Math.random() * 4)] : 'Lina macht es sich gemütlich. ☕' });
       return;
     }
     const name = itemDef(item.itemId)?.name ?? f.def.name;

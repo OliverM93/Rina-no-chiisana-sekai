@@ -44,6 +44,8 @@ export const LARS: NpcDef = {
       { text: ['Schnee! Schal an, Mütze auf!', 'Ärztliche Anordnung. Und brüderliche auch.'], when: { tags: ['wetter-schnee'] }, weight: 3 },
     ],
     chat: [
+      { text: ['Schlaf ist die älteste Medizin.', 'Wer gern und viel schläft, macht medizinisch gesehen vieles richtig. Ich sag das nicht nur, weil ich dich kenne.'] },
+      { text: ['Eine Wärmflasche ist ein wunderbares Hausmittel.', 'Ich verschreibe sie ungern, weil sie gar nicht auf Rezept ist. Aber sie hilft mehr als manche Tablette.'] },
       { text: ['Du baust Gemüse an? Sehr gut.', 'Karotten, Salat, Kräuter. Als Arzt sage ich: Das ist die beste Medizin. Als Bruder sage ich: Bitte nicht nur Pfannkuchen.'], weight: 3 },
       { text: ['Petersilie, Schnittlauch, Thymian …', 'Ich hab das alles in der Apotheke getrocknet. Zählt als Hausmittel. Oma schwört drauf.'] },
       { text: ['Dr. No aus „Schwerer Weg“ – kennst du den?', 'Fachlich gesehen: streng, aber fair. Genau so einen Chefarzt hätte ich mir manchmal gewünscht. Ich würde mit ihm einen Kaffee trinken.'] },

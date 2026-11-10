@@ -144,6 +144,10 @@ Wetter und Feste laufen nach echter Zeit.
 - **Winston:** läuft auf Linas eigener Spur hinterher (bleibt nie an Ecken hängen), setzt sich neben sie,
   wenn sie stehen bleibt. Texte & Funde in `data/winston.ts`. Er buddelt, wenn Lina kurz stehen bleibt – **verpasste Tage sammeln sich bis zu
   3 Fundstellen an** (`DIG_DAYS_MAX`, `core/pet.ts`).
+- **Linas Lieblinge (Persönlichkeit, Nov. 2026):** Lina mag Bento-Boxen, Wärmflaschen, schwere Decken, Pflanzen, Käse und viel Schlaf – eingebaut als Inhalt ohne neues System:
+  **Bett mit Gewichtsdecke** (Katalog, 3 Farben, auch Olis Schlafplatz), **Kaktus**, **Sukkulenten-Schale**, **Yucca-Palme**, **Efeutute** (Pflanzen, Katalog), **Wärmflasche** (Omas Brief),
+  **Bento-Box-Deko** (Jens' Brief); Essen: **Käse** (Jens schenkt gelegentlich ein Stück, `dailyTreat`), Käse-Omelett (Rezept beim ersten Käse), überbackene Kartoffeln, Käsebrett und
+  **Bento-Box** (Rezepte von Anfang an). Dazu Plauderzeilen (Oli, Lars, Oma, Jens) und Erinnerungen mit den Tags `pflanzen-viele`, `bett`, `waermflasche`; das Liegen im Bett hat mehrere Sprüche.
 - **Französisches Bistro:** zwölfter Katalog-Stil (`style: 'bistro'`, 11 Möbel, 2 Tapeten, Bistro-Fliesen). Er taucht im Katalog erst **ab Jens' Einzug** auf (`styleUnlocked` in `game/home.ts`);
   Spielstände, in denen Jens schon da ist, haben ihn sofort. Alle anderen Stile bleiben von Anfang an frei.
 - **Sammlung ausstellen (Audit F2/W6):** Drei Schaukästen zeigen, was Lina schon gefangen oder gefunden hat – **Insektenkasten** (Wand, 24 Plätze, 1 200 ⭐),

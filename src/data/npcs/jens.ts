@@ -47,6 +47,8 @@ export const JENS: NpcDef = {
       { text: ['Ein Regenbogen! 🌈', 'Na, wenn das mal kein Zeichen ist. Für uns Fabelhaften ist das ja quasi die Hausfahne.'], when: { tags: ['regenbogen'] }, weight: 5 },
     ],
     chat: [
+      { text: ['Ma chérie, ein Käsebrett ist wie ein kleines Theater.', 'Jeder Käse hat seine Rolle. Du bist natürlich immer der Hauptdarsteller. Gell?'] },
+      { text: ['Weißt du, was Kyoto mir beigebracht hat? Dass eine Bento-Box ein Gedicht in Fächern ist.', 'Deine hätte mir gefallen. Du kochst, als würdest du Geschichten erzählen.'] },
       { text: ['Chérie, hast du schon Basilikum im Beet?', 'Ohne Basilikum ist eine Tomate nur eine rote Kugel. Mit Basilikum ist sie Poesie.'], weight: 3 },
       { text: ['Thymian, Chérie! Thymian!', 'Ein Zweig davon, und jede Soße riecht nach der Provence. Ratatouille ohne Thymian? Un crime.'], weight: 3 },
       { text: ['Kartoffeln mit Quark – das isch eene Gaiststung, Lina!', 'Ich hab das als Junge in Sachsen gegessen und in Paris vermisst. Mit Schnittlauch. Un des is gud so!'], weight: 3 },
@@ -97,7 +99,10 @@ export const JENS: NpcDef = {
     atHomeSleeping: [['Alles dunkel. An der Tür hängt ein Schild: „Bin am Träumen. Bitte nur bei Notfällen oder Champagner klopfen.“']],
     goodbye: ['Au revoir, chérie! 💋', 'Tschüssi, mei Gudste!', 'À bientôt – und bleib fabelhaft!'],
   },
+  dailyTreat: { itemId: 'kaese', chance: 0.3, lines: ['Ma chérie, ein Stückchen Käse aus der Region!', 'Nur ein kleines. Du weißt ja: Genuss ist ein Gebot. 🧀'] },
+
   letters: [
+    { id: 'bento', subject: 'Eine Schachtel voller Fächer', body: 'Ma chérie,\n\nin Kyoto hab ich eine Bento-Box für dich gefunden. Lack, goldene Kanten und sechs Fächer – für alles, was du so gern kochst und mit Liebe sortierst.\n\nGenau wie du. Oishii!\n\nOnkel Jens', gift: { itemId: 'bento-box', count: 1 } },
     { id: 'rosen-gelb', subject: 'Gelbe Rosen, ma chérie', body: 'Ma chérie,\n\ngelbe Rosen! In Paris stehen sie in jedem zweiten Fenster. Ich hab dir Samen eingepackt.\n\nStell sie neben deine roten, und mit etwas Glück wird daraus ein Orange wie ein Sonnenuntergang über der Seine. Sehr fotogen. Sehr Jens.\n\nBisous\nJens', gift: { itemId: 'samen-rose-gelb', count: 2 } },
     { id: 'vergissmeinnicht-weiss', subject: 'Ein kleines Meer aus Weiß', body: 'Liebe Lina,\n\nweißes Vergissmeinnicht! Wie Schnee im Mai. Ich hab einen Haufen Samen bekommen und viel zu wenig Beet.\n\nNimm sie. Mit einem Hauch Rosa daneben wird daraus ein sehr schönes Lila. Probier es aus, ich bin gespannt.\n\nDein Onkel', gift: { itemId: 'samen-vergissmeinnicht-weiss', count: 2 } },
     { id: 'kunst', subject: 'Ein kleiner Gedanke', body: 'Ma chérie,\n\nheute hab ich ein Bild gemalt: blauer Himmel, eine rosa Wolke, und mittendrin ein kleiner Dackel.\n\nRate mal, wer das ist.\n\nBisous,\nOnkel Jens 🎨' },
