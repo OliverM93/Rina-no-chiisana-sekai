@@ -647,6 +647,18 @@ export function makeFurniture(itemId: string, links: FenceLinks = { n: false, e:
         plate2.rotation.x = Math.PI / 2;
         bell.add(plate2);
       }
+      // Zusatzscheiben für Linas Satz (sonst unsichtbar): richtig viel Gewicht
+      const extra = new THREE.Group();
+      extra.name = 'extraplatten';
+      extra.visible = false;
+      for (const side of [-1, 1]) {
+        for (let i = 0; i < 4; i++) {
+          const pl = c(0.22 - i * 0.01, 0.04, i % 2 ? '#d9534f' : '#2b2a31', 0, 0, side * (0.35 - i * 0.035));
+          pl.rotation.x = Math.PI / 2;
+          extra.add(pl);
+        }
+      }
+      bell.add(extra);
       g.add(bell);
       // Kurzhanteln am Boden
       for (const z of [-0.15, 0.1]) {

@@ -56,6 +56,7 @@ import { OLI_WELCOME } from '../data/npcs/oli';
 import { DINNER_LINES, DINNER_OPENERS, JENS_WELCOME } from '../data/npcs/jens';
 import { pairChatKey, PAIR_CHATS } from '../data/gespraeche';
 import { GUEST_HOUSES } from '../data/gastHaeuser';
+import { TRAINING_OLI, TRAINING_REPS, TRAINING_SOLO } from '../data/training';
 import { dinnerGuests, isDinnerTime } from '../game/dinner';
 import { activeMeetups, joinMeetup, meetupOf, meetupReply } from '../game/meetups';
 import { CHECKUP_GIFTS, CHECKUP_LINES, LARS_WELCOME } from '../data/npcs/lars';
@@ -1084,14 +1085,22 @@ export class World3D {
     const pickup = this.collectibles.pickupNear(tile, player.facing, player.x, player.y);
     if (pickup) return { kind: 'pickup', id: pickup };
     const [fx, fy] = DIRS[player.facing];
+    const front = { x: tile.x + fx, y: tile.y + fy };
+    // Steht jemand neben/vor der Tür, aber nicht direkt vor Lina, geht die Tür vor (Haus lässt sich weiter betreten)
+    const doorId = findInteraction(this.session.map, tile, player.facing, this.interactive);
+    const doorObj = doorId ? objectById(this.session.map, doorId) : undefined;
+    const isDoor = !!doorId && !!doorObj && doorObj.kind !== 'tree' && doorObj.kind !== 'rock';
     for (const npc of this.npcs.values()) {
       if (!npc.present) continue;
       const dx = npc.x - player.x;
       const dy = npc.y - player.y;
       const d = Math.hypot(dx, dy);
-      if (d < TILE * 1.35 && dx * fx + dy * fy > d * 0.35) return { kind: 'npc', npc };
+      if (d < TILE * 1.35 && dx * fx + dy * fy > d * 0.35) {
+        const directlyInFront = Math.floor(npc.x / TILE) === front.x && Math.floor(npc.y / TILE) === front.y;
+        if (isDoor && !directlyInFront) break;
+        return { kind: 'npc', npc };
+      }
     }
-    const front = { x: tile.x + fx, y: tile.y + fy };
     // Stall direkt davor geht vor (Eier abholen), sonst Tiere streicheln
     const coop = this.yardItemAt(front.x, front.y);
     const coopItem = coop ? this.session.data?.yard.items.find((i) => i.uid === coop) : undefined;
@@ -3107,6 +3116,21 @@ export class World3D {
       this.yard.updateLight(this.night);
       return;
     }
+    if (item.itemId === 'hantelbank' && !this.session.visiting) {
+      this.trainDialog(uid);
+      return;
+    }
+    if (item.itemId === 'schreibtisch-pc' && !this.session.visiting) {
+      this.session.bus.emit('dialog:open', {
+        title: 'Olis Schreibtisch',
+        lines: ['Zwei Bildschirme, eine Tastatur in allen Farben. Auf dem einen läuft ein kleines Spiel.'],
+        choices: [
+          { label: '🎮 Eine Runde spielen', onSelect: () => this.session.bus.emit('ui:open', { kind: 'minispiel' }) },
+          { label: '👋 Lieber nicht', onSelect: () => undefined },
+        ],
+      });
+      return;
+    }
     if (f.def.sit) {
       const { w, d } = footprint(f.def, item.rot);
       const o = this.origin;
@@ -3168,6 +3192,73 @@ export class World3D {
         else this.playFx('funkeln');
         this.session.bus.emit('toast', { text: '☕ Kaffee-Kick! Lina läuft ein paar Minuten flotter.' });
       },
+    });
+  }
+
+  /** Hantelbank: Lina darf stemmen (Gag: viel Gewicht, süßes Lächeln) */
+  private trainDialog(uid: string) {
+    const oliHere = !!this.homeOli?.visible;
+    if (oliHere && this.homeOliBench === uid) {
+      this.session.bus.emit('dialog:open', { title: 'Hantelbank', lines: ['Oli ist gerade dran. „Nur ein Satz noch, Lini!“'] });
+      return;
+    }
+    this.session.bus.emit('dialog:open', {
+      title: 'Hantelbank',
+      lines: ['Die Hantel liegt bereit. Eine Menge Scheiben dran … Lina grinst.'],
+      choices: [
+        { label: '💪 Stemmen', onSelect: () => this.trainLina(uid) },
+        { label: '👋 Lieber nicht', onSelect: () => undefined },
+      ],
+    });
+  }
+
+  private trainLina(uid: string) {
+    const player = this.player;
+    const home = this.room;
+    const item = home?.items.find((i) => i.uid === uid);
+    const data = this.session.data;
+    if (!player || !item || !data || this.cutscene) return;
+    this.cutscene = true;
+    const fp = footprint(FURNITURE_BY_ITEM[item.itemId].def, item.rot);
+    const ax: Array<[number, number]> = [[1, 0], [0, 1], [-1, 0], [0, -1]];
+    const [ux, uy] = ax[item.rot];
+    const o = this.origin;
+    const cx = o.x + item.x + fp.w / 2 + ux * 0.28;
+    const cy = o.y + item.y + fp.d / 2 + uy * 0.28;
+    player.teleport(cx * TILE, cy * TILE);
+    player.setSitting(true);
+    player.face((['right', 'down', 'left', 'up'] as const)[item.rot]);
+    player.seatHeight = 0.58;
+    player.work = 'stemmen';
+    const group = this.interior.model(uid)?.group;
+    const bell = group?.getObjectByName('langhantel');
+    const extra = bell?.getObjectByName('extraplatten');
+    if (extra) extra.visible = true;
+    this.session.bus.emit('sfx', 'klick');
+    const oli = this.homeOli?.visible ? this.homeOli : null;
+    if (oli) oli.faceTowards(player.x, player.y);
+    const total = 9000;
+    let shown = -1;
+    this.tweens.add(total, (k) => {
+      if (bell) bell.position.y = 0.86 - (1 - (Math.sin(k * total / 1000 * 2.2) + 1) / 2) * 0.13;
+      const idx = Math.min(TRAINING_REPS.length - 1, Math.floor(k * TRAINING_REPS.length));
+      if (idx !== shown) {
+        shown = idx;
+        this.session.bus.emit('toast', { text: TRAINING_REPS[idx] });
+        if (idx >= 2) oli?.cheer();
+      }
+    }, () => {
+      if (extra) extra.visible = false;
+      if (bell) bell.position.y = 0.86;
+      player.work = undefined;
+      this.standUp();
+      this.cutscene = false;
+      const day = this.session.today();
+      const first = data.world.dates.training !== day;
+      data.world.dates.training = day;
+      const lines = oli ? [...TRAINING_OLI[hashString(day) % TRAINING_OLI.length]] : [...TRAINING_SOLO[hashString(day) % TRAINING_SOLO.length]];
+      if (oli && first) lines.push(...addFriendship(this.session, 'oli', 4));
+      this.session.bus.emit('dialog:open', { title: oli ? 'Oli' : 'Lina', lines });
     });
   }
 

@@ -23,6 +23,7 @@ import { SeedStandPanel } from './SeedStandPanel';
 import { CraftPanel } from './CraftPanel';
 import { MapPanel } from './MapPanel';
 import { GalleryPanel } from './GalleryPanel';
+import { MiniGamePanel } from './MiniGamePanel';
 import { TvPanel } from './TvPanel';
 import { handleArrowKey } from './navigation';
 import { type ConfirmRequest, showToast, ui, useUI } from './store';
@@ -139,8 +140,9 @@ export function App({ session }: { session: Session }) {
       {state.panel?.kind === 'karte' && <MapPanel session={session} />}
       {state.panel?.kind === 'galerie' && <GalleryPanel session={session} />}
       {state.panel?.kind === 'tv' && <TvPanel session={session} withOli={state.panel.withOli} />}
+      {state.panel?.kind === 'minispiel' && <MiniGamePanel />}
       {state.panel?.kind === 'herd' && <CraftPanel session={session} station="herd" />}
-      {state.panel && !['mail', 'book', 'catalog', 'bank', 'werkbank', 'kochstudio', 'apotheke', 'karte', 'galerie', 'tv', 'herd', 'samenstand', 'truhe', 'foto'].includes(state.panel.kind) && <InventoryPanel session={session} panel={state.panel} />}
+      {state.panel && !['mail', 'book', 'catalog', 'bank', 'werkbank', 'kochstudio', 'apotheke', 'karte', 'galerie', 'tv', 'minispiel', 'herd', 'samenstand', 'truhe', 'foto'].includes(state.panel.kind) && <InventoryPanel session={session} panel={state.panel} />}
       {state.dialog && (
         <DialogBox
           dialog={state.dialog}

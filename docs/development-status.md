@@ -271,6 +271,7 @@ Legende: ✅ erledigt · 🚧 in Arbeit · ⬜ geplant
 - ✅ **Fotomodus:** Taste F / 📷 – Schnappschuss mit Rahmen (Polaroid, Herzchen, Blümchen, Schlicht) zum Speichern als PNG
 - ✅ **Sammlungen würdigen:** Brief + Wand-Urkunde für alle Fische, Krabbeltiere, Funde, Blumenfarben und Tassen (Audit F10)
 - ✅ **Oli in Stufen:** „Zeit zu zweit“-Szenen (eine je Herz), „Zur Herzbank“ mit Jahreszeiten-Zeilen, Jubiläums-Briefe nach 100 Tagen und einem Jahr (Audit F6)
+- ✅ **Hantelbank-Training (Lina stemmt viel, Oli ist begeistert) & Minispiel Dackel-Snake am Computer** · Türen bleiben nutzbar, wenn ein Bewohner davor steht
 - ✅ **Besuch bei den Bewohnern:** Omas Haus, Olaf & Christins Haus, Thalias Häuschen, Lars' Praxis und Chez Jens von innen, mit Linas Kommentaren zur Einrichtung · **Werkbank/Küche/Apotheke:** zweispaltiges Fenster mit fester Größe (Bauen-Knopf immer sichtbar)
 - ✅ **Winter-Insekten:** Wintermotte (Nov–Jan), Wintermücke (Nov–Mär) und Schneeschnake (Dez–Feb) – im Winter gibt es jetzt fünf statt zwei Arten (inkl. Winterhaft, Strandkrabbe); Insektenkasten mit 30 Plätzen
 - ✅ **Spontane Gespräche zwischen Bewohnern:** Sprechblasen, 13 Paare, Lina kann mithören oder unterbrechen
