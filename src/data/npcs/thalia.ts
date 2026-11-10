@@ -17,6 +17,11 @@ export const THALIA: NpcDef = {
   appearance: LOOKS.thalia,
   home: 'haus-thalia',
   movesIn: 'thaliaEingezogen',
+  birthday: { day: 11, month: 8 },
+  birthdayLines: {
+    greeting: ['Lina!!! Heute ist mein Geburtstag! 🎉', 'Ich bin offiziell 100 Millionen Jahre jung. Okay, nicht ganz. Aber gefühlt.', 'Heute Abend gibt es Kuchen in Gesteinsform. Mit Schichten!'],
+    thanks: ['NEIN! Für mich?! 🥹', 'Das kommt sofort in meine Vitrine. Neben den Ammoniten. Die sind eifersüchtig.'],
+  },
   schedule: [
     { from: '00:00', label: 'schläft', activity: { kind: 'zuhause', sleeping: true } },
     { from: '08:30', label: 'zeichnet Karten', activity: { kind: 'zuhause' } },

@@ -29,7 +29,7 @@ abgesichert. Die folgenden Punkte betreffen Langzeitmotivation und Feinschliff.
 | # | Erweiterung | Bemerkung |
 |---|---|---|
 | E1 | Fotomodus / Tagebuch (🗓️ bereits geplant) | starker Besitz-Hebel, gut kombinierbar mit W5 (Tagebuch liefert „Erinnerungen“) |
-| E2 | Geburtstage der übrigen Bewohner (🗓️) | wartet auf Daten (❓ O6) |
+| E2 | ✅ erledigt (Nov. 2026): Geburtstage der übrigen Bewohner | nur Oma Giselas Datum fehlt noch |
 | E3 | ✅ erledigt (Nov. 2026): Sternbilder beim Sterne gucken | je Jahreszeit eins, Oli erklärt es |
 | E4 | ✅ erledigt (Nov. 2026): Französisches Bistro-Möbelset | im Katalog ab Jens' Einzug (Audit F13: neue Stile später, nichts wegnehmen) |
 | E5 | ✅ erledigt (Nov. 2026): Eier & Winstons Fund bis 3 Tage ansammeln lassen (❓ O5) | entschärft die Pflichtrunde ohne neue Mechanik |

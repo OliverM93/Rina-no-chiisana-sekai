@@ -190,7 +190,7 @@ Format: **Entscheidung** – Begründung – verworfene Alternative(n) – Auswi
 | O3 | Bleibt es bei **max. 5 Herzen**? | Plateau | so lassen + Herzen füllen · „Erinnerungen“ statt Herzen danach |
 | O4 | Darf es eine **Vorratskiste** geben? | Inventar-Reibung | Truhe im Haus · Tasche erweitern (z. B. als Herz-Geschenk) · so lassen |
 | O5 | Sollen tägliche Ressourcen **ansammeln** (z. B. Eier bis 3 Tage)? | Pflichtrunde vs. Tagesritual | ansammeln · so lassen |
-| O6 | Geburtstage der übrigen Bewohner | Feierliche Höhepunkte | Daten fehlen (seit Langem offen) |
+| O6 | ✅ *entschieden (Nov. 2026): Daten von Oli erhalten, umgesetzt.* Geburtstage der übrigen Bewohner | Feierliche Höhepunkte | nur Oma Gisela fehlt noch |
 | O7 | Fotomodus/Tagebuch – welche Form? | Besitz & Erinnerung | Screenshot-Modus · automatisches Tagebuch schöner Momente · beides |
 | O8 | Lieblingsessen/-farben/-hobbys der Bewohner | Glaubwürdige Geschenk-Vorlieben | Infos von Lina/Oli |
 | O9 | Soll Angeln mehr **Geschick** bekommen? | Kompetenz vs. Entspannung | (Empfehlung: nein – Entspannung ist hier Absicht) |

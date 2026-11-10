@@ -21,6 +21,11 @@ export const CHRISTIN: NpcDef = {
   appearance: LOOKS.christin,
   home: 'haus-olaf',
   movesIn: 'olafEingezogen',
+  birthday: { day: 4, month: 6 },
+  birthdayLines: {
+    greeting: ['Heute ist mein Geburtstag, Lina. Ich hab den Tisch schon gedeckt.', 'Alles gerade ausgerichtet. … Keine Sorge, ich bin nicht streng. Heute nicht.', 'Kuchen steht links. Komm ruhig.'],
+    thanks: ['Oh. Für mich? Das ist … aufmerksam.', 'Ich stell es gleich an einen guten Platz. Danke, Lina.'],
+  },
   schedule: [
     { from: '00:00', label: 'schläft', activity: { kind: 'zuhause', sleeping: true } },
     { from: '07:00', label: 'Fegt den Dorfplatz', activity: { kind: 'spazieren', area: PLATZ } },

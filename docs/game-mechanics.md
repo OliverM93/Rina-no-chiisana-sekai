@@ -189,7 +189,7 @@ Wetter und Feste laufen nach echter Zeit.
   `data/fossils.ts`, Sammelbuch-Reiter „Funde“). Party samstags 19–22 Uhr (`game/party.ts`): `Npc` ersetzt dann
   den Tagesablauf durch `PARTY_ENTRY`, Lichterketten in World3D. Dorfkarte = `ui/MapPanel.tsx` (Taste M),
   Positionen über `session.livePositions()`.
-- **Geburtstage der Bewohner:** `NpcDef.birthday` + `birthdayLines`; Geschenke am Geburtstag zählen doppelt,
+- **Geburtstage der Bewohner:** Lars 03.01., Christin 04.06., Olaf & Jens (Zwillinge) 03.04., Oli 29.07., Thalia 11.08. (Oma: noch offen) – `NpcDef.birthday` + `birthdayLines`; Geschenke am Geburtstag zählen doppelt,
   Tags `geburtstag-<id>` / `bald-geburtstag-<id>` (7 Tage vorher).
 - **Treffen der Bewohner:** `data/meetups.ts` (Wochentage, Uhrzeit, Plätze, Gespräche), Regeln in
   `game/meetups.ts`; `Npc` ersetzt den Tagesablauf (Reihenfolge: Party → Sonntagsessen → Treffen → Plan).

@@ -19,6 +19,11 @@ export const JENS: NpcDef = {
   home: 'bistro-jens',
   movesIn: 'jensEingezogen',
   away: (day) => jensTravels(day),
+  birthday: { day: 3, month: 4 },
+  birthdayLines: {
+    greeting: ['Ma chérie! Heute ist mein Geburtstag – und der von Olaf, mon frère. Wir sind Zwillinge, ich bin natürlich der Hübschere.', 'Champagner steht bereit. Und Croissants. Und eine kleine Rede. Nu, vielleicht auch eine längere.', 'Bleib fabelhaft, chérie – und iss ein Stück Torte!'],
+    thanks: ['Für mich? Ma chérie, du verwöhnst mich! 🎁', 'Mein Herz hüpft. Und mein Magen. Danke, danke, danke!'],
+  },
   schedule: [
     { from: '00:00', label: 'schläft', activity: { kind: 'zuhause', sleeping: true } },
     { from: '08:00', label: 'Croissants backen', activity: { kind: 'zuhause' } },
