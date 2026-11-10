@@ -279,3 +279,13 @@ Risiko: Grind-Druck, neue Modelle, Pflege. **Nur bauen, wenn der Playtest zeigt,
 ---
 
 *Auch dieser Audit ersetzt den Playtest nicht. Er zeigt aber mit Zahlen, wo ein Playtest zuerst hinschauen sollte: Tempo der Einzüge, Orientierung und Olis erste Woche.*
+
+## 9. Entscheidung (Oli, 10. Nov. 2026)
+
+| Maßnahme | Entscheidung |
+|---|---|
+| K1 Enter überall · K2 Training ohne Punkte · K3 Snake-Rekord · K4 Doku · K5 Balancing-Test | ✅ freigegeben |
+| M1 Notizbuch „Was gerade ansteht“ | ✅ freigegeben |
+| M2 Rahmenhandlung strecken (wie vorgeschlagen) | ✅ freigegeben |
+| M3 Oli-Tempo | ⏸️ zurückgestellt bis zum Playtest |
+| G1 Dorf-Verschönerungen · G2 Tagebuch | ⏸️ erst nach dem Playtest |
