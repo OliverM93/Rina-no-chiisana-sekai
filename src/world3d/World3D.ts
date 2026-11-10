@@ -3240,7 +3240,7 @@ export class World3D {
     const total = 9000;
     let shown = -1;
     this.tweens.add(total, (k) => {
-      if (bell) bell.position.y = 0.86 - (1 - (Math.sin(k * total / 1000 * 2.2) + 1) / 2) * 0.13;
+      if (bell) bell.position.y = 0.86 - (1 - (Math.sin(player.clock * 2.2) + 1) / 2) * 0.13;
       const idx = Math.min(TRAINING_REPS.length - 1, Math.floor(k * TRAINING_REPS.length));
       if (idx !== shown) {
         shown = idx;

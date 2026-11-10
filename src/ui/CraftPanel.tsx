@@ -2,7 +2,7 @@
  * Opas Werkbank: gelernte Rezepte ansehen und aus Materialien bauen.
  * Unbekannte Rezepte erscheinen als Schatten mit einem kleinen Hinweis.
  */
-import { useEffect, useState } from 'preact/hooks';
+import { useEffect, useRef, useState } from 'preact/hooks';
 import { countItem } from '../core/inventory';
 import { FURNITURE_BY_ITEM, STYLE_LABELS } from '../data/furniture';
 import { itemDef } from '../data/items';
@@ -33,12 +33,17 @@ export function CraftPanel({ session, station = 'werkbank' }: { session: Session
   const [selected, setSelected] = useState<string | null>(WORKBENCH.find((r) => known.has(r.id))?.id ?? null);
   const [built, setBuilt] = useState<string | null>(null);
   const close = () => ui.set({ panel: null });
+  const buildRef = useRef<() => void>(() => undefined);
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if (e.code === 'Escape') {
         e.preventDefault();
         close();
+      } else if ((e.code === 'Enter' || e.code === 'NumpadEnter') && !e.repeat) {
+        // Enter = Bauen/Binden/Kochen (wie der Hauptknopf)
+        e.preventDefault();
+        buildRef.current();
       }
     };
     window.addEventListener('keydown', onKey);
@@ -61,6 +66,10 @@ export function CraftPanel({ session, station = 'werkbank' }: { session: Session
       window.setTimeout(() => setBuilt(null), 900);
     } else if (r === 'voll') showToast('Deine Tasche ist zu voll für das fertige Stück. 🎒');
     else if (r === 'fehlt') showToast('Da fehlt noch etwas Material.');
+  };
+
+  buildRef.current = () => {
+    if (ready) build();
   };
 
   return (
