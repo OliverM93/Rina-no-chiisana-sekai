@@ -31,7 +31,7 @@ export interface GuestHouse {
   comments: Readonly<Record<string, readonly string[]>>;
 }
 
-const DOOR: RoomLayout['exits'][number] = { cells: [[3, 5], [4, 5]], to: 'draussen', dir: 'down', kind: 'haustuer' };
+const DOOR: RoomLayout['exits'][number] = { cells: [[3, 5]], to: 'draussen', dir: 'down', kind: 'haustuer' };
 
 export const GUEST_LAYOUT: RoomLayout = { id: 'haupt', name: 'Zu Besuch', w: 8, h: 6, exits: [DOOR] };
 

@@ -150,14 +150,15 @@ describe('Haus & Ausbau', () => {
     expect(HOUSE_RULES.layouts(3).map((l) => l.id)).toEqual(['haupt', 'schlafzimmer', 'dach']);
     const main3 = layoutOf(3, 'haupt');
     expect(exitAt(main3, 4, 6)?.to).toBe('draussen');
-    expect(exitAt(main3, 5, 0)?.to).toBe('schlafzimmer');
+    expect(exitAt(main3, 5, 6), 'Tür ist ein Feld breit').toBeNull();
+    expect(exitAt(main3, 4, 0)?.to).toBe('schlafzimmer');
     expect(exitAt(main3, 9, 0)?.to).toBe('dach');
     expect(exitAt(layoutOf(3, 'dach'), 3, 5)?.to).toBe('haupt');
   });
 
   it('nach dem Umbau stehen manche Möbel im Weg', () => {
     const r = empty();
-    placeItem(r, layoutOf(1, 'haupt'), 'andon', 5, 0, 0, furnitureInfo);
+    placeItem(r, layoutOf(1, 'haupt'), 'andon', 4, 0, 0, furnitureInfo);
     placeItem(r, layoutOf(1, 'haupt'), 'bambus', 1, 1, 0, furnitureInfo);
     expect(misfits(r, layoutOf(2, 'haupt'), furnitureInfo).map((i) => i.itemId)).toEqual(['andon']); // Durchgang hinten
   });
