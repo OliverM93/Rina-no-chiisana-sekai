@@ -4,7 +4,7 @@
  */
 import { missingNeeds, type NeedKind, type ProgressState } from '../core/progress';
 import { GARDEN_FLOWER } from '../data/items';
-import { type Milestone, MILESTONES } from '../data/progress';
+import { FLAG_AUSBAU_BESTELLT, type Milestone, MILESTONES } from '../data/progress';
 import type { Session } from './session';
 
 /** Fortschritt für die Meilensteine (zusätzlich: „schon mal durchgecheckt“) */
@@ -15,7 +15,12 @@ export function progressState(session: Session): ProgressState | null {
     stats: data.stats,
     // Blumenfarben zählen nicht mit (sonst wäre „Sammelbuch“ als Einzugs-Bedingung zu schnell erfüllt)
     collectionSize: Object.keys(data.collection).filter((id) => !(id in GARDEN_FLOWER)).length,
-    flags: { ...data.flags, checkupDone: !!data.flags.checkupDone || !!data.world.dates.checkup },
+    flags: {
+      ...data.flags,
+      checkupDone: !!data.flags.checkupDone || !!data.world.dates.checkup,
+      // Erster Hausausbau bestellt (oder schon fertig) – auch für alte Spielstände ohne eigenes Flag
+      [FLAG_AUSBAU_BESTELLT]: data.house.stage >= 1 || !!data.house.pending,
+    },
   };
 }
 
@@ -45,5 +50,7 @@ export function progressHint(session: Session, npcId: string): readonly string[]
   const day = session.today();
   let h = 0;
   for (const ch of day + npcId) h = (h * 31 + ch.charCodeAt(0)) >>> 0;
-  return m.hints[missing[h % missing.length].kind] ?? null;
+  const need = missing[h % missing.length];
+  if (need.kind === 'flag' && need.flag && m.flagHints?.[need.flag]) return m.flagHints[need.flag];
+  return m.hints[need.kind] ?? null;
 }

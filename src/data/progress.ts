@@ -17,7 +17,12 @@ export interface Milestone {
   hintBy: string;
   /** Hinweis je fehlender Bedingung ({dorf} wird ersetzt) */
   hints: Partial<Record<NeedKind, readonly string[]>>;
+  /** Hinweise für einzelne Flag-Bedingungen (gehen vor `hints.flag`), z. B. wenn ein Meilenstein zwei Flags braucht */
+  flagHints?: Readonly<Record<string, readonly string[]>>;
 }
+
+/** Abgeleitetes Flag: Lina hat den ersten Hausausbau bestellt (Dorfkasse) – siehe `game/progress.ts` */
+export const FLAG_AUSBAU_BESTELLT = 'ausbauBestellt';
 
 export const MILESTONES: readonly Milestone[] = [
   {
@@ -48,7 +53,7 @@ export const MILESTONES: readonly Milestone[] = [
     npc: 'jens',
     after: 'oliBegruesst',
     needs: [
-      { kind: 'gebaut', n: 2 },
+      { kind: 'gebaut', n: 3 },
       { kind: 'sammelbuch', n: 6 },
     ],
     hintBy: 'oli',
@@ -61,8 +66,8 @@ export const MILESTONES: readonly Milestone[] = [
     npc: 'lars',
     after: 'jensBegruesst',
     needs: [
-      { kind: 'gekocht', n: 1 },
-      { kind: 'verkauft', n: 2500 },
+      { kind: 'gekocht', n: 3 },
+      { kind: 'verkauft', n: 5000 },
     ],
     hintBy: 'jens',
     hints: {
@@ -75,9 +80,17 @@ export const MILESTONES: readonly Milestone[] = [
     after: 'larsBegruesst',
     needs: [
       { kind: 'flag', n: 1, flag: 'checkupDone' },
-      { kind: 'sammelbuch', n: 9 },
+      // Winter-sicher: Von November bis Februar gibt es nur 10–11 Arten (Test `progress.test.ts`)
+      { kind: 'sammelbuch', n: 8 },
+      { kind: 'flag', n: 1, flag: FLAG_AUSBAU_BESTELLT },
     ],
     hintBy: 'lars',
+    flagHints: {
+      [FLAG_AUSBAU_BESTELLT]: [
+        'Schwesterherz, Thalia fragt, ob sie bei dir mal übernachten kann, wenn sie zu Besuch ist. Dein Häuschen ist ja eher … kompakt.',
+        'Papa macht dir an der Dorfkasse einen Ausbau – zinslos, ohne Frist. Finanzamt-Ehrenwort. Zahlen kannst du, wann du willst.',
+      ],
+    },
     hints: {
       flag: ['Schwesterherz, Thalia hat mich gefragt, ob du gesund und munter bist.', 'Komm doch mal zum Durchchecken in die Praxis. Dann kann ich ihr sagen: Alles bestens. Medizinisch bestätigt.'],
       sammelbuch: ['Thalia will wissen, was es hier alles zu entdecken gibt. Sie ist ja Geografin.', 'Ein paar Arten mehr im Sammelbuch, und sie steht mit Spaten und Landkarte vor der Tür. Wetten?'],
