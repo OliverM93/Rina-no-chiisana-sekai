@@ -958,9 +958,9 @@ export function makeFurniture(itemId: string, links: FenceLinks = { n: false, e:
     }
     case 'insektenkasten': {
       const z = WALL_Z;
-      g.add(b(1.3, 0.86, 0.1, '#8a5a3a', 0, HANG, z + 0.03));
-      g.add(b(1.22, 0.78, 0.02, '#f6efdc', 0, HANG, z + 0.07));
-      specimenGrid(g, INSECTS.map((i) => i.id), collected, 6, 4, [0.195, 0.185], insectSpecimen);
+      g.add(b(1.3, 1.04, 0.1, '#8a5a3a', 0, HANG, z + 0.03));
+      g.add(b(1.22, 0.96, 0.02, '#f6efdc', 0, HANG, z + 0.07));
+      specimenGrid(g, INSECTS.map((i) => i.id), collected, 6, 5, [0.195, 0.185], insectSpecimen);
       break;
     }
     case 'fischtafel': {

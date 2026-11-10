@@ -150,7 +150,7 @@ Wetter und Feste laufen nach echter Zeit.
   **Bento-Box** (Rezepte von Anfang an). Dazu Plauderzeilen (Oli, Lars, Oma, Jens) und Erinnerungen mit den Tags `pflanzen-viele`, `bett`, `waermflasche`; das Liegen im Bett hat mehrere Sprüche.
 - **Französisches Bistro:** zwölfter Katalog-Stil (`style: 'bistro'`, 11 Möbel, 2 Tapeten, Bistro-Fliesen). Er taucht im Katalog erst **ab Jens' Einzug** auf (`styleUnlocked` in `game/home.ts`);
   Spielstände, in denen Jens schon da ist, haben ihn sofort. Alle anderen Stile bleiben von Anfang an frei.
-- **Sammlung ausstellen (Audit F2/W6):** Drei Schaukästen zeigen, was Lina schon gefangen oder gefunden hat – **Insektenkasten** (Wand, 24 Plätze, 1 200 ⭐),
+- **Sammlung ausstellen (Audit F2/W6):** Drei Schaukästen zeigen, was Lina schon gefangen oder gefunden hat – **Insektenkasten** (Wand, 30 Plätze, 1 200 ⭐),
   **Fischtafel** (Wand, 17 Plätze, 1 000 ⭐) und die **Fossilien-Vitrine** (Thalias Geschenk, 12 Plätze). Jede Art hat einen festen Platz: gesammelt = kleines Präparat,
   noch offen = leerer Punkt. Es gibt nichts zu bedienen; `Interior3D.collected` (Sammelbuch-Einträge) fließt in `makeFurniture(…, collected)` ein, das Zimmer baut sich
   beim Betreten bzw. bei geänderter Sammlung neu auf.
