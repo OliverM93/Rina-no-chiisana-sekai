@@ -2,7 +2,7 @@
  * Fortschritt: Woran arbeitet Lina gerade (nächster Einzug), und welcher Bewohner
  * gibt dazu einen sanften Hinweis? (Ohne Abhängigkeit von gameplay/story.)
  */
-import { missingNeeds, type ProgressState } from '../core/progress';
+import { missingNeeds, type NeedKind, type ProgressState } from '../core/progress';
 import { GARDEN_FLOWER } from '../data/items';
 import { type Milestone, MILESTONES } from '../data/progress';
 import type { Session } from './session';
@@ -24,6 +24,14 @@ export function currentMilestone(session: Session): Milestone | null {
   const f = session.data?.flags;
   if (!f) return null;
   return MILESTONES.find((m) => f[m.after] && !f[`${m.npc}Angekuendigt`]) ?? null;
+}
+
+/** Fehlt für den nächsten Einzug noch etwas dieser Art (z. B. „gebaut“ → die Werkbank)? */
+export function milestoneMissing(session: Session, kind: NeedKind): { npc: string } | null {
+  const m = currentMilestone(session);
+  const st = progressState(session);
+  if (!m || !st) return null;
+  return missingNeeds(m.needs, st).some((n) => n.kind === kind) ? { npc: m.npc } : null;
 }
 
 /** Hinweis dieses Bewohners auf das, was für den nächsten Einzug noch fehlt (oder null) */

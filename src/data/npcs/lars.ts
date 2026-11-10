@@ -19,9 +19,9 @@ export const LARS: NpcDef = {
   schedule: [
     { from: '00:00', label: 'schläft', activity: { kind: 'zuhause', sleeping: true } },
     { from: '07:30', label: 'Joggen am Strand', activity: { kind: 'spazieren', area: STRAND } },
-    { from: '09:00', label: 'Praxis geöffnet', activity: { kind: 'stehen', x: 24, y: 16, facing: 'down' } },
+    { from: '09:00', label: 'Praxis geöffnet', activity: { kind: 'stehen', x: 24, y: 14, facing: 'down' } },
     { from: '12:30', label: 'Mittagspause auf dem Dorfplatz', activity: { kind: 'spazieren', area: PLATZ } },
-    { from: '14:00', label: 'Praxis geöffnet', activity: { kind: 'stehen', x: 24, y: 16, facing: 'down' } },
+    { from: '14:00', label: 'Praxis geöffnet', activity: { kind: 'stehen', x: 24, y: 14, facing: 'down' } },
     { from: '17:30', label: 'Feierabend-Runde am Strand', activity: { kind: 'spazieren', area: STRAND } },
     { from: '19:00', label: 'Feierabend', activity: { kind: 'zuhause' } },
     { from: '23:00', label: 'schläft', activity: { kind: 'zuhause', sleeping: true } },

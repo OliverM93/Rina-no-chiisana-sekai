@@ -9,6 +9,7 @@ import { itemDef } from '../data/items';
 import { RECIPES } from '../data/recipes';
 
 import { craftRecipe, recipeName } from '../game/crafting';
+import { milestoneMissing } from '../game/progress';
 import type { Session } from '../game/session';
 import { itemIconUrl } from '../gfx/items';
 import { showToast, ui, useSessionVersion } from './store';
@@ -77,6 +78,7 @@ export function CraftPanel({ session, station = 'werkbank' }: { session: Session
         )}
         <div class="book-tabs">
           <span class="soft small-text">{T.intro}</span>
+          {station === 'werkbank' && milestoneMissing(session, 'gebaut')?.npc === 'jens' && <span class="soft small-text">💡 Jens freut sich über Selbstgebautes – bau ein paar Sachen, dann kommt er vielleicht bald ins Dorf.</span>}
           <span class="book-progress">
             {WORKBENCH.filter((r) => known.has(r.id)).length}/{WORKBENCH.length} Rezepte
           </span>

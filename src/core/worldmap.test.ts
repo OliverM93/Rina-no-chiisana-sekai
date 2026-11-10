@@ -135,6 +135,13 @@ describe('Dorfkarte', () => {
     expect(findPath(m.grid, VILLAGE_SPAWN, { x: 25, y: 14 })).not.toBeNull();
   });
 
+  it('zwischen Brunnen und Samenstand kommt man durch (Nord–Süd)', () => {
+    const m = buildWorldMap(VILLAGE_LAYOUT, VILLAGE_OBJECTS, VILLAGE_SPAWN);
+    applyMapFlags(m, { olafEingezogen: true });
+    for (const y of [16, 17, 18, 19, 20]) expect(m.grid.isBlocked(29, y), `29,${y}`).toBe(false);
+    expect(findPath(m.grid, { x: 29, y: 16 }, { x: 29, y: 20 })).not.toBeNull();
+  });
+
   it('macht die Brücke begehbar und den Fluss daneben nicht', () => {
     const bridge = objectById(map, 'bruecke')!;
     for (let x = bridge.x; x < bridge.x + bridge.w; x++) expect(map.grid.isBlocked(x, bridge.y)).toBe(false);

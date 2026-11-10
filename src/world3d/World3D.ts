@@ -1994,7 +1994,6 @@ export class World3D {
       const line = lines[Math.floor(Math.random() * lines.length)];
       this.kissScene(c, () => {
         this.session.bus.emit('toast', { text: line });
-        this.homeOliKey = ''; // zurück an seinen Platz
         this.kissBusy = false;
       });
     };

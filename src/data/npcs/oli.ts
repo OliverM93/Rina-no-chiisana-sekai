@@ -164,18 +164,18 @@ export const STARS_LINES: readonly (readonly string[])[] = [
 export const KISS_LINES: readonly (readonly string[])[] = [
   ['*Küsschen* 😘', 'Mmh. Noch eins? … Nur eins. Okay, zwei.'],
   ['*wird ein bisschen rot*', 'Lini … du kannst doch nicht einfach so süß sein. Das ist unfair.'],
-  ['*Nasenstupser* Boop. 👃', 'Ich hab dich lieb, Lini.'],
+  ['*Nasenstupser* Boop. 👃', 'Ich liebe dich, Lini.'],
   ['Mmmh, du schmeckst nach Kaffee.', 'Mein Lieblingsgeschmack. Direkt nach dir.'],
-  ['*Küsschen auf die Stirn*', 'So. Jetzt bist du offiziell geküsst. Mit Stempel.'],
-  ['*grinst ganz breit*', 'Ich glaub, ich bin der glücklichste Mensch im ganzen Dorf. Ach was – auf der ganzen Welt.'],
-  ['Noch eins für unterwegs? 😘', '*Küsschen* … und eins für Winston. Der guckt schon so eifersüchtig.'],
+  ['*Küsschen auf die Stirn*', 'So. Jetzt bist du offiziell geküsst. Mit Stempel.', 'Ich liebe dich, Lini.'],
+  ['*grinst ganz breit*', 'Ich glaub, ich bin der glücklichste Mensch im ganzen Dorf. Ach was – auf der ganzen Welt.', 'Ich liebe dich, Lini.'],
+  ['Noch eins für unterwegs? 😘', '*Küsschen* … und eins für Winston. Der guckt schon so eifersüchtig.', 'Ich liebe dich, Lini.'],
 ];
 
 /** Wenn Lina nach Hause kommt und Oli wach ist */
 export const WELCOME_KISS_LINES: readonly string[] = [
   'Oli kommt dir entgegen: „Da bist du ja!“ – *Küsschen* 😘',
   'Oli strahlt: „Lini! Ich hab dich vermisst.“ – *Küsschen* 💕',
-  '„Willkommen zu Hause, Süße.“ – *Küsschen* 😘',
+  '„Willkommen zu Hause, Süße. Ich liebe dich, Lini.“ – *Küsschen* 😘',
   'Oli: „Na, du Hübsche?“ – *Küsschen auf die Wange* 💋',
 ];
 
