@@ -7,7 +7,7 @@ eingebaut (privates Geschenk, keine Datensammlung).
 > 📋 **Zum Ausdrucken:** [`PLAYTEST_BOGEN.md`](PLAYTEST_BOGEN.md) – Ablauf für die Stellvertreter-Tests (drei Sitzungen), Beobachtungsbogen, Fragen, Fehler-Liste.
 > Lina selbst spielt erst nach der Übergabe, vorher testet eine Stellvertreterin.
 
-## 1. Was es schon ggibt ✅
+## 1. Was es schon gibt ✅
 
 | Werkzeug | Prüft |
 |---|---|
