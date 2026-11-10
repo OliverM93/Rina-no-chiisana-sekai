@@ -24,9 +24,9 @@ export const HOUSE_STAGES: readonly HouseStage[] = [
 ];
 export const MAX_STAGE = HOUSE_STAGES.length - 1;
 
-/** Haustür unten in der Mitte eines Raums der Breite w und Höhe h */
+/** Tür unten in der Mitte eines Raums der Breite w und Höhe h – ein Feld breit wie eine normale Tür */
 const frontDoor = (w: number, h: number, to: string, kind: 'haustuer' | 'durchgang' | 'treppe' = 'haustuer') => ({
-  cells: [[w / 2 - 1, h - 1], [w / 2, h - 1]] as const,
+  cells: [[w / 2 - 1, h - 1]] as const,
   to,
   dir: 'down' as const,
   kind,
@@ -45,10 +45,10 @@ export function roomLayouts(stage: number): readonly RoomLayout[] {
     desk: [0, 0],
     exits: [
       frontDoor(w, h, 'draussen'),
-      ...(stage >= 2 ? [{ cells: [[w / 2 - 1, 0], [w / 2, 0]] as const, to: 'schlafzimmer', dir: 'up' as const, kind: 'durchgang' as const }] : []),
+      ...(stage >= 2 ? [{ cells: [[w / 2 - 1, 0]] as const, to: 'schlafzimmer', dir: 'up' as const, kind: 'durchgang' as const }] : []),
       ...(stage >= 3 ? [{ cells: [[w - 1, 0]] as const, to: 'dach', dir: 'up' as const, kind: 'treppe' as const }] : []),
-      ...(stage >= 4 ? [{ cells: [[2, 0], [3, 0]] as const, to: 'kueche', dir: 'up' as const, kind: 'durchgang' as const }] : []),
-      ...(stage >= 5 ? [{ cells: [[w - 4, 0], [w - 3, 0]] as const, to: 'wintergarten', dir: 'up' as const, kind: 'durchgang' as const }] : []),
+      ...(stage >= 4 ? [{ cells: [[2, 0]] as const, to: 'kueche', dir: 'up' as const, kind: 'durchgang' as const }] : []),
+      ...(stage >= 5 ? [{ cells: [[w - 4, 0]] as const, to: 'wintergarten', dir: 'up' as const, kind: 'durchgang' as const }] : []),
       ...(stage >= 6 ? [{ cells: [[w - 2, h - 1], [w - 1, h - 1]] as const, to: 'keller', dir: 'down' as const, kind: 'treppe' as const }] : []),
     ],
   };
