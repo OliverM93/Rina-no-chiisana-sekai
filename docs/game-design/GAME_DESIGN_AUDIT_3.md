@@ -150,6 +150,15 @@ Die Summe der 1×/Tag-Dinge liegt jetzt bei rund 20 [V].
 
 ## 5. Findings – priorisiert
 
+### 🔴 Nachtrag während der Umsetzung (kritisch für ein Winter-Geschenk)
+
+**A0 · Im Winter gibt es nur 10–11 Arten – Sammelbuch-Ziele der Einzüge sind dann knapp [N]**
+- *Befund:* Von November bis Februar sind nur 10–11 Fische und Insekten unterwegs (vor Thalias Schaufel zählt nichts anderes).
+  Thalias bisherige Bedingung „9 Sammelbuch“ verlangte im November **9 von 10 Arten**, darunter Wintermotte (erst ab 17 Uhr) und Hecht (selten).
+  Die ursprünglich vorgeschlagenen 14 Einträge (M2) wären **unmöglich** gewesen – die Geschichte hätte bis März festgesteckt.
+- *Folge:* M2 wurde winter-sicher umgesetzt (Thalia 8 Sammelbuch + erster Hausausbau); ein Test verlangt in jedem Monat ≥ Ziel + 2 Arten.
+- *Weiter offen:* Omas Beet-Wunsch braucht Rosen und Vergissmeinnicht – im Winter nur mit Frühbeet/Gewächshaus. Wünsche sind optional, also kein Blocker, aber im Winter-Playtest beobachten [P].
+
 ### 🟠 Hoch
 
 **A1 · Rahmenhandlung zu schnell, getaktet von Wartezeit statt Erleben [N, Wirkung P]**
@@ -287,6 +296,6 @@ Risiko: Grind-Druck, neue Modelle, Pflege. **Nur bauen, wenn der Playtest zeigt,
 |---|---|
 | K1 Enter überall · K2 Training ohne Punkte · K3 Snake-Rekord · K4 Doku · K5 Balancing-Test | ✅ freigegeben |
 | M1 Notizbuch „Was gerade ansteht“ | ✅ freigegeben |
-| M2 Rahmenhandlung strecken (wie vorgeschlagen) | ✅ freigegeben |
+| M2 Rahmenhandlung strecken | ✅ freigegeben – nach Befund A0 in der **winter-sicheren** Fassung: Jens 3 gebaut + 6 Sammelbuch, Lars 3 gekocht + 5 000 ⭐, Thalia Check-up + 8 Sammelbuch + erster Ausbau |
 | M3 Oli-Tempo | ⏸️ zurückgestellt bis zum Playtest |
 | G1 Dorf-Verschönerungen · G2 Tagebuch | ⏸️ erst nach dem Playtest |
