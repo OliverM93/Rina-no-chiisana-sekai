@@ -111,6 +111,11 @@ const list: ItemDef[] = [
   { id: 'dorsch-gemuese', name: 'Dorsch auf Gemüsebett', plural: 'Portionen Dorsch auf Gemüsebett', category: 'essen', price: 340, description: 'Zarter Dorsch auf Zucchini und Tomate, ganz leicht und sommerlich. Lars sagt: „Ärztlich empfohlen.“' },
   { id: 'aal-gruen', name: 'Aal grün', plural: 'Portionen Aal grün', category: 'essen', price: 760, description: 'Ein Festessen mit viel frischem Grün. Jens: „Ma chérie, das ist Kunst mit Gräten.“' },
   { id: 'steinbutt-ofen', name: 'Steinbutt aus dem Ofen', plural: 'Portionen Steinbutt aus dem Ofen', category: 'essen', price: 900, description: 'Der König der Plattfische, im Ofen mit Thymian gegart. Nur für besondere Anlässe. Oder einfach für Dienstag.' },
+  { id: 'kaese', name: 'Käse', plural: 'Stücke Käse', category: 'essen', price: 45, description: 'Ein schönes Stück Käse. Lina riecht kurz daran und lächelt. Der Käse ist nicht lange sicher.' },
+  { id: 'kaeseomelett', name: 'Käse-Omelett', plural: 'Käse-Omeletts', category: 'essen', price: 170, description: 'Goldgelb, außen zart und innen schön schmelzig. Linas Lieblings-Frühstück.' },
+  { id: 'ueberbackene-kartoffeln', name: 'Überbackene Kartoffeln', plural: 'Portionen überbackene Kartoffeln', category: 'essen', price: 140, description: 'Mit einer Käsehaube, die Blasen wirft. Man muss kurz pusten. Und dann sofort.' },
+  { id: 'kaesebrett', name: 'Käsebrett', plural: 'Käsebretter', category: 'essen', price: 230, description: 'Ein Brett mit Käse, Apfelspalten und Keksen. Ideal für Filmabende (und Linas Herz).' },
+  { id: 'bento', name: 'Bento-Box', plural: 'Bento-Boxen', category: 'essen', price: 120, description: 'Ein Fach mit Omelett, eins mit Möhrchen, eins mit Apfelhäschen. Lina packt sie mit viel Liebe – jedes Fach genau passend.' },
   { id: 'blumensalat', name: 'Blumensalat', plural: 'Schüsseln Blumensalat', category: 'essen', price: 140, description: 'Ein bunter Salat mit essbaren Blüten. Zu schön zum Essen. Fast.' },
   // Feste
   { id: 'plaetzchen', name: 'Omas Plätzchen', plural: 'Omas Plätzchen', category: 'essen', price: 15, description: 'Zimtsterne, Vanillekipferl, Butterplätzchen. Weihnachten in Keksform.' },

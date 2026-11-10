@@ -271,6 +271,7 @@ Legende: ✅ erledigt · 🚧 in Arbeit · ⬜ geplant
 - ✅ **Fotomodus:** Taste F / 📷 – Schnappschuss mit Rahmen (Polaroid, Herzchen, Blümchen, Schlicht) zum Speichern als PNG
 - ✅ **Sammlungen würdigen:** Brief + Wand-Urkunde für alle Fische, Krabbeltiere, Funde, Blumenfarben und Tassen (Audit F10)
 - ✅ **Oli in Stufen:** „Zeit zu zweit“-Szenen (eine je Herz), „Zur Herzbank“ mit Jahreszeiten-Zeilen, Jubiläums-Briefe nach 100 Tagen und einem Jahr (Audit F6)
+- ✅ **Linas Lieblinge:** Bett mit Gewichtsdecke, vier Pflanzen, Wärmflasche, Bento-Box-Deko, Käse & Käse-/Bento-Gerichte, Dialoge und Erinnerungen dazu
 - ✅ **Game-Design-Audit 2 (Nachprüfung):** [`GAME_DESIGN_AUDIT_2.md`](game-design/GAME_DESIGN_AUDIT_2.md) – Status F1–F18, neue Findings, Empfehlung: erst Playtest mit Lina, dann neue Features
 - ✅ **Französisches Bistro:** neuer Stil mit elf Möbeln (Bistrotisch, Bugholzstuhl, Barhocker, Zinktresen, Kreidetafel, Weinregal, Bistro-Lampe, Café-Spiegel, Croissant-Etagere, Turm-Modell, Läufer), zwei Tapeten und Bistro-Fliesen – im Katalog ab Jens' Einzug (Audit F13)
 - ✅ **Sternbilder:** beim Sterne gucken zeigt der Himmel das Sternbild der Jahreszeit (Großer Wagen, Schwan, Kassiopeia, Orion), Oli erklärt es

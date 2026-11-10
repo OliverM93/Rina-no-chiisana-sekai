@@ -56,6 +56,13 @@ export const OLI: NpcDef = {
       { text: ['Schnee, Lini! ❄️', 'Wer zuerst einen Schneemann baut, kriegt einen Kakao. Ich verlier auch absichtlich.'], when: { tags: ['wetter-schnee'] }, weight: 3 },
     ],
     chat: [
+      { text: ['Lini, wie viele Pflanzen sind das jetzt eigentlich bei uns?', 'Ich hab aufgehört zu zählen. Ich gieß sie trotzdem alle. Sogar die, die gar keine Pflanzen sind.'] },
+      { text: ['Du siehst so zufrieden aus, wenn du unter deiner schweren Decke liegst.', 'Ich guck dann manchmal einfach nur zu. Das ist mein ruhigster Moment am Tag.'], when: { minHearts: 2 } },
+      { text: ['Heute Abend Sofa, schwere Decke, Wärmflasche und Käse?', 'Ich hol schon mal das Brett. Es ist ein sehr gutes Brett.'], when: { phases: ['abend', 'abenddaemmerung'] } },
+      { text: ['Dein Käse hat schon wieder eine eigene Schublade im Kühlschrank.', 'Ich hab es nicht gebaut. Ich hab es nur akzeptiert.'] },
+      { text: ['Weißt du, was ich an dir mag? Du kannst überall schlafen.', 'Sofa, Futon, Auto, Zug. Ich beneide dich ein bisschen. Und ich passe gern auf, dass du nicht rutschst.'] },
+      { text: ['Ich hab mir heute die Bento-Box angeschaut, die du für mich gepackt hast.', 'Jedes Fach genau passend. Du hast sogar einen Apfel zum Häschen geschnitzt. Wie kann man so lieb sein?'] },
+      { text: ['Fünf Minuten länger liegen bleiben?', '… Okay, zehn. Mit dir und der schweren Decke ist das keine Verschwendung, das ist Pflege.'], when: { phases: ['morgendaemmerung', 'morgen'] } },
       { text: ['Ich hab im Netz gelesen, dass man aus einem Kürbis auch Suppe machen kann.', 'Also nicht nur Halloween-Gesicht. Wusste ich nicht. Lini, wollen wir?'], weight: 3 },
       { text: ['Lini, dein Doktor No läuft heute wieder.', 'Ich hab schon die Taschentücher hingelegt. Und deinen Platz auf dem Sofa freigehalten. Ich bin ein guter Freund.'] },
       { text: ['Wenn Dr. No „Ein Schritt. Dann noch einer.“ sagt, dann krieg ich auch Lust, was zu machen.', 'Aufräumen zum Beispiel. Oder Hanteln. Oder … nee, ich glaub, Hanteln.'] },

@@ -41,6 +41,10 @@ export function memoryTags(session: Session): string[] {
   if (items.some((i) => FURNITURE_BY_ITEM[i.itemId]?.def.coop === 'huhn')) tags.push('huehner');
   if (items.some((i) => FURNITURE_BY_ITEM[i.itemId]?.def.greenhouse)) tags.push('gewaechshaus');
   if (data.house.rooms.flatMap((r) => r.items).filter((i) => i.itemId.startsWith('tasse-')).length >= 6) tags.push('tassen-viele');
+  const PLANTS = ['topfpflanze', 'gummibaum', 'kaktus', 'sukkulenten', 'yucca', 'haengepflanze', 'bonsai'];
+  if (data.house.rooms.flatMap((r) => r.items).filter((i) => PLANTS.includes(FURNITURE_BY_ITEM[i.itemId]?.def.id ?? '')).length >= 5) tags.push('pflanzen-viele');
+  if (data.house.rooms.some((r) => r.items.some((i) => i.itemId.startsWith('bett')))) tags.push('bett');
+  if (data.house.rooms.some((r) => r.items.some((i) => i.itemId === 'waermflasche'))) tags.push('waermflasche');
   if (data.bank.savings > 0) tags.push('sparbuch');
   if (Object.keys(data.collection).some((id) => GARDEN_FLOWER[id]?.crossOnly && id.includes('schwarz'))) tags.push('schwarze-blume');
   if (lastTravelCity(session)) tags.push('jens-reise');
