@@ -185,7 +185,7 @@ export const FURNITURE: readonly FurnitureDef[] = [
   { id: 'bild-dr-no', name: 'Dr.-No-Porträt', style: 'basis', wall: true, price: 900, w: 1, d: 1, description: 'Ein gerahmtes Porträt von Dr. No aus „Schwerer Weg“. Strenger Blick, gütige Augen, buschige Brauen. Eine Ikone. Hängt am besten über dem Sofa.' },
   { id: 'bild-winston', name: 'Winston-Porträt', style: 'basis', wall: true, price: 600, w: 1, d: 1, description: 'Ein gerahmtes Porträt von Winston. Er guckt sehr würdevoll. Fast.' },
   { id: 'poster-grusel', name: 'Gruselfilm-Poster', style: 'basis', wall: true, price: 400, w: 1, d: 1, description: '„Die Nacht der Kürbisse“ – Linas liebster Gruselklassiker. Oli guckt lieber nicht so genau hin.' },
-  { id: 'insektenkasten', name: 'Insektenkasten', style: 'basis', wall: true, price: 1200, w: 2, d: 1, description: 'Ein Schaukasten mit 24 Plätzen für alle Krabbeltiere. Was du fängst, steckt dann darin. Lars: „Wissenschaftlich einwandfrei.“' },
+  { id: 'insektenkasten', name: 'Insektenkasten', style: 'basis', wall: true, price: 1200, w: 2, d: 1, description: 'Ein Schaukasten mit 30 Plätzen für alle Krabbeltiere. Was du fängst, steckt dann darin. Lars: „Wissenschaftlich einwandfrei.“' },
   { id: 'fischtafel', name: 'Fischtafel', style: 'basis', wall: true, price: 1000, w: 2, d: 1, description: 'Eine Tafel mit 17 Plätzen für Fische. Jeder Fang bekommt seinen Platz. Olaf hat schon nachgezählt: Es fehlen noch einige.' },
   // ---- Französisches Bistro (Jens' Stil) ----
   { id: 'bistrotisch', name: 'Bistrotisch', style: 'bistro', surface: true, surfaceHeight: 0.7, price: 600, w: 1, d: 1, description: 'Rund, mit Marmorplatte und gusseisernem Fuß. Zwei Croissants passen drauf, ein Kaffee sowieso. Jens: „Très chic!“' },

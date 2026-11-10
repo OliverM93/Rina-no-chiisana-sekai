@@ -79,7 +79,7 @@ Legende: ✅ erledigt · 🚧 in Arbeit · ⬜ geplant
 
 - ✅ Angeln ganz entspannt (Fischschatten, Schwimmer, Biss – verpassen geht nicht schief) in Fluss & Meer
 - ✅ Insekten mit dem Kescher fangen (fliehen nicht); Schmetterlinge, Käfer, Libellen, Glühwürmchen, Krabben …
-- ✅ 17 Fische & 24 Insekten – echte heimische Arten, je nach Monat, Uhrzeit und Wetter
+- ✅ 17 Fische & 27 Insekten – echte heimische Arten, je nach Monat, Uhrzeit und Wetter
 - ✅ Sammelbuch mit Schatten für Unentdecktes, Ort/Monaten/Uhrzeit, Anzahl und erstem Fang
 - ✅ Gärtnern: Beet neben Linas Haus, 5 Blumen (Samen → Keimling → Knospe → Blüte), Gießen, Regen gießt mit,
   nichts vertrocknet; beim Pflücken fallen manchmal Samen ab
@@ -271,6 +271,7 @@ Legende: ✅ erledigt · 🚧 in Arbeit · ⬜ geplant
 - ✅ **Fotomodus:** Taste F / 📷 – Schnappschuss mit Rahmen (Polaroid, Herzchen, Blümchen, Schlicht) zum Speichern als PNG
 - ✅ **Sammlungen würdigen:** Brief + Wand-Urkunde für alle Fische, Krabbeltiere, Funde, Blumenfarben und Tassen (Audit F10)
 - ✅ **Oli in Stufen:** „Zeit zu zweit“-Szenen (eine je Herz), „Zur Herzbank“ mit Jahreszeiten-Zeilen, Jubiläums-Briefe nach 100 Tagen und einem Jahr (Audit F6)
+- ✅ **Winter-Insekten:** Wintermotte (Nov–Jan), Wintermücke (Nov–Mär) und Schneeschnake (Dez–Feb) – im Winter gibt es jetzt fünf statt zwei Arten (inkl. Winterhaft, Strandkrabbe); Insektenkasten mit 30 Plätzen
 - ✅ **Spontane Gespräche zwischen Bewohnern:** Sprechblasen, 13 Paare, Lina kann mithören oder unterbrechen
 - ✅ **Feedback-Runde Nov. 2026 (3):** Jens ohne rosa Bäckchen, Christin & Thalia mit schmalerem (ovalem) Gesicht, Schwarzes Brett unten links auf dem Pflaster, Bäume/Kiefern/Büsche im eigenen Garten fällbar (Garten gestalten), Bewohner gehen bei Treffen auf das Gespräch mit den anderen ein, Jens wuchs nicht in Leipzig auf, Taste T = „In die Tasche“ beim Einrichten
 - ✅ **Linas Lieblinge:** Bett mit Gewichtsdecke, vier Pflanzen, Wärmflasche, Bento-Box-Deko, Käse & Käse-/Bento-Gerichte, Dialoge und Erinnerungen dazu

@@ -106,6 +106,10 @@ export const INSECTS: readonly InsectDef[] = [
   { id: 'strandkrabbe', name: 'Strandkrabbe', plural: 'Strandkrabben', habitat: 'strand', shape: 'krabbe', months: ALL, hours: DAY, price: 70, weight: 26, color: '#d97a4a', accent: '#8a4a2a', description: 'Läuft seitwärts über den Sand. Eigentlich kein Insekt – aber ein toller Krabbler!' },
   { id: 'weinbergschnecke', name: 'Weinbergschnecke', plural: 'Weinbergschnecken', habitat: 'felsen', shape: 'schnecke', months: range(4, 10), hours: DAY, rainOnly: true, price: 60, weight: 26, color: '#c9a36a', accent: '#a6886a', description: 'Kommt bei Regen heraus. Ihr Häuschen trägt sie immer mit sich.' },
   { id: 'winterhaft', name: 'Winterhaft', plural: 'Winterhafte', habitat: 'felsen', shape: 'heuschrecke', months: range(11, 3), hours: [9, 20], price: 250, weight: 10, color: '#4a3f3a', accent: '#8a7a70', description: 'Auch „Schneefloh“ genannt: hüpft mitten im Winter über Moos und Schnee.' },
+  // Winter: auch bei Frost ist etwas los
+  { id: 'wintermotte', name: 'Wintermotte', plural: 'Wintermotten', habitat: 'baum', shape: 'nachtfalter', months: range(11, 1), hours: [17, 24], price: 160, weight: 14, color: '#b9a98a', accent: '#6a5f50', description: 'Fliegt als einer der wenigen Falter im November und Dezember – nur die Männchen. Die Weibchen können gar nicht fliegen.' },
+  { id: 'wintermuecke', name: 'Wintermücke', plural: 'Wintermücken', habitat: 'wiese', shape: 'biene', months: range(11, 3), hours: [10, 20], noRain: true, price: 60, weight: 20, color: '#8a8f94', accent: '#d9dde3', description: 'Tanzt an milden Wintertagen in kleinen Schwärmen im Sonnenlicht. Sticht nicht und stört niemanden.' },
+  { id: 'schneeschnake', name: 'Schneeschnake', plural: 'Schneeschnaken', habitat: 'wiese', shape: 'ameise', months: range(12, 2), hours: [10, 20], price: 320, weight: 6, color: '#6f6a66', accent: '#c9c4bf', description: 'Eine flügellose Schnake, die mitten im Schnee herumspaziert. Wirkt wie eine zu groß geratene Spinne – ist aber ganz harmlos.' },
 ];
 
 export const FISH_BY_ID: Readonly<Record<string, FishDef>> = Object.fromEntries(FISH.map((f) => [f.id, f]));

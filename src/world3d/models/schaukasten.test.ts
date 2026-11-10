@@ -23,7 +23,7 @@ describe('Schaukästen zeigen Linas Sammlung', () => {
   });
 
   it('die Kästen haben für jede Art einen Platz', () => {
-    expect(INSECTS.length).toBeLessThanOrEqual(24);
+    expect(INSECTS.length).toBeLessThanOrEqual(30);
     expect(FISH.length).toBeLessThanOrEqual(18);
     expect(FINDS.length).toBeLessThanOrEqual(12);
   });

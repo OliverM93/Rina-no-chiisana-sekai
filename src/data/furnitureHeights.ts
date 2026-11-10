@@ -110,7 +110,7 @@ export const FURNITURE_HEIGHTS: Readonly<Record<string, number>> = {
   'kreidetafel': 0.99,
   'weinregal': 1.01,
   'goldspiegel': 1.01,
-  'insektenkasten': 0.87,
+  'insektenkasten': 0.78,
   'fischtafel': 0.95,
   'discokugel': 0.8,
   'urkunde-blumen': 1.06,
