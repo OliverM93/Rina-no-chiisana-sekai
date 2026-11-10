@@ -7,7 +7,7 @@
   Werkbank/Küche/Apotheke, Feste inklusive Winterzauber, Klang (Musik, Stimmen, Geräusche), Spielstand mit Migrationen.
 - **Qualitätssicherung:** 36 Testdateien (217 Tests) inkl. Durchlauf-Test der ganzen Geschichte; CI prüft jeden Pull
   Request (Typecheck, Tests, Build); jeder Merge nach `main` wird automatisch auf GitHub Pages veröffentlicht.
-- **Als Nächstes denkbar:** Fotomodus & Tagebuch, Geburtstage der übrigen Bewohner (Daten fehlen), Blumen-Kreuzungen,
+- **Als Nächstes denkbar:** Fotomodus & Tagebuch, Oma Giselas Geburtstag (Datum offen), Blumen-Kreuzungen,
   siehe „Ideen-Parkplatz“ und „Offene Fragen“ unten.
 - **Game Design:** Wissensbasis in [`game-design/`](game-design/README.md) mit Analyse und priorisierter
   Verbesserungsliste ([`IMPROVEMENTS.md`](game-design/IMPROVEMENTS.md)) – vor neuen Mechaniken gilt die Designprüfung.
@@ -185,7 +185,7 @@ Legende: ✅ erledigt · 🚧 in Arbeit · ⬜ geplant
   Tür klopfen und mitessen
 - ✅ Jens sächselt gern mit Lina
 - ✅ Olis Geburtstag (29.07.): eigene Sprüche, Geschenke freuen doppelt, Oma erinnert vorher daran
-- ⬜ Weitere Geburtstage der Bewohner (Daten noch offen) – Olaf & Jens sind Zwillinge
+- ✅ Geburtstage der übrigen Bewohner (Nov. 2026): Lars 03.01., Christin 04.06., Olaf & Jens 03.04., Thalia 11.08. – eigene Sprüche, doppelte Freude beim Geschenk, Oma erinnert vorher · ⬜ Oma Gisela (Datum offen)
 - ✅ Lars: Praxis/Apotheke (Tees, Gesundheits-Check) → M7c
 - ✅ Olaf: Sparbuch mit kleinen Zinsen (M8d)
 - ✅ Jens: Bistro/Kochstudio (Rezepte) & Galerie (Kunstwerke sammeln/ausstellen) → M7b, M7f

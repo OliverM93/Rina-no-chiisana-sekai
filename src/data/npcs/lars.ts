@@ -16,6 +16,11 @@ export const LARS: NpcDef = {
   appearance: LOOKS.lars,
   home: 'praxis-lars',
   movesIn: 'larsEingezogen',
+  birthday: { day: 3, month: 1 },
+  birthdayLines: {
+    greeting: ['Schwesterherz! Heute ist mein Geburtstag. 🎂', 'Ich sag\'s nur, damit du\'s nicht vergisst. Nein, ich sag\'s, weil ich mich über dein Gesicht freue, wenn du\'s merkst.', 'Medizinisch gesehen ist Kuchen am Geburtstag erlaubt. Dringend empfohlen.'],
+    thanks: ['Ein Geschenk? Für mich?', 'Danke, Schwesterherz. Ärztlich bestätigt: Das hilft gegen jedes Alter.'],
+  },
   schedule: [
     { from: '00:00', label: 'schläft', activity: { kind: 'zuhause', sleeping: true } },
     { from: '07:30', label: 'Joggen am Strand', activity: { kind: 'spazieren', area: STRAND } },

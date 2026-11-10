@@ -16,6 +16,11 @@ export const OLAF: NpcDef = {
   appearance: LOOKS.olaf,
   home: 'haus-olaf',
   movesIn: 'olafEingezogen',
+  birthday: { day: 3, month: 4 },
+  birthdayLines: {
+    greeting: ['Heute hab ich Geburtstag, mein Schatz. Mein Zwillingsbruder Jens auch. Er sagt, er ist der Schönere.', 'Ich sage: Ich bin der Pünktlichere. Wir haben das beide schon im Kalender.', 'Die Torte ist budgetiert. Die zweite Torte auch. Hehe.'],
+    thanks: ['Ein Geschenk! Das buche ich unter „Freude“.', 'Danke, mein Schatz. Der Betrag ist beträchtlich. Der ideelle erst recht.'],
+  },
   schedule: [
     { from: '00:00', label: 'schläft', activity: { kind: 'zuhause', sleeping: true } },
     { from: '07:30', label: 'Zeitung vor dem Haus', activity: { kind: 'stehen', x: 18, y: 18, facing: 'down' } },
