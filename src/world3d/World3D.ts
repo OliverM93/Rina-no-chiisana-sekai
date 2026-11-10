@@ -55,7 +55,7 @@ import { OLAF_WELCOME } from '../data/npcs/olaf';
 import { OLI_WELCOME } from '../data/npcs/oli';
 import { DINNER_LINES, DINNER_OPENERS, JENS_WELCOME } from '../data/npcs/jens';
 import { dinnerGuests, isDinnerTime } from '../game/dinner';
-import { activeMeetups, joinMeetup, meetupOf } from '../game/meetups';
+import { activeMeetups, joinMeetup, meetupOf, meetupReply } from '../game/meetups';
 import { CHECKUP_GIFTS, CHECKUP_LINES, LARS_WELCOME } from '../data/npcs/lars';
 import { hashString } from '../core/rng';
 import { canDate, canKiss, type DateKind, giveKiss, haveDate, nextStageScene, playStageScene } from '../game/romance';
@@ -1558,7 +1558,7 @@ export class World3D {
         hearts: npcHearts(this.session, npc.def.id),
         lines: joinMeetup(this.session, meet),
         choices: [
-          { label: `💬 Mit ${npc.def.name} reden`, onSelect: () => this.npcDialog(npc, [`Schön, dass du da bist, Lina!`], npcHearts(this.session, npc.def.id)) },
+          { label: `💬 Mit ${npc.def.name} reden`, onSelect: () => this.npcDialog(npc, [meetupReply(this.session, meet, npc.def.id)], npcHearts(this.session, npc.def.id)) },
           { label: '👋 Weiter', onSelect: () => npc.endTalk() },
         ],
       });
@@ -1566,7 +1566,9 @@ export class World3D {
     }
     const out = talkToNpc(this.session, npc.def.id);
     const teaser = wishTeaser(this.session, npc.def.id);
-    this.npcDialog(npc, teaser ? [...out.lines, teaser] : out.lines, out.hearts);
+    // Läuft gerade ein Treffen, geht der Bewohner zuerst auf das Gespräch mit den anderen ein
+    const lead = meet ? [meetupReply(this.session, meet, npc.def.id)] : [];
+    this.npcDialog(npc, [...lead, ...(teaser ? [...out.lines, teaser] : out.lines)], out.hearts);
   }
 
   private npcDialog(npc: Npc, lines: string[], hearts: number) {
@@ -3226,7 +3228,10 @@ export class World3D {
     const d = this.decor;
     if (!d) {
       const top = this.dv.topAt(home, cell.x, cell.y, this.hoverWall);
-      if (!top) return;
+      if (!top) {
+        if (!this.session.inside) this.askFellNature(YARD_AREA.x + cell.x, YARD_AREA.y + cell.y);
+        return;
+      }
       this.decor = { itemId: top.itemId, uid: top.uid, rot: top.rot };
       this.dv.setHidden(top.uid);
       this.updateGhost();
@@ -3247,6 +3252,33 @@ export class World3D {
     this.refreshRoom();
     this.refreshYard();
     this.emitDecor();
+  }
+
+  /** Im Garten gestalten auf einen Baum, eine Kiefer oder einen Busch klicken: Fällen? (gibt Äste, bleibt weg) */
+  private askFellNature(x: number, y: number) {
+    const obj = this.session.map.objects.find((o) => (o.kind === 'tree' || o.kind === 'pine' || o.kind === 'bush') && o.x === x && o.y === y && isActive(this.session.map, o.id));
+    if (!obj) return;
+    const name = obj.kind === 'bush' ? 'Busch' : obj.kind === 'pine' ? 'Kiefer' : 'Baum';
+    this.session.bus.emit('dialog:open', {
+      title: 'Garten',
+      lines: [`${name} wegmachen? Dann ist hier mehr Platz zum Gestalten.`, 'Es gibt ein paar Äste dafür. Weg ist weg – aber neue Bäume gibt es im Dorf genug. 🌳'],
+      choices: [
+        { label: `🪓 ${name} fällen`, onSelect: () => this.fellNature(obj.id, obj.kind) },
+        { label: 'Lieber stehen lassen', onSelect: () => {} },
+      ],
+    });
+  }
+
+  private fellNature(id: string, kind: string) {
+    const data = this.session.data;
+    if (!data) return;
+    data.flags[`gefaellt-${id}`] = true;
+    giveItem(this.session, 'ast', kind === 'bush' ? 1 : 3, true);
+    this.syncMapObjects();
+    this.session.changed();
+    this.session.save();
+    this.session.bus.emit('sfx', 'bauen');
+    this.session.bus.emit('toast', { text: kind === 'bush' ? 'Der Busch ist weg. 🌿' : 'Der Baum ist weg – mehr Platz! 🪵' });
   }
 
   /** Für Tests & Fehlersuche */

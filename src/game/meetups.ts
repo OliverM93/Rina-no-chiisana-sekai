@@ -48,6 +48,13 @@ export function meetupEntry(session: Session, npcId: string): ScheduleEntry | nu
   return e;
 }
 
+/** Was dieses Mitglied sagt, wenn Lina es beim Treffen anspricht – es geht auf das Gespräch mit den anderen ein (täglich wechselnd) */
+export function meetupReply(session: Session, m: MeetupDef, npcId: string): string {
+  const pool = m.replies[npcId] ?? [];
+  if (pool.length === 0) return 'Schön, dass du da bist, Lina!';
+  return pool[hashString(`${m.id}:${npcId}:${session.today()}`) % pool.length];
+}
+
 /** Dazugesellen: Gespräch zum Mithören, einmal pro Tag mit Freundschaft */
 export function joinMeetup(session: Session, m: MeetupDef): string[] {
   const data = session.data;

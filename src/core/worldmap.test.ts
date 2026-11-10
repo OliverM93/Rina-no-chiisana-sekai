@@ -142,6 +142,16 @@ describe('Dorfkarte', () => {
     expect(findPath(m.grid, { x: 29, y: 16 }, { x: 29, y: 20 })).not.toBeNull();
   });
 
+  it('Bäume, Kiefern und Büsche lassen sich per Flag entfernen (Garten fällen)', () => {
+    const m = buildWorldMap(VILLAGE_LAYOUT, VILLAGE_OBJECTS, VILLAGE_SPAWN);
+    const tree = m.objects.find((o) => o.kind === 'tree')!;
+    expect(isActive(m, tree.id)).toBe(true);
+    expect(m.grid.isBlocked(tree.x, tree.y)).toBe(true);
+    expect(applyMapFlags(m, { [`gefaellt-${tree.id}`]: true })).toEqual([tree.id]);
+    expect(isActive(m, tree.id)).toBe(false);
+    expect(m.grid.isBlocked(tree.x, tree.y)).toBe(false);
+  });
+
   it('macht die Brücke begehbar und den Fluss daneben nicht', () => {
     const bridge = objectById(map, 'bruecke')!;
     for (let x = bridge.x; x < bridge.x + bridge.w; x++) expect(map.grid.isBlocked(x, bridge.y)).toBe(false);

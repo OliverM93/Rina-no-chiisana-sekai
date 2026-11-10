@@ -91,7 +91,7 @@ export const VILLAGE_OBJECTS: readonly MapObjectDef[] = [
 
   // Dorfplatz
   { id: 'brunnen', kind: 'fountain', x: 26, y: 18 },
-  { id: 'schwarzes-brett', kind: 'board', x: 28, y: 21 }, // bewusst nicht vor einem Gebäude (nördlich davon steht nichts, das es verdeckt)
+  { id: 'schwarzes-brett', kind: 'board', x: 24, y: 22 }, // unten links auf dem Pflaster des Dorfplatzes, im Weg steht es dort nicht
   { id: 'laterne-platz-1', kind: 'lantern', x: 23, y: 16 },
   { id: 'laterne-platz-2', kind: 'lantern', x: 31, y: 16 },
   { id: 'laterne-platz-3', kind: 'lantern', x: 23, y: 22 },

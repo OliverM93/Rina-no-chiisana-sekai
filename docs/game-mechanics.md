@@ -191,7 +191,9 @@ Wetter und Feste laufen nach echter Zeit.
   Positionen über `session.livePositions()`.
 - **Geburtstage der Bewohner:** Lars 03.01., Christin 04.06., Olaf & Jens (Zwillinge) 03.04., Oli 29.07., Thalia 11.08. (Oma: noch offen) – `NpcDef.birthday` + `birthdayLines`; Geschenke am Geburtstag zählen doppelt,
   Tags `geburtstag-<id>` / `bald-geburtstag-<id>` (7 Tage vorher).
-- **Treffen der Bewohner:** `data/meetups.ts` (Wochentage, Uhrzeit, Plätze, Gespräche), Regeln in
+- **Bäume fällen:** Im Garten gestalten (draußen) auf einen Baum, eine Kiefer oder einen Busch in Linas Garten klicken → „fällen?“ → Äste, dauerhaft weg (Flag `gefaellt-<id>`, `until` der Naturobjekte in `core/worldmap.ts`).
+- **Treffen der Bewohner:** Spricht Lina ein Mitglied während eines Treffens an, geht es zuerst auf das Gespräch mit den anderen ein (`MeetupDef.replies`, `meetupReply`).
+- **Treffen der Bewohner (Technik):** `data/meetups.ts` (Wochentage, Uhrzeit, Plätze, Gespräche), Regeln in
   `game/meetups.ts`; `Npc` ersetzt den Tagesablauf (Reihenfolge: Party → Sonntagsessen → Treffen → Plan).
   `Npc.snap()` setzt alle beim Laden sofort an den richtigen Platz. Fünf Treffen, darunter ein **Abendtreffen** (Thalia & Lars: *Sonnenuntergang am Strand*, Mo/Do 18–20 Uhr).
 - **Abend-Erreichbarkeit (Audit F1):** Jede Fisch-/Insektenart ist zwischen 18 und 22 Uhr irgendwann zu finden (Test `species.evening.test.ts`). Die elf reinen Tagarten

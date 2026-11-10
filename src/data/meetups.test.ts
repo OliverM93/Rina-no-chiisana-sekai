@@ -19,6 +19,10 @@ describe('Treffen der Bewohner', () => {
     }
   });
 
+  it('jedes Mitglied hat Antworten, wenn man es beim Treffen anspricht', () => {
+    for (const m of MEETUPS) for (const id of m.members) expect(m.replies[id]?.length, `${m.id}:${id}`).toBeGreaterThanOrEqual(2);
+  });
+
   it('Treffen überschneiden sich nicht für dieselbe Person', () => {
     for (const a of MEETUPS) for (const b of MEETUPS) {
       if (a === b || !a.members.some((x) => b.members.includes(x))) continue;
