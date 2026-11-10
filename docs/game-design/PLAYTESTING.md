@@ -4,7 +4,10 @@ Es gibt genau eine Zielspielerin – deshalb sind **Beobachtung von Lina** (oder
 Geschenk übergeben ist) und **automatische Tests** wichtiger als Statistik. Telemetrie wird bewusst **nicht**
 eingebaut (privates Geschenk, keine Datensammlung).
 
-## 1. Was es schon gibt ✅
+> 📋 **Zum Ausdrucken:** [`PLAYTEST_BOGEN.md`](PLAYTEST_BOGEN.md) – Ablauf für die Stellvertreter-Tests (drei Sitzungen), Beobachtungsbogen, Fragen, Fehler-Liste.
+> Lina selbst spielt erst nach der Übergabe, vorher testet eine Stellvertreterin.
+
+## 1. Was es schon ggibt ✅
 
 | Werkzeug | Prüft |
 |---|---|
