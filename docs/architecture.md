@@ -15,6 +15,7 @@ src/
     time.ts        Echtzeit-Uhr, Jahreszeiten, Tagesphasen, Tageslicht, URL-Zeit-Override
     save.ts        Spielstand-Format, Versionierung, Migrationen, Normalisierung, SaveManager
     appearance.ts  Aussehen von Figuren (Parameter für die Chibi-Zeichnung)
+    floorplan.ts   Grundriss eines Stockwerks (Lage der Räume, Wandstreifen, Türen, Gesamtgitter) – Konzept docs/haus-grundriss.md
     worldmap.ts    Kartenmodell aus ASCII + Objekten, Kollision, Interaktionspunkte
     inventory.ts   Tasche (Plätze, Stapel, Sortieren)
     friendship.ts  Herzen, Plaudern, Geschenke, Herz-Belohnungen

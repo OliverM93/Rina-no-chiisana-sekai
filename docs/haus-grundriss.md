@@ -1,6 +1,6 @@
 # Konzept: Ein zusammenhängendes Haus (Sims-Prinzip)
 
-Status: 🗓️ **geplant** (Entscheidung Oli, Nov. 2026) · noch nicht gebaut · Bewertung des Aufwands: **groß** (mehrere Pull Requests).
+Status: 🚧 **in Arbeit** – **Phase A ✅** (Datenmodell & Gesamtgitter, noch ohne neue Darstellung), Phasen B–E 🗓️ · Aufwand: **groß** (mehrere Pull Requests).
 
 ## Ziel
 
@@ -23,6 +23,15 @@ Damit **keine Spielstand-Migration** nötig ist und die gute Raster-Logik (`core
 - Zwischen zwei Räumen gibt es **Durchgänge** (1 Feld breit, an einer gemeinsamen Wand). Die Wegfindung rechnet auf einem **Gesamtgitter**, das aus allen Räumen und ihren Durchgängen zusammengesetzt wird.
 - Beim Einrichten entscheidet das Feld unter der Maus, in welchem Raum etwas landet; die Prüfung läuft wie heute im Raum-Layout.
 - Tapete und Boden hängen weiter am Raum (`Room.wallpaper/floor`), jeder Raum wird mit eigener Tapete gezeichnet.
+
+## Phase A: so ist es umgesetzt ✅
+
+- `core/floorplan.ts` (reine Logik): `FloorPlan` (Räume mit Lage im Gesamtgitter, Türen, Haustür), `buildPlanGrid` (begehbares Gesamtgitter – Möbel als Hindernisse), `validatePlan`, `toGlobal`/`roomAt`, `doorCells`.
+- **Wandstreifen statt Kanten-Logik:** Zwischen zwei Räumen liegt ein ein Feld breiter Streifen; er ist nur an Türen begehbar. Dadurch genügen die vorhandene Kachel-Kollision (`CollisionGrid`, `moveWithCollision`) und A* (`findPath`). In Phase B wird der Streifen als Wand gezeichnet.
+- `data/floorplan.ts`: `groundFloor(stage)`, `floorsOf(stage)` (Erdgeschoss, Dach, Keller), `stairsOf(stage)` (Treppen zwischen den Etagen).
+- **Wohnzimmer vorne, Schlafzimmer dahinter, Küche links, Wintergarten rechts** (Küche/Wintergarten über Türen in den Seitenwänden, Zeile 3). Die bisherigen Rückwand-Türen zu Küche und Wintergarten entfallen in Phase C, wenn die Räume zusammenwachsen (die Tür zum Schlafzimmer liegt schon heute an der richtigen Stelle).
+- Tests (`core/floorplan.test.ts`, `data/floorplan.test.ts`): Grundrisse gültig für jede Stufe, Größen passen zu `roomLayouts`, von der Haustür erreicht man jeden Raum, Treppen führen in vorhandene Räume.
+- **Am Spiel ändert sich noch nichts** – die neuen Module sind noch nirgends eingebunden.
 
 ## Grundriss-Vorschlag (Erdgeschoss, Draufsicht von oben, hinten = oben)
 
@@ -50,7 +59,7 @@ Die Kamera schaut schräg von vorn. Wände zwischen vorderer und hinterer Reihe 
 
 | Phase | Inhalt | Risiko |
 |---|---|---|
-| **A** | Datenmodell `FloorPlan` + zusammengesetztes Gesamtgitter (Kollision, Wegfindung) mit Tests – noch ohne neue Darstellung | gering |
+| **A** ✅ | Datenmodell `FloorPlan` + zusammengesetztes Gesamtgitter (Kollision, Wegfindung) mit Tests – noch ohne neue Darstellung | gering |
 | **B** | `Interior3D` zeichnet alle Räume des Erdgeschosses (Böden, Wände, Durchgänge, Tapeten je Raum); Kamera folgt Lina und zoomt weiter heraus | mittel |
 | **C** | Lina, Oli und Winston laufen ohne Umblenden durch Durchgänge; Licht/Lampen je Raum; Einrichten raumübergreifend (Ghost, Treffer, Rückgängig) | **hoch** |
 | **D** | Etagen: Treppe zu Dach/Keller als Etagenwechsel; Hausansicht von außen passt zum Grundriss | mittel |
