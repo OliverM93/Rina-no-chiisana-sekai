@@ -137,8 +137,41 @@ export class Npc {
   }
 
   /** Lina spricht sie an: anhalten und hinschauen. */
+  /** Unterhält sich gerade mit einem anderen Bewohner (spontanes Gespräch) */
+  chatting = false;
+
+  /** Kann sie sich gerade spontan mit jemandem unterhalten? (steht oder geht draußen, nichts Besonderes los) */
+  get canChat(): boolean {
+    return (this.mode === 'idle' || this.mode === 'walking') && !this.char.sitting && !!this.entry && this.char.visible;
+  }
+
+  startChat(x: number, y: number): boolean {
+    if (!this.canChat) return false;
+    this.afterTalk = this.mode === 'walking' ? 'idle' : this.mode;
+    if (this.mode === 'walking') this.char.cancelPath();
+    this.mode = 'talking';
+    this.chatting = true;
+    this.char.faceTowards(x, y);
+    return true;
+  }
+
+  endChat() {
+    if (!this.chatting) return;
+    this.chatting = false;
+    if (this.mode !== 'talking') return;
+    this.mode = this.afterTalk;
+    this.wanderTimer = 1.5;
+    if (this.afterTalk === 'idle' && this.entry?.activity.kind !== 'spazieren') this.entry = null;
+  }
+
   startTalk(lx: number, ly: number) {
-    if (this.mode === 'talking') return;
+    if (this.mode === 'talking' && !this.chatting) return;
+    if (this.chatting) {
+      // Lina unterbricht das Gespräch: Die Zielhaltung (afterTalk) bleibt erhalten
+      this.chatting = false;
+      if (!this.char.sitting) this.char.faceTowards(lx, ly);
+      return;
+    }
     this.afterTalk = this.mode === 'walking' ? 'idle' : this.mode;
     if (this.mode === 'walking') this.char.cancelPath();
     this.mode = 'talking';
