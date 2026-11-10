@@ -271,6 +271,7 @@ Legende: ✅ erledigt · 🚧 in Arbeit · ⬜ geplant
 - ✅ **Fotomodus:** Taste F / 📷 – Schnappschuss mit Rahmen (Polaroid, Herzchen, Blümchen, Schlicht) zum Speichern als PNG
 - ✅ **Sammlungen würdigen:** Brief + Wand-Urkunde für alle Fische, Krabbeltiere, Funde, Blumenfarben und Tassen (Audit F10)
 - ✅ **Oli in Stufen:** „Zeit zu zweit“-Szenen (eine je Herz), „Zur Herzbank“ mit Jahreszeiten-Zeilen, Jubiläums-Briefe nach 100 Tagen und einem Jahr (Audit F6)
+- ✅ **Spontane Gespräche zwischen Bewohnern:** Sprechblasen, 13 Paare, Lina kann mithören oder unterbrechen
 - ✅ **Feedback-Runde Nov. 2026 (3):** Jens ohne rosa Bäckchen, Christin & Thalia mit schmalerem (ovalem) Gesicht, Schwarzes Brett unten links auf dem Pflaster, Bäume/Kiefern/Büsche im eigenen Garten fällbar (Garten gestalten), Bewohner gehen bei Treffen auf das Gespräch mit den anderen ein, Jens wuchs nicht in Leipzig auf, Taste T = „In die Tasche“ beim Einrichten
 - ✅ **Linas Lieblinge:** Bett mit Gewichtsdecke, vier Pflanzen, Wärmflasche, Bento-Box-Deko, Käse & Käse-/Bento-Gerichte, Dialoge und Erinnerungen dazu
 - ✅ **Feedback-Runde Nov. 2026 (2):** Rezept-Hinweis nennt jetzt den richtigen Ort (Herd/Küche statt „Werkbank“ bei Gerichten), Werkbank-Hinweis auf Jens' Einzug, „Bauen“-Knopf immer sichtbar, Durchgang zwischen Brunnen und Samenstand (Stand eine Kachel nach Osten), Lars' Praxis nach Norden (Platz vor Olafs Haus), Oli bleibt nach dem Kuss stehen, „Ich liebe dich, Lini“

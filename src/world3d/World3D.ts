@@ -54,6 +54,7 @@ import { CHRISTIN_WELCOME } from '../data/npcs/christin';
 import { OLAF_WELCOME } from '../data/npcs/olaf';
 import { OLI_WELCOME } from '../data/npcs/oli';
 import { DINNER_LINES, DINNER_OPENERS, JENS_WELCOME } from '../data/npcs/jens';
+import { pairChatKey, PAIR_CHATS } from '../data/gespraeche';
 import { dinnerGuests, isDinnerTime } from '../game/dinner';
 import { activeMeetups, joinMeetup, meetupOf, meetupReply } from '../game/meetups';
 import { CHECKUP_GIFTS, CHECKUP_LINES, LARS_WELCOME } from '../data/npcs/lars';
@@ -382,6 +383,7 @@ export class World3D {
     }
     for (const npc of this.npcs.values()) npc.update(dtMs);
     this.updateMeetups(dt);
+    this.updateChats(dt);
     this.collectibles.update(dt);
     this.view.terrain.update(now / 1000);
     this.updateLeaves(dt);
@@ -1564,11 +1566,12 @@ export class World3D {
       });
       return;
     }
+    const chatLead = this.chatLead(npc);
     const out = talkToNpc(this.session, npc.def.id);
     const teaser = wishTeaser(this.session, npc.def.id);
     // Läuft gerade ein Treffen, geht der Bewohner zuerst auf das Gespräch mit den anderen ein
     const lead = meet ? [meetupReply(this.session, meet, npc.def.id)] : [];
-    this.npcDialog(npc, [...lead, ...(teaser ? [...out.lines, teaser] : out.lines)], out.hearts);
+    this.npcDialog(npc, [...chatLead, ...lead, ...(teaser ? [...out.lines, teaser] : out.lines)], out.hearts);
   }
 
   private npcDialog(npc: Npc, lines: string[], hearts: number) {
@@ -2315,6 +2318,132 @@ export class World3D {
       this.winston?.burst('herz');
       this.session.bus.emit('fx', { kind: 'konfetti' });
       this.session.bus.emit('dialog:open', { title: npc.def.name, hearts: npcHearts(this.session, 'christin'), lines, onClose: () => npc.endTalk() });
+    });
+  }
+
+  // ---- Spontane Gespräche zwischen Bewohnern ----
+  private npcChat: { a: Npc; b: Npc; lines: string[]; t: number; step: number } | null = null;
+  private chatTimer = 20;
+  private chatPairCooldown = new Map<string, number>();
+
+  private endNpcChat(pause = true) {
+    const c = this.npcChat;
+    if (!c) return;
+    c.a.endChat();
+    c.b.endChat();
+    this.npcChat = null;
+    if (pause) this.chatTimer = 25 + Math.random() * 40;
+  }
+
+  private updateChats(dt: number) {
+    const c = this.npcChat;
+    if (this.session.inside || this.cutscene) {
+      this.endNpcChat(false);
+      return;
+    }
+    if (c) {
+      if (!c.a.chatting || !c.b.chatting || !c.a.present || !c.b.present) {
+        this.endNpcChat();
+        return;
+      }
+      c.t += dt;
+      const STEP = 4.2;
+      if (c.step < c.lines.length && c.t >= c.step * STEP) {
+        const who = c.step % 2 === 0 ? c.a : c.b;
+        const near = this.player ? Math.hypot(this.player.x - who.char.x, this.player.y - who.char.y) < TILE * 9 : false;
+        const head = who.char.root.position.clone().add(new THREE.Vector3(0, who.bubbleHeight + 0.2, 0));
+        if (near) this.popSpeech(head, c.lines[c.step]);
+        else this.popEmote(head, '💬');
+        c.step += 1;
+      }
+      if (c.t >= c.lines.length * STEP + 1.2) this.endNpcChat();
+      return;
+    }
+    this.chatTimer -= dt;
+    if (this.chatTimer > 0) return;
+    this.chatTimer = 2;
+    if (this.session.uiBlocking || this.session.decorActive || isPartyTime(this.session) || isDinnerTime(this.session) || activeMeetups(this.session).length > 0) return;
+    const list = [...this.npcs.values()].filter((n) => n.canChat);
+    const now = performance.now();
+    for (let i = 0; i < list.length; i++) {
+      for (let j = i + 1; j < list.length; j++) {
+        const A = list[i];
+        const B = list[j];
+        if (Math.hypot(A.char.x - B.char.x, A.char.y - B.char.y) > TILE * 3.2) continue;
+        const pk = pairChatKey(A.def.id, B.def.id);
+        if (!pk || (this.chatPairCooldown.get(pk.key) ?? 0) > now) continue;
+        const exchanges = PAIR_CHATS[pk.key];
+        const ex = exchanges[Math.floor(Math.random() * exchanges.length)];
+        const first = pk.swapped ? B : A;
+        const second = pk.swapped ? A : B;
+        if (!first.startChat(second.char.x, second.char.y)) continue;
+        if (!second.startChat(first.char.x, first.char.y)) {
+          first.endChat();
+          continue;
+        }
+        this.chatPairCooldown.set(pk.key, now + 4 * 60_000);
+        this.npcChat = { a: first, b: second, lines: [...ex], t: 0, step: 0 };
+        return;
+      }
+    }
+    this.chatTimer = 6 + Math.random() * 6;
+  }
+
+  /** Spricht Lina einen der beiden während des Gesprächs an, geht er zuerst darauf ein */
+  private chatLead(npc: Npc): string[] {
+    const c = this.npcChat;
+    if (!c || (c.a !== npc && c.b !== npc)) return [];
+    const spoken = Math.min(c.step, c.lines.length);
+    if (spoken === 0) return [];
+    if (npc === c.a) return [`Moment, Lina – ich hab ${c.b.def.name} gerade gesagt: „${c.lines[0]}“`];
+    const reply = c.lines[1] && spoken >= 2 ? ` – ich hab geantwortet: „${c.lines[1]}“` : '';
+    return [`${c.a.def.name} hat mir gerade gesagt: „${c.lines[0]}“${reply}`];
+  }
+
+  /** Sprechblase mit Text über einem Kopf */
+  private popSpeech(at: THREE.Vector3, text: string) {
+    const c = document.createElement('canvas');
+    c.width = 320;
+    c.height = 128;
+    const ctx = c.getContext('2d') as CanvasRenderingContext2D;
+    ctx.font = '700 20px Nunito, sans-serif';
+    const words = text.split(' ');
+    const lines: string[] = [];
+    let cur = '';
+    for (const w of words) {
+      const t = cur ? `${cur} ${w}` : w;
+      if (ctx.measureText(t).width > 280 && cur) {
+        lines.push(cur);
+        cur = w;
+      } else cur = t;
+    }
+    lines.push(cur);
+    const h = 28 + lines.length * 24;
+    ctx.fillStyle = 'rgba(255,255,255,0.96)';
+    ctx.strokeStyle = '#f2b8cc';
+    ctx.lineWidth = 3;
+    ctx.beginPath();
+    ctx.roundRect(4, 4, 312, h, 16);
+    ctx.fill();
+    ctx.stroke();
+    ctx.fillStyle = '#5a3a4a';
+    ctx.textAlign = 'center';
+    lines.forEach((l, i) => ctx.fillText(l, 160, 34 + i * 24));
+    const tex = new THREE.CanvasTexture(c);
+    tex.colorSpace = THREE.SRGBColorSpace;
+    const mat = new THREE.SpriteMaterial({ map: tex, transparent: true, depthWrite: false });
+    const sp = new THREE.Sprite(mat);
+    sp.center.set(0.5, 0);
+    sp.scale.set(1.7, 0.68, 1);
+    sp.position.copy(at);
+    sp.renderOrder = 10;
+    this.scene.add(sp);
+    this.tweens.add(3800, (k) => {
+      mat.opacity = k < 0.1 ? k * 10 : k > 0.85 ? 1 - (k - 0.85) / 0.15 : 1;
+    }, () => {
+      sp.removeFromParent();
+      mat.dispose();
+      tex.dispose();
     });
   }
 
