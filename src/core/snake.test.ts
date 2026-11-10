@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { newSnake, stepSnake, freeCell } from './snake';
+import { newSnake, stepSnake, freeCell, readRecord, saveRecord } from './snake';
 
 const rnd = () => 0;
 
@@ -37,5 +37,13 @@ describe('Dackel-Snake', () => {
       const f = freeCell(2, 2, body, () => i / 20);
       expect(body.some((c) => c.x === f?.x && c.y === f?.y)).toBe(false);
     }
+  });
+  it('Rekord bleibt im Spielstand und wird nur überboten', () => {
+    const dates: Record<string, string> = {};
+    expect(readRecord(dates)).toBe(0);
+    expect(saveRecord(dates, 5)).toBe(true);
+    expect(saveRecord(dates, 3)).toBe(false);
+    expect(readRecord(dates)).toBe(5);
+    expect(readRecord({ 'snake-rekord': 'quatsch' })).toBe(0);
   });
 });

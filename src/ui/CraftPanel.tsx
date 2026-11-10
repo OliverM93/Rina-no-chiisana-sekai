@@ -12,6 +12,7 @@ import { craftRecipe, recipeName } from '../game/crafting';
 import { milestoneMissing } from '../game/progress';
 import type { Session } from '../game/session';
 import { itemIconUrl } from '../gfx/items';
+import { enterForPrimary } from './navigation';
 import { showToast, ui, useSessionVersion } from './store';
 
 const TEXT = {
@@ -40,9 +41,8 @@ export function CraftPanel({ session, station = 'werkbank' }: { session: Session
       if (e.code === 'Escape') {
         e.preventDefault();
         close();
-      } else if ((e.code === 'Enter' || e.code === 'NumpadEnter') && !e.repeat) {
-        // Enter = Bauen/Binden/Kochen (wie der Hauptknopf)
-        e.preventDefault();
+      } else if (enterForPrimary(e)) {
+        // Enter (ohne fokussierten Knopf) = Bauen/Binden/Kochen
         buildRef.current();
       }
     };

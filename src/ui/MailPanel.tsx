@@ -1,12 +1,13 @@
 /**
  * Briefkasten: Briefe lesen und Geschenke herausnehmen.
  */
-import { useEffect, useState } from 'preact/hooks';
+import { useEffect, useRef, useState } from 'preact/hooks';
 import { isOpen } from '../core/mail';
 import { itemCountLabel } from '../data/items';
 import { markLetterRead, takeLetterGift } from '../game/gameplay';
 import type { Session } from '../game/session';
 import { itemIconUrl } from '../gfx/items';
+import { enterForPrimary } from './navigation';
 import { showToast, ui, useSessionVersion } from './store';
 
 function formatDay(day: string): string {
@@ -25,9 +26,12 @@ export function MailPanel({ session }: { session: Session }) {
     if (letter && !letter.read) markLetterRead(session, letter.id);
   }, [letter, session]);
 
+  const enter = useRef<() => void>(() => undefined);
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if (e.code === 'Escape') close();
+      // Enter (ohne fokussierten Knopf) = Geschenk aus dem offenen Brief einstecken
+      else if (enterForPrimary(e)) enter.current();
     };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
@@ -36,6 +40,9 @@ export function MailPanel({ session }: { session: Session }) {
   const take = () => {
     if (!letter) return;
     if (!takeLetterGift(session, letter.id)) showToast('Deine Tasche ist voll! 🎒');
+  };
+  enter.current = () => {
+    if (letter?.gift && !letter.giftTaken) take();
   };
 
   return (
