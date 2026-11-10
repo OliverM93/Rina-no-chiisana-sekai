@@ -4,12 +4,12 @@
  * über Olafs Dorfkasse.
  */
 import { borrow, canBorrow, deposit, repay, withdraw } from '../core/bank';
-import { freeSlots, spaceFor } from '../core/inventory';
+import { addItem as invAdd, countItem, freeSlots, removeItem as invRemove, spaceFor } from '../core/inventory';
 import { keepsAccess, yardBlockedTiles } from '../core/yard';
 import { tileOf } from '../core/worldmap';
 import { YARD_AREA } from '../data/yard';
 import { spotKey } from '../core/garden';
-import { cellsOf, checkPlacement, footprint, misfits, moveItem, placeItem, type Room, type RoomLayout, type Rotation, removeItem } from '../core/room';
+import { cellsOf, checkPlacement, footprint, misfits, moveItem, placeItem, type PlacedItem, type Room, type RoomLayout, type Rotation, removeItem } from '../core/room';
 import { waitOver } from '../core/progress';
 import { FURNITURE_BY_ITEM, furnitureInfo, type FurnitureStyle, SURFACE_BY_ID } from '../data/furniture';
 import { GUEST_LAYOUT, guestRoom } from '../data/gastHaeuser';
@@ -43,14 +43,76 @@ export function buyFromCatalog(session: Session, itemId: string): BuyResult {
   const style = FURNITURE_BY_ITEM[itemId]?.def.style ?? SURFACE_BY_ID[itemId]?.style;
   if (style && !styleUnlocked(session, style)) return 'unbekannt';
   if (data.money < price) return 'zu-teuer';
-  if (spaceFor(data.inventory, itemId, maxStackOf) < 1) return 'tasche-voll';
+  const bagOk = spaceFor(data.inventory, itemId, maxStackOf) >= 1;
+  // Tasche voll? Dann wandert das Neue in die Vorratstruhe – Einkaufen soll nie am Platz scheitern
+  if (!bagOk && spaceFor(data.storage, itemId, maxStackOf) < 1) return 'tasche-voll';
   data.money -= price;
   data.stats.bought += 1;
   session.bus.emit('sfx', 'muenzen');
-  giveItem(session, itemId, 1, false);
+  if (bagOk) giveItem(session, itemId, 1, false);
+  else invAdd(data.storage, itemId, 1, maxStackOf);
   session.changed();
   session.save();
   return 'ok';
+}
+
+/** Zum Einrichten bereit: Tasche + Vorratstruhe (Tasche zuerst) */
+export function stockCount(session: Session, itemId: string): number {
+  const d = session.data;
+  return d ? countItem(d.inventory, itemId) + countItem(d.storage, itemId) : 0;
+}
+
+/** Einen Gegenstand zum Aufstellen nehmen: erst aus der Tasche, sonst aus der Truhe */
+export function takeStock(session: Session, itemId: string): boolean {
+  const d = session.data;
+  if (!d) return false;
+  if (invRemove(d.inventory, itemId, 1) || invRemove(d.storage, itemId, 1)) {
+    session.changed();
+    return true;
+  }
+  return false;
+}
+
+/** Einen Gegenstand wegräumen: in die Tasche, ist sie voll in die Truhe. false = nirgends Platz */
+function giveStock(session: Session, itemId: string): boolean {
+  const d = session.data;
+  if (!d) return false;
+  if (spaceFor(d.inventory, itemId, maxStackOf) >= 1) return giveItem(session, itemId, 1, false) === 0;
+  if (invAdd(d.storage, itemId, 1, maxStackOf) === 0) {
+    session.changed();
+    return true;
+  }
+  return false;
+}
+
+/** Alle Möbel & Oberflächen, die gerade zum Aufstellen bereitliegen (mit Ort: Tasche oder Truhe) */
+export function decorStock(session: Session): Array<{ itemId: string; count: number; inStorage: boolean }> {
+  const d = session.data;
+  if (!d) return [];
+  const out = new Map<string, { itemId: string; count: number; inStorage: boolean }>();
+  for (const [inv, inStorage] of [[d.inventory, false], [d.storage, true]] as const) {
+    for (const s of inv.slots) {
+      if (!s || !(FURNITURE_BY_ITEM[s.itemId] || SURFACE_BY_ID[s.itemId])) continue;
+      const e = out.get(s.itemId);
+      if (e) e.count += s.count;
+      else out.set(s.itemId, { itemId: s.itemId, count: s.count, inStorage });
+    }
+  }
+  return [...out.values()];
+}
+
+/** Gehören zwei Gegenstände zum selben Möbel (nur andere Farbe)? */
+export function sameFamily(a: string, b: string): boolean {
+  const fa = FURNITURE_BY_ITEM[a];
+  const fb = FURNITURE_BY_ITEM[b];
+  return !!fa && !!fb && fa.def.id === fb.def.id;
+}
+
+/** Farbvarianten dieses Möbels (leer, wenn es keine gibt) */
+export function variantsOf(itemId: string): Array<{ itemId: string; label: string; color: string }> {
+  const f = FURNITURE_BY_ITEM[itemId];
+  if (!f?.def.variants) return [];
+  return Object.entries(f.def.variants).map(([v, color]) => ({ itemId: `${f.def.id}-${v}`, label: v, color }));
 }
 
 export function isFurniture(itemId: string): boolean {
@@ -113,21 +175,28 @@ function roomChanged(session: Session) {
   session.save();
 }
 
-/** Möbel aus der Tasche in den Raum stellen */
-export function placeFromBag(session: Session, itemId: string, x: number, y: number, rot: Rotation): boolean {
+/**
+ * Möbel aus Tasche/Truhe in den Raum stellen. `source` = was wirklich im Vorrat liegt; wählt Lina beim Halten
+ * eine andere Farbe (`itemId`), kostet das nichts – es wird genau ein Stück der Ausgangsfarbe verbraucht.
+ */
+export function placeFromBag(session: Session, itemId: string, x: number, y: number, rot: Rotation, source = itemId): PlacedItem | null {
   const c = currentRoom(session);
-  if (!c || !canPlace(session, itemId, x, y, rot) || !takeItem(session, itemId, 1)) return false;
-  placeItem(c.room, c.layout, itemId, x, y, rot, furnitureInfo);
+  if (!c || (source !== itemId && !sameFamily(source, itemId)) || !canPlace(session, itemId, x, y, rot) || stockCount(session, source) < 1) return null;
+  const placed = placeItem(c.room, c.layout, itemId, x, y, rot, furnitureInfo);
+  if (!placed) return null;
+  takeStock(session, source);
   roomChanged(session);
-  return true;
+  return placed;
 }
 
-export function moveFurniture(session: Session, uid: string, x: number, y: number, rot: Rotation): boolean {
+/** Verschiebt ein Möbel; mit `recolor` (anderes Farbmuster derselben Sorte) wechselt es dabei die Farbe – kostenlos. */
+export function moveFurniture(session: Session, uid: string, x: number, y: number, rot: Rotation, recolor?: string): boolean {
   const c = currentRoom(session);
   const item = c?.room.items.find((i) => i.uid === uid);
   const data = session.data;
   if (!session.inside && data && bedTiles(session, uid).some((t) => data.world.garden[spotKey(t.x, t.y)])) return false;
   if (!c || !item || !canPlace(session, item.itemId, x, y, rot, uid) || !moveItem(c.room, c.layout, uid, x, y, rot, furnitureInfo)) return false;
+  if (recolor && recolor !== item.itemId && sameFamily(recolor, item.itemId)) item.itemId = recolor;
   roomChanged(session);
   return true;
 }
@@ -153,10 +222,25 @@ export function pickUpFurniture(session: Session, uid: string): PickUpResult {
   if (!session.inside && bedTiles(session, uid).some((t) => data.world.garden[spotKey(t.x, t.y)])) return 'pflanzen';
   const riders = c.room.items.filter((i) => i.uid === uid || i.on === uid);
   if (riders.length === 0) return 'fehler';
-  if (freeSlots(data.inventory) < riders.length) return 'voll';
-  for (const r of removeItem(c.room, uid)) giveItem(session, r.itemId, 1, false);
+  // Tasche voll? Dann nimmt die Vorratstruhe den Rest – Wegräumen scheitert nur, wenn beides voll ist
+  if (freeSlots(data.inventory) + freeSlots(data.storage) < riders.length) return 'voll';
+  for (const r of removeItem(c.room, uid)) giveStock(session, r.itemId);
   roomChanged(session);
   return 'ok';
+}
+
+/** Wegräumen rückgängig machen: Möbel (mit allem, was darauf stand) wieder an ihren alten Platz stellen */
+export function restoreFurniture(session: Session, items: readonly PlacedItem[]): boolean {
+  const c = currentRoom(session);
+  if (!c || items.length === 0) return false;
+  if (items.some((i) => stockCount(session, i.itemId) < 1)) return false;
+  if (c.room.items.some((o) => items.some((i) => i.uid === o.uid))) return false;
+  const base = items[0];
+  if (!canPlace(session, base.itemId, base.x, base.y, base.rot)) return false;
+  for (const i of items) takeStock(session, i.itemId);
+  c.room.items.push(...items.map((i) => ({ ...i })));
+  roomChanged(session);
+  return true;
 }
 
 /** Tapete oder Boden im aktuellen Raum anbringen – die alte kommt in die Tasche. */

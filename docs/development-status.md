@@ -271,6 +271,7 @@ Legende: ✅ erledigt · 🚧 in Arbeit · ⬜ geplant
 - ✅ **Fotomodus:** Taste F / 📷 – Schnappschuss mit Rahmen (Polaroid, Herzchen, Blümchen, Schlicht) zum Speichern als PNG
 - ✅ **Sammlungen würdigen:** Brief + Wand-Urkunde für alle Fische, Krabbeltiere, Funde, Blumenfarben und Tassen (Audit F10)
 - ✅ **Oli in Stufen:** „Zeit zu zweit“-Szenen (eine je Herz), „Zur Herzbank“ mit Jahreszeiten-Zeilen, Jubiläums-Briefe nach 100 Tagen und einem Jahr (Audit F6)
+- ✅ **Einrichten im Fluss:** Katalog im Einrichtungsmodus (Kaufen = in die Hand), Vorrat aus Tasche + Truhe, C „noch eins“, V/1–9 Farbe, Strg+Z rückgängig
 - ✅ **Audit 3 umgesetzt:** Linas Notizbuch (N), Einzüge über Spielen statt Warten (winter-sicher), Enter für Hauptknöpfe, Snake-Rekord gespeichert, Balancing-Test
 - ✅ **Hantelbank-Training (Lina stemmt viel, Oli ist begeistert) & Minispiel Dackel-Snake am Computer** · Türen bleiben nutzbar, wenn ein Bewohner davor steht
 - ✅ **Besuch bei den Bewohnern:** Omas Haus, Olaf & Christins Haus, Thalias Häuschen, Lars' Praxis und Chez Jens von innen, mit Linas Kommentaren zur Einrichtung · **Werkbank/Küche/Apotheke:** zweispaltiges Fenster mit fester Größe (Bauen-Knopf immer sichtbar)
