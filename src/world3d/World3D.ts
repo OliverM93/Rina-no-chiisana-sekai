@@ -2211,6 +2211,7 @@ export class World3D {
       choices: [
         { label: '🍳 Kochstudio', onSelect: () => this.session.bus.emit('ui:open', { kind: 'kochstudio' }) },
         { label: '🖼️ Galerie', onSelect: () => this.session.bus.emit('ui:open', { kind: 'galerie' }) },
+        { label: '🚪 Hineingehen', onSelect: () => this.doorTransition('up', () => this.enterGuest('bistro-jens'), 'up') },
         { label: '👋 Tschüss', onSelect: () => undefined },
       ],
     });
@@ -2283,11 +2284,15 @@ export class World3D {
       return;
     }
     const open = lars.atHome || lars.currentEntry?.label === 'Praxis geöffnet';
-    if (!open) {
-      this.session.bus.emit('dialog:open', { title, lines: ['An der Tür: „Bin gleich zurück! Selbstbedienung in der Apotheke – Kräuter bitte selbst mitbringen. 🌿“'], onClose: () => this.session.bus.emit('ui:open', { kind: 'apotheke' }) });
-      return;
-    }
-    this.session.bus.emit('ui:open', { kind: 'apotheke' });
+    this.session.bus.emit('dialog:open', {
+      title,
+      lines: open ? ['„Hallo Lina! Apotheke oder einmal durchs Wartezimmer?“'] : ['An der Tür: „Bin gleich zurück! Selbstbedienung in der Apotheke – Kräuter bitte selbst mitbringen. 🌿“'],
+      choices: [
+        { label: '🌿 Apotheke', onSelect: () => this.session.bus.emit('ui:open', { kind: 'apotheke' }) },
+        { label: '🚪 Hineingehen', onSelect: () => this.doorTransition('up', () => this.enterGuest('praxis-lars'), 'up') },
+        { label: '👋 Tschüss', onSelect: () => undefined },
+      ],
+    });
   }
 
   /** Party: Lina tanzt mit Thalia (einmal pro Partyabend), alle Gäste freuen sich */
