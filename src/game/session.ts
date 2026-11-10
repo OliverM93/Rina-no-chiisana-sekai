@@ -159,6 +159,8 @@ export class Session {
   inside = false;
   /** In welchem Raum (wenn drinnen) */
   roomId = 'haupt';
+  /** Zu Besuch im Haus eines Bewohners (ID des Hauses, z. B. 'haus-gisela'), sonst leer – wird nicht gespeichert */
+  visiting = '';
   /** Einrichtungsmodus aktiv */
   decorActive = false;
   /** Bis wann (Spielzeit in Sekunden, `playTime()`) Lina vom Kaffee-Kick flotter läuft – wird nicht gespeichert */

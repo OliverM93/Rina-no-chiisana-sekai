@@ -39,6 +39,7 @@ export function DecorBar({ session, decor }: { session: Session; decor: DecorSta
   }, [decor.active]);
 
   const outside = !session.inside;
+  if (!decor.active && session.visiting) return null;
   if (!decor.active) {
     return (
       <button class="btn primary decor-start pop-in" title="Taste G" onClick={() => send({ kind: 'start' })}>

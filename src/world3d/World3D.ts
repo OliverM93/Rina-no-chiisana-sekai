@@ -55,6 +55,7 @@ import { OLAF_WELCOME } from '../data/npcs/olaf';
 import { OLI_WELCOME } from '../data/npcs/oli';
 import { DINNER_LINES, DINNER_OPENERS, JENS_WELCOME } from '../data/npcs/jens';
 import { pairChatKey, PAIR_CHATS } from '../data/gespraeche';
+import { GUEST_HOUSES } from '../data/gastHaeuser';
 import { dinnerGuests, isDinnerTime } from '../game/dinner';
 import { activeMeetups, joinMeetup, meetupOf, meetupReply } from '../game/meetups';
 import { CHECKUP_GIFTS, CHECKUP_LINES, LARS_WELCOME } from '../data/npcs/lars';
@@ -1508,9 +1509,18 @@ export class World3D {
     const ctx = this.session.interactionContext();
     const pick = <T>(list: readonly T[]) => list[(ctx.now.getDate() + ctx.now.getHours()) % list.length];
     let lines: readonly string[];
-    if (npc.present) lines = [`${npc.def.name}s Häuschen.`, 'Die Tür ist abgeschlossen. Auf einem Zettel steht: „Bin unterwegs. Nicht einbrechen!“'];
+    if (npc.present) lines = [`${npc.def.name}s Häuschen.`, 'Niemand zu Hause. Auf einem Zettel steht: „Bin unterwegs. Die Tür ist offen – aber nichts anfassen!“'];
     else lines = pick(npc.isSleeping ? npc.def.dialogue.atHomeSleeping : npc.def.dialogue.atHome);
-    this.session.bus.emit('dialog:open', { title: `${npc.def.name}s Häuschen`, lines: lines.map((l) => fillPlaceholders(l, ctx)) });
+    // Besuch: nur, wenn gerade niemand schläft
+    const houseId = Object.keys(GUEST_HOUSES).find((k) => GUEST_HOUSES[k].npc === npcId || (k === 'haus-olaf' && (npcId === 'olaf' || npcId === 'christin')));
+    const canVisit = !!houseId && !npc.isSleeping;
+    this.session.bus.emit('dialog:open', {
+      title: `${npc.def.name}s Häuschen`,
+      lines: lines.map((l) => fillPlaceholders(l, ctx)),
+      ...(canVisit && houseId
+        ? { choices: [{ label: '🚪 Hineingehen', onSelect: () => this.doorTransition('up', () => this.enterGuest(houseId), 'up') }, { label: 'Lieber nicht', onSelect: () => undefined }] }
+        : {}),
+    });
   }
 
   private openInteraction(id: string) {
@@ -1934,7 +1944,7 @@ export class World3D {
   private updateHomeOli(dtMs: number) {
     const oli = this.npcs.get('oli');
     const room = this.room;
-    const show = !!oli && oli.movedIn && this.session.inside && oli.atHome && !!room && !this.cutscene;
+    const show = !!oli && oli.movedIn && this.session.inside && !this.session.visiting && oli.atHome && !!room && !this.cutscene;
     if (!show || !oli || !room) {
       if (this.homeOli) this.homeOli.setVisible(false);
       this.homeOliKey = '';
@@ -2981,15 +2991,40 @@ export class World3D {
     }, 1400);
   }
 
+  /** Zu Besuch im Haus eines Bewohners: hineingehen (nur ansehen, nicht umräumen) */
+  private enterGuest(houseId: string) {
+    const player = this.player;
+    if (!player || !this.data) return;
+    this.stopFishing();
+    this.session.visiting = houseId;
+    this.session.inside = true;
+    player.heightAt = () => 0;
+    if (this.winston) this.winston.heightAt = () => 0;
+    this.placeInRoom('haupt', 'draussen');
+    this.applyLight();
+    this.session.bus.emit('home:inside', true);
+    const h = GUEST_HOUSES[houseId];
+    const key = `besuch-${houseId}`;
+    if (h && !this.data.flags[key]) {
+      this.data.flags[key] = true;
+      window.setTimeout(() => this.session.bus.emit('dialog:open', { title: h.name, lines: [...h.intro] }), 700);
+    } else if (h) {
+      window.setTimeout(() => this.session.bus.emit('toast', { text: h.name }), 500);
+    }
+  }
+
   private exitHome() {
     const player = this.player;
     if (!player) return;
     this.stopDecor();
+    const visited = this.session.visiting;
     this.session.inside = false;
+    this.session.visiting = '';
     this.session.roomId = 'haupt';
     player.heightAt = this.view.terrain.heightAt;
     if (this.winston) this.winston.heightAt = this.view.terrain.heightAt;
-    const sp = this.session.spawnPoint();
+    const door = visited ? objectById(this.session.map, visited) : null;
+    const sp = door ? { x: (door.x + 2.5) * TILE, y: (door.y + 3.55) * TILE } : this.session.spawnPoint();
     player.teleport(sp.x, sp.y);
     player.face('down');
     this.dogFollow();
@@ -3078,11 +3113,15 @@ export class World3D {
       player.face((['down', 'left', 'up', 'right'] as const)[item.rot]);
       const ground = this.session.inside ? 0 : Math.max(0, this.view.terrain.heightAt(cx, cy));
       player.seatHeight = (this.dv.model(uid)?.seatY ?? 0.1) + ground;
-      this.session.bus.emit('toast', { text: f.def.sit === 'liegen' ? ['Ach, ist das gemütlich … 💤', 'Schwere Decke, warme Füße, nichts zu tun. Perfekt. 💤', 'Lina rollt sich ein. Nur noch fünf Minuten … 🌙', 'Mmmh. Die Decke drückt genau richtig. 💤'][Math.floor(Math.random() * 4)] : 'Lina macht es sich gemütlich. ☕' });
+      const guestSit = this.session.visiting ? GUEST_HOUSES[this.session.visiting]?.comments[f.def.id]?.[0] : undefined;
+      if (guestSit) this.session.bus.emit('toast', { text: guestSit });
+      else this.session.bus.emit('toast', { text: f.def.sit === 'liegen' ? ['Ach, ist das gemütlich … 💤', 'Schwere Decke, warme Füße, nichts zu tun. Perfekt. 💤', 'Lina rollt sich ein. Nur noch fünf Minuten … 🌙', 'Mmmh. Die Decke drückt genau richtig. 💤'][Math.floor(Math.random() * 4)] : 'Lina macht es sich gemütlich. ☕' });
       return;
     }
     const name = itemDef(item.itemId)?.name ?? f.def.name;
-    this.session.bus.emit('dialog:open', { title: name, lines: [f.def.description] });
+    const baseId = f.def.id;
+    const guest = this.session.visiting ? GUEST_HOUSES[this.session.visiting]?.comments[baseId] : undefined;
+    this.session.bus.emit('dialog:open', { title: guest ? 'Lina' : name, lines: guest ? [...guest] : [f.def.description] });
   }
 
   /** Siebträgermaschine: erst Klassiker oder Milchschaum, dann das Getränk */

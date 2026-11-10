@@ -12,6 +12,7 @@ import { spotKey } from '../core/garden';
 import { cellsOf, checkPlacement, footprint, misfits, moveItem, placeItem, type Room, type RoomLayout, type Rotation, removeItem } from '../core/room';
 import { waitOver } from '../core/progress';
 import { FURNITURE_BY_ITEM, furnitureInfo, type FurnitureStyle, SURFACE_BY_ID } from '../data/furniture';
+import { GUEST_LAYOUT, guestRoom } from '../data/gastHaeuser';
 import { emptyRoom, HOUSE_STAGES, layoutOf, MAX_STAGE, roomLayouts } from '../data/house';
 import { itemDef, maxStackOf } from '../data/items';
 import { giveItem, takeItem } from './gameplay';
@@ -64,6 +65,10 @@ export function isSurface(itemId: string): boolean {
 export function currentRoom(session: Session): { room: Room; layout: RoomLayout } | null {
   const house = session.data?.house;
   if (!house) return null;
+  if (session.inside && session.visiting) {
+    const room = guestRoom(session.visiting);
+    return room ? { room, layout: GUEST_LAYOUT } : null;
+  }
   if (!session.inside) return session.data ? { room: session.data.yard, layout: session.yardLayout } : null;
   const room = house.rooms.find((r) => r.id === session.roomId) ?? house.rooms[0];
   return room ? { room, layout: layoutOf(house.stage, room.id) } : null;
