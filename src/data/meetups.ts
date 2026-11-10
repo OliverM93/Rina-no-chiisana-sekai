@@ -27,6 +27,8 @@ export interface MeetupDef {
   emotes: readonly string[];
   /** Gespräche zum Mithören – eins pro Tag (reproduzierbar) */
   talks: readonly (readonly string[])[];
+  /** Was ein Mitglied sagt, wenn Lina es anspricht (es unterhält sich ja gerade mit den anderen) */
+  replies: Readonly<Record<string, readonly string[]>>;
 }
 
 export const MEETUPS: readonly MeetupDef[] = [
@@ -49,6 +51,11 @@ export const MEETUPS: readonly MeetupDef[] = [
       ['Oma: „Mein Ludwig hätte jetzt Fußball geschaut.“', 'Olaf: „Und laut mitgeschimpft.“', 'Oma lächelt: „Am lautesten von allen.“'],
       ['Oma: „Lina, Kindchen, setz dich! Kaffee?“', 'Christin: „Mit Untersetzer, bitte.“', 'Olaf: „Und ein Keks. Der ist steuerlich absetzbar.“ – Oma: „Unsinn.“'],
     ],
+    replies: {
+      gisela: ['Ach, Kind, ich sitz hier mit Christin und Olaf. Die zwei sind sich nie einig – das macht den Kaffee erst gut.', 'Christin und Olaf streiten gerade, wer die Kekse zählt. Ich zähl mit. Eine andere Zahl, natürlich.'],
+      christin: ['Gisela sagt, die Bank hat Patina. Ich sage: Staub. Wir einigen uns nicht. Jeden zweiten Tag.', 'Olaf erklärt Gisela gerade, was ein Keks steuerlich bedeutet. Sie sagt: „Ein Keks.“ Sehr überzeugend.'],
+      olaf: ['Ich hab Gisela gerade erklärt, was ein Keks steuerlich bedeutet. Sie sagt: „Ein Keks.“ Ein starkes Argument.', 'Christin sortiert den Zucker. Gisela sagt, sie soll ihn essen. Wir sind uns einig, dass wir uneinig sind.'],
+    },
   },
   {
     id: 'angeln',
@@ -68,6 +75,10 @@ export const MEETUPS: readonly MeetupDef[] = [
       ['Olaf: „Ich zähle die Fische, Christin räumt auf. Arbeitsteilung!“', 'Christin: „Bisher gibt es nichts zu zählen.“ – Olaf: „Null ist auch eine Zahl.“'],
       ['Christin: „Oh! Da zuckt was!“', 'Olaf: „Ruhig, ganz ruhig …“ … Es war ein Blatt. Beide sind trotzdem sehr zufrieden.'],
     ],
+    replies: {
+      olaf: ['Pssst. Christin hat gerade vorgeschlagen, die Angelsachen nach Größe zu sortieren. Ich stimme leise zu.', 'Ich zähle die Fische, Christin räumt auf. Bisher ist die Quote … überschaubar.'],
+      christin: ['Olaf zählt gerade Fische, die nicht da sind. Ich räum so lange auf. Das passt gut zusammen.', 'Pssst. Olaf hat mir gerade erklärt, dass Fische keine Ohren haben. Ich bin trotzdem leise.'],
+    },
   },
   {
     id: 'training',
@@ -85,6 +96,10 @@ export const MEETUPS: readonly MeetupDef[] = [
       ['Lars: „Weißt du, warum Skelette nie Sport machen?“', 'Oli: „Warum?“', 'Lars: „Sie haben keinen Body dafür.“ – Oli muss so lachen, dass er sich setzen muss.'],
       ['Oli macht Kniebeugen. Lars macht Kniebeugen. Winston macht … ein Nickerchen.', 'Oli: „Lini! Machst du mit? Wir sind bei Satz drei von … sehr vielen.“'],
     ],
+    replies: {
+      oli: ['Lars sagt, ich soll weniger Eiweiß essen. Ich hab gesagt: ärztlicher Rat? Er hat „Bruderrat“ gesagt.', 'Lars zählt meine Liegestütze. Die Hälfte zählt er mit Kommentar.'],
+      lars: ['Oli macht Kniebeugen und ich zähle mit. Die Hälfte zählt medizinisch nicht, aber ich bin nett.', 'Oli will wissen, ob Training gesund ist. Ich hab gesagt: In Maßen. Er hat „Maßen“ nicht verstanden.'],
+    },
   },
   {
     id: 'strand',
@@ -102,6 +117,10 @@ export const MEETUPS: readonly MeetupDef[] = [
       ['Jens malt Thalia, wie sie Steine sammelt. Thalia sammelt Steine, die aussehen wie Jens.', 'Beide finden ihre Arbeit sehr wichtig.'],
       ['Thalia: „Dieser Stein ist 300 Millionen Jahre alt!“', 'Jens: „Und trotzdem sieht er besser aus als Olaf morgens.“ – Thalia prustet los.'],
     ],
+    replies: {
+      thalia: ['Jens malt mich gerade. Ich halte still. Ich hab gesagt, er soll den Stein mit aufs Bild malen.', 'Jens erklärt mir den Farbkreis, ich ihm das Erdzeitalter. Wir sind quitt.'],
+      jens: ['Ma chérie, Thalia beschreibt mir den Stein seit zehn Minuten. Ich male ihn trotzdem schöner.', 'Thalia hält still, ich male. Das ist ein Meisterwerk, gell? Wenn sie sich nicht bewegt.'],
+    },
   },
   {
     id: 'sonnenuntergang',
@@ -120,6 +139,10 @@ export const MEETUPS: readonly MeetupDef[] = [
       ['Thalia hat einen Stein gefunden, der aussieht wie ein kleines Herz.', 'Lars: „Das ist Quarz mit Einschlüssen.“ – Thalia: „Das ist ein Herz.“ – Lars: „… Das ist ein Herz.“'],
       ['Die beiden sitzen einfach da und gucken aufs Meer.', 'Lars: „Weißt du, warum ich das so gern mag?“ – Thalia: „Weil es nichts kostet?“ – Lars: „Weil es mich nichts fragt.“'],
     ],
+    replies: {
+      thalia: ['Lars und ich messen den Sonnenuntergang. Er misst mit Gefühl, ich mit Lineal. Wir kommen auf dasselbe.', 'Lars hat gerade gefragt, wie alt der Sand ist. Ich hab es ihm erklärt. Er hat genickt. Zweimal.'],
+      lars: ['Thalia hat gerade erklärt, wie alt der Sand ist. Ich hab gefragt: „Älter als meine Patienten?“ – „Viel älter.“', 'Feierabend, Strand, Thalia redet über Steine. Medizinisch gesehen entspannend. Ich merke es mir.'],
+    },
   },
 ];
 

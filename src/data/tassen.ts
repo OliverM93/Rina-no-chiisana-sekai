@@ -46,7 +46,7 @@ export const TASSEN: readonly TasseDef[] = [
   tasse('stadt-tokio', 'Tokio', 'stadt', '#ff8fb1', '#2a2a30', 0, 'Mit Tokio-Turm und Katzenwinker. Von Onkel Jens. Lina liest die Aufschrift laut vor und strahlt.'),
   tasse('stadt-wien', 'Wien', 'stadt', '#f2d9a8', '#8a4a30', 0, 'Mit Riesenrad und einem Stück Torte. Von Onkel Jens.'),
   tasse('stadt-lissabon', 'Lissabon', 'stadt', '#f7f5ec', '#3a7ab8', 0, 'Mit blauen Azulejo-Fliesen und einer gelben Straßenbahn. Von Onkel Jens.'),
-  tasse('stadt-leipzig', 'Leipzig', 'stadt', '#7a9a5a', '#f7f5ec', 0, 'Mit Thomaskirche und einem „Nu!“ in goldenen Buchstaben. Von Onkel Jens – seiner Heimat, mit Heimweh geschenkt.'),
+  tasse('stadt-leipzig', 'Leipzig', 'stadt', '#7a9a5a', '#f7f5ec', 0, 'Mit Thomaskirche und einem „Nu!“ in goldenen Buchstaben. Von Onkel Jens – seiner Wahlheimat nach der Schule, mit Heimweh geschenkt.'),
   tasse('stadt-honolulu', 'Honolulu', 'stadt', '#f2845a', '#fff3b0', 0, 'Mit Blumenkette, Palme und Sonnenuntergang. Aus dem Urlaub mit Onkel Jens – „ich hab mich stilvoll verbrannt“.'),
   tasse('stadt-nara', 'Nara', 'stadt', '#c9a77a', '#3f7a62', 0, 'Mit einem kleinen Reh und rotem Torbogen. Aus dem Urlaub mit Onkel Jens – „Matcha und Stille, ma chérie“.'),
   tasse('stadt-montecielo', 'Montecielo', 'stadt', '#b8845a', '#f7f5ec', 0, 'Mit einem Kirchturm zwischen Zypressen. Von Pater Matteo – „für besondere Gäste“, sagt Signora Rosa.'),

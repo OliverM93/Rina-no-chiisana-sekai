@@ -56,7 +56,7 @@ export const JENS: NpcDef = {
       { text: ['Weißt du, was Kyoto mir beigebracht hat? Dass eine Bento-Box ein Gedicht in Fächern ist.', 'Deine hätte mir gefallen. Du kochst, als würdest du Geschichten erzählen.'] },
       { text: ['Chérie, hast du schon Basilikum im Beet?', 'Ohne Basilikum ist eine Tomate nur eine rote Kugel. Mit Basilikum ist sie Poesie.'], weight: 3 },
       { text: ['Thymian, Chérie! Thymian!', 'Ein Zweig davon, und jede Soße riecht nach der Provence. Ratatouille ohne Thymian? Un crime.'], weight: 3 },
-      { text: ['Kartoffeln mit Quark – das isch eene Gaiststung, Lina!', 'Ich hab das als Junge in Sachsen gegessen und in Paris vermisst. Mit Schnittlauch. Un des is gud so!'], weight: 3 },
+      { text: ['Kartoffeln mit Quark – das isch eene Gaiststung, Lina!', 'Das hab ich in Leipzig lieben gelernt und in Paris vermisst. Mit Schnittlauch. Un des is gud so!'], weight: 3 },
       { text: ['Dieser Dr. No aus deiner Sendung, chérie! Diese Augenbrauen!', 'Ich würde sie malen. Auf eine große Leinwand. Titel: „Autorität in Schwarz-Grau“. Und dann ein Rahmen aus Gold.'] },
       { text: ['Lina, du lernst Japanisch! Sag mal was!', 'Ich versteh ja nur „Arigato“ und „Sushi“. Aber ich nicke sehr überzeugend. Hai, hai!'] },
       { text: ['In Kyoto hab ich gelernt: „Ichi-go ichi-e“ – ein Moment, eine Begegnung, nie wieder genau so.', 'Das kennst du doch aus deinem Japanisch-Kurs, chérie? Erklär mir das mal richtig. Ich hab nur genickt und geweint.'] },
@@ -159,7 +159,7 @@ export const TRAVELS: ReadonlyArray<{ city: string; text: string; souvenir: stri
   { city: 'Lissabon', text: 'Blaue Fliesen, gelbe Straßenbahnen und ein Fado-Sänger, der mich zum Weinen gebracht hat. Dann hab ich Sardinen gegessen. Auch schön.', souvenir: 'tasse-stadt-lissabon' },
   { city: 'Honolulu', text: 'Aloha! Blumenketten, Brandung und ein Sonnenuntergang, der aussieht wie von mir gemalt. Ich hab mich sofort verbrannt – stilvoll natürlich.', souvenir: 'tasse-stadt-honolulu' },
   { city: 'Nara', text: 'Hier laufen Rehe frei durch den Park und verbeugen sich, wenn man ihnen was gibt. Ich hab drei Stunden Matcha getrunken und kein einziges Wort gesagt. Ein Wunder.', souvenir: 'tasse-stadt-nara' },
-  { city: 'Leipzig', text: 'Ich war mal in der alten Heimat! Nu, die Thomaskirche steht noch, und ich hab drei Eierschecke gegessen. Ich hab so ein Heimweh gekriegt, dass ich dir gleich was mitgebracht hab.', souvenir: 'tasse-stadt-leipzig' },
+  { city: 'Leipzig', text: 'Ich war mal in meiner Wahlheimat! Nu, die Thomaskirche steht noch, und ich hab drei Eierschecke gegessen. Ich hab so ein Heimweh gekriegt, dass ich dir gleich was mitgebracht hab.', souvenir: 'tasse-stadt-leipzig' },
 ];
 
 /** Postkarte des Tages (wenn Jens reist) */

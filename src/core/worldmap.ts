@@ -166,7 +166,8 @@ export function buildWorldMap(layout: readonly string[], defs: readonly MapObjec
       if (ch === ',') flowers[y * width + x] = 1;
       if (isWaterTerrain(t) && ch !== '=') grid.setBlocked(x, y);
       const nature = CHAR_NATURE[ch];
-      if (nature) objects.push({ id: `${nature}-${x}-${y}`, kind: nature, x, y, w: 1, h: 1 });
+      // Bäume, Kiefern & Büsche lassen sich in Linas Garten fällen (Flag `gefaellt-<id>`)
+      if (nature) objects.push({ id: `${nature}-${x}-${y}`, kind: nature, x, y, w: 1, h: 1, until: `gefaellt-${nature}-${x}-${y}` });
     }
   });
 

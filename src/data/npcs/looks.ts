@@ -66,6 +66,7 @@ export const LOOKS: Readonly<Record<string, Appearance>> = {
   /** Christin (Olafs Freundin): dunkelbrauner Bob mit Seitenscheitel, schlank, korallrotes Oberteil */
   christin: {
     ...base,
+    faceShape: 'oval',
     hairStyle: 'bob',
     hairColor: '#4a3329',
     skinTone: palette.skin[1],
@@ -106,10 +107,12 @@ export const LOOKS: Readonly<Record<string, Appearance>> = {
     build: 1.2,
     eyeColor: palette.eyeColors.blau,
     smile: 'zahnluecke',
+    blush: false,
   },
   /** Thalia (beste Freundin): glatte, dunkelbraune Haare mit Mittelscheitel, Creolen, grünes Halstuch, schwarze Jacke, weite Jeans */
   thalia: {
     ...base,
+    faceShape: 'oval',
     hairStyle: 'glatt',
     hairColor: '#4b3328',
     skinTone: palette.skin[1],

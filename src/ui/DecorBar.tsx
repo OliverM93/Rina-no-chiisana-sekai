@@ -32,7 +32,7 @@ export function DecorBar({ session, decor }: { session: Session; decor: DecorSta
     if (!decor.active) return;
     const onKey = (e: KeyboardEvent) => {
       if (e.code === 'KeyR') send({ kind: 'rotate' });
-      if (e.code === 'Delete' || e.code === 'Backspace') send({ kind: 'store' });
+      if (e.code === 'Delete' || e.code === 'Backspace' || e.code === 'KeyT') send({ kind: 'store' });
     };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
@@ -91,7 +91,7 @@ export function DecorBar({ session, decor }: { session: Session; decor: DecorSta
           ↻ Drehen (R)
         </button>
         <button class="btn small" disabled={!decor.holding} onClick={() => send({ kind: 'store' })}>
-          🎒 In die Tasche
+          🎒 In die Tasche (T)
         </button>
         <button class="btn primary small" onClick={() => send({ kind: 'stop' })}>
           ✓ Fertig (G)
