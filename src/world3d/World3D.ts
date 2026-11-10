@@ -11,7 +11,7 @@ import * as THREE from 'three';
 import { DPR, TILE, UNIT } from '../config';
 import { CollisionGrid, findPath, nearestWalkable, type Tile } from '../core/grid';
 import { checkPlacement, type Exit, riderOffset, exitAt, footprint, type Room, type RoomLayout, type Rotation, wallRotationAt } from '../core/room';
-import { FURNITURE_BY_ITEM, furnitureInfo } from '../data/furniture';
+import { FURNITURE_BY_ITEM, furnitureInfo, SURFACE_BY_ID } from '../data/furniture';
 import { getDaylight, getSeason, isSameDayMonth } from '../core/time';
 import { IDLE_GAP, IDLE_START, type IdleAct } from '../data/idle';
 import { pickIdleAct } from '../game/idle';
@@ -40,7 +40,7 @@ import {
   welcomeLetter,
 } from '../game/gameplay';
 import { KeyboardInput } from '../game/input';
-import { bedTiles, canPlace, currentRoom, finishExpansion, moveFurniture, pickUpFurniture, placeFromBag } from '../game/home';
+import { applySurface, bedTiles, buyFromCatalog, canPlace, catalogPrice, currentRoom, finishExpansion, fitsHere, moveFurniture, pickUpFurniture, placeFromBag, restoreFurniture, stockCount, variantsOf } from '../game/home';
 import { checkStory } from '../game/story';
 import { drinkCoffee, drinksFor, isCoffeeMachine, KICK_SPEED, kickActive } from '../game/coffee';
 import { tassenStand } from '../game/tassen';
@@ -197,7 +197,13 @@ export class World3D {
   private patienceToast = 0;
   private interior: Interior3D;
   /** Einrichten: was gerade gehalten wird (uid = schon im Zimmer, sonst aus der Tasche) */
-  private decor: { itemId: string; uid: string | null; rot: Rotation } | null = null;
+  /**
+   * Was Lina beim Einrichten in der Hand hat. `source` = was im Vorrat liegt (bei neuen Stücken, die Farbe darf
+   * sich ändern); `origin` = Zustand vor dem Aufnehmen (für „Rückgängig“).
+   */
+  private decor: { itemId: string; uid: string | null; rot: Rotation; source?: string; origin?: { x: number; y: number; rot: Rotation; itemId: string } } | null = null;
+  /** Schritte, die sich im Einrichtungsmodus rückgängig machen lassen (jüngster zuletzt) */
+  private undoStack: Array<{ label: string; undo: () => boolean }> = [];
   private hoverCell: { x: number; y: number } | null = null;
   /** Beim Einrichten auf eine Wand gezielt: deren Drehung für Wand-Deko (0 hinten, 3 links, 1 rechts) */
   private hoverWall: Rotation | null = null;
@@ -1199,6 +1205,7 @@ export class World3D {
 
   private onKey(code: string) {
     if (!this.player || this.session.uiBlocking || this.cutscene) return;
+    if (this.session.decorActive) return; // beim Einrichten gehören die Zifferntasten den Farben
     const idx = ['Digit1', 'Digit2', 'Digit3', 'Digit4'].indexOf(code);
     if (idx >= 0) toggleTool(this.session, TOOLS[idx]);
     if (code === 'KeyQ') toggleTool(this.session, null);
@@ -3362,6 +3369,7 @@ export class World3D {
     if (!this.session.inside && !this.session.inYard) return;
     switch (c.kind) {
       case 'start':
+        this.undoStack = [];
         this.session.decorActive = true;
         this.standUp();
         this.player?.cancelPath();
@@ -3375,8 +3383,20 @@ export class World3D {
       case 'take':
         this.session.decorActive = true;
         this.cancelHold();
-        this.decor = { itemId: c.itemId, uid: null, rot: 0 };
+        this.decor = { itemId: c.itemId, uid: null, rot: 0, source: c.itemId };
         break;
+      case 'surface':
+        this.applySurfaceWithUndo(c.itemId);
+        return;
+      case 'pipette':
+        this.pipette();
+        return;
+      case 'variant':
+        this.cycleVariant(c.index);
+        return;
+      case 'undo':
+        this.undoLast();
+        return;
       case 'rotate':
         this.rotateHeld();
         return;
@@ -3394,6 +3414,7 @@ export class World3D {
   private stopDecor() {
     if (!this.session.decorActive) return;
     this.cancelHold();
+    this.undoStack = [];
     this.session.decorActive = false;
     this.interior.hideGhost();
     this.yard.hideGhost();
@@ -3421,7 +3442,13 @@ export class World3D {
   }
 
   private emitDecor(valid = true) {
-    this.session.bus.emit('decor:state', { active: this.session.decorActive, holding: this.decor?.itemId ?? null, valid });
+    this.session.bus.emit('decor:state', {
+      active: this.session.decorActive,
+      holding: this.decor?.itemId ?? null,
+      valid,
+      variants: this.decor ? variantsOf(this.decor.itemId) : [],
+      canUndo: this.undoStack.length > 0,
+    });
   }
 
   private rotateHeld() {
@@ -3434,16 +3461,95 @@ export class World3D {
     const d = this.decor;
     if (!d) return;
     if (d.uid) {
+      // für „Rückgängig“ merken: das Möbel samt allem, was darauf stand
+      const before = this.room?.items.filter((i) => i.uid === d.uid || i.on === d.uid).map((i) => ({ ...i }));
       const r = pickUpFurniture(this.session, d.uid);
       if (r !== 'ok') {
         if (r === 'voll') this.session.bus.emit('toast', { text: 'Deine Tasche ist voll! 🎒' });
         if (r === 'pflanzen') this.session.bus.emit('toast', { text: 'Im Hochbeet wächst noch etwas – erst pflücken, dann wegräumen. 🌱' });
         return;
       }
+      if (before && before.length > 0) this.pushUndo('Wegräumen', () => restoreFurniture(this.session, before));
     }
     this.cancelHold();
     this.refreshRoom();
     this.refreshYard();
+    this.emitDecor();
+  }
+
+  private pushUndo(label: string, undo: () => boolean) {
+    this.undoStack.push({ label, undo });
+    if (this.undoStack.length > 40) this.undoStack.shift();
+  }
+
+  /** Strg+Z: den letzten Schritt zurücknehmen (Geld bleibt, wo es ist – gekaufte Möbel bleiben im Vorrat) */
+  private undoLast() {
+    const step = this.undoStack.pop();
+    if (!step) {
+      this.session.bus.emit('toast', { text: 'Nichts zum Rückgängigmachen.' });
+      return;
+    }
+    this.cancelHold();
+    const ok = step.undo();
+    this.session.bus.emit('toast', { text: ok ? `↶ ${step.label} rückgängig gemacht.` : `${step.label} lässt sich nicht mehr rückgängig machen (der Platz ist belegt).` });
+    this.refreshRoom();
+    this.refreshYard();
+    this.updateGhost();
+    this.emitDecor();
+  }
+
+  /** Tapete/Boden anbringen; die alte kommt in den Vorrat und lässt sich so zurückholen */
+  private applySurfaceWithUndo(itemId: string) {
+    const c = currentRoom(this.session);
+    if (!c) return;
+    const wallpaper = SURFACE_BY_ID[itemId]?.kind === 'tapete';
+    const old = wallpaper ? c.room.wallpaper : c.room.floor;
+    if (!applySurface(this.session, itemId)) return;
+    this.session.bus.emit('toast', { text: `${itemDef(itemId)?.name} angebracht! ✨` });
+    if (old && old !== itemId) this.pushUndo(wallpaper ? 'Tapete' : 'Boden', () => applySurface(this.session, old));
+    this.refreshRoom();
+    this.emitDecor();
+  }
+
+  /** Farbe des gehaltenen Möbels wechseln (Nummer oder weiter) */
+  private cycleVariant(index?: number) {
+    const d = this.decor;
+    if (!d) return;
+    const list = variantsOf(d.itemId);
+    if (list.length < 2) return;
+    const at = list.findIndex((v) => v.itemId === d.itemId);
+    const next = index !== undefined ? list[index] : list[(at + 1) % list.length];
+    if (!next || next.itemId === d.itemId) return;
+    d.itemId = next.itemId;
+    this.updateGhost();
+    this.emitDecor();
+  }
+
+  /**
+   * „Noch eins“ (Taste C): Das Möbel unter dem Mauszeiger bzw. in der Hand nochmal nehmen – aus Tasche/Truhe,
+   * sonst direkt im Katalog kaufen (wie die Pipette bei den Sims).
+   */
+  private pipette() {
+    const home = this.room;
+    const cell = this.hoverCell;
+    if (!home) return;
+    const itemId = this.decor?.itemId ?? (cell ? this.dv.topAt(home, cell.x, cell.y, this.hoverWall)?.itemId : undefined);
+    if (!itemId || !FURNITURE_BY_ITEM[itemId]) return;
+    if (!fitsHere(this.session, itemId)) return;
+    const name = itemDef(itemId)?.name ?? itemId;
+    if (stockCount(this.session, itemId) < 1) {
+      if (catalogPrice(itemId) === null) {
+        this.session.bus.emit('toast', { text: `${name}: gibt es nicht im Katalog – ein Einzelstück. 💝` });
+        return;
+      }
+      const r = buyFromCatalog(this.session, itemId);
+      if (r === 'zu-teuer') return void this.session.bus.emit('toast', { text: `Noch eins ${name}? Dafür reichen die Sternchen nicht. ⭐` });
+      if (r !== 'ok') return void this.session.bus.emit('toast', { text: r === 'tasche-voll' ? 'Tasche und Truhe sind voll! 🎒' : `${name} gibt es noch nicht im Katalog.` });
+      this.session.bus.emit('toast', { text: `${name} nachgekauft. 🛒` });
+    }
+    this.cancelHold();
+    this.decor = { itemId, uid: null, rot: this.decor?.rot ?? 0, source: itemId };
+    this.updateGhost();
     this.emitDecor();
   }
 
@@ -3494,7 +3600,7 @@ export class World3D {
         if (!this.session.inside) this.askFellNature(YARD_AREA.x + cell.x, YARD_AREA.y + cell.y);
         return;
       }
-      this.decor = { itemId: top.itemId, uid: top.uid, rot: top.rot };
+      this.decor = { itemId: top.itemId, uid: top.uid, rot: top.rot, origin: { x: top.x, y: top.y, rot: top.rot, itemId: top.itemId } };
       this.dv.setHidden(top.uid);
       this.updateGhost();
       return;
@@ -3505,7 +3611,20 @@ export class World3D {
     const fp = footprint(info, d.rot);
     const x = cell.x - Math.floor((fp.w - 1) / 2);
     const y = cell.y - Math.floor((fp.d - 1) / 2);
-    const ok = d.uid ? moveFurniture(this.session, d.uid, x, y, d.rot) : placeFromBag(this.session, d.itemId, x, y, d.rot);
+    let ok = false;
+    if (d.uid) {
+      const uid = d.uid;
+      const origin = d.origin;
+      ok = moveFurniture(this.session, uid, x, y, d.rot, d.itemId);
+      if (ok && origin) this.pushUndo('Verschieben', () => moveFurniture(this.session, uid, origin.x, origin.y, origin.rot, origin.itemId));
+    } else {
+      const placed = placeFromBag(this.session, d.itemId, x, y, d.rot, d.source ?? d.itemId);
+      ok = !!placed;
+      if (placed) {
+        const uid = placed.uid;
+        this.pushUndo('Aufstellen', () => pickUpFurniture(this.session, uid) === 'ok');
+      }
+    }
     if (!ok) {
       this.session.bus.emit('toast', { text: this.session.inside ? 'Hier ist kein Platz dafür.' : 'Hier geht das nicht – vielleicht im Weg oder auf Linas Platz?' });
       return;

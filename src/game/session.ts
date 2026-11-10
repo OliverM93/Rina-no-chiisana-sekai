@@ -78,13 +78,24 @@ export interface DecorState {
   holding: string | null;
   /** passt er an die Stelle unter dem Mauszeiger? */
   valid: boolean;
+  /** Farben des gehaltenen Möbels (leer = keine) */
+  variants: Array<{ itemId: string; label: string; color: string }>;
+  /** Gibt es etwas, das sich rückgängig machen lässt? */
+  canUndo: boolean;
 }
 
 export type DecorCommand =
   | { kind: 'start' }
   | { kind: 'stop' }
-  /** Möbel aus der Tasche nehmen */
+  /** Möbel aus Tasche/Truhe nehmen */
   | { kind: 'take'; itemId: string }
+  /** Tapete/Boden aus Tasche/Truhe anbringen (rückgängig machbar) */
+  | { kind: 'surface'; itemId: string }
+  /** „Noch eins“: gleiches Möbel nehmen (aus dem Vorrat, sonst im Katalog kaufen) */
+  | { kind: 'pipette' }
+  /** Farbe des gehaltenen Möbels wechseln (kostenlos): Nummer 0… oder weiter */
+  | { kind: 'variant'; index?: number }
+  | { kind: 'undo' }
   | { kind: 'rotate' }
   /** gehaltenes Möbel zurück in die Tasche */
   | { kind: 'store' }

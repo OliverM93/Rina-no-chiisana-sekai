@@ -46,8 +46,9 @@ Verkaufskiste gegen Sternchen ⭐ tauschen und Briefe im Briefkasten lesen.
 
 **Zu Hause (M5):** Durch die Tür geht's in Linas Zimmer. Am Pult in der Ecke liegt der **Möbelkatalog** –
 Möbel, Tapeten und Böden (zuerst im **japanischen Stil**: Futon, Kotatsu, Tansu, Byōbu, Bonsai, Winkekatze …)
-kosten Sternchen und landen sofort in der Tasche. Mit **🛋️ Einrichten** stellt Lina sie auf: anklicken zum
-Hochheben, **R** oder Mausrad zum Drehen, Klick zum Abstellen. Deko passt auf Tische und Kommoden, Teppiche
+kosten Sternchen und landen in der Tasche. Mit **🛋️ Einrichten** (G) stellt Lina sie auf: anklicken zum
+Hochheben, **R** zum Drehen, Klick zum Abstellen. Im Einrichten gibt es den **🛒 Katalog** gleich dabei (Gekauftes hängt
+an der Maus), **C** = noch eins, **V** oder **1–9** = Farbe wechseln, **Strg+Z** = rückgängig. Deko passt auf Tische und Kommoden, Teppiche
 liegen unter Möbeln. Auf Kissen und Futon kann sie sich setzen, Laternen leuchten abends (und lassen sich
 an- und ausknipsen).
 
