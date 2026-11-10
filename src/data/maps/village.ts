@@ -31,7 +31,7 @@ export const VILLAGE_LAYOUT: readonly string[] = [
   '...........................#............~~~...........T.',
   '...T.................,.....#.....r......~~~........P....',
   'P.........b................#...........~~~............T.',
-  '......................T....#...........~~~.....#.......P',
+  '...........................#...........~~~.....#.......P',
   'T..........................#..........~~~......#........',
   '.P................,.,.,....#...b......~~~......#.......P',
   'T.............#............#..........~~~......#........',
@@ -81,8 +81,8 @@ export const VILLAGE_OBJECTS: readonly MapObjectDef[] = [
   { id: 'haus-olaf', kind: 'house', x: 18, y: 15, variant: 'mint', requires: 'olafEingezogen' },
   { id: 'bauplatz-3', kind: 'plot', x: 48, y: 14, until: 'jensEingezogen' },
   // Lars' Praxis mit Apotheke am Dorfplatz (M7c)
-  { id: 'bauplatz-2', kind: 'plot', x: 22, y: 12, until: 'larsEingezogen' },
-  { id: 'praxis-lars', kind: 'praxis', x: 22, y: 12, requires: 'larsEingezogen' },
+  { id: 'bauplatz-2', kind: 'plot', x: 22, y: 10, until: 'larsEingezogen' },
+  { id: 'praxis-lars', kind: 'praxis', x: 22, y: 10, requires: 'larsEingezogen' },
   // Thalias gelbes Häuschen hinter der Brücke (M7d)
   { id: 'bauplatz-4', kind: 'plot', x: 42, y: 21, until: 'thaliaEingezogen' },
   { id: 'haus-thalia', kind: 'house', x: 42, y: 21, variant: 'butter', requires: 'thaliaEingezogen' },
@@ -102,7 +102,7 @@ export const VILLAGE_OBJECTS: readonly MapObjectDef[] = [
 
   // Christins Samenstand (Samen für Linas Beet) – steht, sobald Olaf & Christin eingezogen sind. Er steht auf der
   // Ostseite des Dorfplatzes: Die Kamera schaut schräg von Süden, hohe Stände würden sonst die Fassade dahinter (Praxis!) verdecken.
-  { id: 'samenstand', kind: 'seedstall', x: 29, y: 17, requires: 'olafEingezogen' },
+  { id: 'samenstand', kind: 'seedstall', x: 30, y: 17, requires: 'olafEingezogen' },
 
   // Orte aus den Herzenswünschen (`data/wishes.ts`) – erscheinen, wenn der Wunsch erfüllt ist
   { id: 'beet-gisela', kind: 'landmark', variant: 'blumenbeet', x: 41, y: 17, w: 3, h: 1, requires: 'wunsch-oma-beet' },

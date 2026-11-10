@@ -632,10 +632,10 @@ export function makeFurniture(itemId: string, links: FenceLinks = { n: false, e:
       g.add(b(0.3, 0.04, 0.5, '#8a8a96', -0.35, 0.02, 0));
       g.add(b(0.3, 0.04, 0.5, '#8a8a96', 0.5, 0.02, 0));
       // Ablage + Langhantel (über der Brust, bewegt sich mit Olis Armen: Gruppe „langhantel“)
-      for (const z of [-0.22, 0.22]) g.add(b(0.05, 0.85, 0.05, '#8a8a96', -0.08, 0.43, z));
+      for (const z of [-0.22, 0.22]) g.add(b(0.05, 0.85, 0.05, '#8a8a96', 0, 0.43, z));
       const bell = new THREE.Group();
       bell.name = 'langhantel';
-      bell.position.set(-0.08, 0.86, 0);
+      bell.position.set(0, 0.86, 0);
       const bar = c(0.018, 0.92, '#c9cbd3', 0, 0, 0);
       bar.rotation.x = Math.PI / 2;
       bell.add(bar);
