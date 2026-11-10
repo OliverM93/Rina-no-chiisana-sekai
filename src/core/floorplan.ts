@@ -170,3 +170,72 @@ export function validatePlan(plan: FloorPlan): string[] {
   }
   return problems;
 }
+
+/** Türöffnung in einer Raumwand (Raum-Koordinaten): Wand + Feld entlang der Wand */
+export interface RoomOpening {
+  side: 'back' | 'left' | 'right';
+  at: number;
+}
+
+/** Alle Türöffnungen in den Wänden eines Raums (Vorderseite hat keine Wand und fehlt deshalb) */
+export function openingsFor(plan: FloorPlan, roomId: string): RoomOpening[] {
+  const out: RoomOpening[] = [];
+  const add = (side: Side, cell: readonly [number, number]) => {
+    if (side === 'up') out.push({ side: 'back', at: cell[0] });
+    else if (side === 'left') out.push({ side: 'left', at: cell[1] });
+    else if (side === 'right') out.push({ side: 'right', at: cell[1] });
+  };
+  for (const d of plan.doors) {
+    if (d.room === roomId) add(d.side, d.cell);
+    if (d.to === roomId) add(oppositeSide(d.side), d.toCell);
+  }
+  return out;
+}
+
+/** Ein Wandstreifen zwischen zwei Räumen (Gesamtgitter): `vertical` = trennt links/rechts, sonst vorne/hinten */
+export interface WallStrip {
+  x: number;
+  y: number;
+  w: number;
+  h: number;
+  vertical: boolean;
+  /** Raum vor dem Streifen (näher an der Kamera), nur bei `vertical === false` */
+  frontRoom?: string;
+  /** Türfelder im Streifen (Gesamtgitter) */
+  openings: Array<{ x: number; y: number }>;
+}
+
+/** Alle Wandstreifen des Stockwerks: überall, wo sich zwei Räume mit genau einem Feld Abstand gegenüberliegen */
+export function wallStrips(plan: FloorPlan): WallStrip[] {
+  const out: WallStrip[] = [];
+  const overlap = (a0: number, a1: number, b0: number, b1: number) => [Math.max(a0, b0), Math.min(a1, b1)] as const;
+  for (let i = 0; i < plan.rooms.length; i++) {
+    for (let j = i + 1; j < plan.rooms.length; j++) {
+      const a = plan.rooms[i];
+      const b = plan.rooms[j];
+      let strip: WallStrip | null = null;
+      const [y0, y1] = overlap(a.y, a.y + a.h, b.y, b.y + b.h);
+      const [x0, x1] = overlap(a.x, a.x + a.w, b.x, b.x + b.w);
+      if (y1 > y0 && (b.x - (a.x + a.w) === 1 || a.x - (b.x + b.w) === 1)) {
+        const left = a.x < b.x ? a : b;
+        strip = { x: left.x + left.w, y: y0, w: 1, h: y1 - y0, vertical: true, openings: [] };
+      } else if (x1 > x0 && (b.y - (a.y + a.h) === 1 || a.y - (b.y + b.h) === 1)) {
+        const top = a.y < b.y ? a : b;
+        const bottom = top === a ? b : a;
+        strip = { x: x0, y: top.y + top.h, w: x1 - x0, h: 1, vertical: false, frontRoom: bottom.id, openings: [] };
+      }
+      if (!strip) continue;
+      for (const d of plan.doors) {
+        const c = doorStripCell(plan, d);
+        if (c && c.x >= strip.x && c.y >= strip.y && c.x < strip.x + strip.w && c.y < strip.y + strip.h) strip.openings.push(c);
+      }
+      out.push(strip);
+    }
+  }
+  return out;
+}
+
+/** Liegt hinter diesem Raum (Richtung Rückwand) ein anderer Raum? Dann ist seine Rückwand nur halbhoch. */
+export function hasRoomBehind(plan: FloorPlan, roomId: string): boolean {
+  return wallStrips(plan).some((s) => !s.vertical && s.frontRoom === roomId);
+}

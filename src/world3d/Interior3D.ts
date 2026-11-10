@@ -14,13 +14,32 @@ export const ROOM_X = 200;
 export const ROOM_Y = 200;
 const WALL_H = 2.3;
 const MAX_LAMPS = 3;
+/** Halbhohe Innenwand (Sims-Prinzip: man sieht über sie hinweg) */
+export const LOW_WALL_H = 0.9;
 
 interface Placed {
   item: PlacedItem;
   model: FurnitureModel;
 }
 
+/** Türöffnung in einer Wand (Raum-Koordinaten): `at` = Feld entlang der Wand */
+export interface WallOpening {
+  side: 'back' | 'left' | 'right';
+  at: number;
+}
+
+/** Zusatz beim Bauen des Raums: Türöffnungen in den Wänden; `hideExits` blendet die alten Tür-Modelle aus */
+export interface ShellOptions {
+  openings?: readonly WallOpening[];
+  hideExits?: boolean;
+  /** Hinter diesem Raum liegt ein anderer: Rückwand nur halbhoch (ohne Fenster), damit man darüber hinwegsieht */
+  lowBack?: boolean;
+}
+
 export class Interior3D {
+  /** Lage der linken oberen Raumecke in der Szene (Weltkacheln) */
+  readonly origin: { x: number; z: number };
+  shellOptions: ShellOptions = {};
   readonly group = new THREE.Group();
   private furniture = new THREE.Group();
   private placed = new Map<string, Placed>();
@@ -44,8 +63,9 @@ export class Interior3D {
   /** aktueller Raum */
   layout: RoomLayout = { id: 'haupt', name: '', w: 8, h: 6, exits: [] };
 
-  constructor(scene: THREE.Scene) {
-    this.group.position.set(ROOM_X, 0, ROOM_Y);
+  constructor(scene: THREE.Scene, origin: { x: number; z: number } = { x: ROOM_X, z: ROOM_Y }) {
+    this.origin = origin;
+    this.group.position.set(origin.x, 0, origin.z);
     this.floor = new THREE.Mesh(new THREE.PlaneGeometry(1, 1).rotateX(-Math.PI / 2), this.floorMat);
     this.floor.receiveShadow = true;
     this.windowGlass = new THREE.MeshToonMaterial({ color: '#9fd2ee', emissive: '#9fd2ee', emissiveIntensity: 0.2 });
@@ -66,21 +86,52 @@ export class Interior3D {
     this.floor.position.set(W / 2, 0, H / 2);
     const attic = layout.id === 'dach';
     // Wände: hinten, links, rechts (vorne offen, wie ein Puppenhaus)
-    const wallH = attic ? 1.6 : WALL_H;
-    const back = new THREE.Mesh(new THREE.BoxGeometry(W + 0.3, wallH, 0.15), this.wallMat);
-    back.position.set(W / 2, wallH / 2, -0.075);
-    const left = new THREE.Mesh(new THREE.BoxGeometry(0.15, wallH, H), this.wallMat);
-    left.position.set(-0.075, wallH / 2, H / 2);
-    const right = left.clone();
-    right.position.x = W + 0.075;
-    back.userData.wall = 'back';
-    left.userData.wall = 'left';
-    right.userData.wall = 'right';
-    this.walls = [back, left, right];
-    for (const wall of [back, left, right]) {
-      wall.receiveShadow = true;
-      this.shell.add(wall);
-    }
+    const fullH = attic ? 1.6 : WALL_H;
+    const wallH = fullH;
+    const openings = this.shellOptions.openings ?? [];
+    this.walls = [];
+    const DOOR_H = 1.85;
+    // eine Wand aus Stücken bauen; an Türöffnungen bleibt unten frei, oben sitzt ein Sturz
+    const buildWall = (side: 'back' | 'left' | 'right', length: number, extra: number) => {
+      const wallH = side === 'back' && this.shellOptions.lowBack ? LOW_WALL_H : fullH;
+      const gaps = openings.filter((o) => o.side === side).map((o) => o.at).sort((a, b) => a - b);
+      const cuts: Array<[number, number, boolean]> = []; // [von, bis, Öffnung?]
+      let at = 0;
+      for (const g of gaps) {
+        if (g > at) cuts.push([at, g, false]);
+        cuts.push([g, g + 1, true]);
+        at = g + 1;
+      }
+      if (at < length) cuts.push([at, length, false]);
+      if (cuts.length === 0) cuts.push([0, length, false]);
+      cuts.forEach(([from, to, open], i) => {
+        if (open && wallH <= DOOR_H) return; // niedrige Wand: Öffnung bleibt einfach frei
+        const len = to - from + (i === 0 ? extra : 0) + (i === cuts.length - 1 ? extra : 0);
+        const mid = (from + to) / 2 + (i === 0 ? -extra / 2 : 0) + (i === cuts.length - 1 ? extra / 2 : 0);
+        const h = open ? wallH - DOOR_H : wallH;
+        const y = open ? DOOR_H + h / 2 : wallH / 2;
+        const geo = side === 'back' ? new THREE.BoxGeometry(len, h, 0.15) : new THREE.BoxGeometry(0.15, h, len);
+        const m = new THREE.Mesh(geo, this.wallMat);
+        if (side === 'back') m.position.set(mid, y, -0.075);
+        else m.position.set(side === 'left' ? -0.075 : W + 0.075, y, mid);
+        m.userData.wall = side;
+        m.receiveShadow = true;
+        this.walls.push(m);
+        this.shell.add(m);
+        if (open && h > 0 && wallH > DOOR_H) {
+          // Türrahmen: zwei Pfosten
+          for (const edge of [from, to]) {
+            const post = mesh(new THREE.BoxGeometry(side === 'back' ? 0.08 : 0.2, DOOR_H, side === 'back' ? 0.2 : 0.08), toon('#a97c56'));
+            if (side === 'back') post.position.set(edge, DOOR_H / 2, -0.05);
+            else post.position.set(side === 'left' ? -0.05 : W + 0.05, DOOR_H / 2, edge);
+            this.shell.add(post);
+          }
+        }
+      });
+    };
+    buildWall('back', W, 0.15);
+    buildWall('left', H, 0);
+    buildWall('right', H, 0);
     if (attic) {
       const beam = mesh(new THREE.BoxGeometry(W, 0.14, 0.14), toon('#a97c56'));
       beam.position.set(W / 2, wallH + 0.2, 0.2);
@@ -101,7 +152,7 @@ export class Interior3D {
     // Keller: kleine Fenster ganz oben (draußen ist dort der Boden)
     const cellar = layout.id === 'keller';
     const [fw, fh] = cellar ? [0.8, 0.36] : [1.1, 0.9];
-    for (const x of backWindows(layout)) {
+    for (const x of this.shellOptions.lowBack ? [] : backWindows(layout)) {
       const y = attic ? 0.95 : cellar ? 1.95 : 1.35;
       const frame = mesh(new THREE.BoxGeometry(fw, fh, 0.06), toon('#ffffff'));
       frame.position.set(x, y, 0.02);
@@ -114,7 +165,7 @@ export class Interior3D {
       this.shell.add(frame, glass, bar, sill);
     }
     // Ausgänge
-    for (const e of layout.exits) {
+    for (const e of this.shellOptions.hideExits ? [] : layout.exits) {
       const xs = e.cells.map(([x]) => x);
       const x0 = Math.min(...xs);
       const width = Math.max(...xs) - x0 + 1;
@@ -165,11 +216,11 @@ export class Interior3D {
 
   /** Zellen-Mitte (Zimmerkoordinaten) → 3D-Weltposition */
   cellCenter(x: number, y: number): THREE.Vector3 {
-    return new THREE.Vector3(ROOM_X + x + 0.5, 0, ROOM_Y + y + 0.5);
+    return new THREE.Vector3(this.origin.x + x + 0.5, 0, this.origin.z + y + 0.5);
   }
 
   refresh(home: Room, layout: RoomLayout, force = false) {
-    const lk = JSON.stringify(layout);
+    const lk = JSON.stringify(layout) + JSON.stringify(this.shellOptions);
     if (lk !== this.layoutKey) {
       this.layoutKey = lk;
       this.layout = layout;
@@ -280,8 +331,8 @@ export class Interior3D {
 
   /** Treffer auf einer Wand → Feld davor + passende Drehung für Wand-Deko */
   wallCell(p: THREE.Vector3, side: string, layout: RoomLayout): { x: number; y: number; rot: Rotation } {
-    const lx = p.x - ROOM_X;
-    const lz = p.z - ROOM_Y;
+    const lx = p.x - this.origin.x;
+    const lz = p.z - this.origin.z;
     const clampX = (v: number) => Math.max(0, Math.min(layout.w - 1, Math.floor(v)));
     const clampY = (v: number) => Math.max(0, Math.min(layout.h - 1, Math.floor(v)));
     if (side === 'left') return { x: 0, y: clampY(lz), rot: 3 };
@@ -295,7 +346,7 @@ export class Interior3D {
 
   /** Mauszeiger über dem Boden → Zelle */
   cellFromPoint(p: THREE.Vector3): { x: number; y: number } {
-    return { x: Math.floor(p.x - ROOM_X), y: Math.floor(p.z - ROOM_Y) };
+    return { x: Math.floor(p.x - this.origin.x), y: Math.floor(p.z - this.origin.z) };
   }
 
   // -------------------------------------------------------------------------
