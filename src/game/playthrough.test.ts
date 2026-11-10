@@ -104,31 +104,35 @@ describe('Durchlauf der Rahmenhandlung', () => {
     expect(buyFromCatalog(s, 'zabuton-rosa')).toBe('ok');
     moveIn(s, 'oli');
 
-    // Jens: 2× gebaut + Sammelbuch 6
+    // Jens: 3× gebaut + Sammelbuch 6
     expect(currentMilestone(s)?.npc).toBe('jens');
-    giveItem(s, 'ast', 10, false);
+    giveItem(s, 'ast', 15, false);
     expect(craftRecipe(s, 'ast-hocker')).toBe('ok');
     expect(craftRecipe(s, 'zaun-holz')).toBe('ok');
+    expect(craftRecipe(s, 'ast-hocker')).toBe('ok');
     catchSome(s, 4);
     moveIn(s, 'jens');
 
-    // Lars: 1× gekocht (Obstsalat von den Obstbäumen) + 2500 verkauft
+    // Lars: 3× gekocht (Obstsalat von den Obstbäumen – es gibt genug Bäume für einen Tag) + 5000 verkauft
     expect(currentMilestone(s)?.npc).toBe('lars');
-    giveItem(s, 'apfel', 1, false);
-    giveItem(s, 'birne', 1, false);
-    giveItem(s, 'pfirsich', 1, false);
-    expect(craftRecipe(s, 'obstsalat')).toBe('ok');
-    for (let i = 0; i < 40 && d.stats.sold < 2500; i++) {
+    giveItem(s, 'apfel', 3, false);
+    giveItem(s, 'birne', 3, false);
+    giveItem(s, 'pfirsich', 3, false);
+    for (let i = 0; i < 3; i++) expect(craftRecipe(s, 'obstsalat')).toBe('ok');
+    for (let i = 0; i < 60 && d.stats.sold < 5000; i++) {
       catchSome(s, 5);
       sellAll(s);
     }
-    expect(d.stats.sold).toBeGreaterThanOrEqual(2500);
+    expect(d.stats.sold).toBeGreaterThanOrEqual(5000);
     moveIn(s, 'lars');
 
-    // Thalia: Durchchecken + Sammelbuch 9
+    // Thalia: Durchchecken + Sammelbuch 8 + erster Hausausbau bestellt (Kredit, kein Geld nötig)
     expect(currentMilestone(s)?.npc).toBe('thalia');
     d.world.dates.checkup = s.today();
     catchSome(s, 4);
+    expect(checkStory(s), 'ohne Ausbau keine Ankündigung').not.toContain('thalia-angekuendigt');
+    expect(progressHint(s, 'lars')?.join(' ')).toMatch(/Dorfkasse|Ausbau/);
+    expect(orderExpansion(s)).toBe('ok');
     moveIn(s, 'thalia');
 
     expect(currentMilestone(s)).toBeNull();

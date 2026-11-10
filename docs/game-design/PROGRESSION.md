@@ -14,12 +14,16 @@ Spielzeit**, nicht an Kalendertagen (Entscheidung M8j). Nach erfülltem Meilenst
 | 0 | Oma Gisela | Spielstart | – |
 | 1 | Olaf & Christin | 3 Sammelbuch-Einträge, 200 ⭐ verkauft | Oma |
 | 2 | Oli | 1 Möbel gekauft | Olaf |
-| 3 | Jens | 2 Dinge gebaut, 6 Sammelbuch-Einträge | Oli |
-| 4 | Lars | 1× gekocht, 2 500 ⭐ verkauft | Jens |
-| 5 | Thalia | Gesundheits-Check, 9 Sammelbuch-Einträge | Lars |
+| 3 | Jens | 3 Dinge gebaut, 6 Sammelbuch-Einträge | Oli |
+| 4 | Lars | 3× gekocht, 5 000 ⭐ verkauft | Jens |
+| 5 | Thalia | Gesundheits-Check, 8 Sammelbuch-Einträge, erster Hausausbau bestellt (Kredit, kein Geld nötig) | Lars |
+
+**Audit 3 (Nov. 2026):** Bedingungen moderat erhöht, damit die Einzüge über Spielen statt Warten getaktet sind (vorher
+2 gebaut / 1× gekocht + 2 500 ⭐ / 9 Sammelbuch). Sammelbuch-Ziele sind **winter-sicher**: Von November bis Februar gibt es
+nur 10–11 Arten; `data/progress.test.ts` verlangt in jedem Monat ≥ Ziel + 2 Arten.
 
 📏 **Dauer:** Alle Bedingungen sind mit wenigen Stunden normalem Spielen erreichbar (Durchlauf-Test
-`game/playthrough.test.ts` beweist die Erreichbarkeit, nicht die Dauer). Geschätzt **2–4 Stunden** bis Thalia.
+`game/playthrough.test.ts` beweist die Erreichbarkeit, nicht die Dauer). Geschätzt **2–3 Stunden** bis Thalia (vorher ~1–1,5 h, überwiegend Wartezeit – Audit 3).
 
 **Bewertung**
 - ✅ Stark: Jeder Meilenstein *führt* in ein neues System ein (Sammelbuch → Katalog → Werkbank → Küche → Praxis).

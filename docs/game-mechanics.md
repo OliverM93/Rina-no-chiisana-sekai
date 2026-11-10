@@ -13,7 +13,9 @@ Wetter und Feste laufen nach echter Zeit.
   gekocht, Flags) – **keine Herzen** (die steigen nur 1×/Tag). Danach Brief, nach `WAIT_SECONDS` (10 Min Spielzeit,
   `session.playTime()`) Einzug; Zeitstempel in `SaveData.story`, Zähler in `SaveData.stats`. World3D prüft alle
   paar Sekunden (`progressTick`, nur draußen & ohne offene Fenster). Hinweise gibt der Bewohner `hintBy` im
-  Gespräch. **Echtzeit bleibt** für Tag/Nacht, Jahreszeiten, Wetter, Feste, Geburtstage, Tägliches, Treffen,
+  Gespräch (`flagHints` für Flag-Bedingungen, z. B. Lars zum ersten Hausausbau). Seit Audit 3: Jens 3 gebaut + 6 Sammelbuch,
+  Lars 3 gekocht + 5 000 ⭐, Thalia Check-up + 8 Sammelbuch + erster Ausbau bestellt (abgeleitetes Flag `ausbauBestellt`);
+  Sammelbuch-Ziele winter-sicher (Test `data/progress.test.ts`). **Echtzeit bleibt** für Tag/Nacht, Jahreszeiten, Wetter, Feste, Geburtstage, Tägliches, Treffen,
   Party, Sonntagsessen und Jens' Reisen.
 - **Post nur von Bewohnern, die da sind:** Nach der Ankündigung (Brief) kommt keine weitere Post, keine Herz-Briefe und keine Kontoauszüge, bis der Bewohner eingezogen **und** begrüßt ist (`hasMovedIn` in `game/gameplay.ts`).
 - **Einzüge:** `NpcDef.movesIn` = Story-Flag; Kartenobjekte mit `requires`/`until` erscheinen/verschwinden
