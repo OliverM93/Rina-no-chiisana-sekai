@@ -170,6 +170,7 @@ Die Summe der 1×/Tag-Dinge liegt jetzt bei rund 20 [V].
 **A4 · Sternchen ohne Zweck nach ~425 k [N/V]** – erst nach vielen Stunden relevant. Empfehlung: **nach dem Playtest** entscheiden; wenn ja, Dorf-Verschönerungen an der Dorfkasse (G1).
 
 **A5 · Enter-Bestätigung uneinheitlich [N]** – Empfehlung: überall dort, wo es einen Hauptknopf gibt (K1).
+  *Korrektur bei der Umsetzung:* Überall gibt es schon Pfeiltasten-Navigation mit Enter auf dem fokussierten Knopf (`ui/navigation.ts`) – im Samenstand reicht das. Es fehlte nur die Abkürzung „Enter ohne Fokus = Hauptknopf“ in Galerie und Briefkasten. Die Code-Suche nach `'Enter'` je Fenster hat das übersehen.
 
 ### 🟢 Niedrig
 
