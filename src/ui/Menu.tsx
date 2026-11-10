@@ -108,6 +108,9 @@ export function Menu({ session }: { session: Session }) {
           </div>
         )}
         <div class="menu-grid">
+          <button class="btn" onClick={() => ui.set({ menuOpen: false, panel: { kind: 'notizbuch' } })}>
+            📓 Notizbuch (N)
+          </button>
           <button class="btn" onClick={() => ui.set({ menuOpen: false, screen: 'editor', editorMode: 'edit' })}>
             🎨 Aussehen ändern
           </button>
@@ -136,7 +139,7 @@ export function Menu({ session }: { session: Session }) {
               <b>Maus &amp; Touch:</b> Irgendwohin tippen, um dorthin zu laufen. Auf Dinge tippen, um sie anzusehen.
             </p>
             <p>
-              <b>Anschauen/Reden/Aufheben:</b> Leertaste, E oder Enter · <b>Tasche:</b> I oder Tab · <b>Menü:</b> Esc
+              <b>Anschauen/Reden/Aufheben:</b> Leertaste, E oder Enter · <b>Tasche:</b> I oder Tab · <b>Notizbuch:</b> N · <b>Menü:</b> Esc
             </p>
             <p>
               <b>In Fenstern &amp; Menüs:</b> Pfeiltasten springen von Knopf zu Knopf, Enter oder Leertaste drückt, Esc schließt.

@@ -2253,3 +2253,23 @@ body:has(.dialog-layer) .decor-bar {
   font-size: 0.9rem;
   opacity: 0.85;
 }
+
+/* Linas Notizbuch */
+.card.notebook {
+  width: min(560px, 94vw);
+  max-height: calc(100vh - var(--toast-strip, 64px) - 40px);
+  overflow-y: auto;
+}
+.nb-head {
+  margin: 12px 0 6px;
+  font-size: 1rem;
+  color: var(--ui-accent);
+}
+.nb-note {
+  margin: 4px 0 8px;
+  line-height: 1.45;
+}
+.nb-list {
+  margin: 4px 0 0 18px;
+  padding: 0;
+}

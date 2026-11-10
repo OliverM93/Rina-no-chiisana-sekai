@@ -22,6 +22,7 @@ Läuft in jedem modernen Browser auf Laptop oder PC. Der Spielstand wird automat
 | Zoomen | – | Mausrad |
 | Tasche | I oder Tab | 🎒 unten rechts |
 | Sammelbuch | B | 📖 unten rechts |
+| Notizbuch („Was steht an?“) | N | Menü → 📓 Notizbuch |
 | Foto machen (mit Rahmen) | F | 📷 unten rechts |
 | Werkzeug nehmen / wegstecken | 1 Angel · 2 Kescher · 3 Gießkanne · Q weg | Werkzeugleiste unten |
 | Menü | Esc | ☰ oben rechts |

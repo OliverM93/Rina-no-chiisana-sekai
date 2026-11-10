@@ -63,6 +63,7 @@ export type UiPanel =
   | { kind: 'galerie' }
   | { kind: 'tv'; withOli: boolean }
   | { kind: 'minispiel' }
+  | { kind: 'notizbuch' }
   | { kind: 'herd' }
   | { kind: 'samenstand' }
   | { kind: 'truhe' }
