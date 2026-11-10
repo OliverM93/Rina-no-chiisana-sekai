@@ -3253,11 +3253,9 @@ export class World3D {
       player.work = undefined;
       this.standUp();
       this.cutscene = false;
+      // Bewusst ohne Freundschaftspunkte (Audit 3, K2): ein Gag-Moment, kein weiteres „heute schon?“
       const day = this.session.today();
-      const first = data.world.dates.training !== day;
-      data.world.dates.training = day;
       const lines = oli ? [...TRAINING_OLI[hashString(day) % TRAINING_OLI.length]] : [...TRAINING_SOLO[hashString(day) % TRAINING_SOLO.length]];
-      if (oli && first) lines.push(...addFriendship(this.session, 'oli', 4));
       this.session.bus.emit('dialog:open', { title: oli ? 'Oli' : 'Lina', lines });
     });
   }

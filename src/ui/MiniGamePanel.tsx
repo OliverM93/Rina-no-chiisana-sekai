@@ -3,7 +3,8 @@
  * Kein Scheitern: stößt er an sich selbst, gibt es nur eine freundliche Meldung und eine neue Runde.
  */
 import { useEffect, useRef, useState } from 'preact/hooks';
-import { type Dir, newSnake, stepSnake, type SnakeState } from '../core/snake';
+import { type Dir, newSnake, readRecord, saveRecord, stepSnake, type SnakeState } from '../core/snake';
+import type { Session } from '../game/session';
 import { palette } from '../style/palette';
 import { ui } from './store';
 
@@ -11,8 +12,6 @@ const CELL = 32;
 const W = 16;
 const H = 11;
 const STEP_MS = 150;
-
-let best = 0;
 
 const KEYS: Record<string, Dir> = {
   ArrowUp: 'up', KeyW: 'up', ArrowDown: 'down', KeyS: 'down', ArrowLeft: 'left', KeyA: 'left', ArrowRight: 'right', KeyD: 'right',
@@ -69,13 +68,15 @@ function draw(ctx: CanvasRenderingContext2D, s: SnakeState) {
   }
 }
 
-export function MiniGamePanel() {
+export function MiniGamePanel({ session }: { session: Session }) {
   const canvas = useRef<HTMLCanvasElement>(null);
   const state = useRef<SnakeState>(newSnake(W, H));
   const want = useRef<Dir>('right');
   const [running, setRunning] = useState(false);
   const [score, setScore] = useState(0);
   const [over, setOver] = useState(false);
+  const [best, setBest] = useState(() => (session.data ? readRecord(session.data.world.dates) : 0));
+  const [record, setRecord] = useState(false);
   const close = () => ui.set({ panel: null });
 
   const start = () => {
@@ -83,6 +84,7 @@ export function MiniGamePanel() {
     want.current = 'right';
     setScore(0);
     setOver(false);
+    setRecord(false);
     setRunning(true);
   };
 
@@ -122,7 +124,12 @@ export function MiniGamePanel() {
       if (ctx) draw(ctx, next);
       setScore(next.score);
       if (next.over) {
-        best = Math.max(best, next.score);
+        const dates = session.data?.world.dates;
+        if (dates && saveRecord(dates, next.score)) {
+          setBest(next.score);
+          setRecord(true);
+          session.save();
+        }
         setRunning(false);
         setOver(true);
       }
@@ -142,7 +149,9 @@ export function MiniGamePanel() {
           {running
             ? 'Pfeiltasten oder WASD – Winston sammelt Leckerli. Die Ränder sind weich.'
             : over
-              ? score > 0
+              ? record
+                ? `Neuer Rekord: ${score} Leckerli! Winston wedelt stolz. 🐶✨`
+                : score > 0
                 ? `Winston hat sich verheddert – ${score} Leckerli! Nochmal? 🐶`
                 : 'Winston hat sich verheddert. Nochmal? 🐶'
               : 'Winston will Leckerli! Leertaste startet.'}

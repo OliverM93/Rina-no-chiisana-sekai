@@ -93,13 +93,13 @@ Bewohner einen Brief mit Geschenk** (vorher fehlten 12 – siehe `DESIGN_DECISIO
 | Sammlung | Umfang | Quelle |
 |---|---|---|
 | Fische | 17 | `data/species.ts` |
-| Insekten | 24 | `data/species.ts` |
+| Insekten | 27 | `data/species.ts` |
 | Funde (Fossilien & Kristalle) | 11 | `data/fossils.ts` |
 | Blumen-Farben | 22 Blüten (5 Arten) + Kräuter | `data/flowers.ts` |
-| Rezepte | 54 (31 Werkbank inkl. Binden, 19 Küche, 4 Apotheke) | `data/recipes.ts` |
+| Rezepte | 68 (32 Werkbank inkl. Binden, 31 Küche, 5 Apotheke) | `data/recipes.ts` |
 | Sammeltassen | 19 | `data/tassen.ts` |
 | Kunstwerke | 12 | `data/art.ts` |
-| Möbel im Katalog | ~106 Modelle in 9 Stilen (plus Varianten) | `data/furniture.ts` |
+| Möbel im Katalog | 125 Modelle in 10 Stilen (plus Varianten) | `data/furniture.ts` |
 
 **Bewertung**
 - ✅ Saisonale Arten machen das Sammelbuch zu einem **Ganzjahresziel** – ein vollständiges Buch braucht

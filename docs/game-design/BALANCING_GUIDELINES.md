@@ -31,7 +31,10 @@ sein, ein häufiger nicht – sonst kippt der Erwartungswert beim Angeln.
 
 ## 3. Verarbeitung
 
-- Essen: Zielspanne **1,5–3×**; Ausreißer bis ~3,5× nur bei Aufwand (mehrere Ernte-Zutaten, Saison).
+- Essen: Zielspanne **1,5–3×**. Ausreißer bis **~6×** sind erlaubt, wenn die Zutaten begrenzt sind (Eier, Obst, Saison) –
+  Kochen ist keine Geldquelle (ein Gericht bringt so viel wie wenige Fänge), sondern Geschenk, Wunsch und Lieblingsbeschäftigung.
+  Heute darüber: Bratapfel 6,3×, Crêpes 5,8×, Lavendelkekse 4,5×, Apfelpfannkuchen 4,4×, Kräutermischung 4,3×, Zimtsterne 4,0× (Audit 3).
+  Der Test `data/balancing.test.ts` hält alle Rezepte zwischen 1,3× und 6,5×.
 - Deko-Crafting: Wert egal, weil Möbel zu ¼ verkauft werden. Wichtig ist nur, dass das *Rezept erreichbar* ist
   (Test vorhanden).
 - Vasen: **genau wertneutral** (Strauß + Vase − 5). Kein Geldkreislauf über Möbel.
@@ -64,6 +67,11 @@ sein, ein häufiger nicht – sonst kippt der Erwartungswert beim Angeln.
 - Sehr selten (< 5 %) nur für reine Sammelziele (z. B. schwarze Kreuzung), nie für Fortschrittsvoraussetzungen.
 - Seltenes darf an Bedingungen hängen (Monat, Uhrzeit, Wetter), aber jede Bedingung tritt mindestens einmal im
   Jahr ein.
+
+## 7b. Automatische Prüfung ✅
+
+`data/balancing.test.ts` (Audit 3, K5) prüft: Küchen-/Apotheken-Margen 1,3–6,5×, Katalogpreise 50–9 000 ⭐ (über 5 000 nur mit Funktion),
+häufige Arten (Gewicht ≥ 20) ≤ 120 ⭐ und teure Arten (≥ 500 ⭐) selten (Gewicht ≤ 5), Wunsch-Sternchen ≤ 5 000, Hausausbau-Zuwachs 5 000–25 000.
 
 ## 8. Was beim Balancing **nicht** gemacht wird
 

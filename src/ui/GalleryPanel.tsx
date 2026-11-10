@@ -9,6 +9,7 @@ import { artOfTheDay, buyArtOfTheDay, donatableArt, donateArt } from '../game/ga
 import { formatMoney } from '../game/gameplay';
 import type { Session } from '../game/session';
 import { artCanvas } from '../gfx/art';
+import { enterForPrimary } from './navigation';
 import { showToast, ui, useSessionVersion } from './store';
 
 function Painting({ art, big = false }: { art: ArtDef; big?: boolean }) {
@@ -28,11 +29,15 @@ export function GalleryPanel({ session }: { session: Session }) {
   useSessionVersion(session);
   const [selected, setSelected] = useState<string | null>(null);
   const close = () => ui.set({ panel: null });
+  const enter = useRef<() => void>(() => undefined);
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if (e.code === 'Escape') {
         e.preventDefault();
         close();
+      } else if (enterForPrimary(e)) {
+        // Enter (ohne fokussierten Knopf) = Kunstwerk des Tages kaufen
+        enter.current();
       }
     };
     window.addEventListener('keydown', onKey);
@@ -50,6 +55,9 @@ export function GalleryPanel({ session }: { session: Session }) {
     if (r === 'ok') showToast(`🖼️ „${today?.name}“ gekauft! Aufstellen mit „Einrichten“ – oder stiften.`);
     else if (r === 'zu-teuer') showToast('Dafür reichen deine Sternchen noch nicht. Jens hält es dir aber nicht zurück – morgen gibt\'s ein neues!');
     else if (r === 'tasche-voll') showToast('Deine Tasche ist voll! 🎒');
+  };
+  enter.current = () => {
+    if (today && !sold && data.money >= today.price) buy();
   };
   const donate = (id: string) => {
     const lines = donateArt(session, id);

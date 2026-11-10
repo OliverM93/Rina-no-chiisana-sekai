@@ -140,7 +140,7 @@ export function App({ session }: { session: Session }) {
       {state.panel?.kind === 'karte' && <MapPanel session={session} />}
       {state.panel?.kind === 'galerie' && <GalleryPanel session={session} />}
       {state.panel?.kind === 'tv' && <TvPanel session={session} withOli={state.panel.withOli} />}
-      {state.panel?.kind === 'minispiel' && <MiniGamePanel />}
+      {state.panel?.kind === 'minispiel' && <MiniGamePanel session={session} />}
       {state.panel?.kind === 'herd' && <CraftPanel session={session} station="herd" />}
       {state.panel && !['mail', 'book', 'catalog', 'bank', 'werkbank', 'kochstudio', 'apotheke', 'karte', 'galerie', 'tv', 'minispiel', 'herd', 'samenstand', 'truhe', 'foto'].includes(state.panel.kind) && <InventoryPanel session={session} panel={state.panel} />}
       {state.dialog && (
