@@ -30,6 +30,7 @@ Stand der Bestandsaufnahme: November 2026 (nach Merge von Beet & Samen, Phasen 1
 | [`PACING.md`](PACING.md) | Rhythmus von 1 Minute bis 1 Jahr |
 | [`PLAYER_PSYCHOLOGY.md`](PLAYER_PSYCHOLOGY.md) | SDT, Neugier, Besitz, Anti-Manipulations-Regeln |
 | [`PLAYTESTING.md`](PLAYTESTING.md) | Wie wir prüfen, ob es sich gut anfühlt |
+| [`PLAYTEST_BOGEN.md`](PLAYTEST_BOGEN.md) | Playtest-Bogen für Olis Test vor der Übergabe (Ablauf, Notizen, Fragen, Fehler-Liste) |
 | [`DESIGN_DECISIONS.md`](DESIGN_DECISIONS.md) | Getroffene Entscheidungen (mit Begründung) + offene Fragen |
 | [`IMPROVEMENTS.md`](IMPROVEMENTS.md) | Priorisierte Verbesserungsliste & Abschlussbericht der Analyse |
 | [`GAME_DESIGN_AUDIT.md`](GAME_DESIGN_AUDIT.md) | Unabhängiger, kritischer Audit des tatsächlich implementierten Spiels (Findings F1–F18, Roadmap) |

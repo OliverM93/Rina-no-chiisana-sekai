@@ -100,6 +100,8 @@ die „Radierkopf“-Verbeugung. Das ist bewusst und in `DESIGN_DECISIONS.md` (D
 
 ## 6. Empfohlene nächste Schritte
 
+> **Hinweis (nach Rückmeldung):** Das Spiel ist ein Geschenk – Lina spielt es erst nach der Übergabe. Der Playtest läuft deshalb mit **Oli als einzigem Tester**, Ablauf in [`PLAYTEST_BOGEN.md`](PLAYTEST_BOGEN.md). Lina-Fragen (Q2–Q8) beantwortet Oli dort selbst als „Wäre das etwas für Lina?“.
+
 1. **Playtest mit Lina** (S1–S9) und die offenen Fragen **Q2–Q8** klären – vor jedem weiteren neuen System. Vorschlag: 3 Sitzungen (je ~45 Min.), ein Zettel mit „Was hat mir Freude gemacht / was hat genervt / was fehlt?“.
 2. Danach nur das nachbessern, was dort auffällt (v. a. Tempo der Handlung F9, Wiederholung F8, Muss-noch-Gefühl N2).
 3. Echte Insider von Oli und der Familie (Q7) einsammeln und in Dialoge/Briefe einbauen.
