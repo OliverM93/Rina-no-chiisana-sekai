@@ -99,8 +99,8 @@ export const GUEST_HOUSES: Readonly<Record<string, GuestHouse>> = {
     items: [
       { id: 'sofa', x: 1, y: 3, rot: 0 },
       { id: 'globus', x: 5, y: 1 },
-      { id: 'wandkarte-thalia', x: 2, y: 0, rot: 0 },
-      { id: 'discokugel', x: 7, y: 1 },
+      { id: 'wandkarte-thalia', x: 7, y: 2, rot: 1 },
+      { id: 'discokugel', x: 6, y: 1 },
       { id: 'regal', x: 0, y: 1, rot: 0 },
       { id: 'ammonit-lina', x: 0, y: 1, on: 'regal' },
       { id: 'formenteppich', x: 4, y: 3 },
