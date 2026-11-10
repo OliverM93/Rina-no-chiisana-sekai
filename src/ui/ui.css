@@ -2169,3 +2169,14 @@ body:has(.dialog-layer) .decor-bar {
   flex-wrap: wrap;
   margin-bottom: 8px;
 }
+
+/* Werkbank, Küche & Apotheke: Knöpfe unten bleiben immer sichtbar, auch wenn die Karte scrollt */
+.card.book.craft > .card-actions {
+  position: sticky;
+  bottom: -20px;
+  margin: 12px -22px -20px;
+  padding: 10px 22px 16px;
+  background: var(--ui-panel);
+  border-top: 2px solid color-mix(in srgb, var(--ui-border) 55%, transparent);
+  z-index: 2;
+}

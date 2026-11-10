@@ -17,12 +17,20 @@ export function recipeName(r: RecipeDef): string {
 }
 
 /** Lernt ein Rezept (mit Meldung). Gibt `true` zurück, wenn es neu war. */
+/** Wo man das Rezept zubereitet – damit der Hinweis stimmt (Gerichte gehen nicht an die Werkbank) */
+export function recipeWhere(r: RecipeDef): string {
+  const st = r.station ?? 'werkbank';
+  if (st === 'kueche') return 'Kochen kannst du am Herd – später in deiner eigenen Küche oder bei Jens im Kochstudio.';
+  if (st === 'apotheke') return 'Aufbrühen kannst du es in Lars\' Apotheke.';
+  return 'Ab an die Werkbank.';
+}
+
 export function learnRecipe(session: Session, id: string, announce = true): boolean {
   const data = session.data;
   const r = RECIPE_BY_ID[id];
   if (!data || !r || !learn(data.recipes, id)) return false;
   session.changed();
-  if (announce) session.bus.emit('toast', { text: `📜 Neues Rezept: ${recipeName(r)}! Ab an die Werkbank.`, icon: itemIconUrl(r.result) });
+  if (announce) session.bus.emit('toast', { text: `📜 Neues Rezept: ${recipeName(r)}! ${recipeWhere(r)}`, icon: itemIconUrl(r.result) });
   return true;
 }
 
