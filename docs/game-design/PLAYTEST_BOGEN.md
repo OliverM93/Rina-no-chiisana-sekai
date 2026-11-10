@@ -1,15 +1,16 @@
-# Playtest-Bogen (Stellvertreter-Test vor der Übergabe)
+# Playtest-Bogen (Test vor der Übergabe)
 
-Das Spiel ist ein **Geschenk für Lina**. Sie soll es erst spielen, wenn es fertig ist – deshalb testet vorher eine **Stellvertreterin / ein Stellvertreter**
-(Familie oder Freunde, die Lina gut kennen, das Spiel aber nicht). Dieser Bogen ist für sie/ihn und für die Person, die beobachtet.
+Das Spiel ist ein **Geschenk für Lina**. Sie soll es erst spielen, wenn es fertig ist – deshalb **testet Oli allein** (Stand: Nov. 2026), und niemand sonst.
+Der Bogen funktioniert **ohne Beobachter**: Oli spielt und notiert selbst. Oli kennt das Spiel und Lina gut – das ist Stärke (er erkennt, was nicht zu ihr passt)
+und Schwäche (er sieht Hürden nicht mehr, die ein Fremder sähe). Das sollte beim Spielen bewusst mitgedacht werden.
 Er ergänzt [`PLAYTESTING.md`](PLAYTESTING.md) (Szenarien S1–S9, Kennzahlen) und beantwortet die offenen Fragen aus
 [`GAME_DESIGN_AUDIT_2.md`](GAME_DESIGN_AUDIT_2.md).
 
 **Grundregeln**
-- Keine Telemetrie, keine Aufzeichnung – nur Zettel und Gespräch. Der Spielstand bleibt im Browser der Testerin.
-- Die Testerin spielt **so, wie sie will**. Es gibt keine Aufgaben, kein Richtig oder Falsch. Alles, was nicht klappt, ist ein Fehler im Spiel, nicht bei ihr.
-- Die beobachtende Person (z. B. Oli) **sagt nichts und hilft nicht**, außer die Testerin steckt fest (dann notieren, *wo*, und erst danach helfen).
-- Wichtig: **Nicht Lina vorab zeigen.** Wer testet, sollte Verschwiegenheit zusagen (Screenshots nicht teilen).
+- Keine Telemetrie, keine Aufzeichnung durch das Spiel – nur Notizen. Der Test-Spielstand bleibt in deinem Browser (und ist **nicht** Linas Spielstand: für Lina startet ein frisches Spiel).
+- Spiel **so, wie Lina es vermutlich täte**, nicht wie jemand, der das Spiel kennt: nicht gleich zur Werkbank rennen, Hinweise im Spiel lesen, Dialoge wirklich lesen.
+- **Selbstbeobachtung:** Stolperstellen sofort in Stichworten notieren, nicht erst hinterher. Hilfreich: eine **Bildschirmaufnahme** (nur für dich) der ersten 20 Minuten.
+- Wichtig: **Nicht Lina vorab zeigen**, auch keine Screenshots teilen.
 
 ## 1. Vorbereitung (5 Minuten)
 
@@ -31,23 +32,23 @@ Zwischen den Sitzungen mindestens einen Tag Pause lassen (Wiederholungen im Dial
 **Zeitreise-Hilfen (nur für Beobachtende):** `?zeit=19:30` · `?datum=2026-12-10` (Winter) · `?wetter=regen` an die Adresse hängen.
 Tagsüber **und** abends testen: Lina spielt beides.
 
-## 3. Beobachtungsbogen (für die beobachtende Person)
+## 3. Notizbogen (selbst ausfüllen)
 
 Pro Auffälligkeit eine Zeile: *Uhrzeit · was passiert · Wortlaut, wenn sie etwas sagt*. Strichlisten unten.
 
-**Wo zögert oder sucht sie?** (Bedienhürden)
+**Wo zögerst oder suchst du?** (Bedienhürden)
 -
 -
 
-**Wann lacht sie, liest laut vor, sagt „oh wie süß“?** (das funktioniert)
+**Wann musst du lachen oder denkst „das gefällt Lina“?** (das funktioniert)
 -
 -
 
-**Wann sagt sie „jetzt muss ich noch …“ / „ich sollte noch …“?** (Pflichtgefühl – jede einzelne Aussage zählt)
+**Wann denkst du „jetzt muss ich noch …“ / „ich sollte noch …“?** (Pflichtgefühl – jeder einzelne Gedanke zählt)
 -
 -
 
-**Wann wartet sie nur oder schaut sich ratlos um?** (Pacing)
+**Wann wartest du nur oder weißt nicht weiter?** (Pacing)
 -
 -
 
@@ -65,7 +66,7 @@ Pro Auffälligkeit eine Zeile: *Uhrzeit · was passiert · Wortlaut, wenn sie et
 
 **Zeitmarken** (Spielzeit zählt, nicht Uhr): Ankunft Oma · 1. Einzug · 2. Einzug · alle Einzüge · erstes eigenes Möbel aufgestellt · erster Wunsch erfüllt: ______
 
-## 4. Fragen an die Testerin (nach jeder Sitzung, 5–10 Minuten, offen und nicht suggestiv)
+## 4. Fragen an dich selbst (nach jeder Sitzung, 5–10 Minuten, schriftlich)
 
 1. Was war der schönste Moment?
 2. Gab es etwas, das sich wie **Arbeit** angefühlt hat?
@@ -79,9 +80,9 @@ Pro Auffälligkeit eine Zeile: *Uhrzeit · was passiert · Wortlaut, wenn sie et
 8. Gab es eine Stelle, an der du dachtest „das ist aber lieb gemeint“ – und dich gefreut hast?
 9. Hat dich etwas genervt, das sich wiederholt hat?
 
-## 5. Stellvertreter-Fragen: „Wäre das etwas für Lina?“
+## 5. „Wäre das etwas für Lina?“
 
-Hier geht es um **Linas Geschmack**, nicht um die Testerin. Bitte ehrlich und kurz antworten (Ja / Eher ja / Eher nein / Nein – und warum):
+Hier geht es um **Linas Geschmack**, nicht um deinen. Du kennst sie am besten – bitte ehrlich und kurz antworten (Ja / Eher ja / Eher nein / Nein – und warum):
 
 | Frage | Antwort |
 |---|---|
