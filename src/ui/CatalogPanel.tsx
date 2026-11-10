@@ -7,7 +7,7 @@ import { CURRENCY } from '../data/items';
 import { FLOORS, FURNITURE, type FurnitureStyle, STYLE_LABELS, VARIANT_LABELS, WALLPAPERS } from '../data/furniture';
 import { getSeason } from '../core/time';
 import { formatMoney } from '../game/gameplay';
-import { buyFromCatalog, styleUnlocked } from '../game/home';
+import { buyFromCatalog, isSurface, styleUnlocked } from '../game/home';
 import type { Session } from '../game/session';
 import { itemIconUrl } from '../gfx/items';
 import { showToast, ui, useSessionVersion } from './store';
@@ -83,9 +83,14 @@ export function CatalogPanel({ session }: { session: Session }) {
     if (!sel || !v) return;
     if (money < sel.price) return showToast('Dafür reichen deine Sternchen noch nicht. ⭐');
     const r = buyFromCatalog(session, v.itemId);
-    if (r === 'ok') showToast(`${sel.name} gekauft! Liegt jetzt in deiner Tasche. 🎁`, itemIconUrl(v.itemId));
+    if (r === 'ok' && session.decorActive) {
+      // Beim Einrichten: Katalog zu, das Gekaufte hängt gleich an der Maus (Tapete/Boden wird sofort angebracht)
+      ui.set({ panel: null });
+      session.bus.emit('decor:command', isSurface(v.itemId) ? { kind: 'surface', itemId: v.itemId } : { kind: 'take', itemId: v.itemId });
+      showToast(`${sel.name} gekauft! ${isSurface(v.itemId) ? '' : 'Klick zum Abstellen.'}`, itemIconUrl(v.itemId));
+    } else if (r === 'ok') showToast(`${sel.name} gekauft! Liegt jetzt in deiner Tasche. 🎁`, itemIconUrl(v.itemId));
     else if (r === 'zu-teuer') showToast('Dafür reichen deine Sternchen noch nicht. ⭐');
-    else if (r === 'tasche-voll') showToast('Deine Tasche ist voll! 🎒');
+    else if (r === 'tasche-voll') showToast('Tasche und Truhe sind voll! 🎒');
   };
 
   buyRef.current = buy;
@@ -171,7 +176,7 @@ export function CatalogPanel({ session }: { session: Session }) {
               </div>
             </>
           ) : (
-            <p class="soft center">Such dir etwas Schönes aus! Gekauftes kommt sofort in deine Tasche – aufstellen kannst du es mit „Einrichten“.</p>
+            <p class="soft center">Such dir etwas Schönes aus! Gekauftes kommt in deine Tasche – oder, wenn du gerade einrichtest, direkt in deine Hand.</p>
           )}
         </div>
         <div class="card-actions">
