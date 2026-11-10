@@ -21,7 +21,7 @@ Wichtigste Einschränkung: Headless-Chromium läuft mit wenigen Bildern pro Seku
    Einzüge brauchen zusammen 9 Sammelbuch-Einträge, 2 500 ⭐ Verkäufe (≈ 30 Fänge), 1 Möbel, 2 Bastelstücke, 1 Gericht, 1 Check-up.
    Das schafft man in deutlich unter einer Stunde; den Rest füllen die 5 × 10 Minuten Wartezeit. **Der stärkste Motor des Spiels
    ist realistisch nach dem ersten Abend verbraucht** [V]. Für ein Geschenk, das von Vorfreude lebt, ist das der größte Hebel.
-2. **Die Sternchen-Wirtschaft ist sauber, hat aber ein Ende [N]:** Alles einmal zu besitzen kostet **≈ 420 000 ⭐**. Danach haben
+2. **Die Sternchen-Wirtschaft ist sauber, hat aber ein Ende [N]:** Alles einmal zu besitzen kostet **≈ 425 000 ⭐**. Danach haben
    Sternchen keinen Zweck mehr; das Sparbuch ist schon vorher bedeutungslos.
 3. **Oli – die wichtigste Figur – hat die meisten Freundschaftsquellen [N]:** Bis zu ~126 Punkte am Tag; 5 Herzen (400) in
    **3–4 echten Tagen**. Seine Stufen-Szenen sind damit in der ersten Woche erzählt.
@@ -167,7 +167,7 @@ Die Summe der 1×/Tag-Dinge liegt jetzt bei rund 20 [V].
 
 **A3 · Oli-Herzen in 3–4 Tagen voll [N]** – Stufen-Szenen schnell verbraucht. Empfehlung: Punkte für Date-Momente moderat senken (M3) – [P], ob es überhaupt stört.
 
-**A4 · Sternchen ohne Zweck nach ~420 k [N/V]** – erst nach vielen Stunden relevant. Empfehlung: **nach dem Playtest** entscheiden; wenn ja, Dorf-Verschönerungen an der Dorfkasse (G1).
+**A4 · Sternchen ohne Zweck nach ~425 k [N/V]** – erst nach vielen Stunden relevant. Empfehlung: **nach dem Playtest** entscheiden; wenn ja, Dorf-Verschönerungen an der Dorfkasse (G1).
 
 **A5 · Enter-Bestätigung uneinheitlich [N]** – Empfehlung: überall dort, wo es einen Hauptknopf gibt (K1).
 
