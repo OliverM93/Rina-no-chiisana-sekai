@@ -2,7 +2,7 @@
  * Fortschritt: Woran arbeitet Lina gerade (nächster Einzug), und welcher Bewohner
  * gibt dazu einen sanften Hinweis? (Ohne Abhängigkeit von gameplay/story.)
  */
-import { missingNeeds, type NeedKind, type ProgressState } from '../core/progress';
+import { missingNeeds, type Need, type NeedKind, type ProgressState } from '../core/progress';
 import { GARDEN_FLOWER } from '../data/items';
 import { FLAG_AUSBAU_BESTELLT, type Milestone, MILESTONES } from '../data/progress';
 import type { Session } from './session';
@@ -39,6 +39,25 @@ export function milestoneMissing(session: Session, kind: NeedKind): { npc: strin
   return missingNeeds(m.needs, st).some((n) => n.kind === kind) ? { npc: m.npc } : null;
 }
 
+/** Hinweistext für eine fehlende Bedingung (Flag-Hinweise gehen vor) */
+function hintFor(m: Milestone, need: Need): readonly string[] | null {
+  if (need.kind === 'flag' && need.flag && m.flagHints?.[need.flag]) return m.flagHints[need.flag];
+  return m.hints[need.kind] ?? null;
+}
+
+/** Alle Hinweise auf das, was für den nächsten Einzug noch fehlt (fürs Notizbuch) */
+export function allProgressHints(session: Session): { by: string; lines: readonly string[] }[] {
+  const m = currentMilestone(session);
+  const st = progressState(session);
+  if (!m || !st) return [];
+  const out: { by: string; lines: readonly string[] }[] = [];
+  for (const need of missingNeeds(m.needs, st)) {
+    const lines = hintFor(m, need);
+    if (lines && !out.some((o) => o.lines === lines)) out.push({ by: m.hintBy, lines });
+  }
+  return out;
+}
+
 /** Hinweis dieses Bewohners auf das, was für den nächsten Einzug noch fehlt (oder null) */
 export function progressHint(session: Session, npcId: string): readonly string[] | null {
   const m = currentMilestone(session);
@@ -50,7 +69,5 @@ export function progressHint(session: Session, npcId: string): readonly string[]
   const day = session.today();
   let h = 0;
   for (const ch of day + npcId) h = (h * 31 + ch.charCodeAt(0)) >>> 0;
-  const need = missing[h % missing.length];
-  if (need.kind === 'flag' && need.flag && m.flagHints?.[need.flag]) return m.flagHints[need.flag];
-  return m.hints[need.kind] ?? null;
+  return hintFor(m, missing[h % missing.length]);
 }

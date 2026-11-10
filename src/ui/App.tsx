@@ -24,6 +24,7 @@ import { CraftPanel } from './CraftPanel';
 import { MapPanel } from './MapPanel';
 import { GalleryPanel } from './GalleryPanel';
 import { MiniGamePanel } from './MiniGamePanel';
+import { NotebookPanel } from './NotebookPanel';
 import { TvPanel } from './TvPanel';
 import { handleArrowKey } from './navigation';
 import { type ConfirmRequest, showToast, ui, useUI } from './store';
@@ -59,6 +60,7 @@ export function App({ session }: { session: Session }) {
         ui.set({ panel: { kind: 'inventory' } });
       }
       if (e.code === 'KeyB' && free && !typing) ui.set({ panel: { kind: 'book' } });
+      if (e.code === 'KeyN' && free && !typing) ui.set({ panel: { kind: 'notizbuch' } });
       if (e.code === 'KeyF' && free && !typing) session.bus.emit('foto:aufnehmen', undefined);
       if (e.code === 'KeyM' && free && !typing && session.data?.flags.thaliaBegruesst) ui.set({ panel: { kind: 'karte' } });
       // G: Einrichten (drinnen) bzw. Garten gestalten (im Garten) – nochmal G = fertig
@@ -140,9 +142,10 @@ export function App({ session }: { session: Session }) {
       {state.panel?.kind === 'karte' && <MapPanel session={session} />}
       {state.panel?.kind === 'galerie' && <GalleryPanel session={session} />}
       {state.panel?.kind === 'tv' && <TvPanel session={session} withOli={state.panel.withOli} />}
+      {state.panel?.kind === 'notizbuch' && <NotebookPanel session={session} />}
       {state.panel?.kind === 'minispiel' && <MiniGamePanel session={session} />}
       {state.panel?.kind === 'herd' && <CraftPanel session={session} station="herd" />}
-      {state.panel && !['mail', 'book', 'catalog', 'bank', 'werkbank', 'kochstudio', 'apotheke', 'karte', 'galerie', 'tv', 'minispiel', 'herd', 'samenstand', 'truhe', 'foto'].includes(state.panel.kind) && <InventoryPanel session={session} panel={state.panel} />}
+      {state.panel && !['mail', 'book', 'catalog', 'bank', 'werkbank', 'kochstudio', 'apotheke', 'karte', 'galerie', 'tv', 'minispiel', 'notizbuch', 'herd', 'samenstand', 'truhe', 'foto'].includes(state.panel.kind) && <InventoryPanel session={session} panel={state.panel} />}
       {state.dialog && (
         <DialogBox
           dialog={state.dialog}
