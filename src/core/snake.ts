@@ -59,3 +59,19 @@ export function stepSnake(s: SnakeState, want: Dir, rnd: () => number = Math.ran
   // Bildschirm voll = Meisterleistung
   return { ...s, body, dir, score: s.score + 1, food: food ?? s.food, over: food === null };
 }
+
+/** Schlüssel des Rekords im Spielstand (`world.dates`, als Zahl-Text – kein neues Spielstand-Format) */
+export const SNAKE_RECORD_KEY = 'snake-rekord';
+
+/** Gespeicherter Rekord (ungültig/fehlend = 0) */
+export function readRecord(dates: Readonly<Record<string, string>>): number {
+  const n = Number.parseInt(dates[SNAKE_RECORD_KEY] ?? '', 10);
+  return Number.isFinite(n) && n > 0 ? n : 0;
+}
+
+/** Neuen Rekord eintragen, falls höher; gibt zurück, ob es ein neuer Rekord ist */
+export function saveRecord(dates: Record<string, string>, score: number): boolean {
+  if (score <= readRecord(dates)) return false;
+  dates[SNAKE_RECORD_KEY] = String(score);
+  return true;
+}

@@ -35,6 +35,7 @@ Stand der Bestandsaufnahme: November 2026 (nach Merge von Beet & Samen, Phasen 1
 | [`IMPROVEMENTS.md`](IMPROVEMENTS.md) | Priorisierte Verbesserungsliste & Abschlussbericht der Analyse |
 | [`GAME_DESIGN_AUDIT.md`](GAME_DESIGN_AUDIT.md) | Unabhängiger, kritischer Audit des tatsächlich implementierten Spiels (Findings F1–F18, Roadmap) |
 | [`GAME_DESIGN_AUDIT_2.md`](GAME_DESIGN_AUDIT_2.md) | Nachprüfung (Nov. 2026): Status von F1–F18, neue Findings N1–N8, Empfehlung: Playtest vor neuen Features |
+| [`GAME_DESIGN_AUDIT_3.md`](GAME_DESIGN_AUDIT_3.md) | Audit 3 (Nov. 2026): Sternchen-Wirtschaft nachgerechnet, Tempo der Einzüge, Oli-Tempo, Orientierung, Maßnahmen K1–K5 / M1–M3 / G1–G2 |
 
 ## Designprüfung vor jedem neuen Feature
 

@@ -18,7 +18,7 @@ und Freundschaft als „weiche Währung“. Alle Zahlen hier stammen aus den Dat
 | Quelle | Grenze | Wert (📏) |
 |---|---|---|
 | **Angeln** (17 Arten) | unbegrenzt | Ø 83–104 ⭐ je Fang (gewichtet, je nach Monat); 15–1 200 ⭐ |
-| **Insekten** (24 Arten) | unbegrenzt, aber man muss sie finden | Ø 57–120 ⭐ je Fang; Winter wenige, teure Arten |
+| **Insekten** (27 Arten) | unbegrenzt, aber man muss sie finden | Ø 51–73 ⭐ je Fang tagsüber, 86–171 ⭐ nachts; Winter wenige, teure Arten (~120 ⭐) |
 | Muscheln & Seesterne | 7 Funde/Tag | 12–60 ⭐ |
 | Felsen | 1×/Tag je Felsen | Kiesel 4 ⭐, Glitzerstein 120 ⭐ (12 %) |
 | Obstbäume | wächst nach 3 Tagen nach | 10–12 ⭐ |
@@ -38,7 +38,8 @@ realistisch **~10–15 k ⭐/h**. **Im Playtest messen!**
 | Senke | Umfang |
 |---|---|
 | **Hausausbau** | 273 800 ⭐ für alle 6 Stufen (9 800 → 89 800) |
-| **Möbelkatalog** | ~106 Modelle, zusammen ≈ 90 600 ⭐ (Median 600, 25 %: 300, 75 %: 900, max. 8 800) |
+| **Möbelkatalog** | 125 Modelle, zusammen ≈ 103 300 ⭐ (Median 520, max. 8 800) · Tapeten/Böden 21 350 ⭐ |
+| Galerie | 13 Bilder, zusammen 18 800 ⭐ |
 | Kaffeemaschinen | 650 / 3 200 / 8 800 |
 | Gewächshaus / Frühbeet | 4 200 / 1 800 |
 | Galerie | 900–2 200 je Bild, 1 Angebot/Tag |
@@ -46,14 +47,14 @@ realistisch **~10–15 k ⭐/h**. **Im Playtest messen!**
 | Herzenswünsche ✅ | Materialien + 5 000 ⭐ (Olafs Steg 3 000, Thalias Aussichtspunkt 2 000) |
 | Saisonware (Winter, Saison-Tassen) | wiederkehrend |
 
-**Gesamtbedarf** für „alles einmal besitzen“: grob **~380 k ⭐**. Danach gibt es kaum noch Senken außer Samen
+**Gesamtbedarf** für „alles einmal besitzen“: **≈ 425 k ⭐** (Audit 3, nachgerechnet). Danach gibt es kaum noch Senken außer Samen
 und Galerie.
 
 ## Verarbeitungs-Margen (Ergebnis-Wert ÷ Zutaten-Wert)
 
 | Station | Spanne | Auffällig |
 |---|---|---|
-| Küche (26, davon 7 Fischgerichte 1,6–1,8×) | 1,3 – 3,3× | `bratapfel` **6,3×** (Winter, Rezept per Adventskalender), `kuerbissuppe` 3,3× |
+| Küche (31, davon 7 Fischgerichte 1,6–1,8×) | 1,6 – 6,3× | über 3,5×: Bratapfel 6,3×, Crêpes 5,8×, Lavendelkekse 4,5×, Apfelpfannkuchen 4,4×, Zimtsterne 4,0× – unkritisch, weil Zutaten begrenzt und Kochen keine Geldquelle ist |
 | Apotheke (4) | 1,5 – 2,2× | – |
 | Werkbank-Möbel | 0,8 – 3,2× | Möbelwert zählt nur ¼ → Verkaufen lohnt nicht; sie sind **Deko**, keine Einnahme |
 | Sträuße | 1,2 – 1,8× | Schwarz-Strauß 700 ⭐ (seltene Mischfarbe) |

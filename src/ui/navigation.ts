@@ -83,3 +83,16 @@ export function handleArrowKey(e: KeyboardEvent, container: HTMLElement): boolea
   }
   return true;
 }
+
+/**
+ * Enter als Abkürzung für den Hauptknopf eines Fensters – aber nur, wenn gerade kein Aktionsknopf (`.btn`), Reiter oder
+ * Feld den Fokus hat (dann drückt Enter wie gewohnt diesen Knopf). Listeneinträge (Rezept, Brief, Bild) zählen nicht:
+ * Sie wählen beim Fokussieren schon aus, Enter löst dann die Hauptaktion dafür aus – wie im Katalog.
+ */
+export function enterForPrimary(e: KeyboardEvent): boolean {
+  if ((e.code !== 'Enter' && e.code !== 'NumpadEnter') || e.repeat) return false;
+  const active = document.activeElement;
+  if (active instanceof HTMLElement && active.matches('input, select, textarea, .btn, .chip, .swatch')) return false;
+  e.preventDefault();
+  return true;
+}
