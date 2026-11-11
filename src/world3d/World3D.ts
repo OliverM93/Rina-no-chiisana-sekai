@@ -530,7 +530,7 @@ export class World3D {
   }
 
   private updateCamera() {
-    const desired = this.camTarget.clone().add(CAM_OFFSET.clone().multiplyScalar(this.session.inside ? this.camScale * (this.houseWide() ? this.zoom : 1) : this.zoom));
+    const desired = this.camTarget.clone().add(CAM_OFFSET.clone().multiplyScalar(this.session.inside ? this.camScale * this.zoom : this.zoom));
     this.camPos.copy(desired);
     this.camera.position.copy(this.camPos);
     this.camera.lookAt(this.camTarget.x, 0.75, this.camTarget.z);
@@ -541,11 +541,10 @@ export class World3D {
 
   private onWheel = (e: WheelEvent) => {
     e.preventDefault();
-    if (this.session.decorActive) {
-      if (Math.abs(e.deltaY) > 2) this.rotateHeld();
-      return;
-    }
-    this.zoomBy(e.deltaY > 0 ? 1.08 : 0.93);
+    // Mausrad und Touchpad (Zwei-Finger-Scrollen, Pinch) zoomen – auch beim Einrichten (Drehen: R oder Knopf).
+    // Proportional zur Scrollstärke: Touchpads schicken viele kleine Schritte, Mausräder wenige große.
+    const k = Math.max(-80, Math.min(80, e.deltaMode === 1 ? e.deltaY * 30 : e.deltaY));
+    this.zoomBy(Math.exp(k * 0.0013));
   };
 
   /** Steht hier gerade ein Bewohner? (Lina läuft nicht durch sie hindurch – ihre eigene Kachel zählt nie) */
