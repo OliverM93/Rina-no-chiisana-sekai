@@ -17,6 +17,77 @@ export function drawPattern(ctx: CanvasRenderingContext2D, def: SurfaceDef, s: n
       ctx.fillRect(0, s - s / 24, s, s / 24);
       break;
     }
+    case 'zickzack': {
+      // Schwarz-weißes Zickzack: breite Bänder, deren Kanten Zacken bilden (kachelbar: zwei Zacken pro Kachel)
+      const bands = 4;
+      const h = s / bands;
+      const period = s / 2;
+      const amp = h / 2;
+      const zig = (x: number) => {
+        const p = (((x % period) + period) % period) / period; // 0..1
+        return (p < 0.5 ? p : 1 - p) * 2 * amp - amp / 2; // Dreieckswelle
+      };
+      ctx.fillStyle = accent;
+      for (let k = -1; k < bands; k += 2) {
+        ctx.beginPath();
+        for (let x = 0; x <= s + 1; x += period / 2) ctx.lineTo(x, k * h + zig(x));
+        for (let x = s; x >= -1; x -= period / 2) ctx.lineTo(x, (k + 1) * h + zig(x));
+        ctx.closePath();
+        ctx.fill();
+      }
+      // weicher Glanz auf dem Boden
+      ctx.globalAlpha = 0.08;
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(0, 0, s, s / 40);
+      ctx.globalAlpha = 1;
+      break;
+    }
+    case 'vorhang': {
+      // schwere Samtvorhänge: senkrechte Falten mit Licht und Schatten
+      const folds = 8;
+      const w = s / folds;
+      for (let i = 0; i < folds; i++) {
+        const g = ctx.createLinearGradient(i * w, 0, (i + 1) * w, 0);
+        g.addColorStop(0, darken(color, 0.28));
+        g.addColorStop(0.45, lighten(color, 0.1));
+        g.addColorStop(0.6, color);
+        g.addColorStop(1, darken(color, 0.28));
+        ctx.fillStyle = g;
+        ctx.fillRect(i * w, 0, w + 1, s);
+      }
+      ctx.globalAlpha = 0.2;
+      ctx.fillStyle = accent;
+      ctx.fillRect(0, s - s / 16, s, s / 16);
+      ctx.globalAlpha = 1;
+      break;
+    }
+    case 'tannen': {
+      // kleine Tannen in versetzten Reihen
+      const n = 4;
+      const t = s / n;
+      for (let row = -1; row <= n; row++) {
+        for (let col = -1; col <= n; col++) {
+          const cx = col * t + (row % 2 ? t / 2 : 0) + t / 2;
+          const base = row * t + t * 0.9;
+          ctx.fillStyle = darken(accent, 0.3);
+          ctx.fillRect(cx - t * 0.03, base - t * 0.12, t * 0.06, t * 0.14);
+          for (let k = 0; k < 3; k++) {
+            ctx.fillStyle = k % 2 ? accent : lighten(accent, 0.08);
+            const top = base - t * (0.78 - k * 0.0);
+            const y0 = base - t * 0.12 - k * t * 0.2;
+            const wd = t * (0.3 - k * 0.07);
+            ctx.beginPath();
+            ctx.moveTo(cx, y0 - t * 0.3);
+            ctx.lineTo(cx + wd, y0);
+            ctx.lineTo(cx - wd, y0);
+            ctx.closePath();
+            ctx.fill();
+            void top;
+          }
+        }
+      }
+      break;
+    }
     case 'chevron': {
       // Französisches Fischgrät: Stäbe laufen spitz in der Mitte zusammen (V-Form), links gespiegelt zu rechts
       const t = s / 6;
