@@ -6,16 +6,16 @@
  *       ┌───────────────┐
  *       │  Schlafzimmer │              (ab Stufe 2, Tür in der Rückwand des Wohnzimmers)
  *       └───────┬───────┘
- *  ┌──────┐ ┌───┴───────────┐ ┌──────────────┐
- *  │Küche ├─┤  Wohnzimmer   ├─┤ Wintergarten │   (Küche ab Stufe 4, Wintergarten ab Stufe 5; Türen in den Seitenwänden)
- *  └──────┘ └───────┬───────┘ └──────────────┘
+ *  ┌──────────────┐ ┌───┴───────────┐ ┌──────┐
+ *  │ Wintergarten ├─┤  Wohnzimmer   ├─┤Küche │   (Küche ab Stufe 4, Wintergarten ab Stufe 5; Türen in den Seitenwänden)
+ *  └──────────────┘ └───────┬───────┘ └──────┘
  *                Haustür
  *
  * Dach und Keller sind eigene Etagen, die Treppe verbindet sie mit dem Erdgeschoss.
  * Die Möbel bleiben raumweise gespeichert (Raum-Koordinaten) – hier steht nur, wo jeder Raum liegt.
  */
 import type { FloorPlan, PlacedRoom, PlanDoor } from '../core/floorplan';
-import { layoutOf, MAX_STAGE } from './house';
+import { innerDoors, layoutOf, MAX_STAGE, roomLayouts } from './house';
 
 /** Etagen-ID: Erdgeschoss, Dachzimmer oben, Keller unten */
 export type FloorId = 'eg' | 'dach' | 'keller';
@@ -26,42 +26,25 @@ export interface StairLink {
   to: { floor: FloorId; room: string; cell: readonly [number, number] };
 }
 
-/** Das Feld in Seitenwand-Türen, an dem Küche/Wintergarten mit dem Wohnzimmer verbunden sind (Zeile im Raum) */
-const SIDE_DOOR_ROW = 3;
-
 /** Erdgeschoss für diese Ausbaustufe */
 export function groundFloor(stage: number): FloorPlan {
   const main = layoutOf(stage, 'haupt');
-  const hasBedroom = stage >= 2;
-  const hasKitchen = stage >= 4;
-  const hasConservatory = stage >= 5;
-  const size = (id: string) => layoutOf(stage, id);
+  const size = (id: string) => (stage >= (id === 'schlafzimmer' ? 2 : id === 'kueche' ? 4 : 5) ? layoutOf(stage, id) : null);
+  const bedroom = size('schlafzimmer');
+  const kitchen = size('kueche');
+  const conservatory = size('wintergarten');
 
-  const bedroom = hasBedroom ? size('schlafzimmer') : null;
-  const kitchen = hasKitchen ? size('kueche') : null;
-  const conservatory = hasConservatory ? size('wintergarten') : null;
-
-  // vordere Reihe: Küche | Wohnzimmer | Wintergarten; hinten darüber das Schlafzimmer
+  // vordere Reihe: Wintergarten | Wohnzimmer | Küche; hinten darüber das Schlafzimmer
   const frontY = bedroom ? bedroom.h + 1 : 0;
-  const mainX = kitchen ? kitchen.w + 1 : 0;
-  const rooms: PlacedRoom[] = [{ id: 'haupt', x: mainX, y: frontY, w: main.w, h: main.h }];
-  const doors: PlanDoor[] = [];
-
-  if (bedroom) {
-    // Rückwand-Tür des Wohnzimmers liegt über der Haustür des Schlafzimmers
-    const mainDoorX = Math.floor(main.w / 2) - 1;
-    const bedDoorX = Math.floor(bedroom.w / 2) - 1;
-    rooms.push({ id: 'schlafzimmer', x: mainX + mainDoorX - bedDoorX, y: 0, w: bedroom.w, h: bedroom.h });
-    doors.push({ room: 'haupt', cell: [mainDoorX, 0], side: 'up', to: 'schlafzimmer', toCell: [bedDoorX, bedroom.h - 1] });
-  }
-  if (kitchen) {
-    rooms.push({ id: 'kueche', x: 0, y: frontY, w: kitchen.w, h: kitchen.h });
-    doors.push({ room: 'kueche', cell: [kitchen.w - 1, SIDE_DOOR_ROW], side: 'right', to: 'haupt', toCell: [0, SIDE_DOOR_ROW] });
-  }
-  if (conservatory) {
-    rooms.push({ id: 'wintergarten', x: mainX + main.w + 1, y: frontY, w: conservatory.w, h: conservatory.h });
-    doors.push({ room: 'haupt', cell: [main.w - 1, SIDE_DOOR_ROW], side: 'right', to: 'wintergarten', toCell: [0, SIDE_DOOR_ROW] });
-  }
+  const mainX = conservatory ? conservatory.w + 1 : 0;
+  const placed: Record<string, { x: number; y: number }> = { haupt: { x: mainX, y: frontY } };
+  if (bedroom) placed.schlafzimmer = { x: mainX + Math.floor(main.w / 2) - 1 - 3, y: 0 };
+  if (conservatory) placed.wintergarten = { x: 0, y: frontY };
+  if (kitchen) placed.kueche = { x: mainX + main.w + 1, y: frontY };
+  const rooms: PlacedRoom[] = roomLayouts(stage)
+    .filter((l) => placed[l.id])
+    .map((l) => ({ id: l.id, x: placed[l.id].x, y: placed[l.id].y, w: l.w, h: l.h }));
+  const doors: PlanDoor[] = innerDoors(stage).map((d) => ({ ...d }));
   return { id: 'eg', rooms, doors, entrance: { room: 'haupt', cell: [Math.floor(main.w / 2) - 1, main.h - 1], side: 'down' } };
 }
 

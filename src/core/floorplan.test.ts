@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { findPath } from './grid';
-import { buildPlanGrid, doorCells, doorStripCell, type FloorPlan, hasRoomBehind, openingsFor, planSize, roomAt, toGlobal, validatePlan, wallStrips } from './floorplan';
+import { buildPlanGrid, doorCells, doorStripCell, type FloorPlan, hasRoomBehind, openingsFor, roomsBehind, planSize, roomAt, toGlobal, validatePlan, wallStrips } from './floorplan';
 
 /** Zwei 4×3-Räume nebeneinander mit einem Wandstreifen (x = 4) und einer Tür auf Zeile 1 */
 const plan: FloorPlan = {
@@ -70,6 +70,8 @@ describe('Türöffnungen & Wandstreifen', () => {
     expect(openingsFor(stacked, 'hinten')).toEqual([]); // Vorderseite hat keine Wand
     expect(hasRoomBehind(stacked, 'vorne')).toBe(true);
     expect(hasRoomBehind(stacked, 'hinten')).toBe(false);
+    expect(roomsBehind(stacked, 'vorne')).toEqual(['hinten']);
+    expect(roomsBehind(stacked, 'hinten')).toEqual([]);
   });
 
   it('Wandstreifen liegen zwischen den Räumen und enthalten die Türfelder', () => {

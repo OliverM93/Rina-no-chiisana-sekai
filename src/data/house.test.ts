@@ -3,7 +3,7 @@ import { checkPlacement, exitAt, reservedCells, type Room } from '../core/room';
 import { findPath } from '../core/grid';
 import { buildWorldMap, objectById, OBJECT_KINDS, setExtraBlocked } from '../core/worldmap';
 import { furnitureInfo } from './furniture';
-import { annexOffsets, emptyRoom, HOUSE_STAGES, MAX_STAGE, roomLayouts } from './house';
+import { annexOffsets, emptyRoom, HOUSE_STAGES, innerDoors, MAX_STAGE, roomLayouts } from './house';
 import { INTERACTIONS } from './interactions';
 import { VILLAGE_LAYOUT, VILLAGE_OBJECTS, VILLAGE_SPAWN } from './maps/village';
 
@@ -23,6 +23,7 @@ describe('Hausausbau', () => {
         for (const e of r.exits) {
           expect(e.to === 'draussen' || ids.includes(e.to), `${r.id} → ${e.to}`).toBe(true);
           if (e.to !== 'draussen') expect(rooms.find((o) => o.id === e.to)!.exits.some((b) => b.to === r.id), `${e.to} führt nicht zurück zu ${r.id}`).toBe(true);
+          // (Räume ohne Ausgang sind nur über Grundriss-Türen verbunden)
           for (const [x, y] of e.cells) {
             expect(x >= 0 && y >= 0 && x < r.w && y < r.h, `${r.id}: Ausgang außerhalb`).toBe(true);
             // Ausgänge liegen an der Wand, in die sie führen
@@ -35,7 +36,18 @@ describe('Hausausbau', () => {
       }
       // vom Wohnzimmer aus kommt man überall hin
       const reach = new Set(['haupt']);
-      for (let k = 0; k < rooms.length; k++) for (const r of rooms) if (reach.has(r.id)) for (const e of r.exits) if (e.to !== 'draussen') reach.add(e.to);
+      const inner = innerDoors(stage);
+      for (let k = 0; k < rooms.length; k++) {
+        for (const r of rooms) {
+          if (!reach.has(r.id)) continue;
+          for (const e of r.exits) if (e.to !== 'draussen') reach.add(e.to);
+          // Türen im Grundriss gehen in beide Richtungen
+          for (const d of inner) {
+            if (d.room === r.id) reach.add(d.to);
+            if (d.to === r.id) reach.add(d.room);
+          }
+        }
+      }
       expect([...reach].sort()).toEqual([...ids].sort());
     }
   });

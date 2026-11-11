@@ -75,6 +75,7 @@ npm run preview      # Build lokal ansehen → http://localhost:4173
 
 - **3D-Galerie (nur Dev):** <http://localhost:5173/gallery.html> zeigt Figuren, Natur und Gebäude in 3D
   (`?ansicht=figuren|natur|gebaeude`, `&winkel=0..360`, Tasten 1–3, Maus ziehen = drehen).
+- **Haus-Ausbau testen:** `?ausbau=5` (0–6) an die URL hängen: ein **neues** Spiel startet dann mit fertig ausgebautem Haus und 50 000 ⭐ (nur Dev-Server).
 - **Zeit testen:** `?zeit=21:30` und/oder `?datum=2026-12-24` an die URL hängen. Die Uhr startet dort und
   läuft normal weiter. **Wetter testen:** `?wetter=regen|sonnig|wolkig|gewitter|schnee|regenbogen`.
 - **Debug im Dev-Modus:** `window.__rina` enthält `{ session, game, ui }` (`game.debug` → Lina, Bewohner …).

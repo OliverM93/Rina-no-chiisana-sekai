@@ -1,6 +1,6 @@
 # Konzept: Ein zusammenhängendes Haus (Sims-Prinzip)
 
-Status: 🚧 **in Arbeit** – **Phase A ✅** (Datenmodell & Gesamtgitter), **Phase B ✅ als Vorschau** (`?haus=neu`), Phasen C–E 🗓️ · Aufwand: **groß** (mehrere Pull Requests).
+Status: 🚧 **in Arbeit** – **Phase A ✅**, **B ✅**, **C ✅** (Lina läuft ohne Umblenden durchs Erdgeschoss, Einrichten über alle Räume); D (Etagen-Feinschliff) und E (Wandmodus, Feinschliff) 🗓️ · Aufwand: **groß** (mehrere Pull Requests).
 
 ## Ziel
 
@@ -33,7 +33,24 @@ Damit **keine Spielstand-Migration** nötig ist und die gute Raster-Logik (`core
 - Tests (`core/floorplan.test.ts`, `data/floorplan.test.ts`): Grundrisse gültig für jede Stufe, Größen passen zu `roomLayouts`, von der Haustür erreicht man jeden Raum, Treppen führen in vorhandene Räume.
 - **Am Spiel ändert sich noch nichts** – die neuen Module sind noch nirgends eingebunden.
 
-## Phase B: so ist es umgesetzt ✅ (Vorschau)
+## Phase C: so ist es umgesetzt ✅
+
+**Das Haus ist jetzt wirklich zusammenhängend – ohne Vorschau-Schalter (`?haus=neu` entfällt).**
+
+- **Grundriss geändert:** Wohnzimmer vorne, Schlafzimmer dahinter, **Wintergarten links, Küche rechts** (so liegen sie auch außen am Haus). Schlafzimmer, Küche und Wintergarten haben **keinen Ausgang mehr**, sondern Türen im Grundriss (`data/house.ts` → `innerDoors`) – man läuft einfach hindurch. Dach und Keller bleiben Etagen mit Treppe (kurzes Umblenden).
+- **Ein Gesamtgitter:** `World3D.getFloorGrid()` = Grundriss + Möbel aller Räume (`buildPlanGrid`); Kollision, Klick-zum-Laufen, Oli, Winston und Hundekörbchen nutzen es. Der „aktuelle Raum“ folgt Linas Position (`trackRoom`), nicht mehr einer Animation.
+- **Räume an festen Stellen:** `HouseView3D` hält je Raum eine `Interior3D` an fester Position; `World3D.interior` ist die Ansicht des aktuellen Raums. Besuche bei Bewohnern und die Etagen nutzen denselben Weg mit einem Einzelraum-Grundriss.
+- **Türfelder frei:** Die Felder vor/hinter den Innentüren sind gesperrt (`RoomLayout.reserved`); Möbel, die dort standen, wandern beim Laden zurück in die Tasche (nichts geht verloren, bestehender Mechanismus `misfits`).
+- **Wände zum hinteren Raum bleiben voll** (Fenster, Tapete, Wand-Deko wie gewohnt) und werden **durchsichtig, wenn man hindurchsehen muss** – wie die Häuser im Dorf: wenn Lina im Raum dahinter oder im Türstreifen steht, und beim Einrichten (`World3D.updateWallFade`, `Interior3D.setBackFade`, `core/floorplan.roomsBehind`). Die erste Fassung mit dauerhaft halbhohen Wänden wurde auf Wunsch verworfen.
+- **Oli** geht an den passenden Platz in irgendeinem Raum (Bett im Schlafzimmer, Herd in der Küche …).
+- **Einrichten:** Die Kamera zeigt das **ganze Stockwerk**; der Raum unter dem Mauszeiger wird zum aktuellen Raum, man kann in jedem Raum aufstellen. Ein Möbel in einen anderen Raum ziehen = im alten einpacken, im neuen aufstellen (ohne Rückgängig).
+- **Kamera sonst:** zentriert auf Linas Raum, etwas weiter heraus (die Nachbarräume schauen herein), Mausrad zoomt.
+- Spielstand: kein neues Format (Möbel bleiben raumweise gespeichert).
+
+![Durchgang zum Schlafzimmer](screenshots/haus-durchgang.png)
+![Einrichten: das ganze Haus](screenshots/haus-einrichten-ganz.png)
+
+## Phase B: so ist es umgesetzt ✅ (zuerst als Vorschau)
 
 - **Nur mit `?haus=neu` in der Adresse** (z. B. `http://localhost:5173/?haus=neu`): Lina betritt ihr Haus, und man sieht **das ganze Erdgeschoss**. Ohne den Zusatz bleibt alles wie bisher – Lina kann in dieser Phase noch nicht durch die Türen in die anderen Räume laufen (das ist Phase C).
 - `world3d/HouseView3D.ts`: zeichnet alle übrigen Räume des Stockwerks (je eine eigene `Interior3D` mit Möbeln, Tapete und Boden) und die Wandstreifen dazwischen (Seitenwände voll mit Sturz über der Tür, Wände zwischen vorne und hinten **halbhoch**).
@@ -72,7 +89,7 @@ Die Kamera schaut schräg von vorn. Wände zwischen vorderer und hinterer Reihe 
 |---|---|---|
 | **A** ✅ | Datenmodell `FloorPlan` + zusammengesetztes Gesamtgitter (Kollision, Wegfindung) mit Tests – noch ohne neue Darstellung | gering |
 | **B** ✅ | `Interior3D` zeichnet alle Räume des Erdgeschosses (Böden, Wände, Durchgänge, Tapeten je Raum); Kamera zeigt das ganze Haus – **als Vorschau mit `?haus=neu`** | mittel |
-| **C** | Lina, Oli und Winston laufen ohne Umblenden durch Durchgänge; Licht/Lampen je Raum; Einrichten raumübergreifend (Ghost, Treffer, Rückgängig) | **hoch** |
+| **C** ✅ | Lina, Oli und Winston laufen ohne Umblenden durch Durchgänge; Licht/Lampen je Raum; Einrichten raumübergreifend (Ghost, Treffer, Rückgängig) | **hoch** |
 | **D** | Etagen: Treppe zu Dach/Keller als Etagenwechsel; Hausansicht von außen passt zum Grundriss | mittel |
 | **E** | Feinschliff: Wandmodus, Spielstand-Test (alte Stände laden), Doku | gering |
 

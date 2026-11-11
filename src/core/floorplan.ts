@@ -239,3 +239,15 @@ export function wallStrips(plan: FloorPlan): WallStrip[] {
 export function hasRoomBehind(plan: FloorPlan, roomId: string): boolean {
   return wallStrips(plan).some((s) => !s.vertical && s.frontRoom === roomId);
 }
+
+/** Räume, die direkt hinter diesem Raum liegen (Richtung Rückwand, nur durch einen Wandstreifen getrennt) */
+export function roomsBehind(plan: FloorPlan, roomId: string): string[] {
+  const out: string[] = [];
+  for (const s of wallStrips(plan)) {
+    if (s.vertical || s.frontRoom !== roomId) continue;
+    // der Raum, dessen Unterkante an diesem Streifen liegt
+    const behind = plan.rooms.find((r) => r.id !== roomId && r.y + r.h === s.y && r.x < s.x + s.w && r.x + r.w > s.x);
+    if (behind) out.push(behind.id);
+  }
+  return out;
+}

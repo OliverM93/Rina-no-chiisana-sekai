@@ -20,13 +20,13 @@ describe('Grundrisse des Hauses', () => {
     }
   });
 
-  it('Stufe 0–1: ein Raum; ab Stufe 2 Schlafzimmer dahinter; Küche links ab 4, Wintergarten rechts ab 5', () => {
+  it('Stufe 0–1: ein Raum; ab Stufe 2 Schlafzimmer dahinter; Wintergarten links ab 5, Küche rechts ab 4', () => {
     expect(groundFloor(0).rooms).toHaveLength(1);
     const s2 = groundFloor(2);
     expect(roomById(s2, 'schlafzimmer')!.y).toBeLessThan(roomById(s2, 'haupt')!.y);
     const s5 = groundFloor(5);
-    expect(roomById(s5, 'kueche')!.x).toBeLessThan(roomById(s5, 'haupt')!.x);
-    expect(roomById(s5, 'wintergarten')!.x).toBeGreaterThan(roomById(s5, 'haupt')!.x);
+    expect(roomById(s5, 'wintergarten')!.x).toBeLessThan(roomById(s5, 'haupt')!.x);
+    expect(roomById(s5, 'kueche')!.x).toBeGreaterThan(roomById(s5, 'haupt')!.x);
   });
 
   it('Erdgeschoss: von der Haustür aus kommt man in jeden Raum (leere Räume)', () => {

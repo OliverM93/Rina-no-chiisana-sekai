@@ -1,77 +1,126 @@
 /**
- * Das ganze Erdgeschoss auf einen Blick (Konzept: `docs/haus-grundriss.md`, Phase B).
+ * Ein Stockwerk als Ganzes (Konzept: `docs/haus-grundriss.md`, Phasen B/C).
  *
- * Linas aktueller Raum wird weiter von `Interior3D` in `World3D` gezeichnet. Diese Klasse zeichnet die
- * **übrigen Räume** des Stockwerks daneben (je eine eigene `Interior3D` mit Möbeln, Tapete und Boden) und
- * die **Wandstreifen** dazwischen – Seitenwände voll, Wände zwischen vorne und hinten halbhoch.
+ * Jeder Raum des Stockwerks hat eine eigene `Interior3D` an **fester Stelle** (Welt = ROOM_X/ROOM_Y + Lage im
+ * Grundriss) – Möbel, Tapete und Boden je Raum – dazu die Wandstreifen zwischen den Räumen: Seitenwände voll,
+ * Wände zwischen vorne und hinten halbhoch. Lina läuft einfach durch die Türen; welcher Raum „aktuell“ ist,
+ * entscheidet `World3D` über ihre Position.
  */
 import * as THREE from 'three';
-import { type FloorPlan, hasRoomBehind, openingsFor, roomById, wallStrips } from '../core/floorplan';
-import type { Room } from '../core/room';
-import { layoutOf } from '../data/house';
-import { Interior3D, LOW_WALL_H, ROOM_X, ROOM_Y } from './Interior3D';
+import { type FloorPlan, openingsFor, wallStrips } from '../core/floorplan';
+import type { Room, RoomLayout } from '../core/room';
+import { Interior3D, ROOM_X, ROOM_Y } from './Interior3D';
 import { mesh, toon } from './materials';
 
 const WALL_COLOR = '#ece3d3';
 const WALL_H = 2.3;
 
+/** Grundriss mit einem einzigen Raum (Dach, Keller, Besuche, Start) */
+export function singleRoomPlan(id: string, roomId: string, w: number, h: number): FloorPlan {
+  return { id, rooms: [{ id: roomId, x: 0, y: 0, w, h }], doors: [] };
+}
+
 export class HouseView3D {
   private views = new Map<string, Interior3D>();
   private strips = new THREE.Group();
+  /** Querstreifen (zwischen vorderem und hinterem Raum): werden mit der Rückwand durchsichtig */
+  private crossMat = new THREE.MeshToonMaterial({ color: WALL_COLOR, transparent: true });
   private key = '';
+  plan: FloorPlan = singleRoomPlan('init', 'haupt', 8, 6);
 
   constructor(private scene: THREE.Scene) {
     scene.add(this.strips);
+    this.setFloor(this.plan, 'init');
   }
 
-  /** Optionen für den Raum, den `World3D` selbst zeichnet (Öffnungen, halbhohe Rückwand) */
+  /** Optionen für die Wände eines Raums: Türöffnungen, halbhohe Rückwand, alte Tür-Modelle aus */
   static shellFor(plan: FloorPlan, roomId: string) {
-    return { openings: openingsFor(plan, roomId), hideExits: true, lowBack: hasRoomBehind(plan, roomId) };
+    return { openings: openingsFor(plan, roomId), hideExits: false };
+  }
+
+  /** Stockwerk wechseln bzw. neu aufbauen, wenn sich der Grundriss geändert hat. true = neu gebaut */
+  setFloor(plan: FloorPlan, key: string): boolean {
+    const fullKey = key + JSON.stringify(plan);
+    if (fullKey === this.key) return false;
+    this.key = fullKey;
+    this.plan = plan;
+    for (const v of this.views.values()) v.group.removeFromParent();
+    this.views.clear();
+    this.strips.clear();
+    for (const r of plan.rooms) {
+      const view = new Interior3D(this.scene, { x: ROOM_X + r.x, z: ROOM_Y + r.y });
+      view.setLightsActive(false);
+      this.views.set(r.id, view);
+    }
+    this.buildStrips(plan);
+    return true;
   }
 
   /**
-   * Zeichnet alle Räume außer `currentId` (sie liegen so, dass `currentId` bei (ROOM_X, ROOM_Y) bleibt).
-   * `rooms` = Möbel/Tapete je Raum aus dem Spielstand.
+   * Rückwand des Raums `roomId` (samt Querstreifen dahinter) durchsichtig machen. 1 = voll, 0 = weg.
+   * Die Querstreifen teilen sich ein Material (alle Räume mit Raum dahinter blenden zusammen).
    */
-  refresh(plan: FloorPlan, stage: number, rooms: readonly Room[], currentId: string, collected: ReadonlySet<string>) {
-    const cur = roomById(plan, currentId);
-    if (!cur) return this.clear();
-    const key = `${plan.id}:${stage}:${currentId}`;
-    const rebuild = key !== this.key;
-    this.key = key;
-    if (rebuild) {
-      this.clear();
-      this.buildStrips(plan, cur.x, cur.y);
-    }
-    for (const r of plan.rooms) {
-      if (r.id === currentId) continue;
-      const room = rooms.find((x) => x.id === r.id);
-      if (!room) continue;
-      let view = this.views.get(r.id);
-      if (!view) {
-        view = new Interior3D(this.scene, { x: ROOM_X + r.x - cur.x, z: ROOM_Y + r.y - cur.y });
-        this.views.set(r.id, view);
-      }
-      view.shellOptions = HouseView3D.shellFor(plan, r.id);
+  setBackFade(roomId: string, opacity: number) {
+    this.views.get(roomId)?.setBackFade(opacity);
+  }
+
+  setCrossFade(opacity: number) {
+    this.crossMat.opacity = opacity;
+    this.crossMat.depthWrite = opacity > 0.95;
+  }
+
+  /** Welcher Raum bekommt die echten Lichter? (immer genau einer: gleiche Lichtanzahl, kein Shader-Neubau) */
+  setActive(roomId: string) {
+    for (const [id, v] of this.views) v.setLightsActive(id === roomId);
+  }
+
+  view(roomId: string): Interior3D | undefined {
+    return this.views.get(roomId);
+  }
+
+  /** Irgendein Raum des Stockwerks (Rückfall, solange noch nichts Bestimmtes gewählt ist) */
+  first(): Interior3D {
+    return this.views.values().next().value as Interior3D;
+  }
+
+  all(): Array<[string, Interior3D]> {
+    return [...this.views.entries()];
+  }
+
+  /** Möbel, Tapete und Boden aller Räume aktualisieren */
+  refreshAll(rooms: ReadonlyArray<{ room: Room; layout: RoomLayout }>, collected: ReadonlySet<string>, force = false) {
+    for (const { room, layout } of rooms) {
+      const view = this.views.get(room.id);
+      if (!view) continue;
+      view.shellOptions = HouseView3D.shellFor(this.plan, room.id);
       view.collected = collected;
-      view.refresh(room, layoutOf(stage, r.id), rebuild);
+      view.refresh(room, layout, force);
     }
   }
 
-  private buildStrips(plan: FloorPlan, curX: number, curY: number) {
+  private buildStrips(plan: FloorPlan) {
     const mat = toon(WALL_COLOR);
     for (const s of wallStrips(plan)) {
-      const height = s.vertical ? WALL_H : LOW_WALL_H;
+      // minimal höher als die Raumwände, die im Streifen stecken (sonst flackern gleich hohe Oberkanten)
+      const height = WALL_H + 0.02;
       // Zelle für Zelle, an Türfeldern bleibt unten frei (vertikale Wände bekommen einen Sturz)
       const cells = s.vertical ? s.h : s.w;
       for (let i = 0; i < cells; i++) {
         const gx = s.vertical ? s.x : s.x + i;
         const gy = s.vertical ? s.y + i : s.y;
         const door = s.openings.some((o) => o.x === gx && o.y === gy);
+        if (door) {
+          // Türschwelle: ein Stück Boden in der Öffnung, sonst sieht man darunter ins Leere
+          const sill = mesh(new THREE.BoxGeometry(1, 0.04, 1), toon('#c9a77c'), false, true);
+          sill.position.set(ROOM_X + gx + 0.5, 0.01, ROOM_Y + gy + 0.5);
+          this.strips.add(sill);
+        }
         if (door && !s.vertical) continue;
         const h = door ? height - 1.85 : height;
-        const box = mesh(new THREE.BoxGeometry(1, h, 1), mat);
-        box.position.set(ROOM_X + gx - curX + 0.5, door ? 1.85 + h / 2 : h / 2, ROOM_Y + gy - curY + 0.5);
+        // Etwas schmaler als das Feld (0,96): so liegen die Flächen nicht deckungsgleich auf den Raumwänden
+        // (die ragen 0,15 in den Streifen) – sonst flackern („Z-Fighting“) die Wandtapete und der Streifen
+        const box = mesh(new THREE.BoxGeometry(s.vertical ? 0.96 : 1, h, s.vertical ? 1 : 0.96), s.vertical ? mat : this.crossMat);
+        box.position.set(ROOM_X + gx + 0.5, door ? 1.85 + h / 2 : h / 2, ROOM_Y + gy + (s.vertical ? 0.5 : 0.5 - 0.02));
         box.castShadow = true;
         box.receiveShadow = true;
         this.strips.add(box);
@@ -88,10 +137,13 @@ export class HouseView3D {
     for (const v of this.views.values()) v.group.visible = on;
   }
 
-  clear() {
-    this.key = '';
-    this.strips.clear();
-    for (const v of this.views.values()) v.group.removeFromParent();
-    this.views.clear();
+  /** Zu welchem Raum gehört ein getroffenes Objekt? */
+  roomOf(obj: THREE.Object3D): string | null {
+    let o: THREE.Object3D | null = obj;
+    while (o) {
+      for (const [id, v] of this.views) if (v.group === o) return id;
+      o = o.parent;
+    }
+    return null;
   }
 }
