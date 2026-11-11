@@ -87,6 +87,9 @@ export const JENS: NpcDef = {
       { text: ['Kochen ist wie Malen, chérie.', 'Ein bisschen hiervon, ein Klecks davon – und am Ende staunt jeder.', 'Komm doch mal ins Kochstudio! Ich zeig dir was.'] },
       { text: ['Weißt du, was das Beste am Reisen ist?', 'Nach Hause kommen. Zu euch. Mit vollem Koffer und noch volleren Geschichten.'], when: { minHearts: 2 } },
       { text: ['Ich bin so stolz auf dich, mei Liebsche.', 'Du machst dein Leben zu einem Kunstwerk. Und das ist die größte Kunst von allen.'], when: { minHearts: 3 } },
+      { text: ['Mon frère Olaf hat mich gestern „Frère“ genannt. Ich hab „Frère“ zurückgesagt.','Wir waren sehr gerührt. Und pünktlich. Das ist bei uns Zwillingen selten zusammen.'] },
+      { text: ['Du willst Thalia verkuppeln, ma chérie? Wunderbar!','Ich übernehme das Menü. Drei Gänge, Kerzenlicht, ein kleines „Nu, ihr zwee!“ am Rand. Das wird eine Vorstellung.'] },
+      { text: ['Lina und ein kühles Bier? Ich bevorzuge ja Rotwein, aber …','… nu, mit dir ausnahmsweise. Wenn du erst mal warm wirst, ist der Abend gerettet.'] },
     ],
     gifts: {
       liebt: [['Oh là là! 😍', 'Das ist ja ein Meisterwerk! Das kommt sofort in meine Sammlung.']],

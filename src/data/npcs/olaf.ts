@@ -84,6 +84,10 @@ export const OLAF: NpcDef = {
       { text: ['Im Winter plane ich gern. Kalender, Tabellen, Heizkosten …', 'Christin plant Kekse. Ich glaube, ihr Plan ist besser.'], when: { seasons: ['winter'] } },
       { text: ['Regen? Sehr gut für den Haushalt. Wir müssen nicht gießen.', 'Ich spar Wasser und Zeit. Und die Zeit leg ich fürs Flugzeugmodell an.'], when: { tags: ['wetter-regen'] }, weight: 2 },
       { text: ['Wenn ein Flugzeug über den Himmel zieht, bleibe ich immer kurz stehen.', 'Bauart, Triebwerke, Spannweite. Ich muss das mal nachschlagen. Hehe, ich weiß natürlich alles. Aber nachschlagen macht Spaß.'] },
+      { text: ['Frère! … So nennen Jens und ich uns manchmal.','Er sagt es französisch. Ich sage es, weil es so schön feierlich klingt. Hehe.'] },
+      { text: ['Christin und ich haben früher an der Ostsee gewohnt.','Wind, Wasser, Fischbrötchen … Unser Strand hier ist nicht schlecht. Aber ein kleines bisschen Heimweh nach der Ostsee hab ich schon. Verbucht unter „Wehmut“.'] },
+      { text: ['Ich lese gern „Der kleine Stinkstiefel“. Ein Klassiker unter den Comics!','Christin findet ihn grauenhaft. Ich verstecke ihn im Ordner „Steuern 2019“. Da schaut keiner nach.'] },
+      { text: ['Du und Oli sitzt wieder vor dem Bildschirm? Hauptsache, ihr macht Pausen.','Das sagt der Papa. Der Beamte rechnet gerade den Stromverbrauch aus.'] },
     ],
     gifts: {
       liebt: [['Oh, Lina! Das ist ja wunderbar!', 'Das trag ich gleich in mein Haushaltsbuch ein. Unter „Glück“.']],

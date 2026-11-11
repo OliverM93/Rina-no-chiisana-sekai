@@ -84,6 +84,12 @@ export const LARS: NpcDef = {
       { text: ['Im Winter sage ich meinen Patienten immer dasselbe:', 'Warm anziehen, viel trinken, genug schlafen. Und dann sagen sie: „Gibt’s dafür keine Tablette?“ Nein. Aber Tee.'], when: { seasons: ['winter'] } },
       { text: ['Bei dem Wetter bleibt man am besten drin.', 'Ich hab gerade zwei Stunden in der Praxis gesessen und niemand ist krank geworden. Medizinisch ein perfekter Tag.'], when: { tags: ['wetter-regen'] }, weight: 2 },
       { text: ['Abends versuche ich, keinen Fachkram mehr zu lesen.', 'Heute Abend zum Beispiel: Kochbuch. Ich lerne also noch immer – nur an Zwiebeln statt an Organen.'], when: { phases: ['abend', 'abenddaemmerung'] } },
+      { text: ['Ich zocke gerade wieder „Atomherbst 3“. Alles verstrahlt, aber die Leute sind nett.','Wie im Wartezimmer. Nur mit besseren Waffen.'] },
+      { text: ['Bei „Aureole“ ruft Oli immer: „Pass auf links!“','Ich bin Arzt, ich weiß, wo links ist. Ich stehe bloß aus Prinzip rechts.'] },
+      { text: ['Als Arzt sage ich: Ein Feierabendbier ist völlig okay.','Zwei sind eine Meinung. Drei sind ein Fall für mich. … Ich zähle gerade nicht mit.'] },
+      { text: ['Meine kleine Schwester wird nach einem Bier richtig lustig.','Letztens hat sie Winston ihre Lieblings-Diagnose gestellt. „Akuter Dackelblick.“ Sehr treffend.'] },
+      { text: ['Lina will Thalia verkuppeln. Ich halte mich raus.','Ärztliche Schweigepflicht. … Okay, ich halte mich nur raus, solange es lustig bleibt.'] },
+      { text: ['In Tschechien soll es hervorragendes Bier geben.','Rein wissenschaftlich interessant. Lina und Thalia waren ja eine Woche dort. Ich erwarte einen Bericht. Mit Quellenangaben.'] },
     ],
     gifts: {
       liebt: [['Oh, Lina! Das ist ja großartig!', 'Das verschreib ich mir ab sofort selbst. Dreimal täglich.']],
