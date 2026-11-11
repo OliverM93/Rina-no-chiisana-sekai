@@ -208,6 +208,8 @@ export class World3D {
   private hoverRoom = '';
   /** Wie sichtbar ist die Rückwand je Raum (1 = voll, kleiner = durchsichtig, weil dahinter ein Raum liegt)? */
   private wallFade = new Map<string, number>();
+  /** Zoom beim Einrichten im Haus (1 = das ganze Stockwerk im Bild) */
+  private decorZoom = 1;
   /** Kamera-Verschiebung beim Einrichten (WASD/Pfeile) */
   private decorPan = { x: 0, z: 0 };
   /** Kamera-Abstand: ruhig an das Stockwerk angepasst */
@@ -455,7 +457,7 @@ export class World3D {
         // …stattdessen schwenkt WASD/Pfeile die Kamera über das Stockwerk (Sims-Prinzip)
         if (this.houseWide()) {
           const size = planSize(this.houseView.plan);
-          const speed = 12 * this.camScale * (dtMs / 1000);
+          const speed = 12 * this.camScale * this.decorZoom * (dtMs / 1000);
           this.decorPan.x = Math.max(-size.w / 2, Math.min(size.w / 2, this.decorPan.x + intent.dx * speed));
           this.decorPan.z = Math.max(-size.h / 2, Math.min(size.h / 2, this.decorPan.z + intent.dy * speed));
         }
@@ -530,7 +532,7 @@ export class World3D {
   }
 
   private updateCamera() {
-    const desired = this.camTarget.clone().add(CAM_OFFSET.clone().multiplyScalar(this.session.inside ? this.camScale * this.zoom : this.zoom));
+    const desired = this.camTarget.clone().add(CAM_OFFSET.clone().multiplyScalar(this.session.inside ? this.camScale * (this.session.decorActive && this.houseWide() ? this.decorZoom : this.zoom) : this.zoom));
     this.camPos.copy(desired);
     this.camera.position.copy(this.camPos);
     this.camera.lookAt(this.camTarget.x, 0.75, this.camTarget.z);
@@ -561,6 +563,12 @@ export class World3D {
 
   /** Hinein-/Herauszoomen (Mausrad & Knöpfe) */
   private zoomBy(factor: number) {
+    // Beim Einrichten im Haus gibt es einen eigenen Zoom: von „ganzes Stockwerk“ bis dicht an einen Raum heran
+    if (this.session.inside && this.session.decorActive && this.houseWide()) {
+      const minRel = 0.95 / Math.max(this.camScale, 0.01); // so nah wie die normale Raumansicht
+      this.decorZoom = Math.min(1.5, Math.max(Math.min(minRel, 1), this.decorZoom * factor));
+      return;
+    }
     this.zoom = Math.min(1.45, Math.max(0.55, this.zoom * factor));
   }
 
@@ -3648,6 +3656,7 @@ export class World3D {
       case 'start':
         this.undoStack = [];
         this.decorPan = { x: 0, z: 0 };
+        this.decorZoom = 1;
         this.session.decorActive = true;
         this.standUp();
         this.player?.cancelPath();
