@@ -89,7 +89,7 @@ export const CHRISTIN: NpcDef = {
       { text: ['Wir haben früher an der Ostsee gewohnt, Olaf und ich.','Salzluft, weite Dünen, und alles sauber geharkt. Manchmal fehlt mir das. Das Meer hier ist ja auch schön – nur anders sortiert.'] },
       { text: ['Olaf liest wieder diesen Comic. „Der kleine Stinkstiefel“.','Ich verstehe nicht, was daran lustig sein soll. Ich habe ihn nach Größe einsortiert. Ganz unten.'] },
       { text: ['Du willst Thalia verkuppeln? Ich plane gern mit.','Tisch, Kerzen, passende Servietten. Der Rest ist Zufall. Und der kann bei mir nur mitkommen, wenn er pünktlich ist.'] },
-      { text: ['Wie lange sitzt du eigentlich schon vor dem Bildschirm, Lina?','Ich leg dir einen Pausenplan hin. Mit Smileys. Und einem Teller Obst.'] },
+      { text: ['Wie lange sitzen Oli und Lars eigentlich schon vor dem Bildschirm?','Ich leg den beiden einen Pausenplan hin. Mit Smileys. Und einem Teller Obst.'] },
     ],
     gifts: {
       liebt: [['Oh, wie schön! 💜', 'Das bekommt einen ganz besonderen Platz. Ganz gerade ausgerichtet.']],

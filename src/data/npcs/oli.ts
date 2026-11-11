@@ -103,7 +103,7 @@ export const OLI: NpcDef = {
       { text: ['Thalia hat mir erklärt, wie man aus Gestein Musik macht.', 'Ich glaube, sie hat mich veräppelt. Aber der Stein war tatsächlich ein bisschen laut.'], when: { tags: ['thalia-da'] } },
       { text: ['Du, Lini … ich bin noch nie so gern nach Hause gekommen.', 'Das sag ich nicht, damit du rot wirst. Okay, doch. Aber es stimmt auch.'], when: { minHearts: 5 } },
       { text: ['Ich hab gestern wieder gegen denselben Boss in „Düsterburg“ verloren. Zwölf Mal.','Beim dreizehnten Mal hab ich gewonnen – und laut geschrien. Die Nachbarn wissen jetzt, wie das Spiel heißt.'] },
-      { text: ['Lini, wollen wir heute Abend zocken?','Du bist besser im Rennen, ich bin besser im Fluchen. Das ergänzt sich wunderbar.'] },
+      { text: ['Lars und ich zocken heute Abend wieder zusammen, Lini.','Er ist besser im Zielen, ich bin besser im Fluchen. Das ergänzt sich wunderbar. Du darfst zuschauen und mich trösten.'] },
       { text: ['In „Großstadt-Gauner V“ fahre ich ausschließlich nach Verkehrsregeln.','Das ist die schwerste Herausforderung des ganzen Spiels. Du lachst, aber nach dem dritten Blitzer wird man demütig.'] },
       { text: ['Lini ist richtig lustig, wenn sie ein Feierabendbier hatte. Ihr Lieblings-Böhmisch, du weißt schon.','Sie imitiert dann Winston. Winston ist stolz. Ich auch.'] },
       { text: ['Lini hat schon wieder einen Plan, wie wir Thalia verkuppeln.','Ich bin der Fahrer. Ich weiß nicht, wohin. Aber ich fahre.'] },

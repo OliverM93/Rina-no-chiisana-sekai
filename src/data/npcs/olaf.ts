@@ -87,7 +87,7 @@ export const OLAF: NpcDef = {
       { text: ['Frère! … So nennen Jens und ich uns manchmal.','Er sagt es französisch. Ich sage es, weil es so schön feierlich klingt. Hehe.'] },
       { text: ['Christin und ich haben früher an der Ostsee gewohnt.','Wind, Wasser, Fischbrötchen … Unser Strand hier ist nicht schlecht. Aber ein kleines bisschen Heimweh nach der Ostsee hab ich schon. Verbucht unter „Wehmut“.'] },
       { text: ['Ich lese gern „Der kleine Stinkstiefel“. Ein Klassiker unter den Comics!','Christin findet ihn grauenhaft. Ich verstecke ihn im Ordner „Steuern 2019“. Da schaut keiner nach.'] },
-      { text: ['Du und Oli sitzt wieder vor dem Bildschirm? Hauptsache, ihr macht Pausen.','Das sagt der Papa. Der Beamte rechnet gerade den Stromverbrauch aus.'] },
+      { text: ['Oli und Lars sitzen wieder vor dem Bildschirm? Hauptsache, sie machen Pausen.','Das sagt der Papa. Der Beamte rechnet gerade den Stromverbrauch aus.'] },
     ],
     gifts: {
       liebt: [['Oh, Lina! Das ist ja wunderbar!', 'Das trag ich gleich in mein Haushaltsbuch ein. Unter „Glück“.']],

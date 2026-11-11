@@ -86,7 +86,7 @@ export const THALIA: NpcDef = {
       { text: ['Weißt du noch, unsere Studienreise nach Tschechien?','Eine Woche, Lina und ich, und mein Kartenkoffer. Ich kartiere die Erinnerung bis heute. Die schönsten Stellen sind rot markiert.'] },
       { text: ['Lina, ich weiß, dass du mich verkuppeln willst. Dein Gesicht verrät dich. Immer.','Ich bin gerührt und genervt gleichzeitig. Das ist die beste Mischung.'] },
       { text: ['Lina nach einem Bier ist die beste Lina.','Sie erzählt Witze, die sie nüchtern nie wagen würde. Und lacht am lautesten selbst darüber. Ich liebe das.'] },
-      { text: ['Ich spiele ja nicht so viel. Aber wenn ihr zockt, hol ich Chips.','Und ich kartiere eure Fehler. Das wird eine sehr dicke Karte.'] },
+      { text: ['Ich spiele ja nicht so viel. Aber wenn Oli und Lars zocken, hol ich Chips.','Und ich kartiere ihre Fehler. Das wird eine sehr dicke Karte.'] },
     ],
     gifts: {
       liebt: [['NEIN! Für mich?! 😍', 'Das kommt sofort in meine Vitrine. Ganz vorne. Mit Etikett: „Von Lina, der Besten“.']],
