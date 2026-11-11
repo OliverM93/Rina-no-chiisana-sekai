@@ -462,6 +462,11 @@ export class World3D {
           this.decorPan.z = Math.max(-size.h / 2, Math.min(size.h / 2, this.decorPan.z + intent.dy * speed));
         }
         intent.dx = intent.dy = 0;
+      } else if (this.session.decorActive) {
+        // Garten gestalten: genauso – Lina bleibt stehen, WASD/Pfeile und Ziehen schwenken die Kamera
+        const speed = 12 * this.zoom * (dtMs / 1000);
+        this.setDecorPan(this.decorPan.x + intent.dx * speed, this.decorPan.z + intent.dy * speed);
+        intent.dx = intent.dy = 0;
       }
       // beim Durch-die-Tür-Gehen: keine Kollision (sonst stünde Lina vor der Hauswand)
       // Kaffee-Kick: ein paar Minuten flotter unterwegs
@@ -504,7 +509,9 @@ export class World3D {
       if (!player.hasPath) this.marker.visible = false;
 
       // Kamera folgt Lina weich (zu Hause: fester Blick ins Zimmer)
-      const target = this.session.inside ? this.insideCamTarget() : new THREE.Vector3(player.x * UNIT, 0, player.y * UNIT);
+      const target = this.session.inside
+        ? this.insideCamTarget()
+        : new THREE.Vector3(player.x * UNIT, 0, player.y * UNIT).add(this.session.decorActive ? new THREE.Vector3(this.decorPan.x, 0, this.decorPan.z) : new THREE.Vector3());
       this.camTarget.lerp(target, 1 - Math.pow(0.002, dt));
       if (!this.session.inside) this.updateOccluders(player);
       if (!this.session.inside) {
@@ -1858,7 +1865,7 @@ export class World3D {
   private onPointerDown = (e: PointerEvent) => {
     if (e.button === 0) this.pointerDown = { x: e.clientX, y: e.clientY };
     // Einrichten im Haus: Maus ziehen schwenkt die Kamera (links ohne Möbel in der Hand, sonst rechts/Mitte)
-    if (this.session.inside && this.session.decorActive && this.houseWide() && (e.button === 1 || e.button === 2 || (e.button === 0 && !this.decor))) {
+    if (this.session.decorActive && (!this.session.inside || this.houseWide()) && (e.button === 1 || e.button === 2 || (e.button === 0 && !this.decor))) {
       this.panDrag = { x: e.clientX, y: e.clientY, sx: e.clientX, sy: e.clientY, moved: false };
     }
   };
@@ -1871,6 +1878,22 @@ export class World3D {
     return this.raycaster.ray.intersectPlane(new THREE.Plane(new THREE.Vector3(0, 1, 0), 0), new THREE.Vector3());
   }
 
+  /** Kameraschwenk beim Einrichten setzen – im Haus um die Stockwerksmitte, im Garten um Lina, immer innerhalb der Grenzen */
+  private setDecorPan(x: number, z: number) {
+    if (this.session.inside) {
+      const size = planSize(this.houseView.plan);
+      this.decorPan.x = Math.max(-size.w / 2, Math.min(size.w / 2, x));
+      this.decorPan.z = Math.max(-size.h / 2, Math.min(size.h / 2, z));
+      return;
+    }
+    const p = this.player;
+    const bx = p ? p.x * UNIT : YARD_AREA.x;
+    const bz = p ? p.y * UNIT : YARD_AREA.y;
+    // Die Kamera bleibt über dem Gartenbereich
+    this.decorPan.x = Math.max(YARD_AREA.x - bx, Math.min(YARD_AREA.x + YARD_AREA.w - bx, x));
+    this.decorPan.z = Math.max(YARD_AREA.y - bz, Math.min(YARD_AREA.y + YARD_AREA.h - bz, z));
+  }
+
   private dragCamera(e: PointerEvent) {
     const d = this.panDrag;
     if (!d) return;
@@ -1881,14 +1904,12 @@ export class World3D {
     d.x = e.clientX;
     d.y = e.clientY;
     if (!a || !b) return;
-    const size = planSize(this.houseView.plan);
-    const nx = Math.max(-size.w / 2, Math.min(size.w / 2, this.decorPan.x + (a.x - b.x)));
-    const nz = Math.max(-size.h / 2, Math.min(size.h / 2, this.decorPan.z + (a.z - b.z)));
+    const ox = this.decorPan.x;
+    const oz = this.decorPan.z;
+    this.setDecorPan(ox + (a.x - b.x), oz + (a.z - b.z));
     // Kamera sofort mitnehmen (nicht erst über die weiche Annäherung), sonst „rutscht“ der gegriffene Punkt weg
-    this.camTarget.x += nx - this.decorPan.x;
-    this.camTarget.z += nz - this.decorPan.z;
-    this.decorPan.x = nx;
-    this.decorPan.z = nz;
+    this.camTarget.x += this.decorPan.x - ox;
+    this.camTarget.z += this.decorPan.z - oz;
     this.canvas.style.cursor = 'grabbing';
   }
 
