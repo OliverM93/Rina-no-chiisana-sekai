@@ -45,9 +45,18 @@ export class HouseView3D {
     for (const v of this.views.values()) v.group.removeFromParent();
     this.views.clear();
     this.strips.clear();
-    for (const r of plan.rooms) this.views.set(r.id, new Interior3D(this.scene, { x: ROOM_X + r.x, z: ROOM_Y + r.y }));
+    for (const r of plan.rooms) {
+      const view = new Interior3D(this.scene, { x: ROOM_X + r.x, z: ROOM_Y + r.y });
+      view.setLightsActive(false);
+      this.views.set(r.id, view);
+    }
     this.buildStrips(plan);
     return true;
+  }
+
+  /** Welcher Raum bekommt die echten Lichter? (immer genau einer: gleiche Lichtanzahl, kein Shader-Neubau) */
+  setActive(roomId: string) {
+    for (const [id, v] of this.views) v.setLightsActive(id === roomId);
   }
 
   view(roomId: string): Interior3D | undefined {
@@ -77,13 +86,20 @@ export class HouseView3D {
   private buildStrips(plan: FloorPlan) {
     const mat = toon(WALL_COLOR);
     for (const s of wallStrips(plan)) {
-      const height = s.vertical ? WALL_H : LOW_WALL_H;
+      // minimal höher als die Raumwände, die im Streifen stecken (sonst flackern gleich hohe Oberkanten)
+      const height = (s.vertical ? WALL_H : LOW_WALL_H) + 0.02;
       // Zelle für Zelle, an Türfeldern bleibt unten frei (vertikale Wände bekommen einen Sturz)
       const cells = s.vertical ? s.h : s.w;
       for (let i = 0; i < cells; i++) {
         const gx = s.vertical ? s.x : s.x + i;
         const gy = s.vertical ? s.y + i : s.y;
         const door = s.openings.some((o) => o.x === gx && o.y === gy);
+        if (door) {
+          // Türschwelle: ein Stück Boden in der Öffnung, sonst sieht man darunter ins Leere
+          const sill = mesh(new THREE.BoxGeometry(1, 0.04, 1), toon('#c9a77c'), false, true);
+          sill.position.set(ROOM_X + gx + 0.5, 0.01, ROOM_Y + gy + 0.5);
+          this.strips.add(sill);
+        }
         if (door && !s.vertical) continue;
         const h = door ? height - 1.85 : height;
         const box = mesh(new THREE.BoxGeometry(1, h, 1), mat);

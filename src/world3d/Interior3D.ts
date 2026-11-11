@@ -277,6 +277,15 @@ export class Interior3D {
     mat.needsUpdate = true;
   }
 
+  /**
+   * Nur der Raum, in dem Lina steht, bekommt echte Lichter (Raumlicht + Lampen). Die Zahl der sichtbaren Lichter
+   * bleibt dadurch beim Raumwechsel gleich – kein Neu-Kompilieren der Shader, und es sind nie zu viele.
+   */
+  setLightsActive(on: boolean) {
+    this.roomLight.visible = on;
+    for (const l of this.lamps) l.visible = on;
+  }
+
   /** Licht nach Tageszeit: tagsüber Fensterlicht, abends Lampen */
   updateLight(night: number, clouds: number) {
     this.windowGlass.color.set(night > 0.5 ? '#3a4370' : '#9fd2ee');

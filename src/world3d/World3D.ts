@@ -2951,6 +2951,14 @@ export class World3D {
       return new THREE.Vector3(ROOM_X + size.w / 2, 0, ROOM_Y + size.h / 2);
     }
     this.camScale = this.houseWide() ? 1.6 : 1.22;
+    // Im Haus mit mehreren Räumen folgt die Kamera Lina (sonst läuft sie beim Hineinzoomen aus dem Bild)
+    const p = this.player;
+    if (this.houseWide() && p) {
+      const size = planSize(this.houseView.plan);
+      const x = Math.min(ROOM_X + size.w - 3, Math.max(ROOM_X + 3, p.x * UNIT));
+      const z = Math.min(ROOM_Y + size.h - 2, Math.max(ROOM_Y + 2, p.y * UNIT));
+      return new THREE.Vector3(x, 0, z - 0.2);
+    }
     return this.roomCenter();
   }
 
@@ -3022,6 +3030,7 @@ export class World3D {
     }
     const rebuilt = this.houseView.setFloor(plan, key);
     this.houseView.refreshAll(rooms, collected, force || rebuilt);
+    this.houseView.setActive(this.session.roomId);
     this.houseView.updateLight(this.night, currentWeather(this.session).clouds);
     this.floorGrid = null; // Möbel haben sich evtl. geändert
     this.exitBeyond = new Set(
@@ -3067,6 +3076,7 @@ export class World3D {
     const id = this.roomAtTile(t.x, t.y);
     if (id && id !== this.session.roomId && this.houseView.view(id)) {
       this.session.roomId = id;
+      this.houseView.setActive(id);
       this.homeOliKey = '';
     }
   }
@@ -3461,6 +3471,7 @@ export class World3D {
       this.hoverRoom = rid;
       if (rid !== this.session.roomId) {
         this.session.roomId = rid;
+        this.houseView.setActive(rid);
         for (const [id, v] of views) if (id !== rid) v.hideGhost();
       }
       const view = this.interior;
