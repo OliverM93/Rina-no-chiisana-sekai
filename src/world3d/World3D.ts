@@ -349,6 +349,7 @@ export class World3D {
 
     canvas.addEventListener('pointerdown', this.onPointerDown);
     canvas.addEventListener('pointerup', this.onPointerUp);
+    canvas.addEventListener('contextmenu', (e) => this.session.decorActive && e.preventDefault());
     canvas.addEventListener('pointermove', this.onPointerMove);
     canvas.addEventListener('wheel', this.onWheel, { passive: false });
     window.addEventListener('resize', this.resize);
@@ -1841,11 +1842,54 @@ export class World3D {
     return { ground: g?.point };
   }
 
+  /** Kamera ziehen beim Einrichten: Position beim letzten Ereignis; `moved` = wirklich gezogen (dann kein Klick) */
+  private panDrag: { x: number; y: number; moved: boolean; sx: number; sy: number } | null = null;
+
   private onPointerDown = (e: PointerEvent) => {
     if (e.button === 0) this.pointerDown = { x: e.clientX, y: e.clientY };
+    // Einrichten im Haus: Maus ziehen schwenkt die Kamera (links ohne Möbel in der Hand, sonst rechts/Mitte)
+    if (this.session.inside && this.session.decorActive && this.houseWide() && (e.button === 1 || e.button === 2 || (e.button === 0 && !this.decor))) {
+      this.panDrag = { x: e.clientX, y: e.clientY, sx: e.clientX, sy: e.clientY, moved: false };
+    }
   };
 
+  /** Bodenpunkt unter einer Bildschirmposition (für „den Boden greifen und ziehen“) */
+  private groundPoint(clientX: number, clientY: number): THREE.Vector3 | null {
+    const r = this.canvas.getBoundingClientRect();
+    const ndc = new THREE.Vector2(((clientX - r.left) / r.width) * 2 - 1, -((clientY - r.top) / r.height) * 2 + 1);
+    this.raycaster.setFromCamera(ndc, this.camera);
+    return this.raycaster.ray.intersectPlane(new THREE.Plane(new THREE.Vector3(0, 1, 0), 0), new THREE.Vector3());
+  }
+
+  private dragCamera(e: PointerEvent) {
+    const d = this.panDrag;
+    if (!d) return;
+    if (!d.moved && Math.hypot(e.clientX - d.sx, e.clientY - d.sy) < 6) return;
+    d.moved = true;
+    const a = this.groundPoint(d.x, d.y);
+    const b = this.groundPoint(e.clientX, e.clientY);
+    d.x = e.clientX;
+    d.y = e.clientY;
+    if (!a || !b) return;
+    const size = planSize(this.houseView.plan);
+    const nx = Math.max(-size.w / 2, Math.min(size.w / 2, this.decorPan.x + (a.x - b.x)));
+    const nz = Math.max(-size.h / 2, Math.min(size.h / 2, this.decorPan.z + (a.z - b.z)));
+    // Kamera sofort mitnehmen (nicht erst über die weiche Annäherung), sonst „rutscht“ der gegriffene Punkt weg
+    this.camTarget.x += nx - this.decorPan.x;
+    this.camTarget.z += nz - this.decorPan.z;
+    this.decorPan.x = nx;
+    this.decorPan.z = nz;
+    this.canvas.style.cursor = 'grabbing';
+  }
+
   private onPointerMove = (e: PointerEvent) => {
+    if (this.panDrag) {
+      if (e.buttons === 0) this.panDrag = null;
+      else {
+        this.dragCamera(e);
+        if (this.panDrag?.moved) return;
+      }
+    }
     if (!this.player || this.session.uiBlocking) {
       this.canvas.style.cursor = '';
       return;
@@ -1874,6 +1918,12 @@ export class World3D {
   private onPointerUp = (e: PointerEvent) => {
     const down = this.pointerDown;
     this.pointerDown = null;
+    // Nach dem Ziehen der Kamera kein Klick (nichts aufheben/abstellen)
+    if (this.panDrag?.moved) {
+      this.panDrag = null;
+      return;
+    }
+    this.panDrag = null;
     const player = this.player;
     if (!player || !down || this.cutscene || !this.session.acceptsPointer()) return;
     if (Math.hypot(e.clientX - down.x, e.clientY - down.y) > 8) return;

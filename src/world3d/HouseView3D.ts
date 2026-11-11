@@ -102,8 +102,10 @@ export class HouseView3D {
         }
         if (door && !s.vertical) continue;
         const h = door ? height - 1.85 : height;
-        const box = mesh(new THREE.BoxGeometry(1, h, 1), mat);
-        box.position.set(ROOM_X + gx + 0.5, door ? 1.85 + h / 2 : h / 2, ROOM_Y + gy + 0.5);
+        // Etwas schmaler als das Feld (0,96): so liegen die Flächen nicht deckungsgleich auf den Raumwänden
+        // (die ragen 0,15 in den Streifen) – sonst flackern („Z-Fighting“) die Wandtapete und der Streifen
+        const box = mesh(new THREE.BoxGeometry(s.vertical ? 0.96 : 1, h, s.vertical ? 1 : 0.96), mat);
+        box.position.set(ROOM_X + gx + 0.5, door ? 1.85 + h / 2 : h / 2, ROOM_Y + gy + (s.vertical ? 0.5 : 0.5 - 0.02));
         box.castShadow = true;
         box.receiveShadow = true;
         this.strips.add(box);
