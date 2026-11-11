@@ -4,7 +4,7 @@
  */
 import { useEffect, useRef, useState } from 'preact/hooks';
 import { CURRENCY } from '../data/items';
-import { FLOORS, FURNITURE, type FurnitureStyle, STYLE_LABELS, VARIANT_LABELS, WALLPAPERS } from '../data/furniture';
+import { FLOORS, FURNITURE, type FurnitureStyle, STYLE_LABELS, VARIANT_LABELS, WALLPAPERS, variantItemId } from '../data/furniture';
 import { getSeason } from '../core/time';
 import { formatMoney } from '../game/gameplay';
 import { buyFromCatalog, isSurface, styleUnlocked } from '../game/home';
@@ -36,7 +36,7 @@ function entries(tab: Tab, winter: boolean, season: string): Entry[] {
       description: f.description,
       size: f.wall ? `🖼️ Wand-Deko, ${f.w} breit (Möbel passen darunter)` : f.small ? 'klein (passt auf Tische)' : f.rug ? `Teppich ${f.w}×${f.d}` : `${f.w}×${f.d} Felder`,
       variants: f.variants
-        ? Object.entries(f.variants).map(([v, color]) => ({ itemId: `${f.id}-${v}`, label: VARIANT_LABELS[v] ?? v, color }))
+        ? Object.entries(f.variants).map(([v, color]) => ({ itemId: variantItemId(f, v), label: VARIANT_LABELS[v] ?? v, color }))
         : [{ itemId: f.id, label: '', color: null }],
     }));
   }

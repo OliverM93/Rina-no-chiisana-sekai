@@ -567,15 +567,15 @@ export function makeFurniture(itemId: string, links: FenceLinks = { n: false, e:
       break;
     }
     case 'regal': {
-      for (const x of [-0.85, 0.85]) g.add(b(0.06, 0.95, 0.4, '#e6c59c', x, 0.475, 0));
-      for (const y of [0.05, 0.45, 0.9]) g.add(b(1.76, 0.04, 0.4, '#e6c59c', 0, y, 0));
-      g.add(b(1.76, 0.95, 0.02, '#d8b68c', 0, 0.475, -0.19));
+      for (const x of [-0.85, 0.85]) g.add(b(0.06, 0.95, 0.4, col, x, 0.475, 0));
+      for (const y of [0.05, 0.45, 0.9]) g.add(b(1.76, 0.04, 0.4, col, 0, y, 0));
+      g.add(b(1.76, 0.95, 0.02, darken(col, 0.06), 0, 0.475, -0.19));
       for (const [x, h, cc] of [[-0.6, 0.28, '#f4a3b8'], [-0.5, 0.25, '#8ac8ff'], [-0.42, 0.3, '#f3dc6a']] as const) g.add(b(0.07, h, 0.24, cc, x, 0.47 + h / 2, 0));
       break;
     }
     case 'stehlampe': {
-      g.add(c(0.16, 0.03, '#5a4a52', 0, 0.015, 0));
-      g.add(c(0.02, 1.1, '#5a4a52', 0, 0.56, 0));
+      g.add(c(0.16, 0.03, col, 0, 0.015, 0));
+      g.add(c(0.02, 1.1, col, 0, 0.56, 0));
       glow = glowMat('#fff1c8');
       const shade = mesh(new THREE.CylinderGeometry(0.14, 0.24, 0.26, 16, 1, true), glow);
       shade.position.y = 1.18;
@@ -1299,9 +1299,9 @@ export function makeFurniture(itemId: string, links: FenceLinks = { n: false, e:
         g.add(b(0.08, 0.4, 0.38, '#5a5a66', x, 0.2, 0));
         g.add(b(0.08, 0.06, 0.4, '#5a5a66', x, 0.6, -0.02));
       }
-      for (const z of [-0.12, 0.02, 0.16]) g.add(b(1.72, 0.05, 0.12, '#c9955f', 0, 0.42, z));
+      for (const z of [-0.12, 0.02, 0.16]) g.add(b(1.72, 0.05, 0.12, col, 0, 0.42, z));
       for (const y of [0.6, 0.75]) {
-        const back = b(1.72, 0.1, 0.04, '#c9955f', 0, y, -0.2);
+        const back = b(1.72, 0.1, 0.04, col, 0, y, -0.2);
         back.rotation.x = -0.15;
         g.add(back);
       }
@@ -1820,7 +1820,7 @@ export function makeFurniture(itemId: string, links: FenceLinks = { n: false, e:
     }
     case 'wandregal': {
       const z = WALL_Z + 0.1;
-      g.add(b(1.6, 0.05, 0.22, WOOD, 0, HANG - 0.1, z));
+      g.add(b(1.6, 0.05, 0.22, col, 0, HANG - 0.1, z));
       for (const dx of [-0.6, 0.6]) g.add(b(0.04, 0.12, 0.04, DARK_WOOD, dx, HANG - 0.17, WALL_Z + 0.02));
       // Bücher
       const books = ['#f4a3b8', '#5b6fa8', '#f7d26a', '#9ad8c0', '#e85a8a'];
@@ -1937,14 +1937,14 @@ export function makeFurniture(itemId: string, links: FenceLinks = { n: false, e:
     }
     // ---------------------------------------------------------------- Cottagecore
     case 'landhaustisch': {
-      g.add(b(1.84, 0.07, 0.86, '#c9a06e', 0, 0.6, 0));
-      g.add(b(1.7, 0.08, 0.74, darken('#c9a06e', 0.12), 0, 0.53, 0));
+      g.add(b(1.84, 0.07, 0.86, col, 0, 0.6, 0));
+      g.add(b(1.7, 0.08, 0.74, darken(col, 0.12), 0, 0.53, 0));
       for (const [x, z] of [[-0.8, -0.34], [0.8, -0.34], [-0.8, 0.34], [0.8, 0.34]]) {
-        g.add(c(0.05, 0.52, '#b98a5e', x, 0.26, z));
-        for (const y of [0.12, 0.3, 0.44]) g.add(s(0.065, 0.03, 0.065, '#a97c56', x, y, z));
+        g.add(c(0.05, 0.52, darken(col, 0.1), x, 0.26, z));
+        for (const y of [0.12, 0.3, 0.44]) g.add(s(0.065, 0.03, 0.065, darken(col, 0.18), x, y, z));
       }
       // Kerben & ein Laib Brot auf dem Brett
-      g.add(b(0.4, 0.03, 0.26, '#b98a5e', -0.45, 0.65, 0.05));
+      g.add(b(0.4, 0.03, 0.26, darken(col, 0.1), -0.45, 0.65, 0.05));
       g.add(s(0.14, 0.07, 0.09, '#d9a066', -0.45, 0.7, 0.05));
       break;
     }
@@ -1960,7 +1960,7 @@ export function makeFurniture(itemId: string, links: FenceLinks = { n: false, e:
       break;
     }
     case 'haekelteppich': {
-      const rings = ['#f7efe2', '#f4b6c2', '#f7efe2', '#a9c4a0', '#f7efe2', '#f2c14e'];
+      const rings = ['#f7efe2', col, '#f7efe2', '#a9c4a0', '#f7efe2', '#f2c14e'];
       rings.forEach((rc, i) => {
         const r = 0.95 - i * 0.15;
         const m = c(r, 0.012 + i * 0.002, rc, 0, 0.006 + i * 0.002, 0);
@@ -1969,7 +1969,7 @@ export function makeFurniture(itemId: string, links: FenceLinks = { n: false, e:
       // Bogenkante (gehäkelt)
       for (let i = 0; i < 24; i++) {
         const a = (i / 24) * Math.PI * 2;
-        g.add(s(0.07, 0.01, 0.07, '#f4b6c2', Math.cos(a) * 0.95, 0.006, Math.sin(a) * 0.95));
+        g.add(s(0.07, 0.01, 0.07, col, Math.cos(a) * 0.95, 0.006, Math.sin(a) * 0.95));
       }
       break;
     }
@@ -2025,7 +2025,7 @@ export function makeFurniture(itemId: string, links: FenceLinks = { n: false, e:
     case 'nierentisch': {
       const top = s(0.42, 0.025, 0.3, '#2a2a30', 0, 0.42, 0);
       g.add(top);
-      g.add(s(0.36, 0.028, 0.24, '#d9534f', -0.03, 0.43, 0));
+      g.add(s(0.36, 0.028, 0.24, col, -0.03, 0.43, 0));
       for (const [x, z] of [[-0.25, -0.15], [0.28, -0.1], [0, 0.2]]) {
         const leg = c(0.015, 0.44, '#c9a24a', x, 0.21, z);
         leg.rotation.z = -x * 0.5;
@@ -2044,7 +2044,7 @@ export function makeFurniture(itemId: string, links: FenceLinks = { n: false, e:
       g.add(shade);
       for (let i = 0; i < 20; i++) {
         const a = (i / 20) * Math.PI * 2;
-        g.add(b(0.012, 0.1, 0.012, '#d9a441', Math.cos(a) * 0.28, 0.98, Math.sin(a) * 0.28));
+        g.add(b(0.012, 0.1, 0.012, col, Math.cos(a) * 0.28, 0.98, Math.sin(a) * 0.28));
       }
       lightAt = new THREE.Vector3(0, 1.1, 0);
       break;
@@ -2062,9 +2062,9 @@ export function makeFurniture(itemId: string, links: FenceLinks = { n: false, e:
       break;
     }
     case 'perserteppich': {
-      g.add(b(1.9, 0.02, 1.9, '#8a2f35', 0, 0.01, 0));
+      g.add(b(1.9, 0.02, 1.9, darken(col, 0.22), 0, 0.01, 0));
       g.add(b(1.6, 0.022, 1.6, '#1f3a5a', 0, 0.011, 0));
-      g.add(b(1.4, 0.024, 1.4, '#a8443d', 0, 0.012, 0));
+      g.add(b(1.4, 0.024, 1.4, col, 0, 0.012, 0));
       const med = c(0.45, 0.026, '#e0b04a', 0, 0.013, 0);
       g.add(med);
       g.add(c(0.3, 0.028, '#1f3a5a', 0, 0.014, 0));
@@ -2364,7 +2364,7 @@ export function makeFurniture(itemId: string, links: FenceLinks = { n: false, e:
       break;
     }
     case 'bistrostuhl': {
-      const wood = '#7a4a2e';
+      const wood = col;
       g.add(c(0.24, 0.04, '#c99a68', 0, 0.45, 0.02));
       for (const [x, z] of [[-0.18, -0.12], [0.18, -0.12], [-0.17, 0.2], [0.17, 0.2]] as const) {
         const leg = c(0.018, 0.46, wood, x, 0.22, z);
@@ -2382,7 +2382,7 @@ export function makeFurniture(itemId: string, links: FenceLinks = { n: false, e:
       break;
     }
     case 'barhocker': {
-      g.add(c(0.2, 0.05, '#b8484f', 0, 0.64, 0));
+      g.add(c(0.2, 0.05, col, 0, 0.64, 0));
       g.add(c(0.2, 0.012, '#c9a24a', 0, 0.61, 0));
       g.add(c(0.025, 0.58, '#2a2a30', 0, 0.3, 0));
       g.add(c(0.17, 0.02, '#2a2a30', 0, 0.01, 0));
@@ -2430,7 +2430,7 @@ export function makeFurniture(itemId: string, links: FenceLinks = { n: false, e:
       g.add(c(0.08, 0.02, '#c9a24a', 0, 0.01, 0));
       g.add(c(0.012, 0.2, '#c9a24a', 0, 0.12, 0));
       glow = glowMat('#fff0b8');
-      const shade = mesh(new THREE.CylinderGeometry(0.05, 0.12, 0.1, 14, 1, true), toon('#3f8a5a', { side: THREE.DoubleSide }));
+      const shade = mesh(new THREE.CylinderGeometry(0.05, 0.12, 0.1, 14, 1, true), toon(col, { side: THREE.DoubleSide }));
       shade.position.set(0, 0.26, 0);
       g.add(shade);
       g.add(s(0.045, 0.035, 0.045, glow, 0, 0.23, 0));

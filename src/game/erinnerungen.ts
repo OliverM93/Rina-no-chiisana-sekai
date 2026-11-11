@@ -45,6 +45,13 @@ export function memoryTags(session: Session): string[] {
   if (data.house.rooms.flatMap((r) => r.items).filter((i) => PLANTS.includes(FURNITURE_BY_ITEM[i.itemId]?.def.id ?? '')).length >= 5) tags.push('pflanzen-viele');
   if (data.house.rooms.some((r) => r.items.some((i) => i.itemId.startsWith('bett')))) tags.push('bett');
   if (data.house.rooms.some((r) => r.items.some((i) => i.itemId === 'waermflasche'))) tags.push('waermflasche');
+  // Einrichtung: Stile (ab vier Stücken im Haus), Boden & Wand, Garten
+  const houseItems = data.house.rooms.flatMap((r) => r.items);
+  const styleCount = (style: string) => houseItems.filter((i) => FURNITURE_BY_ITEM[i.itemId]?.def.style === style).length;
+  for (const [style, min] of [['japanisch', 4], ['cottage', 4], ['retro', 4], ['modern', 4], ['midcentury', 4], ['bistro', 3]] as const) if (styleCount(style) >= min) tags.push(`stil-${style}`);
+  if (data.house.rooms.some((r) => /^boden-(chevron|fischgraet|flecht|schiff|tafel)/.test(r.floor))) tags.push('parkett-edel');
+  if (data.house.rooms.some((r) => r.wallpaper.startsWith('tapete-uni-'))) tags.push('tapete-uni');
+  if (data.yard.items.length >= 8) tags.push('garten-deko');
   if (data.bank.savings > 0) tags.push('sparbuch');
   if (Object.keys(data.collection).some((id) => GARDEN_FLOWER[id]?.crossOnly && id.includes('schwarz'))) tags.push('schwarze-blume');
   if (lastTravelCity(session)) tags.push('jens-reise');

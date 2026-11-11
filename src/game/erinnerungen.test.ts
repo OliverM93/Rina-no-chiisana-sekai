@@ -24,7 +24,7 @@ function fresh(iso = '2026-05-12T12:00:00') {
 
 describe('Erinnerungen – Daten', () => {
   it('jede Zeile gehört zu einem Bewohner, hat eine eindeutige ID und einen bekannten Tag', () => {
-    const known = ['haus-anbau', 'haus-dach', 'haus-kueche', 'haus-keller', 'buch-10', 'buch-20', 'buch-30', 'huehner', 'gewaechshaus', 'tassen-viele', 'sparbuch', 'schwarze-blume', 'jens-reise', 'matteo', 'kino', 'tourshirt', 'pflanzen-viele', 'bett', 'waermflasche', 'monat-1', 'jahr-1'];
+    const known = ['haus-anbau', 'haus-dach', 'haus-kueche', 'haus-keller', 'buch-10', 'buch-20', 'buch-30', 'huehner', 'gewaechshaus', 'tassen-viele', 'sparbuch', 'schwarze-blume', 'jens-reise', 'matteo', 'kino', 'tourshirt', 'pflanzen-viele', 'bett', 'waermflasche', 'monat-1', 'jahr-1', 'stil-japanisch', 'stil-cottage', 'stil-retro', 'stil-modern', 'stil-midcentury', 'stil-bistro', 'parkett-edel', 'tapete-uni', 'garten-deko'];
     const ids = new Set<string>();
     for (const m of MEMORIES) {
       expect(NPC_BY_ID[m.npc], m.id).toBeTruthy();
@@ -34,6 +34,29 @@ describe('Erinnerungen – Daten', () => {
     }
     // jeder Bewohner hat mindestens drei Erinnerungen
     for (const id of ['gisela', 'olaf', 'christin', 'oli', 'jens', 'lars', 'thalia']) expect(MEMORIES.filter((m) => m.npc === id).length, id).toBeGreaterThanOrEqual(3);
+  });
+});
+
+describe('Erinnerungen – Einrichtung', () => {
+  it('Boden, Wandfarbe und Stile werden bemerkt – aber erst ab ein paar Stücken', () => {
+    const { s } = fresh();
+    const room = s.data!.house.rooms[0];
+    room.items = [];
+    expect(memoryTags(s)).not.toContain('parkett-edel');
+    room.floor = 'boden-fischgraet-nuss';
+    room.wallpaper = 'tapete-uni-salbei';
+    for (let i = 0; i < 3; i++) room.items.push({ uid: `j${i}`, itemId: 'zabuton-rosa', x: i, y: 0, rot: 0 });
+    expect(memoryTags(s)).toEqual(expect.arrayContaining(['parkett-edel', 'tapete-uni']));
+    expect(memoryTags(s)).not.toContain('stil-japanisch');
+    room.items.push({ uid: 'j9', itemId: 'bonsai', x: 5, y: 0, rot: 0 });
+    expect(memoryTags(s)).toContain('stil-japanisch');
+  });
+
+  it('der Bewohner kommentiert die neue Einrichtung genau einmal', () => {
+    const { s } = fresh();
+    s.data!.house.rooms[0].floor = 'boden-chevron-eiche';
+    expect(takeMemory(s, 'jens').join(' ')).toContain('Chevron');
+    expect(takeMemory(s, 'jens')).toEqual([]);
   });
 });
 

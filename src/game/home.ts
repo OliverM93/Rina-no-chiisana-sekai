@@ -11,7 +11,7 @@ import { YARD_AREA } from '../data/yard';
 import { spotKey } from '../core/garden';
 import { cellsOf, checkPlacement, footprint, misfits, moveItem, placeItem, type PlacedItem, type Room, type RoomLayout, type Rotation, removeItem } from '../core/room';
 import { waitOver } from '../core/progress';
-import { FURNITURE_BY_ITEM, furnitureInfo, type FurnitureStyle, SURFACE_BY_ID } from '../data/furniture';
+import { FURNITURE_BY_ITEM, furnitureInfo, type FurnitureStyle, SURFACE_BY_ID, variantItemId } from '../data/furniture';
 import { GUEST_LAYOUT, guestRoom } from '../data/gastHaeuser';
 import { emptyRoom, HOUSE_STAGES, layoutOf, MAX_STAGE, roomLayouts } from '../data/house';
 import { itemDef, maxStackOf } from '../data/items';
@@ -112,7 +112,7 @@ export function sameFamily(a: string, b: string): boolean {
 export function variantsOf(itemId: string): Array<{ itemId: string; label: string; color: string }> {
   const f = FURNITURE_BY_ITEM[itemId];
   if (!f?.def.variants) return [];
-  return Object.entries(f.def.variants).map(([v, color]) => ({ itemId: `${f.def.id}-${v}`, label: v, color }));
+  return Object.entries(f.def.variants).map(([v, color]) => ({ itemId: variantItemId(f.def, v), label: v, color }));
 }
 
 export function isFurniture(itemId: string): boolean {
