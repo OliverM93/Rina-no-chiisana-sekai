@@ -124,6 +124,9 @@ export const GISELA: NpcDef = {
       { text: ['Dein Vater wohnt jetzt also auch hier.', 'Ich hab ihm gleich gesagt, dass seine Weste schief sitzt.', 'Christin hat sie dann gerade gezogen. Die gefällt mir. Ordentliches Mädchen.'], when: { tags: ['olaf-da'] }, weight: 2 },
       { text: ['Olaf will mir ein Sparbuch einrichten.', 'Ich hab gesagt: Mein Geld ist unterm Kopfkissen am sichersten.', 'Ende der Diskussion.'], when: { tags: ['olaf-da'] } },
       { text: ['Diese Winkekatze in den Katalogen …', 'Die guckt einen so an. Ein bisschen unheimlich, wenn du mich fragst.', 'Ich hab das letzte Wort: unheimlich.'] },
+      { text: ['Ich komme eigentlich aus Dessau, Kind. Bauhaus-Stadt!','Da sind die Fenster groß und die Meinungen noch größer. Deshalb hab ich immer das letzte Wort.'] },
+      { text: ['Bier? Gutes Bier ist wie gute Kekse: köstlich, aber in Maßen.','Lars trinkt zu gern davon, pfui. Und du auch, hör ich. … Ich sage nichts. Ich habe nur das letzte Wort.'] },
+      { text: ['Lars und Oli sitzen vor ihren flimmernden Kisten und nennen das Spaß?','Frische Luft, Kind! … Ludwig hätte natürlich Fußball geguckt. Aber das ist was anderes.'] },
     ],
     gifts: {
       liebt: [

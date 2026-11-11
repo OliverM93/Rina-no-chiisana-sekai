@@ -83,6 +83,10 @@ export const THALIA: NpcDef = {
       { text: ['Ich muss dir was gestehen: Ich hab meine Lieblingssteine benannt.', 'Gustav, Ingrid und der kleine Dieter. Dieter ist ein Kiesel. Er ist sehr bescheiden.'], when: { minHearts: 1 } },
       { text: ['Wenn du mal traurig bist, ruf mich an.', 'Ich komme mit Keksen, Landkarte und einer Geschichte über Gesteinsfaltung. Das hilft garantiert. Oder macht dich müde. Beides gut.'], when: { minHearts: 2 } },
       { text: ['Weißt du, was das Schönste an Freundschaft ist?', 'Man kann stundenlang nichts sagen und es ist trotzdem das beste Gespräch. Wie bei Gesteinsschichten.'], when: { minHearts: 4 } },
+      { text: ['Weißt du noch, unsere Studienreise nach Tschechien?','Eine Woche, Lina und ich, und mein Kartenkoffer. Ich kartiere die Erinnerung bis heute. Die schönsten Stellen sind rot markiert.'] },
+      { text: ['Lina, ich weiß, dass du mich verkuppeln willst. Dein Gesicht verrät dich. Immer.','Ich bin gerührt und genervt gleichzeitig. Das ist die beste Mischung.'] },
+      { text: ['Lina nach einem Bier ist die beste Lina.','Sie erzählt Witze, die sie nüchtern nie wagen würde. Und lacht am lautesten selbst darüber. Ich liebe das.'] },
+      { text: ['Ich spiele ja nicht so viel. Aber wenn Oli und Lars zocken, hol ich Chips.','Und ich kartiere ihre Fehler. Das wird eine sehr dicke Karte.'] },
     ],
     gifts: {
       liebt: [['NEIN! Für mich?! 😍', 'Das kommt sofort in meine Vitrine. Ganz vorne. Mit Etikett: „Von Lina, der Besten“.']],
