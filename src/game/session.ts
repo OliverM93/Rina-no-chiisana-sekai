@@ -27,7 +27,7 @@ import { parseWeatherOverride, type WeatherKind } from '../core/weather';
 import { buildWorldMap, tileCenter, type WorldMap } from '../core/worldmap';
 import { isKnownItem, type ToolId } from '../data/items';
 import { furnitureInfo } from '../data/furniture';
-import { annexOffsets, HOUSE_RULES, STARTER_HOUSE } from '../data/house';
+import { annexOffsets, emptyRoom, HOUSE_RULES, MAX_STAGE, roomLayouts, STARTER_HOUSE } from '../data/house';
 import { VILLAGE_LAYOUT, VILLAGE_OBJECTS, VILLAGE_SPAWN } from '../data/maps/village';
 import { NPCS } from '../data/npcs';
 import type { InteractionContext } from '../data/interactions';
@@ -244,10 +244,19 @@ export class Session {
     return true;
   }
 
+  /** Nur Entwicklungsmodus: Ausbaustufe für neue Spiele (`?ausbau=5`) */
+  devHouseStage = 0;
+
   startNewGame(appearance: Appearance, villageName: string) {
     const data = createNewSave({ appearance, villageName, spawn: this.spawnPoint(), now: this.clock(), house: STARTER_HOUSE, recipes: START_RECIPES });
     for (const npc of NPCS) data.npcs[npc.id] = createNpcState();
     data.flags.winstonNochNicht = true; // Winston wird erst kurz nach Spielbeginn gefunden
+    // Nur zum Testen (Entwicklungsmodus, `?ausbau=5`): Haus gleich ausgebaut, dazu etwas Geld
+    if (this.devHouseStage > 0) {
+      data.house.stage = Math.min(this.devHouseStage, MAX_STAGE);
+      for (const l of roomLayouts(data.house.stage)) if (!data.house.rooms.some((r) => r.id === l.id)) data.house.rooms.push(emptyRoom(l.id));
+      data.money = Math.max(data.money, 50000);
+    }
     this.begin(data);
     this.save();
   }

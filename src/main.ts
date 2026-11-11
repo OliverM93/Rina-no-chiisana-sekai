@@ -123,7 +123,12 @@ async function start() {
   }, 2000);
 
   // Für Tests & Fehlersuche im Entwicklungsmodus
-  if (import.meta.env.DEV) Object.assign(window, { __rina: { session, game, ui } });
+  if (import.meta.env.DEV) {
+    Object.assign(window, { __rina: { session, game, ui } });
+    // `?ausbau=5` in der Adresse: neue Spiele starten mit fertig ausgebautem Haus (nur zum Testen)
+    const stage = Number(new URLSearchParams(window.location.search).get('ausbau'));
+    if (Number.isFinite(stage) && stage > 0) session.devHouseStage = Math.floor(stage);
+  }
 
   // Automatisch speichern
   let warned = false;
