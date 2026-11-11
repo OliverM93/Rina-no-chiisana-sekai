@@ -206,6 +206,8 @@ export class World3D {
   private exitBeyond = new Set<string>();
   /** Raum unter dem Mauszeiger (Einrichten über mehrere Räume) */
   private hoverRoom = '';
+  /** Kamera-Verschiebung beim Einrichten (WASD/Pfeile) */
+  private decorPan = { x: 0, z: 0 };
   /** Kamera-Abstand: ruhig an das Stockwerk angepasst */
   private camScale = 1.22;
   /** Einrichten: was gerade gehalten wird (uid = schon im Zimmer, sonst aus der Tasche) */
@@ -446,7 +448,16 @@ export class World3D {
         ? this.floorSolid
         : (tx: number, ty: number) => grid.isBlocked(tx, ty) || this.npcStands(tx, ty, player);
       // drinnen bleibt Lina beim Einrichten stehen, im Garten darf sie herumlaufen
-      if (this.session.decorActive && this.session.inside) intent.dx = intent.dy = 0;
+      if (this.session.decorActive && this.session.inside) {
+        // …stattdessen schwenkt WASD/Pfeile die Kamera über das Stockwerk (Sims-Prinzip)
+        if (this.houseWide()) {
+          const size = planSize(this.houseView.plan);
+          const speed = 12 * this.camScale * (dtMs / 1000);
+          this.decorPan.x = Math.max(-size.w / 2, Math.min(size.w / 2, this.decorPan.x + intent.dx * speed));
+          this.decorPan.z = Math.max(-size.h / 2, Math.min(size.h / 2, this.decorPan.z + intent.dy * speed));
+        }
+        intent.dx = intent.dy = 0;
+      }
       // beim Durch-die-Tür-Gehen: keine Kollision (sonst stünde Lina vor der Hauswand)
       // Kaffee-Kick: ein paar Minuten flotter unterwegs
       player.speedFactor = kickActive(this.session) ? KICK_SPEED : 1;
@@ -2952,7 +2963,7 @@ export class World3D {
     if (this.session.decorActive && this.houseWide()) {
       const size = planSize(this.houseView.plan);
       this.camScale = Math.max(1.22, size.w / 7.2, size.h / 5.5);
-      return new THREE.Vector3(ROOM_X + size.w / 2, 0, ROOM_Y + size.h / 2);
+      return new THREE.Vector3(ROOM_X + size.w / 2 + this.decorPan.x, 0, ROOM_Y + size.h / 2 + this.decorPan.z);
     }
     this.camScale = this.houseWide() ? 1.6 : 1.22;
     // Im Haus mit mehreren Räumen folgt die Kamera Lina (sonst läuft sie beim Hineinzoomen aus dem Bild)
@@ -3558,6 +3569,7 @@ export class World3D {
     switch (c.kind) {
       case 'start':
         this.undoStack = [];
+        this.decorPan = { x: 0, z: 0 };
         this.session.decorActive = true;
         this.standUp();
         this.player?.cancelPath();

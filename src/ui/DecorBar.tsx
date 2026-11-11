@@ -100,7 +100,7 @@ export function DecorBar({ session, decor }: { session: Session; decor: DecorSta
             ? `${holding}: Klicken zum Abstellen${decor.valid ? '' : ' (hier passt es nicht)'}`
             : outside
               ? 'Klick auf Gartensachen zum Verschieben – laufen geht mit WASD.'
-              : 'Klick auf ein Möbel zum Verschieben – C = noch eins, oder nimm etwas aus dem Vorrat.'}
+              : 'Klick auf ein Möbel zum Verschieben – C = noch eins. WASD schwenkt die Kamera, Mausrad zoomt.'}
         </span>
         {decor.variants.length > 1 && (
           <span class="decor-colors" title="Farbe wechseln (V oder 1–9) – kostenlos">
