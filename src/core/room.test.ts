@@ -154,7 +154,6 @@ describe('Haus & Ausbau', () => {
     // Schlafzimmer: keine Ausgangs-Tür mehr – man läuft durch die Tür im Grundriss; das Feld bleibt aber frei
     expect(exitAt(main3, 4, 0)).toBeNull();
     expect(main3.reserved).toContainEqual([4, 0]);
-    expect(main3.lowBackWall).toBe(true);
     expect(exitAt(main3, 9, 0)?.to).toBe('dach');
     expect(exitAt(layoutOf(3, 'dach'), 3, 5)?.to).toBe('haupt');
   });

@@ -69,8 +69,6 @@ export function roomLayouts(stage: number): readonly RoomLayout[] {
     w,
     h,
     desk: [0, 0],
-    // Liegt das Schlafzimmer dahinter, ist die Rückwand nur halbhoch (kein Platz für Wand-Deko, keine Fenster)
-    lowBackWall: stage >= 2,
     exits: [
       frontDoor(w, h, 'draussen'),
       // Schlafzimmer, Küche und Wintergarten erreicht man ohne Ausgang: Türen im Grundriss (`innerDoors`), man läuft einfach hindurch

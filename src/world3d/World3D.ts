@@ -10,7 +10,7 @@ import { dressFor } from '../core/appearance';
 import * as THREE from 'three';
 import { DPR, TILE, UNIT } from '../config';
 import { CollisionGrid, findPath, nearestWalkable, type Tile } from '../core/grid';
-import { buildPlanGrid, type FloorPlan, planSize, roomAt } from '../core/floorplan';
+import { buildPlanGrid, type FloorPlan, planSize, roomAt, roomsBehind, wallStrips } from '../core/floorplan';
 import { floorsOf, groundFloor } from '../data/floorplan';
 import { checkPlacement, type Exit, riderOffset, exitAt, footprint, type Room, type RoomLayout, type Rotation, wallRotationAt } from '../core/room';
 import { FURNITURE_BY_ITEM, furnitureInfo, SURFACE_BY_ID } from '../data/furniture';
@@ -206,6 +206,8 @@ export class World3D {
   private exitBeyond = new Set<string>();
   /** Raum unter dem Mauszeiger (Einrichten über mehrere Räume) */
   private hoverRoom = '';
+  /** Wie sichtbar ist die Rückwand je Raum (1 = voll, kleiner = durchsichtig, weil dahinter ein Raum liegt)? */
+  private wallFade = new Map<string, number>();
   /** Kamera-Verschiebung beim Einrichten (WASD/Pfeile) */
   private decorPan = { x: 0, z: 0 };
   /** Kamera-Abstand: ruhig an das Stockwerk angepasst */
@@ -477,6 +479,7 @@ export class World3D {
       this.updateWinston(dtMs, player, blocked, solid);
       this.updateIdle(player, blocked);
       this.updateHomeOli(dtMs);
+      this.updateWallFade(player, dtMs / 1000);
       if (this.session.inside && !this.session.decorActive) {
         const t = player.tile;
         const lay = this.lay;
@@ -3132,6 +3135,32 @@ export class World3D {
   /** Raum unter einem Feld des Gesamtgitters (Wandstreifen und Außenbereich: null) */
   private roomAtTile(tx: number, ty: number): string | null {
     return roomAt(this.houseView.plan, tx - ROOM_X, ty - ROOM_Y)?.room ?? null;
+  }
+
+  /**
+   * Rückwände zu Räumen dahinter werden durchsichtig, wenn man hindurchsehen muss: Lina steht im Raum dahinter (oder
+   * im Türstreifen) – wie die Häuser im Dorf, wenn Lina dahinter steht – und beim Einrichten (dann auch, um dort
+   * Wand-Deko aufzuhängen). Sonst bleiben die Wände ganz: Fenster, Tapete und Wand-Deko wie gewohnt.
+   */
+  private updateWallFade(player: Character, dt: number) {
+    const plan = this.houseView.plan;
+    if (!this.session.inside || plan.rooms.length < 2) return;
+    const g = { x: player.tile.x - ROOM_X, y: player.tile.y - ROOM_Y };
+    const here = roomAt(plan, g.x, g.y)?.room ?? null;
+    const strips = wallStrips(plan).filter((s) => !s.vertical);
+    let minOpacity = 1;
+    for (const r of plan.rooms) {
+      const behind = roomsBehind(plan, r.id);
+      if (behind.length === 0) continue;
+      const inStrip = strips.some((s) => s.frontRoom === r.id && g.x >= s.x && g.x < s.x + s.w && g.y >= s.y && g.y < s.y + s.h);
+      const want = this.session.decorActive || inStrip || (here !== null && behind.includes(here)) ? 0.18 : 1;
+      const cur = this.wallFade.get(r.id) ?? 1;
+      const next = cur + (want - cur) * Math.min(1, dt * 6);
+      this.wallFade.set(r.id, next);
+      this.houseView.setBackFade(r.id, next);
+      minOpacity = Math.min(minOpacity, next);
+    }
+    this.houseView.setCrossFade(minOpacity);
   }
 
   /** Lina steht in einem anderen Raum als zuletzt? Dann wird der „aktuelle Raum“ umgestellt (kein Umblenden). */

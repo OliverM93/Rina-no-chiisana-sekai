@@ -14,8 +14,6 @@ export const ROOM_X = 200;
 export const ROOM_Y = 200;
 const WALL_H = 2.3;
 const MAX_LAMPS = 3;
-/** Halbhohe Innenwand (Sims-Prinzip: man sieht über sie hinweg) */
-export const LOW_WALL_H = 0.9;
 
 interface Placed {
   item: PlacedItem;
@@ -32,8 +30,6 @@ export interface WallOpening {
 export interface ShellOptions {
   openings?: readonly WallOpening[];
   hideExits?: boolean;
-  /** Hinter diesem Raum liegt ein anderer: Rückwand nur halbhoch (ohne Fenster), damit man darüber hinwegsieht */
-  lowBack?: boolean;
 }
 
 export class Interior3D {
@@ -45,6 +41,10 @@ export class Interior3D {
   private placed = new Map<string, Placed>();
   private floorMat = new THREE.MeshToonMaterial();
   private wallMat = new THREE.MeshToonMaterial();
+  /** Rückwand mit eigenem Material: sie wird durchsichtig, wenn dahinter ein Raum liegt und man hindurchsehen will */
+  private backMat = new THREE.MeshToonMaterial({ transparent: true });
+  /** Fenster & Rahmen der Rückwand (verschwinden mit der Wand) */
+  private backDeco: THREE.Object3D[] = [];
   private signature = '';
   /** Was Lina gefangen/gefunden hat (Sammelbuch-Einträge) – Vitrine, Insektenkasten & Fischtafel zeigen es */
   collected: ReadonlySet<string> = new Set();
@@ -82,6 +82,7 @@ export class Interior3D {
   private buildShell(layout: RoomLayout) {
     const { w: W, h: H } = layout;
     this.shell.clear();
+    this.backDeco = [];
     this.floor.scale.set(W, 1, H);
     this.floor.position.set(W / 2, 0, H / 2);
     const attic = layout.id === 'dach';
@@ -93,7 +94,7 @@ export class Interior3D {
     const DOOR_H = 1.85;
     // eine Wand aus Stücken bauen; an Türöffnungen bleibt unten frei, oben sitzt ein Sturz
     const buildWall = (side: 'back' | 'left' | 'right', length: number, extra: number) => {
-      const wallH = side === 'back' && this.shellOptions.lowBack ? LOW_WALL_H : fullH;
+      const wallH = fullH;
       const gaps = openings.filter((o) => o.side === side).map((o) => o.at).sort((a, b) => a - b);
       const cuts: Array<[number, number, boolean]> = []; // [von, bis, Öffnung?]
       let at = 0;
@@ -111,7 +112,7 @@ export class Interior3D {
         const h = open ? wallH - DOOR_H : wallH;
         const y = open ? DOOR_H + h / 2 : wallH / 2;
         const geo = side === 'back' ? new THREE.BoxGeometry(len, h, 0.15) : new THREE.BoxGeometry(0.15, h, len);
-        const m = new THREE.Mesh(geo, this.wallMat);
+        const m = new THREE.Mesh(geo, side === 'back' ? this.backMat : this.wallMat);
         if (side === 'back') m.position.set(mid, y, -0.075);
         else m.position.set(side === 'left' ? -0.075 : W + 0.075, y, mid);
         m.userData.wall = side;
@@ -152,7 +153,7 @@ export class Interior3D {
     // Keller: kleine Fenster ganz oben (draußen ist dort der Boden)
     const cellar = layout.id === 'keller';
     const [fw, fh] = cellar ? [0.8, 0.36] : [1.1, 0.9];
-    for (const x of this.shellOptions.lowBack ? [] : backWindows(layout)) {
+    for (const x of backWindows(layout)) {
       const y = attic ? 0.95 : cellar ? 1.95 : 1.35;
       const frame = mesh(new THREE.BoxGeometry(fw, fh, 0.06), toon('#ffffff'));
       frame.position.set(x, y, 0.02);
@@ -163,6 +164,7 @@ export class Interior3D {
       const sill = mesh(new THREE.BoxGeometry(fw + 0.1, 0.05, 0.16), toon('#cfa175'));
       sill.position.set(x, y - fh / 2 - 0.02, 0.08);
       this.shell.add(frame, glass, bar, sill);
+      this.backDeco.push(frame, glass, bar, sill);
     }
     // Ausgänge
     for (const e of this.shellOptions.hideExits ? [] : layout.exits) {
@@ -233,6 +235,9 @@ export class Interior3D {
     this.signature = sig;
     this.applySurface(this.floorMat, home.floor, layout.w / 2, layout.h / 2);
     this.applySurface(this.wallMat, home.wallpaper, layout.w / 2, 1);
+    // die Rückwand trägt dieselbe Tapete (eigenes Material, damit sie allein durchsichtig werden kann)
+    this.backMat.map = this.wallMat.map;
+    this.backMat.needsUpdate = true;
     this.furniture.clear();
     this.placed.clear();
     const byUid = new Map(home.items.map((i) => [i.uid, i]));
@@ -284,6 +289,17 @@ export class Interior3D {
   setLightsActive(on: boolean) {
     this.roomLight.visible = on;
     for (const l of this.lamps) l.visible = on;
+  }
+
+  /**
+   * Rückwand durchsichtig machen (1 = voll sichtbar, 0 = weg): damit man in den Raum dahinter sieht – wie Häuser im
+   * Dorf durchsichtig werden, wenn Lina dahinter steht. Fenster verschwinden ab etwa halb durchsichtig mit.
+   */
+  setBackFade(opacity: number) {
+    this.backMat.opacity = opacity;
+    this.backMat.depthWrite = opacity > 0.95;
+    const show = opacity > 0.55;
+    for (const o of this.backDeco) o.visible = show;
   }
 
   /** Licht nach Tageszeit: tagsüber Fensterlicht, abends Lampen */

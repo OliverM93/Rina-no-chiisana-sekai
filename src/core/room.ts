@@ -54,8 +54,6 @@ export interface RoomLayout {
   exits: readonly Exit[];
   /** Katalog-Pult */
   desk?: readonly [number, number];
-  /** Hinter dem Raum liegt ein anderer: Rückwand nur halbhoch – keine Wand-Deko, keine Fenster */
-  lowBackWall?: boolean;
   /** Weitere Felder, auf denen nichts stehen darf (z. B. Hauswände im Garten) */
   reserved?: ReadonlyArray<readonly [number, number]>;
 }
@@ -131,7 +129,7 @@ export function reservedCells(layout: RoomLayout): Set<string> {
 export function backWindows(layout: RoomLayout): number[] {
   const backDoors = layout.exits.filter((e) => e.dir === 'up').flatMap((e) => e.cells.map(([x]) => x));
   // Wintergarten: die Wände sind ja schon aus Glas
-  if (layout.id === 'wintergarten' || layout.lowBackWall) return [];
+  if (layout.id === 'wintergarten') return [];
   const xs = layout.id === 'dach' ? [layout.w / 2] : layout.id === 'keller' ? [3, layout.w / 2, layout.w - 3] : [2, layout.w - 2];
   return xs.filter((x) => !backDoors.some((d) => Math.abs(d + 0.5 - x) < 1.2));
 }
@@ -142,7 +140,6 @@ export function backWindows(layout: RoomLayout): number[] {
  */
 export function wallCellsOk(layout: RoomLayout, cells: Array<[number, number]>, rot: Rotation): boolean {
   if (rot === 0) {
-    if (layout.lowBackWall) return false;
     const wins = backWindows(layout);
     return cells.every(([cx, cy]) => cy === 0 && !wins.some((w) => cx + 0.5 > w - 0.75 && cx + 0.5 < w + 0.75));
   }

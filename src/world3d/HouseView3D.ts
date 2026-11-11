@@ -7,9 +7,9 @@
  * entscheidet `World3D` über ihre Position.
  */
 import * as THREE from 'three';
-import { type FloorPlan, hasRoomBehind, openingsFor, wallStrips } from '../core/floorplan';
+import { type FloorPlan, openingsFor, wallStrips } from '../core/floorplan';
 import type { Room, RoomLayout } from '../core/room';
-import { Interior3D, LOW_WALL_H, ROOM_X, ROOM_Y } from './Interior3D';
+import { Interior3D, ROOM_X, ROOM_Y } from './Interior3D';
 import { mesh, toon } from './materials';
 
 const WALL_COLOR = '#ece3d3';
@@ -23,6 +23,8 @@ export function singleRoomPlan(id: string, roomId: string, w: number, h: number)
 export class HouseView3D {
   private views = new Map<string, Interior3D>();
   private strips = new THREE.Group();
+  /** Querstreifen (zwischen vorderem und hinterem Raum): werden mit der Rückwand durchsichtig */
+  private crossMat = new THREE.MeshToonMaterial({ color: WALL_COLOR, transparent: true });
   private key = '';
   plan: FloorPlan = singleRoomPlan('init', 'haupt', 8, 6);
 
@@ -33,7 +35,7 @@ export class HouseView3D {
 
   /** Optionen für die Wände eines Raums: Türöffnungen, halbhohe Rückwand, alte Tür-Modelle aus */
   static shellFor(plan: FloorPlan, roomId: string) {
-    return { openings: openingsFor(plan, roomId), hideExits: false, lowBack: hasRoomBehind(plan, roomId) };
+    return { openings: openingsFor(plan, roomId), hideExits: false };
   }
 
   /** Stockwerk wechseln bzw. neu aufbauen, wenn sich der Grundriss geändert hat. true = neu gebaut */
@@ -52,6 +54,19 @@ export class HouseView3D {
     }
     this.buildStrips(plan);
     return true;
+  }
+
+  /**
+   * Rückwand des Raums `roomId` (samt Querstreifen dahinter) durchsichtig machen. 1 = voll, 0 = weg.
+   * Die Querstreifen teilen sich ein Material (alle Räume mit Raum dahinter blenden zusammen).
+   */
+  setBackFade(roomId: string, opacity: number) {
+    this.views.get(roomId)?.setBackFade(opacity);
+  }
+
+  setCrossFade(opacity: number) {
+    this.crossMat.opacity = opacity;
+    this.crossMat.depthWrite = opacity > 0.95;
   }
 
   /** Welcher Raum bekommt die echten Lichter? (immer genau einer: gleiche Lichtanzahl, kein Shader-Neubau) */
@@ -87,7 +102,7 @@ export class HouseView3D {
     const mat = toon(WALL_COLOR);
     for (const s of wallStrips(plan)) {
       // minimal höher als die Raumwände, die im Streifen stecken (sonst flackern gleich hohe Oberkanten)
-      const height = (s.vertical ? WALL_H : LOW_WALL_H) + 0.02;
+      const height = WALL_H + 0.02;
       // Zelle für Zelle, an Türfeldern bleibt unten frei (vertikale Wände bekommen einen Sturz)
       const cells = s.vertical ? s.h : s.w;
       for (let i = 0; i < cells; i++) {
@@ -104,7 +119,7 @@ export class HouseView3D {
         const h = door ? height - 1.85 : height;
         // Etwas schmaler als das Feld (0,96): so liegen die Flächen nicht deckungsgleich auf den Raumwänden
         // (die ragen 0,15 in den Streifen) – sonst flackern („Z-Fighting“) die Wandtapete und der Streifen
-        const box = mesh(new THREE.BoxGeometry(s.vertical ? 0.96 : 1, h, s.vertical ? 1 : 0.96), mat);
+        const box = mesh(new THREE.BoxGeometry(s.vertical ? 0.96 : 1, h, s.vertical ? 1 : 0.96), s.vertical ? mat : this.crossMat);
         box.position.set(ROOM_X + gx + 0.5, door ? 1.85 + h / 2 : h / 2, ROOM_Y + gy + (s.vertical ? 0.5 : 0.5 - 0.02));
         box.castShadow = true;
         box.receiveShadow = true;
