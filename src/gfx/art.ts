@@ -186,16 +186,58 @@ export function drawArtwork(ctx: C, a: ArtDef, w: number, h: number) {
       ctx.fillRect(w * 0.47, h * 0.45, w * 0.06, h * 0.01);
       break;
     }
-    case 'stickbild': {
-      ctx.fillStyle = main;
-      const cell = w / 24;
-      for (let x = 0; x < 24; x++) for (let y = 0; y < 24; y++) if (x === 1 || y === 1 || x === 22 || y === 22) ctx.fillRect(x * cell, y * cell, cell * 0.8, cell * 0.8);
-      ctx.font = `700 ${h * 0.1}px serif`;
-      ctx.textAlign = 'center';
-      ctx.fillStyle = accent;
-      ctx.fillText('Trautes Heim', w / 2, h * 0.38);
-      ctx.fillText('Glück allein', w / 2, h * 0.52);
-      heart(ctx, w * 0.5, h * 0.7, w * 0.1, main);
+    case 'kubismus': {
+      // Futuristisch-kubistisch: ein zersplittertes Gesicht aus Facetten, Neonkanten und einem Raster
+      ctx.strokeStyle = 'rgba(255,255,255,0.08)';
+      ctx.lineWidth = 1;
+      for (let i = 1; i < 10; i++) {
+        ctx.beginPath();
+        ctx.moveTo((w * i) / 10, 0);
+        ctx.lineTo((w * i) / 10, h);
+        ctx.moveTo(0, (h * i) / 10);
+        ctx.lineTo(w, (h * i) / 10);
+        ctx.stroke();
+      }
+      const pal = [main, accent, '#ffd23f', '#7a5cff', '#ffffff'];
+      const poly = (pts: Array<[number, number]>, color: string, alpha: number) => {
+        ctx.globalAlpha = alpha;
+        ctx.fillStyle = color;
+        ctx.beginPath();
+        pts.forEach(([x, y], i) => (i ? ctx.lineTo(x * w, y * h) : ctx.moveTo(x * w, y * h)));
+        ctx.closePath();
+        ctx.fill();
+        ctx.globalAlpha = 1;
+        ctx.strokeStyle = 'rgba(255,255,255,0.55)';
+        ctx.lineWidth = Math.max(1, w / 150);
+        ctx.stroke();
+      };
+      // Kopf: Profil links, Frontalansicht rechts, dazwischen Splitter
+      poly([[0.18, 0.18], [0.5, 0.1], [0.5, 0.78], [0.3, 0.9], [0.14, 0.6]], pal[0], 0.9);
+      poly([[0.5, 0.1], [0.82, 0.2], [0.86, 0.62], [0.68, 0.88], [0.5, 0.78]], pal[1], 0.85);
+      poly([[0.34, 0.32], [0.62, 0.28], [0.58, 0.5], [0.36, 0.52]], pal[3], 0.75);
+      poly([[0.4, 0.58], [0.66, 0.56], [0.6, 0.72], [0.44, 0.74]], pal[2], 0.8);
+      // zwei Augen aus Würfeln
+      poly([[0.3, 0.36], [0.4, 0.34], [0.4, 0.42], [0.3, 0.44]], pal[4], 0.95);
+      poly([[0.6, 0.32], [0.7, 0.34], [0.7, 0.42], [0.6, 0.4]], pal[4], 0.95);
+      ctx.fillStyle = bg;
+      ctx.fillRect(w * 0.34, h * 0.38, w * 0.03, h * 0.03);
+      ctx.fillRect(w * 0.64, h * 0.36, w * 0.03, h * 0.03);
+      // schwebende Würfel
+      for (let i = 0; i < 7; i++) {
+        const x = 0.06 + rnd() * 0.86;
+        const y = 0.06 + rnd() * 0.88;
+        const r = 0.025 + rnd() * 0.03;
+        poly([[x, y], [x + r, y - r * 0.5], [x + r * 2, y], [x + r, y + r * 0.5]], pal[i % 4], 0.9);
+        poly([[x, y], [x + r, y + r * 0.5], [x + r, y + r * 1.6], [x, y + r * 1.1]], pal[(i + 1) % 4], 0.7);
+      }
+      // Neonlinien quer durchs Bild
+      ctx.strokeStyle = accent;
+      ctx.lineWidth = Math.max(2, w / 60);
+      ctx.beginPath();
+      ctx.moveTo(0, h * 0.82);
+      ctx.lineTo(w * 0.45, h * 0.62);
+      ctx.lineTo(w, h * 0.9);
+      ctx.stroke();
       break;
     }
     case 'karte': {

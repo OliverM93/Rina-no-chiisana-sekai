@@ -263,6 +263,8 @@ export class World3D {
   /** Oli drinnen (wenn er zu Hause ist und Lina auch) */
   private homeOli: Character | null = null;
   private homeOliKey = '';
+  /** Bewohner, die zu Hause angetroffen werden, wenn Lina zu Besuch ist (Schlüssel: Bewohner-ID) */
+  private guestChars = new Map<string, Character>();
   /** uid der Hantelbank, auf der Oli gerade trainiert (für die Langhantel) */
   private homeOliBench = '';
   /** Wie lange Lina schon stillsteht (für Winstons Buddeln & Körbchen) */
@@ -486,6 +488,7 @@ export class World3D {
       this.updateWinston(dtMs, player, blocked, solid);
       this.updateIdle(player, blocked);
       this.updateHomeOli(dtMs);
+      this.updateGuestResidents(dtMs);
       this.updateWallFade(player, dtMs / 1000);
       if (this.session.inside && !this.session.decorActive) {
         const t = player.tile;
@@ -997,6 +1000,10 @@ export class World3D {
     if (target.kind === 'npc' && this.session.inside && this.homeOli?.visible && target.npc.def.id === 'oli') {
       return { key: 'npc:oli-home', talk: true, pos: this.homeOli.root.position.clone().add(new THREE.Vector3(0, this.homeOli.sitting ? 0.9 : 1.15, 0)) };
     }
+    if (target.kind === 'npc' && this.session.inside && this.guestChars.get(target.npc.def.id)?.visible) {
+      const c = this.guestChars.get(target.npc.def.id)!;
+      return { key: `npc:${target.npc.def.id}-gast`, talk: true, pos: c.root.position.clone().add(new THREE.Vector3(0, 1.15, 0)) };
+    }
     if (target.kind === 'npc') {
       return { key: `npc:${target.npc.def.id}`, talk: true, pos: target.npc.char.root.position.clone().add(new THREE.Vector3(0, target.npc.bubbleHeight, 0)) };
     }
@@ -1131,6 +1138,17 @@ export class World3D {
       const d = Math.hypot(dx, dy);
       const oli = this.npcs.get('oli');
       if (oli && d < TILE * 1.4 && dx * hx + dy * hy > d * 0.3) return { kind: 'npc', npc: oli };
+    }
+    if (this.session.inside && this.session.visiting) {
+      const [hx, hy] = DIRS[player.facing];
+      for (const [id, c] of this.guestChars) {
+        if (!c.visible) continue;
+        const dx = c.x - player.x;
+        const dy = c.y - player.y;
+        const d = Math.hypot(dx, dy);
+        const npc = this.npcs.get(id);
+        if (npc && d < TILE * 1.4 && dx * hx + dy * hy > d * 0.3) return { kind: 'npc', npc };
+      }
     }
     // Bewohner gehen vor – Winston wird gestreichelt, wenn sonst niemand vor Lina steht
     if (this.session.inside) return this.winstonInFront(player) ? { kind: 'winston' } : this.homeTarget(player);
@@ -1600,7 +1618,12 @@ export class World3D {
     const player = this.player;
     if (!player) return;
     npc.startTalk(player.x, player.y);
-    if (this.homeOli?.visible && npc.def.id === 'oli') {
+    const guest = this.session.visiting ? this.guestChars.get(npc.def.id) : undefined;
+    if (guest?.visible) {
+      player.faceTowards(guest.x, guest.y);
+      guest.faceTowards(player.x, player.y);
+      guest.wave();
+    } else if (this.homeOli?.visible && npc.def.id === 'oli') {
       player.faceTowards(this.homeOli.x, this.homeOli.y);
       if (!this.homeOli.sitting) {
         this.homeOli.faceTowards(player.x, player.y);
@@ -2120,6 +2143,41 @@ export class World3D {
       this.nextSpontaneousKiss = now + 150_000 + Math.random() * 180_000;
       if (Math.hypot(player.x - c.x, player.y - c.y) < TILE * 3.5) this.homeOliComes(SPONTANEOUS_KISS_LINES);
     }
+  }
+
+  /**
+   * Zu Besuch: Ist die Bewohnerin / der Bewohner gerade zu Hause (und wach), steht sie/er im Zimmer und lässt sich
+   * ansprechen. Beim Besuch bei Olaf & Christin sind beide da, wenn sie beide zu Hause sind.
+   */
+  private updateGuestResidents(dtMs: number) {
+    const house = this.session.inside && this.session.visiting ? GUEST_HOUSES[this.session.visiting] : undefined;
+    const owners = house ? (this.session.visiting === 'haus-olaf' ? ['olaf', 'christin'] : [house.npc]) : [];
+    const day = this.session.today();
+    owners.forEach((id, i) => {
+      const npc = this.npcs.get(id);
+      const want = !!npc && npc.movedIn && npc.atHome && !npc.isSleeping && !this.cutscene;
+      let c = this.guestChars.get(id);
+      if (!want || !npc) {
+        if (c?.visible) c.setVisible(false);
+        return;
+      }
+      if (!c) {
+        c = new Character(this.scene, dressFor(npc.def.appearance, wardrobeFor(this.session, npc.def), day, id), 0, 0, 'down', () => 0, this.session.season, day);
+        c.speedFactor = 0.7;
+        c.setVisible(false); // wird gleich unten an ihren Platz gestellt
+        this.guestChars.set(id, c);
+      }
+      if (!c.visible) {
+        const free = nearestWalkable(this.roomGrid(), { x: i === 0 ? 5 : 2, y: 2 });
+        c.setVisible(true);
+        c.setSitting(false);
+        c.teleport((ROOM_X + (free?.x ?? 4)) * TILE + 32, (ROOM_Y + (free?.y ?? 2)) * TILE + 40);
+        c.face('down');
+      }
+      c.update(dtMs, { dx: 0, dy: 0, run: false }, () => true);
+    });
+    // nicht (mehr) zu Besuch: alle ausblenden
+    for (const [id, c] of this.guestChars) if (c.visible && !owners.includes(id)) c.setVisible(false);
   }
 
   /** Oli kommt im Zimmer zu Lina und gibt ihr ein Küsschen */
@@ -3526,7 +3584,10 @@ export class World3D {
     const group = this.modelOf(uid)?.group;
     const bell = group?.getObjectByName('langhantel');
     const extra = bell?.getObjectByName('extraplatten');
-    if (extra) extra.visible = true;
+    if (extra) {
+      extra.visible = true;
+      extra.children.forEach((pl) => (pl.visible = false));
+    }
     this.session.bus.emit('sfx', 'klick');
     const oli = this.homeOli?.visible ? this.homeOli : null;
     if (oli) oli.faceTowards(player.x, player.y);
@@ -3538,6 +3599,8 @@ export class World3D {
       if (idx !== shown) {
         shown = idx;
         this.session.bus.emit('toast', { text: TRAINING_REPS[idx] });
+        // mit dem Gewicht kommen Scheiben dazu (20 kg = nur die Grundscheiben, 220 kg = alle)
+        extra?.children.forEach((pl) => (pl.visible = (pl.userData.stufe as number) <= idx));
         if (idx >= 2) oli?.cheer();
       }
     }, () => {
@@ -4141,7 +4204,7 @@ export class World3D {
   private playFx(kind: FxKind, npcId?: string, x?: number, y?: number) {
     const player = this.player;
     if (npcId) {
-      const home = npcId === 'oli' && this.homeOli?.visible ? this.homeOli : null;
+      const home = this.guestChars.get(npcId)?.visible ? this.guestChars.get(npcId)! : npcId === 'oli' && this.homeOli?.visible ? this.homeOli : null;
       const npc = home ?? this.npcs.get(npcId)?.char ?? null;
       if (npc && npc.visible) {
         this.fxAt(kind, npc.x, npc.y, 0, 0.15);

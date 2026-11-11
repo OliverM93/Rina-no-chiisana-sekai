@@ -6,7 +6,7 @@
  * aufstellen kann – oder man stiftet es der Galerie.
  */
 
-export type ArtStyle = 'landschaft' | 'meer' | 'blumen' | 'nacht' | 'abstrakt' | 'dackel' | 'berge' | 'portrait' | 'stickbild' | 'karte' | 'herzen' | 'stadt';
+export type ArtStyle = 'landschaft' | 'meer' | 'blumen' | 'nacht' | 'abstrakt' | 'dackel' | 'berge' | 'portrait' | 'kubismus' | 'karte' | 'herzen' | 'stadt';
 
 export interface ArtDef {
   id: string;
@@ -29,7 +29,8 @@ export const ARTWORKS: readonly ArtDef[] = [
   { id: 'kunst-winston', name: 'Bildnis eines Dackels', artist: 'Jens', style: 'dackel', price: 1500, colors: ['#f7c6d4', '#b8642e', '#8fd08a'], description: 'Winston, in königlicher Pose. Er hat drei Minuten stillgehalten – ein Rekord.' },
   { id: 'kunst-alpengluehen', name: 'Alpenglühen', artist: 'Jens', style: 'berge', price: 1700, colors: ['#f7b27a', '#8a6a9a', '#ffffff'], description: 'Berge im Abendrot. „Ich war in den Alpen, hab gemalt und dabei sehr viel Käsefondue gegessen.“' },
   { id: 'kunst-oma', name: 'Oma auf der Bank', artist: 'Jens', style: 'portrait', price: 2200, colors: ['#e6f4ff', '#3a5fc8', '#d9534f'], description: 'Oma Gisela im blauen Mantel, mit sehr ernstem Blick. Sie sagt, sie sieht „zu alt“ aus. Sie sieht wunderbar aus.' },
-  { id: 'kunst-stickbild', name: 'Gestickt: Trautes Heim', artist: 'Oma Gisela', style: 'stickbild', price: 900, colors: ['#fbf6ec', '#e85a8a', '#6fa86a'], description: 'Ein Kreuzstichbild von Oma: „Trautes Heim, Glück allein“. Mit einem Herzchen, das ein bisschen schief ist.' },
+  // ID bleibt (alte Spielstände): früher ein Kreuzstichbild, jetzt ein futuristisch-kubistisches Gemälde
+  { id: 'kunst-stickbild', name: 'Zukunft in Würfeln', artist: 'Jens', style: 'kubismus', price: 1900, colors: ['#14163a', '#2fd6e0', '#ff4fa3'], description: 'Futuristisch und kubistisch: ein Gesicht aus Würfeln, Neonlinien und Splittern. Jens: „Es zeigt die Zukunft – von allen Seiten gleichzeitig.“' },
   { id: 'kunst-schatzkarte', name: 'Thalias erste Dorfkarte', artist: 'Thalia', style: 'karte', price: 1100, colors: ['#f3e2c4', '#5b7fc2', '#6fa86a'], description: 'Thalias erste Karte vom Dorf, mit Kompassrose und einem X da, wo der beste Kuchen ist.' },
   { id: 'kunst-herzen', name: 'Hundert kleine Herzen', artist: 'Oli', style: 'herzen', price: 1000, colors: ['#ffffff', '#e85a8a', '#f4a3b8'], description: 'Oli hat hundert Herzen gemalt. „Eins für jeden Grund, warum ich Lini lieb hab.“ (Es sind eigentlich mehr.)' },
   { id: 'kunst-paris', name: 'Dächer von Paris', artist: 'Jens', style: 'stadt', price: 2400, colors: ['#bfd8f0', '#7a8a96', '#f4a3b8'], description: 'Graue Dächer, rosa Abendhimmel, ein winziger Eiffelturm. Jens\' Lieblingsbild.' },
