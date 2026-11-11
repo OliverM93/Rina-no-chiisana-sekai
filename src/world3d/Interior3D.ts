@@ -43,6 +43,8 @@ export class Interior3D {
   private wallMat = new THREE.MeshToonMaterial();
   /** Rückwand mit eigenem Material: sie wird durchsichtig, wenn dahinter ein Raum liegt und man hindurchsehen will */
   private backMat = new THREE.MeshToonMaterial({ transparent: true });
+  /** Seitenwände mit eigenem Material (durchsichtig, wenn dahinter ein Nachbarraum liegt und man hindurchsehen will) */
+  private sideMats = { left: new THREE.MeshToonMaterial({ transparent: true }), right: new THREE.MeshToonMaterial({ transparent: true }) };
   /** Fenster & Rahmen der Rückwand (verschwinden mit der Wand) */
   private backDeco: THREE.Object3D[] = [];
   private signature = '';
@@ -112,7 +114,7 @@ export class Interior3D {
         const h = open ? wallH - DOOR_H : wallH;
         const y = open ? DOOR_H + h / 2 : wallH / 2;
         const geo = side === 'back' ? new THREE.BoxGeometry(len, h, 0.15) : new THREE.BoxGeometry(0.15, h, len);
-        const m = new THREE.Mesh(geo, side === 'back' ? this.backMat : this.wallMat);
+        const m = new THREE.Mesh(geo, side === 'back' ? this.backMat : this.sideMats[side]);
         if (side === 'back') m.position.set(mid, y, -0.075);
         else m.position.set(side === 'left' ? -0.075 : W + 0.075, y, mid);
         m.userData.wall = side;
@@ -238,6 +240,10 @@ export class Interior3D {
     // die Rückwand trägt dieselbe Tapete (eigenes Material, damit sie allein durchsichtig werden kann)
     this.backMat.map = this.wallMat.map;
     this.backMat.needsUpdate = true;
+    for (const m of Object.values(this.sideMats)) {
+      m.map = this.wallMat.map;
+      m.needsUpdate = true;
+    }
     this.furniture.clear();
     this.placed.clear();
     const byUid = new Map(home.items.map((i) => [i.uid, i]));
@@ -300,6 +306,12 @@ export class Interior3D {
     this.backMat.depthWrite = opacity > 0.95;
     const show = opacity > 0.55;
     for (const o of this.backDeco) o.visible = show;
+  }
+
+  /** Seitenwand (links/rechts) durchsichtig machen: 1 = voll, 0 = weg */
+  setSideFade(side: 'left' | 'right', opacity: number) {
+    this.sideMats[side].opacity = opacity;
+    this.sideMats[side].depthWrite = opacity > 0.95;
   }
 
   /** Licht nach Tageszeit: tagsüber Fensterlicht, abends Lampen */
