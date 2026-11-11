@@ -582,7 +582,11 @@ export class World3D {
     this.hemi.groundColor.set(mixHex('#a9d48e', '#2d3560', n));
     this.baseHemi = 1.35 * (1 - n * 0.55) * (1 - clouds * 0.25);
     this.hemi.intensity = this.baseHemi;
-    (this.scene.fog as THREE.Fog).near = 26 - clouds * 8;
+    // Draußen versteckt der Nebel das ferne Land; im Haus gibt es nichts zu verstecken (sonst verschwindet beim
+    // Herauszoomen/Einrichten das ganze Stockwerk im Nebel)
+    const fog = this.scene.fog as THREE.Fog;
+    fog.near = this.session.inside ? 1000 : 26 - clouds * 8;
+    fog.far = this.session.inside ? 2000 : 55;
     if (this.session.data) {
       this.insects.refresh();
       if (updateGarden(this.session)) this.garden.refresh();
