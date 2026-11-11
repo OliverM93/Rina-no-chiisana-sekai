@@ -1,64 +1,80 @@
 /**
- * Das ganze Erdgeschoss auf einen Blick (Konzept: `docs/haus-grundriss.md`, Phase B).
+ * Ein Stockwerk als Ganzes (Konzept: `docs/haus-grundriss.md`, Phasen B/C).
  *
- * Linas aktueller Raum wird weiter von `Interior3D` in `World3D` gezeichnet. Diese Klasse zeichnet die
- * **übrigen Räume** des Stockwerks daneben (je eine eigene `Interior3D` mit Möbeln, Tapete und Boden) und
- * die **Wandstreifen** dazwischen – Seitenwände voll, Wände zwischen vorne und hinten halbhoch.
+ * Jeder Raum des Stockwerks hat eine eigene `Interior3D` an **fester Stelle** (Welt = ROOM_X/ROOM_Y + Lage im
+ * Grundriss) – Möbel, Tapete und Boden je Raum – dazu die Wandstreifen zwischen den Räumen: Seitenwände voll,
+ * Wände zwischen vorne und hinten halbhoch. Lina läuft einfach durch die Türen; welcher Raum „aktuell“ ist,
+ * entscheidet `World3D` über ihre Position.
  */
 import * as THREE from 'three';
-import { type FloorPlan, hasRoomBehind, openingsFor, roomById, wallStrips } from '../core/floorplan';
-import type { Room } from '../core/room';
-import { layoutOf } from '../data/house';
+import { type FloorPlan, hasRoomBehind, openingsFor, wallStrips } from '../core/floorplan';
+import type { Room, RoomLayout } from '../core/room';
 import { Interior3D, LOW_WALL_H, ROOM_X, ROOM_Y } from './Interior3D';
 import { mesh, toon } from './materials';
 
 const WALL_COLOR = '#ece3d3';
 const WALL_H = 2.3;
 
+/** Grundriss mit einem einzigen Raum (Dach, Keller, Besuche, Start) */
+export function singleRoomPlan(id: string, roomId: string, w: number, h: number): FloorPlan {
+  return { id, rooms: [{ id: roomId, x: 0, y: 0, w, h }], doors: [] };
+}
+
 export class HouseView3D {
   private views = new Map<string, Interior3D>();
   private strips = new THREE.Group();
   private key = '';
+  plan: FloorPlan = singleRoomPlan('init', 'haupt', 8, 6);
 
   constructor(private scene: THREE.Scene) {
     scene.add(this.strips);
+    this.setFloor(this.plan, 'init');
   }
 
-  /** Optionen für den Raum, den `World3D` selbst zeichnet (Öffnungen, halbhohe Rückwand) */
+  /** Optionen für die Wände eines Raums: Türöffnungen, halbhohe Rückwand, alte Tür-Modelle aus */
   static shellFor(plan: FloorPlan, roomId: string) {
-    return { openings: openingsFor(plan, roomId), hideExits: true, lowBack: hasRoomBehind(plan, roomId) };
+    return { openings: openingsFor(plan, roomId), hideExits: false, lowBack: hasRoomBehind(plan, roomId) };
   }
 
-  /**
-   * Zeichnet alle Räume außer `currentId` (sie liegen so, dass `currentId` bei (ROOM_X, ROOM_Y) bleibt).
-   * `rooms` = Möbel/Tapete je Raum aus dem Spielstand.
-   */
-  refresh(plan: FloorPlan, stage: number, rooms: readonly Room[], currentId: string, collected: ReadonlySet<string>) {
-    const cur = roomById(plan, currentId);
-    if (!cur) return this.clear();
-    const key = `${plan.id}:${stage}:${currentId}`;
-    const rebuild = key !== this.key;
-    this.key = key;
-    if (rebuild) {
-      this.clear();
-      this.buildStrips(plan, cur.x, cur.y);
-    }
-    for (const r of plan.rooms) {
-      if (r.id === currentId) continue;
-      const room = rooms.find((x) => x.id === r.id);
-      if (!room) continue;
-      let view = this.views.get(r.id);
-      if (!view) {
-        view = new Interior3D(this.scene, { x: ROOM_X + r.x - cur.x, z: ROOM_Y + r.y - cur.y });
-        this.views.set(r.id, view);
-      }
-      view.shellOptions = HouseView3D.shellFor(plan, r.id);
+  /** Stockwerk wechseln bzw. neu aufbauen, wenn sich der Grundriss geändert hat. true = neu gebaut */
+  setFloor(plan: FloorPlan, key: string): boolean {
+    const fullKey = key + JSON.stringify(plan);
+    if (fullKey === this.key) return false;
+    this.key = fullKey;
+    this.plan = plan;
+    for (const v of this.views.values()) v.group.removeFromParent();
+    this.views.clear();
+    this.strips.clear();
+    for (const r of plan.rooms) this.views.set(r.id, new Interior3D(this.scene, { x: ROOM_X + r.x, z: ROOM_Y + r.y }));
+    this.buildStrips(plan);
+    return true;
+  }
+
+  view(roomId: string): Interior3D | undefined {
+    return this.views.get(roomId);
+  }
+
+  /** Irgendein Raum des Stockwerks (Rückfall, solange noch nichts Bestimmtes gewählt ist) */
+  first(): Interior3D {
+    return this.views.values().next().value as Interior3D;
+  }
+
+  all(): Array<[string, Interior3D]> {
+    return [...this.views.entries()];
+  }
+
+  /** Möbel, Tapete und Boden aller Räume aktualisieren */
+  refreshAll(rooms: ReadonlyArray<{ room: Room; layout: RoomLayout }>, collected: ReadonlySet<string>, force = false) {
+    for (const { room, layout } of rooms) {
+      const view = this.views.get(room.id);
+      if (!view) continue;
+      view.shellOptions = HouseView3D.shellFor(this.plan, room.id);
       view.collected = collected;
-      view.refresh(room, layoutOf(stage, r.id), rebuild);
+      view.refresh(room, layout, force);
     }
   }
 
-  private buildStrips(plan: FloorPlan, curX: number, curY: number) {
+  private buildStrips(plan: FloorPlan) {
     const mat = toon(WALL_COLOR);
     for (const s of wallStrips(plan)) {
       const height = s.vertical ? WALL_H : LOW_WALL_H;
@@ -71,7 +87,7 @@ export class HouseView3D {
         if (door && !s.vertical) continue;
         const h = door ? height - 1.85 : height;
         const box = mesh(new THREE.BoxGeometry(1, h, 1), mat);
-        box.position.set(ROOM_X + gx - curX + 0.5, door ? 1.85 + h / 2 : h / 2, ROOM_Y + gy - curY + 0.5);
+        box.position.set(ROOM_X + gx + 0.5, door ? 1.85 + h / 2 : h / 2, ROOM_Y + gy + 0.5);
         box.castShadow = true;
         box.receiveShadow = true;
         this.strips.add(box);
@@ -88,10 +104,13 @@ export class HouseView3D {
     for (const v of this.views.values()) v.group.visible = on;
   }
 
-  clear() {
-    this.key = '';
-    this.strips.clear();
-    for (const v of this.views.values()) v.group.removeFromParent();
-    this.views.clear();
+  /** Zu welchem Raum gehört ein getroffenes Objekt? */
+  roomOf(obj: THREE.Object3D): string | null {
+    let o: THREE.Object3D | null = obj;
+    while (o) {
+      for (const [id, v] of this.views) if (v.group === o) return id;
+      o = o.parent;
+    }
+    return null;
   }
 }

@@ -151,7 +151,10 @@ describe('Haus & Ausbau', () => {
     const main3 = layoutOf(3, 'haupt');
     expect(exitAt(main3, 4, 6)?.to).toBe('draussen');
     expect(exitAt(main3, 5, 6), 'Tür ist ein Feld breit').toBeNull();
-    expect(exitAt(main3, 4, 0)?.to).toBe('schlafzimmer');
+    // Schlafzimmer: keine Ausgangs-Tür mehr – man läuft durch die Tür im Grundriss; das Feld bleibt aber frei
+    expect(exitAt(main3, 4, 0)).toBeNull();
+    expect(main3.reserved).toContainEqual([4, 0]);
+    expect(main3.lowBackWall).toBe(true);
     expect(exitAt(main3, 9, 0)?.to).toBe('dach');
     expect(exitAt(layoutOf(3, 'dach'), 3, 5)?.to).toBe('haupt');
   });

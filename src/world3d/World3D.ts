@@ -10,8 +10,8 @@ import { dressFor } from '../core/appearance';
 import * as THREE from 'three';
 import { DPR, TILE, UNIT } from '../config';
 import { CollisionGrid, findPath, nearestWalkable, type Tile } from '../core/grid';
-import { planSize, roomById } from '../core/floorplan';
-import { floorsOf } from '../data/floorplan';
+import { buildPlanGrid, type FloorPlan, planSize, roomAt } from '../core/floorplan';
+import { floorsOf, groundFloor } from '../data/floorplan';
 import { checkPlacement, type Exit, riderOffset, exitAt, footprint, type Room, type RoomLayout, type Rotation, wallRotationAt } from '../core/room';
 import { FURNITURE_BY_ITEM, furnitureInfo, SURFACE_BY_ID } from '../data/furniture';
 import { getDaylight, getSeason, isSameDayMonth } from '../core/time';
@@ -51,7 +51,7 @@ import { christinTip, christinWaters } from '../game/christin';
 import { buyDrink, checkAdvent, isAdventTime, punschOpen } from '../game/winter';
 import { PUNSCH_DRINKS, PUNSCH_HOURS } from '../data/winter';
 import { Footprints3D } from './Footprints3D';
-import { HOUSE_STAGES } from '../data/house';
+import { HOUSE_STAGES, layoutOf } from '../data/house';
 import { CHRISTIN_WELCOME } from '../data/npcs/christin';
 import { OLAF_WELCOME } from '../data/npcs/olaf';
 import { OLI_WELCOME } from '../data/npcs/oli';
@@ -100,7 +100,7 @@ import { Collectibles } from './Collectibles3D';
 import { Fishing3D } from './Fishing3D';
 import { Garden3D } from './Garden3D';
 import { Insects3D } from './Insects3D';
-import { HouseView3D } from './HouseView3D';
+import { HouseView3D, singleRoomPlan } from './HouseView3D';
 import { Interior3D, ROOM_X, ROOM_Y } from './Interior3D';
 import { Yard3D } from './Yard3D';
 import { DigSpots3D } from './DigSpots3D';
@@ -198,18 +198,22 @@ export class World3D {
   private held: { tool: ToolId; model: ToolModel } | null = null;
   private baseHemi = 1.3;
   private patienceToast = 0;
-  private interior: Interior3D;
-  /** Kamera-Ziel & Abstand für die Haus-Vorschau (null = normaler Raum) */
-  private houseCam: { cx: number; cz: number; scale: number } | null = null;
-  /** Phase B (Vorschau, `?haus=neu`): die übrigen Räume des Erdgeschosses daneben */
+  /** Das Haus als zusammenhängendes Stockwerk (Räume an festen Stellen, Wandstreifen dazwischen) */
   private houseView: HouseView3D;
-  private readonly houseFlag = typeof location !== 'undefined' && new URLSearchParams(location.search).get('haus') === 'neu';
+  /** Begehbares Gesamtgitter des Stockwerks (Gesamtkoordinaten = Welt − ROOM_X/ROOM_Y); null = neu bauen */
+  private floorGrid: CollisionGrid | null = null;
+  /** Felder hinter Ausgängen (Haustür, Treppe): dort geht Lina hinaus */
+  private exitBeyond = new Set<string>();
+  /** Raum unter dem Mauszeiger (Einrichten über mehrere Räume) */
+  private hoverRoom = '';
+  /** Kamera-Abstand: ruhig an das Stockwerk angepasst */
+  private camScale = 1.22;
   /** Einrichten: was gerade gehalten wird (uid = schon im Zimmer, sonst aus der Tasche) */
   /**
    * Was Lina beim Einrichten in der Hand hat. `source` = was im Vorrat liegt (bei neuen Stücken, die Farbe darf
    * sich ändern); `origin` = Zustand vor dem Aufnehmen (für „Rückgängig“).
    */
-  private decor: { itemId: string; uid: string | null; rot: Rotation; source?: string; origin?: { x: number; y: number; rot: Rotation; itemId: string } } | null = null;
+  private decor: { itemId: string; uid: string | null; rot: Rotation; source?: string; origin?: { x: number; y: number; rot: Rotation; itemId: string; roomId: string } } | null = null;
   /** Schritte, die sich im Einrichtungsmodus rückgängig machen lassen (jüngster zuletzt) */
   private undoStack: Array<{ label: string; undo: () => boolean }> = [];
   private hoverCell: { x: number; y: number } | null = null;
@@ -322,7 +326,6 @@ export class World3D {
     this.insects = new Insects3D(this.scene, session, this.view, this.tweens);
     this.garden = new Garden3D(this.scene, session, this.tweens);
     this.interactive.add('beet-lina');
-    this.interior = new Interior3D(this.scene);
     this.houseView = new HouseView3D(this.scene);
     this.yard = new Yard3D(this.scene, this.view.terrain.heightAt);
     this.digSpots = new DigSpots3D(this.scene, session, this.view);
@@ -440,7 +443,7 @@ export class World3D {
       if (player.sitting && (intent.dx !== 0 || intent.dy !== 0)) this.standUp();
       const home = this.room;
       const solid = this.session.inside && home
-        ? (tx: number, ty: number) => this.interior.isBlocked(home, tx - ROOM_X, ty - ROOM_Y)
+        ? this.floorSolid
         : (tx: number, ty: number) => grid.isBlocked(tx, ty) || this.npcStands(tx, ty, player);
       // drinnen bleibt Lina beim Einrichten stehen, im Garten darf sie herumlaufen
       if (this.session.decorActive && this.session.inside) intent.dx = intent.dy = 0;
@@ -465,8 +468,9 @@ export class World3D {
       if (this.session.inside && !this.session.decorActive) {
         const t = player.tile;
         const lay = this.lay;
-        const cx = t.x - ROOM_X;
-        const cy = t.y - ROOM_Y;
+        this.trackRoom(player);
+        const cx = t.x - this.ox;
+        const cy = t.y - this.oy;
         // Hinter einem Ausgang (oder auf dem Ausgang in seine Richtung gelaufen) → hindurchgehen
         const beyond = lay.exits.find((e) => e.cells.some(([ex]) => ex === cx) && ((e.dir === 'down' && cy >= lay.h) || (e.dir === 'up' && cy < 0)));
         const on = exitAt(lay, cx, cy);
@@ -483,7 +487,7 @@ export class World3D {
       if (!player.hasPath) this.marker.visible = false;
 
       // Kamera folgt Lina weich (zu Hause: fester Blick ins Zimmer)
-      const target = this.session.inside ? (this.houseCam ? new THREE.Vector3(this.houseCam.cx, 0, this.houseCam.cz) : this.roomCenter()) : new THREE.Vector3(player.x * UNIT, 0, player.y * UNIT);
+      const target = this.session.inside ? this.insideCamTarget() : new THREE.Vector3(player.x * UNIT, 0, player.y * UNIT);
       this.camTarget.lerp(target, 1 - Math.pow(0.002, dt));
       if (!this.session.inside) this.updateOccluders(player);
       if (!this.session.inside) {
@@ -511,7 +515,7 @@ export class World3D {
   }
 
   private updateCamera() {
-    const desired = this.camTarget.clone().add(CAM_OFFSET.clone().multiplyScalar(this.session.inside ? (this.houseCam?.scale ?? 1.22) * (this.houseCam ? this.zoom : 1) : this.zoom));
+    const desired = this.camTarget.clone().add(CAM_OFFSET.clone().multiplyScalar(this.session.inside ? this.camScale * (this.houseWide() ? this.zoom : 1) : this.zoom));
     this.camPos.copy(desired);
     this.camera.position.copy(this.camPos);
     this.camera.lookAt(this.camTarget.x, 0.75, this.camTarget.z);
@@ -561,7 +565,6 @@ export class World3D {
     const clouds = w.clouds;
     const outside = mixHex(mixHex(mixHex('#bfe6f7', tint, 0.55), '#9aa6b4', clouds * 0.7), '#2a2e5c', n * 0.75);
     const sky = this.session.inside ? mixHex('#f3e3cf', '#3a3450', n * 0.7) : outside;
-    this.interior.updateLight(n, clouds);
     this.houseView.updateLight(n, clouds);
     this.yard.updateLight(n);
     const party = isPartyTime(this.session) && !this.session.inside;
@@ -978,7 +981,7 @@ export class World3D {
       return { key: 'katalog', talk: false, pos: this.interior.cellCenter(d[0], d[1]).add(new THREE.Vector3(0, 1.3, 0)) };
     }
     if (target.kind === 'moebel') {
-      const model = this.session.inside ? this.interior.model(target.uid) : this.yard.model(target.uid);
+      const model = this.session.inside ? this.modelOf(target.uid) : this.yard.model(target.uid);
       if (!model) return null;
       const box = new THREE.Box3().setFromObject(model.group);
       if (box.isEmpty()) return null;
@@ -1983,17 +1986,18 @@ export class World3D {
     }
     const c = this.homeOli;
     const label = oli.currentEntry?.label ?? '';
-    const key = `${this.session.roomId}|${label}|${oli.isSleeping}|${JSON.stringify(room.items)}`;
+    const floorItems = this.houseView.plan.rooms.map((r) => JSON.stringify(this.roomData(r.id)?.items ?? []));
+    const key = `${this.houseView.plan.id}|${label}|${oli.isSleeping}|${floorItems.join('#')}`;
     if (key !== this.homeOliKey) {
       this.homeOliKey = key;
-      const spot = this.homeOliSpot(room, label, oli.isSleeping);
+      const spot = this.homeOliSpot(label, oli.isSleeping);
       if (!spot) {
         c.setVisible(false);
         return;
       }
       c.setVisible(true);
       c.setSitting(false);
-      c.teleport((ROOM_X + spot.x) * TILE, (ROOM_Y + spot.y) * TILE);
+      c.teleport((ROOM_X + spot.x) * TILE, (ROOM_Y + spot.y) * TILE); // spot ist im Gesamtgitter
       if (spot.lie !== undefined) {
         c.setSitting(true);
         c.seatHeight = spot.lie;
@@ -2005,11 +2009,11 @@ export class World3D {
         }
       } else c.face(spot.facing);
     }
-    const walkSolid = (tx: number, ty: number) => this.interior.isBlocked(room, tx - ROOM_X, ty - ROOM_Y);
+    const walkSolid = this.floorSolid;
     if (c.visible) c.update(dtMs, { dx: 0, dy: 0, run: false }, this.homeOliWalk ? walkSolid : () => true);
     // Bankdrücken: die Langhantel geht mit Olis Armen auf und ab (gleicher Takt wie die Pose)
     if (this.homeOliBench && c.work === 'stemmen') {
-      const bell = this.interior.model(this.homeOliBench)?.group.getObjectByName('langhantel');
+      const bell = this.modelOf(this.homeOliBench)?.group.getObjectByName('langhantel');
       if (bell) bell.position.y = 0.86 - (1 - (Math.sin(c.clock * 2.2) + 1) / 2) * 0.13;
     }
     // ab und zu einfach so ein Küsschen, wenn Lina in der Nähe herumsteht
@@ -2102,22 +2106,47 @@ export class World3D {
     });
   }
 
-  /** Wo steht Oli gerade im Zimmer? (Zimmerkoordinaten, Feldmitte = +0.5) */
-  private homeOliSpot(room: Room, label: string, sleeping: boolean): { x: number; y: number; facing: 'up' | 'down' | 'left' | 'right'; lie?: number; work?: 'tippen' | 'stemmen'; uid?: string } | null {
-    const find = (pred: (id: string) => boolean) => room.items.find((i) => pred(FURNITURE_BY_ITEM[i.itemId]?.def.id ?? ''));
+  /** Modell eines Möbels in irgendeinem Raum des Stockwerks */
+  private modelOf(uid: string) {
+    for (const [, v] of this.houseView.all()) {
+      const m = v.model(uid);
+      if (m) return m;
+    }
+    return null;
+  }
+
+  /** Wo steht Oli gerade im Haus? (Gesamtgitter, Feldmitte = +0.5) – er geht an den passenden Platz in irgendeinem Raum */
+  private homeOliSpot(label: string, sleeping: boolean): { x: number; y: number; facing: 'up' | 'down' | 'left' | 'right'; lie?: number; work?: 'tippen' | 'stemmen'; uid?: string } | null {
+    // alle Räume des Stockwerks mit ihrer Lage; das Schlafzimmer zuerst (Betten stehen dort), dann das Wohnzimmer
+    const rooms = this.houseView.plan.rooms
+      .map((r) => ({ id: r.id, data: this.roomData(r.id), ox: (this.houseView.view(r.id)?.origin.x ?? ROOM_X) - ROOM_X, oy: (this.houseView.view(r.id)?.origin.z ?? ROOM_Y) - ROOM_Y, layout: this.layoutFor(r.id) }))
+      .filter((r): r is typeof r & { data: Room } => !!r.data)
+      .sort((a, b) => (a.id === 'schlafzimmer' ? -1 : b.id === 'schlafzimmer' ? 1 : a.id === 'haupt' ? -1 : b.id === 'haupt' ? 1 : 0));
+    const grid = this.roomGrid();
+    const findIn = (pred: (id: string) => boolean) => {
+      for (const r of rooms) {
+        const item = r.data.items.find((i) => pred(FURNITURE_BY_ITEM[i.itemId]?.def.id ?? ''));
+        if (item) return { r, item };
+      }
+      return undefined;
+    };
     if (sleeping) {
-      const futon = find((id) => id === 'futon' || id === 'bett');
-      if (!futon) return null;
+      const hit = findIn((id) => id === 'futon' || id === 'bett');
+      if (!hit) return null;
+      const { r, item: futon } = hit;
       const fp = footprint(FURNITURE_BY_ITEM[futon.itemId].def, futon.rot);
-      return { x: futon.x + fp.w / 2, y: futon.y + fp.d / 2 + 0.15, facing: 'down', lie: (this.interior.model(futon.uid)?.seatY ?? 0.1) + 0.02 };
+      return { x: r.ox + futon.x + fp.w / 2, y: r.oy + futon.y + fp.d / 2 + 0.15, facing: 'down', lie: (this.modelOf(futon.uid)?.seatY ?? 0.1) + 0.02 };
     }
     const anchorIds = /Kaffee|kocht/.test(label) ? ['herd', 'kaffeemaschine', 'kotatsu', 'chabudai'] : /programmiert/.test(label) ? ['schreibtisch-pc'] : /trainiert/.test(label) ? ['hantelbank'] : [];
-    const grid = this.roomGrid();
-    const free = (x: number, y: number) => x >= 0 && y >= 0 && x < this.lay.w && y < this.lay.h && !grid.isBlocked(x, y) && !exitAt(this.lay, x, y);
+    // Felder im Gesamtgitter: begehbar, nicht vor einer Tür/Treppe
+    const freeIn = (r: (typeof rooms)[number]) => (x: number, y: number) =>
+      x >= 0 && y >= 0 && x < r.layout.w && y < r.layout.h && !grid.isBlocked(r.ox + x, r.oy + y) && !exitAt(r.layout, x, y) && !(r.layout.reserved ?? []).some(([rx, ry]) => rx === x && ry === y);
     // Programmieren: Oli sitzt auf dem Bürostuhl vor dem Rechner; Trainieren: er liegt auf der Hantelbank und stemmt
     const job = /programmiert/.test(label) ? 'schreibtisch-pc' : /trainiert/.test(label) ? 'hantelbank' : null;
-    const jobItem = job ? find((x) => x === job) : undefined;
-    if (jobItem) {
+    const jobHit = job ? findIn((x) => x === job) : undefined;
+    if (jobHit) {
+      const { r, item: jobItem } = jobHit;
+      const free = freeIn(r);
       const fp0 = footprint(FURNITURE_BY_ITEM[jobItem.itemId].def, jobItem.rot);
       const cx0 = jobItem.x + fp0.w / 2;
       const cy0 = jobItem.y + fp0.d / 2;
@@ -2127,31 +2156,36 @@ export class World3D {
       if (job === 'schreibtisch-pc') {
         const sx = cx0 + fx * 0.66;
         const sy = cy0 + fy * 0.66;
-        if (free(Math.floor(sx), Math.floor(sy))) return { x: sx, y: sy, facing: faces[jobItem.rot], lie: 0.45, work: 'tippen' };
+        if (free(Math.floor(sx), Math.floor(sy))) return { x: r.ox + sx, y: r.oy + sy, facing: faces[jobItem.rot], lie: 0.45, work: 'tippen' };
       } else {
         // Bank liegt entlang der Möbel-X-Achse, der Kopf zeigt zur Hantel (links, −x)
         const ax: Array<[number, number]> = [[1, 0], [0, 1], [-1, 0], [0, -1]];
         const [ux, uy] = ax[jobItem.rot];
         const facesAlong = ['right', 'down', 'left', 'up'] as const;
-        return { x: cx0 + ux * 0.28, y: cy0 + uy * 0.28, facing: facesAlong[jobItem.rot], lie: 0.58, work: 'stemmen', uid: jobItem.uid };
+        return { x: r.ox + cx0 + ux * 0.28, y: r.oy + cy0 + uy * 0.28, facing: facesAlong[jobItem.rot], lie: 0.58, work: 'stemmen', uid: jobItem.uid };
       }
     }
     for (const id of anchorIds) {
-      const a = find((x) => x === id);
-      if (!a) continue;
+      const hit = findIn((x) => x === id);
+      if (!hit) continue;
+      const { r, item: a } = hit;
+      const free = freeIn(r);
       // Kleines steht auf einem Tisch – dann zählt der Tisch
-      const base = a.on ? room.items.find((i) => i.uid === a.on) ?? a : a;
+      const base = a.on ? r.data.items.find((i) => i.uid === a.on) ?? a : a;
       const fp = footprint(FURNITURE_BY_ITEM[base.itemId].def, base.rot);
       const around: Array<[number, number, 'up' | 'down' | 'left' | 'right']> = [];
       for (let dx = 0; dx < fp.w; dx++) around.push([base.x + dx, base.y + fp.d, 'up'], [base.x + dx, base.y - 1, 'down']);
       for (let dy = 0; dy < fp.d; dy++) around.push([base.x - 1, base.y + dy, 'right'], [base.x + fp.w, base.y + dy, 'left']);
-      const hit = around.find(([x, y]) => free(x, y));
-      if (hit) return { x: hit[0] + 0.5, y: hit[1] + 0.62, facing: hit[2] };
+      const spot = around.find(([x, y]) => free(x, y));
+      if (spot) return { x: r.ox + spot[0] + 0.5, y: r.oy + spot[1] + 0.62, facing: spot[2] };
     }
-    // sonst: ein freier Platz im Zimmer (immer derselbe für diesen Raum)
-    const cx = Math.floor(this.lay.w / 2) + 1;
-    const cy = Math.floor(this.lay.h / 2);
-    for (let r = 0; r < 6; r++) for (let dx = -r; dx <= r; dx++) for (let dy = -r; dy <= r; dy++) if (free(cx + dx, cy + dy)) return { x: cx + dx + 0.5, y: cy + dy + 0.62, facing: 'down' };
+    // sonst: ein freier Platz im Wohnzimmer (immer derselbe)
+    const r = rooms.find((x) => x.id === 'haupt') ?? rooms[0];
+    if (!r) return null;
+    const free = freeIn(r);
+    const cx = Math.floor(r.layout.w / 2) + 1;
+    const cy = Math.floor(r.layout.h / 2);
+    for (let d = 0; d < 6; d++) for (let dx = -d; dx <= d; dx++) for (let dy = -d; dy <= d; dy++) if (free(cx + dx, cy + dy)) return { x: r.ox + cx + dx + 0.5, y: r.oy + cy + dy + 0.62, facing: 'down' };
     return null;
   }
 
@@ -2857,15 +2891,17 @@ export class World3D {
     if (!basket) return;
     const grid = this.roomGrid();
     const from = { x: w.tile.x - ROOM_X, y: w.tile.y - ROOM_Y };
+    // Korb in Gesamtkoordinaten (der Raum hat eine feste Lage im Grundriss)
+    const gb = { x: basket.x + this.ox - ROOM_X, y: basket.y + this.oy - ROOM_Y };
     let best: Tile[] | null = null;
-    for (const n of neighbours({ x: basket.x, y: basket.y })) {
-      if (n.x < 0 || n.y < 0 || n.x >= this.lay.w || n.y >= this.lay.h || grid.isBlocked(n.x, n.y)) continue;
+    for (const n of neighbours(gb)) {
+      if (grid.isBlocked(n.x, n.y)) continue;
       const path = findPath(grid, from, n);
       if (path && (!best || path.length < best.length)) best = path;
     }
     if (!best) return;
     const toWorld = (t: Tile) => ({ x: (ROOM_X + t.x + 0.5) * TILE, y: (ROOM_Y + t.y + 0.5) * TILE });
-    w.setBasket(toWorld(basket), best.map(toWorld));
+    w.setBasket(toWorld(gb), best.map(toWorld));
   }
 
   // -------------------------------------------------------------------------
@@ -2874,6 +2910,19 @@ export class World3D {
 
   private get data() {
     return this.session.data;
+  }
+
+  /** Raum, in dem Lina gerade steht (bzw. den sie beim Einrichten anvisiert) */
+  private get interior(): Interior3D {
+    return this.houseView.view(this.session.roomId) ?? this.houseView.first();
+  }
+
+  /** Weltkachel der linken oberen Ecke des aktuellen Raums */
+  private get ox(): number {
+    return this.interior.origin.x;
+  }
+  private get oy(): number {
+    return this.interior.origin.z;
   }
 
   private get room(): Room | undefined {
@@ -2889,9 +2938,25 @@ export class World3D {
     return !!d && d[0] === x && d[1] === y;
   }
 
+  /** Mehrere Räume im Stockwerk? */
+  private houseWide(): boolean {
+    return this.houseView.plan.rooms.length > 1;
+  }
+
+  /** Kamera im Haus: beim Einrichten das ganze Stockwerk, sonst der Raum, in dem Lina steht (Nachbarräume schauen herein) */
+  private insideCamTarget(): THREE.Vector3 {
+    if (this.session.decorActive && this.houseWide()) {
+      const size = planSize(this.houseView.plan);
+      this.camScale = Math.max(1.22, size.w / 7.2, size.h / 5.5);
+      return new THREE.Vector3(ROOM_X + size.w / 2, 0, ROOM_Y + size.h / 2);
+    }
+    this.camScale = this.houseWide() ? 1.6 : 1.22;
+    return this.roomCenter();
+  }
+
   private roomCenter(): THREE.Vector3 {
     const L = this.lay;
-    return new THREE.Vector3(ROOM_X + L.w / 2, 0, ROOM_Y + L.h / 2 - 0.2);
+    return new THREE.Vector3(this.ox + L.w / 2, 0, this.oy + L.h / 2 - 0.2);
   }
 
   /** Darstellung des Ortes, an dem gerade eingerichtet wird (Zimmer oder Garten) */
@@ -2901,7 +2966,7 @@ export class World3D {
 
   /** Kachel-Ursprung des aktuellen Raums/Gartens */
   private get origin(): { x: number; y: number } {
-    return this.session.inside ? { x: ROOM_X, y: ROOM_Y } : { x: YARD_AREA.x, y: YARD_AREA.y };
+    return this.session.inside ? { x: this.ox, y: this.oy } : { x: YARD_AREA.x, y: YARD_AREA.y };
   }
 
   private refreshYard(force = false) {
@@ -2936,30 +3001,74 @@ export class World3D {
 
   private refreshRoom(force = false) {
     const c = currentRoom(this.session);
-    if (this.session.inside && c) {
-      this.interior.collected = new Set(Object.keys(this.session.data?.collection ?? {}));
-      this.refreshHouseView(c);
-      this.interior.refresh(c.room, c.layout, force);
+    const house = this.session.data?.house;
+    if (!this.session.inside || !c || !house) return;
+    const collected = new Set(Object.keys(this.session.data?.collection ?? {}));
+    let rooms: Array<{ room: Room; layout: RoomLayout }>;
+    let plan: FloorPlan;
+    let key: string;
+    if (this.session.visiting) {
+      // Besuch: ein einzelner Raum
+      plan = singleRoomPlan('gast', c.room.id, c.layout.w, c.layout.h);
+      rooms = [c];
+      key = `gast:${this.session.visiting}`;
+    } else {
+      plan = floorsOf(house.stage).find((f) => f.rooms.some((r) => r.id === c.room.id)) ?? groundFloor(house.stage);
+      rooms = plan.rooms.flatMap((r) => {
+        const room = house.rooms.find((x) => x.id === r.id);
+        return room ? [{ room, layout: layoutOf(house.stage, r.id) }] : [];
+      });
+      key = `${plan.id}:${house.stage}`;
     }
+    const rebuilt = this.houseView.setFloor(plan, key);
+    this.houseView.refreshAll(rooms, collected, force || rebuilt);
+    this.houseView.updateLight(this.night, currentWeather(this.session).clouds);
+    this.floorGrid = null; // Möbel haben sich evtl. geändert
+    this.exitBeyond = new Set(
+      rooms.flatMap(({ room, layout }) => {
+        const view = this.houseView.view(room.id);
+        const ox = (view?.origin.x ?? ROOM_X) - ROOM_X;
+        const oz = (view?.origin.z ?? ROOM_Y) - ROOM_Y;
+        return layout.exits.flatMap((e) => e.cells.map(([x, y]) => `${ox + x},${oz + y + (e.dir === 'down' ? 1 : -1)}`));
+      }),
+    );
   }
 
-  /** Vorschau „ganzes Haus“ (nur mit `?haus=neu`, nicht bei Besuchen): übrige Räume des Erdgeschosses zeichnen */
-  private refreshHouseView(c: { room: { id: string }; layout: RoomLayout }) {
+  /** Begehbares Gesamtgitter des Stockwerks (Gesamtkoordinaten) */
+  private getFloorGrid(): CollisionGrid {
+    if (this.floorGrid) return this.floorGrid;
     const house = this.session.data?.house;
-    const plan = house && !this.session.visiting && this.houseFlag ? floorsOf(house.stage).find((f) => f.rooms.some((r) => r.id === c.room.id)) : undefined;
-    if (!house || !plan || plan.rooms.length < 2) {
-      this.interior.shellOptions = {};
-      this.houseView.clear();
-      this.houseCam = null;
-      return;
+    const plan = this.houseView.plan;
+    this.floorGrid = buildPlanGrid(plan, (roomId, x, y) => {
+      const view = this.houseView.view(roomId);
+      const room = this.session.visiting ? currentRoom(this.session)?.room : house?.rooms.find((r) => r.id === roomId);
+      return !view || !room || view.isBlocked(room, x, y);
+    });
+    return this.floorGrid;
+  }
+
+  /** Kollision für alle, die im Haus laufen (Gesamtkoordinaten + Welt-Offset) */
+  private floorSolid = (tx: number, ty: number): boolean => {
+    const gx = tx - ROOM_X;
+    const gy = ty - ROOM_Y;
+    if (this.exitBeyond.has(`${gx},${gy}`)) return false;
+    return this.getFloorGrid().isBlocked(gx, gy);
+  };
+
+  /** Raum unter einem Feld des Gesamtgitters (Wandstreifen und Außenbereich: null) */
+  private roomAtTile(tx: number, ty: number): string | null {
+    return roomAt(this.houseView.plan, tx - ROOM_X, ty - ROOM_Y)?.room ?? null;
+  }
+
+  /** Lina steht in einem anderen Raum als zuletzt? Dann wird der „aktuelle Raum“ umgestellt (kein Umblenden). */
+  private trackRoom(player: Character) {
+    if (!this.session.inside || this.session.decorActive || this.session.visiting) return;
+    const t = player.tile;
+    const id = this.roomAtTile(t.x, t.y);
+    if (id && id !== this.session.roomId && this.houseView.view(id)) {
+      this.session.roomId = id;
+      this.homeOliKey = '';
     }
-    this.interior.shellOptions = HouseView3D.shellFor(plan, c.room.id);
-    this.houseView.refresh(plan, house.stage, house.rooms, c.room.id, this.interior.collected);
-    this.houseView.updateLight(this.night, currentWeather(this.session).clouds);
-    // Kamera: das ganze Stockwerk im Blick
-    const cur = roomById(plan, c.room.id);
-    const size = planSize(plan);
-    if (cur) this.houseCam = { cx: ROOM_X + size.w / 2 - cur.x, cz: ROOM_Y + size.h / 2 - cur.y, scale: Math.max(1.22, Math.max(size.w / 7.2, size.h / 5.5)) };
   }
 
   /** Lina betritt Raum `roomId` durch den Ausgang, der zu `from` führt */
@@ -2972,7 +3081,7 @@ export class World3D {
     const back = L.exits.find((e) => e.to === from) ?? L.exits[0];
     const [cx, cy] = back ? back.cells[0] : [Math.floor(L.w / 2), L.h - 1];
     const inward = back?.dir === 'up' ? 1 : -1;
-    player.teleport((ROOM_X + cx) * TILE + (back && back.cells.length > 1 ? 64 : 32), (ROOM_Y + cy + inward) * TILE + 40);
+    player.teleport((this.ox + cx) * TILE + (back && back.cells.length > 1 ? 64 : 32), (this.oy + cy + inward) * TILE + 40);
     player.face(back?.dir === 'up' ? 'down' : 'up');
     this.camTarget.copy(this.roomCenter());
     this.dogFollow();
@@ -3071,9 +3180,7 @@ export class World3D {
     const visited = this.session.visiting;
     this.session.inside = false;
     this.session.visiting = '';
-    this.houseView.clear();
-    this.interior.shellOptions = {};
-    this.houseCam = null;
+
     this.session.roomId = 'haupt';
     player.heightAt = this.view.terrain.heightAt;
     if (this.winston) this.winston.heightAt = this.view.terrain.heightAt;
@@ -3094,8 +3201,8 @@ export class World3D {
     if (!home) return null;
     const [fx, fy] = DIRS[player.facing];
     const t = player.tile;
-    const cx = t.x - ROOM_X + fx;
-    const cy = t.y - ROOM_Y + fy;
+    const cx = t.x - this.ox + fx;
+    const cy = t.y - this.oy + fy;
     if (this.isDesk(cx, cy)) return { kind: 'katalog' };
     // auch das Feld, auf dem Lina steht (Teppich), zählt nicht – nur davor
     const top = this.interior.topAt(home, cx, cy);
@@ -3152,7 +3259,7 @@ export class World3D {
     }
     if (f.def.light) {
       this.dv.toggleLamp(uid);
-      this.interior.updateLight(this.night, currentWeather(this.session).clouds);
+      this.houseView.updateLight(this.night, currentWeather(this.session).clouds);
       this.yard.updateLight(this.night);
       return;
     }
@@ -3270,7 +3377,7 @@ export class World3D {
     player.face((['right', 'down', 'left', 'up'] as const)[item.rot]);
     player.seatHeight = 0.58;
     player.work = 'stemmen';
-    const group = this.interior.model(uid)?.group;
+    const group = this.modelOf(uid)?.group;
     const bell = group?.getObjectByName('langhantel');
     const extra = bell?.getObjectByName('extraplatten');
     if (extra) extra.visible = true;
@@ -3320,56 +3427,85 @@ export class World3D {
     if (free) player.teleport((ROOM_X + free.x) * TILE + 32, (ROOM_Y + free.y) * TILE + 40);
   }
 
+  /** Begehbares Gitter des ganzen Stockwerks (Gesamtkoordinaten: Welt − ROOM_X/ROOM_Y) */
   private roomGrid(): CollisionGrid {
-    const L = this.lay;
-    const g = new CollisionGrid(L.w, L.h);
-    const home = this.room;
-    if (home) for (let x = 0; x < L.w; x++) for (let y = 0; y < L.h; y++) if (this.interior.isBlocked(home, x, y)) g.setBlocked(x, y);
-    return g;
+    return this.getFloorGrid();
+  }
+
+  /** Layout eines Raums des aktuellen Stockwerks (bei Besuchen: das Gastzimmer) */
+  private layoutFor(roomId: string): RoomLayout {
+    const c = currentRoom(this.session);
+    if (this.session.visiting && c) return c.layout;
+    return layoutOf(this.session.data?.house.stage ?? 0, roomId);
+  }
+
+  /** Möbel & Tapete eines Raums des aktuellen Stockwerks */
+  private roomData(roomId: string): Room | undefined {
+    if (this.session.visiting) return currentRoom(this.session)?.room;
+    return this.session.data?.house.rooms.find((r) => r.id === roomId);
   }
 
   private roomCellAt(e: PointerEvent): { x: number; y: number } | null {
     this.raycaster.setFromCamera(this.ndc(e), this.camera);
+    const views = this.houseView.all();
     if (this.session.decorActive) {
-      // Einrichten: Boden oder Wand (zum Aufhängen von Bildern & Regalen)
+      // Einrichten: Boden oder Wand (zum Aufhängen von Bildern & Regalen) in jedem Raum
       // ohne etwas in der Hand: auf Möbel zielen (auch Wand-Deko), sonst Boden/Wand
-      const hit = this.decor
-        ? this.raycaster.intersectObjects([this.interior.floor, ...this.interior.walls], false)[0]
-        : this.raycaster.intersectObject(this.interior.group, true)[0];
+      const targets = this.decor ? views.flatMap(([, v]) => [v.floor, ...v.walls]) : views.map(([, v]) => v.group);
+      const hit = this.raycaster.intersectObjects(targets, !this.decor)[0];
       this.hoverWall = null;
       if (!hit) return null;
+      const rid = this.houseView.roomOf(hit.object);
+      if (!rid) return null;
+      // Beim Einrichten wird der Raum unter dem Mauszeiger zum aktuellen Raum
+      this.hoverRoom = rid;
+      if (rid !== this.session.roomId) {
+        this.session.roomId = rid;
+        for (const [id, v] of views) if (id !== rid) v.hideGhost();
+      }
+      const view = this.interior;
+      const L = this.lay;
       const side = hit.object.userData.wall as string | undefined;
       if (side) {
-        const wc = this.interior.wallCell(hit.point, side, this.lay);
+        const wc = view.wallCell(hit.point, side, L);
         this.hoverWall = wc.rot;
         return { x: wc.x, y: wc.y };
       }
-      const cell = this.interior.cellFromPoint(hit.point);
+      const cell = view.cellFromPoint(hit.point);
       // Treffer hoch oben direkt an einer Wand = Wand-Deko
-      const lx = hit.point.x - ROOM_X;
-      const lz = hit.point.z - ROOM_Y;
-      if (!this.decor && hit.point.y > 0.7) this.hoverWall = lz < 0.12 ? 0 : lx < 0.12 ? 3 : lx > this.lay.w - 0.12 ? 1 : null;
-      return cell.x >= 0 && cell.y >= 0 && cell.x < this.lay.w && cell.y < this.lay.h ? cell : null;
+      const lx = hit.point.x - view.origin.x;
+      const lz = hit.point.z - view.origin.z;
+      if (!this.decor && hit.point.y > 0.7) this.hoverWall = lz < 0.12 ? 0 : lx < 0.12 ? 3 : lx > L.w - 0.12 ? 1 : null;
+      return cell.x >= 0 && cell.y >= 0 && cell.x < L.w && cell.y < L.h ? cell : null;
     }
-    const hits = this.raycaster.intersectObject(this.interior.group, true);
+    const hits = this.raycaster.intersectObjects(views.map(([, v]) => v.group), true);
     if (hits.length === 0) return null;
     // Bei Möbeln zählt das Feld unter dem Treffer; sonst Bodenpunkt
-    const p = hits[0].point;
-    const cell = this.interior.cellFromPoint(p);
-    return cell.x >= 0 && cell.y >= 0 && cell.x < this.lay.w && cell.y < this.lay.h ? cell : null;
+    const rid = this.houseView.roomOf(hits[0].object);
+    const view = rid ? this.houseView.view(rid) : undefined;
+    if (!rid || !view) return null;
+    this.hoverRoom = rid;
+    const L = this.layoutFor(rid);
+    const cell = view.cellFromPoint(hits[0].point);
+    return cell.x >= 0 && cell.y >= 0 && cell.x < L.w && cell.y < L.h ? cell : null;
   }
 
-  /** Klick im Zimmer (ohne Einrichten): hinlaufen bzw. benutzen */
+  /** Klick im Haus (ohne Einrichten): hinlaufen bzw. benutzen – auch in andere Räume */
   private roomClick() {
     const player = this.player;
-    const cell = this.hoverCell;
-    const home = this.room;
-    if (!player || !cell || !home) return;
+    const localCell = this.hoverCell;
+    const rid = this.hoverRoom || this.session.roomId;
+    const home = this.roomData(rid);
+    const view = this.houseView.view(rid);
+    if (!player || !localCell || !home || !view) return;
     if (player.sitting) this.standUp();
     const grid = this.roomGrid();
+    // Feld im Gesamtgitter
+    const cell = { x: view.origin.x - ROOM_X + localCell.x, y: view.origin.z - ROOM_Y + localCell.y };
     const from = { x: player.tile.x - ROOM_X, y: player.tile.y - ROOM_Y };
-    const isDesk = this.isDesk(cell.x, cell.y);
-    const top = this.interior.topAt(home, cell.x, cell.y);
+    const desk = this.layoutFor(rid).desk;
+    const isDesk = !!desk && desk[0] === localCell.x && desk[1] === localCell.y;
+    const top = view.topAt(home, localCell.x, localCell.y);
     const toWorld = (path: Tile[]) => path.map((t) => ({ x: t.x + ROOM_X, y: t.y + ROOM_Y }));
     if (isDesk || (top && grid.isBlocked(cell.x, cell.y))) {
       const spots = neighbours(cell).filter((n) => !grid.isBlocked(n.x, n.y));
@@ -3387,7 +3523,11 @@ export class World3D {
       player.followPath(toWorld(best), () => {
         player.face(cell.x > g.x ? 'right' : cell.x < g.x ? 'left' : cell.y > g.y ? 'down' : 'up');
         if (isDesk) this.session.bus.emit('ui:open', { kind: 'catalog' });
-        else if (top) this.useFurniture(top.uid);
+        else if (top) {
+          // Möbel in einem anderen Raum: Lina steht jetzt dort (der Raum-Wechsel folgt der Position)
+          this.trackRoom(player);
+          this.useFurniture(top.uid);
+        }
       });
       return;
     }
@@ -3449,6 +3589,7 @@ export class World3D {
     this.cancelHold();
     this.undoStack = [];
     this.session.decorActive = false;
+    if (this.player) this.trackRoom(this.player);
     this.interior.hideGhost();
     this.yard.hideGhost();
     this.yard.showGrid(false);
@@ -3458,7 +3599,7 @@ export class World3D {
       // Falls jetzt ein Möbel auf Linas Platz steht: zur Tür
       const t = player.tile;
       const room = this.room;
-      if (room && this.interior.isBlocked(room, t.x - ROOM_X, t.y - ROOM_Y)) {
+      if (room && this.roomGrid().isBlocked(t.x - ROOM_X, t.y - ROOM_Y)) {
         const free = nearestWalkable(this.roomGrid(), { x: t.x - ROOM_X, y: t.y - ROOM_Y }) ?? { x: Math.floor(this.lay.w / 2), y: this.lay.h - 1 };
         player.teleport((ROOM_X + free.x) * TILE + 32, (ROOM_Y + free.y) * TILE + 40);
       }
@@ -3511,7 +3652,18 @@ export class World3D {
   }
 
   private pushUndo(label: string, undo: () => boolean) {
-    this.undoStack.push({ label, undo });
+    // Rückgängig gilt im Raum, in dem es passiert ist (beim Einrichten wechselt der aktuelle Raum mit dem Mauszeiger)
+    const rid = this.session.roomId;
+    const inRoom = () => {
+      const cur = this.session.roomId;
+      this.session.roomId = rid;
+      try {
+        return undo();
+      } finally {
+        this.session.roomId = cur;
+      }
+    };
+    this.undoStack.push({ label, undo: inRoom });
     if (this.undoStack.length > 40) this.undoStack.shift();
   }
 
@@ -3633,7 +3785,7 @@ export class World3D {
         if (!this.session.inside) this.askFellNature(YARD_AREA.x + cell.x, YARD_AREA.y + cell.y);
         return;
       }
-      this.decor = { itemId: top.itemId, uid: top.uid, rot: top.rot, origin: { x: top.x, y: top.y, rot: top.rot, itemId: top.itemId } };
+      this.decor = { itemId: top.itemId, uid: top.uid, rot: top.rot, origin: { x: top.x, y: top.y, rot: top.rot, itemId: top.itemId, roomId: this.session.roomId } };
       this.dv.setHidden(top.uid);
       this.updateGhost();
       return;
@@ -3645,7 +3797,24 @@ export class World3D {
     const x = cell.x - Math.floor((fp.w - 1) / 2);
     const y = cell.y - Math.floor((fp.d - 1) / 2);
     let ok = false;
-    if (d.uid) {
+    if (d.uid && d.origin && d.origin.roomId !== this.session.roomId) {
+      // In einen anderen Raum stellen: im alten Raum einpacken, im neuen aufstellen (ohne Rückgängig)
+      const target = this.session.roomId;
+      this.session.roomId = d.origin.roomId;
+      const packed = pickUpFurniture(this.session, d.uid);
+      this.session.roomId = target;
+      if (packed !== 'ok') {
+        this.session.bus.emit('toast', { text: packed === 'voll' ? 'Tasche und Truhe sind voll! 🎒' : 'Das lässt sich nicht in einen anderen Raum bringen.' });
+        return;
+      }
+      ok = !!placeFromBag(this.session, d.itemId, x, y, d.rot, d.itemId);
+      if (!ok) {
+        // Platz im neuen Raum belegt: zurück in den alten Raum stellen, nichts geht verloren
+        this.session.roomId = d.origin.roomId;
+        placeFromBag(this.session, d.itemId, d.origin.x, d.origin.y, d.origin.rot, d.itemId);
+        this.session.roomId = target;
+      }
+    } else if (d.uid) {
       const uid = d.uid;
       const origin = d.origin;
       ok = moveFurniture(this.session, uid, x, y, d.rot, d.itemId);
