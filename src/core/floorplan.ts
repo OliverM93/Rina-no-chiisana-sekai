@@ -251,3 +251,18 @@ export function roomsBehind(plan: FloorPlan, roomId: string): string[] {
   }
   return out;
 }
+
+/** Räume links und rechts neben diesem Raum (nur durch einen Wandstreifen getrennt) */
+export function roomsBeside(plan: FloorPlan, roomId: string): { left: string | null; right: string | null } {
+  const me = roomById(plan, roomId);
+  const out: { left: string | null; right: string | null } = { left: null, right: null };
+  if (!me) return out;
+  for (const s of wallStrips(plan)) {
+    if (!s.vertical) continue;
+    const other = plan.rooms.find((r) => r.id !== roomId && r.y < s.y + s.h && r.y + r.h > s.y && (r.x + r.w === s.x || r.x === s.x + 1));
+    if (!other) continue;
+    if (me.x + me.w === s.x && other.x === s.x + 1) out.right = other.id;
+    else if (other.x + other.w === s.x && me.x === s.x + 1) out.left = other.id;
+  }
+  return out;
+}

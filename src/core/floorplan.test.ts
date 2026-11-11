@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { findPath } from './grid';
-import { buildPlanGrid, doorCells, doorStripCell, type FloorPlan, hasRoomBehind, openingsFor, roomsBehind, planSize, roomAt, toGlobal, validatePlan, wallStrips } from './floorplan';
+import { buildPlanGrid, doorCells, doorStripCell, type FloorPlan, hasRoomBehind, openingsFor, roomsBehind, roomsBeside, planSize, roomAt, toGlobal, validatePlan, wallStrips } from './floorplan';
 
 /** Zwei 4×3-Räume nebeneinander mit einem Wandstreifen (x = 4) und einer Tür auf Zeile 1 */
 const plan: FloorPlan = {
@@ -78,5 +78,10 @@ describe('Türöffnungen & Wandstreifen', () => {
     const [s] = wallStrips(plan);
     expect(s).toMatchObject({ x: 4, y: 0, w: 1, h: 3, vertical: true });
     expect(s.openings).toEqual([{ x: 4, y: 1 }]);
+  });
+
+  it('Nachbarräume links und rechts', () => {
+    expect(roomsBeside(plan, 'a')).toEqual({ left: null, right: 'b' });
+    expect(roomsBeside(plan, 'b')).toEqual({ left: 'a', right: null });
   });
 });

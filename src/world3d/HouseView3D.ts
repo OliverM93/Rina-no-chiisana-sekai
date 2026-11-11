@@ -12,8 +12,6 @@ import type { Room, RoomLayout } from '../core/room';
 import { Interior3D, ROOM_X, ROOM_Y } from './Interior3D';
 import { mesh, toon } from './materials';
 
-const WALL_COLOR = '#ece3d3';
-const WALL_H = 2.3;
 
 /** Grundriss mit einem einzigen Raum (Dach, Keller, Besuche, Start) */
 export function singleRoomPlan(id: string, roomId: string, w: number, h: number): FloorPlan {
@@ -23,8 +21,6 @@ export function singleRoomPlan(id: string, roomId: string, w: number, h: number)
 export class HouseView3D {
   private views = new Map<string, Interior3D>();
   private strips = new THREE.Group();
-  /** Querstreifen (zwischen vorderem und hinterem Raum): werden mit der Rückwand durchsichtig */
-  private crossMat = new THREE.MeshToonMaterial({ color: WALL_COLOR, transparent: true });
   private key = '';
   plan: FloorPlan = singleRoomPlan('init', 'haupt', 8, 6);
 
@@ -64,9 +60,8 @@ export class HouseView3D {
     this.views.get(roomId)?.setBackFade(opacity);
   }
 
-  setCrossFade(opacity: number) {
-    this.crossMat.opacity = opacity;
-    this.crossMat.depthWrite = opacity > 0.95;
+  setSideFade(roomId: string, side: 'left' | 'right', opacity: number) {
+    this.views.get(roomId)?.setSideFade(side, opacity);
   }
 
   /** Welcher Raum bekommt die echten Lichter? (immer genau einer: gleiche Lichtanzahl, kein Shader-Neubau) */
@@ -98,32 +93,24 @@ export class HouseView3D {
     }
   }
 
+  /**
+   * Zwischen zwei Räumen liegt im Grundriss ein Wandstreifen. Die Wände selbst gehören den Räumen (dünn, mit der
+   * Tapete des jeweiligen Raums); im Streifen dazwischen liegt nur ein dunkler Boden („Mauerdicke“), an Türen
+   * eine hölzerne Schwelle. So wirken die Wände dünn, und die Rückwand lässt sich allein durchsichtig machen.
+   */
   private buildStrips(plan: FloorPlan) {
-    const mat = toon(WALL_COLOR);
+    const floorMat = toon('#9b846f');
+    const sillMat = toon('#c9a77c');
     for (const s of wallStrips(plan)) {
-      // minimal höher als die Raumwände, die im Streifen stecken (sonst flackern gleich hohe Oberkanten)
-      const height = WALL_H + 0.02;
-      // Zelle für Zelle, an Türfeldern bleibt unten frei (vertikale Wände bekommen einen Sturz)
-      const cells = s.vertical ? s.h : s.w;
-      for (let i = 0; i < cells; i++) {
-        const gx = s.vertical ? s.x : s.x + i;
-        const gy = s.vertical ? s.y + i : s.y;
-        const door = s.openings.some((o) => o.x === gx && o.y === gy);
-        if (door) {
-          // Türschwelle: ein Stück Boden in der Öffnung, sonst sieht man darunter ins Leere
-          const sill = mesh(new THREE.BoxGeometry(1, 0.04, 1), toon('#c9a77c'), false, true);
-          sill.position.set(ROOM_X + gx + 0.5, 0.01, ROOM_Y + gy + 0.5);
-          this.strips.add(sill);
+      for (let dx = 0; dx < s.w; dx++) {
+        for (let dy = 0; dy < s.h; dy++) {
+          const gx = s.x + dx;
+          const gy = s.y + dy;
+          const door = s.openings.some((o) => o.x === gx && o.y === gy);
+          const slab = mesh(new THREE.BoxGeometry(1, 0.06, 1), door ? sillMat : floorMat, false, true);
+          slab.position.set(ROOM_X + gx + 0.5, door ? 0.01 : -0.02, ROOM_Y + gy + 0.5);
+          this.strips.add(slab);
         }
-        if (door && !s.vertical) continue;
-        const h = door ? height - 1.85 : height;
-        // Etwas schmaler als das Feld (0,96): so liegen die Flächen nicht deckungsgleich auf den Raumwänden
-        // (die ragen 0,15 in den Streifen) – sonst flackern („Z-Fighting“) die Wandtapete und der Streifen
-        const box = mesh(new THREE.BoxGeometry(s.vertical ? 0.96 : 1, h, s.vertical ? 1 : 0.96), s.vertical ? mat : this.crossMat);
-        box.position.set(ROOM_X + gx + 0.5, door ? 1.85 + h / 2 : h / 2, ROOM_Y + gy + (s.vertical ? 0.5 : 0.5 - 0.02));
-        box.castShadow = true;
-        box.receiveShadow = true;
-        this.strips.add(box);
       }
     }
   }

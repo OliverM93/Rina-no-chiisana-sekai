@@ -10,7 +10,7 @@ import { dressFor } from '../core/appearance';
 import * as THREE from 'three';
 import { DPR, TILE, UNIT } from '../config';
 import { CollisionGrid, findPath, nearestWalkable, type Tile } from '../core/grid';
-import { buildPlanGrid, type FloorPlan, planSize, roomAt, roomsBehind, wallStrips } from '../core/floorplan';
+import { buildPlanGrid, type FloorPlan, planSize, roomAt, roomsBehind, roomsBeside, wallStrips } from '../core/floorplan';
 import { floorsOf, groundFloor } from '../data/floorplan';
 import { checkPlacement, type Exit, riderOffset, exitAt, footprint, type Room, type RoomLayout, type Rotation, wallRotationAt } from '../core/room';
 import { FURNITURE_BY_ITEM, furnitureInfo, SURFACE_BY_ID } from '../data/furniture';
@@ -3155,7 +3155,6 @@ export class World3D {
     const g = { x: player.tile.x - ROOM_X, y: player.tile.y - ROOM_Y };
     const here = roomAt(plan, g.x, g.y)?.room ?? null;
     const strips = wallStrips(plan).filter((s) => !s.vertical);
-    let minOpacity = 1;
     for (const r of plan.rooms) {
       const behind = roomsBehind(plan, r.id);
       if (behind.length === 0) continue;
@@ -3165,9 +3164,24 @@ export class World3D {
       const next = cur + (want - cur) * Math.min(1, dt * 6);
       this.wallFade.set(r.id, next);
       this.houseView.setBackFade(r.id, next);
-      minOpacity = Math.min(minOpacity, next);
     }
-    this.houseView.setCrossFade(minOpacity);
+    // Seitenwände zu Nachbarräumen (Küche, Wintergarten): durchsichtig, solange Lina in einem der beiden Räume steht,
+    // in der Tür oder beim Einrichten – sonst voll (Tapete, Wand-Deko)
+    const vstrips = wallStrips(plan).filter((s) => s.vertical);
+    for (const r of plan.rooms) {
+      const beside = roomsBeside(plan, r.id);
+      for (const side of ['left', 'right'] as const) {
+        const other = beside[side];
+        if (!other) continue;
+        const inDoor = vstrips.some((s) => g.x >= s.x && g.x < s.x + s.w && g.y >= s.y && g.y < s.y + s.h && roomAt(plan, s.x - 1, g.y)?.room !== undefined && (roomAt(plan, s.x - 1, g.y)?.room === r.id || roomAt(plan, s.x + 1, g.y)?.room === r.id));
+        const want = this.session.decorActive || inDoor || here === r.id || here === other ? 0.3 : 1;
+        const key = `${r.id}:${side}`;
+        const cur = this.wallFade.get(key) ?? 1;
+        const next = cur + (want - cur) * Math.min(1, dt * 6);
+        this.wallFade.set(key, next);
+        this.houseView.setSideFade(r.id, side, next);
+      }
+    }
   }
 
   /** Lina steht in einem anderen Raum als zuletzt? Dann wird der „aktuelle Raum“ umgestellt (kein Umblenden). */
