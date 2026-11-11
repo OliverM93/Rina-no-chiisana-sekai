@@ -285,6 +285,24 @@ export const WALLPAPERS: readonly SurfaceDef[] = [
   { id: 'tapete-bistro', name: 'Bordeaux-Streifen', style: 'bistro', price: 700, kind: 'tapete', pattern: 'streifen', color: '#f3e6cf', accent: '#b8484f', description: 'Cremefarbene Wand mit weinroten Streifen – wie die Markise vor Jens\' Bistro.' },
   { id: 'tapete-metro', name: 'Pariser Kacheln', style: 'bistro', price: 750, kind: 'tapete', pattern: 'kacheln', color: '#f6f2e8', accent: '#9bb5c9', description: 'Glänzende weiße Kacheln mit blaugrauen Fugen. Typisch Metro und Bistro.' },
   { id: 'tapete-rosa', name: 'Pastellrosa Tapete', style: 'basis', price: 400, kind: 'tapete', pattern: 'streifen', color: '#fbe0e8', accent: '#f6cfdb', description: 'Ganz zarte Streifen in Rosa.' },
+  // Einfarbige Wände: glatt, ohne Muster – Grundfarben zum Kombinieren mit Parkett und Möbeln
+  { id: 'tapete-uni-weiss', name: 'Einfarbig Weiß', style: 'basis', price: 250, kind: 'tapete', pattern: 'flach', color: '#fbfaf6', accent: '#fbfaf6', description: 'Reines, helles Weiß. Wie ein frisch gestrichenes Zimmer.' },
+  { id: 'tapete-uni-sand', name: 'Einfarbig Sand', style: 'basis', price: 300, kind: 'tapete', pattern: 'flach', color: '#eadcc6', accent: '#eadcc6', description: 'Warmes Sandbeige – ruhig und zeitlos.' },
+  { id: 'tapete-uni-grau', name: 'Einfarbig Hellgrau', style: 'modern', price: 300, kind: 'tapete', pattern: 'flach', color: '#dcd9d9', accent: '#dcd9d9', description: 'Ein sanftes Grau, das nichts will und alles trägt.' },
+  { id: 'tapete-uni-rosa', name: 'Einfarbig Rosa', style: 'basis', price: 350, kind: 'tapete', pattern: 'flach', color: '#f8d7df', accent: '#f8d7df', description: 'Ein zartes Rosa, das jedes Zimmer ein bisschen verliebter macht.' },
+  { id: 'tapete-uni-pfirsich', name: 'Einfarbig Pfirsich', style: 'basis', price: 350, kind: 'tapete', pattern: 'flach', color: '#fbd9c4', accent: '#fbd9c4', description: 'Warm wie ein Sommerabend.' },
+  { id: 'tapete-uni-butter', name: 'Einfarbig Buttergelb', style: 'basis', price: 350, kind: 'tapete', pattern: 'flach', color: '#fbeeb0', accent: '#fbeeb0', description: 'Wie Sonnenlicht in der Küche.' },
+  { id: 'tapete-uni-mint', name: 'Einfarbig Mint', style: 'basis', price: 350, kind: 'tapete', pattern: 'flach', color: '#c9ead9', accent: '#c9ead9', description: 'Frisch und leicht, wie frische Minze.' },
+  { id: 'tapete-uni-salbei', name: 'Einfarbig Salbeigrün', style: 'cottage', price: 350, kind: 'tapete', pattern: 'flach', color: '#c1d2b8', accent: '#c1d2b8', description: 'Ein beruhigendes, staubiges Grün.' },
+  { id: 'tapete-uni-himmel', name: 'Einfarbig Himmelblau', style: 'basis', price: 350, kind: 'tapete', pattern: 'flach', color: '#cfe4f6', accent: '#cfe4f6', description: 'Als hätte man ein Stück Himmel an die Wand geholt.' },
+  { id: 'tapete-uni-flieder', name: 'Einfarbig Flieder', style: 'basis', price: 350, kind: 'tapete', pattern: 'flach', color: '#dccff0', accent: '#dccff0', description: 'Zartes Lila mit einem Hauch Frühling.' },
+  { id: 'tapete-uni-taupe', name: 'Einfarbig Taupe', style: 'modern', price: 400, kind: 'tapete', pattern: 'flach', color: '#bfaea3', accent: '#bfaea3', description: 'Ein erdiger Grau-Braun-Ton, sehr gemütlich.' },
+  { id: 'tapete-uni-graublau', name: 'Einfarbig Graublau', style: 'modern', price: 400, kind: 'tapete', pattern: 'flach', color: '#a9b8c9', accent: '#a9b8c9', description: 'Kühl, ruhig und ein bisschen nordisch.' },
+  { id: 'tapete-uni-petrol', name: 'Einfarbig Petrol', style: 'modern', price: 450, kind: 'tapete', pattern: 'flach', color: '#3f7f86', accent: '#3f7f86', description: 'Ein tiefes Blaugrün – eine Wand, die Eindruck macht.' },
+  { id: 'tapete-uni-waldgruen', name: 'Einfarbig Waldgrün', style: 'cottage', price: 450, kind: 'tapete', pattern: 'flach', color: '#476b4f', accent: '#476b4f', description: 'Dunkles Grün wie im Wald nach dem Regen.' },
+  { id: 'tapete-uni-bordeaux', name: 'Einfarbig Bordeaux', style: 'retro', price: 450, kind: 'tapete', pattern: 'flach', color: '#8d3b45', accent: '#8d3b45', description: 'Satt und gemütlich wie ein Samtsessel.' },
+  { id: 'tapete-uni-nachtblau', name: 'Einfarbig Nachtblau', style: 'modern', price: 450, kind: 'tapete', pattern: 'flach', color: '#34406b', accent: '#34406b', description: 'Wie der Himmel um Mitternacht.' },
+  { id: 'tapete-uni-schwarz', name: 'Einfarbig Schwarz', style: 'modern', price: 450, kind: 'tapete', pattern: 'flach', color: '#2a2a30', accent: '#2a2a30', description: 'Für Lina natürlich auch an der Wand. Sehr gemütlich bei Kerzenlicht.' },
 ];
 
 export const FLOORS: readonly SurfaceDef[] = [
@@ -299,6 +317,20 @@ export const FLOORS: readonly SurfaceDef[] = [
   { id: 'boden-schach', name: 'Schachbrett-Fliesen', style: 'midcentury', price: 800, kind: 'boden', pattern: 'schach', color: '#f2efe8', accent: '#2a2a30', description: 'Schwarze und weiße Fliesen im Wechsel. Klar, grafisch, zeitlos.' },
   { id: 'boden-terrakotta', name: 'Terrakotta-Fliesen', style: 'basis', price: 700, kind: 'boden', pattern: 'terrakotta', color: '#d9895f', accent: '#b8693f', description: 'Warme, rötliche Tonfliesen. Fühlen sich nach Urlaub an.' },
   { id: 'boden-teppich', name: 'Rosa Teppichboden', style: 'basis', price: 500, kind: 'boden', pattern: 'teppich', color: '#f7c6d4', accent: '#f4b3c6', description: 'Flauschig und weich unter den Füßen.' },
+  // Parkett-Varianten: Chevron, Fischgrät, Würfelparkett, Schiffsboden, Tafelparkett
+  { id: 'boden-chevron-eiche', name: 'Chevron-Parkett Eiche', style: 'modern', price: 1100, kind: 'boden', pattern: 'chevron', color: '#dcb98a', accent: '#c29a66', description: 'Französisches Fischgrät aus heller Eiche: Die Stäbe laufen spitz zusammen und lassen den Raum größer wirken.' },
+  { id: 'boden-chevron-grau', name: 'Chevron-Parkett Räuchereiche', style: 'modern', price: 1100, kind: 'boden', pattern: 'chevron', color: '#a89a8c', accent: '#8b7d70', description: 'Graubraune Räuchereiche im Chevron-Muster. Kühl, edel, ein bisschen Loft.' },
+  { id: 'boden-chevron-nuss', name: 'Chevron-Parkett Nussbaum', style: 'midcentury', price: 1200, kind: 'boden', pattern: 'chevron', color: '#8b5e3c', accent: '#6e4630', description: 'Dunkler Nussbaum in spitzen Zacken – sehr elegant.' },
+  { id: 'boden-fischgraet-weiss', name: 'Fischgrät weiß gekalkt', style: 'cottage', price: 1000, kind: 'boden', pattern: 'fischgraet', color: '#efe6d8', accent: '#d9ccb8', description: 'Helles, gekalktes Fischgrät – wie in einem sonnigen Landhaus.' },
+  { id: 'boden-fischgraet-nuss', name: 'Fischgrät Nussbaum', style: 'retro', price: 1000, kind: 'boden', pattern: 'fischgraet', color: '#7c5336', accent: '#5e3e28', description: 'Warmes Nussbaum im klassischen Fischgrätmuster.' },
+  { id: 'boden-fischgraet-ebenholz', name: 'Fischgrät Ebenholz', style: 'modern', price: 1200, kind: 'boden', pattern: 'fischgraet', color: '#3a3236', accent: '#2a2426', description: 'Fast schwarzes Fischgrät. Für Lina natürlich auch am Boden.' },
+  { id: 'boden-flecht-eiche', name: 'Würfelparkett Eiche', style: 'retro', price: 950, kind: 'boden', pattern: 'flecht', color: '#cfa56f', accent: '#b58954', description: 'Quadrate aus je drei Stäben, abwechselnd quer und längs – wie in Omas Salon.' },
+  { id: 'boden-flecht-ahorn', name: 'Würfelparkett Ahorn', style: 'cottage', price: 950, kind: 'boden', pattern: 'flecht', color: '#ecd5ab', accent: '#d4b983', description: 'Helles Ahornholz im Flechtmuster. Freundlich und hell.' },
+  { id: 'boden-schiff-eiche', name: 'Schiffsboden Eiche', style: 'basis', price: 850, kind: 'boden', pattern: 'schiff', color: '#c9a06a', accent: '#a9824f', description: 'Lange Dielen mit versetzten Stößen, wie auf einem alten Segelschiff.' },
+  { id: 'boden-schiff-treibholz', name: 'Schiffsboden Treibholz', style: 'modern', price: 850, kind: 'boden', pattern: 'schiff', color: '#b3aaa0', accent: '#968d83', description: 'Silbergraue Dielen, als hätte sie das Meer angespült.' },
+  { id: 'boden-schiff-schwarz', name: 'Schiffsboden Schwarzeiche', style: 'modern', price: 950, kind: 'boden', pattern: 'schiff', color: '#4a413d', accent: '#352e2b', description: 'Dunkle, fast schwarze Dielen mit versetzten Stößen.' },
+  { id: 'boden-tafel-eiche', name: 'Tafelparkett Eiche', style: 'midcentury', price: 1300, kind: 'boden', pattern: 'tafel', color: '#d2a671', accent: '#a8794a', description: 'Große Felder mit dunklem Rahmen – Tafelparkett wie im Schloss, nur kleiner.' },
+  { id: 'boden-tafel-nuss', name: 'Tafelparkett Nussbaum', style: 'midcentury', price: 1400, kind: 'boden', pattern: 'tafel', color: '#8a5a3a', accent: '#5e3e28', description: 'Dunkles Tafelparkett aus Nussbaum. Sehr feierlich.' },
 ];
 
 // Poster (Wand) & Bildbände (Tisch) zu Linas Lieblingsthemen aus `posters.ts`

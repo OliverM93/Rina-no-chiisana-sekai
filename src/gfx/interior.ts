@@ -11,6 +11,110 @@ export function drawPattern(ctx: CanvasRenderingContext2D, def: SurfaceDef, s: n
   ctx.fillStyle = color;
   ctx.fillRect(0, 0, s, s);
   switch (def.pattern) {
+    case 'flach': {
+      // wirklich einfarbig (nur ein ganz zarter Streifen unten als Fußleisten-Schatten)
+      ctx.fillStyle = darken(color, 0.04);
+      ctx.fillRect(0, s - s / 24, s, s / 24);
+      break;
+    }
+    case 'chevron': {
+      // Französisches Fischgrät: Stäbe laufen spitz in der Mitte zusammen (V-Form), links gespiegelt zu rechts
+      const t = s / 6;
+      const half = (mirror: boolean) => {
+        ctx.save();
+        if (mirror) {
+          ctx.translate(s, 0);
+          ctx.scale(-1, 1);
+        }
+        ctx.beginPath();
+        ctx.rect(0, 0, s / 2, s);
+        ctx.clip();
+        const dx = s / 2;
+        for (let k = -4; k < 12; k++) {
+          const o = k * t;
+          ctx.fillStyle = k % 3 === 0 ? accent : k % 3 === 1 ? color : lighten(color, 0.08);
+          ctx.beginPath();
+          ctx.moveTo(0, o);
+          ctx.lineTo(dx, o - dx);
+          ctx.lineTo(dx, o - dx + t);
+          ctx.lineTo(0, o + t);
+          ctx.closePath();
+          ctx.fill();
+          ctx.strokeStyle = darken(color, 0.22);
+          ctx.lineWidth = Math.max(1, s / 200);
+          ctx.stroke();
+        }
+        ctx.restore();
+      };
+      half(false);
+      half(true);
+      break;
+    }
+    case 'flecht': {
+      // Würfelparkett (Flechtmuster): Quadrate aus je drei Stäben, abwechselnd quer und längs
+      const n = 4;
+      const c = s / n;
+      ctx.lineWidth = Math.max(1, s / 220);
+      ctx.strokeStyle = darken(color, 0.24);
+      for (let i = 0; i < n; i++) {
+        for (let j = 0; j < n; j++) {
+          const horizontal = (i + j) % 2 === 0;
+          for (let k = 0; k < 3; k++) {
+            ctx.fillStyle = (i + j + k) % 3 === 0 ? accent : (i + j + k) % 3 === 1 ? color : lighten(color, 0.09);
+            const x = i * c + (horizontal ? 0 : (k * c) / 3);
+            const y = j * c + (horizontal ? (k * c) / 3 : 0);
+            const w = horizontal ? c : c / 3;
+            const h = horizontal ? c / 3 : c;
+            ctx.fillRect(x, y, w, h);
+            ctx.strokeRect(x, y, w, h);
+          }
+        }
+      }
+      break;
+    }
+    case 'schiff': {
+      // Schiffsboden: lange Dielen mit versetzten Stößen in wechselnden Holztönen
+      const rows = 6;
+      const h = s / rows;
+      ctx.lineWidth = Math.max(1, s / 220);
+      ctx.strokeStyle = darken(color, 0.25);
+      for (let r = 0; r < rows; r++) {
+        const offset = ((r * 2 + (r % 3)) % 6) / 6; // Stoß je Reihe versetzt
+        const cuts = [offset * s, ((offset + 0.5) % 1) * s].sort((a, b) => a - b);
+        const bounds = [0, ...cuts, s];
+        for (let i = 0; i < bounds.length - 1; i++) {
+          ctx.fillStyle = (r + i * 2) % 3 === 0 ? color : (r + i * 2) % 3 === 1 ? lighten(color, 0.07) : accent;
+          ctx.fillRect(bounds[i], r * h, bounds[i + 1] - bounds[i], h);
+          ctx.strokeRect(bounds[i], r * h, bounds[i + 1] - bounds[i], h);
+        }
+      }
+      break;
+    }
+    case 'tafel': {
+      // Tafelparkett: große Felder mit dunklem Rahmen aus Stäben und parallelen Stäben in der Mitte
+      const n = 2;
+      const c = s / n;
+      const b = c / 7;
+      ctx.lineWidth = Math.max(1, s / 220);
+      ctx.strokeStyle = darken(color, 0.25);
+      for (let i = 0; i < n; i++) {
+        for (let j = 0; j < n; j++) {
+          const x = i * c;
+          const y = j * c;
+          ctx.fillStyle = accent; // Rahmen
+          ctx.fillRect(x, y, c, c);
+          ctx.strokeRect(x, y, c, c);
+          const vertical = (i + j) % 2 === 0;
+          for (let k = 0; k < 4; k++) {
+            ctx.fillStyle = k % 2 ? lighten(color, 0.07) : color;
+            if (vertical) ctx.fillRect(x + b + (k * (c - 2 * b)) / 4, y + b, (c - 2 * b) / 4, c - 2 * b);
+            else ctx.fillRect(x + b, y + b + (k * (c - 2 * b)) / 4, c - 2 * b, (c - 2 * b) / 4);
+          }
+          ctx.strokeRect(x + b, y + b, c - 2 * b, c - 2 * b);
+        }
+      }
+      break;
+    }
     case 'uni': {
       ctx.fillStyle = accent;
       for (let i = 0; i < 40; i++) {
