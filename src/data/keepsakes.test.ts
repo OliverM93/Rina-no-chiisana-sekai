@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { FURNITURE } from './furniture';
+import { FURNITURE, variantItemId } from './furniture';
 import { GARDEN_FLOWERS, isKeepsake, itemDef, TOOLS } from './items';
 import { NPCS } from './npcs';
 import { ALL_STAND_SEEDS } from './seedstand';
@@ -17,7 +17,7 @@ describe('Nichts geht für immer verloren', () => {
 
   it('einmalige Geschenke sind unverkäuflich, Kunstwerke & Katalogmöbel nicht', () => {
     for (const f of FURNITURE) {
-      const id = f.variants ? `${f.id}-${Object.keys(f.variants)[0]}` : f.id;
+      const id = f.variants ? variantItemId(f, Object.keys(f.variants)[0]) : f.id;
       const once = !!f.gift && f.style !== 'kunst';
       expect(isKeepsake(id), f.id).toBe(once);
       expect(itemDef(id)?.price === null, f.id).toBe(once);

@@ -6,7 +6,7 @@
  * Neues Haus: hier eintragen, in `World3D.knockAtHome` freischalten.
  */
 import type { PlacedItem, Room, RoomLayout } from '../core/room';
-import { FURNITURE } from './furniture';
+import { FURNITURE, variantItemId } from './furniture';
 
 export interface GuestItem {
   id: string;
@@ -188,7 +188,7 @@ export const GUEST_HOUSES: Readonly<Record<string, GuestHouse>> = {
 /** Gegenstands-ID zu einer Basis-ID: Möbel mit Farbvarianten nehmen die erste Farbe */
 export function guestItemId(base: string): string {
   const def = FURNITURE.find((f) => f.id === base);
-  if (def?.variants) return `${base}-${Object.keys(def.variants)[0]}`;
+  if (def?.variants) return variantItemId(def, Object.keys(def.variants)[0]);
   return base;
 }
 

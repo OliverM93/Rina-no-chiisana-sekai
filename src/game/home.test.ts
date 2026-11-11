@@ -90,7 +90,7 @@ describe('Einrichten: Farbe wechseln & Rückgängig', () => {
   });
 
   it('Farbvarianten', () => {
-    expect(variantsOf('zabuton-rosa').map((v) => v.itemId)).toEqual(['zabuton-rosa', 'zabuton-indigo', 'zabuton-senf']);
+    expect(variantsOf('zabuton-rosa').map((v) => v.itemId)).toEqual(['zabuton-rosa', 'zabuton-indigo', 'zabuton-senf', 'zabuton-mint', 'zabuton-rot', 'zabuton-grau']);
     expect(variantsOf('herd')).toEqual([]);
   });
 });

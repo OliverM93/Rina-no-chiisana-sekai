@@ -66,6 +66,8 @@ export interface FurnitureDef {
   wall?: boolean;
   /** Farbvarianten (Name → Farbe); ohne = eine Variante */
   variants?: Record<string, string>;
+  /** Diese Variante behält die alte Gegenstands-ID (ohne Suffix) – so bleiben Spielstände, Rezepte & Wünsche gültig, wenn ein Möbel nachträglich Farben bekommt */
+  baseVariant?: string;
   /** Nur im Winter (Dezember–Februar) im Katalog */
   seasonal?: boolean;
   /** Nur in dieser Jahreszeit im Katalog (Saison-Tassen) */
@@ -73,10 +75,10 @@ export interface FurnitureDef {
 }
 
 export const FURNITURE: readonly FurnitureDef[] = [
-  { id: 'futon', name: 'Futon', style: 'japanisch', price: 800, w: 1, d: 2, sit: 'liegen', description: 'Weich gepolstert zum Schlafen auf dem Boden. Morgens zusammenrollen? Ach was.', variants: { rosa: '#f7c6d4', indigo: '#5b6fa8', creme: '#f3ead8' } },
+  { id: 'futon', name: 'Futon', style: 'japanisch', price: 800, w: 1, d: 2, sit: 'liegen', description: 'Weich gepolstert zum Schlafen auf dem Boden. Morgens zusammenrollen? Ach was.', variants: { rosa: '#f7c6d4', indigo: '#5b6fa8', creme: '#f3ead8', grau: '#9a9aa4', salbei: '#a9c4a0' } },
   { id: 'chabudai', name: 'Chabudai', style: 'japanisch', price: 600, w: 1, d: 1, surface: true, surfaceHeight: 0.32, description: 'Ein niedriger, runder Tisch. Perfekt für Tee und Gespräche.' },
-  { id: 'kotatsu', name: 'Kotatsu', style: 'japanisch', price: 1400, w: 2, d: 2, surface: true, surfaceHeight: 0.42, description: 'Ein Tisch mit Heizdecke darunter. Wer einmal drunter sitzt, steht nie wieder auf.', variants: { rot: '#d9534f', blau: '#5b7fc2', gruen: '#6fa86a' } },
-  { id: 'zabuton', name: 'Zabuton', style: 'japanisch', price: 180, w: 1, d: 1, sit: 'sitzen', description: 'Ein dickes Sitzkissen für den Boden.', variants: { rosa: '#f4a3b8', indigo: '#4f5f98', senf: '#e0b04a' } },
+  { id: 'kotatsu', name: 'Kotatsu', style: 'japanisch', price: 1400, w: 2, d: 2, surface: true, surfaceHeight: 0.42, description: 'Ein Tisch mit Heizdecke darunter. Wer einmal drunter sitzt, steht nie wieder auf.', variants: { rot: '#d9534f', blau: '#5b7fc2', gruen: '#6fa86a', rosa: '#f4a3b8', grau: '#9a9aa4' } },
+  { id: 'zabuton', name: 'Zabuton', style: 'japanisch', price: 180, w: 1, d: 1, sit: 'sitzen', description: 'Ein dickes Sitzkissen für den Boden.', variants: { rosa: '#f4a3b8', indigo: '#4f5f98', senf: '#e0b04a', mint: '#9ad8c0', rot: '#d9534f', grau: '#9a9aa4' } },
   { id: 'andon', name: 'Andon-Laterne', style: 'japanisch', price: 450, w: 1, d: 1, light: true, description: 'Eine Laterne aus Papier und Holz. Leuchtet abends ganz warm.' },
   { id: 'tansu', name: 'Tansu-Kommode', style: 'japanisch', price: 1200, w: 2, d: 1, surface: true, surfaceHeight: 0.8, description: 'Eine Kommode aus dunklem Holz mit Metallbeschlägen und vielen Schubladen.' },
   { id: 'byobu', name: 'Byōbu-Wandschirm', style: 'japanisch', price: 900, w: 2, d: 1, description: 'Ein Faltschirm mit gemalten Kirschblüten.' },
@@ -88,9 +90,9 @@ export const FURNITURE: readonly FurnitureDef[] = [
   { id: 'ikebana', name: 'Ikebana-Vase', style: 'japanisch', price: 380, w: 1, d: 1, small: true, description: 'Ein schlichtes Blumengesteck. Weniger ist mehr.' },
   { id: 'winkekatze', name: 'Winkekatze', style: 'japanisch', price: 500, w: 1, d: 1, small: true, description: 'Winkt fröhlich und soll Glück bringen. Oma findet sie „ein bisschen unheimlich“.' },
   { id: 'kokeshi', name: 'Kokeshi-Puppe', style: 'japanisch', price: 260, w: 1, d: 1, small: true, description: 'Eine kleine bemalte Holzpuppe mit rundem Kopf.' },
-  { id: 'regal', name: 'Holzregal', style: 'basis', price: 500, w: 2, d: 1, surface: true, surfaceHeight: 0.9, description: 'Ein schlichtes Regal aus hellem Holz.' },
+  { id: 'regal', name: 'Holzregal', style: 'basis', price: 500, w: 2, d: 1, surface: true, surfaceHeight: 0.9, description: 'Ein schlichtes Regal aus hellem Holz.', variants: { honig: '#e6c59c', weiss: '#f2efe9', schwarz: '#2f2f35', mint: '#a8d8c4', rosa: '#f4c6d2' }, baseVariant: 'honig' },
   { id: 'vorratstruhe', name: 'Vorratstruhe', style: 'basis', storage: true, surface: true, surfaceHeight: 0.68, price: 650, w: 2, d: 1, description: 'Eine große Holztruhe mit Eisenbeschlägen. Hier ist Platz für 60 Dinge, die nicht in die Tasche müssen. Alle Truhen teilen sich denselben Vorrat.' },
-  { id: 'stehlampe', name: 'Stehlampe', style: 'basis', price: 400, w: 1, d: 1, light: true, description: 'Eine Lampe mit rundem Schirm für gemütliches Licht.' },
+  { id: 'stehlampe', name: 'Stehlampe', style: 'basis', price: 400, w: 1, d: 1, light: true, description: 'Eine Lampe mit rundem Schirm für gemütliches Licht.', variants: { pflaume: '#5a4a52', weiss: '#f2efe9', messing: '#c9a24a', mint: '#9ad8c0', schwarz: '#2a2a30' }, baseVariant: 'pflaume' },
   // Handgemacht an Opas Werkbank (siehe `recipes.ts`) – Preis = Verkaufswert × 4
   { id: 'ast-hocker', name: 'Ast-Hocker', style: 'handgemacht', crafted: true, price: 120, w: 1, d: 1, sit: 'sitzen', description: 'Ein kleiner Hocker aus Ästen. Wackelt ein bisschen – das gehört so.' },
   { id: 'blumenvase', name: 'Wildblumenvase', style: 'handgemacht', crafted: true, price: 100, w: 1, d: 1, small: true, description: 'Ein Kieselstein-Töpfchen voller Wildblumen. Bringt die Wiese ins Haus.' },
@@ -154,7 +156,7 @@ export const FURNITURE: readonly FurnitureDef[] = [
   { id: 'schneekugel-wir', name: 'Schneekugel mit uns', style: 'winter', gift: true, small: true, price: 400, w: 1, d: 1, description: 'Von Oli, aus dem 24. Türchen: Lina, Oli und Winston vor einem kleinen Haus. Schütteln – und es schneit Herzchen.' },
   // Wohnzimmer & Küche (M7h)
   { id: 'fernseher', name: 'Fernseher', style: 'basis', price: 2500, w: 2, d: 1, description: 'Ein Fernseher auf einem Lowboard. Für Datingshows, Dokus, True Crime – und die Kochshow.' },
-  { id: 'sofa', name: 'Sofa', style: 'basis', sit: 'sitzen', price: 1800, w: 2, d: 1, description: 'Ein kuscheliges Sofa für zwei. Und einen Dackel.', variants: { rosa: '#f4a3b8', grau: '#9a9aa4', mint: '#9ad8c0' } },
+  { id: 'sofa', name: 'Sofa', style: 'basis', sit: 'sitzen', price: 1800, w: 2, d: 1, description: 'Ein kuscheliges Sofa für zwei. Und einen Dackel.', variants: { rosa: '#f4a3b8', grau: '#9a9aa4', mint: '#9ad8c0', creme: '#f3ead8', senf: '#e0b04a', petrol: '#3f7a7a', flieder: '#c9b3e8' } },
   { id: 'herd', name: 'Küchenzeile mit Herd', style: 'basis', price: 2200, w: 2, d: 1, surface: true, surfaceHeight: 0.62, description: 'Herd, Arbeitsfläche, Topf und Pfanne – hier kocht Lina ihre Lieblingsgerichte.' },
   // Garten (draußen, M6c)
   { id: 'zaun-holz', name: 'Astzaun', style: 'garten', crafted: true, outdoor: true, fence: true, price: 60, w: 1, d: 1, description: 'Ein Zaun aus Ästen, mit Bast zusammengebunden. Rustikal und gemütlich.' },
@@ -164,10 +166,10 @@ export const FURNITURE: readonly FurnitureDef[] = [
   { id: 'weg-holz', name: 'Holzbohlen-Weg', style: 'garten', outdoor: true, rug: true, price: 80, w: 1, d: 1, description: 'Ein Weg aus warmen Holzbohlen.' },
   { id: 'weg-kies', name: 'Kiesweg', style: 'garten', outdoor: true, rug: true, price: 60, w: 1, d: 1, description: 'Knirscht so schön beim Drüberlaufen.' },
   { id: 'weg-pflaster', name: 'Pflasterweg', style: 'garten', outdoor: true, rug: true, price: 120, w: 1, d: 1, description: 'Ordentliche Pflastersteine. Christin ist begeistert.' },
-  { id: 'gartenbank', name: 'Gartenbank', style: 'garten', outdoor: true, sit: 'sitzen', price: 900, w: 2, d: 1, description: 'Eine Holzbank für die Abendsonne.' },
+  { id: 'gartenbank', name: 'Gartenbank', style: 'garten', outdoor: true, sit: 'sitzen', price: 900, w: 2, d: 1, description: 'Eine Holzbank für die Abendsonne.', variants: { holz: '#c9955f', weiss: '#f7f5ec', mint: '#9ad8c0', blau: '#7fb2e0' }, baseVariant: 'holz' },
   { id: 'gartentisch', name: 'Gartentisch', style: 'garten', outdoor: true, surface: true, surfaceHeight: 0.6, price: 500, w: 1, d: 1, description: 'Ein runder Tisch für Limonade im Grünen.' },
-  { id: 'gartenstuhl', name: 'Gartenstuhl', style: 'garten', outdoor: true, sit: 'sitzen', price: 300, w: 1, d: 1, description: 'Ein Stuhl aus geschwungenem Metall.', variants: { weiss: '#f7f5ec', rosa: '#f4a3b8', mint: '#9ad8c0' } },
-  { id: 'sonnenschirm', name: 'Sonnenschirm', style: 'garten', outdoor: true, price: 600, w: 1, d: 1, description: 'Spendet Schatten an heißen Tagen.', variants: { rosa: '#f4a3b8', mint: '#9ad8c0', gelb: '#f7d26a' } },
+  { id: 'gartenstuhl', name: 'Gartenstuhl', style: 'garten', outdoor: true, sit: 'sitzen', price: 300, w: 1, d: 1, description: 'Ein Stuhl aus geschwungenem Metall.', variants: { weiss: '#f7f5ec', rosa: '#f4a3b8', mint: '#9ad8c0', gelb: '#f7d26a', himmel: '#9fc4e8', schwarz: '#2a2a30' } },
+  { id: 'sonnenschirm', name: 'Sonnenschirm', style: 'garten', outdoor: true, price: 600, w: 1, d: 1, description: 'Spendet Schatten an heißen Tagen.', variants: { rosa: '#f4a3b8', mint: '#9ad8c0', gelb: '#f7d26a', weiss: '#f7f5ec', himmel: '#9fc4e8', rot: '#d9534f' } },
   { id: 'lichterkette', name: 'Lichterkette', style: 'garten', outdoor: true, light: true, price: 800, w: 2, d: 1, description: 'Zwei Pfosten mit bunten Lämpchen dazwischen. Abends wunderschön.' },
   { id: 'gartenlaterne', name: 'Gartenlaterne', style: 'garten', outdoor: true, light: true, price: 450, w: 1, d: 1, description: 'Eine kleine Laterne auf einem Pfahl.' },
   { id: 'windlicht', name: 'Windlicht', style: 'garten', outdoor: true, small: true, light: true, price: 200, w: 1, d: 1, description: 'Ein Glas mit Kerze für den Gartentisch.' },
@@ -189,51 +191,51 @@ export const FURNITURE: readonly FurnitureDef[] = [
   { id: 'fischtafel', name: 'Fischtafel', style: 'basis', wall: true, price: 1000, w: 2, d: 1, description: 'Eine Tafel mit 17 Plätzen für Fische. Jeder Fang bekommt seinen Platz. Olaf hat schon nachgezählt: Es fehlen noch einige.' },
   // ---- Französisches Bistro (Jens' Stil) ----
   { id: 'bistrotisch', name: 'Bistrotisch', style: 'bistro', surface: true, surfaceHeight: 0.7, price: 600, w: 1, d: 1, description: 'Rund, mit Marmorplatte und gusseisernem Fuß. Zwei Croissants passen drauf, ein Kaffee sowieso. Jens: „Très chic!“' },
-  { id: 'bistrostuhl', name: 'Bugholzstuhl', style: 'bistro', sit: 'sitzen', price: 380, w: 1, d: 1, description: 'Geschwungenes Holz, runder Sitz. In jedem guten Pariser Café steht ein Dutzend davon. Bei dir immerhin einer.' },
-  { id: 'barhocker', name: 'Barhocker', style: 'bistro', sit: 'sitzen', price: 320, w: 1, d: 1, description: 'Hoch, drehbar und perfekt für einen schnellen Espresso am Tresen.' },
+  { id: 'bistrostuhl', name: 'Bugholzstuhl', style: 'bistro', sit: 'sitzen', price: 380, w: 1, d: 1, description: 'Geschwungenes Holz, runder Sitz. In jedem guten Pariser Café steht ein Dutzend davon. Bei dir immerhin einer.', variants: { nuss: '#7a4a2e', schwarz: '#2a2a30', weiss: '#f2efe9', salbei: '#a9c4a0' }, baseVariant: 'nuss' },
+  { id: 'barhocker', name: 'Barhocker', style: 'bistro', sit: 'sitzen', price: 320, w: 1, d: 1, description: 'Hoch, drehbar und perfekt für einen schnellen Espresso am Tresen.', variants: { rot: '#b8484f', schwarz: '#2a2a30', mint: '#9ad8c0', senf: '#e0b04a' }, baseVariant: 'rot' },
   { id: 'zinktheke', name: 'Zinktresen', style: 'bistro', surface: true, surfaceHeight: 0.95, price: 1400, w: 2, d: 1, description: 'Ein echter Bistro-Tresen mit schimmernder Zinkplatte. Hier wird geplaudert, gelacht und die Rechnung „aufgeschrieben“.' },
   { id: 'kreidetafel', name: 'Kreidetafel „Tagesgericht“', style: 'bistro', wall: true, price: 450, w: 1, d: 1, description: 'Heute: Fischbrötchen à la Jens. Und ein Herzchen. Die Schrift ist von Hand – leicht sächsisch.' },
   { id: 'weinregal', name: 'Weinregal', style: 'bistro', price: 700, w: 1, d: 1, description: 'Ein schmales Holzregal, in dem die Flaschen liegen. Lars sagt: „In Maßen.“ Oma: „Wo sind die Gläser?“' },
-  { id: 'bistrolampe', name: 'Bistro-Tischlampe', style: 'bistro', small: true, light: true, price: 380, w: 1, d: 1, description: 'Eine Messinglampe mit grünem Glasschirm. Macht jeden Abend gemütlich und ein bisschen nach Paris.' },
+  { id: 'bistrolampe', name: 'Bistro-Tischlampe', style: 'bistro', small: true, light: true, price: 380, w: 1, d: 1, description: 'Eine Messinglampe mit grünem Glasschirm. Macht jeden Abend gemütlich und ein bisschen nach Paris.', variants: { gruen: '#3f8a5a', rot: '#b8484f', blau: '#3f5a8a', weiss: '#f2efe9' }, baseVariant: 'gruen' },
   { id: 'goldspiegel', name: 'Café-Spiegel', style: 'bistro', wall: true, price: 800, w: 1, d: 1, description: 'Ein ovaler Spiegel mit goldenem Rahmen. Der sieht jeden Gast und lächelt zurück.' },
   { id: 'etagere', name: 'Croissant-Etagere', style: 'bistro', small: true, price: 280, w: 1, d: 1, description: 'Zwei Etagen, ein Hauch Puderzucker und genau drei Croissants. Eins ist für Winston. Fast.' },
   { id: 'eiffelmodell', name: 'Turm-Modell', style: 'bistro', small: true, price: 350, w: 1, d: 1, description: 'Ein kleiner eiserner Turm aus Paris. Jens: „Da war ich schon. Und dort. Und dort.“' },
   { id: 'bistrolaeufer', name: 'Bordeaux-Läufer', style: 'bistro', rug: true, price: 600, w: 2, d: 1, description: 'Ein roter Läufer mit schmaler cremefarbener Borte. Ein Gang wie im Bistro.' },
   // ---- Linas Lieblinge: Schlafen, Pflanzen, Wärme ----
-  { id: 'bett', name: 'Bett mit Gewichtsdecke', style: 'basis', sit: 'liegen', price: 2200, w: 2, d: 2, description: 'Ein großes Bett mit einer richtig schweren Decke – wie eine Umarmung, die nicht aufhört. Zum Ausschlafen und Liegenbleiben. Immer erlaubt.', variants: { grau: '#9aa0aa', rosa: '#f4a3b8', salbei: '#a9c4a0' } },
+  { id: 'bett', name: 'Bett mit Gewichtsdecke', style: 'basis', sit: 'liegen', price: 2200, w: 2, d: 2, description: 'Ein großes Bett mit einer richtig schweren Decke – wie eine Umarmung, die nicht aufhört. Zum Ausschlafen und Liegenbleiben. Immer erlaubt.', variants: { grau: '#9aa0aa', rosa: '#f4a3b8', salbei: '#a9c4a0', creme: '#f3ead8', himmel: '#9fc4e8', flieder: '#c9b3e8' } },
   { id: 'kaktus', name: 'Kaktus', style: 'basis', small: true, price: 180, w: 1, d: 1, description: 'Klein, rund und gar nicht stachelig – wenn man ihn nicht anfasst. Gießen muss man ihn fast nie.' },
   { id: 'sukkulenten', name: 'Sukkulenten-Schale', style: 'basis', small: true, price: 240, w: 1, d: 1, description: 'Fünf pummelige Pflänzchen in einer Schale. Oli nennt sie „die Kleinen“ und redet manchmal mit ihnen.' },
   { id: 'yucca', name: 'Yucca-Palme', style: 'basis', price: 520, w: 1, d: 1, description: 'Ein Stamm mit einem Schopf langer, spitzer Blätter. Wächst gern in die Höhe – und wird nie gegossen. Fast nie.' },
   { id: 'haengepflanze', name: 'Efeutute im Ampeltopf', style: 'basis', wall: true, price: 450, w: 1, d: 1, description: 'Ein Töpfchen an der Wand, aus dem die Ranken fast bis zum Boden fallen. Die Pflanzen im Haus werden immer mehr.' },
   { id: 'waermflasche', name: 'Wärmflasche', style: 'basis', gift: true, small: true, price: 200, w: 1, d: 1, description: 'Mit selbstgestricktem Bezug von Oma Gisela. Für kalte Füße, kalte Abende und kalte Nasen.' },
   { id: 'bento-box', name: 'Bento-Box (Deko)', style: 'japanisch', gift: true, small: true, price: 300, w: 1, d: 1, description: 'Eine hübsche Lackbox mit Fächern. Von Jens aus Kyoto – „für Lina, die so schön kocht“.' },
-  { id: 'wandregal', name: 'Wandregal', style: 'basis', wall: true, price: 500, w: 2, d: 1, description: 'Ein schwebendes Brett mit Büchern, einem Pflänzchen und einer kleinen Kerze.' },
-  { id: 'wanduhr', name: 'Wanduhr', style: 'basis', wall: true, price: 450, w: 1, d: 1, description: 'Eine runde Uhr. Sie geht genau richtig – Papa hat sie gestellt.', variants: { rosa: '#f4a3b8', mint: '#9ad8c0', schwarz: '#2a2a30' } },
+  { id: 'wandregal', name: 'Wandregal', style: 'basis', wall: true, price: 500, w: 2, d: 1, description: 'Ein schwebendes Brett mit Büchern, einem Pflänzchen und einer kleinen Kerze.', variants: { holz: '#b98a5e', weiss: '#f2efe9', schwarz: '#2f2f35', mint: '#a8d8c4', rosa: '#f4c6d2' }, baseVariant: 'holz' },
+  { id: 'wanduhr', name: 'Wanduhr', style: 'basis', wall: true, price: 450, w: 1, d: 1, description: 'Eine runde Uhr. Sie geht genau richtig – Papa hat sie gestellt.', variants: { rosa: '#f4a3b8', mint: '#9ad8c0', schwarz: '#2a2a30', gelb: '#f7d26a', weiss: '#f7f5ec' } },
   { id: 'rollbild', name: 'Rollbild', style: 'japanisch', wall: true, price: 700, w: 1, d: 1, description: 'Ein Kakejiku mit einem Kranich über den Bergen. Ganz still und schön.' },
   { id: 'wimpelkette', name: 'Wimpelkette', style: 'basis', wall: true, price: 250, w: 2, d: 1, description: 'Bunte Stoffwimpel an einer Schnur. Jeden Tag ein bisschen Geburtstag.' },
   { id: 'fotowand', name: 'Fotowand', style: 'basis', wall: true, light: true, price: 900, w: 2, d: 1, description: 'Fotos von allen Liebsten an einer Lichterkette mit kleinen Klammern. Leuchtet abends.' },
   { id: 'spiegel-rund', name: 'Runder Spiegel', style: 'basis', wall: true, price: 500, w: 1, d: 1, description: 'Ein runder Spiegel mit goldenem Rand. Christin prüft darin, ob alles gerade hängt.' },
   { id: 'trockenkranz', name: 'Trockenblumenkranz', style: 'basis', wall: true, price: 350, w: 1, d: 1, description: 'Ein Kranz aus Lavendel, Eukalyptus und kleinen Rosen. Duftet ein bisschen nach Sommer.' },
   // Cottagecore (M8g): Landhaus, Blümchen, Häkeln, Kräuter
-  { id: 'landhaustisch', name: 'Landhaustisch', style: 'cottage', price: 1100, w: 2, d: 1, surface: true, surfaceHeight: 0.62, description: 'Ein großer Holztisch mit gedrechselten Beinen und ein paar Kerben. Hier wird gebacken!' },
-  { id: 'bluemchensessel', name: 'Blümchensessel', style: 'cottage', sit: 'sitzen', price: 950, w: 1, d: 1, description: 'Ein gepolsterter Sessel mit Streublümchen. Perfekt für eine Tasse Tee und ein Buch.', variants: { rosa: '#f4b6c2', salbei: '#a9c4a0', creme: '#f3ead8' } },
-  { id: 'haekelteppich', name: 'Häkelteppich', style: 'cottage', rug: true, price: 450, w: 2, d: 2, description: 'Ein runder Teppich, Masche für Masche gehäkelt. Oma hat ein paar Reihen beigesteuert.' },
+  { id: 'landhaustisch', name: 'Landhaustisch', style: 'cottage', price: 1100, w: 2, d: 1, surface: true, surfaceHeight: 0.62, description: 'Ein großer Holztisch mit gedrechselten Beinen und ein paar Kerben. Hier wird gebacken!', variants: { honig: '#c9a06e', weiss: '#efe8dc', grau: '#a9a49b', salbei: '#a9c4a0', nuss: '#8a5a3a' }, baseVariant: 'honig' },
+  { id: 'bluemchensessel', name: 'Blümchensessel', style: 'cottage', sit: 'sitzen', price: 950, w: 1, d: 1, description: 'Ein gepolsterter Sessel mit Streublümchen. Perfekt für eine Tasse Tee und ein Buch.', variants: { rosa: '#f4b6c2', salbei: '#a9c4a0', creme: '#f3ead8', himmel: '#9fc4e8', flieder: '#c9b3e8' } },
+  { id: 'haekelteppich', name: 'Häkelteppich', style: 'cottage', rug: true, price: 450, w: 2, d: 2, description: 'Ein runder Teppich, Masche für Masche gehäkelt. Oma hat ein paar Reihen beigesteuert.', variants: { rosa: '#f4b6c2', mint: '#9ad8c0', himmel: '#a9c8ff', flieder: '#c9b3e8', gelb: '#f2c14e' }, baseVariant: 'rosa' },
   { id: 'kraeutertoepfe', name: 'Kräutertöpfchen', style: 'cottage', small: true, price: 220, w: 1, d: 1, description: 'Basilikum, Thymian und Rosmarin in drei kleinen Tontöpfen. Riecht nach Kochen.' },
   { id: 'kerzenleuchter', name: 'Kerzenleuchter', style: 'cottage', small: true, light: true, price: 300, w: 1, d: 1, description: 'Ein Messingleuchter mit drei Kerzen. Flackert abends gemütlich.' },
   { id: 'wollkorb', name: 'Wollkorb', style: 'cottage', price: 260, w: 1, d: 1, description: 'Ein Weidenkorb voller Wollknäuel. Winston findet ihn sehr verdächtig.' },
   // Retro-Oma-Chic (M8g): Ohrensessel, Nierentisch, Fransen & Kristall
-  { id: 'ohrensessel', name: 'Ohrensessel', style: 'retro', sit: 'sitzen', price: 1300, w: 1, d: 1, description: 'Samtig, gemütlich und mit großen „Ohren“. Oma sagt: „So einen hatte Ludwig auch. Köstlich!“', variants: { senf: '#d9a441', rost: '#b8573a', petrol: '#3f7a7a' } },
-  { id: 'nierentisch', name: 'Nierentisch', style: 'retro', surface: true, surfaceHeight: 0.42, price: 700, w: 1, d: 1, description: 'Ein Tischchen in Nierenform auf schrägen Beinchen. Echt fünfziger Jahre.' },
-  { id: 'fransenlampe', name: 'Fransenlampe', style: 'retro', light: true, price: 650, w: 1, d: 1, description: 'Eine Stehlampe mit Stoffschirm und langen Fransen. Leuchtet warm wie früher.' },
+  { id: 'ohrensessel', name: 'Ohrensessel', style: 'retro', sit: 'sitzen', price: 1300, w: 1, d: 1, description: 'Samtig, gemütlich und mit großen „Ohren“. Oma sagt: „So einen hatte Ludwig auch. Köstlich!“', variants: { senf: '#d9a441', rost: '#b8573a', petrol: '#3f7a7a', salbei: '#a9c4a0', creme: '#f3ead8' } },
+  { id: 'nierentisch', name: 'Nierentisch', style: 'retro', surface: true, surfaceHeight: 0.42, price: 700, w: 1, d: 1, description: 'Ein Tischchen in Nierenform auf schrägen Beinchen. Echt fünfziger Jahre.', variants: { rot: '#d9534f', mint: '#9ad8c0', senf: '#e0b04a', himmel: '#7fb2e0', schwarz: '#3a3a42' }, baseVariant: 'rot' },
+  { id: 'fransenlampe', name: 'Fransenlampe', style: 'retro', light: true, price: 650, w: 1, d: 1, description: 'Eine Stehlampe mit Stoffschirm und langen Fransen. Leuchtet warm wie früher.', variants: { senf: '#d9a441', rosa: '#e88aa6', petrol: '#3f7a7a', rot: '#c94a5a' }, baseVariant: 'senf' },
   { id: 'bonbonschale', name: 'Bonbonschale', style: 'retro', small: true, price: 240, w: 1, d: 1, description: 'Eine Kristallschale mit bunten Bonbons. Wie bei Oma – nur dass man hier welche nehmen darf.' },
-  { id: 'perserteppich', name: 'Orientteppich', style: 'retro', rug: true, price: 1200, w: 2, d: 2, description: 'Ein dicker Teppich mit Mustern und Fransen. Christin kämmt die Fransen jeden Sonntag gerade.' },
+  { id: 'perserteppich', name: 'Orientteppich', style: 'retro', rug: true, price: 1200, w: 2, d: 2, description: 'Ein dicker Teppich mit Mustern und Fransen. Christin kämmt die Fransen jeden Sonntag gerade.', variants: { rot: '#a8443d', blau: '#3a5a8a', gruen: '#4a7a5a', senf: '#c99a3a' }, baseVariant: 'rot' },
   { id: 'gummibaum', name: 'Gummibaum', style: 'retro', price: 380, w: 1, d: 1, description: 'Glänzende, dicke Blätter. Steht seit Jahrzehnten in jeder guten Stube.' },
   // Modern (M8g): klare Formen, Grau & Holz, Marmor
-  { id: 'loungesofa', name: 'Loungesofa', style: 'modern', sit: 'sitzen', price: 2100, w: 2, d: 1, description: 'Ein niedriges, breites Sofa mit vielen Kissen. Zum Versinken.', variants: { grau: '#9a9aa4', sand: '#d9c8ad', schwarz: '#3a3a42' } },
+  { id: 'loungesofa', name: 'Loungesofa', style: 'modern', sit: 'sitzen', price: 2100, w: 2, d: 1, description: 'Ein niedriges, breites Sofa mit vielen Kissen. Zum Versinken.', variants: { grau: '#9a9aa4', sand: '#d9c8ad', schwarz: '#3a3a42', petrol: '#3f7a7a', rost: '#b8573a', salbei: '#a9c4a0' } },
   { id: 'marmortisch', name: 'Marmor-Couchtisch', style: 'modern', surface: true, surfaceHeight: 0.36, price: 1200, w: 1, d: 1, description: 'Rund, weiß mit grauen Adern, auf einem schwarzen Metallfuß.' },
   { id: 'bogenlampe', name: 'Bogenlampe', style: 'modern', light: true, price: 900, w: 1, d: 1, description: 'Eine Lampe mit langem Bogen. Sie beugt sich über das Sofa, als wollte sie mitlesen.' },
   { id: 'wuerfelregal', name: 'Würfelregal', style: 'modern', surface: true, surfaceHeight: 0.92, price: 800, w: 2, d: 1, description: 'Ein Regal aus hellen Holzwürfeln mit Platz für Bücher, Körbe und Kleinkram.' },
-  { id: 'sitzsack', name: 'Sitzsack', style: 'modern', sit: 'sitzen', price: 500, w: 1, d: 1, description: 'Ein dicker Sitzsack. Man plumpst hinein und steht nie wieder auf.', variants: { rosa: '#f4a3b8', grau: '#9a9aa4', senf: '#e0b04a' } },
+  { id: 'sitzsack', name: 'Sitzsack', style: 'modern', sit: 'sitzen', price: 500, w: 1, d: 1, description: 'Ein dicker Sitzsack. Man plumpst hinein und steht nie wieder auf.', variants: { rosa: '#f4a3b8', grau: '#9a9aa4', senf: '#e0b04a', mint: '#9ad8c0', himmel: '#9fc4e8', schwarz: '#3a3a42' } },
   { id: 'keramikvase', name: 'Keramikvase', style: 'modern', small: true, price: 280, w: 1, d: 1, description: 'Eine bauchige Vase mit einem einzelnen Eukalyptuszweig. Sehr minimalistisch.' },
   // Mid-Century & Bauhaus (M8h): Teak & Nussbaum, Chrom, schräge Beine, Grundformen in Rot, Gelb, Blau
   { id: 'lederloungesessel', name: 'Leder-Loungesessel', style: 'midcentury', sit: 'sitzen', price: 2400, w: 1, d: 1, description: 'Weiches Leder in geschwungenen Nussbaum-Schalen. Man sitzt wie in einer Umarmung.', variants: { cognac: '#a8643a', schwarz: '#2a2a30' } },
@@ -286,6 +288,8 @@ export const WALLPAPERS: readonly SurfaceDef[] = [
   { id: 'tapete-metro', name: 'Pariser Kacheln', style: 'bistro', price: 750, kind: 'tapete', pattern: 'kacheln', color: '#f6f2e8', accent: '#9bb5c9', description: 'Glänzende weiße Kacheln mit blaugrauen Fugen. Typisch Metro und Bistro.' },
   { id: 'tapete-rosa', name: 'Pastellrosa Tapete', style: 'basis', price: 400, kind: 'tapete', pattern: 'streifen', color: '#fbe0e8', accent: '#f6cfdb', description: 'Ganz zarte Streifen in Rosa.' },
   // Einfarbige Wände: glatt, ohne Muster – Grundfarben zum Kombinieren mit Parkett und Möbeln
+  { id: 'tapete-vorhang-rot', name: 'Roter Samtvorhang', style: 'retro', price: 1100, kind: 'tapete', pattern: 'vorhang', color: '#9a1f2c', accent: '#4a0f16', description: 'Schwere rote Vorhänge in tiefen Falten. Ein bisschen geheimnisvoll, ein bisschen Theater – und im Schwarz-Weiß-Zickzack-Boden zu Hause.' },
+  { id: 'tapete-tannen', name: 'Tannenwald-Tapete', style: 'cottage', price: 700, kind: 'tapete', pattern: 'tannen', color: '#e4eee0', accent: '#2f5d3f', description: 'Kleine dunkelgrüne Tannen auf hellem Grund. Es duftet fast nach Wald und heißem Kakao.' },
   { id: 'tapete-uni-weiss', name: 'Einfarbig Weiß', style: 'basis', price: 250, kind: 'tapete', pattern: 'flach', color: '#fbfaf6', accent: '#fbfaf6', description: 'Reines, helles Weiß. Wie ein frisch gestrichenes Zimmer.' },
   { id: 'tapete-uni-sand', name: 'Einfarbig Sand', style: 'basis', price: 300, kind: 'tapete', pattern: 'flach', color: '#eadcc6', accent: '#eadcc6', description: 'Warmes Sandbeige – ruhig und zeitlos.' },
   { id: 'tapete-uni-grau', name: 'Einfarbig Hellgrau', style: 'modern', price: 300, kind: 'tapete', pattern: 'flach', color: '#dcd9d9', accent: '#dcd9d9', description: 'Ein sanftes Grau, das nichts will und alles trägt.' },
@@ -318,6 +322,17 @@ export const FLOORS: readonly SurfaceDef[] = [
   { id: 'boden-terrakotta', name: 'Terrakotta-Fliesen', style: 'basis', price: 700, kind: 'boden', pattern: 'terrakotta', color: '#d9895f', accent: '#b8693f', description: 'Warme, rötliche Tonfliesen. Fühlen sich nach Urlaub an.' },
   { id: 'boden-teppich', name: 'Rosa Teppichboden', style: 'basis', price: 500, kind: 'boden', pattern: 'teppich', color: '#f7c6d4', accent: '#f4b3c6', description: 'Flauschig und weich unter den Füßen.' },
   // Parkett-Varianten: Chevron, Fischgrät, Würfelparkett, Schiffsboden, Tafelparkett
+  { id: 'boden-zickzack', name: 'Zickzack-Boden Schwarz-Weiß', style: 'retro', price: 1000, kind: 'boden', pattern: 'zickzack', color: '#f5f2ea', accent: '#1f1d22', description: 'Breite Zickzack-Bänder in Schwarz und Weiß. Mutig, grafisch und ein kleines bisschen unheimlich schön.' },
+  { id: 'boden-dielen-weiss', name: 'Weiß gekalkte Dielen', style: 'cottage', price: 450, kind: 'boden', pattern: 'dielen', color: '#f2ede3', accent: '#ddd5c6', description: 'Helle, weiß gekalkte Dielen. Schlicht und freundlich.' },
+  { id: 'boden-dielen-birke', name: 'Birkendielen', style: 'modern', price: 450, kind: 'boden', pattern: 'dielen', color: '#f0dfc2', accent: '#decba7', description: 'Ganz helle Birkendielen – lassen jeden Raum luftiger wirken.' },
+  { id: 'boden-dielen-ahorn', name: 'Ahorndielen', style: 'basis', price: 400, kind: 'boden', pattern: 'dielen', color: '#ead3a8', accent: '#d6bc8c', description: 'Warme, helle Ahorndielen.' },
+  { id: 'boden-dielen-esche', name: 'Eschendielen hell', style: 'modern', price: 500, kind: 'boden', pattern: 'dielen', color: '#e8d9bf', accent: '#d3c2a4', description: 'Zarte, helle Esche mit feiner Maserung.' },
+  { id: 'boden-dielen-hellgrau', name: 'Dielen Hellgrau', style: 'modern', price: 450, kind: 'boden', pattern: 'dielen', color: '#d4cfc7', accent: '#bfb9af', description: 'Zartgrau gebeizte Dielen. Passen zu allem.' },
+  { id: 'boden-chevron-birke', name: 'Chevron-Parkett Birke', style: 'modern', price: 1000, kind: 'boden', pattern: 'chevron', color: '#efdfc3', accent: '#dcc8a2', description: 'Sehr helles Chevron-Parkett aus Birke. Schlicht und edel.' },
+  { id: 'boden-chevron-weiss', name: 'Chevron-Parkett Weiß', style: 'modern', price: 1050, kind: 'boden', pattern: 'chevron', color: '#f3eee4', accent: '#e0d8c8', description: 'Weiß gekalktes Chevron-Parkett – hell, ruhig und edel.' },
+  { id: 'boden-fischgraet-birke', name: 'Fischgrät Birke', style: 'basis', price: 850, kind: 'boden', pattern: 'fischgraet', color: '#f0dfc2', accent: '#decba7', description: 'Helles Fischgrät aus Birke – schlicht und freundlich.' },
+  { id: 'boden-schiff-weiss', name: 'Schiffsboden Weiß', style: 'cottage', price: 750, kind: 'boden', pattern: 'schiff', color: '#ece6da', accent: '#d8d0c0', description: 'Weiß lasierte Schiffsdielen, wie am Strandhaus.' },
+  { id: 'boden-tafel-ahorn', name: 'Tafelparkett Ahorn', style: 'basis', price: 1100, kind: 'boden', pattern: 'tafel', color: '#e8d0a2', accent: '#d2b886', description: 'Helles Tafelparkett aus Ahorn.' },
   { id: 'boden-chevron-eiche', name: 'Chevron-Parkett Eiche', style: 'modern', price: 1100, kind: 'boden', pattern: 'chevron', color: '#dcb98a', accent: '#c29a66', description: 'Französisches Fischgrät aus heller Eiche: Die Stäbe laufen spitz zusammen und lassen den Raum größer wirken.' },
   { id: 'boden-chevron-grau', name: 'Chevron-Parkett Räuchereiche', style: 'modern', price: 1100, kind: 'boden', pattern: 'chevron', color: '#a89a8c', accent: '#8b7d70', description: 'Graubraune Räuchereiche im Chevron-Muster. Kühl, edel, ein bisschen Loft.' },
   { id: 'boden-chevron-nuss', name: 'Chevron-Parkett Nussbaum', style: 'midcentury', price: 1200, kind: 'boden', pattern: 'chevron', color: '#8b5e3c', accent: '#6e4630', description: 'Dunkler Nussbaum in spitzen Zacken – sehr elegant.' },
@@ -372,16 +387,21 @@ export interface FurnitureItem {
   ),
 );
 
+/** Gegenstands-ID einer Variante (die `baseVariant` heißt wie das Möbel selbst) */
+export function variantItemId(def: Pick<FurnitureDef, 'id' | 'baseVariant'>, variant: string): string {
+  return def.baseVariant === variant ? def.id : `${def.id}-${variant}`;
+}
+
 export const FURNITURE_ITEMS: readonly FurnitureItem[] = FURNITURE.flatMap((def): FurnitureItem[] =>
   def.variants
-    ? Object.entries(def.variants).map(([v, color]) => ({ itemId: `${def.id}-${v}`, def, variant: v, color }))
+    ? Object.entries(def.variants).map(([v, color]) => ({ itemId: variantItemId(def, v), def, variant: v, color }))
     : [{ itemId: def.id, def, variant: null, color: null }],
 );
 
 export const FURNITURE_BY_ITEM: Readonly<Record<string, FurnitureItem>> = Object.fromEntries(FURNITURE_ITEMS.map((f) => [f.itemId, f]));
 export const SURFACE_BY_ID: Readonly<Record<string, SurfaceDef>> = Object.fromEntries([...WALLPAPERS, ...FLOORS].map((s) => [s.id, s]));
 
-export const VARIANT_LABELS: Record<string, string> = { grau: 'Grau', weiss: 'Weiß', mint: 'Mint', gelb: 'Gelb', rosa: 'Rosa', indigo: 'Indigo', creme: 'Creme', rot: 'Rot', blau: 'Blau', gruen: 'Grün', senf: 'Senfgelb', salbei: 'Salbei', rost: 'Rost', petrol: 'Petrol', sand: 'Sand', schwarz: 'Schwarz', cognac: 'Cognac', geflecht: 'Wiener Geflecht' };
+export const VARIANT_LABELS: Record<string, string> = { grau: 'Grau', weiss: 'Weiß', mint: 'Mint', gelb: 'Gelb', rosa: 'Rosa', indigo: 'Indigo', creme: 'Creme', rot: 'Rot', blau: 'Blau', gruen: 'Grün', senf: 'Senfgelb', salbei: 'Salbei', rost: 'Rost', petrol: 'Petrol', sand: 'Sand', schwarz: 'Schwarz', cognac: 'Cognac', geflecht: 'Wiener Geflecht', himmel: 'Himmelblau', flieder: 'Flieder', messing: 'Messing', pflaume: 'Pflaume', honig: 'Honig', nuss: 'Nuss', holz: 'Holz' };
 
 
 /** Raum-Infos für die Raumlogik (`core/room.ts`) */
