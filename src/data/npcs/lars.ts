@@ -7,7 +7,6 @@ import { LOOKS } from './looks';
 import type { NpcDef } from './types';
 
 const STRAND = { x: 20, y: 30, w: 14, h: 3 };
-const PLATZ = { x: 23, y: 16, w: 9, h: 7 };
 
 export const LARS: NpcDef = {
   id: 'lars',
@@ -25,7 +24,7 @@ export const LARS: NpcDef = {
     { from: '00:00', label: 'schläft', activity: { kind: 'zuhause', sleeping: true } },
     { from: '07:30', label: 'Joggen am Strand', activity: { kind: 'spazieren', area: STRAND } },
     { from: '09:00', label: 'Praxis geöffnet', activity: { kind: 'stehen', x: 24, y: 14, facing: 'down' } },
-    { from: '12:30', label: 'Mittagspause auf dem Dorfplatz', activity: { kind: 'spazieren', area: PLATZ } },
+    { from: '12:30', label: 'Mittagspause zu Hause', activity: { kind: 'zuhause' } },
     { from: '14:00', label: 'Praxis geöffnet', activity: { kind: 'stehen', x: 24, y: 14, facing: 'down' } },
     { from: '17:30', label: 'Feierabend-Runde am Strand', activity: { kind: 'spazieren', area: STRAND } },
     { from: '19:00', label: 'Feierabend', activity: { kind: 'zuhause' } },

@@ -651,10 +651,12 @@ export function makeFurniture(itemId: string, links: FenceLinks = { n: false, e:
       const extra = new THREE.Group();
       extra.name = 'extraplatten';
       extra.visible = false;
+      // sechs Scheiben je Seite, von außen nach innen – `userData.stufe` = ab welchem Gewichtsschritt sichtbar
       for (const side of [-1, 1]) {
-        for (let i = 0; i < 4; i++) {
-          const pl = c(0.22 - i * 0.01, 0.04, i % 2 ? '#d9534f' : '#2b2a31', 0, 0, side * (0.35 - i * 0.035));
+        for (let i = 0; i < 6; i++) {
+          const pl = c(0.23 - i * 0.008, 0.04, i % 2 ? '#d9534f' : '#2b2a31', 0, 0, side * (0.36 - i * 0.045));
           pl.rotation.x = Math.PI / 2;
+          pl.userData.stufe = i + 1;
           extra.add(pl);
         }
       }

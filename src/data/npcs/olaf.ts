@@ -6,7 +6,6 @@
 import { LOOKS } from './looks';
 import type { LetterTemplate, NpcDef } from './types';
 
-const PLATZ = { x: 23, y: 16, w: 9, h: 7 };
 const STRAND = { x: 30, y: 30, w: 14, h: 3 };
 
 export const OLAF: NpcDef = {
@@ -25,7 +24,7 @@ export const OLAF: NpcDef = {
     { from: '00:00', label: 'schläft', activity: { kind: 'zuhause', sleeping: true } },
     { from: '07:30', label: 'Zeitung vor dem Haus', activity: { kind: 'stehen', x: 18, y: 18, facing: 'down' } },
     { from: '09:00', label: 'Dorfkasse geöffnet', activity: { kind: 'stehen', x: 20, y: 18, facing: 'down' } },
-    { from: '12:30', label: 'Mittagspause auf dem Dorfplatz', activity: { kind: 'spazieren', area: PLATZ } },
+    { from: '12:30', label: 'Mittagessen zu Hause', activity: { kind: 'zuhause' } },
     { from: '13:30', label: 'Dorfkasse geöffnet', activity: { kind: 'stehen', x: 20, y: 18, facing: 'down' } },
     { from: '17:30', label: 'Abendspaziergang am Strand', activity: { kind: 'spazieren', area: STRAND } },
     { from: '19:30', label: 'Feierabend zu Hause', activity: { kind: 'zuhause' } },
