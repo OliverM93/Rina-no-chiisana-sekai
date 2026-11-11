@@ -10,6 +10,8 @@ import { dressFor } from '../core/appearance';
 import * as THREE from 'three';
 import { DPR, TILE, UNIT } from '../config';
 import { CollisionGrid, findPath, nearestWalkable, type Tile } from '../core/grid';
+import { planSize, roomById } from '../core/floorplan';
+import { floorsOf } from '../data/floorplan';
 import { checkPlacement, type Exit, riderOffset, exitAt, footprint, type Room, type RoomLayout, type Rotation, wallRotationAt } from '../core/room';
 import { FURNITURE_BY_ITEM, furnitureInfo, SURFACE_BY_ID } from '../data/furniture';
 import { getDaylight, getSeason, isSameDayMonth } from '../core/time';
@@ -98,6 +100,7 @@ import { Collectibles } from './Collectibles3D';
 import { Fishing3D } from './Fishing3D';
 import { Garden3D } from './Garden3D';
 import { Insects3D } from './Insects3D';
+import { HouseView3D } from './HouseView3D';
 import { Interior3D, ROOM_X, ROOM_Y } from './Interior3D';
 import { Yard3D } from './Yard3D';
 import { DigSpots3D } from './DigSpots3D';
@@ -196,6 +199,11 @@ export class World3D {
   private baseHemi = 1.3;
   private patienceToast = 0;
   private interior: Interior3D;
+  /** Kamera-Ziel & Abstand für die Haus-Vorschau (null = normaler Raum) */
+  private houseCam: { cx: number; cz: number; scale: number } | null = null;
+  /** Phase B (Vorschau, `?haus=neu`): die übrigen Räume des Erdgeschosses daneben */
+  private houseView: HouseView3D;
+  private readonly houseFlag = typeof location !== 'undefined' && new URLSearchParams(location.search).get('haus') === 'neu';
   /** Einrichten: was gerade gehalten wird (uid = schon im Zimmer, sonst aus der Tasche) */
   /**
    * Was Lina beim Einrichten in der Hand hat. `source` = was im Vorrat liegt (bei neuen Stücken, die Farbe darf
@@ -315,6 +323,7 @@ export class World3D {
     this.garden = new Garden3D(this.scene, session, this.tweens);
     this.interactive.add('beet-lina');
     this.interior = new Interior3D(this.scene);
+    this.houseView = new HouseView3D(this.scene);
     this.yard = new Yard3D(this.scene, this.view.terrain.heightAt);
     this.digSpots = new DigSpots3D(this.scene, session, this.view);
     this.festivals = new Festivals3D(this.scene, session.map, this.view.terrain.heightAt);
@@ -474,7 +483,7 @@ export class World3D {
       if (!player.hasPath) this.marker.visible = false;
 
       // Kamera folgt Lina weich (zu Hause: fester Blick ins Zimmer)
-      const target = this.session.inside ? this.roomCenter() : new THREE.Vector3(player.x * UNIT, 0, player.y * UNIT);
+      const target = this.session.inside ? (this.houseCam ? new THREE.Vector3(this.houseCam.cx, 0, this.houseCam.cz) : this.roomCenter()) : new THREE.Vector3(player.x * UNIT, 0, player.y * UNIT);
       this.camTarget.lerp(target, 1 - Math.pow(0.002, dt));
       if (!this.session.inside) this.updateOccluders(player);
       if (!this.session.inside) {
@@ -502,7 +511,7 @@ export class World3D {
   }
 
   private updateCamera() {
-    const desired = this.camTarget.clone().add(CAM_OFFSET.clone().multiplyScalar(this.session.inside ? 1.22 : this.zoom));
+    const desired = this.camTarget.clone().add(CAM_OFFSET.clone().multiplyScalar(this.session.inside ? (this.houseCam?.scale ?? 1.22) * (this.houseCam ? this.zoom : 1) : this.zoom));
     this.camPos.copy(desired);
     this.camera.position.copy(this.camPos);
     this.camera.lookAt(this.camTarget.x, 0.75, this.camTarget.z);
@@ -553,6 +562,7 @@ export class World3D {
     const outside = mixHex(mixHex(mixHex('#bfe6f7', tint, 0.55), '#9aa6b4', clouds * 0.7), '#2a2e5c', n * 0.75);
     const sky = this.session.inside ? mixHex('#f3e3cf', '#3a3450', n * 0.7) : outside;
     this.interior.updateLight(n, clouds);
+    this.houseView.updateLight(n, clouds);
     this.yard.updateLight(n);
     const party = isPartyTime(this.session) && !this.session.inside;
     if (party && !this.partyLights.group.visible) this.session.bus.emit('toast', { text: '🎉 Party auf dem Dorfplatz! Thalia hat Musik mitgebracht.' });
@@ -2928,8 +2938,28 @@ export class World3D {
     const c = currentRoom(this.session);
     if (this.session.inside && c) {
       this.interior.collected = new Set(Object.keys(this.session.data?.collection ?? {}));
+      this.refreshHouseView(c);
       this.interior.refresh(c.room, c.layout, force);
     }
+  }
+
+  /** Vorschau „ganzes Haus“ (nur mit `?haus=neu`, nicht bei Besuchen): übrige Räume des Erdgeschosses zeichnen */
+  private refreshHouseView(c: { room: { id: string }; layout: RoomLayout }) {
+    const house = this.session.data?.house;
+    const plan = house && !this.session.visiting && this.houseFlag ? floorsOf(house.stage).find((f) => f.rooms.some((r) => r.id === c.room.id)) : undefined;
+    if (!house || !plan || plan.rooms.length < 2) {
+      this.interior.shellOptions = {};
+      this.houseView.clear();
+      this.houseCam = null;
+      return;
+    }
+    this.interior.shellOptions = HouseView3D.shellFor(plan, c.room.id);
+    this.houseView.refresh(plan, house.stage, house.rooms, c.room.id, this.interior.collected);
+    this.houseView.updateLight(this.night, currentWeather(this.session).clouds);
+    // Kamera: das ganze Stockwerk im Blick
+    const cur = roomById(plan, c.room.id);
+    const size = planSize(plan);
+    if (cur) this.houseCam = { cx: ROOM_X + size.w / 2 - cur.x, cz: ROOM_Y + size.h / 2 - cur.y, scale: Math.max(1.22, Math.max(size.w / 7.2, size.h / 5.5)) };
   }
 
   /** Lina betritt Raum `roomId` durch den Ausgang, der zu `from` führt */
@@ -3041,6 +3071,9 @@ export class World3D {
     const visited = this.session.visiting;
     this.session.inside = false;
     this.session.visiting = '';
+    this.houseView.clear();
+    this.interior.shellOptions = {};
+    this.houseCam = null;
     this.session.roomId = 'haupt';
     player.heightAt = this.view.terrain.heightAt;
     if (this.winston) this.winston.heightAt = this.view.terrain.heightAt;

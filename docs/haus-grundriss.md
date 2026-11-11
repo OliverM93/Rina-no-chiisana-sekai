@@ -1,6 +1,6 @@
 # Konzept: Ein zusammenhängendes Haus (Sims-Prinzip)
 
-Status: 🚧 **in Arbeit** – **Phase A ✅** (Datenmodell & Gesamtgitter, noch ohne neue Darstellung), Phasen B–E 🗓️ · Aufwand: **groß** (mehrere Pull Requests).
+Status: 🚧 **in Arbeit** – **Phase A ✅** (Datenmodell & Gesamtgitter), **Phase B ✅ als Vorschau** (`?haus=neu`), Phasen C–E 🗓️ · Aufwand: **groß** (mehrere Pull Requests).
 
 ## Ziel
 
@@ -33,6 +33,17 @@ Damit **keine Spielstand-Migration** nötig ist und die gute Raster-Logik (`core
 - Tests (`core/floorplan.test.ts`, `data/floorplan.test.ts`): Grundrisse gültig für jede Stufe, Größen passen zu `roomLayouts`, von der Haustür erreicht man jeden Raum, Treppen führen in vorhandene Räume.
 - **Am Spiel ändert sich noch nichts** – die neuen Module sind noch nirgends eingebunden.
 
+## Phase B: so ist es umgesetzt ✅ (Vorschau)
+
+- **Nur mit `?haus=neu` in der Adresse** (z. B. `http://localhost:5173/?haus=neu`): Lina betritt ihr Haus, und man sieht **das ganze Erdgeschoss**. Ohne den Zusatz bleibt alles wie bisher – Lina kann in dieser Phase noch nicht durch die Türen in die anderen Räume laufen (das ist Phase C).
+- `world3d/HouseView3D.ts`: zeichnet alle übrigen Räume des Stockwerks (je eine eigene `Interior3D` mit Möbeln, Tapete und Boden) und die Wandstreifen dazwischen (Seitenwände voll mit Sturz über der Tür, Wände zwischen vorne und hinten **halbhoch**).
+- `world3d/Interior3D.ts`: frei wählbare Lage (`origin`), `ShellOptions` (Türöffnungen in den Wänden, alte Tür-Modelle ausblenden, halbhohe Rückwand ohne Fenster).
+- `core/floorplan.ts`: `openingsFor`, `wallStrips`, `hasRoomBehind` (mit Tests).
+- Kamera: zeigt das ganze Stockwerk (Abstand wächst mit der Hausgröße), Mausrad zoomt weiter.
+- Bekannt: Ferne Räume wirken durch den Nebel etwas blass; Wand-Deko an halbhohen Wänden ist noch nicht gesperrt (kommt mit Phase C).
+
+![Das ganze Haus (Vorschau)](screenshots/haus-ganz-vorschau.png)
+
 ## Grundriss-Vorschlag (Erdgeschoss, Draufsicht von oben, hinten = oben)
 
 ```
@@ -60,7 +71,7 @@ Die Kamera schaut schräg von vorn. Wände zwischen vorderer und hinterer Reihe 
 | Phase | Inhalt | Risiko |
 |---|---|---|
 | **A** ✅ | Datenmodell `FloorPlan` + zusammengesetztes Gesamtgitter (Kollision, Wegfindung) mit Tests – noch ohne neue Darstellung | gering |
-| **B** | `Interior3D` zeichnet alle Räume des Erdgeschosses (Böden, Wände, Durchgänge, Tapeten je Raum); Kamera folgt Lina und zoomt weiter heraus | mittel |
+| **B** ✅ | `Interior3D` zeichnet alle Räume des Erdgeschosses (Böden, Wände, Durchgänge, Tapeten je Raum); Kamera zeigt das ganze Haus – **als Vorschau mit `?haus=neu`** | mittel |
 | **C** | Lina, Oli und Winston laufen ohne Umblenden durch Durchgänge; Licht/Lampen je Raum; Einrichten raumübergreifend (Ghost, Treffer, Rückgängig) | **hoch** |
 | **D** | Etagen: Treppe zu Dach/Keller als Etagenwechsel; Hausansicht von außen passt zum Grundriss | mittel |
 | **E** | Feinschliff: Wandmodus, Spielstand-Test (alte Stände laden), Doku | gering |

@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { findPath } from './grid';
-import { buildPlanGrid, doorCells, doorStripCell, type FloorPlan, planSize, roomAt, toGlobal, validatePlan } from './floorplan';
+import { buildPlanGrid, doorCells, doorStripCell, type FloorPlan, hasRoomBehind, openingsFor, planSize, roomAt, toGlobal, validatePlan, wallStrips } from './floorplan';
 
 /** Zwei 4×3-Räume nebeneinander mit einem Wandstreifen (x = 4) und einer Tür auf Zeile 1 */
 const plan: FloorPlan = {
@@ -54,5 +54,27 @@ describe('Grundriss', () => {
     expect(validatePlan(notOnWall).join(' ')).toContain('nicht an der Wand');
     const lonely: FloorPlan = { ...plan, doors: [] };
     expect(validatePlan(lonely).join(' ')).toContain('nicht erreichbar');
+  });
+});
+
+describe('Türöffnungen & Wandstreifen', () => {
+  it('Öffnungen in den Raumwänden', () => {
+    expect(openingsFor(plan, 'a')).toEqual([{ side: 'right', at: 1 }]);
+    expect(openingsFor(plan, 'b')).toEqual([{ side: 'left', at: 1 }]);
+    const stacked: FloorPlan = {
+      id: 's',
+      rooms: [{ id: 'hinten', x: 1, y: 0, w: 4, h: 3 }, { id: 'vorne', x: 0, y: 4, w: 6, h: 3 }],
+      doors: [{ room: 'vorne', cell: [2, 0], side: 'up', to: 'hinten', toCell: [1, 2] }],
+    };
+    expect(openingsFor(stacked, 'vorne')).toEqual([{ side: 'back', at: 2 }]);
+    expect(openingsFor(stacked, 'hinten')).toEqual([]); // Vorderseite hat keine Wand
+    expect(hasRoomBehind(stacked, 'vorne')).toBe(true);
+    expect(hasRoomBehind(stacked, 'hinten')).toBe(false);
+  });
+
+  it('Wandstreifen liegen zwischen den Räumen und enthalten die Türfelder', () => {
+    const [s] = wallStrips(plan);
+    expect(s).toMatchObject({ x: 4, y: 0, w: 1, h: 3, vertical: true });
+    expect(s.openings).toEqual([{ x: 4, y: 1 }]);
   });
 });
