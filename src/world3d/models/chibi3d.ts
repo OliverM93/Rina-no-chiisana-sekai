@@ -440,9 +440,10 @@ function addHair(head: THREE.Group, a: Appearance, R: number) {
       // Breitere (kräftigere) Köpfe brauchen etwas größere Kappen, sonst sticht die Haut zackig durch
       const k = Math.max(1, 1 + (a.build - 1) * 0.35);
       topCap(1.1, 1.06 * k);
-      // volles Seitenhaar wie früher bis weit nach unten – nur genau so viel Platz, wie das Ohr braucht, bleibt frei
-      backCap(1.36, 1.05 * k + 0.01);
-      for (const [start, len] of [[FRONT + 0.85, 0.5], [FRONT - 1.35, 0.5], [FRONT + 1.8, Math.PI * 2 - 3.6]] as const) head.add(shell(R * (1.05 * k + 0.01), col, start, len, 0, 1.85));
+      // volles Seitenhaar wie früher; das Ohr schaut als kleines Oval aus dem Haar (wie bei den anderen)
+      const hairR = 1.05 * k + 0.01;
+      backCap(1.85, hairR);
+      for (const sd of [-1, 1]) head.add(part(sphere, a.skinTone, R * 0.17, R * 0.21, R * 0.12, sd * R * hairR * 0.97, -R * 0.05, 0));
       head.add(shell(R * 1.07 * k, col, FRONT - 1.0, 2.0, 0.42, 0.4));
       // abstehende, wuschelige Strähnen / Fransen (nicht direkt am Ohr)
       for (let i = 0; i < 40; i++) {
