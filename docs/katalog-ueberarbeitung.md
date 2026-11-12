@@ -269,7 +269,7 @@ dann mit dem Einzug.
 
 ## 9. Backlog: Kernsortiment der neuen Stile 🗓️ (Vorschlag, priorisiert)
 
-1. **Japandi, Skandinavisch, Minimalismus** – hell, ruhig, passt zu Linas Haus; viele Teile wiederverwendbar
+1. ✅ *erledigt (Teil 1)* **Japandi, Skandinavisch, Minimalismus** – hell, ruhig, passt zu Linas Haus; viele Teile wiederverwendbar
    (Daybed/Bank, Lattenregal, Papier-Pendelleuchte, Wollteppich, Kalkputz-Wand, helle Eiche).
 2. **Dark Academia, Art déco, Industrial** – starker Bezug zu Thalia, Jens und Lars
    (Bücherwand, Sekretär, Chesterfield, Fächer-Sessel, Messing-Stehlampe, Fabrikleuchte, Stahlregal, Ledersofa).

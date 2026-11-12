@@ -7,17 +7,23 @@ const SEASONS: Season[] = ['fruehling', 'sommer', 'herbst', 'winter'];
 const ALL_FLAGS = { olafBegruesst: true, oliBegruesst: true, jensBegruesst: true, larsBegruesst: true, thaliaBegruesst: true };
 const ctx = (season: Season, flags: Record<string, boolean> = {}): CatalogContext => ({ season, flags });
 
+/** Linien, die es vor der Katalog-Überarbeitung gab – nur deren Stücke vergleicht „nichts wegnehmen“ */
+const OLD_LINES = new Set(['japanisch', 'basis', 'cottage', 'retro', 'modern', 'midcentury', 'handgemacht', 'garten', 'kunst', 'winter', 'lieblinge', 'bistro']);
+
 /** So hat der alte Katalog entschieden, was zu sehen ist – Vergleich für „nichts wegnehmen“ */
 function oldCatalogIds(season: Season, jens: boolean): string[] {
-  const furn = FURNITURE.filter((f) => !f.crafted && !f.gift && !f.retired && (!f.seasonal || season === 'winter') && (!f.inSeason || f.inSeason === season) && (f.style !== 'bistro' || jens));
-  const surf = [...WALLPAPERS, ...FLOORS].filter((s) => s.style !== 'bistro' || jens);
+  const furn = FURNITURE.filter((f) => OLD_LINES.has(f.style) && !f.crafted && !f.gift && !f.retired && (!f.seasonal || season === 'winter') && (!f.inSeason || f.inSeason === season) && (f.style !== 'bistro' || jens));
+  const surf = [...WALLPAPERS, ...FLOORS].filter((s) => OLD_LINES.has(s.style) && (s.style !== 'bistro' || jens));
   return [...furn, ...surf].map((x) => x.id).sort();
 }
+
+const oldIds = new Set([...FURNITURE, ...WALLPAPERS, ...FLOORS].filter((x) => OLD_LINES.has(x.style)).map((x) => x.id));
 
 describe('Katalog: nichts verschwindet', () => {
   for (const season of SEASONS) {
     it(`${season}, ganz am Anfang: genau das bisherige Sortiment`, () => {
-      expect(catalogEntries(ctx(season)).map((e) => e.id).sort()).toEqual(oldCatalogIds(season, false));
+      const old = catalogEntries(ctx(season)).filter((e) => oldIds.has(e.id));
+      expect(old.map((e) => e.id).sort()).toEqual(oldCatalogIds(season, false));
     });
     it(`${season}, alle eingezogen: alles Bisherige ist da`, () => {
       const ids = new Set(catalogEntries(ctx(season, ALL_FLAGS)).map((e) => e.id));
@@ -33,6 +39,17 @@ describe('Katalog: Freischaltung neuer Stile', () => {
     expect(designStyleUnlocked(ctx('sommer', { thaliaBegruesst: true }), 'darkacademia')).toBe(true);
     expect(designStyleUnlocked(ctx('sommer'), 'cyberpunk')).toBe(false);
     expect(designStyleUnlocked(ctx('sommer', { oliBegruesst: true }), 'cyberpunk')).toBe(true);
+  });
+
+  it('neue Stücke kommen mit ihrer Linie: Japandi sofort, Skandinavisch & Minimalismus mit Olaf & Christin', () => {
+    const start = new Set(catalogEntries(ctx('sommer')).map((e) => e.id));
+    expect(start.has('japandi-daybed')).toBe(true);
+    expect(start.has('tapete-kalkputz')).toBe(true);
+    expect(start.has('skandi-sofa')).toBe(false);
+    expect(start.has('kubus-sofa')).toBe(false);
+    expect(start.has('boden-mikrozement')).toBe(false);
+    const olaf = new Set(catalogEntries(ctx('sommer', { olafBegruesst: true })).map((e) => e.id));
+    for (const id of ['skandi-sofa', 'schaukelstuhl', 'kubus-sofa', 'plattformbett', 'boden-mikrozement']) expect(olaf.has(id), id).toBe(true);
   });
 
   it('der Stil-Filter zeigt einen Stil erst, wenn er frei ist', () => {
@@ -51,7 +68,7 @@ describe('Katalog: Filter Stil × Kategorie × Typ', () => {
 
   it('„alle Lampen im Stil Japandi“', () => {
     const f = effectiveFilter(entries, { category: 'moebel', type: 'lampen', style: 'japandi' });
-    expect(filterEntries(entries, f).map((e) => e.id)).toEqual(['andon']);
+    expect(filterEntries(entries, f).map((e) => e.id)).toEqual(['andon', 'papierleuchte']);
   });
 
   it('„alle Mid-Century-Möbel“ – nur Treffer mit diesem Stil', () => {

@@ -2781,6 +2781,178 @@ export function makeFurniture(itemId: string, links: FenceLinks = { n: false, e:
       for (const [x, y, z] of [[-0.04, 0.2, 0.03], [0.05, 0.18, -0.03], [0.01, 0.23, 0.05], [-0.06, 0.15, -0.05]] as const) g.add(s(0.008, 0.008, 0.008, '#ff8fb1', x, y, z));
       break;
     }
+    // ---------------------------------------------------------------- Japandi
+    case 'japandi-daybed': {
+      const oak = '#d9b98c';
+      g.add(b(1.86, 0.12, 0.84, oak, 0, 0.14, 0));
+      for (const [x, z] of [[-0.85, -0.35], [0.85, -0.35], [-0.85, 0.35], [0.85, 0.35]]) g.add(b(0.08, 0.1, 0.08, darken(oak, 0.1), x, 0.04, z));
+      g.add(b(1.78, 0.14, 0.76, col, 0, 0.27, 0.02));
+      g.add(b(1.86, 0.3, 0.08, oak, 0, 0.35, -0.39));
+      for (const [x, rc] of [[-0.55, lighten(col, 0.12)], [0.35, darken(col, 0.12)]] as const) g.add(b(0.4, 0.26, 0.12, rc, x, 0.46, -0.28).rotateZ(x * 0.12));
+      g.add(b(0.5, 0.03, 0.7, darken(col, 0.18), 0.6, 0.355, 0.04));
+      seatY = 0.36;
+      break;
+    }
+    case 'lattenregal': {
+      g.add(b(1.84, 0.04, 0.44, col, 0, 0.48, 0));
+      g.add(b(1.8, 0.34, 0.4, darken(col, 0.05), 0, 0.29, 0));
+      for (let i = 0; i < 17; i++) g.add(b(0.06, 0.32, 0.012, lighten(col, 0.06), -0.84 + i * 0.105, 0.29, 0.205));
+      for (const x of [-0.82, 0.82]) for (const z of [-0.16, 0.16]) g.add(b(0.05, 0.12, 0.05, darken(col, 0.2), x, 0.06, z));
+      g.add(s(0.07, 0.1, 0.07, '#e9e4dc', 0.45, 0.6, 0));
+      g.add(c(0.006, 0.28, '#7a6a52', 0.45, 0.78, 0).rotateZ(0.2));
+      break;
+    }
+    case 'papierleuchte': {
+      g.add(c(0.14, 0.03, '#b98a5e', 0, 0.015, 0));
+      g.add(c(0.015, 1.05, '#b98a5e', 0, 0.54, 0));
+      glow = glowMat('#fff3d8');
+      const ball = mesh(new THREE.SphereGeometry(0.26, 16, 12), glow);
+      ball.position.y = 1.28;
+      g.add(ball);
+      for (const y of [-0.12, 0, 0.12]) g.add(c(Math.sqrt(0.26 * 0.26 - y * y) + 0.003, 0.006, '#efe2c8', 0, 1.28 + y, 0));
+      lightAt = new THREE.Vector3(0, 1.2, 0);
+      break;
+    }
+    case 'linienbild': {
+      const z = WALL_Z;
+      g.add(b(0.5, 0.66, 0.03, '#d9b98c', 0, HANG, z));
+      g.add(b(0.44, 0.6, 0.01, '#f7f2e8', 0, HANG, z + 0.02));
+      const pts: THREE.Vector3[] = [];
+      for (let i = 0; i <= 12; i++) {
+        const t = i / 12;
+        pts.push(new THREE.Vector3(-0.14 + t * 0.26, HANG - 0.2 + t * 0.38 + Math.sin(t * Math.PI * 2) * 0.05, z + 0.03));
+      }
+      g.add(mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts), 24, 0.012, 5, false), toon('#2a2a30')));
+      g.add(s(0.025, 0.025, 0.006, '#c94a3a', 0.13, HANG - 0.22, z + 0.028));
+      break;
+    }
+    // ---------------------------------------------------------------- Skandinavisch
+    case 'skandi-sofa': {
+      const oak = '#d9b98c';
+      for (const [x, z] of [[-0.8, -0.28], [0.8, -0.28], [-0.8, 0.28], [0.8, 0.28]]) {
+        const leg = c(0.025, 0.2, oak, x, 0.1, z);
+        leg.rotation.z = x > 0 ? -0.2 : 0.2;
+        g.add(leg);
+      }
+      g.add(b(1.84, 0.16, 0.72, col, 0, 0.28, 0));
+      for (const x of [-0.42, 0.42]) g.add(b(0.82, 0.1, 0.62, lighten(col, 0.08), x, 0.41, 0.04));
+      g.add(b(1.84, 0.4, 0.16, darken(col, 0.06), 0, 0.55, -0.28));
+      for (const x of [-0.86, 0.86]) g.add(b(0.12, 0.26, 0.72, darken(col, 0.04), x, 0.44, 0));
+      g.add(b(0.34, 0.3, 0.1, '#f2ede3', -0.5, 0.6, -0.15).rotateZ(0.15));
+      for (let i = 0; i < 4; i++) g.add(b(0.34, 0.02, 0.102, '#e3dccd', -0.5, 0.5 + i * 0.07, -0.15).rotateZ(0.15));
+      seatY = 0.44;
+      break;
+    }
+    case 'schaukelstuhl': {
+      for (const x of [-0.24, 0.24]) {
+        // Kufe: flacher Bogen, berührt den Boden in der Mitte
+        const pts: THREE.Vector3[] = [];
+        for (let i = 0; i <= 10; i++) {
+          const z = -0.4 + i * 0.08;
+          pts.push(new THREE.Vector3(x, 0.025 + z * z * 0.5, z));
+        }
+        g.add(mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts), 16, 0.022, 6, false), toon(col)));
+        for (const z of [-0.18, 0.2]) g.add(c(0.02, 0.32, col, x, 0.2, z));
+        g.add(b(0.04, 0.04, 0.42, col, x, 0.56, 0.02));
+      }
+      g.add(b(0.52, 0.05, 0.46, col, 0, 0.38, 0));
+      const back = b(0.5, 0.56, 0.04, col, 0, 0.68, -0.24);
+      back.rotation.x = -0.18;
+      g.add(back);
+      g.add(b(0.44, 0.04, 0.4, '#f7f5ef', 0, 0.42, 0.02));
+      const fell = b(0.4, 0.42, 0.04, '#f7f5ef', 0, 0.66, -0.2);
+      fell.rotation.x = -0.18;
+      g.add(fell);
+      seatY = 0.42;
+      break;
+    }
+    case 'skandi-esstisch': {
+      const oak = '#d9b98c';
+      g.add(c(0.44, 0.05, oak, 0, 0.7, 0));
+      for (const a of [0.785, 2.356, 3.927, 5.498]) {
+        const leg = c(0.025, 0.68, darken(oak, 0.06), Math.cos(a) * 0.25, 0.34, Math.sin(a) * 0.25);
+        leg.rotation.set(Math.sin(a) * 0.12, 0, -Math.cos(a) * 0.12);
+        g.add(leg);
+      }
+      break;
+    }
+    case 'skandi-stuhl': {
+      for (const [x, z] of [[-0.18, -0.16], [0.18, -0.16], [-0.18, 0.16], [0.18, 0.16]]) {
+        const leg = c(0.02, 0.44, col, x, 0.22, z);
+        leg.rotation.set(z > 0 ? 0.08 : -0.08, 0, x > 0 ? -0.08 : 0.08);
+        g.add(leg);
+      }
+      g.add(b(0.42, 0.04, 0.4, col, 0, 0.45, 0));
+      g.add(b(0.42, 0.13, 0.03, col, 0, 0.78, -0.2));
+      for (const x of [-0.18, 0.18]) g.add(c(0.016, 0.34, col, x, 0.62, -0.19));
+      seatY = 0.47;
+      break;
+    }
+    case 'rautenteppich': {
+      g.add(b(1.86, 0.02, 1.86, '#f2ede3', 0, 0.01, 0));
+      for (let i = -2; i <= 2; i++) {
+        for (let j = -2; j <= 2; j++) {
+          if ((i + j) % 2 !== 0) continue;
+          // Raute aus vier Strichen um den Mittelpunkt
+          for (const [dx, dz, r] of [[0.06, 0.06, Math.PI / 4], [-0.06, -0.06, Math.PI / 4], [0.06, -0.06, -Math.PI / 4], [-0.06, 0.06, -Math.PI / 4]] as const) {
+            const d = b(0.17, 0.022, 0.022, '#2a2a30', i * 0.34 + dx, 0.011, j * 0.34 + dz);
+            d.rotation.y = r;
+            g.add(d);
+          }
+        }
+      }
+      for (let i = 0; i < 18; i++) for (const z of [-0.95, 0.95]) g.add(b(0.02, 0.008, 0.06, '#e3dccd', -0.85 + i * 0.1, 0.006, z));
+      break;
+    }
+    case 'schaffell': {
+      const fell = s(0.42, 0.03, 0.34, '#f7f5ef', 0, 0.02, 0);
+      g.add(fell);
+      for (let i = 0; i < 10; i++) {
+        const a = (i / 10) * Math.PI * 2;
+        g.add(s(0.08, 0.03, 0.06, '#f2efe6', Math.cos(a) * 0.38, 0.02, Math.sin(a) * 0.3));
+      }
+      break;
+    }
+    // ---------------------------------------------------------------- Minimalismus
+    case 'kubus-sofa': {
+      g.add(b(1.86, 0.34, 0.8, col, 0, 0.17, 0));
+      g.add(b(1.86, 0.36, 0.18, darken(col, 0.05), 0, 0.52, -0.31));
+      for (const x of [-0.84, 0.84]) g.add(b(0.18, 0.2, 0.8, darken(col, 0.03), x, 0.44, 0));
+      g.add(b(1.5, 0.004, 0.6, darken(col, 0.08), 0, 0.342, 0.08));
+      seatY = 0.36;
+      break;
+    }
+    case 'plattformbett': {
+      g.add(b(1.7, 0.08, 1.7, '#2f2f35', 0, 0.06, 0));
+      g.add(b(1.86, 0.08, 1.86, '#d9b98c', 0, 0.14, 0));
+      g.add(b(1.7, 0.16, 1.7, '#fbfaf6', 0, 0.26, 0.04));
+      g.add(b(1.72, 0.06, 1.2, col, 0, 0.37, 0.28));
+      for (const x of [-0.42, 0.42]) g.add(b(0.66, 0.1, 0.26, lighten(col, 0.12), x, 0.4, -0.62));
+      g.add(b(1.86, 0.5, 0.06, '#d9b98c', 0, 0.42, -0.9));
+      seatY = 0.36;
+      break;
+    }
+    case 'linienleuchte': {
+      g.add(b(0.3, 0.03, 0.18, '#2a2a30', 0, 0.015, 0));
+      g.add(b(0.03, 1.4, 0.03, '#2a2a30', -0.06, 0.73, 0));
+      glow = glowMat('#fff6e0');
+      const bar = mesh(new THREE.BoxGeometry(0.035, 1.25, 0.035), glow);
+      bar.position.set(0.0, 0.72, 0);
+      g.add(bar);
+      lightAt = new THREE.Vector3(0, 1.0, 0.2);
+      break;
+    }
+    case 'plattentisch': {
+      g.add(b(0.8, 0.26, 0.6, col, 0, 0.15, 0));
+      g.add(b(0.86, 0.04, 0.66, lighten(col, 0.05), 0, 0.3, 0));
+      g.add(b(0.72, 0.02, 0.52, darken(col, 0.25), 0, 0.01, 0));
+      break;
+    }
+    case 'wollteppich': {
+      g.add(b(1.86, 0.02, 1.86, darken(col, 0.08), 0, 0.01, 0));
+      g.add(b(1.72, 0.022, 1.72, col, 0, 0.011, 0));
+      break;
+    }
     default:
       g.add(b(0.6, 0.6, 0.6, col, 0, 0.3, 0));
   }

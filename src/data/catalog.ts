@@ -265,6 +265,24 @@ const FURNITURE_META: Record<string, Row> = {
   etagere: ['moebel', 'deko', ['bistro']],
   eiffelmodell: ['moebel', 'deko', ['bistro']],
   bistrolaeufer: ['moebel', 'teppiche', ['bistro']],
+  // Japandi
+  'japandi-daybed': ['moebel', 'sofas', ['japandi']],
+  lattenregal: ['moebel', 'regale', ['japandi', 'minimalismus']],
+  papierleuchte: ['moebel', 'lampen', ['japandi', 'skandinavisch']],
+  linienbild: ['moebel', 'wanddeko', ['japandi', 'minimalismus']],
+  // Skandinavisch
+  'skandi-sofa': ['moebel', 'sofas', ['skandinavisch']],
+  schaukelstuhl: ['moebel', 'sofas', ['skandinavisch']],
+  'skandi-esstisch': ['moebel', 'tische', ['skandinavisch', 'japandi']],
+  'skandi-stuhl': ['moebel', 'stuehle', ['skandinavisch', 'japandi']],
+  rautenteppich: ['moebel', 'teppiche', ['skandinavisch']],
+  schaffell: ['moebel', 'teppiche', ['skandinavisch']],
+  // Minimalismus
+  'kubus-sofa': ['moebel', 'sofas', ['minimalismus']],
+  plattformbett: ['moebel', 'betten', ['minimalismus', 'japandi']],
+  linienleuchte: ['moebel', 'lampen', ['minimalismus']],
+  plattentisch: ['moebel', 'tische', ['minimalismus']],
+  wollteppich: ['moebel', 'teppiche', ['minimalismus', 'japandi', 'skandinavisch']],
   // Garten
   'zaun-weiss': ['garten', 'zaun'],
   gartentor: ['garten', 'zaun'],
@@ -306,6 +324,9 @@ const TASSEN_IDS = new Set(TASSEN.map((t) => t.id));
 /** Stile der Wände und Böden (alle anderen: ohne Stil) */
 const SURFACE_STYLES: Record<string, DesignStyle[]> = {
   'tapete-shoji': ['japanisch', 'japandi'],
+  'tapete-kalkputz': ['japandi', 'minimalismus'],
+  'tapete-holzlatten': ['japandi', 'skandinavisch'],
+  'boden-mikrozement': ['minimalismus', 'modern'],
   'tapete-kirschblueten': ['japanisch'],
   'tapete-wellen': ['japanisch'],
   'tapete-bluemchen': ['cottage'],
@@ -361,7 +382,7 @@ const SURFACE_STYLES: Record<string, DesignStyle[]> = {
   'boden-bistro': ['bistro'],
 };
 
-const WALL_MATERIAL = new Set(['kacheln', 'backstein', 'glas', 'vertaefelung', 'shoji']);
+const WALL_MATERIAL = new Set(['kacheln', 'backstein', 'glas', 'vertaefelung', 'shoji', 'putz', 'latten']);
 const FLOOR_TYPE: Record<string, string> = {
   dielen: 'dielen',
   schiff: 'dielen',
@@ -372,6 +393,7 @@ const FLOOR_TYPE: Record<string, string> = {
   schach: 'fliesen',
   terrakotta: 'fliesen',
   beton: 'fliesen',
+  putz: 'fliesen',
   zickzack: 'fliesen',
   tatami: 'weich',
   teppich: 'weich',
