@@ -271,7 +271,7 @@ dann mit dem Einzug.
 
 1. ✅ *erledigt (Teil 1)* **Japandi, Skandinavisch, Minimalismus** – hell, ruhig, passt zu Linas Haus; viele Teile wiederverwendbar
    (Daybed/Bank, Lattenregal, Papier-Pendelleuchte, Wollteppich, Kalkputz-Wand, helle Eiche).
-2. **Dark Academia, Art déco, Industrial** – starker Bezug zu Thalia, Jens und Lars
+2. ✅ *erledigt (Teil 2)* **Dark Academia, Art déco, Industrial** – starker Bezug zu Thalia, Jens und Lars
    (Bücherwand, Sekretär, Chesterfield, Fächer-Sessel, Messing-Stehlampe, Fabrikleuchte, Stahlregal, Ledersofa).
 3. **Space Age, Cyberpunk** – Oli (Kugelsessel, Tulpentisch, Lavalampe, Gaming-Stuhl, Neonröhren, Monitorwand).
 4. **Brutalismus, Memphis** – mutig, eher Akzente (Betonbank, Blockregal, Squiggle-Teppich, Totem-Regal, Memphis-Tapete).

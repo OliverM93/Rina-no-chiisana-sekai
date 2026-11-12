@@ -276,6 +276,22 @@ export const FURNITURE: readonly FurnitureDef[] = [
   { id: 'linienleuchte', name: 'Linienleuchte', style: 'minimalismus', light: true, price: 600, w: 1, d: 1, description: 'Ein schmaler Leuchtstab auf einem flachen Sockel. Ein Strich Licht im Raum.' },
   { id: 'plattentisch', name: 'Plattentisch', style: 'minimalismus', surface: true, surfaceHeight: 0.3, price: 650, w: 1, d: 1, description: 'Ein niedriger Block mit glatter Platte. Steht einfach da und ist schön.', variants: { weiss: '#efedea', schwarz: '#2f2f35', eiche: '#d9b98c' }, baseVariant: 'weiss' },
   { id: 'wollteppich', name: 'Wollteppich', style: 'minimalismus', rug: true, price: 600, w: 2, d: 2, description: 'Ein schlichter Teppich ohne Muster, nur mit feinem Rand. Ruhe für die Füße.', variants: { creme: '#efe8dc', grau: '#bdbdc2', sand: '#d9c8ad', anthrazit: '#56565e' }, baseVariant: 'creme' },
+  // ---- Dark Academia: Bücher, dunkles Holz, grünes Lampenlicht (kommt mit Thalia) ----
+  { id: 'buecherwand', name: 'Bücherwand', style: 'darkacademia', surface: true, surfaceHeight: 1.62, price: 1600, w: 2, d: 1, description: 'Ein hohes Regal aus dunklem Holz, bis oben voll mit Büchern, einem Totenkopf aus Gips und einer Sanduhr. Thalia: „Endlich ein Zuhause für meine Atlanten.“' },
+  { id: 'sekretaer', name: 'Sekretär', style: 'darkacademia', surface: true, surfaceHeight: 0.74, price: 1300, w: 1, d: 1, description: 'Ein kleiner Schreibtisch mit Aufsatz, Federhalter und Tintenfass. Perfekt für Briefe an Pater Matteo.' },
+  { id: 'chesterfield', name: 'Chesterfield-Sofa', style: 'darkacademia', sit: 'sitzen', price: 2300, w: 2, d: 1, description: 'Ein Sofa aus weichem Leder mit vielen Knöpfen und gerollten Lehnen. Riecht nach Bibliothek.', variants: { flaschengruen: '#2f5a44', cognac: '#a8643a', bordeaux: '#7a2f38' }, baseVariant: 'flaschengruen' },
+  { id: 'weltkarte', name: 'Alte Weltkarte', style: 'darkacademia', wall: true, price: 750, w: 2, d: 1, description: 'Eine vergilbte Weltkarte mit Kompassrose und Seeungeheuer. Thalia hat drei Fehler gefunden und sie trotzdem lieb.' },
+  // ---- Art déco: Gold, Samt, Fächer (kommt mit Jens) ----
+  { id: 'muschelsessel', name: 'Muschelsessel', style: 'artdeco', sit: 'sitzen', price: 1500, w: 1, d: 1, description: 'Ein Samtsessel mit Rückenlehne wie eine aufgeklappte Muschel, auf goldenen Füßchen. Jens: „Endlich ein Stuhl, der mich versteht.“', variants: { smaragd: '#2f7a5e', rosa: '#e8a0b0', senf: '#d9a441', nachtblau: '#34406b' }, baseVariant: 'smaragd' },
+  { id: 'etagenlampe', name: 'Etagen-Stehlampe', style: 'artdeco', light: true, price: 950, w: 1, d: 1, description: 'Eine Messinglampe mit gestuftem Glasschirm, wie aus einem alten Hotel. Leuchtet abends golden.' },
+  { id: 'barschrank', name: 'Barschrank', style: 'artdeco', surface: true, surfaceHeight: 1.0, price: 1700, w: 1, d: 1, description: 'Ein schwarzer Lackschrank mit goldenen Fächerbeschlägen. Innen: Gläser, ein Shaker – und Omas Eierlikör.' },
+  { id: 'faecherteppich', name: 'Fächerteppich', style: 'artdeco', rug: true, price: 1100, w: 2, d: 2, description: 'Ein tiefgrüner Teppich mit goldenen Fächern. Man möchte darauf Charleston tanzen.' },
+  // ---- Industrial: Backstein, Stahl, Fabriklampen (kommt mit Lars) ----
+  { id: 'ledersofa', name: 'Vintage-Ledersofa', style: 'industrial', sit: 'sitzen', price: 2200, w: 2, d: 1, description: 'Ein tiefes Sofa aus abgewetztem Leder auf schwarzen Stahlkufen. Je älter, desto schöner. Lars: „Wie ich.“', variants: { cognac: '#a8643a', schwarz: '#2f2f35', olive: '#6b6a3a' }, baseVariant: 'cognac' },
+  { id: 'stahlregal', name: 'Rohrregal', style: 'industrial', surface: true, surfaceHeight: 1.5, price: 1100, w: 2, d: 1, description: 'Dicke Holzbretter zwischen schwarzen Wasserrohren. Hält alles – auch Lars\' Bierkrug-Sammlung.' },
+  { id: 'fabrikleuchte', name: 'Fabrik-Stehleuchte', style: 'industrial', light: true, price: 800, w: 1, d: 1, description: 'Eine Stehlampe mit Emailleschirm auf einem Stativ. Kam früher in eine Werkhalle, jetzt in Linas Zimmer.' },
+  { id: 'vintageteppich', name: 'Verwaschener Teppich', style: 'industrial', rug: true, price: 900, w: 2, d: 2, description: 'Ein alter Teppich in ausgeblichenem Blau und Rost. Die Farben haben Geschichten zu erzählen.' },
+  { id: 'bahnhofsuhr', name: 'Bahnhofsuhr', style: 'industrial', wall: true, price: 650, w: 1, d: 1, description: 'Eine große Uhr mit schwarzem Metallrand und kräftigen Zeigern. Der Zug nach Nirgendwo fährt pünktlich.' },
   { id: 'topfpflanze', name: 'Monstera', style: 'basis', price: 300, w: 1, d: 1, description: 'Große, grüne Blätter mit Löchern. Sehr fotogen.' },
 ];
 
@@ -333,6 +349,8 @@ export const WALLPAPERS: readonly SurfaceDef[] = [
   { id: 'tapete-uni-nachtblau', name: 'Einfarbig Nachtblau', style: 'modern', price: 450, kind: 'tapete', pattern: 'flach', color: '#34406b', accent: '#34406b', description: 'Wie der Himmel um Mitternacht.' },
   { id: 'tapete-kalkputz', name: 'Lehmputz', style: 'japandi', price: 650, kind: 'tapete', pattern: 'putz', color: '#e6dccb', accent: '#cdbfa8', description: 'Eine Wand wie von Hand verputzt – warm, matt und ganz leicht wolkig.' },
   { id: 'tapete-holzlatten', name: 'Holzlatten-Wand', style: 'japandi', price: 950, kind: 'tapete', pattern: 'latten', color: '#d9b98c', accent: '#a9875e', description: 'Schmale Eichenlatten mit dunklen Fugen. Riecht ein bisschen nach Sauna im Wald.' },
+  { id: 'tapete-bibliothek', name: 'Dunkle Holzvertäfelung', style: 'darkacademia', price: 1000, kind: 'tapete', pattern: 'vertaefelung', color: '#5a3a2a', accent: '#4a2e20', description: 'Halbhohe Paneele aus dunklem Holz – wie im Lesesaal einer alten Universität.' },
+  { id: 'tapete-faecher', name: 'Fächer-Tapete', style: 'artdeco', price: 900, kind: 'tapete', pattern: 'faecher', color: '#1f3a33', accent: '#d9b45a', description: 'Goldene Fächer auf dunklem Smaragd. Ein bisschen Zwanziger-Jahre-Glamour.' },
   { id: 'tapete-uni-schwarz', name: 'Einfarbig Schwarz', style: 'modern', price: 450, kind: 'tapete', pattern: 'flach', color: '#2a2a30', accent: '#2a2a30', description: 'Für Lina natürlich auch an der Wand. Sehr gemütlich bei Kerzenlicht.' },
 ];
 
@@ -432,7 +450,7 @@ export const FURNITURE_ITEMS: readonly FurnitureItem[] = FURNITURE.flatMap((def)
 export const FURNITURE_BY_ITEM: Readonly<Record<string, FurnitureItem>> = Object.fromEntries(FURNITURE_ITEMS.map((f) => [f.itemId, f]));
 export const SURFACE_BY_ID: Readonly<Record<string, SurfaceDef>> = Object.fromEntries([...WALLPAPERS, ...FLOORS].map((s) => [s.id, s]));
 
-export const VARIANT_LABELS: Record<string, string> = { grau: 'Grau', weiss: 'Weiß', mint: 'Mint', gelb: 'Gelb', rosa: 'Rosa', indigo: 'Indigo', creme: 'Creme', rot: 'Rot', blau: 'Blau', gruen: 'Grün', senf: 'Senfgelb', salbei: 'Salbei', rost: 'Rost', petrol: 'Petrol', sand: 'Sand', schwarz: 'Schwarz', cognac: 'Cognac', geflecht: 'Wiener Geflecht', himmel: 'Himmelblau', flieder: 'Flieder', messing: 'Messing', pflaume: 'Pflaume', honig: 'Honig', nuss: 'Nuss', holz: 'Holz', leinen: 'Leinen', anthrazit: 'Anthrazit', eiche: 'Eiche', hellgrau: 'Hellgrau', taubenblau: 'Taubenblau' };
+export const VARIANT_LABELS: Record<string, string> = { grau: 'Grau', weiss: 'Weiß', mint: 'Mint', gelb: 'Gelb', rosa: 'Rosa', indigo: 'Indigo', creme: 'Creme', rot: 'Rot', blau: 'Blau', gruen: 'Grün', senf: 'Senfgelb', salbei: 'Salbei', rost: 'Rost', petrol: 'Petrol', sand: 'Sand', schwarz: 'Schwarz', cognac: 'Cognac', geflecht: 'Wiener Geflecht', himmel: 'Himmelblau', flieder: 'Flieder', messing: 'Messing', pflaume: 'Pflaume', honig: 'Honig', nuss: 'Nuss', holz: 'Holz', leinen: 'Leinen', anthrazit: 'Anthrazit', eiche: 'Eiche', hellgrau: 'Hellgrau', taubenblau: 'Taubenblau', flaschengruen: 'Flaschengrün', bordeaux: 'Bordeaux', smaragd: 'Smaragd', nachtblau: 'Nachtblau', olive: 'Oliv' };
 
 
 /** Raum-Infos für die Raumlogik (`core/room.ts`) */

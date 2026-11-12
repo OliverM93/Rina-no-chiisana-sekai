@@ -360,6 +360,31 @@ export function drawPattern(ctx: CanvasRenderingContext2D, def: SurfaceDef, s: n
       ctx.globalAlpha = 1;
       break;
     }
+    case 'faecher': {
+      // Art déco: Reihen goldener Fächer (Halbkreise mit Strahlen), versetzt
+      const r = s / 8;
+      ctx.strokeStyle = accent;
+      ctx.lineWidth = Math.max(1, s / 160);
+      for (let row = 0; row <= 4; row++) {
+        for (let col = -1; col <= 4; col++) {
+          const cx = col * r * 2 + (row % 2 ? r : 0) + r;
+          const cy = row * r;
+          for (const rr of [r, r * 0.7, r * 0.4]) {
+            ctx.beginPath();
+            ctx.arc(cx, cy, rr, Math.PI, 0);
+            ctx.stroke();
+          }
+          for (let k = 1; k < 6; k++) {
+            const a = Math.PI + (k / 6) * Math.PI;
+            ctx.beginPath();
+            ctx.moveTo(cx, cy);
+            ctx.lineTo(cx + Math.cos(a) * r, cy + Math.sin(a) * r);
+            ctx.stroke();
+          }
+        }
+      }
+      break;
+    }
     case 'latten': {
       // schmale senkrechte Holzlatten mit dunklen Fugen
       const n = 10;
