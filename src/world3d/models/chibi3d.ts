@@ -425,11 +425,11 @@ function addHair(head: THREE.Group, a: Appearance, R: number) {
     }
     case 'zerzaust': {
       topCap(1.1, 1.06);
-      backCap(1.85, 1.05);
+      backCap(1.3, 1.05); // endet über den Ohren – die Ohren bleiben frei wie bei den anderen
       head.add(shell(R * 1.07, col, FRONT - 1.0, 2.0, 0.42, 0.4));
-      // abstehende, wuschelige Strähnen
+      // abstehende, wuschelige Strähnen (nur oben, nicht rund um die Ohren)
       for (let i = 0; i < 40; i++) {
-        const theta = 0.15 + rnd() * 1.0;
+        const theta = 0.15 + rnd() * 0.85;
         const phi = rnd() * Math.PI * 2;
         if (theta > 0.8 && fromFront(phi) < openFace) continue;
         const p = onSphere(R * 1.02, theta, phi);
