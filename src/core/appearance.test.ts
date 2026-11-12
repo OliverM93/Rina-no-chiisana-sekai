@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { LOOKS } from '../data/npcs/looks';
-import { DEFAULT_LINA, STREETWEAR_ROTATION, dressFor, normalizeAppearance, outfitFor, shoesFor } from './appearance';
+import { DEFAULT_LINA, HAIR_STYLES, STREETWEAR_ROTATION, dressFor, normalizeAppearance, outfitFor, shoesFor } from './appearance';
 import { OLI_WARDROBE } from '../data/npcs/looks';
 
 describe('Aussehen', () => {
@@ -96,5 +96,12 @@ describe('Aussehen', () => {
     for (const o of ['hawaii', 'sport', 'radierkopf', 'bandshirt', 'polo', 'jacke'] as const) {
       expect(normalizeAppearance({ ...DEFAULT_LINA, outfit: o }).outfit).toBe(o);
     }
+  });
+});
+
+describe('Frisur „Fade“', () => {
+  it('gibt es im Editor und bleibt beim Normalisieren erhalten', () => {
+    expect(HAIR_STYLES.some((h) => h.id === 'fade')).toBe(true);
+    expect(normalizeAppearance({ hairStyle: 'fade' }).hairStyle).toBe('fade');
   });
 });
