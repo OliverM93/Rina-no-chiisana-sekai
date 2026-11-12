@@ -48,7 +48,7 @@ Verkaufskiste gegen Sternchen ⭐ tauschen und Briefe im Briefkasten lesen.
 Möbel, Pflanzen, Tapeten, Böden, Lieblingsthemen und Gartensachen in vielen **Einrichtungsstilen** (Japanisch, Japandi,
 Skandinavisch, Mid-Century-Modern, Cottagecore, Art déco, Dark Academia …) kosten Sternchen und landen in der Tasche.
 Im Katalog filtert man nach **Kategorie**, **Typ** und **Stil** – ganz mit der Tastatur: **↑/↓** wechselt die Zeile,
-**←/→** wählt, **Bild↑/Bild↓** blättert die Kategorien, **Enter** kauft, **Esc** schließt. Mit **🛋️ Einrichten** (G) stellt Lina sie auf: anklicken zum
+**←/→** wählt, **Bild↑/Bild↓** blättert die Kategorien, **Leertaste** zeigt eine lange Beschreibung ganz, **Enter** kauft, **Esc** schließt. Mit **🛋️ Einrichten** (G) stellt Lina sie auf: anklicken zum
 Hochheben, **R** zum Drehen, Klick zum Abstellen. Im Einrichten gibt es den **🛒 Katalog** gleich dabei (Gekauftes hängt
 an der Maus), **C** = noch eins, **V** oder **1–9** = Farbe wechseln, **Strg+Z** = rückgängig. Deko passt auf Tische und Kommoden, Teppiche
 liegen unter Möbeln. Auf Kissen und Futon kann sie sich setzen, Laternen leuchten abends (und lassen sich
