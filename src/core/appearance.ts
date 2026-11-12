@@ -8,7 +8,7 @@
 import { palette } from '../style/palette';
 import type { Season } from './time';
 
-export type HairStyle = 'locken' | 'schulterlang' | 'bob' | 'zopf' | 'dutt' | 'kurz' | 'wuschel' | 'zerzaust' | 'kurzgeschoren' | 'glatt';
+export type HairStyle = 'locken' | 'schulterlang' | 'bob' | 'zopf' | 'dutt' | 'kurz' | 'wuschel' | 'zerzaust' | 'kurzgeschoren' | 'glatt' | 'fade';
 export type Outfit = 'kleid' | 'pulli' | 'latzhose' | 'hemd' | 'strickjacke' | 'mantel' | 'weste' | 'streifenhemd' | 'hoodie' | 'troyer' | 'sweatshirt' | 'shorts' | 'sommer' | 'fleece' | 'hawaii' | 'sport' | 'radierkopf' | 'bandshirt' | 'polo' | 'jacke' | 'saison';
 export type Beard = 'keiner' | 'kurz' | 'voll' | 'schnurrbart';
 export type Smile = 'laecheln' | 'grinsen' | 'zahnluecke';
@@ -64,6 +64,7 @@ export const HAIR_STYLES: Option<HairStyle>[] = [
   { id: 'zerzaust', label: 'Zerzaust' },
   { id: 'kurzgeschoren', label: 'Kurz geschoren' },
   { id: 'glatt', label: 'Glatt mit Mittelscheitel' },
+  { id: 'fade', label: 'Fade (kurze Seiten, Deckhaar oben)' },
 ];
 
 export const OUTFITS: Option<Outfit>[] = [
