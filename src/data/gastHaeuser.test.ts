@@ -54,4 +54,26 @@ describe('Häuser der Bewohner von innen', () => {
       }
     }
   });
+
+  it('Stühle und Sessel stehen an einem Tisch und schauen ihn an (kein Sessel allein im Raum)', () => {
+    const chairs = new Set(['bistrostuhl', 'bluemchensessel', 'ohrensessel', 'lederloungesessel', 'freischwinger']);
+    const front: Record<number, [number, number]> = { 0: [0, 1], 1: [-1, 0], 2: [0, -1], 3: [1, 0] };
+    for (const [id, h] of Object.entries(GUEST_HOUSES)) {
+      const tables = new Set<string>();
+      for (const it of h.items) {
+        const f = FURNITURE_BY_ITEM[guestItemId(it.id, it.variant)].def;
+        if (!(f.surface || it.id === 'schreibtisch-pc') || f.wall || f.rug || it.on || f.id.includes('regal') || f.id === 'teaksideboard') continue;
+        const rot = it.rot ?? 0;
+        const w = rot % 2 ? f.d : f.w;
+        const d = rot % 2 ? f.w : f.d;
+        for (let dx = 0; dx < w; dx++) for (let dy = 0; dy < d; dy++) tables.add(`${it.x + dx},${it.y + dy}`);
+      }
+      for (const it of h.items) {
+        if (!chairs.has(it.id)) continue;
+        const [fx, fy] = front[it.rot ?? 0];
+        const seesTable = [1, 2].some((k) => tables.has(`${it.x + fx * k},${it.y + fy * k}`));
+        expect(seesTable, `${id}: ${it.id} (${it.x},${it.y}) schaut keinen Tisch an`).toBe(true);
+      }
+    }
+  });
 });

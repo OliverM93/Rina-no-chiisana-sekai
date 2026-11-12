@@ -385,7 +385,7 @@ function addHair(head: THREE.Group, a: Appearance, R: number) {
       break;
     }
     case 'glatt': {
-      // glatte Haare mit Mittelscheitel, hinter die Ohren gestrichen, fallen bis auf die Schultern
+      // glatte Haare mit Mittelscheitel, hinter die Ohren gestrichen, enden etwa auf Kinn-/Nackenhöhe
       topCap(1.0, 1.07);
       backCap(2.3, 1.065);
       // zwei Haarhälften vom Mittelscheitel aus, rahmen die Stirn ein
@@ -395,12 +395,12 @@ function addHair(head: THREE.Group, a: Appearance, R: number) {
       }
       // glatter Fall hinten (Ohren bleiben frei)
       const open = 1.75;
-      const fall = mesh(new THREE.CylinderGeometry(R * 1.03, R * 1.1, R * 0.95, 24, 1, true, open, Math.PI * 2 - open * 2), toon(col, { side: THREE.DoubleSide }));
-      fall.position.y = -R * 0.82;
+      const fall = mesh(new THREE.CylinderGeometry(R * 1.03, R * 1.1, R * 0.55, 24, 1, true, open, Math.PI * 2 - open * 2), toon(col, { side: THREE.DoubleSide }));
+      fall.position.y = -R * 0.6;
       head.add(fall);
-      // Strähnen hinter den Ohren, fallen auf die Schultern
+      // Strähnen hinter den Ohren, enden am Hals
       for (const s of [-1, 1]) {
-        const strand = part(capsule, col, R * 0.2, R * 0.42, R * 0.24, s * R * 0.88, -R * 0.78, -R * 0.42);
+        const strand = part(capsule, col, R * 0.2, R * 0.24, R * 0.24, s * R * 0.88, -R * 0.56, -R * 0.42);
         strand.rotation.z = s * 0.12;
         head.add(strand);
       }
