@@ -130,6 +130,7 @@ export const FURNITURE_HEIGHTS: Readonly<Record<string, number>> = {
   'weihnachtsstern': 0.49,
   'weihnachtsstrumpf': 1.14,
   'wimpelkette': 1.24,
+  'priesterkalender': 0.78,
   'witzkalender': 1.12,
   'wollkorb': 0.56,
   'wuerfelregal': 0.92,

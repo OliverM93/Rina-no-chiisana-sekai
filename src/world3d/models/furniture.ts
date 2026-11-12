@@ -1109,6 +1109,29 @@ export function makeFurniture(itemId: string, links: FenceLinks = { n: false, e:
       g.add(b(0.08, 0.02, 0.005, '#e6c59c', 0, 0.025, 0.062));
       break;
     }
+    case 'priesterkalender': {
+      // Wandkalender: roter Kopfbalken, Monatsfeld, darunter ein Padre im Halbporträt (schwarze Soutane, weißer Kragen)
+      const z = WALL_Z;
+      g.add(b(0.44, 0.62, 0.02, '#fffaf2', 0, HANG, z + 0.012));
+      g.add(b(0.44, 0.06, 0.03, '#8a1f2c', 0, HANG + 0.28, z + 0.02));
+      g.add(c(0.012, 0.01, '#c9cbd3', 0, HANG + 0.33, z + 0.02).rotateX(Math.PI / 2));
+      g.add(b(0.4, 0.4, 0.005, '#d9c9a8', 0, HANG + 0.04, z + 0.026)); // Foto: warmes Gemäuer
+      g.add(b(0.34, 0.2, 0.006, '#c9b48a', 0, HANG + 0.14, z + 0.03)); // Bogenfenster
+      g.add(c(0.06, 0.008, '#c9b48a', 0, HANG + 0.24, z + 0.03).rotateX(Math.PI / 2));
+      // Soutane (Schultern + Brust)
+      g.add(s(0.16, 0.12, 0.012, '#1f1d22', 0, HANG - 0.1, z + 0.036));
+      g.add(b(0.08, 0.1, 0.01, '#1f1d22', 0, HANG - 0.07, z + 0.04));
+      g.add(b(0.07, 0.025, 0.012, '#fbf7ee', 0, HANG - 0.025, z + 0.046)); // Kollar
+      // Kopf: Haut, dunkles gewelltes Haar, Lächeln
+      g.add(s(0.062, 0.072, 0.014, '#e8b88e', 0, HANG + 0.03, z + 0.042));
+      g.add(s(0.068, 0.04, 0.014, '#2a1d18', 0, HANG + 0.085, z + 0.046));
+      for (const dx of [-0.026, 0.026]) g.add(s(0.01, 0.012, 0.004, '#2a1d18', dx, HANG + 0.045, z + 0.058));
+      g.add(b(0.03, 0.006, 0.004, '#a8553e', 0, HANG + 0.0, z + 0.058));
+      // Datumsraster
+      g.add(b(0.36, 0.1, 0.005, '#f1ece0', 0, HANG - 0.22, z + 0.026));
+      for (let i = 0; i < 7; i++) for (let j = 0; j < 2; j++) g.add(b(0.03, 0.02, 0.004, i === 6 ? '#8a1f2c' : '#9a9aa4', -0.15 + i * 0.05, HANG - 0.2 - j * 0.04, z + 0.031));
+      break;
+    }
     case 'witzkalender': {
       const z = WALL_Z;
       g.add(b(0.34, 0.06, 0.03, '#e8484f', 0, HANG + 0.2, z + 0.02));

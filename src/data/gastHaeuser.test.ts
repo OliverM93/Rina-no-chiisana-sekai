@@ -12,7 +12,7 @@ describe('Häuser der Bewohner von innen', () => {
       expect(SURFACE_BY_ID[h.floor], `${id}: ${h.floor}`).toBeTruthy();
       expect(h.intro.length, id).toBeGreaterThanOrEqual(1);
       for (const it of h.items) {
-        const f = FURNITURE_BY_ITEM[guestItemId(it.id)];
+        const f = FURNITURE_BY_ITEM[guestItemId(it.id, it.variant)];
         expect(f, `${id}: ${it.id}`).toBeTruthy();
         expect(it.x >= 0 && it.y >= 0 && it.x < GUEST_LAYOUT.w && it.y < GUEST_LAYOUT.h, `${id}: ${it.id} im Raum`).toBe(true);
         // nichts auf dem Ausgang
@@ -37,6 +37,21 @@ describe('Häuser der Bewohner von innen', () => {
       for (const key of Object.keys(h.comments)) expect(present.has(key), `${id}: ${key}`).toBe(true);
       const unique = [...present];
       expect(unique.filter((k) => h.comments[k]).length / unique.length, id).toBeGreaterThanOrEqual(0.7);
+    }
+  });
+
+  it('Schränke und Regale stehen an der Wand (nicht mitten im Raum), nur Tresen & Schreibtisch dürfen trennen', () => {
+    const wallFurniture = new Set(['regal', 'teaksideboard', 'weinregal', 'vitrine', 'tansu', 'wuerfelregal', 'hellerau-standregal', 'fernseher']);
+    for (const [id, h] of Object.entries(GUEST_HOUSES)) {
+      for (const it of h.items) {
+        if (!wallFurniture.has(it.id) || it.on) continue;
+        const f = FURNITURE_BY_ITEM[guestItemId(it.id, it.variant)].def;
+        const rot = it.rot ?? 0;
+        const w = rot % 2 ? f.d : f.w;
+        const d = rot % 2 ? f.w : f.d;
+        const atWall = it.x === 0 || it.y === 0 || it.x + w === GUEST_LAYOUT.w || it.y + d === GUEST_LAYOUT.h;
+        expect(atWall, `${id}: ${it.id} steht mitten im Raum`).toBe(true);
+      }
     }
   });
 });
