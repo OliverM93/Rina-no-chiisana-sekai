@@ -88,6 +88,7 @@ export const THALIA: NpcDef = {
       { text: ['Lina, ich weiß, dass du mich verkuppeln willst. Dein Gesicht verrät dich. Immer.','Ich bin gerührt und genervt gleichzeitig. Das ist die beste Mischung.'] },
       { text: ['Lina nach einem Bier ist die beste Lina.','Sie erzählt Witze, die sie nüchtern nie wagen würde. Und lacht am lautesten selbst darüber. Ich liebe das.'] },
       { text: ['Ich spiele ja nicht so viel. Aber wenn Oli und Lars zocken, hol ich Chips.','Und ich kartiere ihre Fehler. Das wird eine sehr dicke Karte.'] },
+      { text: ['Olis Freund Mo war letztens dabei, als wir am Strand waren.', 'Der ist … ganz süß. Also, nett. Er ist nett. Und Lina: Ich sehe dein Gesicht. Bitte plane jetzt nichts.'] },
     ],
     gifts: {
       liebt: [['NEIN! Für mich?! 😍', 'Das kommt sofort in meine Vitrine. Ganz vorne. Mit Etikett: „Von Lina, der Besten“.']],

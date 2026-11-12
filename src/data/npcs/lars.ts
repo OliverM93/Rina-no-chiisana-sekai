@@ -89,6 +89,9 @@ export const LARS: NpcDef = {
       { text: ['Meine kleine Schwester wird nach einem Bier richtig lustig.','Letztens hat sie Winston ihre Lieblings-Diagnose gestellt. „Akuter Dackelblick.“ Sehr treffend.'] },
       { text: ['Lina will Thalia verkuppeln. Ich halte mich raus.','Ärztliche Schweigepflicht. … Okay, ich halte mich nur raus, solange es lustig bleibt.'] },
       { text: ['In Tschechien soll es hervorragendes Bier geben.','Rein wissenschaftlich interessant. Lina und Thalia waren ja eine Woche dort. Ich erwarte einen Bericht. Mit Quellenangaben.'] },
+      { text: ['Mein Kumpel Ronny ist Polizist. Wenn ich zu schnell rede, sagt er: „Führerschein und Fahrzeugpapiere, bitte.“', 'Ich hab ihm einmal meinen Arztausweis gezeigt. Er hat trotzdem gepustet. Ich auch – war ein Witz.'] },
+      { text: ['Ich hab gestern Sumo geguckt. Zwei Riesen, ein Kreis, drei Sekunden.', 'Effizienter als jede Sprechstunde. Und keiner fragt nach einem Rezept.'] },
+      { text: ['Beim Sumo werfen sie vor dem Kampf Salz in den Ring. Zur Reinigung.', 'Ich hab überlegt, das im Wartezimmer einzuführen. Christin würde sofort den Staubsauger holen.'] },
     ],
     gifts: {
       liebt: [['Oh, Lina! Das ist ja großartig!', 'Das verschreib ich mir ab sofort selbst. Dreimal täglich.']],
