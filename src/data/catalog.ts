@@ -283,6 +283,22 @@ const FURNITURE_META: Record<string, Row> = {
   linienleuchte: ['moebel', 'lampen', ['minimalismus']],
   plattentisch: ['moebel', 'tische', ['minimalismus']],
   wollteppich: ['moebel', 'teppiche', ['minimalismus', 'japandi', 'skandinavisch']],
+  // Dark Academia
+  buecherwand: ['moebel', 'regale', ['darkacademia']],
+  sekretaer: ['moebel', 'tische', ['darkacademia', 'retro']],
+  chesterfield: ['moebel', 'sofas', ['darkacademia', 'industrial']],
+  weltkarte: ['moebel', 'wanddeko', ['darkacademia']],
+  // Art déco
+  muschelsessel: ['moebel', 'sofas', ['artdeco']],
+  etagenlampe: ['moebel', 'lampen', ['artdeco']],
+  barschrank: ['moebel', 'regale', ['artdeco']],
+  faecherteppich: ['moebel', 'teppiche', ['artdeco']],
+  // Industrial
+  ledersofa: ['moebel', 'sofas', ['industrial']],
+  stahlregal: ['moebel', 'regale', ['industrial']],
+  fabrikleuchte: ['moebel', 'lampen', ['industrial']],
+  vintageteppich: ['moebel', 'teppiche', ['industrial']],
+  bahnhofsuhr: ['moebel', 'wanddeko', ['industrial']],
   // Garten
   'zaun-weiss': ['garten', 'zaun'],
   gartentor: ['garten', 'zaun'],
@@ -325,6 +341,8 @@ const TASSEN_IDS = new Set(TASSEN.map((t) => t.id));
 const SURFACE_STYLES: Record<string, DesignStyle[]> = {
   'tapete-shoji': ['japanisch', 'japandi'],
   'tapete-kalkputz': ['japandi', 'minimalismus'],
+  'tapete-bibliothek': ['darkacademia'],
+  'tapete-faecher': ['artdeco'],
   'tapete-holzlatten': ['japandi', 'skandinavisch'],
   'boden-mikrozement': ['minimalismus', 'modern'],
   'tapete-kirschblueten': ['japanisch'],

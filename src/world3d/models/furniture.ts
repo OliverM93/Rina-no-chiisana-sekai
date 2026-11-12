@@ -255,6 +255,73 @@ function findSpecimen(id: string, x: number, y: number, z: number): THREE.Object
   return grp;
 }
 
+/** Alte Weltkarte (ausgedacht): Pergament, grobe Kontinente, Kompassrose, Seeungeheuer */
+function weltkarteCanvas(): HTMLCanvasElement {
+  const cv = document.createElement('canvas');
+  cv.width = 256;
+  cv.height = 152;
+  const x = cv.getContext('2d')!;
+  x.fillStyle = '#e9d9b0';
+  x.fillRect(0, 0, 256, 152);
+  x.strokeStyle = '#b89a62';
+  x.lineWidth = 0.6;
+  for (let i = 1; i < 8; i++) {
+    x.beginPath();
+    x.moveTo((i * 256) / 8, 0);
+    x.lineTo((i * 256) / 8, 152);
+    x.stroke();
+  }
+  for (let i = 1; i < 5; i++) {
+    x.beginPath();
+    x.moveTo(0, (i * 152) / 5);
+    x.lineTo(256, (i * 152) / 5);
+    x.stroke();
+  }
+  x.fillStyle = '#b8a070';
+  x.strokeStyle = '#6e5232';
+  x.lineWidth = 1.2;
+  const blob = (pts: number[][]) => {
+    x.beginPath();
+    x.moveTo(pts[0][0], pts[0][1]);
+    for (const [px, py] of pts.slice(1)) x.lineTo(px, py);
+    x.closePath();
+    x.fill();
+    x.stroke();
+  };
+  blob([[30, 30], [70, 22], [86, 44], [70, 70], [58, 64], [44, 50]]);
+  blob([[62, 80], [82, 86], [78, 120], [66, 136], [60, 110]]);
+  blob([[120, 26], [160, 20], [210, 30], [226, 56], [190, 66], [160, 60], [140, 48]]);
+  blob([[128, 66], [150, 70], [152, 104], [138, 120], [126, 96]]);
+  blob([[196, 100], [222, 98], [228, 118], [204, 122]]);
+  // Kompassrose
+  x.fillStyle = '#7a2f38';
+  x.beginPath();
+  x.moveTo(108, 112);
+  x.lineTo(112, 124);
+  x.lineTo(108, 136);
+  x.lineTo(104, 124);
+  x.closePath();
+  x.fill();
+  x.beginPath();
+  x.moveTo(96, 124);
+  x.lineTo(108, 120);
+  x.lineTo(120, 124);
+  x.lineTo(108, 128);
+  x.closePath();
+  x.fill();
+  // Seeungeheuer
+  x.strokeStyle = '#3a5a6a';
+  x.lineWidth = 2;
+  x.beginPath();
+  x.arc(180, 130, 6, Math.PI, 0);
+  x.arc(192, 130, 6, Math.PI, 0);
+  x.stroke();
+  x.strokeStyle = '#5a3a2a';
+  x.lineWidth = 4;
+  x.strokeRect(2, 2, 252, 148);
+  return cv;
+}
+
 export function makeFurniture(itemId: string, links: FenceLinks = { n: false, e: true, s: false, w: true }, collected: ReadonlySet<string> = NOTHING): FurnitureModel {
   const f = FURNITURE_BY_ITEM[itemId];
   const g = new THREE.Group();
@@ -2951,6 +3018,226 @@ export function makeFurniture(itemId: string, links: FenceLinks = { n: false, e:
     case 'wollteppich': {
       g.add(b(1.86, 0.02, 1.86, darken(col, 0.08), 0, 0.01, 0));
       g.add(b(1.72, 0.022, 1.72, col, 0, 0.011, 0));
+      break;
+    }
+    // ---------------------------------------------------------------- Dark Academia
+    case 'buecherwand': {
+      const wood = '#5a3a2a';
+      for (const x of [-0.88, 0.88]) g.add(b(0.06, 1.62, 0.42, wood, x, 0.81, 0));
+      g.add(b(1.82, 1.62, 0.03, darken(wood, 0.15), 0, 0.81, -0.2));
+      const shelves = [0.05, 0.45, 0.85, 1.25, 1.6];
+      for (const y of shelves) g.add(b(1.76, 0.04, 0.4, wood, 0, y, 0));
+      g.add(b(1.86, 0.06, 0.46, darken(wood, 0.1), 0, 1.64, 0.01));
+      const cols = ['#7a2f38', '#2f5a44', '#c9a24a', '#3a4a6a', '#8a5a3a', '#e3d6b8', '#4a2e20'];
+      for (let r = 0; r < 4; r++) {
+        let x = -0.82;
+        let k = r * 3;
+        while (x < 0.78) {
+          if (r === 1 && x > 0.2 && x < 0.55) {
+            x += 0.36;
+            continue;
+          }
+          const w = 0.05 + ((k * 7) % 4) * 0.012;
+          const h = 0.24 + ((k * 5) % 5) * 0.025;
+          g.add(b(w, h, 0.26, cols[k % cols.length], x + w / 2, shelves[r] + 0.02 + h / 2, 0.02));
+          x += w + 0.008;
+          k++;
+        }
+      }
+      // Gipsschädel & Sanduhr im freien Fach
+      g.add(s(0.07, 0.07, 0.07, '#efe8dc', 0.3, 0.55, 0.02));
+      g.add(c(0.03, 0.12, '#c9a24a', 0.46, 0.53, 0.02));
+      g.add(s(0.025, 0.04, 0.025, '#e3cfa0', 0.46, 0.53, 0.02));
+      break;
+    }
+    case 'sekretaer': {
+      const wood = '#6e4630';
+      g.add(b(0.86, 0.05, 0.5, wood, 0, 0.72, 0));
+      for (const [x, z] of [[-0.38, -0.2], [0.38, -0.2], [-0.38, 0.2], [0.38, 0.2]]) g.add(b(0.05, 0.7, 0.05, darken(wood, 0.1), x, 0.35, z));
+      g.add(b(0.8, 0.12, 0.44, wood, 0, 0.64, 0));
+      g.add(b(0.8, 0.34, 0.18, wood, 0, 0.92, -0.16));
+      for (const x of [-0.26, 0, 0.26]) g.add(b(0.22, 0.12, 0.01, lighten(wood, 0.08), x, 0.95, -0.065));
+      g.add(c(0.025, 0.04, '#2a2a30', 0.25, 0.765, 0.08));
+      g.add(c(0.004, 0.16, '#f7f5ef', 0.25, 0.83, 0.08).rotateZ(0.3));
+      g.add(b(0.2, 0.005, 0.15, '#f3ead8', -0.12, 0.748, 0.1).rotateY(0.2));
+      break;
+    }
+    case 'chesterfield': {
+      g.add(b(1.84, 0.26, 0.76, col, 0, 0.2, 0));
+      g.add(b(1.84, 0.4, 0.18, darken(col, 0.06), 0, 0.5, -0.29));
+      for (const x of [-0.84, 0.84]) {
+        g.add(b(0.18, 0.32, 0.76, darken(col, 0.04), x, 0.4, 0));
+        const roll = c(0.12, 0.76, darken(col, 0.04), x, 0.56, 0);
+        roll.rotation.x = Math.PI / 2;
+        g.add(roll);
+      }
+      for (const x of [-0.42, 0.42]) g.add(b(0.8, 0.09, 0.6, lighten(col, 0.06), x, 0.375, 0.05));
+      for (let i = 0; i < 7; i++) for (const y of [0.45, 0.6]) g.add(s(0.015, 0.015, 0.01, darken(col, 0.3), -0.66 + i * 0.22 + (y > 0.5 ? 0.11 : 0), y, -0.195));
+      for (const x of [-0.8, 0.8]) for (const z of [-0.3, 0.3]) g.add(s(0.05, 0.04, 0.05, '#3a2a20', x, 0.03, z));
+      seatY = 0.42;
+      break;
+    }
+    case 'weltkarte': {
+      const z = WALL_Z;
+      g.add(b(1.3, 0.8, 0.03, '#5a3a2a', 0, HANG + 0.05, z));
+      const tex = new THREE.CanvasTexture(weltkarteCanvas());
+      tex.colorSpace = THREE.SRGBColorSpace;
+      const map = new THREE.Mesh(new THREE.PlaneGeometry(1.22, 0.72), new THREE.MeshToonMaterial({ map: tex }));
+      map.position.set(0, HANG + 0.05, z + 0.017);
+      g.add(map);
+      break;
+    }
+    // ---------------------------------------------------------------- Art déco
+    case 'muschelsessel': {
+      for (const x of [-0.22, 0.22]) for (const z of [-0.2, 0.2]) g.add(c(0.025, 0.12, '#d9b45a', x, 0.06, z));
+      g.add(b(0.62, 0.18, 0.56, col, 0, 0.21, 0.02));
+      g.add(b(0.56, 0.08, 0.5, lighten(col, 0.08), 0, 0.34, 0.04));
+      // Muschelrücken: aufrechte Halbscheibe mit Rillen
+      const shell = mesh(new THREE.CylinderGeometry(0.34, 0.34, 0.1, 18, 1, false, Math.PI / 2, Math.PI), toon(col));
+      shell.rotation.x = Math.PI / 2;
+      shell.position.set(0, 0.3, -0.22);
+      g.add(shell);
+      for (let i = 1; i < 7; i++) {
+        const a = -Math.PI / 2 + (i / 7) * Math.PI;
+        const groove = b(0.014, 0.3, 0.012, darken(col, 0.18), Math.sin(a) * 0.17, 0.3 + Math.cos(a) * 0.17, -0.165);
+        groove.rotation.z = -a;
+        g.add(groove);
+      }
+      g.add(b(0.62, 0.04, 0.06, '#d9b45a', 0, 0.3, -0.2));
+      seatY = 0.38;
+      break;
+    }
+    case 'etagenlampe': {
+      const brass = '#d9b45a';
+      g.add(c(0.18, 0.04, '#2a2a30', 0, 0.02, 0));
+      g.add(c(0.022, 1.25, brass, 0, 0.66, 0));
+      glow = glowMat('#ffe9b8');
+      for (const [y, r] of [[1.3, 0.26], [1.4, 0.2], [1.48, 0.13]] as const) {
+        const tier = mesh(new THREE.CylinderGeometry(r * 0.75, r, 0.09, 8, 1, true), glow);
+        tier.position.y = y;
+        g.add(tier);
+        g.add(c(r + 0.005, 0.012, brass, 0, y - 0.045, 0, new THREE.CylinderGeometry(1, 1, 1, 8)));
+      }
+      g.add(s(0.03, 0.03, 0.03, brass, 0, 1.56, 0));
+      lightAt = new THREE.Vector3(0, 1.25, 0);
+      break;
+    }
+    case 'barschrank': {
+      const lack = '#1f1d22';
+      const gold = '#d9b45a';
+      g.add(b(0.8, 0.86, 0.46, lack, 0, 0.55, 0));
+      g.add(b(0.84, 0.04, 0.5, gold, 0, 0.99, 0));
+      for (const x of [-0.3, 0.3]) for (const z of [-0.16, 0.16]) g.add(c(0.02, 0.12, gold, x, 0.06, z));
+      // goldene Fächer auf den Türen
+      for (const x of [-0.19, 0.19]) {
+        for (let i = 0; i < 5; i++) {
+          const a = -0.8 + i * 0.4;
+          const ray = b(0.012, 0.22, 0.01, gold, x + Math.sin(a) * 0.1, 0.5 + Math.cos(a) * 0.1, 0.236);
+          ray.rotation.z = -a;
+          g.add(ray);
+        }
+        g.add(b(0.36, 0.012, 0.01, gold, x, 0.4, 0.236));
+      }
+      g.add(b(0.012, 0.8, 0.01, gold, 0, 0.55, 0.236));
+      // Gläser oben
+      for (const x of [-0.2, -0.08]) g.add(c(0.03, 0.08, new THREE.MeshToonMaterial({ color: '#e8f4ff', transparent: true, opacity: 0.6 }), x, 1.05, 0));
+      g.add(c(0.045, 0.16, '#c9c9cf', 0.18, 1.09, 0));
+      break;
+    }
+    case 'faecherteppich': {
+      g.add(b(1.9, 0.02, 1.9, '#d9b45a', 0, 0.01, 0));
+      g.add(b(1.8, 0.022, 1.8, '#1f3a33', 0, 0.011, 0));
+      for (const [cx, cz] of [[-0.45, -0.45], [0.45, -0.45], [-0.45, 0.45], [0.45, 0.45]]) {
+        for (let i = 0; i < 5; i++) {
+          const a = -1 + i * 0.5;
+          const ray = b(0.018, 0.024, 0.32, '#d9b45a', cx + Math.sin(a) * 0.16, 0.012, cz - Math.cos(a) * 0.16);
+          ray.rotation.y = -a;
+          g.add(ray);
+        }
+      }
+      break;
+    }
+    // ---------------------------------------------------------------- Industrial
+    case 'ledersofa': {
+      for (const x of [-0.82, 0.82]) {
+        g.add(b(0.04, 0.04, 0.74, '#2a2a30', x, 0.02, 0));
+        g.add(b(0.04, 0.14, 0.04, '#2a2a30', x, 0.09, 0.3));
+        g.add(b(0.04, 0.14, 0.04, '#2a2a30', x, 0.09, -0.3));
+      }
+      g.add(b(1.8, 0.22, 0.78, col, 0, 0.27, 0));
+      for (const x of [-0.43, 0.43]) g.add(b(0.84, 0.12, 0.62, lighten(col, 0.08), x, 0.43, 0.05));
+      g.add(b(1.8, 0.38, 0.16, darken(col, 0.08), 0, 0.55, -0.31));
+      for (const x of [-0.86, 0.86]) g.add(b(0.12, 0.3, 0.78, darken(col, 0.05), x, 0.46, 0));
+      // abgewetzte Stellen
+      for (const [x, z] of [[-0.4, 0.15], [0.5, 0.0]] as const) g.add(b(0.2, 0.004, 0.16, lighten(col, 0.2), x, 0.492, z));
+      seatY = 0.46;
+      break;
+    }
+    case 'stahlregal': {
+      const pipe = '#2a2a30';
+      for (const x of [-0.82, 0.82]) for (const z of [-0.14, 0.14]) g.add(c(0.025, 1.5, pipe, x, 0.75, z));
+      for (const y of [0.1, 0.55, 1.0, 1.46]) {
+        g.add(b(1.84, 0.05, 0.38, '#8a5a3a', 0, y, 0));
+        for (const x of [-0.82, 0.82]) for (const z of [-0.14, 0.14]) g.add(c(0.035, 0.03, pipe, x, y - 0.04, z));
+      }
+      // Krüge, Kisten, Pflanze
+      for (const x of [-0.6, -0.42]) g.add(c(0.06, 0.16, '#c9a24a', x, 0.66, 0));
+      g.add(b(0.4, 0.22, 0.28, '#b98a5e', 0.4, 0.24, 0));
+      g.add(c(0.07, 0.1, '#5a5a62', 0.55, 1.08, 0));
+      g.add(s(0.12, 0.1, 0.1, '#5f9a4a', 0.55, 1.2, 0));
+      for (let i = 0; i < 5; i++) g.add(b(0.06, 0.24, 0.22, ['#7a2f38', '#3a4a6a', '#e3d6b8', '#2f5a44', '#c9a24a'][i], -0.7 + i * 0.07, 1.14, 0));
+      break;
+    }
+    case 'fabrikleuchte': {
+      const steel = '#2a2a30';
+      for (let i = 0; i < 3; i++) {
+        const a = (i / 3) * Math.PI * 2;
+        const leg = c(0.018, 1.2, steel, Math.cos(a) * 0.16, 0.58, Math.sin(a) * 0.16);
+        leg.rotation.set(Math.sin(a) * 0.14, 0, -Math.cos(a) * 0.14);
+        g.add(leg);
+      }
+      g.add(c(0.03, 0.3, steel, 0, 1.3, 0));
+      // Ausleger nach vorn, daran hängt der Emailleschirm
+      const arm = b(0.03, 0.03, 0.36, steel, 0, 1.44, 0.16);
+      g.add(arm);
+      g.add(c(0.008, 0.08, steel, 0, 1.4, 0.33));
+      const shade = mesh(new THREE.SphereGeometry(0.2, 16, 8, 0, Math.PI * 2, 0, Math.PI / 2), toon('#3f5a4a', { side: THREE.DoubleSide }));
+      shade.position.set(0, 1.28, 0.33);
+      g.add(shade);
+      g.add(c(0.205, 0.02, '#f7f5ef', 0, 1.285, 0.33));
+      glow = glowMat('#fff1c8');
+      const bulb = mesh(new THREE.SphereGeometry(0.07, 10, 8), glow);
+      bulb.position.set(0, 1.27, 0.33);
+      g.add(bulb);
+      lightAt = new THREE.Vector3(0, 1.1, 0.33);
+      break;
+    }
+    case 'vintageteppich': {
+      g.add(b(1.86, 0.02, 1.86, '#8fa3b8', 0, 0.01, 0));
+      g.add(b(1.5, 0.022, 1.5, '#b8735a', 0, 0.011, 0));
+      g.add(b(1.2, 0.024, 1.2, '#a9b8c4', 0, 0.012, 0));
+      g.add(b(0.5, 0.026, 0.5, '#b8735a', 0, 0.013, 0).rotateY(Math.PI / 4));
+      // ausgeblichene Flecken
+      for (const [x, z, r] of [[-0.4, 0.3, 0.25], [0.5, -0.4, 0.2], [0.2, 0.55, 0.15]] as const) g.add(c(r, 0.027, '#c9d2da', x, 0.0135, z));
+      break;
+    }
+    case 'bahnhofsuhr': {
+      const z = WALL_Z;
+      const ring = c(0.3, 0.06, '#2a2a30', 0, HANG + 0.15, z + 0.03);
+      ring.rotation.x = Math.PI / 2;
+      g.add(ring);
+      const face = c(0.27, 0.01, '#f7f5ef', 0, HANG + 0.15, z + 0.062);
+      face.rotation.x = Math.PI / 2;
+      g.add(face);
+      for (let i = 0; i < 12; i++) {
+        const a = (i / 12) * Math.PI * 2;
+        const tick = b(0.015, i % 3 ? 0.04 : 0.07, 0.005, '#2a2a30', Math.sin(a) * 0.22, HANG + 0.15 + Math.cos(a) * 0.22, z + 0.07);
+        tick.rotation.z = -a;
+        g.add(tick);
+      }
+      g.add(b(0.025, 0.2, 0.006, '#2a2a30', 0.04, HANG + 0.22, z + 0.074).rotateZ(-0.4));
+      g.add(b(0.02, 0.14, 0.006, '#2a2a30', -0.05, HANG + 0.12, z + 0.076).rotateZ(-2.2));
+      g.add(c(0.018, 0.01, '#c9483b', 0, HANG + 0.15, z + 0.08).rotateX(Math.PI / 2));
       break;
     }
     default:

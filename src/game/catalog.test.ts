@@ -52,6 +52,16 @@ describe('Katalog: Freischaltung neuer Stile', () => {
     for (const id of ['skandi-sofa', 'schaukelstuhl', 'kubus-sofa', 'plattformbett', 'boden-mikrozement']) expect(olaf.has(id), id).toBe(true);
   });
 
+  it('Teil 2: Dark Academia mit Thalia, Art déco mit Jens, Industrial mit Lars', () => {
+    const start = new Set(catalogEntries(ctx('sommer')).map((e) => e.id));
+    for (const id of ['buecherwand', 'muschelsessel', 'ledersofa', 'tapete-faecher']) expect(start.has(id), id).toBe(false);
+    const has = (flags: Record<string, boolean>, id: string) => catalogEntries(ctx('sommer', flags)).some((e) => e.id === id);
+    expect(has({ thaliaBegruesst: true }, 'buecherwand')).toBe(true);
+    expect(has({ jensBegruesst: true }, 'muschelsessel')).toBe(true);
+    expect(has({ larsBegruesst: true }, 'ledersofa')).toBe(true);
+    expect(has({ larsBegruesst: true }, 'muschelsessel')).toBe(false);
+  });
+
   it('der Stil-Filter zeigt einen Stil erst, wenn er frei ist', () => {
     expect(availableStyles(catalogEntries(ctx('sommer')), 'moebel')).not.toContain('darkacademia');
     expect(availableStyles(catalogEntries(ctx('sommer', ALL_FLAGS)), 'moebel')).toContain('darkacademia');
