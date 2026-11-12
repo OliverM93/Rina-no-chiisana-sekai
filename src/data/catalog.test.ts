@@ -89,9 +89,9 @@ describe('Katalog-Ordnung: Inhalt', () => {
     expect(DESIGN_STYLE_BY_ID.japandi.arrivesWith).toBeUndefined();
   });
 
-  it('Japandi, Skandinavisch, Minimalismus, Dark Academia, Art déco und Industrial haben ein Kernsortiment', () => {
+  it('die neuen Stile (außer Brutalismus & Memphis) haben ein Kernsortiment', () => {
     const all = [...inCatalog.map((f) => f.id), ...WALLPAPERS.map((w) => w.id), ...FLOORS.map((w) => w.id)];
-    for (const style of ['japandi', 'skandinavisch', 'minimalismus', 'darkacademia', 'artdeco', 'industrial'] as const) {
+    for (const style of ['japandi', 'skandinavisch', 'minimalismus', 'darkacademia', 'artdeco', 'industrial', 'spaceage', 'cyberpunk'] as const) {
       const ids = all.filter((id) => catalogMeta(id)?.styles.includes(style));
       const types = new Set(ids.map((id) => catalogMeta(id)!.type));
       const cats = new Set(ids.map((id) => catalogMeta(id)!.category));

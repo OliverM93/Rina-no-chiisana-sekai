@@ -273,7 +273,7 @@ dann mit dem Einzug.
    (Daybed/Bank, Lattenregal, Papier-Pendelleuchte, Wollteppich, Kalkputz-Wand, helle Eiche).
 2. ✅ *erledigt (Teil 2)* **Dark Academia, Art déco, Industrial** – starker Bezug zu Thalia, Jens und Lars
    (Bücherwand, Sekretär, Chesterfield, Fächer-Sessel, Messing-Stehlampe, Fabrikleuchte, Stahlregal, Ledersofa).
-3. **Space Age, Cyberpunk** – Oli (Kugelsessel, Tulpentisch, Lavalampe, Gaming-Stuhl, Neonröhren, Monitorwand).
+3. ✅ *erledigt (Teil 3)* **Space Age, Cyberpunk** – Oli (Kugelsessel, Tulpentisch, Lavalampe, Gaming-Stuhl, Neonröhren, Monitorwand).
 4. **Brutalismus, Memphis** – mutig, eher Akzente (Betonbank, Blockregal, Squiggle-Teppich, Totem-Regal, Memphis-Tapete).
 
 💡 Später denkbar: Reaktionen der Bewohner auch für die neuen Stile (`game/erinnerungen.ts`, Tags `stil-…`),

@@ -385,6 +385,50 @@ export function drawPattern(ctx: CanvasRenderingContext2D, def: SurfaceDef, s: n
       }
       break;
     }
+    case 'gitter': {
+      // Neon-Gitter: leuchtende Linien mit weichem Schein, kachelbar
+      const n = 4;
+      for (const [w, a] of [[s / 40, 0.18], [s / 120, 1]] as const) {
+        ctx.globalAlpha = a;
+        ctx.fillStyle = accent;
+        for (let i = 0; i < n; i++) {
+          ctx.fillRect((i * s) / n - w / 2, 0, Math.max(1, w), s);
+          ctx.fillRect(0, (i * s) / n - w / 2, s, Math.max(1, w));
+        }
+      }
+      ctx.globalAlpha = 1;
+      break;
+    }
+    case 'orbit': {
+      // Space Age: Planeten mit Umlaufbahnen, versetzt
+      for (const [cx, cy, r, ring] of [[0.25, 0.25, 0.07, true], [0.75, 0.75, 0.09, false], [0.75, 0.2, 0.04, false], [0.2, 0.72, 0.05, true]] as const) {
+        ctx.strokeStyle = darken(accent, 0.25);
+        ctx.lineWidth = Math.max(1, s / 200);
+        ctx.beginPath();
+        ctx.ellipse(cx * s, cy * s, r * 2.4 * s, r * 0.9 * s, -0.3, 0, Math.PI * 2);
+        ctx.stroke();
+        ctx.fillStyle = ring ? accent : darken(accent, 0.35);
+        ctx.beginPath();
+        ctx.arc(cx * s, cy * s, r * s, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      break;
+    }
+    case 'riffel': {
+      // Riffelblech: kleine schräge Rippen, abwechselnd gedreht
+      ctx.fillStyle = accent;
+      const step = s / 8;
+      for (let y = 0; y < 8; y++) {
+        for (let x = 0; x < 8; x++) {
+          ctx.save();
+          ctx.translate(x * step + step / 2, y * step + step / 2);
+          ctx.rotate((x + y) % 2 ? Math.PI / 4 : -Math.PI / 4);
+          ctx.fillRect(-step * 0.3, -step * 0.06, step * 0.6, step * 0.12);
+          ctx.restore();
+        }
+      }
+      break;
+    }
     case 'latten': {
       // schmale senkrechte Holzlatten mit dunklen Fugen
       const n = 10;

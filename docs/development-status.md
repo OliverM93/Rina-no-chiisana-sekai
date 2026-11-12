@@ -305,7 +305,8 @@ Legende: ✅ erledigt · 🚧 in Arbeit · ⬜ geplant
   (siehe [`katalog-ueberarbeitung.md`](katalog-ueberarbeitung.md)).
 - ✅ **Neue Stile Teil 1:** Japandi, Skandinavisch, Minimalismus – Kernsortiment (15 Möbel, 2 Tapeten, 1 Boden).
 - ✅ **Neue Stile Teil 2:** Dark Academia, Art déco, Industrial – Kernsortiment (13 Möbel, 2 Tapeten).
-- 🗓️ **Neue Stile Teil 3–4:** Space Age/Cyberpunk, dann Brutalismus/Memphis.
+- ✅ **Neue Stile Teil 3:** Space Age, Cyberpunk – Kernsortiment (12 Möbel, 2 Tapeten, 2 Böden).
+- 🗓️ **Neue Stile Teil 4:** Brutalismus, Memphis.
 
 ## 💡 Ideen-Parkplatz
 
