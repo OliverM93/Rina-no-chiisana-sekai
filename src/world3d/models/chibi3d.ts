@@ -424,13 +424,16 @@ function addHair(head: THREE.Group, a: Appearance, R: number) {
       break;
     }
     case 'fade': {
-      // Fade: Seiten und Nacken ganz kurz (nach unten immer hautnäher), oben etwas längeres, glattes Deckhaar (ohne Tolle)
+      // Fade: Seiten und Nacken ganz kurz (nach unten immer hautnäher), oben etwas längeres, glattes Deckhaar (ohne Tolle).
+      // Breitere (kräftigere) Köpfe brauchen etwas größere Kappen, sonst sticht die Haut durch.
+      const w = 1 + (a.build - 1) * 0.35;
+      const k = Math.max(1, w);
       const buzz = mixHex(a.skinTone, col, 0.55);
       const graded = mixHex(a.skinTone, col, 0.8);
-      backCap(1.9, 1.012, buzz, 0.95);
-      backCap(1.5, 1.022, graded, 0.95);
-      topCap(1.02, 1.085);
-      head.add(shell(R * 1.1, col, FRONT - 0.95, 1.9, 0.3, 0.5)); // kurzer, glatter Pony
+      backCap(1.9, 1.012 * k + 0.012, buzz, 0.95);
+      backCap(1.5, 1.03 * k + 0.02, graded, 0.95);
+      topCap(1.02, 1.085 * k);
+      head.add(shell(R * 1.1 * k, col, FRONT - 0.95, 1.9, 0.3, 0.5)); // kurzer, glatter Pony
       break;
     }
     case 'zerzaust': {
