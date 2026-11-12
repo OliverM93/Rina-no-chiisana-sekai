@@ -72,9 +72,9 @@ export function App({ session }: { session: Session }) {
     return () => window.removeEventListener('keydown', onKey);
   }, []);
 
-  // Pfeiltasten springen in jedem Fenster/Menü von Knopf zu Knopf (Tasche, Verkaufen & Katalog haben ihren eigenen Cursor)
+  // Pfeiltasten springen in jedem Fenster/Menü von Knopf zu Knopf (Tasche, Verkaufen, Katalog & Dackel-Snake haben ihre eigene Steuerung)
   useEffect(() => {
-    const OWN_CURSOR = ['inventory', 'sell', 'gift', 'seeds', 'catalog'];
+    const OWN_CURSOR = ['inventory', 'sell', 'gift', 'seeds', 'catalog', 'minispiel'];
     const onKey = (e: KeyboardEvent) => {
       const s = ui.state;
       if (s.dialog) return;

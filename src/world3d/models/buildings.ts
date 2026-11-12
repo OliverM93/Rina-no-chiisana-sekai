@@ -546,7 +546,7 @@ function s(rx: number, ry: number, rz: number, color: string, x = 0, y = 0, z = 
   return m;
 }
 
-/** Onkel Jens' Bistro „Chez Jens“: Häuschen mit gestreifter Markise, Schild, Café-Tischchen & Regenbogenfähnchen */
+/** Onkel Jens' Bistro „Chez Jens“: Häuschen mit gestreifter Markise, Schild & Café-Tischchen */
 export function makeBistro(): HouseModel {
   const h = makeHouse(palette.roof.sky);
   const g = h.group;
@@ -603,10 +603,6 @@ export function makeBistro(): HouseModel {
       for (const ddx of [-0.08, 0.08]) g.add(c(0.012, 0.4, '#3a3a44', x + dx + ddx, 0.2, zf + 0.9));
     }
   }
-  // Regenbogen-Fähnchen am Fensterbrett 🌈
-  g.add(c(0.012, 0.5, '#8a5a3a', 2.1, 1.25, zf + 0.15));
-  const flag = ['#ff8a8a', '#ffc27a', '#fff08a', '#9ce59a', '#8ac8ff', '#b79af0'];
-  flag.forEach((col, i) => g.add(b(0.34, 0.04, 0.01, col, 2.28, 1.47 - i * 0.04, zf + 0.15)));
   // Staffelei mit Bild neben der Tür (Jens ist Künstler)
   for (const dx of [-0.12, 0.12]) {
     const leg = b(0.03, 0.9, 0.03, '#8a5a3a', -0.75 + dx, 0.45, zf + 0.25);
