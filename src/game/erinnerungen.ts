@@ -4,6 +4,7 @@
  */
 import { daysBetween } from '../core/daily';
 import type { DialogueLine } from '../core/dialogue';
+import { catalogMeta } from '../data/catalog';
 import { FURNITURE_BY_ITEM } from '../data/furniture';
 import { GARDEN_FLOWER } from '../data/items';
 import { FISH_BY_ID, INSECT_BY_ID } from '../data/species';
@@ -47,8 +48,17 @@ export function memoryTags(session: Session): string[] {
   if (data.house.rooms.some((r) => r.items.some((i) => i.itemId === 'waermflasche'))) tags.push('waermflasche');
   // Einrichtung: Stile (ab vier Stücken im Haus), Boden & Wand, Garten
   const houseItems = data.house.rooms.flatMap((r) => r.items);
-  const styleCount = (style: string) => houseItems.filter((i) => FURNITURE_BY_ITEM[i.itemId]?.def.style === style).length;
-  for (const [style, min] of [['japanisch', 4], ['cottage', 4], ['retro', 4], ['modern', 4], ['midcentury', 4], ['bistro', 3]] as const) if (styleCount(style) >= min) tags.push(`stil-${style}`);
+  // ein Stück zählt für seine Linie und für jeden seiner Stile (z. B. Eichenstuhl: Skandinavisch und Japandi)
+  const styleCount = (style: string) =>
+    houseItems.filter((i) => {
+      const def = FURNITURE_BY_ITEM[i.itemId]?.def;
+      return !!def && (def.style === style || (catalogMeta(def.id)?.styles as readonly string[] | undefined)?.includes(style));
+    }).length;
+  for (const [style, min] of [
+    ['japanisch', 4], ['cottage', 4], ['retro', 4], ['modern', 4], ['midcentury', 4], ['bistro', 3],
+    ['japandi', 4], ['minimalismus', 4], ['skandinavisch', 4], ['industrial', 4], ['darkacademia', 4], ['artdeco', 4],
+    ['spaceage', 4], ['cyberpunk', 4], ['brutalismus', 4], ['memphis', 4],
+  ] as const) if (styleCount(style) >= min) tags.push(`stil-${style}`);
   if (data.house.rooms.some((r) => /^boden-(chevron|fischgraet|flecht|schiff|tafel)/.test(r.floor))) tags.push('parkett-edel');
   if (data.house.rooms.some((r) => r.wallpaper.startsWith('tapete-uni-'))) tags.push('tapete-uni');
   if (data.yard.items.length >= 8) tags.push('garten-deko');
