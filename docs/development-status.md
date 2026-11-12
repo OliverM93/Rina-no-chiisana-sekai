@@ -300,6 +300,12 @@ Legende: ✅ erledigt · 🚧 in Arbeit · ⬜ geplant
 - ✅ **M8n Sammeltassen:** 19 Tassen (Klassik, Saison, Städte) der ausgedachten Kette „Sternenbohne“, Tassenregal, Städte-Tassen von Jens' Reisen, Thalia & Oli
 - ⬜ Weitere Animationen & Partikel, Balancing
 
+- ✅ **Möbelkatalog neu geordnet (Nov. 2026):** Kategorie × Typ × Stil, 16 Einrichtungsstile mit Mehrfachstilen und
+  „Ohne Stil“, neue Stile teils an Einzüge gekoppelt, komplett per Pfeiltasten bedienbar
+  (siehe [`katalog-ueberarbeitung.md`](katalog-ueberarbeitung.md)).
+- 🗓️ **Kernsortiment der neuen Stile** in Folge-PRs (je 3–4 Stile): Japandi, Minimalismus, Skandinavisch, Industrial,
+  Dark Academia, Art déco, Brutalismus, Space Age, Cyberpunk, Memphis – rund 45–55 neue Modelle plus Tapeten/Böden.
+
 ## 💡 Ideen-Parkplatz
 
 - Ganz am Ende (wenn das Spiel fertig ist): als App installierbar & offline spielbar (PWA), größere Schrift /

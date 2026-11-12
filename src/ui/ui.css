@@ -1537,6 +1537,7 @@ body:has(.dialog-layer) .decor-bar {
 
 /* Feste Größe: Das Fenster springt nicht mehr, wenn Reiter, Stil oder Auswahl wechseln */
 .card.book.catalog {
+  position: relative;
   height: min(700px, calc(100vh - var(--toast-strip) - 24px));
   display: flex;
   flex-direction: column;
@@ -1544,42 +1545,111 @@ body:has(.dialog-layer) .decor-bar {
 }
 .card.book.catalog > .catalog-grid {
   flex: 1 1 auto;
-  min-height: 0;
+  min-height: 84px;
   max-height: none;
   align-content: start;
 }
 .card.book.catalog > .item-detail {
   flex: 0 0 auto;
   min-height: 118px;
-  max-height: 160px;
+  max-height: 128px;
   overflow-y: auto;
 }
 
-/* Breite Bildschirme: Möbel links (nur diese Liste scrollt), Beschreibung & Kaufen rechts */
+/* Filterzeilen: Kategorie, Typ, Stil – jede Zeile bleibt einzeilig und scrollt bei Bedarf seitlich */
+.catalog-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  padding: 3px 6px;
+  margin-bottom: 4px;
+  border: 2.5px solid transparent;
+  border-radius: 16px;
+}
+.catalog-row.nav-active,
+.variant-row.nav-active {
+  border-color: var(--ui-sky);
+}
+.variant-row {
+  border: 2.5px solid transparent;
+  border-radius: 999px;
+  padding: 2px 6px;
+}
+.catalog-grid.nav-active {
+  outline: 3px solid var(--ui-sky);
+  outline-offset: 2px;
+}
+.filter-strip {
+  display: flex;
+  gap: 6px;
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow-x: auto;
+  scrollbar-width: thin;
+  padding: 2px;
+}
+.row-label {
+  flex: none;
+  width: 30px;
+  font-weight: 900;
+  font-size: 12px;
+  color: var(--ui-text-soft);
+}
+.catalog-empty {
+  grid-column: 1 / -1;
+  padding: 16px;
+}
+.catalog-money {
+  position: absolute;
+  top: 22px;
+  right: 24px;
+  font-weight: 800;
+}
+.catalog-hint {
+  text-align: center;
+  margin-top: 6px;
+}
+
+/* Breite Bildschirme: Filter oben, Möbel links (nur diese Liste scrollt), Beschreibung & Kaufen rechts */
 @media (min-width: 820px) {
   .card.book.catalog {
-    width: min(900px, 100%);
-    height: min(640px, calc(100vh - var(--toast-strip) - 24px));
+    width: min(920px, 100%);
+    height: min(660px, calc(100vh - var(--toast-strip) - 24px));
     display: grid;
     grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
-    grid-template-rows: auto auto auto 1fr auto;
+    grid-template-rows: auto auto auto auto minmax(0, 1fr) auto auto;
+    grid-template-areas:
+      'title title'
+      'kat kat'
+      'typ typ'
+      'stil stil'
+      'grid detail'
+      'grid actions'
+      'hint hint';
     column-gap: 18px;
   }
-  .card.book.catalog > .card-title,
-  .card.book.catalog > .book-tabs {
-    grid-column: 1 / -1;
+  .card.book.catalog > .card-title {
+    grid-area: title;
+  }
+  .card.book.catalog > .catalog-row.row-kat {
+    grid-area: kat;
+  }
+  .card.book.catalog > .catalog-row.row-typ {
+    grid-area: typ;
+  }
+  .card.book.catalog > .catalog-row.row-stil {
+    grid-area: stil;
   }
   .card.book.catalog > .catalog-grid {
-    grid-column: 1;
-    grid-row: 4 / span 2;
+    grid-area: grid;
     max-height: none;
     min-height: 0;
     overflow-y: auto;
     align-self: stretch;
   }
   .card.book.catalog > .item-detail {
-    grid-column: 2;
-    grid-row: 4;
+    grid-area: detail;
     margin-top: 0;
     align-self: start;
     flex-direction: column;
@@ -1589,9 +1659,11 @@ body:has(.dialog-layer) .decor-bar {
     overflow-y: auto;
   }
   .card.book.catalog > .card-actions {
-    grid-column: 2;
-    grid-row: 5;
+    grid-area: actions;
     align-self: end;
+  }
+  .card.book.catalog > .catalog-hint {
+    grid-area: hint;
   }
 }
 

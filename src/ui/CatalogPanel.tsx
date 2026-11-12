@@ -1,83 +1,71 @@
 /**
- * Möbelkatalog: Möbel, Tapeten und Böden für Sternchen kaufen.
- * Gekauftes landet sofort in der Tasche.
+ * Möbelkatalog: Möbel, Pflanzen, Tapeten, Böden, Lieblingsthemen und Garten für Sternchen kaufen.
+ *
+ * Drei Filterzeilen – Kategorie (Reiter), Typ und Einrichtungsstil – darunter das Raster und die Details.
+ * Alles geht mit den Pfeiltasten (Zustandsmaschine in `catalogNav.ts`), mit der Maus genauso.
+ * Gekauftes landet in der Tasche – oder beim Einrichten gleich in Linas Hand.
  */
-import { useEffect, useRef, useState } from 'preact/hooks';
+import { useEffect, useLayoutEffect, useRef, useState } from 'preact/hooks';
+import { CATEGORY_BY_ID, DESIGN_STYLE_BY_ID } from '../data/catalog';
 import { CURRENCY } from '../data/items';
-import { FLOORS, FURNITURE, type FurnitureStyle, STYLE_LABELS, VARIANT_LABELS, WALLPAPERS, variantItemId } from '../data/furniture';
 import { getSeason } from '../core/time';
+import { availableCategories, availableStyles, availableTypes, type CatalogEntry, catalogContext, catalogEntries, effectiveFilter, filterEntries, type StyleFilter, styleFilterLabel } from '../game/catalog';
 import { formatMoney } from '../game/gameplay';
-import { buyFromCatalog, isSurface, styleUnlocked } from '../game/home';
+import { buyFromCatalog, isSurface } from '../game/home';
 import type { Session } from '../game/session';
 import { itemIconUrl } from '../gfx/items';
+import { initialNav, type NavContext, navigate, navKeyOf, type NavRow, type NavState, normalize } from './catalogNav';
 import { showToast, ui, useSessionVersion } from './store';
 
-type Tab = 'moebel' | 'tapete' | 'boden';
-
-interface Entry {
-  /** Basis-ID (Möbel) bzw. Tapete/Boden */
-  id: string;
-  name: string;
-  price: number;
-  style: FurnitureStyle;
-  description: string;
-  /** Kauf-IDs (Varianten) */
-  variants: Array<{ itemId: string; label: string; color: string | null }>;
-  size?: string;
+/** Mausrad über einer Chip-Zeile scrollt sie seitlich */
+function wheelSideways(e: WheelEvent) {
+  const el = e.currentTarget as HTMLElement;
+  if (el.scrollWidth <= el.clientWidth || Math.abs(e.deltaX) > Math.abs(e.deltaY)) return;
+  el.scrollLeft += e.deltaY;
+  e.preventDefault();
 }
 
-function entries(tab: Tab, winter: boolean, season: string): Entry[] {
-  if (tab === 'moebel') {
-    return FURNITURE.filter((f) => !f.crafted && !f.gift && !f.retired && (!f.seasonal || winter) && (!f.inSeason || f.inSeason === season)).map((f) => ({
-      id: f.id,
-      name: f.name,
-      price: f.price,
-      style: f.style,
-      description: f.description,
-      size: f.wall ? `🖼️ Wand-Deko, ${f.w} breit (Möbel passen darunter)` : f.small ? 'klein (passt auf Tische)' : f.rug ? `Teppich ${f.w}×${f.d}` : `${f.w}×${f.d} Felder`,
-      variants: f.variants
-        ? Object.entries(f.variants).map(([v, color]) => ({ itemId: variantItemId(f, v), label: VARIANT_LABELS[v] ?? v, color }))
-        : [{ itemId: f.id, label: '', color: null }],
-    }));
-  }
-  return (tab === 'tapete' ? WALLPAPERS : FLOORS).map((s) => ({ id: s.id, name: s.name, price: s.price, style: s.style, description: s.description, variants: [{ itemId: s.id, label: '', color: null }] }));
+/** Der Katalog merkt sich, wo Lina zuletzt geblättert hat (bis die Seite neu lädt) */
+let remembered: NavState | null = null;
+
+function typeLabel(category: string, type: string): string {
+  if (type === 'alle') return 'Alle';
+  return CATEGORY_BY_ID[category as keyof typeof CATEGORY_BY_ID]?.types.find((t) => t.id === type)?.name ?? type;
+}
+
+function styleLine(e: CatalogEntry): string {
+  return e.meta.styles.length > 0 ? e.meta.styles.map((s) => DESIGN_STYLE_BY_ID[s].name).join(' · ') : 'Ohne Stil';
 }
 
 export function CatalogPanel({ session }: { session: Session }) {
   useSessionVersion(session);
-  const [tab, setTab] = useState<Tab>('moebel');
-  const [style, setStyle] = useState<FurnitureStyle | 'alle'>('alle');
-  const [selected, setSelected] = useState<string | null>(null);
-  const [variant, setVariant] = useState(0);
+  const season = getSeason(session.clock());
+  const entries = catalogEntries(catalogContext(session, season));
+  const categories = availableCategories(entries);
+  const [rawNav, setNav] = useState<NavState>(() => {
+    const r = remembered && categories.includes(remembered.category) ? remembered : initialNav(categories[0] ?? 'moebel');
+    return { ...r, row: 'raster' };
+  });
+  const gridRef = useRef<HTMLDivElement>(null);
+  const [cols, setCols] = useState(6);
   const close = () => ui.set({ panel: null });
 
-  const buyRef = useRef<() => void>(() => {});
-  useEffect(() => {
-    const onKey = (e: KeyboardEvent) => {
-      if (e.code === 'Escape') {
-        e.preventDefault();
-        close();
-      }
-      // Enter kauft den ausgewählten Gegenstand (Knöpfe, Reiter & Farbpunkte behalten ihr eigenes Enter)
-      if (e.code === 'Enter' && !e.repeat) {
-        const active = document.activeElement;
-        const ownEnter = active instanceof HTMLElement && active.matches('.btn, .chip, .swatch');
-        if (!ownEnter) {
-          e.preventDefault();
-          buyRef.current();
-        }
-      }
-    };
-    window.addEventListener('keydown', onKey);
-    return () => window.removeEventListener('keydown', onKey);
-  });
-
+  // wirksame Filter & Listen für den aktuellen Zustand
+  const filter = effectiveFilter(entries, { category: rawNav.category, type: rawNav.type, style: rawNav.style });
+  const styles = availableStyles(entries, filter.category);
+  const types = availableTypes(entries, filter.category, filter.style);
+  const list = filterEntries(entries, filter);
+  const ctxFor = (n: NavState): NavContext => {
+    const f = effectiveFilter(entries, { category: n.category, type: n.type, style: n.style });
+    const l = filterEntries(entries, f);
+    const sel = l[Math.min(n.index, l.length - 1)];
+    return { categories, type: f.type, style: f.style, types: availableTypes(entries, f.category, f.style), styles: availableStyles(entries, f.category), count: l.length, cols, variants: sel?.variants.length ?? 1 };
+  };
+  const nav = normalize(rawNav, ctxFor(rawNav));
+  remembered = nav;
+  const sel = list[nav.index] ?? null;
+  const v = sel ? sel.variants[Math.min(nav.variant, sel.variants.length - 1)] : null;
   const money = session.data?.money ?? 0;
-  const season = getSeason(session.clock());
-  const winter = season === 'winter';
-  const list = entries(tab, winter, season).filter((e) => styleUnlocked(session, e.style) && (style === 'alle' || e.style === style));
-  const sel = list.find((e) => e.id === selected) ?? null;
-  const v = sel ? sel.variants[Math.min(variant, sel.variants.length - 1)] : null;
 
   const buy = () => {
     if (!sel || !v) return;
@@ -93,58 +81,90 @@ export function CatalogPanel({ session }: { session: Session }) {
     else if (r === 'tasche-voll') showToast('Tasche und Truhe sind voll! 🎒');
   };
 
-  buyRef.current = buy;
+  // Tasten: immer den aktuellsten Zustand verwenden
+  const live = useRef({ nav, buy, ctxFor });
+  live.current = { nav, buy, ctxFor };
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.code === 'Escape') {
+        e.preventDefault();
+        close();
+        return;
+      }
+      if (e.code === 'Enter' && !e.repeat) {
+        // Knöpfe (Schließen/Kaufen), die per Tab gewählt sind, behalten ihr eigenes Enter
+        const active = document.activeElement;
+        if (active instanceof HTMLElement && active.matches('.btn')) return;
+        e.preventDefault();
+        live.current.buy();
+        return;
+      }
+      const key = navKeyOf(e.code);
+      if (!key) return;
+      e.preventDefault();
+      const { nav: n, ctxFor: c } = live.current;
+      setNav(navigate(n, key, c(n)));
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, []);
+
+  // Spaltenzahl des Rasters (für ↑/↓) und gewählten Eintrag/Chip sichtbar halten
+  useLayoutEffect(() => {
+    const g = gridRef.current;
+    if (g) {
+      const n = getComputedStyle(g).gridTemplateColumns.split(' ').filter(Boolean).length;
+      if (n > 0 && n !== cols) setCols(n);
+      g.querySelector<HTMLElement>('.catalog-cell.selected')?.scrollIntoView({ block: 'nearest' });
+    }
+    for (const el of document.querySelectorAll<HTMLElement>('.catalog .filter-strip .chip.active')) el.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+  });
+
+  const pick = (patch: Partial<NavState>) => setNav({ ...nav, ...patch });
+  const rowClass = (r: NavRow) => `catalog-row ${nav.row === r ? 'nav-active' : ''}`;
 
   return (
     <div class="modal-layer" onPointerUp={(e) => e.target === e.currentTarget && close()}>
       <div class="card book catalog pop-in">
         <h2 class="card-title">📒 Möbelkatalog</h2>
-        <div class="book-tabs">
-          {(
-            [
-              ['moebel', '🪑 Möbel'],
-              ['tapete', '🖼️ Tapeten'],
-              ['boden', '🟫 Böden'],
-            ] as const
-          ).map(([t, label]) => (
-            <button
-              key={t}
-              class={`chip ${tab === t ? 'active' : ''}`}
-              onClick={() => {
-                setTab(t);
-                setSelected(null);
-              }}
-            >
-              {label}
-            </button>
-          ))}
-          <span class="money book-progress">{formatMoney(money)}</span>
+        <span class="money catalog-money">{formatMoney(money)}</span>
+        <div class={`${rowClass('kategorie')} row-kat`}>
+          <div class="filter-strip" onWheel={wheelSideways}>
+            {categories.map((c) => (
+              <button key={c} tabIndex={-1} class={`chip ${filter.category === c ? 'active' : ''}`} onClick={() => pick({ row: 'kategorie', category: c, type: 'alle', index: 0, variant: 0 })}>
+                {CATEGORY_BY_ID[c].icon} {CATEGORY_BY_ID[c].name}
+              </button>
+            ))}
+          </div>
         </div>
-        <div class="book-tabs">
-          {(['alle', 'japanisch', 'basis', 'cottage', 'retro', 'modern', 'midcentury', ...(styleUnlocked(session, 'bistro') ? (['bistro'] as const) : []), 'garten', 'lieblinge', ...(winter || tab !== 'moebel' ? (['winter'] as const) : [])] as const).map((s) => (
-            <button key={s} class={`chip small ${style === s ? 'active' : ''}`} onClick={() => setStyle(s)}>
-              {s === 'alle' ? 'Alle Stile' : STYLE_LABELS[s]}
-            </button>
-          ))}
-        </div>
-        <div class="book-grid catalog-grid">
-          {list.map((e) => (
-            <button
-              key={e.id}
-              class={`book-cell catalog-cell ${selected === e.id ? 'selected' : ''}`}
-              onClick={() => {
-                setSelected(e.id);
-                setVariant(0);
-              }}
-              onFocus={() => {
-                // Pfeiltasten springen nur den Fokus weiter – die Auswahl (und die Anzeige rechts) folgt
-                if (selected !== e.id) {
-                  setSelected(e.id);
-                  setVariant(0);
-                }
-              }}
-              aria-label={e.name}
-            >
+        {types.length > 0 && (
+          <div class={`${rowClass('typ')} row-typ`}>
+            <span class="row-label">Typ</span>
+            <div class="filter-strip" onWheel={wheelSideways}>
+              {types.map((t) => (
+                <button key={t} tabIndex={-1} class={`chip small ${filter.type === t ? 'active' : ''}`} onClick={() => pick({ row: 'typ', type: t, index: 0, variant: 0 })}>
+                  {typeLabel(filter.category, t)}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+        {styles.length > 0 && (
+          <div class={`${rowClass('stil')} row-stil`}>
+            <span class="row-label">Stil</span>
+            <div class="filter-strip" onWheel={wheelSideways}>
+              {styles.map((s: StyleFilter) => (
+                <button key={s} tabIndex={-1} class={`chip small ${filter.style === s ? 'active' : ''}`} onClick={() => pick({ row: 'stil', style: s, index: 0, variant: 0 })}>
+                  {styleFilterLabel(s)}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+        <div ref={gridRef} class={`book-grid catalog-grid ${nav.row === 'raster' ? 'nav-active' : ''}`}>
+          {list.length === 0 && <p class="soft center catalog-empty">Hier gibt es gerade nichts – schau in einer anderen Ecke des Katalogs!</p>}
+          {list.map((e, i) => (
+            <button key={e.id} tabIndex={-1} class={`book-cell catalog-cell ${i === nav.index ? 'selected' : ''}`} onClick={() => pick({ row: 'raster', index: i, variant: 0 })} aria-label={e.name} title={e.name}>
               <img src={itemIconUrl(e.variants[0].itemId)} alt="" draggable={false} />
               <span class="catalog-price">{e.price}</span>
             </button>
@@ -157,14 +177,16 @@ export function CatalogPanel({ session }: { session: Session }) {
               <div>
                 <div class="item-name">{sel.name}</div>
                 <div class="item-cat">
-                  {STYLE_LABELS[sel.style]}
+                  {CATEGORY_BY_ID[sel.meta.category].name}
+                  {sel.meta.type ? ` › ${typeLabel(sel.meta.category, sel.meta.type)}` : ''}
                   {sel.size ? ` · ${sel.size}` : ''}
                 </div>
+                <div class="item-cat soft">{styleLine(sel)}</div>
                 <div class="item-desc">{sel.description}</div>
                 {sel.variants.length > 1 && (
-                  <div class="variant-row">
+                  <div class={`variant-row ${nav.row === 'farbe' ? 'nav-active' : ''}`}>
                     {sel.variants.map((x, i) => (
-                      <button key={x.itemId} class={`swatch ${i === variant ? 'active' : ''}`} style={{ background: x.color ?? undefined }} title={x.label} aria-label={x.label} onClick={() => setVariant(i)} />
+                      <button key={x.itemId} tabIndex={-1} class={`swatch ${i === nav.variant ? 'active' : ''}`} style={{ background: x.color ?? undefined }} title={x.label} aria-label={x.label} onClick={() => pick({ row: 'farbe', variant: i })} />
                     ))}
                     <span class="soft">{v.label}</span>
                   </div>
@@ -172,7 +194,6 @@ export function CatalogPanel({ session }: { session: Session }) {
                 <div class="item-price">
                   Preis: {sel.price} {CURRENCY.icon}
                 </div>
-                <div class="soft small-text">Enter kauft</div>
               </div>
             </>
           ) : (
@@ -187,6 +208,7 @@ export function CatalogPanel({ session }: { session: Session }) {
             {sel ? `Kaufen · ${sel.price} ${CURRENCY.icon}` : 'Kaufen'}
           </button>
         </div>
+        <div class="catalog-hint soft small-text">↑↓ Zeile · ←→ auswählen · Bild↑↓ Kategorie · Enter kaufen · Esc schließen</div>
       </div>
     </div>
   );

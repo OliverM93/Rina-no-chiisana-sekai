@@ -181,6 +181,17 @@ Format: **Entscheidung** – Begründung – verworfene Alternative(n) – Auswi
 
 ---
 
+### D27 · Katalog nach Kategorie, Typ und Stil (N3, Nov. 2026)
+
+**Entscheidung:** Der Möbelkatalog filtert über drei unabhängige Achsen (Kategorie, Typ, Einrichtungsstil); Stücke haben
+0–n Stile, Stilloses (Pflanzen, Garten, Lieblingsthemen) wird über die Kategorie gefunden. 16 Stile, einige kommen mit
+Einzügen (F13); das neue Kernsortiment folgt schrittweise. Alles per Pfeiltasten bedienbar.
+**Begründung:** Die Audits 2/3 nannten den Katalog unübersichtlich (N3) und rieten von neuen Stilen „ohne Not“ ab. Erst die
+Navigation lösen, dann Stile ergänzen – so wächst das Sortiment, ohne dass Lina sich verliert. Mehrfachstile statt
+Duplikaten; nichts verschwindet (die Freischaltung hängt an der bisherigen Linie, nicht an den neuen Stil-Schildern).
+**Verworfen:** eine Stil-Startseite („Showroom“, langsamer beim Suchen nach Typ), Seitenleiste (schmaleres Raster),
+genau ein Stil je Stück.
+
 ## Offene Designentscheidungen ❓
 
 | # | Frage | Warum wichtig | Optionen |
