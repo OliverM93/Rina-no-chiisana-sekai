@@ -306,6 +306,19 @@ export const FURNITURE: readonly FurnitureDef[] = [
   { id: 'neonroehre', name: 'Neon-Schriftzug', style: 'cyberpunk', wall: true, light: true, price: 700, w: 2, d: 1, description: 'Ein leuchtender Schriftzug „GG“ in Pink und Türkis. Für jeden gewonnenen Abend – und jeden verlorenen.' },
   { id: 'rgbleuchte', name: 'Leuchtstab', style: 'cyberpunk', light: true, price: 550, w: 1, d: 1, description: 'Ein schlanker Lichtstab, der oben pink und unten türkis leuchtet. Taucht die Ecke in Arcade-Licht.' },
   { id: 'gitterteppich', name: 'Gitterteppich', style: 'cyberpunk', rug: true, price: 800, w: 2, d: 2, description: 'Ein schwarzer Teppich mit leuchtend türkisen Gitterlinien. Fühlt sich an wie ein Level aus den Achtzigern.' },
+  // ---- Brutalismus: roher Beton, schwere Formen (kommt mit Thalia) ----
+  { id: 'betonsofa', name: 'Betonsofa', style: 'brutalismus', sit: 'sitzen', price: 2000, w: 2, d: 1, description: 'Ein Sockel aus glattem Beton mit dicken Polstern obendrauf. Steht da wie ein Fels – und ist trotzdem gemütlich.', variants: { senf: '#d9a441', grau: '#9a9aa4', rost: '#b8573a', creme: '#efe8dc' }, baseVariant: 'senf' },
+  { id: 'betontisch', name: 'Betonblock-Tisch', style: 'brutalismus', surface: true, surfaceHeight: 0.4, price: 900, w: 1, d: 1, description: 'Ein schwerer Würfel aus Beton mit eingelassener Holzplatte. Thalia: „Sedimentgestein. Fast.“' },
+  { id: 'blockregal', name: 'Blockregal', style: 'brutalismus', surface: true, surfaceHeight: 1.05, price: 1100, w: 2, d: 1, description: 'Dicke Bretter auf gestapelten Betonblöcken. Es wackelt garantiert nie.' },
+  { id: 'betonleuchte', name: 'Betonleuchte', style: 'brutalismus', light: true, price: 650, w: 1, d: 1, description: 'Ein grober Betonsockel, darauf eine große Milchglaskugel. Schwer unten, leicht oben.' },
+  { id: 'filzteppich', name: 'Filzteppich', style: 'brutalismus', rug: true, price: 700, w: 2, d: 2, description: 'Ein dicker Teppich aus grauem Filz mit einem rostroten Streifen. Ruhig, schwer, weich.' },
+  { id: 'betonrelief', name: 'Betonrelief', style: 'brutalismus', wall: true, price: 600, w: 1, d: 1, description: 'Eine Platte mit gegossenen Kreisen und Kanten. Sieht aus wie ein Stück von einem alten Kulturhaus.' },
+  // ---- Memphis: knallig, verspielt, wilde Formen (kommt mit Jens) ----
+  { id: 'memphissessel', name: 'Memphis-Sessel', style: 'memphis', sit: 'sitzen', price: 1300, w: 1, d: 1, description: 'Ein Sessel aus Würfel, Halbkreis und Kugelfüßen in lauter Farben. Jens: „Endlich ein Möbel mit Humor!“', variants: { pink: '#f07ab0', gelb: '#f2c14e', mint: '#9ad8c0', blau: '#5b7fc2' }, baseVariant: 'pink' },
+  { id: 'memphistisch', name: 'Terrazzo-Tisch', style: 'memphis', surface: true, surfaceHeight: 0.42, price: 900, w: 1, d: 1, description: 'Eine runde Terrazzo-Platte auf drei bunten Beinen: Kugel, Kegel, Zylinder.' },
+  { id: 'totemregal', name: 'Totem-Regal', style: 'memphis', surface: true, surfaceHeight: 1.4, price: 1400, w: 1, d: 1, description: 'Ein schiefes Regal aus bunten Formen, eins über dem anderen. Ein bisschen Kunst, ein bisschen Kletterturm.' },
+  { id: 'memphislampe', name: 'Kegel-Lampe', style: 'memphis', light: true, price: 700, w: 1, d: 1, description: 'Ein gestreifter Kegel als Fuß, oben eine leuchtende Kugel mit Zackenkranz.' },
+  { id: 'kringelteppich', name: 'Kringel-Teppich', style: 'memphis', rug: true, price: 800, w: 2, d: 2, description: 'Ein Teppich voller Kringel, Dreiecke und Punkte. Unmöglich, darauf schlechte Laune zu haben.' },
   { id: 'topfpflanze', name: 'Monstera', style: 'basis', price: 300, w: 1, d: 1, description: 'Große, grüne Blätter mit Löchern. Sehr fotogen.' },
 ];
 
@@ -367,6 +380,8 @@ export const WALLPAPERS: readonly SurfaceDef[] = [
   { id: 'tapete-faecher', name: 'Fächer-Tapete', style: 'artdeco', price: 900, kind: 'tapete', pattern: 'faecher', color: '#1f3a33', accent: '#d9b45a', description: 'Goldene Fächer auf dunklem Smaragd. Ein bisschen Zwanziger-Jahre-Glamour.' },
   { id: 'tapete-neongitter', name: 'Neon-Gitter', style: 'cyberpunk', price: 900, kind: 'tapete', pattern: 'gitter', color: '#1c1a2a', accent: '#4ad8e8', description: 'Dunkles Violett mit leuchtenden Gitterlinien. Wie im Inneren eines Videospiels.' },
   { id: 'tapete-orbit', name: 'Orbit-Tapete', style: 'spaceage', price: 750, kind: 'tapete', pattern: 'orbit', color: '#f6efe2', accent: '#f08a3a', description: 'Planeten und Umlaufbahnen in Orange und Braun. Ein bisschen Mondlandung an der Wand.' },
+  { id: 'tapete-sichtbeton', name: 'Sichtbeton', style: 'brutalismus', price: 850, kind: 'tapete', pattern: 'sichtbeton', color: '#bdbab4', accent: '#a9a59e', description: 'Glatter Beton mit den kleinen runden Löchern der Schalung. Ehrlich und ein bisschen streng.' },
+  { id: 'tapete-memphis', name: 'Memphis-Tapete', style: 'memphis', price: 800, kind: 'tapete', pattern: 'memphis', color: '#fdf6e8', accent: '#f07ab0', description: 'Kringel, Dreiecke und Punkte in Pink, Gelb und Türkis. Laut, fröhlich, achtziger.' },
   { id: 'tapete-uni-schwarz', name: 'Einfarbig Schwarz', style: 'modern', price: 450, kind: 'tapete', pattern: 'flach', color: '#2a2a30', accent: '#2a2a30', description: 'Für Lina natürlich auch an der Wand. Sehr gemütlich bei Kerzenlicht.' },
 ];
 
@@ -408,6 +423,7 @@ export const FLOORS: readonly SurfaceDef[] = [
   { id: 'boden-mikrozement', name: 'Mikrozement', style: 'minimalismus', price: 900, kind: 'boden', pattern: 'putz', color: '#dedbd5', accent: '#c9c5be', description: 'Ein fugenloser, hellgrauer Boden. Ruhig wie ein leeres Blatt Papier.' },
   { id: 'boden-glanzweiss', name: 'Weißer Glanzboden', style: 'spaceage', price: 800, kind: 'boden', pattern: 'flach', color: '#f4f2ee', accent: '#e6e3dd', description: 'Ein spiegelglatter weißer Boden. Hier fühlt sich jeder Schritt nach Raumstation an.' },
   { id: 'boden-metall', name: 'Riffelblech', style: 'cyberpunk', price: 850, kind: 'boden', pattern: 'riffel', color: '#4a4c56', accent: '#6a6c78', description: 'Dunkles Metall mit Riffeln. Klingt beim Drüberlaufen ein bisschen nach Raumschiff.' },
+  { id: 'boden-terrazzo-bunt', name: 'Bunter Terrazzo', style: 'memphis', price: 950, kind: 'boden', pattern: 'terrazzo', color: '#f4efe6', accent: '#f07ab0', description: 'Heller Terrazzo mit bunten Steinchen. Jeder Schritt landet auf einem kleinen Konfetti.' },
   { id: 'boden-tafel-eiche', name: 'Tafelparkett Eiche', style: 'midcentury', price: 1300, kind: 'boden', pattern: 'tafel', color: '#d2a671', accent: '#a8794a', description: 'Große Felder mit dunklem Rahmen – Tafelparkett wie im Schloss, nur kleiner.' },
   { id: 'boden-tafel-nuss', name: 'Tafelparkett Nussbaum', style: 'midcentury', price: 1400, kind: 'boden', pattern: 'tafel', color: '#8a5a3a', accent: '#5e3e28', description: 'Dunkles Tafelparkett aus Nussbaum. Sehr feierlich.' },
 ];

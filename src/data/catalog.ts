@@ -313,6 +313,19 @@ const FURNITURE_META: Record<string, Row> = {
   neonroehre: ['moebel', 'wanddeko', ['cyberpunk']],
   rgbleuchte: ['moebel', 'lampen', ['cyberpunk']],
   gitterteppich: ['moebel', 'teppiche', ['cyberpunk']],
+  // Brutalismus
+  betonsofa: ['moebel', 'sofas', ['brutalismus']],
+  betontisch: ['moebel', 'tische', ['brutalismus', 'industrial']],
+  blockregal: ['moebel', 'regale', ['brutalismus', 'industrial']],
+  betonleuchte: ['moebel', 'lampen', ['brutalismus']],
+  filzteppich: ['moebel', 'teppiche', ['brutalismus', 'minimalismus']],
+  betonrelief: ['moebel', 'wanddeko', ['brutalismus']],
+  // Memphis
+  memphissessel: ['moebel', 'sofas', ['memphis']],
+  memphistisch: ['moebel', 'tische', ['memphis']],
+  totemregal: ['moebel', 'regale', ['memphis']],
+  memphislampe: ['moebel', 'lampen', ['memphis']],
+  kringelteppich: ['moebel', 'teppiche', ['memphis']],
   // Garten
   'zaun-weiss': ['garten', 'zaun'],
   gartentor: ['garten', 'zaun'],
@@ -355,6 +368,9 @@ const TASSEN_IDS = new Set(TASSEN.map((t) => t.id));
 const SURFACE_STYLES: Record<string, DesignStyle[]> = {
   'tapete-shoji': ['japanisch', 'japandi'],
   'tapete-kalkputz': ['japandi', 'minimalismus'],
+  'tapete-sichtbeton': ['brutalismus', 'industrial'],
+  'tapete-memphis': ['memphis'],
+  'boden-terrazzo-bunt': ['memphis'],
   'tapete-neongitter': ['cyberpunk'],
   'tapete-orbit': ['spaceage'],
   'boden-glanzweiss': ['spaceage', 'minimalismus'],
@@ -418,7 +434,7 @@ const SURFACE_STYLES: Record<string, DesignStyle[]> = {
   'boden-bistro': ['bistro'],
 };
 
-const WALL_MATERIAL = new Set(['kacheln', 'backstein', 'glas', 'vertaefelung', 'shoji', 'putz', 'latten']);
+const WALL_MATERIAL = new Set(['kacheln', 'backstein', 'glas', 'vertaefelung', 'shoji', 'putz', 'latten', 'sichtbeton']);
 const FLOOR_TYPE: Record<string, string> = {
   dielen: 'dielen',
   schiff: 'dielen',
@@ -432,6 +448,7 @@ const FLOOR_TYPE: Record<string, string> = {
   putz: 'fliesen',
   flach: 'fliesen',
   riffel: 'fliesen',
+  terrazzo: 'fliesen',
   zickzack: 'fliesen',
   tatami: 'weich',
   teppich: 'weich',

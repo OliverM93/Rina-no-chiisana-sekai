@@ -62,6 +62,14 @@ describe('Katalog: Freischaltung neuer Stile', () => {
     expect(has({ larsBegruesst: true }, 'muschelsessel')).toBe(false);
   });
 
+  it('Teil 4: Brutalismus mit Thalia, Memphis mit Jens', () => {
+    const has = (flags: Record<string, boolean>, id: string) => catalogEntries(ctx('sommer', flags)).some((e) => e.id === id);
+    expect(has({}, 'betonsofa')).toBe(false);
+    expect(has({ thaliaBegruesst: true }, 'betonsofa')).toBe(true);
+    expect(has({}, 'memphissessel')).toBe(false);
+    expect(has({ jensBegruesst: true }, 'memphissessel')).toBe(true);
+  });
+
   it('Teil 3: Space Age und Cyberpunk mit Oli', () => {
     const has = (flags: Record<string, boolean>, id: string) => catalogEntries(ctx('sommer', flags)).some((e) => e.id === id);
     for (const id of ['kugelsessel', 'gamingstuhl', 'tapete-neongitter', 'boden-glanzweiss']) {

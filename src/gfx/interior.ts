@@ -429,6 +429,60 @@ export function drawPattern(ctx: CanvasRenderingContext2D, def: SurfaceDef, s: n
       }
       break;
     }
+    case 'sichtbeton': {
+      // Schalungsplatten mit feinen Fugen und je vier runden Ankerlöchern
+      for (let i = 0; i < 60; i++) {
+        ctx.globalAlpha = 0.08;
+        ctx.fillStyle = i % 2 ? accent : lighten(color, 0.08);
+        ctx.beginPath();
+        ctx.arc((((i * 53) % 101) / 101) * s, (((i * 29) % 97) / 97) * s, s / 22, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      ctx.globalAlpha = 0.6;
+      ctx.fillStyle = darken(color, 0.12);
+      ctx.fillRect(0, 0, s, Math.max(1, s / 200));
+      ctx.fillRect(0, s / 2, s, Math.max(1, s / 200));
+      ctx.fillRect(0, 0, Math.max(1, s / 200), s);
+      ctx.globalAlpha = 1;
+      ctx.fillStyle = darken(color, 0.3);
+      for (const y of [0.12, 0.38, 0.62, 0.88]) {
+        for (const x of [0.25, 0.75]) {
+          ctx.beginPath();
+          ctx.arc(x * s, y * s, s / 70, 0, Math.PI * 2);
+          ctx.fill();
+        }
+      }
+      break;
+    }
+    case 'memphis': {
+      // Kringel, Dreiecke, Punkte in drei Farben (kachelbar durch feste Positionen)
+      const cols = [accent, '#f2c14e', '#4ad8e8', '#2a2a30'];
+      ctx.lineWidth = Math.max(1, s / 90);
+      ctx.lineCap = 'round';
+      for (let i = 0; i < 10; i++) {
+        const x = (((i * 37) % 89) / 89) * s * 0.84 + s * 0.08;
+        const y = (((i * 61) % 83) / 83) * s * 0.84 + s * 0.08;
+        const cc = cols[i % cols.length];
+        if (i % 3 === 0) {
+          ctx.strokeStyle = cc;
+          ctx.beginPath();
+          for (let k = 0; k <= 12; k++) ctx.lineTo(x - s / 16 + (k * s) / 96, y + Math.sin(k * 1.2) * (s / 50));
+          ctx.stroke();
+        } else if (i % 3 === 1) {
+          ctx.fillStyle = cc;
+          ctx.beginPath();
+          ctx.moveTo(x, y - s / 30);
+          ctx.lineTo(x + s / 30, y + s / 40);
+          ctx.lineTo(x - s / 30, y + s / 40);
+          ctx.closePath();
+          ctx.fill();
+        } else {
+          ctx.fillStyle = cc;
+          for (let k = 0; k < 3; k++) ctx.fillRect(x + k * (s / 40), y, s / 80, s / 80);
+        }
+      }
+      break;
+    }
     case 'latten': {
       // schmale senkrechte Holzlatten mit dunklen Fugen
       const n = 10;
