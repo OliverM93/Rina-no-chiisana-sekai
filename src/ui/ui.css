@@ -172,6 +172,13 @@ body {
   background: var(--ui-panel);
   z-index: 2;
 }
+/* Fenster mit fester Größe (Katalog, Truhe, Samenstand) scrollen nie – dort keine Abdeckung, die sonst
+   Zeilen unter der Knopfleiste (Tastenhilfe) verdecken würde */
+.card.catalog > .card-actions::after,
+.card.storage-card > .card-actions::after,
+.card.seedstand > .card-actions::after {
+  display: none;
+}
 /* deckt den Innenabstand unter der Leiste ab, damit beim Scrollen nichts darunter hervorschaut */
 .card > .card-actions::after {
   content: '';
@@ -1689,6 +1696,48 @@ body:has(.dialog-layer) .decor-bar {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+.catalog-detail {
+  position: relative;
+}
+.catalog-detail .detail-desc-wrap {
+  position: relative;
+  align-self: stretch;
+  min-height: 0;
+  overflow: hidden;
+}
+/* „… weiterlesen“ sitzt unten rechts auf dem gekürzten Text, mit sanftem Übergang */
+.desc-more {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  border: none;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 800;
+  color: var(--ui-accent-dark);
+  background: linear-gradient(to right, transparent, var(--ui-bg) 30%);
+  padding: 0 4px 0 28px;
+  cursor: pointer;
+}
+/* der ganze Text als Ebene über der Detailspalte */
+.desc-full {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 14px 16px;
+  background: var(--ui-bg);
+  border-radius: 18px;
+  box-shadow: 0 0 0 2px var(--ui-border);
+  text-align: left;
+  overflow-y: auto;
+  cursor: pointer;
+}
+.desc-full-text {
+  line-height: 1.5;
 }
 .catalog-detail .detail-desc {
   align-self: start;

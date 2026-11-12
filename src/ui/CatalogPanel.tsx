@@ -49,6 +49,10 @@ export function CatalogPanel({ session }: { session: Session }) {
   });
   const gridRef = useRef<HTMLDivElement>(null);
   const [cols, setCols] = useState(6);
+  /** Beschreibung zu lang für die Detailspalte? Dann gibt es „weiterlesen“ (Leertaste) mit dem ganzen Text */
+  const descRef = useRef<HTMLDivElement>(null);
+  const [descLong, setDescLong] = useState(false);
+  const [descOpen, setDescOpen] = useState(false);
   const close = () => ui.set({ panel: null });
 
   // wirksame Filter & Listen für den aktuellen Zustand
@@ -83,13 +87,21 @@ export function CatalogPanel({ session }: { session: Session }) {
   };
 
   // Tasten: immer den aktuellsten Zustand verwenden
-  const live = useRef({ nav, buy, ctxFor });
-  live.current = { nav, buy, ctxFor };
+  const live = useRef({ nav, buy, ctxFor, descLong, descOpen });
+  live.current = { nav, buy, ctxFor, descLong, descOpen };
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if (e.code === 'Escape') {
         e.preventDefault();
-        close();
+        // erst den ganzen Text schließen, dann den Katalog
+        if (live.current.descOpen) setDescOpen(false);
+        else close();
+        return;
+      }
+      if (e.code === 'Space' && !e.repeat) {
+        e.preventDefault();
+        if (live.current.descOpen) setDescOpen(false);
+        else if (live.current.descLong) setDescOpen(true);
         return;
       }
       if (e.code === 'Enter' && !e.repeat) {
@@ -103,6 +115,7 @@ export function CatalogPanel({ session }: { session: Session }) {
       const key = navKeyOf(e.code);
       if (!key) return;
       e.preventDefault();
+      setDescOpen(false);
       const { nav: n, ctxFor: c } = live.current;
       setNav(navigate(n, key, c(n)));
     };
@@ -119,7 +132,13 @@ export function CatalogPanel({ session }: { session: Session }) {
       g.querySelector<HTMLElement>('.catalog-cell.selected')?.scrollIntoView({ block: 'nearest' });
     }
     for (const el of document.querySelectorAll<HTMLElement>('.catalog .filter-strip .chip.active')) el.scrollIntoView({ block: 'nearest', inline: 'center' });
+    const d = descRef.current;
+    const long = !!d && d.scrollHeight > d.clientHeight + 2;
+    if (long !== descLong) setDescLong(long);
   });
+  // neuer Eintrag → ganzer Text wieder zu
+  const selKey = `${nav.category}|${nav.type}|${nav.style}|${nav.index}`;
+  useEffect(() => setDescOpen(false), [selKey]);
 
   const pick = (patch: Partial<NavState>) => setNav({ ...nav, ...patch });
   const rowClass = (r: NavRow, empty = false) => `catalog-row ${nav.row === r ? 'nav-active' : ''} ${empty ? 'empty' : ''}`;
@@ -187,7 +206,16 @@ export function CatalogPanel({ session }: { session: Session }) {
             {sel ? `${CATEGORY_BY_ID[sel.meta.category].name}${sel.meta.type ? ` › ${typeLabel(sel.meta.category, sel.meta.type)}` : ''}${sel.size ? ` · ${sel.size}` : ''}` : ' '}
           </div>
           <div class="detail-line item-cat soft">{sel ? styleLine(sel) : ' '}</div>
-          <div class="detail-desc item-desc">{sel ? sel.description : 'Gekauftes kommt in deine Tasche – oder, wenn du gerade einrichtest, direkt in deine Hand.'}</div>
+          <div class="detail-desc-wrap">
+            <div ref={descRef} class="detail-desc item-desc">
+              {sel ? sel.description : 'Gekauftes kommt in deine Tasche – oder, wenn du gerade einrichtest, direkt in deine Hand.'}
+            </div>
+            {descLong && sel && (
+              <button class="desc-more" tabIndex={-1} onClick={() => setDescOpen(true)}>
+                … weiterlesen <span class="soft">(Leertaste)</span>
+              </button>
+            )}
+          </div>
           <div class={`variant-row ${nav.row === 'farbe' ? 'nav-active' : ''}`} style={{ visibility: sel && sel.variants.length > 1 ? 'visible' : 'hidden' }}>
             {(sel && sel.variants.length > 1 ? sel.variants : [{ itemId: '-', label: '', color: null }]).map((x, i) => (
               <button key={x.itemId} tabIndex={-1} class={`swatch ${i === nav.variant ? 'active' : ''}`} style={{ background: x.color ?? undefined }} title={x.label} aria-label={x.label} onClick={() => pick({ row: 'farbe', variant: i })} />
@@ -195,6 +223,13 @@ export function CatalogPanel({ session }: { session: Session }) {
             <span class="soft">{v && sel && sel.variants.length > 1 ? v.label : ''}</span>
           </div>
           <div class="item-price">{sel ? `Preis: ${sel.price} ${CURRENCY.icon}` : ' '}</div>
+          {descOpen && sel && (
+            <div class="desc-full pop-in" onClick={() => setDescOpen(false)}>
+              <div class="item-name">{sel.name}</div>
+              <div class="desc-full-text">{sel.description}</div>
+              <div class="soft small-text">Leertaste, Esc oder Klick schließt</div>
+            </div>
+          )}
         </div>
         <div class="card-actions">
           <button class="btn ghost" onClick={close}>
@@ -204,7 +239,7 @@ export function CatalogPanel({ session }: { session: Session }) {
             {sel ? `Kaufen · ${sel.price} ${CURRENCY.icon}` : 'Kaufen'}
           </button>
         </div>
-        <div class="catalog-hint soft small-text">↑↓ Zeile · ←→ auswählen · Bild↑↓ Kategorie · Enter kaufen · Esc schließen</div>
+        <div class="catalog-hint soft small-text">↑↓ Zeile · ←→ auswählen · Bild↑↓ Kategorie · Leertaste ganzer Text · Enter kaufen · Esc schließen</div>
       </div>
     </div>
   );
