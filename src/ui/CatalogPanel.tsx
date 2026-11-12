@@ -5,6 +5,7 @@
  * Alles geht mit den Pfeiltasten (Zustandsmaschine in `catalogNav.ts`), mit der Maus genauso.
  * Gekauftes landet in der Tasche – oder beim Einrichten gleich in Linas Hand.
  */
+import type { ComponentChildren } from 'preact';
 import { useEffect, useLayoutEffect, useRef, useState } from 'preact/hooks';
 import { CATEGORY_BY_ID, DESIGN_STYLE_BY_ID } from '../data/catalog';
 import { CURRENCY } from '../data/items';
@@ -117,11 +118,13 @@ export function CatalogPanel({ session }: { session: Session }) {
       if (n > 0 && n !== cols) setCols(n);
       g.querySelector<HTMLElement>('.catalog-cell.selected')?.scrollIntoView({ block: 'nearest' });
     }
-    for (const el of document.querySelectorAll<HTMLElement>('.catalog .filter-strip .chip.active')) el.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+    for (const el of document.querySelectorAll<HTMLElement>('.catalog .filter-strip .chip.active')) el.scrollIntoView({ block: 'nearest', inline: 'center' });
   });
 
   const pick = (patch: Partial<NavState>) => setNav({ ...nav, ...patch });
-  const rowClass = (r: NavRow) => `catalog-row ${nav.row === r ? 'nav-active' : ''}`;
+  const rowClass = (r: NavRow, empty = false) => `catalog-row ${nav.row === r ? 'nav-active' : ''} ${empty ? 'empty' : ''}`;
+  const noStyleHere = styles.length === 0;
+  const noTypeHere = types.length === 0;
 
   return (
     <div class="modal-layer" onPointerUp={(e) => e.target === e.currentTarget && close()}>
@@ -129,38 +132,44 @@ export function CatalogPanel({ session }: { session: Session }) {
         <h2 class="card-title">📒 Möbelkatalog</h2>
         <span class="money catalog-money">{formatMoney(money)}</span>
         <div class={`${rowClass('kategorie')} row-kat`}>
-          <div class="filter-strip" onWheel={wheelSideways}>
+          <span class="row-label" />
+          <ChipStrip>
             {categories.map((c) => (
               <button key={c} tabIndex={-1} class={`chip ${filter.category === c ? 'active' : ''}`} onClick={() => pick({ row: 'kategorie', category: c, type: 'alle', index: 0, variant: 0 })}>
                 {CATEGORY_BY_ID[c].icon} {CATEGORY_BY_ID[c].name}
               </button>
             ))}
-          </div>
+          </ChipStrip>
         </div>
-        {types.length > 0 && (
-          <div class={`${rowClass('typ')} row-typ`}>
-            <span class="row-label">Typ</span>
-            <div class="filter-strip" onWheel={wheelSideways}>
-              {types.map((t) => (
+        {/* Typ- und Stil-Zeile stehen immer da – gibt es nichts zu wählen, sind sie ausgegraut (das Fenster springt nicht) */}
+        <div class={`${rowClass('typ', noTypeHere)} row-typ`}>
+          <span class="row-label">Typ</span>
+          <ChipStrip>
+            {noTypeHere ? (
+              <span class="chip small disabled">{CATEGORY_BY_ID[filter.category].types.length === 0 ? 'Keine Typen' : 'Nur ein Typ'}</span>
+            ) : (
+              types.map((t) => (
                 <button key={t} tabIndex={-1} class={`chip small ${filter.type === t ? 'active' : ''}`} onClick={() => pick({ row: 'typ', type: t, index: 0, variant: 0 })}>
                   {typeLabel(filter.category, t)}
                 </button>
-              ))}
-            </div>
-          </div>
-        )}
-        {styles.length > 0 && (
-          <div class={`${rowClass('stil')} row-stil`}>
-            <span class="row-label">Stil</span>
-            <div class="filter-strip" onWheel={wheelSideways}>
-              {styles.map((s: StyleFilter) => (
-                <button key={s} tabIndex={-1} class={`chip small ${filter.style === s ? 'active' : ''}`} onClick={() => pick({ row: 'stil', style: s, index: 0, variant: 0 })}>
-                  {styleFilterLabel(s)}
+              ))
+            )}
+          </ChipStrip>
+        </div>
+        <div class={`${rowClass('stil', noStyleHere)} row-stil`}>
+          <span class="row-label">Stil</span>
+          <ChipStrip>
+            {noStyleHere ? (
+              <span class="chip small disabled">Hier ohne Stil</span>
+            ) : (
+              styles.map((st: StyleFilter) => (
+                <button key={st} tabIndex={-1} class={`chip small ${filter.style === st ? 'active' : ''}`} title={st !== 'alle' && st !== 'ohne' ? DESIGN_STYLE_BY_ID[st].blurb : undefined} onClick={() => pick({ row: 'stil', style: st, index: 0, variant: 0 })}>
+                  {styleFilterLabel(st)}
                 </button>
-              ))}
-            </div>
-          </div>
-        )}
+              ))
+            )}
+          </ChipStrip>
+        </div>
         <div ref={gridRef} class={`book-grid catalog-grid ${nav.row === 'raster' ? 'nav-active' : ''}`}>
           {list.length === 0 && <p class="soft center catalog-empty">Hier gibt es gerade nichts – schau in einer anderen Ecke des Katalogs!</p>}
           {list.map((e, i) => (
@@ -170,35 +179,22 @@ export function CatalogPanel({ session }: { session: Session }) {
             </button>
           ))}
         </div>
-        <div class="item-detail">
-          {sel && v ? (
-            <>
-              <img src={itemIconUrl(v.itemId, 96)} alt="" />
-              <div>
-                <div class="item-name">{sel.name}</div>
-                <div class="item-cat">
-                  {CATEGORY_BY_ID[sel.meta.category].name}
-                  {sel.meta.type ? ` › ${typeLabel(sel.meta.category, sel.meta.type)}` : ''}
-                  {sel.size ? ` · ${sel.size}` : ''}
-                </div>
-                <div class="item-cat soft">{styleLine(sel)}</div>
-                <div class="item-desc">{sel.description}</div>
-                {sel.variants.length > 1 && (
-                  <div class={`variant-row ${nav.row === 'farbe' ? 'nav-active' : ''}`}>
-                    {sel.variants.map((x, i) => (
-                      <button key={x.itemId} tabIndex={-1} class={`swatch ${i === nav.variant ? 'active' : ''}`} style={{ background: x.color ?? undefined }} title={x.label} aria-label={x.label} onClick={() => pick({ row: 'farbe', variant: i })} />
-                    ))}
-                    <span class="soft">{v.label}</span>
-                  </div>
-                )}
-                <div class="item-price">
-                  Preis: {sel.price} {CURRENCY.icon}
-                </div>
-              </div>
-            </>
-          ) : (
-            <p class="soft center">Such dir etwas Schönes aus! Gekauftes kommt in deine Tasche – oder, wenn du gerade einrichtest, direkt in deine Hand.</p>
-          )}
+        {/* Feste Anordnung: Bild, Name, Ort, Stil, Text (feste Höhe), Farben (Platz bleibt frei), Preis */}
+        <div class="item-detail catalog-detail">
+          <img src={v ? itemIconUrl(v.itemId, 96) : undefined} alt="" style={{ visibility: v ? 'visible' : 'hidden' }} />
+          <div class="detail-name item-name">{sel ? sel.name : 'Such dir etwas Schönes aus!'}</div>
+          <div class="detail-line item-cat">
+            {sel ? `${CATEGORY_BY_ID[sel.meta.category].name}${sel.meta.type ? ` › ${typeLabel(sel.meta.category, sel.meta.type)}` : ''}${sel.size ? ` · ${sel.size}` : ''}` : ' '}
+          </div>
+          <div class="detail-line item-cat soft">{sel ? styleLine(sel) : ' '}</div>
+          <div class="detail-desc item-desc">{sel ? sel.description : 'Gekauftes kommt in deine Tasche – oder, wenn du gerade einrichtest, direkt in deine Hand.'}</div>
+          <div class={`variant-row ${nav.row === 'farbe' ? 'nav-active' : ''}`} style={{ visibility: sel && sel.variants.length > 1 ? 'visible' : 'hidden' }}>
+            {(sel && sel.variants.length > 1 ? sel.variants : [{ itemId: '-', label: '', color: null }]).map((x, i) => (
+              <button key={x.itemId} tabIndex={-1} class={`swatch ${i === nav.variant ? 'active' : ''}`} style={{ background: x.color ?? undefined }} title={x.label} aria-label={x.label} onClick={() => pick({ row: 'farbe', variant: i })} />
+            ))}
+            <span class="soft">{v && sel && sel.variants.length > 1 ? v.label : ''}</span>
+          </div>
+          <div class="item-price">{sel ? `Preis: ${sel.price} ${CURRENCY.icon}` : ' '}</div>
         </div>
         <div class="card-actions">
           <button class="btn ghost" onClick={close}>
@@ -210,6 +206,44 @@ export function CatalogPanel({ session }: { session: Session }) {
         </div>
         <div class="catalog-hint soft small-text">↑↓ Zeile · ←→ auswählen · Bild↑↓ Kategorie · Enter kaufen · Esc schließen</div>
       </div>
+    </div>
+  );
+}
+
+/**
+ * Eine Chip-Zeile ohne sichtbaren Scrollbalken: Geht sie über den Rand, erscheinen ◀ ▶ (Klick blättert),
+ * die Kante blendet sanft aus. Mausrad und Pfeiltasten (aktiver Chip wird eingeblendet) funktionieren weiter.
+ */
+function ChipStrip({ children }: { children: ComponentChildren }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const [edge, setEdge] = useState({ left: false, right: false });
+  const update = () => {
+    const el = ref.current;
+    if (!el) return;
+    const left = el.scrollLeft > 2;
+    const right = el.scrollLeft + el.clientWidth < el.scrollWidth - 2;
+    if (left !== edge.left || right !== edge.right) setEdge({ left, right });
+  };
+  useLayoutEffect(update);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el || typeof ResizeObserver === 'undefined') return;
+    const ro = new ResizeObserver(() => update());
+    ro.observe(el);
+    return () => ro.disconnect();
+  });
+  const page = (dir: number) => ref.current?.scrollBy({ left: dir * ref.current.clientWidth * 0.7, behavior: 'smooth' });
+  return (
+    <div class={`chip-strip ${edge.left ? 'more-left' : ''} ${edge.right ? 'more-right' : ''}`}>
+      <button class="strip-arrow left" tabIndex={-1} aria-label="zurückblättern" style={{ visibility: edge.left ? 'visible' : 'hidden' }} onClick={() => page(-1)}>
+        ◀
+      </button>
+      <div ref={ref} class="filter-strip" onWheel={wheelSideways} onScroll={update}>
+        {children}
+      </div>
+      <button class="strip-arrow right" tabIndex={-1} aria-label="weiterblättern" style={{ visibility: edge.right ? 'visible' : 'hidden' }} onClick={() => page(1)}>
+        ▶
+      </button>
     </div>
   );
 }
