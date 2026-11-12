@@ -343,6 +343,35 @@ export function drawPattern(ctx: CanvasRenderingContext2D, def: SurfaceDef, s: n
       }
       break;
     }
+    case 'putz': {
+      // Lehmputz: weiche, wolkige Flecken ohne Fugen (kachelbar durch Wiederholung an den Rändern)
+      for (let i = 0; i < 90; i++) {
+        const x = (((i * 61) % 97) / 97) * s;
+        const y = (((i * 37) % 89) / 89) * s;
+        const r = s / 14 + (i % 5) * (s / 60);
+        ctx.globalAlpha = 0.08;
+        ctx.fillStyle = i % 3 ? accent : lighten(color, 0.08);
+        for (const [dx, dy] of [[0, 0], [s, 0], [-s, 0], [0, s], [0, -s]]) {
+          ctx.beginPath();
+          ctx.arc(x + dx, y + dy, r, 0, Math.PI * 2);
+          ctx.fill();
+        }
+      }
+      ctx.globalAlpha = 1;
+      break;
+    }
+    case 'latten': {
+      // schmale senkrechte Holzlatten mit dunklen Fugen
+      const n = 10;
+      const w = s / n;
+      for (let i = 0; i < n; i++) {
+        ctx.fillStyle = i % 3 === 0 ? lighten(color, 0.05) : i % 3 === 1 ? color : darken(color, 0.04);
+        ctx.fillRect(i * w, 0, w, s);
+        ctx.fillStyle = darken(accent, 0.1);
+        ctx.fillRect(i * w, 0, Math.max(1, w * 0.07), s);
+      }
+      break;
+    }
     case 'vertaefelung': {
       // senkrechte Holzleisten mit Fugen + Abschlussleiste oben
       ctx.fillStyle = accent;

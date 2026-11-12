@@ -303,8 +303,8 @@ Legende: ✅ erledigt · 🚧 in Arbeit · ⬜ geplant
 - ✅ **Möbelkatalog neu geordnet (Nov. 2026):** Kategorie × Typ × Stil, 16 Einrichtungsstile mit Mehrfachstilen und
   „Ohne Stil“, neue Stile teils an Einzüge gekoppelt, komplett per Pfeiltasten bedienbar
   (siehe [`katalog-ueberarbeitung.md`](katalog-ueberarbeitung.md)).
-- 🗓️ **Kernsortiment der neuen Stile** in Folge-PRs (je 3–4 Stile): Japandi, Minimalismus, Skandinavisch, Industrial,
-  Dark Academia, Art déco, Brutalismus, Space Age, Cyberpunk, Memphis – rund 45–55 neue Modelle plus Tapeten/Böden.
+- ✅ **Neue Stile Teil 1:** Japandi, Skandinavisch, Minimalismus – Kernsortiment (15 Möbel, 2 Tapeten, 1 Boden).
+- 🗓️ **Neue Stile Teil 2–4:** Dark Academia/Art déco/Industrial, dann Space Age/Cyberpunk, dann Brutalismus/Memphis.
 
 ## 💡 Ideen-Parkplatz
 

@@ -12,7 +12,13 @@ import { BOUQUETS, EMPTY_VASE, vaseId, WREATHS } from './straeusse';
 import { SAMMLUNGEN, urkundeId } from './sammlungen';
 import { TASSEN } from './tassen';
 
-export type FurnitureStyle = 'japanisch' | 'basis' | 'cottage' | 'retro' | 'modern' | 'midcentury' | 'handgemacht' | 'garten' | 'kunst' | 'winter' | 'lieblinge' | 'bistro';
+/**
+ * „Linie“ eines Stücks: woher es kommt und wann es im Katalog erscheint (siehe `data/catalog.ts`).
+ * Die neuen Einrichtungsstile sind zugleich Linien ihrer eigenen Stücke – so kommen diese mit dem passenden Einzug.
+ */
+export type FurnitureStyle =
+  | 'japanisch' | 'basis' | 'cottage' | 'retro' | 'modern' | 'midcentury' | 'handgemacht' | 'garten' | 'kunst' | 'winter' | 'lieblinge' | 'bistro'
+  | 'japandi' | 'minimalismus' | 'skandinavisch' | 'industrial' | 'brutalismus' | 'artdeco' | 'darkacademia' | 'spaceage' | 'cyberpunk' | 'memphis';
 
 export interface FurnitureDef {
   /** Basis-ID (ohne Variante) */
@@ -252,6 +258,24 @@ export const FURNITURE: readonly FurnitureDef[] = [
   { id: 'hellerau-standregal', name: 'Hellerau-Standregal', style: 'midcentury', surface: true, surfaceHeight: 1.46, price: 1100, w: 1, d: 1, description: 'Das Hellerau-Regal zum Hinstellen: vier Bretter zwischen zwei Leiterseiten, oben ist Platz für Kleinigkeiten.', variants: { sand: '#e3c79a', weiss: '#f2efe9', schwarz: '#2f2f35', mint: '#a8d8c4' } },
   { id: 'formenbild', name: 'Formen-Bild', style: 'midcentury', wall: true, price: 700, w: 1, d: 1, description: 'Ein Bild aus Grundformen und Grundfarben. Jens sagt: „Weniger ist mehr, ma chérie.“' },
   { id: 'sonnenspiegel', name: 'Sonnenspiegel', style: 'midcentury', wall: true, price: 850, w: 1, d: 1, description: 'Ein runder Spiegel mit goldenen Strahlen rundherum – wie eine kleine Sonne an der Wand.' },
+  // ---- Japandi: Japanische Ruhe + nordisches Holz (ab Anfang) ----
+  { id: 'japandi-daybed', name: 'Japandi-Daybed', style: 'japandi', sit: 'sitzen', price: 1700, w: 2, d: 1, description: 'Ein niedriges Eichengestell mit dicker Leinenauflage. Halb Sofa, halb Bett – ganz Ruhe.', variants: { leinen: '#e9e1d2', salbei: '#b4c4a8', sand: '#d6c3a5', anthrazit: '#56565e' }, baseVariant: 'leinen' },
+  { id: 'lattenregal', name: 'Lattenregal', style: 'japandi', surface: true, surfaceHeight: 0.5, price: 950, w: 2, d: 1, description: 'Ein flaches Sideboard aus heller Eiche mit Lattentüren. Oben drauf: genau eine Vase. Mehr braucht es nicht.', variants: { eiche: '#d9b98c', nuss: '#8a5a3a', schwarz: '#2f2f35' }, baseVariant: 'eiche' },
+  { id: 'papierleuchte', name: 'Papierkugel-Leuchte', style: 'japandi', light: true, price: 520, w: 1, d: 1, description: 'Eine große Kugel aus Reispapier auf einem schlanken Holzstab. Das Licht wird ganz weich.' },
+  { id: 'linienbild', name: 'Bild „Eine Linie“', style: 'japandi', wall: true, price: 480, w: 1, d: 1, description: 'Ein einziger Pinselstrich auf hellem Papier. Jens sagt: „Mutig.“ Oma sagt: „Da fehlt doch was.“' },
+  // ---- Skandinavisch: hell, weich, hygge (kommt mit Olaf & Christin) ----
+  { id: 'skandi-sofa', name: 'Skandi-Sofa', style: 'skandinavisch', sit: 'sitzen', price: 1900, w: 2, d: 1, description: 'Ein schlankes Sofa auf schrägen Eichenbeinen, dazu ein Strickkissen. Christin: „Endlich mal gerade Linien.“', variants: { hellgrau: '#c9c9cf', sand: '#d9c8ad', salbei: '#a9c4a0', senf: '#e0b04a', taubenblau: '#8fa8c4' }, baseVariant: 'hellgrau' },
+  { id: 'schaukelstuhl', name: 'Schaukelstuhl', style: 'skandinavisch', sit: 'sitzen', price: 1100, w: 1, d: 1, description: 'Ein Schaukelstuhl mit Schaffell. Wippen, Tee trinken, aus dem Fenster gucken – mehr Programm gibt es heute nicht.', variants: { weiss: '#f2efe9', eiche: '#d9b98c', schwarz: '#2f2f35' }, baseVariant: 'weiss' },
+  { id: 'skandi-esstisch', name: 'Runder Eichentisch', style: 'skandinavisch', surface: true, surfaceHeight: 0.72, price: 1000, w: 1, d: 1, description: 'Ein runder Tisch aus heller Eiche auf vier schrägen Beinen. Platz für zwei Tassen und ein langes Gespräch.' },
+  { id: 'skandi-stuhl', name: 'Eichenstuhl', style: 'skandinavisch', sit: 'sitzen', price: 420, w: 1, d: 1, description: 'Ein leichter Holzstuhl mit gebogener Lehne. Passt an jeden Tisch.', variants: { eiche: '#d9b98c', weiss: '#f2efe9', schwarz: '#2f2f35', salbei: '#a9c4a0' }, baseVariant: 'eiche' },
+  { id: 'rautenteppich', name: 'Rautenteppich', style: 'skandinavisch', rug: true, price: 800, w: 2, d: 2, description: 'Ein dicker Wollteppich, cremeweiß mit schwarzen Rauten. Barfuß ein Gedicht.' },
+  { id: 'schaffell', name: 'Schaffell', style: 'skandinavisch', rug: true, price: 300, w: 1, d: 1, description: 'Ein weiches, weißes Fell (natürlich aus Kunstfell). Winston hat es sofort für sich beansprucht.' },
+  // ---- Minimalismus: weniger, aber schöner (kommt mit Olaf & Christin) ----
+  { id: 'kubus-sofa', name: 'Kubus-Sofa', style: 'minimalismus', sit: 'sitzen', price: 2000, w: 2, d: 1, description: 'Klare Kanten, keine Kissen, keine Schnörkel. Sitzt sich trotzdem erstaunlich weich.', variants: { weiss: '#efedea', grau: '#9a9aa4', schwarz: '#3a3a42' }, baseVariant: 'weiss' },
+  { id: 'plattformbett', name: 'Plattformbett', style: 'minimalismus', sit: 'liegen', price: 2000, w: 2, d: 2, description: 'Ein schwebend niedriges Bett mit glatter Decke. Morgens Bett machen dauert genau drei Sekunden.', variants: { weiss: '#efedea', grau: '#b9b9c0', sand: '#d9c8ad', schwarz: '#3a3a42' }, baseVariant: 'weiss' },
+  { id: 'linienleuchte', name: 'Linienleuchte', style: 'minimalismus', light: true, price: 600, w: 1, d: 1, description: 'Ein schmaler Leuchtstab auf einem flachen Sockel. Ein Strich Licht im Raum.' },
+  { id: 'plattentisch', name: 'Plattentisch', style: 'minimalismus', surface: true, surfaceHeight: 0.3, price: 650, w: 1, d: 1, description: 'Ein niedriger Block mit glatter Platte. Steht einfach da und ist schön.', variants: { weiss: '#efedea', schwarz: '#2f2f35', eiche: '#d9b98c' }, baseVariant: 'weiss' },
+  { id: 'wollteppich', name: 'Wollteppich', style: 'minimalismus', rug: true, price: 600, w: 2, d: 2, description: 'Ein schlichter Teppich ohne Muster, nur mit feinem Rand. Ruhe für die Füße.', variants: { creme: '#efe8dc', grau: '#bdbdc2', sand: '#d9c8ad', anthrazit: '#56565e' }, baseVariant: 'creme' },
   { id: 'topfpflanze', name: 'Monstera', style: 'basis', price: 300, w: 1, d: 1, description: 'Große, grüne Blätter mit Löchern. Sehr fotogen.' },
 ];
 
@@ -307,6 +331,8 @@ export const WALLPAPERS: readonly SurfaceDef[] = [
   { id: 'tapete-uni-waldgruen', name: 'Einfarbig Waldgrün', style: 'cottage', price: 450, kind: 'tapete', pattern: 'flach', color: '#476b4f', accent: '#476b4f', description: 'Dunkles Grün wie im Wald nach dem Regen.' },
   { id: 'tapete-uni-bordeaux', name: 'Einfarbig Bordeaux', style: 'retro', price: 450, kind: 'tapete', pattern: 'flach', color: '#8d3b45', accent: '#8d3b45', description: 'Satt und gemütlich wie ein Samtsessel.' },
   { id: 'tapete-uni-nachtblau', name: 'Einfarbig Nachtblau', style: 'modern', price: 450, kind: 'tapete', pattern: 'flach', color: '#34406b', accent: '#34406b', description: 'Wie der Himmel um Mitternacht.' },
+  { id: 'tapete-kalkputz', name: 'Lehmputz', style: 'japandi', price: 650, kind: 'tapete', pattern: 'putz', color: '#e6dccb', accent: '#cdbfa8', description: 'Eine Wand wie von Hand verputzt – warm, matt und ganz leicht wolkig.' },
+  { id: 'tapete-holzlatten', name: 'Holzlatten-Wand', style: 'japandi', price: 950, kind: 'tapete', pattern: 'latten', color: '#d9b98c', accent: '#a9875e', description: 'Schmale Eichenlatten mit dunklen Fugen. Riecht ein bisschen nach Sauna im Wald.' },
   { id: 'tapete-uni-schwarz', name: 'Einfarbig Schwarz', style: 'modern', price: 450, kind: 'tapete', pattern: 'flach', color: '#2a2a30', accent: '#2a2a30', description: 'Für Lina natürlich auch an der Wand. Sehr gemütlich bei Kerzenlicht.' },
 ];
 
@@ -345,6 +371,7 @@ export const FLOORS: readonly SurfaceDef[] = [
   { id: 'boden-schiff-eiche', name: 'Schiffsboden Eiche', style: 'basis', price: 850, kind: 'boden', pattern: 'schiff', color: '#c9a06a', accent: '#a9824f', description: 'Lange Dielen mit versetzten Stößen, wie auf einem alten Segelschiff.' },
   { id: 'boden-schiff-treibholz', name: 'Schiffsboden Treibholz', style: 'modern', price: 850, kind: 'boden', pattern: 'schiff', color: '#b3aaa0', accent: '#968d83', description: 'Silbergraue Dielen, als hätte sie das Meer angespült.' },
   { id: 'boden-schiff-schwarz', name: 'Schiffsboden Schwarzeiche', style: 'modern', price: 950, kind: 'boden', pattern: 'schiff', color: '#4a413d', accent: '#352e2b', description: 'Dunkle, fast schwarze Dielen mit versetzten Stößen.' },
+  { id: 'boden-mikrozement', name: 'Mikrozement', style: 'minimalismus', price: 900, kind: 'boden', pattern: 'putz', color: '#dedbd5', accent: '#c9c5be', description: 'Ein fugenloser, hellgrauer Boden. Ruhig wie ein leeres Blatt Papier.' },
   { id: 'boden-tafel-eiche', name: 'Tafelparkett Eiche', style: 'midcentury', price: 1300, kind: 'boden', pattern: 'tafel', color: '#d2a671', accent: '#a8794a', description: 'Große Felder mit dunklem Rahmen – Tafelparkett wie im Schloss, nur kleiner.' },
   { id: 'boden-tafel-nuss', name: 'Tafelparkett Nussbaum', style: 'midcentury', price: 1400, kind: 'boden', pattern: 'tafel', color: '#8a5a3a', accent: '#5e3e28', description: 'Dunkles Tafelparkett aus Nussbaum. Sehr feierlich.' },
 ];
@@ -371,7 +398,10 @@ for (const w of WREATHS) (FURNITURE as FurnitureDef[]).push({ id: w.id, name: w.
 // Kunstwerke (Bild auf Staffelei) aus `art.ts` – nur über Jens erhältlich
 for (const a of ARTWORKS) (FURNITURE as FurnitureDef[]).push({ id: a.id, name: a.name, style: 'kunst', gift: true, price: a.price, w: 1, d: 1, description: `${a.description} – ${a.artist}` });
 
-export const STYLE_LABELS: Record<FurnitureStyle, string> = { japanisch: 'Japanisch', basis: 'Basis', cottage: 'Cottagecore', retro: 'Retro-Oma-Chic', modern: 'Modern', midcentury: 'Mid-Century & Bauhaus', handgemacht: 'Handgemacht', garten: 'Garten', kunst: 'Kunst', winter: 'Winterzauber', lieblinge: 'Lieblingsthemen', bistro: 'Französisches Bistro' };
+export const STYLE_LABELS: Record<FurnitureStyle, string> = {
+  japanisch: 'Japanisch', basis: 'Basis', cottage: 'Cottagecore', retro: 'Retro-Oma-Chic', modern: 'Contemporary', midcentury: 'Mid-Century-Modern', handgemacht: 'Handgemacht', garten: 'Garten', kunst: 'Kunst', winter: 'Winterzauber', lieblinge: 'Lieblingsthemen', bistro: 'Französisches Bistro',
+  japandi: 'Japandi', minimalismus: 'Minimalismus', skandinavisch: 'Skandinavisch', industrial: 'Industrial', brutalismus: 'Brutalismus', artdeco: 'Art déco', darkacademia: 'Dark Academia', spaceage: 'Space Age', cyberpunk: 'Cyberpunk', memphis: 'Memphis',
+};
 
 /** Möbel-Gegenstand (mit Variante) → Basis + Farbe */
 export interface FurnitureItem {
@@ -402,7 +432,7 @@ export const FURNITURE_ITEMS: readonly FurnitureItem[] = FURNITURE.flatMap((def)
 export const FURNITURE_BY_ITEM: Readonly<Record<string, FurnitureItem>> = Object.fromEntries(FURNITURE_ITEMS.map((f) => [f.itemId, f]));
 export const SURFACE_BY_ID: Readonly<Record<string, SurfaceDef>> = Object.fromEntries([...WALLPAPERS, ...FLOORS].map((s) => [s.id, s]));
 
-export const VARIANT_LABELS: Record<string, string> = { grau: 'Grau', weiss: 'Weiß', mint: 'Mint', gelb: 'Gelb', rosa: 'Rosa', indigo: 'Indigo', creme: 'Creme', rot: 'Rot', blau: 'Blau', gruen: 'Grün', senf: 'Senfgelb', salbei: 'Salbei', rost: 'Rost', petrol: 'Petrol', sand: 'Sand', schwarz: 'Schwarz', cognac: 'Cognac', geflecht: 'Wiener Geflecht', himmel: 'Himmelblau', flieder: 'Flieder', messing: 'Messing', pflaume: 'Pflaume', honig: 'Honig', nuss: 'Nuss', holz: 'Holz' };
+export const VARIANT_LABELS: Record<string, string> = { grau: 'Grau', weiss: 'Weiß', mint: 'Mint', gelb: 'Gelb', rosa: 'Rosa', indigo: 'Indigo', creme: 'Creme', rot: 'Rot', blau: 'Blau', gruen: 'Grün', senf: 'Senfgelb', salbei: 'Salbei', rost: 'Rost', petrol: 'Petrol', sand: 'Sand', schwarz: 'Schwarz', cognac: 'Cognac', geflecht: 'Wiener Geflecht', himmel: 'Himmelblau', flieder: 'Flieder', messing: 'Messing', pflaume: 'Pflaume', honig: 'Honig', nuss: 'Nuss', holz: 'Holz', leinen: 'Leinen', anthrazit: 'Anthrazit', eiche: 'Eiche', hellgrau: 'Hellgrau', taubenblau: 'Taubenblau' };
 
 
 /** Raum-Infos für die Raumlogik (`core/room.ts`) */
