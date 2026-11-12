@@ -90,6 +90,10 @@ export const JENS: NpcDef = {
       { text: ['Mon frère Olaf hat mich gestern „Frère“ genannt. Ich hab „Frère“ zurückgesagt.','Wir waren sehr gerührt. Und pünktlich. Das ist bei uns Zwillingen selten zusammen.'] },
       { text: ['Du willst Thalia verkuppeln, ma chérie? Wunderbar!','Ich übernehme das Menü. Drei Gänge, Kerzenlicht, ein kleines „Nu, ihr zwee!“ am Rand. Das wird eine Vorstellung.'] },
       { text: ['Lina und ein kühles Bier? Ich bevorzuge ja Rotwein, aber …','… nu, mit dir ausnahmsweise. Wenn du erst mal warm wirst, ist der Abend gerettet.'] },
+      { text: ['Mein Freund Stefan arbeitet in der IT. Ich hab ihn gefragt, ob er mein Telefon schneller machen kann.', 'Er hat es aus- und wieder eingeschaltet. Es ist jetzt schneller. C’est magique!'] },
+      { text: ['Steffen kommt bald wieder aus San Francisco zu Besuch!', 'Er bringt immer Sauerteigbrot mit. Im Handgepäck. Am Flughafen kennen sie ihn schon.'] },
+      { text: ['Mein alter Nachbar Andreas – alle sagen Brocki – ist Professor für Ethnologie.', 'Er erklärt mir die Bräuche der ganzen Welt. Ich erkläre ihm, wie man ein Croissant isst. Kulturaustausch, ma chérie!'] },
+      { text: ['Brocki sagt, jedes Volk hat ein Ritual fürs gemeinsame Essen.', 'Unseres ist der Sonntag bei mir. Ich hab’s ihm erzählt. Er hat sich Notizen gemacht.'] },
     ],
     gifts: {
       liebt: [['Oh là là! 😍', 'Das ist ja ein Meisterwerk! Das kommt sofort in meine Sammlung.']],
