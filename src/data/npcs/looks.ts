@@ -94,10 +94,10 @@ export const LOOKS: Readonly<Record<string, Appearance>> = {
     eyeColor: palette.eyeColors.blau,
     smile: 'grinsen',
   },
-  /** Jens (Onkel): dunkler Fade (Seiten kurz, oben etwas länger), kein Bart, rundes Gesicht, untersetzt, schwarzer Hoodie, Zahnlücken-Grinsen */
+  /** Jens (Onkel): dunkle, zerzauste Haare mit Strähnen (Ohren frei), kein Bart, rundes Gesicht, untersetzt, schwarzer Hoodie, Zahnlücken-Grinsen */
   jens: {
     ...base,
-    hairStyle: 'fade',
+    hairStyle: 'zerzaust',
     hairColor: '#40342f',
     skinTone: '#f6cfb4',
     outfit: 'hoodie',
