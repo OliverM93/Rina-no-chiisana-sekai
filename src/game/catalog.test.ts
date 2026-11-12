@@ -62,6 +62,14 @@ describe('Katalog: Freischaltung neuer Stile', () => {
     expect(has({ larsBegruesst: true }, 'muschelsessel')).toBe(false);
   });
 
+  it('Teil 3: Space Age und Cyberpunk mit Oli', () => {
+    const has = (flags: Record<string, boolean>, id: string) => catalogEntries(ctx('sommer', flags)).some((e) => e.id === id);
+    for (const id of ['kugelsessel', 'gamingstuhl', 'tapete-neongitter', 'boden-glanzweiss']) {
+      expect(has({}, id), id).toBe(false);
+      expect(has({ oliBegruesst: true }, id), id).toBe(true);
+    }
+  });
+
   it('der Stil-Filter zeigt einen Stil erst, wenn er frei ist', () => {
     expect(availableStyles(catalogEntries(ctx('sommer')), 'moebel')).not.toContain('darkacademia');
     expect(availableStyles(catalogEntries(ctx('sommer', ALL_FLAGS)), 'moebel')).toContain('darkacademia');

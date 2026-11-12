@@ -292,6 +292,20 @@ export const FURNITURE: readonly FurnitureDef[] = [
   { id: 'fabrikleuchte', name: 'Fabrik-Stehleuchte', style: 'industrial', light: true, price: 800, w: 1, d: 1, description: 'Eine Stehlampe mit Emailleschirm auf einem Stativ. Kam früher in eine Werkhalle, jetzt in Linas Zimmer.' },
   { id: 'vintageteppich', name: 'Verwaschener Teppich', style: 'industrial', rug: true, price: 900, w: 2, d: 2, description: 'Ein alter Teppich in ausgeblichenem Blau und Rost. Die Farben haben Geschichten zu erzählen.' },
   { id: 'bahnhofsuhr', name: 'Bahnhofsuhr', style: 'industrial', wall: true, price: 650, w: 1, d: 1, description: 'Eine große Uhr mit schwarzem Metallrand und kräftigen Zeigern. Der Zug nach Nirgendwo fährt pünktlich.' },
+  // ---- Space Age: Kugeln, Kurven, Weltraumträume (kommt mit Oli) ----
+  { id: 'kugelsessel', name: 'Kugelsessel', style: 'spaceage', sit: 'sitzen', price: 2200, w: 1, d: 1, description: 'Eine weiße Kugel mit weichem Polster innen. Drinnen ist es still wie in einer Raumkapsel. Oli: „Houston, ich bleib hier.“', variants: { orange: '#f08a3a', rot: '#d9483b', weiss: '#f2efe9', mint: '#9ad8c0' }, baseVariant: 'orange' },
+  { id: 'tulpentisch', name: 'Tulpentisch', style: 'spaceage', surface: true, surfaceHeight: 0.72, price: 950, w: 1, d: 1, description: 'Ein runder weißer Tisch auf einem einzigen geschwungenen Fuß. Keine Beine, an die man stößt.' },
+  { id: 'kapselregal', name: 'Kapselregal', style: 'spaceage', surface: true, surfaceHeight: 1.2, price: 1200, w: 2, d: 1, description: 'Ein weißes Regal mit runden Ecken und ovalen Fächern – wie Bullaugen in einem Raumschiff.' },
+  { id: 'lavalampe', name: 'Lavalampe', style: 'spaceage', small: true, light: true, price: 380, w: 1, d: 1, description: 'Bunte Blasen steigen langsam auf und sinken wieder. Man kann stundenlang hinsehen. Oli hat es ausprobiert.', variants: { orange: '#f08a3a', pink: '#f07ab0', gruen: '#7ad86a', lila: '#a97ad8' }, baseVariant: 'orange' },
+  { id: 'planetenteppich', name: 'Planetenteppich', style: 'spaceage', rug: true, price: 850, w: 2, d: 2, description: 'Ein runder Teppich mit Ringen in Orange und Braun – wie ein Planet von oben.' },
+  // ---- Cyberpunk: Neon, Kabel, Bildschirme (kommt mit Oli) ----
+  { id: 'gamingstuhl', name: 'Gaming-Stuhl', style: 'cyberpunk', sit: 'sitzen', price: 900, w: 1, d: 1, description: 'Hohe Lehne, Rennsitz-Optik, leuchtende Kanten. Lars sagt, er sitzt bequemer als sein Praxisstuhl.', variants: { pink: '#f07ab0', cyan: '#4ad8e8', lila: '#9a6ad8' }, baseVariant: 'pink' },
+  { id: 'neonsofa', name: 'Neon-Sofa', style: 'cyberpunk', sit: 'sitzen', light: true, price: 2100, w: 2, d: 1, description: 'Ein schwarzes Modulsofa mit Lichtstreifen am Sockel. Abends schwebt es fast.', variants: { pink: '#f07ab0', cyan: '#4ad8e8', lila: '#9a6ad8' }, baseVariant: 'pink' },
+  { id: 'zockertisch', name: 'Zocker-Schreibtisch', style: 'cyberpunk', surface: true, surfaceHeight: 0.74, light: true, price: 1500, w: 2, d: 1, description: 'Ein schwarzer Tisch mit zwei Bildschirmen und leuchtender Kante. Genau richtig für zwei Spieler und eine Packung Chips.' },
+  { id: 'serverregal', name: 'Blinkregal', style: 'cyberpunk', surface: true, surfaceHeight: 1.3, light: true, price: 1300, w: 1, d: 1, description: 'Ein Metallregal voller Kästen, Kabel und kleiner Lämpchen, die vor sich hin blinzeln. Was es tut? Niemand weiß es.' },
+  { id: 'neonroehre', name: 'Neon-Schriftzug', style: 'cyberpunk', wall: true, light: true, price: 700, w: 2, d: 1, description: 'Ein leuchtender Schriftzug „GG“ in Pink und Türkis. Für jeden gewonnenen Abend – und jeden verlorenen.' },
+  { id: 'rgbleuchte', name: 'Leuchtstab', style: 'cyberpunk', light: true, price: 550, w: 1, d: 1, description: 'Ein schlanker Lichtstab, der oben pink und unten türkis leuchtet. Taucht die Ecke in Arcade-Licht.' },
+  { id: 'gitterteppich', name: 'Gitterteppich', style: 'cyberpunk', rug: true, price: 800, w: 2, d: 2, description: 'Ein schwarzer Teppich mit leuchtend türkisen Gitterlinien. Fühlt sich an wie ein Level aus den Achtzigern.' },
   { id: 'topfpflanze', name: 'Monstera', style: 'basis', price: 300, w: 1, d: 1, description: 'Große, grüne Blätter mit Löchern. Sehr fotogen.' },
 ];
 
@@ -351,6 +365,8 @@ export const WALLPAPERS: readonly SurfaceDef[] = [
   { id: 'tapete-holzlatten', name: 'Holzlatten-Wand', style: 'japandi', price: 950, kind: 'tapete', pattern: 'latten', color: '#d9b98c', accent: '#a9875e', description: 'Schmale Eichenlatten mit dunklen Fugen. Riecht ein bisschen nach Sauna im Wald.' },
   { id: 'tapete-bibliothek', name: 'Dunkle Holzvertäfelung', style: 'darkacademia', price: 1000, kind: 'tapete', pattern: 'vertaefelung', color: '#5a3a2a', accent: '#4a2e20', description: 'Halbhohe Paneele aus dunklem Holz – wie im Lesesaal einer alten Universität.' },
   { id: 'tapete-faecher', name: 'Fächer-Tapete', style: 'artdeco', price: 900, kind: 'tapete', pattern: 'faecher', color: '#1f3a33', accent: '#d9b45a', description: 'Goldene Fächer auf dunklem Smaragd. Ein bisschen Zwanziger-Jahre-Glamour.' },
+  { id: 'tapete-neongitter', name: 'Neon-Gitter', style: 'cyberpunk', price: 900, kind: 'tapete', pattern: 'gitter', color: '#1c1a2a', accent: '#4ad8e8', description: 'Dunkles Violett mit leuchtenden Gitterlinien. Wie im Inneren eines Videospiels.' },
+  { id: 'tapete-orbit', name: 'Orbit-Tapete', style: 'spaceage', price: 750, kind: 'tapete', pattern: 'orbit', color: '#f6efe2', accent: '#f08a3a', description: 'Planeten und Umlaufbahnen in Orange und Braun. Ein bisschen Mondlandung an der Wand.' },
   { id: 'tapete-uni-schwarz', name: 'Einfarbig Schwarz', style: 'modern', price: 450, kind: 'tapete', pattern: 'flach', color: '#2a2a30', accent: '#2a2a30', description: 'Für Lina natürlich auch an der Wand. Sehr gemütlich bei Kerzenlicht.' },
 ];
 
@@ -390,6 +406,8 @@ export const FLOORS: readonly SurfaceDef[] = [
   { id: 'boden-schiff-treibholz', name: 'Schiffsboden Treibholz', style: 'modern', price: 850, kind: 'boden', pattern: 'schiff', color: '#b3aaa0', accent: '#968d83', description: 'Silbergraue Dielen, als hätte sie das Meer angespült.' },
   { id: 'boden-schiff-schwarz', name: 'Schiffsboden Schwarzeiche', style: 'modern', price: 950, kind: 'boden', pattern: 'schiff', color: '#4a413d', accent: '#352e2b', description: 'Dunkle, fast schwarze Dielen mit versetzten Stößen.' },
   { id: 'boden-mikrozement', name: 'Mikrozement', style: 'minimalismus', price: 900, kind: 'boden', pattern: 'putz', color: '#dedbd5', accent: '#c9c5be', description: 'Ein fugenloser, hellgrauer Boden. Ruhig wie ein leeres Blatt Papier.' },
+  { id: 'boden-glanzweiss', name: 'Weißer Glanzboden', style: 'spaceage', price: 800, kind: 'boden', pattern: 'flach', color: '#f4f2ee', accent: '#e6e3dd', description: 'Ein spiegelglatter weißer Boden. Hier fühlt sich jeder Schritt nach Raumstation an.' },
+  { id: 'boden-metall', name: 'Riffelblech', style: 'cyberpunk', price: 850, kind: 'boden', pattern: 'riffel', color: '#4a4c56', accent: '#6a6c78', description: 'Dunkles Metall mit Riffeln. Klingt beim Drüberlaufen ein bisschen nach Raumschiff.' },
   { id: 'boden-tafel-eiche', name: 'Tafelparkett Eiche', style: 'midcentury', price: 1300, kind: 'boden', pattern: 'tafel', color: '#d2a671', accent: '#a8794a', description: 'Große Felder mit dunklem Rahmen – Tafelparkett wie im Schloss, nur kleiner.' },
   { id: 'boden-tafel-nuss', name: 'Tafelparkett Nussbaum', style: 'midcentury', price: 1400, kind: 'boden', pattern: 'tafel', color: '#8a5a3a', accent: '#5e3e28', description: 'Dunkles Tafelparkett aus Nussbaum. Sehr feierlich.' },
 ];
@@ -450,7 +468,7 @@ export const FURNITURE_ITEMS: readonly FurnitureItem[] = FURNITURE.flatMap((def)
 export const FURNITURE_BY_ITEM: Readonly<Record<string, FurnitureItem>> = Object.fromEntries(FURNITURE_ITEMS.map((f) => [f.itemId, f]));
 export const SURFACE_BY_ID: Readonly<Record<string, SurfaceDef>> = Object.fromEntries([...WALLPAPERS, ...FLOORS].map((s) => [s.id, s]));
 
-export const VARIANT_LABELS: Record<string, string> = { grau: 'Grau', weiss: 'Weiß', mint: 'Mint', gelb: 'Gelb', rosa: 'Rosa', indigo: 'Indigo', creme: 'Creme', rot: 'Rot', blau: 'Blau', gruen: 'Grün', senf: 'Senfgelb', salbei: 'Salbei', rost: 'Rost', petrol: 'Petrol', sand: 'Sand', schwarz: 'Schwarz', cognac: 'Cognac', geflecht: 'Wiener Geflecht', himmel: 'Himmelblau', flieder: 'Flieder', messing: 'Messing', pflaume: 'Pflaume', honig: 'Honig', nuss: 'Nuss', holz: 'Holz', leinen: 'Leinen', anthrazit: 'Anthrazit', eiche: 'Eiche', hellgrau: 'Hellgrau', taubenblau: 'Taubenblau', flaschengruen: 'Flaschengrün', bordeaux: 'Bordeaux', smaragd: 'Smaragd', nachtblau: 'Nachtblau', olive: 'Oliv' };
+export const VARIANT_LABELS: Record<string, string> = { grau: 'Grau', weiss: 'Weiß', mint: 'Mint', gelb: 'Gelb', rosa: 'Rosa', indigo: 'Indigo', creme: 'Creme', rot: 'Rot', blau: 'Blau', gruen: 'Grün', senf: 'Senfgelb', salbei: 'Salbei', rost: 'Rost', petrol: 'Petrol', sand: 'Sand', schwarz: 'Schwarz', cognac: 'Cognac', geflecht: 'Wiener Geflecht', himmel: 'Himmelblau', flieder: 'Flieder', messing: 'Messing', pflaume: 'Pflaume', honig: 'Honig', nuss: 'Nuss', holz: 'Holz', leinen: 'Leinen', anthrazit: 'Anthrazit', eiche: 'Eiche', hellgrau: 'Hellgrau', taubenblau: 'Taubenblau', flaschengruen: 'Flaschengrün', bordeaux: 'Bordeaux', smaragd: 'Smaragd', nachtblau: 'Nachtblau', olive: 'Oliv', orange: 'Orange', pink: 'Pink', lila: 'Lila', cyan: 'Türkis' };
 
 
 /** Raum-Infos für die Raumlogik (`core/room.ts`) */
