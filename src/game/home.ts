@@ -15,6 +15,7 @@ import { FURNITURE_BY_ITEM, furnitureInfo, type FurnitureStyle, SURFACE_BY_ID, v
 import { GUEST_LAYOUT, guestRoom } from '../data/gastHaeuser';
 import { emptyRoom, HOUSE_STAGES, layoutOf, MAX_STAGE, roomLayouts } from '../data/house';
 import { itemDef, maxStackOf } from '../data/items';
+import { lineUnlocked } from './catalog';
 import { giveItem, takeItem } from './gameplay';
 import type { Session } from './session';
 
@@ -26,12 +27,11 @@ export function catalogPrice(itemId: string): number | null {
 }
 
 /**
- * Ist dieser Stil im Katalog freigeschaltet? Das Französische Bistro bringt Jens mit (ab seinem Einzug) – alle
- * anderen Stile gibt es von Anfang an (Game Design F13: nichts wegnehmen, nur Neues später bringen).
+ * Ist diese Linie im Katalog freigeschaltet? Manche Einrichtungsstile kommen mit einem Einzug (Bistro mit Jens,
+ * siehe `data/catalog.ts`) – alles andere gibt es von Anfang an (Game Design F13: nichts wegnehmen, nur Neues später bringen).
  */
 export function styleUnlocked(session: Session, style: FurnitureStyle): boolean {
-  if (style === 'bistro') return !!session.data?.flags.jensBegruesst;
-  return true;
+  return lineUnlocked({ flags: session.data?.flags ?? {}, season: 'sommer' }, style);
 }
 
 export type BuyResult = 'ok' | 'zu-teuer' | 'tasche-voll' | 'unbekannt';
