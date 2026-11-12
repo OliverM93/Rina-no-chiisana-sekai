@@ -109,7 +109,7 @@ export const LOOKS: Readonly<Record<string, Appearance>> = {
     smile: 'zahnluecke',
     blush: false,
   },
-  /** Thalia (beste Freundin): glatte, dunkelbraune Haare mit Mittelscheitel, Creolen, grünes Halstuch, schwarze Jacke, weite Jeans */
+  /** Thalia (beste Freundin): glatte, dunkelbraune Haare mit Mittelscheitel (etwa kinn- bis nackenlang), Creolen, grünes Halstuch, schwarze Jacke, weite Jeans */
   thalia: {
     ...base,
     faceShape: 'oval',

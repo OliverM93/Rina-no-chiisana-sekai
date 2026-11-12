@@ -23,9 +23,9 @@ export const OLAF: NpcDef = {
   schedule: [
     { from: '00:00', label: 'schläft', activity: { kind: 'zuhause', sleeping: true } },
     { from: '07:30', label: 'Zeitung vor dem Haus', activity: { kind: 'stehen', x: 18, y: 18, facing: 'down' } },
-    { from: '09:00', label: 'Dorfkasse geöffnet', activity: { kind: 'stehen', x: 20, y: 18, facing: 'down' } },
+    { from: '09:00', label: 'Dorfkasse geöffnet', activity: { kind: 'stehen', x: 21, y: 18, facing: 'down' } },
     { from: '12:30', label: 'Mittagessen zu Hause', activity: { kind: 'zuhause' } },
-    { from: '13:30', label: 'Dorfkasse geöffnet', activity: { kind: 'stehen', x: 20, y: 18, facing: 'down' } },
+    { from: '13:30', label: 'Dorfkasse geöffnet', activity: { kind: 'stehen', x: 21, y: 18, facing: 'down' } },
     { from: '17:30', label: 'Abendspaziergang am Strand', activity: { kind: 'spazieren', area: STRAND } },
     { from: '19:30', label: 'Feierabend zu Hause', activity: { kind: 'zuhause' } },
     { from: '22:30', label: 'schläft', activity: { kind: 'zuhause', sleeping: true } },

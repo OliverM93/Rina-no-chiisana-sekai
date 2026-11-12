@@ -12,7 +12,7 @@ describe('Häuser der Bewohner von innen', () => {
       expect(SURFACE_BY_ID[h.floor], `${id}: ${h.floor}`).toBeTruthy();
       expect(h.intro.length, id).toBeGreaterThanOrEqual(1);
       for (const it of h.items) {
-        const f = FURNITURE_BY_ITEM[guestItemId(it.id)];
+        const f = FURNITURE_BY_ITEM[guestItemId(it.id, it.variant)];
         expect(f, `${id}: ${it.id}`).toBeTruthy();
         expect(it.x >= 0 && it.y >= 0 && it.x < GUEST_LAYOUT.w && it.y < GUEST_LAYOUT.h, `${id}: ${it.id} im Raum`).toBe(true);
         // nichts auf dem Ausgang
@@ -37,6 +37,43 @@ describe('Häuser der Bewohner von innen', () => {
       for (const key of Object.keys(h.comments)) expect(present.has(key), `${id}: ${key}`).toBe(true);
       const unique = [...present];
       expect(unique.filter((k) => h.comments[k]).length / unique.length, id).toBeGreaterThanOrEqual(0.7);
+    }
+  });
+
+  it('Schränke und Regale stehen an der Wand (nicht mitten im Raum), nur Tresen & Schreibtisch dürfen trennen', () => {
+    const wallFurniture = new Set(['regal', 'teaksideboard', 'weinregal', 'vitrine', 'tansu', 'wuerfelregal', 'hellerau-standregal', 'fernseher']);
+    for (const [id, h] of Object.entries(GUEST_HOUSES)) {
+      for (const it of h.items) {
+        if (!wallFurniture.has(it.id) || it.on) continue;
+        const f = FURNITURE_BY_ITEM[guestItemId(it.id, it.variant)].def;
+        const rot = it.rot ?? 0;
+        const w = rot % 2 ? f.d : f.w;
+        const d = rot % 2 ? f.w : f.d;
+        const atWall = it.x === 0 || it.y === 0 || it.x + w === GUEST_LAYOUT.w || it.y + d === GUEST_LAYOUT.h;
+        expect(atWall, `${id}: ${it.id} steht mitten im Raum`).toBe(true);
+      }
+    }
+  });
+
+  it('Stühle und Sessel stehen an einem Tisch und schauen ihn an (kein Sessel allein im Raum)', () => {
+    const chairs = new Set(['bistrostuhl', 'bluemchensessel', 'ohrensessel', 'lederloungesessel', 'freischwinger']);
+    const front: Record<number, [number, number]> = { 0: [0, 1], 1: [-1, 0], 2: [0, -1], 3: [1, 0] };
+    for (const [id, h] of Object.entries(GUEST_HOUSES)) {
+      const tables = new Set<string>();
+      for (const it of h.items) {
+        const f = FURNITURE_BY_ITEM[guestItemId(it.id, it.variant)].def;
+        if (!(f.surface || it.id === 'schreibtisch-pc') || f.wall || f.rug || it.on || f.id.includes('regal') || f.id === 'teaksideboard') continue;
+        const rot = it.rot ?? 0;
+        const w = rot % 2 ? f.d : f.w;
+        const d = rot % 2 ? f.w : f.d;
+        for (let dx = 0; dx < w; dx++) for (let dy = 0; dy < d; dy++) tables.add(`${it.x + dx},${it.y + dy}`);
+      }
+      for (const it of h.items) {
+        if (!chairs.has(it.id)) continue;
+        const [fx, fy] = front[it.rot ?? 0];
+        const seesTable = [1, 2].some((k) => tables.has(`${it.x + fx * k},${it.y + fy * k}`));
+        expect(seesTable, `${id}: ${it.id} (${it.x},${it.y}) schaut keinen Tisch an`).toBe(true);
+      }
     }
   });
 });
