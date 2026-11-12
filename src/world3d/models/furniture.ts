@@ -3411,6 +3411,139 @@ export function makeFurniture(itemId: string, links: FenceLinks = { n: false, e:
       g.add(b(1.86, 0.024, 0.04, '#f07ab0', 0, 0.012, -0.91));
       break;
     }
+    // ---------------------------------------------------------------- Brutalismus
+    case 'betonsofa': {
+      const con = '#a9a6a0';
+      g.add(b(1.88, 0.24, 0.84, con, 0, 0.12, 0));
+      g.add(b(1.88, 0.5, 0.2, darken(con, 0.04), 0, 0.37, -0.32));
+      for (const x of [-0.84, 0.84]) g.add(b(0.2, 0.36, 0.84, darken(con, 0.02), x, 0.3, 0));
+      for (const x of [-0.37, 0.37]) g.add(b(0.72, 0.14, 0.6, col, x, 0.31, 0.06));
+      for (const x of [-0.37, 0.37]) g.add(b(0.66, 0.26, 0.12, lighten(col, 0.08), x, 0.5, -0.17).rotateX(-0.12));
+      // Schalungslöcher
+      for (const x of [-0.6, 0, 0.6]) g.add(c(0.018, 0.005, darken(con, 0.3), x, 0.12, 0.421).rotateX(Math.PI / 2));
+      seatY = 0.38;
+      break;
+    }
+    case 'betontisch': {
+      const con = '#a9a6a0';
+      g.add(b(0.72, 0.36, 0.72, con, 0, 0.18, 0));
+      g.add(b(0.56, 0.04, 0.56, '#8a5a3a', 0, 0.38, 0));
+      for (const [x, z] of [[-0.2, 0.361], [0.2, 0.361]] as const) g.add(c(0.016, 0.005, darken(con, 0.3), x, 0.18, z).rotateX(Math.PI / 2));
+      break;
+    }
+    case 'blockregal': {
+      const con = '#a9a6a0';
+      for (const y of [0, 0.35, 0.7]) {
+        for (const x of [-0.75, 0.75]) g.add(b(0.26, 0.3, 0.36, y === 0.35 ? darken(con, 0.04) : con, x, y + 0.15, 0));
+        g.add(b(1.86, 0.05, 0.4, '#8a5a3a', 0, y + 0.325, 0));
+      }
+      for (let i = 0; i < 6; i++) g.add(b(0.06, 0.24, 0.24, ['#b8573a', '#2f2f35', '#d9a441', '#efe8dc', '#5b6f7a', '#b8573a'][i], -0.35 + i * 0.07, 0.47, 0));
+      g.add(s(0.12, 0.1, 0.12, '#7a8a74', 0.3, 0.82, 0));
+      g.add(c(0.07, 0.1, darken(con, 0.1), 0.3, 0.75, 0));
+      break;
+    }
+    case 'betonleuchte': {
+      const con = '#a9a6a0';
+      g.add(b(0.36, 0.36, 0.36, con, 0, 0.18, 0));
+      g.add(b(0.24, 0.6, 0.24, darken(con, 0.04), 0, 0.66, 0));
+      glow = glowMat('#fff3d8');
+      const globe = mesh(new THREE.SphereGeometry(0.24, 18, 12), glow);
+      globe.position.y = 1.18;
+      g.add(globe);
+      lightAt = new THREE.Vector3(0, 1.1, 0);
+      break;
+    }
+    case 'filzteppich': {
+      g.add(b(1.86, 0.03, 1.86, '#8f8d8a', 0, 0.015, 0));
+      g.add(b(1.86, 0.032, 0.22, '#b8573a', 0, 0.016, 0.5));
+      break;
+    }
+    case 'betonrelief': {
+      const z = WALL_Z;
+      const con = '#bdbab4';
+      g.add(b(0.62, 0.62, 0.06, con, 0, HANG + 0.1, z + 0.01));
+      const ring = mesh(new THREE.TorusGeometry(0.14, 0.03, 6, 20), toon(darken(con, 0.08)));
+      ring.position.set(-0.1, HANG + 0.18, z + 0.05);
+      g.add(ring);
+      g.add(b(0.2, 0.2, 0.06, darken(con, 0.12), 0.14, HANG - 0.04, z + 0.05));
+      g.add(b(0.4, 0.04, 0.06, lighten(con, 0.06), 0, HANG - 0.12, z + 0.06));
+      break;
+    }
+    // ---------------------------------------------------------------- Memphis
+    case 'memphissessel': {
+      for (const [x, z, cc] of [[-0.22, -0.18, '#2a2a30'], [0.22, -0.18, '#f2c14e'], [-0.22, 0.2, '#4ad8e8'], [0.22, 0.2, '#2a2a30']] as const) g.add(s(0.06, 0.06, 0.06, cc, x, 0.06, z));
+      g.add(b(0.62, 0.22, 0.56, col, 0, 0.23, 0));
+      // Muster auf dem Sitzwürfel
+      for (let i = 0; i < 5; i++) g.add(b(0.04, 0.04, 0.005, '#2a2a30', -0.22 + i * 0.11, 0.2 + (i % 2) * 0.05, 0.283));
+      const back = mesh(new THREE.CylinderGeometry(0.3, 0.3, 0.1, 18, 1, false, Math.PI / 2, Math.PI), toon('#f2c14e'));
+      back.rotation.x = Math.PI / 2;
+      back.position.set(0, 0.34, -0.22);
+      g.add(back);
+      for (const x of [-0.34, 0.34]) g.add(b(0.08, 0.28, 0.5, x < 0 ? '#4ad8e8' : '#2a2a30', x, 0.42, 0.02));
+      seatY = 0.36;
+      break;
+    }
+    case 'memphistisch': {
+      const top = c(0.4, 0.05, '#f4efe6', 0, 0.42, 0);
+      g.add(top);
+      for (const [x, z, cc] of [[0.1, 0.25, '#f07ab0'], [-0.3, 0.05, '#4ad8e8'], [0.25, -0.2, '#f2c14e'], [-0.05, -0.32, '#2a2a30'], [0.3, 0.05, '#5b7fc2']] as const) g.add(c(0.03, 0.006, cc, x, 0.448, z));
+      g.add(s(0.08, 0.08, 0.08, '#f07ab0', -0.2, 0.32, -0.12));
+      g.add(c(0.03, 0.4, '#2a2a30', -0.2, 0.2, -0.12));
+      g.add(c(0.08, 0.4, '#4ad8e8', 0.22, 0.2, -0.1, new THREE.ConeGeometry(1, 1, 12)));
+      g.add(c(0.05, 0.4, '#f2c14e', 0, 0.2, 0.22));
+      break;
+    }
+    case 'totemregal': {
+      g.add(b(0.6, 0.34, 0.4, '#f07ab0', 0, 0.17, 0));
+      g.add(b(0.04, 0.3, 0.04, '#2a2a30', -0.2, 0.49, 0));
+      g.add(b(0.04, 0.3, 0.04, '#2a2a30', 0.2, 0.49, 0));
+      g.add(b(0.7, 0.05, 0.42, '#f2c14e', 0.04, 0.665, 0).rotateZ(0.06));
+      g.add(c(0.18, 0.34, '#4ad8e8', -0.1, 0.86, 0));
+      g.add(b(0.6, 0.05, 0.4, '#2a2a30', 0, 1.05, 0));
+      g.add(b(0.04, 0.3, 0.04, '#f07ab0', 0.24, 1.22, 0));
+      g.add(b(0.5, 0.05, 0.36, '#5b7fc2', 0.02, 1.4, 0).rotateZ(-0.05));
+      const tri = mesh(new THREE.CylinderGeometry(0.12, 0.12, 0.06, 3), toon('#f2c14e'));
+      tri.rotation.x = Math.PI / 2;
+      tri.position.set(0.15, 0.85, 0.05);
+      g.add(tri);
+      break;
+    }
+    case 'memphislampe': {
+      for (let i = 0; i < 4; i++) {
+        const r0 = 0.2 - i * 0.04;
+        g.add(c(r0, 0.22, i % 2 ? '#2a2a30' : '#f4efe6', 0, 0.11 + i * 0.22, 0, new THREE.CylinderGeometry(0.8, 1, 1, 14)));
+      }
+      glow = glowMat('#ffd6e6');
+      const ball = mesh(new THREE.SphereGeometry(0.18, 16, 12), glow);
+      ball.position.y = 1.08;
+      g.add(ball);
+      for (let i = 0; i < 8; i++) {
+        const a = (i / 8) * Math.PI * 2;
+        const spike = c(0.035, 0.1, '#f2c14e', Math.cos(a) * 0.19, 1.08, Math.sin(a) * 0.19, new THREE.ConeGeometry(1, 1, 6));
+        spike.rotation.set(Math.sin(a) * Math.PI / 2, 0, -Math.cos(a) * Math.PI / 2);
+        g.add(spike);
+      }
+      lightAt = new THREE.Vector3(0, 1.0, 0);
+      break;
+    }
+    case 'kringelteppich': {
+      g.add(b(1.86, 0.02, 1.86, '#cfeee2', 0, 0.01, 0));
+      g.add(b(1.86, 0.022, 0.08, '#2a2a30', 0, 0.011, 0.89));
+      g.add(b(1.86, 0.022, 0.08, '#2a2a30', 0, 0.011, -0.89));
+      for (const [x, z, cc, r] of [[-0.5, -0.4, '#f07ab0', 0.4], [0.4, 0.3, '#4ad8e8', -0.6], [-0.3, 0.45, '#f2c14e', 1.2], [0.45, -0.45, '#5b7fc2', 0.2]] as const) {
+        const pts: THREE.Vector3[] = [];
+        for (let k = 0; k <= 10; k++) pts.push(new THREE.Vector3(x - 0.3 + k * 0.06, 0.03, z + Math.sin(k * 1.3) * 0.06));
+        const sq = mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts), 20, 0.022, 5, false), toon(cc));
+        sq.rotation.y = r * 0.2;
+        g.add(sq);
+      }
+      for (const [x, z, cc] of [[0, 0, '#f07ab0'], [-0.6, 0.1, '#4ad8e8'], [0.65, -0.05, '#f2c14e']] as const) {
+        const tri = mesh(new THREE.CylinderGeometry(0.1, 0.1, 0.024, 3), toon(cc));
+        tri.position.set(x, 0.012, z);
+        g.add(tri);
+      }
+      break;
+    }
     default:
       g.add(b(0.6, 0.6, 0.6, col, 0, 0.3, 0));
   }
