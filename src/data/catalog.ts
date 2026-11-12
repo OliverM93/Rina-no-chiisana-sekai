@@ -23,6 +23,7 @@ export type DesignStyle =
   | 'skandinavisch'
   | 'modern'
   | 'midcentury'
+  | 'bauhaus'
   | 'cottage'
   | 'retro'
   | 'bistro'
@@ -53,7 +54,8 @@ export const DESIGN_STYLES: readonly DesignStyleDef[] = [
   { id: 'minimalismus', name: 'Minimalismus', blurb: 'Weniger, aber schöner. Jedes Stück darf atmen.', arrivesWith: 'olaf' },
   { id: 'skandinavisch', name: 'Skandinavisch', blurb: 'Helles Holz, weiche Stoffe, viel Licht – hygge eben.', arrivesWith: 'olaf' },
   { id: 'modern', name: 'Contemporary', blurb: 'Klare Formen, Grau und Holz, ein bisschen Marmor.' },
-  { id: 'midcentury', name: 'Mid-Century-Modern', blurb: 'Teak, Nussbaum, schräge Beinchen – und ein Hauch Bauhaus.' },
+  { id: 'midcentury', name: 'Mid-Century-Modern', blurb: 'Teak, Nussbaum, schräge Beinchen und warme Farben.' },
+  { id: 'bauhaus', name: 'Bauhaus', blurb: 'Stahlrohr, Leder und Grundformen – Form folgt Funktion. In Dessau zu Hause, wie Oma.' },
   { id: 'cottage', name: 'Cottagecore', blurb: 'Landhaus, Blümchen, Gehäkeltes und Kräuter auf der Fensterbank.' },
   { id: 'retro', name: 'Retro-Oma-Chic', blurb: 'Ohrensessel, Fransen und Kristall – wie bei Oma, nur bunter.' },
   { id: 'bistro', name: 'Französisches Bistro', blurb: 'Marmor, Bugholz und Zink – très chic, sagt Jens.', arrivesWith: 'jens' },
@@ -96,6 +98,7 @@ export const CATEGORIES: readonly CategoryDef[] = [
       { id: 'wanddeko', name: 'Wanddeko' },
       { id: 'deko', name: 'Kleine Deko' },
       { id: 'technik', name: 'Küche & Technik' },
+      { id: 'besonderes', name: 'Besonderes' },
     ],
   },
   {
@@ -242,16 +245,16 @@ const FURNITURE_META: Record<string, Row> = {
   keramikvase: ['moebel', 'deko', ['modern', 'japandi', 'minimalismus']],
   // Mid-Century-Modern (inkl. Bauhaus)
   lederloungesessel: ['moebel', 'sofas', ['midcentury']],
-  freischwinger: ['moebel', 'stuehle', ['midcentury', 'industrial']],
+  freischwinger: ['moebel', 'stuehle', ['midcentury', 'bauhaus', 'industrial']],
   teaksideboard: ['moebel', 'regale', ['midcentury']],
   satztische: ['moebel', 'tische', ['midcentury']],
   tripodlampe: ['moebel', 'lampen', ['midcentury']],
-  'opal-leuchte': ['moebel', 'lampen', ['midcentury', 'spaceage']],
-  formenteppich: ['moebel', 'teppiche', ['midcentury']],
+  'opal-leuchte': ['moebel', 'lampen', ['midcentury', 'bauhaus', 'spaceage']],
+  formenteppich: ['moebel', 'teppiche', ['midcentury', 'bauhaus']],
   'hellerau-regal': ['moebel', 'regale', ['midcentury', 'skandinavisch']],
   'hellerau-regalwand': ['moebel', 'regale', ['midcentury', 'skandinavisch']],
   'hellerau-standregal': ['moebel', 'regale', ['midcentury', 'skandinavisch']],
-  formenbild: ['moebel', 'wanddeko', ['midcentury']],
+  formenbild: ['moebel', 'wanddeko', ['midcentury', 'bauhaus']],
   sonnenspiegel: ['moebel', 'wanddeko', ['midcentury', 'artdeco']],
   // Französisches Bistro
   bistrotisch: ['moebel', 'tische', ['bistro']],
@@ -326,6 +329,30 @@ const FURNITURE_META: Record<string, Row> = {
   totemregal: ['moebel', 'regale', ['memphis']],
   memphislampe: ['moebel', 'lampen', ['memphis']],
   kringelteppich: ['moebel', 'teppiche', ['memphis']],
+  // Besondere Stücke
+  haengesessel: ['moebel', 'sofas', ['skandinavisch', 'cottage']],
+  kuehlschrank: ['moebel', 'technik', ['retro', 'midcentury']],
+  wandkamin: ['moebel', 'besonderes', ['darkacademia', 'cottage', 'retro']],
+  aquarium: ['moebel', 'besonderes'],
+  spielautomat: ['moebel', 'besonderes', ['cyberpunk']],
+  jukebox: ['moebel', 'besonderes', ['retro', 'midcentury']],
+  popcornmaschine: ['lieblinge', 'filme'],
+  teleskop: ['moebel', 'besonderes', ['spaceage', 'darkacademia']],
+  pflanzenleiter: ['pflanzen', 'gross', ['skandinavisch', 'japandi']],
+  // Bauhaus
+  'wassily-sessel': ['moebel', 'sofas', ['bauhaus']],
+  'cesca-stuhl': ['moebel', 'stuehle', ['bauhaus', 'midcentury']],
+  'barcelona-sessel': ['moebel', 'sofas', ['bauhaus', 'modern']],
+  'laccio-stuhl': ['moebel', 'stuehle', ['bauhaus', 'minimalismus']],
+  'laccio-tisch': ['moebel', 'tische', ['bauhaus', 'minimalismus']],
+  'mies-sofa': ['moebel', 'sofas', ['bauhaus', 'modern']],
+  'barcelona-liege': ['moebel', 'sofas', ['bauhaus']],
+  'lc4-liege': ['moebel', 'sofas', ['bauhaus', 'modern']],
+  'wagenfeld-leuchte': ['moebel', 'lampen', ['bauhaus']],
+  'kandem-leuchte': ['moebel', 'lampen', ['bauhaus', 'industrial']],
+  'breuer-regal': ['moebel', 'regale', ['bauhaus']],
+  'bauhaus-wandschrank': ['moebel', 'regale', ['bauhaus']],
+  stahlrohrregal: ['moebel', 'regale', ['bauhaus', 'industrial']],
   // Garten
   'zaun-weiss': ['garten', 'zaun'],
   gartentor: ['garten', 'zaun'],
@@ -399,7 +426,7 @@ const SURFACE_STYLES: Record<string, DesignStyle[]> = {
   'tapete-uni-schwarz': ['modern'],
   'tapete-uni-waldgruen': ['cottage', 'darkacademia'],
   'tapete-uni-bordeaux': ['retro', 'darkacademia'],
-  'tapete-formen': ['midcentury'],
+  'tapete-formen': ['midcentury', 'bauhaus'],
   'tapete-atomic': ['midcentury', 'spaceage'],
   'tapete-bistro': ['bistro'],
   'tapete-metro': ['bistro'],
@@ -428,7 +455,7 @@ const SURFACE_STYLES: Record<string, DesignStyle[]> = {
   'boden-schiff-schwarz': ['modern', 'industrial'],
   'boden-nussbaum': ['midcentury'],
   'boden-chevron-nuss': ['midcentury', 'darkacademia'],
-  'boden-schach': ['midcentury', 'artdeco'],
+  'boden-schach': ['midcentury', 'artdeco', 'bauhaus'],
   'boden-tafel-eiche': ['midcentury'],
   'boden-tafel-nuss': ['midcentury', 'darkacademia'],
   'boden-bistro': ['bistro'],

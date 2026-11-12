@@ -128,4 +128,6 @@ export const MEMORIES: readonly Memory[] = [
   { id: 'olaf-brutalismus', npc: 'olaf', tag: 'stil-brutalismus', text: ['Viel Beton bei dir, mein Schatz. Konkret gesagt: gefällt mir.', 'Das war ein Wortspiel. Christin hat nicht gelacht.'] },
   { id: 'jens-memphis', npc: 'jens', tag: 'stil-memphis', text: ['Memphis! Kringel, Kegel, Konfetti – Lina, das ist Kunst, auf der man sitzen kann!', 'Ich bin begeistert. Ich bin ergriffen. Ich setz mich mal.'] },
   { id: 'christin-memphis', npc: 'christin', tag: 'stil-memphis', text: ['Sehr … bunt. Ich sortiere es im Kopf gerade nach Farben.', 'Doch, es ist schön. Und die Kringel liegen sogar alle parallel.'] },
+  { id: 'gisela-bauhaus', npc: 'gisela', tag: 'stil-bauhaus', text: ['Stahlrohr und Leder! Kind, das ist ja wie bei uns in Dessau. Da standen die überall.', 'Ich hab früher immer gesagt, das sieht aus wie Zahnarztstühle. Jetzt find ich’s schön. Das bleibt unter uns.'] },
+  { id: 'jens-bauhaus', npc: 'jens', tag: 'stil-bauhaus', text: ['Bauhaus! Form folgt Funktion, ma chérie – und bei dir folgt sie auch noch dem Herzen.', 'Frag mal Mutti nach Dessau. Aber setz dich vorher. Das dauert.'] },
 ];

@@ -57,7 +57,7 @@ export function memoryTags(session: Session): string[] {
   for (const [style, min] of [
     ['japanisch', 4], ['cottage', 4], ['retro', 4], ['modern', 4], ['midcentury', 4], ['bistro', 3],
     ['japandi', 4], ['minimalismus', 4], ['skandinavisch', 4], ['industrial', 4], ['darkacademia', 4], ['artdeco', 4],
-    ['spaceage', 4], ['cyberpunk', 4], ['brutalismus', 4], ['memphis', 4],
+    ['spaceage', 4], ['cyberpunk', 4], ['brutalismus', 4], ['memphis', 4], ['bauhaus', 4],
   ] as const) if (styleCount(style) >= min) tags.push(`stil-${style}`);
   if (data.house.rooms.some((r) => /^boden-(chevron|fischgraet|flecht|schiff|tafel)/.test(r.floor))) tags.push('parkett-edel');
   if (data.house.rooms.some((r) => r.wallpaper.startsWith('tapete-uni-'))) tags.push('tapete-uni');
