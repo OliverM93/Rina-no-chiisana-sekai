@@ -118,9 +118,6 @@ function aquarium(): THREE.Group {
     f.userData.swim = true;
     g.add(f);
   }
-  // Schildchen „Chez Jens – Aquarium“ mit Regenbogenstreifen
-  const rb = ['#e8484f', '#f2a83a', '#f7d26a', '#6fb06a', '#5b7fc2', '#a98ad8'];
-  rb.forEach((col, i) => g.add(b(0.05, 0.12, 0.01, col, -0.15 + i * 0.05, 0.5, 0.33)));
   return g;
 }
 
