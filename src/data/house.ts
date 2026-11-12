@@ -16,11 +16,11 @@ export interface HouseStage {
 export const HOUSE_STAGES: readonly HouseStage[] = [
   { stage: 0, name: 'Gemütliches Zimmer', price: 0, description: 'Ein Zimmer mit 8 × 6 Feldern.' },
   { stage: 1, name: 'Großes Zimmer', price: 9800, description: 'Das Zimmer wird größer: 10 × 7 Felder.' },
-  { stage: 2, name: 'Schlafzimmer-Anbau', price: 19800, description: 'Ein zweites Zimmer hinten am Haus – durch eine Tür in der Rückwand, man läuft einfach hindurch.' },
-  { stage: 3, name: 'Dachzimmer', price: 34800, description: 'Eine Treppe führt in ein gemütliches Zimmer unterm Dach.' },
-  { stage: 4, name: 'Wohnküche', price: 49800, description: 'Das Wohnzimmer wächst auf 12 × 8 Felder – und rechts kommt eine eigene Küche mit Herd dazu, durch eine Tür in der Seitenwand.' },
-  { stage: 5, name: 'Wintergarten', price: 69800, description: 'Ein heller Glasanbau links, voller Licht und Pflanzen. Durch eine Tür in der linken Wand des Wohnzimmers.' },
-  { stage: 6, name: 'Keller', price: 89800, description: 'Eine Treppe vorne rechts führt hinunter in einen großen Hobbykeller mit Backsteinwänden.' },
+  { stage: 2, name: 'Schlafzimmer-Anbau', price: 17800, description: 'Ein zweites Zimmer hinten am Haus – durch eine Tür in der Rückwand, man läuft einfach hindurch.' },
+  { stage: 3, name: 'Dachzimmer', price: 27800, description: 'Eine Treppe führt in ein gemütliches Zimmer unterm Dach.' },
+  { stage: 4, name: 'Wohnküche', price: 37800, description: 'Das Wohnzimmer wächst auf 12 × 8 Felder – und rechts kommt eine eigene Küche mit Herd dazu, durch eine Tür in der Seitenwand.' },
+  { stage: 5, name: 'Wintergarten', price: 47800, description: 'Ein heller Glasanbau links, voller Licht und Pflanzen. Durch eine Tür in der linken Wand des Wohnzimmers.' },
+  { stage: 6, name: 'Keller', price: 59800, description: 'Eine Treppe vorne rechts führt hinunter in einen großen Hobbykeller mit Backsteinwänden.' },
 ];
 export const MAX_STAGE = HOUSE_STAGES.length - 1;
 

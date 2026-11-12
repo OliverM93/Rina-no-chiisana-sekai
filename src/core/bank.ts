@@ -1,8 +1,10 @@
 /**
  * Olafs Dorfkasse:
  * - zinsloser Kredit für den Hausausbau – zurückzahlen, wann und wie viel man möchte
- * - Sparbuch mit kleinen Zinsen: am Monatsanfang gibt es 1 % (höchstens 2000 Sternchen pro Monat),
- *   Ein- und Auszahlen geht jederzeit und kostet nichts
+ * - Sparbuch: jede Woche (ab Montag) 2 % Zinsen, höchstens 600 Sternchen pro Woche; verpasste Wochen
+ *   werden nachgeholt (bis zu 26). Ein- und Auszahlen geht jederzeit und kostet nichts.
+ * - „Olafs Bausparen“: Wer einen Ausbau direkt vom Sparbuch bezahlt, bekommt 15 % von Papa dazu
+ *   (siehe `game/home.ts → orderExpansion`).
  */
 
 export interface Bank {
@@ -10,21 +12,28 @@ export interface Bank {
   loan: number;
   /** Guthaben auf dem Sparbuch */
   savings: number;
-  /** Monat der letzten Zinsgutschrift („JJJJ-MM“), leer = Sparbuch noch nie benutzt */
-  interestMonth: string;
+  /** Woche der letzten Zinsgutschrift (Montag „JJJJ-MM-TT“), leer = Sparbuch noch nie benutzt */
+  interestWeek: string;
   /** zuletzt gutgeschriebene Zinsen (zum Anzeigen) */
   lastInterest: number;
 }
 
-/** Zinssatz pro Monat */
-export const INTEREST_RATE = 0.01;
-/** höchstens so viele Zinsen pro Monat */
-export const INTEREST_CAP = 2000;
-/** so viele verpasste Monate werden höchstens nachgeholt */
-const MAX_MONTHS = 12;
+/** Zinssatz pro Woche */
+export const INTEREST_RATE = 0.02;
+/** höchstens so viele Zinsen pro Woche */
+export const INTEREST_CAP = 600;
+/** so viele verpasste Wochen werden höchstens nachgeholt (ein halbes Jahr) */
+const MAX_WEEKS = 26;
+/** Olafs Bauspar-Zuschuss: Anteil am Ausbaupreis, den Papa übernimmt, wenn vom Sparbuch bezahlt wird */
+export const BAUSPAR_BONUS = 0.15;
+
+/** Was Lina vom Sparbuch zahlen muss, damit Olaf den Rest dazulegt */
+export function bausparShare(price: number): number {
+  return Math.ceil(price * (1 - BAUSPAR_BONUS));
+}
 
 export function createBank(): Bank {
-  return { loan: 0, savings: 0, interestMonth: '', lastInterest: 0 };
+  return { loan: 0, savings: 0, interestWeek: '', lastInterest: 0 };
 }
 
 /** Darf ein neuer Ausbau bestellt werden? (erst, wenn der alte Kredit bezahlt ist) */
@@ -45,23 +54,27 @@ export function repay(bank: Bank, amount: number, money: number): number {
   return pay;
 }
 
-/** „JJJJ-MM“ aus einem Tag „JJJJ-MM-TT“ */
-export function monthOf(day: string): string {
-  return day.slice(0, 7);
+const DAY_MS = 24 * 60 * 60 * 1000;
+
+/** Montag der Woche eines Tages „JJJJ-MM-TT“ (ebenfalls „JJJJ-MM-TT“) */
+export function weekOf(day: string): string {
+  const t = Date.UTC(Number(day.slice(0, 4)), Number(day.slice(5, 7)) - 1, Number(day.slice(8, 10)));
+  const weekday = (new Date(t).getUTCDay() + 6) % 7; // Montag = 0
+  return new Date(t - weekday * DAY_MS).toISOString().slice(0, 10);
 }
 
-/** Wie viele Monatswechsel liegen zwischen zwei Monaten („JJJJ-MM“)? */
-export function monthsBetween(from: string, to: string): number {
-  const [fy, fm] = from.split('-').map(Number);
-  const [ty, tm] = to.split('-').map(Number);
-  if (![fy, fm, ty, tm].every(Number.isFinite)) return 0;
-  return (ty - fy) * 12 + (tm - fm);
+/** Wie viele Wochenwechsel liegen zwischen zwei Wochen-Montagen? */
+export function weeksBetween(from: string, to: string): number {
+  const a = Date.parse(`${from}T00:00:00Z`);
+  const b = Date.parse(`${to}T00:00:00Z`);
+  if (!Number.isFinite(a) || !Number.isFinite(b)) return 0;
+  return Math.round((b - a) / (7 * DAY_MS));
 }
 
 /** Einzahlen (höchstens so viel, wie man dabeihat). Gibt den eingezahlten Betrag zurück. */
 export function deposit(bank: Bank, amount: number, money: number, day: string): number {
   const put = Math.max(0, Math.min(Math.floor(amount), Math.floor(money)));
-  if (put > 0 && !bank.interestMonth) bank.interestMonth = monthOf(day);
+  if (put > 0 && !bank.interestWeek) bank.interestWeek = weekOf(day);
   bank.savings += put;
   return put;
 }
@@ -73,29 +86,34 @@ export function withdraw(bank: Bank, amount: number): number {
   return take;
 }
 
-/** Zinsen eines Monats für ein Guthaben */
+/** Zinsen einer Woche für ein Guthaben */
 export function interestFor(savings: number): number {
   return Math.min(INTEREST_CAP, Math.floor(savings * INTEREST_RATE));
 }
 
 /**
- * Schreibt die Zinsen für alle seit der letzten Gutschrift begonnenen Monate gut (mit Zinseszins,
- * höchstens 12 Monate). Gibt die Summe zurück (0 = nichts passiert).
+ * Schreibt die Zinsen für alle seit der letzten Gutschrift begonnenen Wochen gut (mit Zinseszins,
+ * höchstens 26 Wochen). Gibt die Summe zurück (0 = nichts passiert).
  */
 export function creditInterest(bank: Bank, day: string): number {
-  const month = monthOf(day);
-  if (!bank.interestMonth) return 0;
-  const months = Math.min(MAX_MONTHS, monthsBetween(bank.interestMonth, month));
-  if (months <= 0) return 0;
-  bank.interestMonth = month;
+  const week = weekOf(day);
+  if (!bank.interestWeek) return 0;
+  const weeks = Math.min(MAX_WEEKS, weeksBetween(bank.interestWeek, week));
+  if (weeks <= 0) return 0;
+  bank.interestWeek = week;
   let total = 0;
-  for (let i = 0; i < months; i++) {
+  for (let i = 0; i < weeks; i++) {
     const z = interestFor(bank.savings);
     bank.savings += z;
     total += z;
   }
   bank.lastInterest = total;
   return total;
+}
+
+/** Alter Zinsmonat „JJJJ-MM“ (bis Spielstand v14) → Montag der Woche des Monatsersten */
+export function weekFromLegacyMonth(month: string): string {
+  return /^\d{4}-\d{2}$/.test(month) ? weekOf(`${month}-01`) : '';
 }
 
 export function normalizeBank(raw: unknown): Bank {
@@ -106,6 +124,7 @@ export function normalizeBank(raw: unknown): Bank {
   b.loan = num(r.loan);
   b.savings = num(r.savings);
   b.lastInterest = num(r.lastInterest);
-  b.interestMonth = typeof r.interestMonth === 'string' && /^\d{4}-\d{2}$/.test(r.interestMonth) ? r.interestMonth : '';
+  if (typeof r.interestWeek === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(r.interestWeek)) b.interestWeek = weekOf(r.interestWeek);
+  else if (typeof r.interestMonth === 'string') b.interestWeek = weekFromLegacyMonth(r.interestMonth);
   return b;
 }

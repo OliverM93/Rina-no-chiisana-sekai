@@ -140,7 +140,7 @@ export const CHRISTIN_TIPS: readonly (readonly string[])[] = [
   ['Ordnungstipp: Das Sammelbuch – Taste B – ist wie ein Aktenordner.', 'Jeder Fisch und jeder Käfer bekommt seinen eigenen Platz. Sehr befriedigend.'],
   ['Ordnungstipp: Ein Hochbeet im Garten bringt zwei Pflanzplätze mehr.', 'Und man muss sich nicht so bücken. Mein Rücken sagt Danke.'],
   ['Ordnungstipp: Regen gießt dein Beet gleich mit.', 'Und an trockenen Tagen schau ich abends vorbei und gieße, was noch durstig ist. Abends verdunstet weniger. Logisch.'],
-  ['Ordnungstipp: Sternchen, die du gerade nicht brauchst, gehören aufs Sparbuch bei Olaf.', 'Am Monatsanfang gibt es sogar ein bisschen Zinsen. Er erklärt dir das gern. Sehr ausführlich.'],
+  ['Ordnungstipp: Sternchen, die du gerade nicht brauchst, gehören aufs Sparbuch bei Olaf.', 'Jeden Montag gibt es Zinsen, und beim Ausbau legt er sogar etwas dazu. Er erklärt dir das gern. Sehr ausführlich.'],
   ['Ordnungstipp: Wand-Deko hängt an der Wand – darunter darf trotzdem ein Möbel stehen.', 'Platz doppelt genutzt. So mag ich das.'],
   ['Ordnungstipp: Teppiche zuerst legen, dann die Möbel draufstellen.', 'Das ist die richtige Reihenfolge. Immer.'],
   ['Ordnungstipp: Beim Blumenpflücken fällt manchmal ein Samenkorn ab.', 'Gleich wieder einpflanzen – dann bleibt das Beet nie leer.'],

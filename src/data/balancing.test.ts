@@ -7,7 +7,7 @@ import { describe, expect, it } from 'vitest';
 import { FURNITURE } from './furniture';
 import { ITEMS } from './items';
 import { RECIPES } from './recipes';
-import { FISH, INSECTS } from './species';
+import { CATCH_PRICE_FACTOR, FISH, INSECTS } from './species';
 import { ALL_WISHES } from './wishes';
 import { HOUSE_STAGES } from './house';
 
@@ -35,11 +35,13 @@ describe('Balancing-Spannen', () => {
   });
 
   it('Fische & Insekten: selten = teuer (sehr häufige Arten sind nie teuer)', () => {
+    // Grenzen wachsen mit dem Fang-Faktor (Sternchen-Balancing Nov. 2026: × 1,5)
+    const f = CATCH_PRICE_FACTOR;
     for (const s of [...FISH, ...INSECTS]) {
       expect(s.price, s.id).toBeGreaterThanOrEqual(15);
-      expect(s.price, s.id).toBeLessThanOrEqual(1200);
-      if (s.weight >= 20) expect(s.price, `${s.id} ist häufig (${s.weight}) – Preis ${s.price}`).toBeLessThanOrEqual(120);
-      if (s.price >= 500) expect(s.weight, `${s.id} ist teuer (${s.price}) – Häufigkeit ${s.weight}`).toBeLessThanOrEqual(5);
+      expect(s.price, s.id).toBeLessThanOrEqual(1200 * f);
+      if (s.weight >= 20) expect(s.price, `${s.id} ist häufig (${s.weight}) – Preis ${s.price}`).toBeLessThanOrEqual(120 * f);
+      if (s.price >= 500 * f) expect(s.weight, `${s.id} ist teuer (${s.price}) – Häufigkeit ${s.weight}`).toBeLessThanOrEqual(5);
     }
   });
 

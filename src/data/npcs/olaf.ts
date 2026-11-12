@@ -60,7 +60,7 @@ export const OLAF: NpcDef = {
       { text: ['Was sagt die Null zur Acht?', '„Schicker Gürtel!“ … Ich liebe den. Zahlen sind eben mein Fachgebiet. Und mein Humor.'] },
       { text: ['Christin sagt, ich hab ein Haushaltsdefizit an Ernsthaftigkeit.', 'Ich sage: Das ist die einzige Schuld, die ich gern mache. Hehe.'] },
       { text: ['Lina: „Papa, bitte nicht noch ein Wortspiel.“', 'Olaf: „Zu spät! Ich hab schon eins im Anflug. Es heißt: „Hallo, ich bin Olaf – und das ist meine Steuernummer.““'], weight: 2 },
-      { text: ['Schon ans Sparbuch gedacht, Lina?', 'Jeden Monatsanfang gibt es ein Prozent Zinsen. Das ist nicht viel – aber es ist von ganz allein mehr geworden. Herrlich!'], weight: 2 },
+      { text: ['Schon ans Sparbuch gedacht, Lina?', 'Jeden Montag gibt es zwei Prozent Zinsen. Und wenn du deinen Ausbau vom Sparbuch bezahlst, leg ich fünfzehn Prozent dazu. Bausparen! Herrlich!'], weight: 2 },
       { text: ['Weißt du, was das Schönste an meinem Beruf ist?', 'Zahlen lügen nicht. Christin übrigens auch nicht. Gerade hat sie mir gesagt, dass meine Weste schief sitzt.'] },
       { text: ['Wusstest du, dass Jens und ich Zwillinge sind?', 'Er sagt immer, er ist der Hübschere. Ich sage: Ich bin der Pünktlichere. Fünf Minuten älter, nämlich.'], when: { tags: ['jens-da'] }, weight: 2 },
       { text: ['Als Kinder haben Jens und ich uns manchmal ausgetauscht.', 'Ich bin für ihn in den Kunstunterricht, er für mich in Mathe.', 'Er hatte eine Eins. Ich eine Vier. Wir haben nie wieder getauscht.'], when: { tags: ['jens-da'] } },
@@ -133,10 +133,10 @@ export const OLAF_WELCOME: readonly string[] = [
   'Ich leih dir die Sternchen – ganz ohne Zinsen. Zurückzahlen kannst du, wann es dir passt.',
 ];
 
-/** Kontoauszug zum Monatsanfang (`{zinsen}`, `{guthaben}` werden ersetzt) */
+/** Kontoauszug (höchstens einmal im Monat; `{zinsen}` = letzte Gutschrift, `{guthaben}` werden ersetzt) */
 export const INTEREST_LETTERS: readonly LetterTemplate[] = [
-  { id: 'zinsen', subject: 'Dein Kontoauszug 📒', body: 'Liebe Lina,\n\nneuer Monat, neue Zinsen! Auf dein Sparbuch sind {zinsen} gekommen. Guthaben jetzt: {guthaben}.\n\nDas nennt man Zinseszins. Christin sagt, ich soll beim Abendessen nicht mehr davon anfangen. Aber es ist doch so schön!\n\nDein Papa' },
-  { id: 'zinsen', subject: 'Zinsen sind da! 📈', body: 'Liebe Lina,\n\nich habe nachgerechnet – zweimal, sicher ist sicher: Diesen Monat gab es {zinsen} Zinsen. Neues Guthaben: {guthaben}.\n\nIch bin sehr stolz auf dich. Und ein bisschen auf mich, weil ich so gut rechnen kann.\n\nDein Papa' },
+  { id: 'zinsen', subject: 'Dein Kontoauszug 📒', body: 'Liebe Lina,\n\njede Woche ein bisschen mehr! Zuletzt sind {zinsen} Zinsen auf dein Sparbuch gekommen. Guthaben jetzt: {guthaben}.\n\nDas nennt man Zinseszins. Christin sagt, ich soll beim Abendessen nicht mehr davon anfangen. Aber es ist doch so schön!\n\nDein Papa' },
+  { id: 'zinsen', subject: 'Zinsen sind da! 📈', body: 'Liebe Lina,\n\nich habe nachgerechnet – zweimal, sicher ist sicher: Zuletzt gab es {zinsen} Zinsen. Neues Guthaben: {guthaben}.\n\nIch bin sehr stolz auf dich. Und ein bisschen auf mich, weil ich so gut rechnen kann.\n\nDein Papa' },
   { id: 'zinsen', subject: 'Post von der Dorfkasse', body: 'Liebe Lina,\n\ndein Geld hat fleißig für dich gearbeitet, während du geschlafen hast: {zinsen} Zinsen! Auf dem Sparbuch liegen jetzt {guthaben}.\n\nKleinvieh macht auch Mist. Großvieh übrigens auch.\n\nDein Papa' },
 ];
 

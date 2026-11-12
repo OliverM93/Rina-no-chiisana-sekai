@@ -45,11 +45,14 @@ der alte abbezahlt ist), Bau dauert Spielzeit.
 | Stufe | Name | Preis | kumuliert |
 |---|---|---|---|
 | 1 | Großes Zimmer (10×7) | 9 800 | 9 800 |
-| 2 | Schlafzimmer-Anbau | 19 800 | 29 600 |
-| 3 | Dachzimmer | 34 800 | 64 400 |
-| 4 | Wohnküche (12×8 + Küche) | 49 800 | 114 200 |
-| 5 | Wintergarten | 69 800 | 184 000 |
-| 6 | Keller | 89 800 | 273 800 |
+| 2 | Schlafzimmer-Anbau | 17 800 | 27 600 |
+| 3 | Dachzimmer | 27 800 | 55 400 |
+| 4 | Wohnküche (12×8 + Küche) | 37 800 | 93 200 |
+| 5 | Wintergarten | 47 800 | 141 000 |
+| 6 | Keller | 59 800 | 200 800 |
+
+✅ *Sternchen-Balancing (Nov. 2026):* vorher 19 800 / 34 800 / 49 800 / 69 800 / 89 800 (zusammen 273 800). Gesenkt, weil der
+Katalog inzwischen ≈ 185 k ⭐ Möbel + 62 k ⭐ Flächen umfasst. Mit Bausparen (Papa übernimmt 15 %) zahlt Lina ≈ 171 k.
 
 **Bewertung**
 - ✅ Gute Kurve: Kosten wachsen ungefähr linear (+10–20 k je Stufe), jede Stufe bringt *neuen Raum* – eine

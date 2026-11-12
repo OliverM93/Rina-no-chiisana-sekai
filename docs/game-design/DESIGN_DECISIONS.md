@@ -192,6 +192,20 @@ Duplikaten; nichts verschwindet (die Freischaltung hängt an der bisherigen Lini
 **Verworfen:** eine Stil-Startseite („Showroom“, langsamer beim Suchen nach Typ), Seitenleiste (schmaleres Raster),
 genau ein Stil je Stück.
 
+### D28 · Sternchen-Balancing: mehr verdienen, günstiger ausbauen, Bausparen (Nov. 2026)
+
+**Anlass:** Lina-Feedback: Sternchen sammeln dauert zu lange; das Sparbuch ist kein Anreiz. Nachgerechnet: Haus 273,8 k +
+Katalog 185 k + Flächen 62 k ≈ 520 k ⭐ bei gemütlich ~3–5 k ⭐/h – allein der Ausbau 55–90 Stunden. Der Katalog ist seit dem
+letzten Audit um ~80 % gewachsen, die Einnahmen nicht.
+**Entscheidung:** (1) Fische & Insekten × 1,5 (zentraler Faktor, Fischgerichte mitgezogen); (2) Ausbau-Stufen 2–6 günstiger
+(zusammen 200,8 k, Zuwachs weiter 8–12 k je Stufe); (3) Sparbuch-Zinsen wöchentlich (2 %, max. 600, 26 Wochen nachholbar);
+(4) „Olafs Bausparen“: Ausbau vom Sparbuch → Papa übernimmt 15 %.
+**Begründung:** Einnahmen heben wirkt überall gleichzeitig und braucht keine 200 Einzelpreise. Bausparen gibt dem Sparbuch
+einen *sofort spürbaren* Zweck (Sparziel mit Belohnung) statt eines kaum merklichen Zinses; es ist einmalig je Stufe und nicht
+ausnutzbar. Keine Strafe fürs Pausieren (verpasste Wochen werden nachgeholt), kein Zwang (Kredit bleibt).
+**Verworfen:** alle Möbelpreise senken (viel Aufwand, Preise sind auch Wertsignal); Tagesbonus fürs Einloggen (FOMO);
+Zuschuss auf jede Einzahlung (Ein-/Auszahlen wäre ausnutzbar).
+
 ## Offene Designentscheidungen ❓
 
 | # | Frage | Warum wichtig | Optionen |
