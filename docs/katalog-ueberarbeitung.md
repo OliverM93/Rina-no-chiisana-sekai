@@ -93,7 +93,8 @@ man über ihre Kategorie und den Typ. Der Stilfilter hat „Alle“ und „Ohne 
 | Minimalismus | `minimalismus` | neu |
 | Skandinavisch | `skandinavisch` | neu (Wunsch „Scandinavian“, deutsch benannt) |
 | Contemporary | `modern` | bestehend „Modern“, umbenannt |
-| Mid-Century-Modern | `midcentury` | bestehend „Mid-Century & Bauhaus“ – Bauhaus-Stücke bleiben drin |
+| Mid-Century-Modern | `midcentury` | bestehend „Mid-Century & Bauhaus“ |
+| Bauhaus | `bauhaus` | ✅ seit Nov. 2026 eigener Stil (13 Klassiker), von Anfang an da |
 | Cottagecore | `cottage` | bestehend |
 | Retro-Oma-Chic | `retro` | bestehend |
 | Französisches Bistro | `bistro` | bestehend (ab Jens) |

@@ -322,6 +322,24 @@ function weltkarteCanvas(): HTMLCanvasElement {
   return cv;
 }
 
+/** Bauhaus-Stahlrohr: verchromtes Rohr entlang von Punkten (sanft gebogen) */
+const CHROME = '#d9dbe2';
+function steelTube(points: ReadonlyArray<readonly [number, number, number]>, r = 0.022, color = CHROME): THREE.Mesh {
+  const curve = new THREE.CatmullRomCurve3(points.map(([x, y, z]) => new THREE.Vector3(x, y, z)), false, 'catmullrom', 0.05);
+  return mesh(new THREE.TubeGeometry(curve, Math.max(8, points.length * 8), r, 8, false), toon(color));
+}
+/** Gestepptes Polster: Block mit kleinen Knöpfen im Raster */
+function tufted(g: THREE.Group, w: number, h: number, d: number, color: string, x: number, y: number, z: number, cols: number, rows: number, face: 'top' | 'front') {
+  g.add(b(w, h, d, color, x, y, z));
+  for (let i = 0; i < cols; i++) {
+    for (let j = 0; j < rows; j++) {
+      const u = -w / 2 + (w * (i + 0.5)) / cols;
+      if (face === 'top') g.add(s(0.012, 0.006, 0.012, darken(color, 0.35), x + u, y + h / 2 + 0.002, z - d / 2 + (d * (j + 0.5)) / rows));
+      else g.add(s(0.012, 0.012, 0.006, darken(color, 0.35), x + u, y - h / 2 + (h * (j + 0.5)) / rows, z + d / 2 + 0.002));
+    }
+  }
+}
+
 export function makeFurniture(itemId: string, links: FenceLinks = { n: false, e: true, s: false, w: true }, collected: ReadonlySet<string> = NOTHING): FurnitureModel {
   const f = FURNITURE_BY_ITEM[itemId];
   const g = new THREE.Group();
@@ -1685,7 +1703,7 @@ export function makeFurniture(itemId: string, links: FenceLinks = { n: false, e:
       for (let i = 0; i < 3; i++) {
         const a2 = (i / 3) * Math.PI * 2;
         const leg = c(0.025, 0.38, '#8a5a3a', Math.cos(a2) * 0.12, 0.18, Math.sin(a2) * 0.12);
-        leg.rotation.set(Math.sin(a2) * 0.18, 0, -Math.cos(a2) * 0.18);
+        leg.rotation.set(-Math.sin(a2) * 0.18, 0, Math.cos(a2) * 0.18);
         g.add(leg);
       }
       const brace = c(0.015, 0.26, '#8a5a3a', 0, 0.14, 0);
@@ -2301,7 +2319,7 @@ export function makeFurniture(itemId: string, links: FenceLinks = { n: false, e:
       }
       for (const [x, z] of [[-0.82, -0.17], [0.82, -0.17], [-0.82, 0.17], [0.82, 0.17]]) {
         const leg = c(0.022, 0.26, '#3a2a20', x, 0.11, z);
-        leg.rotation.z = x > 0 ? -0.18 : 0.18;
+        leg.rotation.z = x > 0 ? 0.18 : -0.18;
         leg.rotation.x = z > 0 ? -0.12 : 0.12;
         g.add(leg);
       }
@@ -2320,8 +2338,8 @@ export function makeFurniture(itemId: string, links: FenceLinks = { n: false, e:
       for (let i = 0; i < 3; i++) {
         const a2 = (i / 3) * Math.PI * 2;
         const leg = c(0.018, 1.2, '#8a5a3a', Math.cos(a2) * 0.14, 0.58, Math.sin(a2) * 0.14);
-        leg.rotation.z = -Math.cos(a2) * 0.22;
-        leg.rotation.x = Math.sin(a2) * 0.22;
+        leg.rotation.z = Math.cos(a2) * 0.22;
+        leg.rotation.x = -Math.sin(a2) * 0.22;
         g.add(leg);
       }
       glow = glowMat('#fff1c8');
@@ -2898,7 +2916,7 @@ export function makeFurniture(itemId: string, links: FenceLinks = { n: false, e:
       const oak = '#d9b98c';
       for (const [x, z] of [[-0.8, -0.28], [0.8, -0.28], [-0.8, 0.28], [0.8, 0.28]]) {
         const leg = c(0.025, 0.2, oak, x, 0.1, z);
-        leg.rotation.z = x > 0 ? -0.2 : 0.2;
+        leg.rotation.z = x > 0 ? 0.2 : -0.2;
         g.add(leg);
       }
       g.add(b(1.84, 0.16, 0.72, col, 0, 0.28, 0));
@@ -2938,7 +2956,7 @@ export function makeFurniture(itemId: string, links: FenceLinks = { n: false, e:
       g.add(c(0.44, 0.05, oak, 0, 0.7, 0));
       for (const a of [0.785, 2.356, 3.927, 5.498]) {
         const leg = c(0.025, 0.68, darken(oak, 0.06), Math.cos(a) * 0.25, 0.34, Math.sin(a) * 0.25);
-        leg.rotation.set(Math.sin(a) * 0.12, 0, -Math.cos(a) * 0.12);
+        leg.rotation.set(-Math.sin(a) * 0.12, 0, Math.cos(a) * 0.12);
         g.add(leg);
       }
       break;
@@ -2946,7 +2964,7 @@ export function makeFurniture(itemId: string, links: FenceLinks = { n: false, e:
     case 'skandi-stuhl': {
       for (const [x, z] of [[-0.18, -0.16], [0.18, -0.16], [-0.18, 0.16], [0.18, 0.16]]) {
         const leg = c(0.02, 0.44, col, x, 0.22, z);
-        leg.rotation.set(z > 0 ? 0.08 : -0.08, 0, x > 0 ? -0.08 : 0.08);
+        leg.rotation.set(z > 0 ? -0.08 : 0.08, 0, x > 0 ? 0.08 : -0.08);
         g.add(leg);
       }
       g.add(b(0.42, 0.04, 0.4, col, 0, 0.45, 0));
@@ -3193,7 +3211,7 @@ export function makeFurniture(itemId: string, links: FenceLinks = { n: false, e:
       for (let i = 0; i < 3; i++) {
         const a = (i / 3) * Math.PI * 2;
         const leg = c(0.018, 1.2, steel, Math.cos(a) * 0.16, 0.58, Math.sin(a) * 0.16);
-        leg.rotation.set(Math.sin(a) * 0.14, 0, -Math.cos(a) * 0.14);
+        leg.rotation.set(-Math.sin(a) * 0.14, 0, Math.cos(a) * 0.14);
         g.add(leg);
       }
       g.add(c(0.03, 0.3, steel, 0, 1.3, 0));
@@ -3681,7 +3699,7 @@ export function makeFurniture(itemId: string, links: FenceLinks = { n: false, e:
       for (let i = 0; i < 3; i++) {
         const a = (i / 3) * Math.PI * 2;
         const leg = c(0.018, 0.9, wood, Math.cos(a) * 0.16, 0.43, Math.sin(a) * 0.16);
-        leg.rotation.set(Math.sin(a) * 0.35, 0, -Math.cos(a) * 0.35);
+        leg.rotation.set(-Math.sin(a) * 0.35, 0, Math.cos(a) * 0.35);
         g.add(leg);
       }
       g.add(s(0.05, 0.05, 0.05, '#c9a24a', 0, 0.86, 0));
@@ -3720,6 +3738,177 @@ export function makeFurniture(itemId: string, links: FenceLinks = { n: false, e:
       // Ranke von der obersten Stufe
       const pts = [new THREE.Vector3(0.16, 1.1, -0.08), new THREE.Vector3(0.3, 0.9, 0.05), new THREE.Vector3(0.36, 0.6, 0.12)];
       g.add(mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts), 10, 0.01, 4, false), toon('#4f9a5a')));
+      break;
+    }
+    // ---------------------------------------------------------------- Bauhaus
+    case 'wassily-sessel': {
+      for (const x of [-0.3, 0.3]) {
+        g.add(steelTube([[x, 0.02, 0.3], [x, 0.02, -0.28], [x, 0.7, -0.3], [x, 0.7, -0.1]]));
+        g.add(steelTube([[x, 0.02, 0.3], [x, 0.5, 0.28], [x, 0.5, -0.2]]));
+        g.add(b(0.07, 0.02, 0.48, col, x, 0.52, 0.04));
+      }
+      g.add(steelTube([[-0.3, 0.02, 0.3], [0.3, 0.02, 0.3]]));
+      // Sitz und Lehne aus gespannten Lederbändern
+      const seat = b(0.56, 0.02, 0.46, col, 0, 0.34, 0.02);
+      seat.rotation.x = 0.12;
+      g.add(seat);
+      const back = b(0.56, 0.36, 0.02, col, 0, 0.56, -0.22);
+      back.rotation.x = -0.25;
+      g.add(back);
+      for (const z of [-0.08, 0.12]) g.add(steelTube([[-0.3, 0.36 + z * 0.1, z], [0.3, 0.36 + z * 0.1, z]], 0.012));
+      seatY = 0.38;
+      break;
+    }
+    case 'cesca-stuhl': {
+      for (const x of [-0.2, 0.2]) g.add(steelTube([[x, 0.44, -0.18], [x, 0.44, 0.18], [x, 0.3, 0.24], [x, 0.02, 0.22], [x, 0.02, -0.2]]));
+      g.add(steelTube([[-0.2, 0.02, -0.2], [0.2, 0.02, -0.2]]));
+      // Holzrahmen mit Wiener Geflecht
+      g.add(b(0.46, 0.04, 0.42, col, 0, 0.46, 0));
+      g.add(b(0.38, 0.042, 0.34, '#e3cfa0', 0, 0.462, 0));
+      for (const x of [-0.2, 0.2]) g.add(steelTube([[x, 0.44, -0.18], [x, 0.78, -0.22]]));
+      g.add(b(0.46, 0.2, 0.03, col, 0, 0.74, -0.22));
+      g.add(b(0.38, 0.14, 0.032, '#e3cfa0', 0, 0.74, -0.22));
+      seatY = 0.47;
+      break;
+    }
+    case 'barcelona-sessel': {
+      // gekreuzte Stahlbögen an beiden Seiten
+      for (const x of [-0.3, 0.3]) {
+        g.add(steelTube([[x, 0.02, 0.3], [x, 0.3, 0.1], [x, 0.5, -0.1], [x, 0.78, -0.32]], 0.02));
+        g.add(steelTube([[x, 0.02, -0.3], [x, 0.2, -0.12], [x, 0.34, 0.12], [x, 0.38, 0.3]], 0.02));
+      }
+      for (const z of [-0.12, 0.18]) g.add(steelTube([[-0.3, 0.34, z], [0.3, 0.34, z]], 0.014));
+      tufted(g, 0.6, 0.1, 0.52, col, 0, 0.4, 0.04, 4, 4, 'top');
+      const back = new THREE.Group();
+      back.position.set(0, 0.62, -0.22);
+      back.rotation.x = -0.32;
+      tufted(back, 0.6, 0.46, 0.1, col, 0, 0, 0, 4, 4, 'front');
+      g.add(back);
+      seatY = 0.46;
+      break;
+    }
+    case 'laccio-stuhl': {
+      for (const x of [-0.18, 0.18]) g.add(steelTube([[x, 0.02, -0.2], [x, 0.02, 0.2], [x, 0.44, 0.2], [x, 0.44, -0.2], [x, 0.8, -0.22]]));
+      g.add(steelTube([[-0.18, 0.02, -0.2], [0.18, 0.02, -0.2]]));
+      g.add(b(0.44, 0.04, 0.42, col, 0, 0.46, 0));
+      g.add(b(0.4, 0.16, 0.03, col, 0, 0.74, -0.22));
+      seatY = 0.48;
+      break;
+    }
+    case 'laccio-tisch': {
+      for (const z of [-0.26, 0.26]) g.add(steelTube([[-0.38, 0.02, z], [-0.38, 0.44, z], [0.38, 0.44, z], [0.38, 0.02, z]]));
+      g.add(b(0.84, 0.03, 0.62, col, 0, 0.46, 0));
+      // kleines Tischchen darunter
+      for (const z of [-0.18, 0.18]) g.add(steelTube([[-0.22, 0.02, z], [-0.22, 0.26, z], [0.22, 0.26, z], [0.22, 0.02, z]], 0.016));
+      g.add(b(0.5, 0.025, 0.44, col === '#2a2a30' ? '#f2efe9' : '#2a2a30', 0, 0.28, 0));
+      break;
+    }
+    case 'mies-sofa': {
+      for (const x of [-0.82, 0.82]) for (const z of [-0.3, 0.3]) g.add(b(0.04, 0.16, 0.04, CHROME, x, 0.08, z));
+      g.add(steelTube([[-0.84, 0.16, -0.32], [0.84, 0.16, -0.32]], 0.02));
+      g.add(steelTube([[-0.84, 0.16, 0.32], [0.84, 0.16, 0.32]], 0.02));
+      tufted(g, 1.8, 0.16, 0.72, col, 0, 0.26, 0, 9, 3, 'top');
+      tufted(g, 1.8, 0.34, 0.14, col, 0, 0.5, -0.3, 9, 2, 'front');
+      for (const x of [-0.86, 0.86]) g.add(b(0.08, 0.16, 0.72, darken(col, 0.05), x, 0.42, 0));
+      seatY = 0.36;
+      break;
+    }
+    case 'barcelona-liege': {
+      const wood = '#7a4a2e';
+      for (const x of [-0.78, 0.78]) for (const z of [-0.3, 0.3]) g.add(c(0.035, 0.18, wood, x, 0.09, z));
+      g.add(b(1.8, 0.06, 0.72, wood, 0, 0.2, 0));
+      tufted(g, 1.74, 0.12, 0.66, col, 0, 0.29, 0, 10, 3, 'top');
+      const roll = c(0.09, 0.62, col, -0.72, 0.43, 0);
+      roll.rotation.x = Math.PI / 2;
+      g.add(roll);
+      seatY = 0.36;
+      break;
+    }
+    case 'lc4-liege': {
+      // H-förmiger schwarzer Fuß
+      for (const x of [-0.3, 0.3]) g.add(b(0.06, 0.24, 0.5, '#2a2a30', x, 0.12, 0));
+      g.add(b(0.6, 0.05, 0.05, '#2a2a30', 0, 0.12, 0));
+      // geschwungener Chromrahmen und Polster entlang der Kurve
+      const pts: Array<[number, number, number]> = [];
+      for (let i = 0; i <= 10; i++) {
+        const t = i / 10;
+        const x = -0.88 + t * 1.76;
+        pts.push([x, 0.3 + 0.18 * Math.cos(t * Math.PI * 1.1) + t * 0.12, 0]);
+      }
+      for (const z of [-0.24, 0.24]) g.add(steelTube(pts.map(([x, y]) => [x, y, z] as [number, number, number]), 0.02));
+      for (let i = 0; i < 10; i++) {
+        const [x0, y0] = pts[i];
+        const [x1, y1] = pts[i + 1];
+        const seg = b(Math.hypot(x1 - x0, y1 - y0) + 0.01, 0.06, 0.44, col, (x0 + x1) / 2, (y0 + y1) / 2 + 0.04, 0);
+        seg.rotation.z = Math.atan2(y1 - y0, x1 - x0);
+        g.add(seg);
+      }
+      const roll = c(0.07, 0.42, col, pts[1][0], pts[1][1] + 0.12, 0);
+      roll.rotation.x = Math.PI / 2;
+      g.add(roll);
+      seatY = 0.36;
+      break;
+    }
+    case 'wagenfeld-leuchte': {
+      const glass = new THREE.MeshToonMaterial({ color: '#e8f4ff', transparent: true, opacity: 0.55 });
+      g.add(c(0.09, 0.02, glass, 0, 0.01, 0));
+      g.add(c(0.02, 0.26, glass, 0, 0.15, 0));
+      g.add(c(0.006, 0.28, CHROME, 0, 0.16, 0));
+      glow = glowMat('#fff3d8');
+      const dome = mesh(new THREE.SphereGeometry(0.1, 16, 10, 0, Math.PI * 2, 0, Math.PI / 2), glow);
+      dome.position.y = 0.29;
+      g.add(dome);
+      g.add(c(0.1, 0.012, CHROME, 0, 0.29, 0));
+      lightAt = new THREE.Vector3(0, 0.25, 0);
+      break;
+    }
+    case 'kandem-leuchte': {
+      g.add(c(0.08, 0.025, col, 0, 0.012, 0));
+      g.add(s(0.02, 0.02, 0.02, CHROME, 0, 0.03, 0));
+      const arm1 = c(0.008, 0.2, CHROME, 0.02, 0.12, 0);
+      arm1.rotation.z = -0.2;
+      g.add(arm1);
+      const arm2 = c(0.008, 0.16, CHROME, 0.08, 0.24, 0);
+      arm2.rotation.z = -1.0;
+      g.add(arm2);
+      const shade = mesh(new THREE.ConeGeometry(0.07, 0.11, 14, 1, true), toon(col, { side: THREE.DoubleSide }));
+      shade.position.set(0.15, 0.25, 0);
+      shade.rotation.z = 0.6;
+      g.add(shade);
+      glow = glowMat('#fff1c8');
+      const bulb = mesh(new THREE.SphereGeometry(0.025, 8, 6), glow);
+      bulb.position.set(0.17, 0.22, 0);
+      g.add(bulb);
+      lightAt = new THREE.Vector3(0.2, 0.15, 0);
+      break;
+    }
+    case 'breuer-regal': {
+      for (const x of [-0.86, 0.86]) for (const z of [-0.16, 0.16]) g.add(steelTube([[x, 0.02, z], [x, 1.0, z]], 0.018));
+      for (const y of [0.18, 0.58, 0.98]) g.add(b(1.84, 0.04, 0.4, '#b0703f', 0, y, 0));
+      for (let i = 0; i < 6; i++) g.add(b(0.06, 0.24, 0.24, ['#d9483b', '#2a2a30', '#f2c14e', '#efe8dc', '#3a5fa8', '#d9483b'][i], -0.6 + i * 0.07, 0.32, 0));
+      g.add(s(0.1, 0.1, 0.1, '#f2c14e', 0.45, 0.68, 0));
+      g.add(b(0.18, 0.18, 0.18, '#3a5fa8', 0.45, 1.09, 0));
+      break;
+    }
+    case 'bauhaus-wandschrank': {
+      const z = WALL_Z + 0.16;
+      g.add(b(1.6, 0.5, 0.3, '#efe8dc', 0, HANG + 0.2, z));
+      for (const [x, w, cc] of [[-0.55, 0.46, '#d9483b'], [-0.05, 0.5, '#f2c14e'], [0.5, 0.56, '#3a5fa8']] as const) {
+        g.add(b(w, 0.44, 0.012, cc, x, HANG + 0.2, z + 0.152));
+        g.add(b(0.02, 0.1, 0.02, '#2a2a30', x + w / 2 - 0.05, HANG + 0.2, z + 0.165));
+      }
+      g.add(b(1.62, 0.02, 0.32, '#2a2a30', 0, HANG - 0.06, z));
+      break;
+    }
+    case 'stahlrohrregal': {
+      for (const x of [-0.86, 0, 0.86]) for (const z of [-0.16, 0.16]) g.add(steelTube([[x, 0.02, z], [x, 1.5, z]], 0.018));
+      for (const y of [0.02, 0.5, 1.0, 1.48]) for (const z of [-0.16, 0.16]) g.add(steelTube([[-0.86, y, z], [0.86, y, z]], 0.014));
+      const cols = ['#d9483b', '#f2c14e', '#3a5fa8', '#efe8dc'];
+      let k = 0;
+      for (const y of [0.04, 0.52, 1.02, 1.5]) for (const x of [-0.43, 0.43]) g.add(b(0.84, 0.03, 0.34, cols[k++ % cols.length], x, y, 0));
+      g.add(b(0.36, 0.36, 0.3, '#d9483b', -0.43, 0.72, 0));
+      g.add(s(0.12, 0.12, 0.12, '#3a5fa8', 0.43, 1.16, 0));
+      for (let i = 0; i < 5; i++) g.add(b(0.06, 0.24, 0.22, ['#2a2a30', '#efe8dc', '#f2c14e', '#2a2a30', '#d9483b'][i], 0.25 + i * 0.07, 0.66, 0));
       break;
     }
     default:

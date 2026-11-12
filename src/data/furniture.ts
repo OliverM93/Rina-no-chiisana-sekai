@@ -18,7 +18,7 @@ import { TASSEN } from './tassen';
  */
 export type FurnitureStyle =
   | 'japanisch' | 'basis' | 'cottage' | 'retro' | 'modern' | 'midcentury' | 'handgemacht' | 'garten' | 'kunst' | 'winter' | 'lieblinge' | 'bistro'
-  | 'japandi' | 'minimalismus' | 'skandinavisch' | 'industrial' | 'brutalismus' | 'artdeco' | 'darkacademia' | 'spaceage' | 'cyberpunk' | 'memphis';
+  | 'bauhaus' | 'japandi' | 'minimalismus' | 'skandinavisch' | 'industrial' | 'brutalismus' | 'artdeco' | 'darkacademia' | 'spaceage' | 'cyberpunk' | 'memphis';
 
 export interface FurnitureDef {
   /** Basis-ID (ohne Variante) */
@@ -329,6 +329,20 @@ export const FURNITURE: readonly FurnitureDef[] = [
   { id: 'popcornmaschine', name: 'Popcorn-Maschine', style: 'lieblinge', small: true, price: 450, w: 1, d: 1, description: 'Ein kleiner roter Popcornwagen für den Tisch. Pflicht bei Horrorfilmabenden – damit man was zum Festhalten hat.' },
   { id: 'teleskop', name: 'Teleskop', style: 'basis', price: 1300, w: 1, d: 1, description: 'Ein Messingfernrohr auf einem Holzstativ. Oli zeigt dir damit jedes Sternbild – und erfindet manchmal eins dazu.' },
   { id: 'pflanzenleiter', name: 'Pflanzenleiter', style: 'basis', price: 700, w: 1, d: 1, description: 'Eine schräge Holzleiter mit drei Stufen voller Topfpflanzen. Die Pflanzen im Haus werden wirklich immer mehr.' },
+  // ---- Bauhaus: Stahlrohr, Leder, Grundformen (von Anfang an) ----
+  { id: 'wassily-sessel', name: 'Wassily Chair', style: 'bauhaus', sit: 'sitzen', price: 2200, w: 1, d: 1, description: 'Ein Sessel aus gebogenem Stahlrohr, Sitz, Lehne und Armlehnen aus gespannten Lederbändern. Sieht aus wie ein Fahrrad, das Sessel werden wollte.', variants: { schwarz: '#2a2a30', cognac: '#a8643a' }, baseVariant: 'schwarz' },
+  { id: 'cesca-stuhl', name: 'Cesca Chair', style: 'bauhaus', sit: 'sitzen', price: 800, w: 1, d: 1, description: 'Ein Freischwinger aus Chromrohr mit Holzrahmen und Wiener Geflecht. Federt ein klein bisschen – wie ein Nicken.', variants: { nuss: '#7a4a2e', schwarz: '#2a2a30', natur: '#c9955f' }, baseVariant: 'nuss' },
+  { id: 'barcelona-sessel', name: 'Barcelona Chair', style: 'bauhaus', sit: 'sitzen', price: 2600, w: 1, d: 1, description: 'Zwei gekreuzte Stahlbögen tragen dicke, gesteppte Lederkissen. Eigentlich für einen König gebaut – jetzt für Lina.', variants: { schwarz: '#2a2a30', cognac: '#a8643a', creme: '#efe8dc' }, baseVariant: 'schwarz' },
+  { id: 'laccio-stuhl', name: 'Laccio Chair', style: 'bauhaus', sit: 'sitzen', price: 700, w: 1, d: 1, description: 'Ein schlichter Stuhl aus einer einzigen Stahlrohr-Schlaufe mit lackierter Sitzfläche – passend zum Laccio-Tisch.', variants: { schwarz: '#2a2a30', weiss: '#f2efe9' }, baseVariant: 'schwarz' },
+  { id: 'laccio-tisch', name: 'Laccio Table', style: 'bauhaus', surface: true, surfaceHeight: 0.46, price: 900, w: 1, d: 1, description: 'Ein Beistelltisch aus Stahlrohr-Schlaufen mit lackierter Platte. Ein kleineres Tischchen passt genau darunter.', variants: { schwarz: '#2a2a30', weiss: '#f2efe9' }, baseVariant: 'schwarz' },
+  { id: 'mies-sofa', name: 'Mies-Sofa', style: 'bauhaus', sit: 'sitzen', price: 2400, w: 2, d: 1, description: 'Auch Knoll-Sofa genannt: ein langes, gestepptes Polster auf einem schlanken Chromgestell. Weniger ist mehr – nur nicht bei Kissen.', variants: { schwarz: '#2a2a30', cognac: '#a8643a', creme: '#efe8dc' }, baseVariant: 'schwarz' },
+  { id: 'barcelona-liege', name: 'Barcelona Couch', style: 'bauhaus', sit: 'liegen', price: 2300, w: 2, d: 1, description: 'Eine flache Liege aus Holz mit gesteppter Lederauflage und einer runden Nackenrolle. Für ein Nickerchen mit Stil.', variants: { schwarz: '#2a2a30', cognac: '#a8643a' }, baseVariant: 'schwarz' },
+  { id: 'lc4-liege', name: 'LC4 Chaise Longue', style: 'bauhaus', sit: 'liegen', price: 2600, w: 2, d: 1, description: 'Ein geschwungener Chromrahmen auf schwarzem Fuß, mit Polster und Nackenrolle. Liegt sich wie eine Welle.', variants: { schwarz: '#2a2a30', cognac: '#a8643a', fell: '#efe8dc' }, baseVariant: 'schwarz' },
+  { id: 'wagenfeld-leuchte', name: 'Wagenfeld-Leuchte', style: 'bauhaus', small: true, light: true, price: 650, w: 1, d: 1, description: 'Glasfuß, Chromstab und eine Halbkugel aus Opalglas. Die berühmteste Tischlampe aus der Bauhaus-Werkstatt.' },
+  { id: 'kandem-leuchte', name: 'Kandem-Leuchte', style: 'bauhaus', small: true, light: true, price: 480, w: 1, d: 1, description: 'Eine Schreibtischlampe mit verstellbarem Arm und spitzem Metallschirm. Leuchtet genau dahin, wo Lina gerade schreibt.', variants: { schwarz: '#2a2a30', rot: '#c94a3a', messing: '#c9a24a' }, baseVariant: 'schwarz' },
+  { id: 'breuer-regal', name: 'Breuer-Regal', style: 'bauhaus', surface: true, surfaceHeight: 1.0, price: 1200, w: 2, d: 1, description: 'Holzböden zwischen einem Rahmen aus Chromrohr. Leicht, luftig – und hält trotzdem alle Kochbücher.' },
+  { id: 'bauhaus-wandschrank', name: 'Bauhaus-Wandschrank', style: 'bauhaus', wall: true, price: 950, w: 2, d: 1, description: 'Ein Hängeschrank mit Türen in Rot, Gelb und Blau. Christin hat ihn schon dreimal ausgerichtet. Er hing schon gerade.' },
+  { id: 'stahlrohrregal', name: 'Modulares Stahlrohrregal', style: 'bauhaus', surface: true, surfaceHeight: 1.5, price: 1400, w: 2, d: 1, description: 'Ein Gitter aus Stahlrohr mit Fächern in Grundfarben. Man kann es endlos weiterdenken – Lina hat erstmal eins.' },
   { id: 'topfpflanze', name: 'Monstera', style: 'basis', price: 300, w: 1, d: 1, description: 'Große, grüne Blätter mit Löchern. Sehr fotogen.' },
 ];
 
@@ -462,7 +476,7 @@ for (const a of ARTWORKS) (FURNITURE as FurnitureDef[]).push({ id: a.id, name: a
 
 export const STYLE_LABELS: Record<FurnitureStyle, string> = {
   japanisch: 'Japanisch', basis: 'Basis', cottage: 'Cottagecore', retro: 'Retro-Oma-Chic', modern: 'Contemporary', midcentury: 'Mid-Century-Modern', handgemacht: 'Handgemacht', garten: 'Garten', kunst: 'Kunst', winter: 'Winterzauber', lieblinge: 'Lieblingsthemen', bistro: 'Französisches Bistro',
-  japandi: 'Japandi', minimalismus: 'Minimalismus', skandinavisch: 'Skandinavisch', industrial: 'Industrial', brutalismus: 'Brutalismus', artdeco: 'Art déco', darkacademia: 'Dark Academia', spaceage: 'Space Age', cyberpunk: 'Cyberpunk', memphis: 'Memphis',
+  bauhaus: 'Bauhaus', japandi: 'Japandi', minimalismus: 'Minimalismus', skandinavisch: 'Skandinavisch', industrial: 'Industrial', brutalismus: 'Brutalismus', artdeco: 'Art déco', darkacademia: 'Dark Academia', spaceage: 'Space Age', cyberpunk: 'Cyberpunk', memphis: 'Memphis',
 };
 
 /** Möbel-Gegenstand (mit Variante) → Basis + Farbe */
@@ -494,7 +508,7 @@ export const FURNITURE_ITEMS: readonly FurnitureItem[] = FURNITURE.flatMap((def)
 export const FURNITURE_BY_ITEM: Readonly<Record<string, FurnitureItem>> = Object.fromEntries(FURNITURE_ITEMS.map((f) => [f.itemId, f]));
 export const SURFACE_BY_ID: Readonly<Record<string, SurfaceDef>> = Object.fromEntries([...WALLPAPERS, ...FLOORS].map((s) => [s.id, s]));
 
-export const VARIANT_LABELS: Record<string, string> = { grau: 'Grau', weiss: 'Weiß', mint: 'Mint', gelb: 'Gelb', rosa: 'Rosa', indigo: 'Indigo', creme: 'Creme', rot: 'Rot', blau: 'Blau', gruen: 'Grün', senf: 'Senfgelb', salbei: 'Salbei', rost: 'Rost', petrol: 'Petrol', sand: 'Sand', schwarz: 'Schwarz', cognac: 'Cognac', geflecht: 'Wiener Geflecht', himmel: 'Himmelblau', flieder: 'Flieder', messing: 'Messing', pflaume: 'Pflaume', honig: 'Honig', nuss: 'Nuss', holz: 'Holz', leinen: 'Leinen', anthrazit: 'Anthrazit', eiche: 'Eiche', hellgrau: 'Hellgrau', taubenblau: 'Taubenblau', flaschengruen: 'Flaschengrün', bordeaux: 'Bordeaux', smaragd: 'Smaragd', nachtblau: 'Nachtblau', olive: 'Oliv', orange: 'Orange', pink: 'Pink', lila: 'Lila', cyan: 'Türkis' };
+export const VARIANT_LABELS: Record<string, string> = { grau: 'Grau', weiss: 'Weiß', mint: 'Mint', gelb: 'Gelb', rosa: 'Rosa', indigo: 'Indigo', creme: 'Creme', rot: 'Rot', blau: 'Blau', gruen: 'Grün', senf: 'Senfgelb', salbei: 'Salbei', rost: 'Rost', petrol: 'Petrol', sand: 'Sand', schwarz: 'Schwarz', cognac: 'Cognac', geflecht: 'Wiener Geflecht', himmel: 'Himmelblau', flieder: 'Flieder', messing: 'Messing', pflaume: 'Pflaume', honig: 'Honig', nuss: 'Nuss', holz: 'Holz', leinen: 'Leinen', anthrazit: 'Anthrazit', eiche: 'Eiche', hellgrau: 'Hellgrau', taubenblau: 'Taubenblau', flaschengruen: 'Flaschengrün', bordeaux: 'Bordeaux', smaragd: 'Smaragd', nachtblau: 'Nachtblau', olive: 'Oliv', orange: 'Orange', pink: 'Pink', lila: 'Lila', cyan: 'Türkis', natur: 'Natur', fell: 'Fell' };
 
 
 /** Raum-Infos für die Raumlogik (`core/room.ts`) */

@@ -24,7 +24,7 @@ function fresh(iso = '2026-05-12T12:00:00') {
 
 describe('Erinnerungen – Daten', () => {
   it('jede Zeile gehört zu einem Bewohner, hat eine eindeutige ID und einen bekannten Tag', () => {
-    const known = ['haus-anbau', 'haus-dach', 'haus-kueche', 'haus-keller', 'buch-10', 'buch-20', 'buch-30', 'huehner', 'gewaechshaus', 'tassen-viele', 'sparbuch', 'schwarze-blume', 'jens-reise', 'matteo', 'kino', 'tourshirt', 'pflanzen-viele', 'bett', 'waermflasche', 'monat-1', 'jahr-1', 'stil-japanisch', 'stil-cottage', 'stil-retro', 'stil-modern', 'stil-midcentury', 'stil-bistro', 'stil-japandi', 'stil-minimalismus', 'stil-skandinavisch', 'stil-industrial', 'stil-darkacademia', 'stil-artdeco', 'stil-spaceage', 'stil-cyberpunk', 'stil-brutalismus', 'stil-memphis', 'parkett-edel', 'tapete-uni', 'garten-deko'];
+    const known = ['haus-anbau', 'haus-dach', 'haus-kueche', 'haus-keller', 'buch-10', 'buch-20', 'buch-30', 'huehner', 'gewaechshaus', 'tassen-viele', 'sparbuch', 'schwarze-blume', 'jens-reise', 'matteo', 'kino', 'tourshirt', 'pflanzen-viele', 'bett', 'waermflasche', 'monat-1', 'jahr-1', 'stil-japanisch', 'stil-cottage', 'stil-retro', 'stil-modern', 'stil-midcentury', 'stil-bistro', 'stil-japandi', 'stil-minimalismus', 'stil-skandinavisch', 'stil-industrial', 'stil-darkacademia', 'stil-artdeco', 'stil-spaceage', 'stil-cyberpunk', 'stil-brutalismus', 'stil-memphis', 'stil-bauhaus', 'parkett-edel', 'tapete-uni', 'garten-deko'];
     const ids = new Set<string>();
     for (const m of MEMORIES) {
       expect(NPC_BY_ID[m.npc], m.id).toBeTruthy();
@@ -72,7 +72,7 @@ describe('Erinnerungen – Einrichtung', () => {
   });
 
   it('jeder neue Stil hat mindestens zwei Reaktionen von verschiedenen Bewohnern', () => {
-    for (const st of ['japandi', 'minimalismus', 'skandinavisch', 'industrial', 'darkacademia', 'artdeco', 'spaceage', 'cyberpunk', 'brutalismus', 'memphis']) {
+    for (const st of ['japandi', 'minimalismus', 'skandinavisch', 'industrial', 'darkacademia', 'artdeco', 'spaceage', 'cyberpunk', 'brutalismus', 'memphis', 'bauhaus']) {
       const npcs = new Set(MEMORIES.filter((m) => m.tag === `stil-${st}`).map((m) => m.npc));
       expect(npcs.size, st).toBeGreaterThanOrEqual(2);
     }
