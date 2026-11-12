@@ -437,18 +437,20 @@ function addHair(head: THREE.Group, a: Appearance, R: number) {
       break;
     }
     case 'zerzaust': {
-      topCap(1.1, 1.06);
-      // Seitenhaar wie früher bis weit nach unten – nur direkt am Ohr ist ein Fenster frei, damit das Ohr ordentlich aussieht
-      backCap(1.3, 1.05);
-      for (const [start, len] of [[FRONT + 0.85, 0.3], [FRONT - 1.15, 0.3], [FRONT + 1.95, Math.PI * 2 - 3.9]] as const) head.add(shell(R * 1.05, col, start, len, 0, 1.85));
-      head.add(shell(R * 1.07, col, FRONT - 1.0, 2.0, 0.42, 0.4));
-      // abstehende, wuschelige Strähnen (nicht direkt am Ohr)
+      // Breitere (kräftigere) Köpfe brauchen etwas größere Kappen, sonst sticht die Haut zackig durch
+      const k = Math.max(1, 1 + (a.build - 1) * 0.35);
+      topCap(1.1, 1.06 * k);
+      // volles Seitenhaar wie früher bis weit nach unten – nur direkt am Ohr ist ein Fenster frei, damit das Ohr ordentlich aussieht
+      backCap(1.3, 1.05 * k + 0.01);
+      for (const [start, len] of [[FRONT + 0.85, 0.3], [FRONT - 1.15, 0.3], [FRONT + 1.95, Math.PI * 2 - 3.9]] as const) head.add(shell(R * (1.05 * k + 0.01), col, start, len, 0, 1.85));
+      head.add(shell(R * 1.07 * k, col, FRONT - 1.0, 2.0, 0.42, 0.4));
+      // abstehende, wuschelige Strähnen / Fransen (nicht direkt am Ohr)
       for (let i = 0; i < 40; i++) {
         const theta = 0.15 + rnd() * 1.0;
         const phi = rnd() * Math.PI * 2;
         if (theta > 0.8 && fromFront(phi) < openFace) continue;
         if (theta > 0.85 && fromFront(phi) > 1.05 && fromFront(phi) < 2.05) continue;
-        const p = onSphere(R * 1.02, theta, phi);
+        const p = onSphere(R * 1.05 * k, theta, phi);
         const tuft = part(cone, shades[i % 3], R * 0.16, R * (0.2 + rnd() * 0.12), R * 0.16, p.x, p.y, p.z);
         const n = p.clone().normalize();
         tuft.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), n.add(new THREE.Vector3((rnd() - 0.5) * 1.4, -0.1, (rnd() - 0.5) * 1.4)).normalize());
