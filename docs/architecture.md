@@ -88,7 +88,7 @@ src/
                    materials.ts (Toon-Materialien)
   ui/          Preact-Overlay: App, TitleScreen, CharacterEditor, Hud, DialogBox (mit Auswahl & Herzen),
                InventoryPanel (Tasche/Verkaufen/Schenken), MailPanel, Menu, store.ts,
-               CatalogPanel (Möbelkatalog), CraftPanel (Werkbank/Küche/Apotheke), CollectionBook (Sammelbuch),
+               CatalogPanel (Möbelkatalog, Tastatur `catalogNav.ts`; Ordnung `data/catalog.ts`, Filter `game/catalog.ts`), CraftPanel (Werkbank/Küche/Apotheke), CollectionBook (Sammelbuch),
                DecorBar (Einrichten), BankPanel, SeedStandPanel (Samenstand), MapPanel (Dorfkarte), GalleryPanel, TvPanel, NotebookPanel (Notizbuch, Logik `game/notebook.ts`), MiniGamePanel (Dackel-Snake, Logik `core/snake.ts`), Preview3D
   dev/         Entwickler-Galerie (wird nicht ins Spiel gebaut)
 ```
@@ -103,7 +103,8 @@ src/
 - **Menü & Fenster:** Dialoge, Fenster und Rückfragen sperren das Menü (`Hud`: `busy`), ein offenes Menü schließt sich,
   wenn ein Dialog oder Fenster aufgeht (`App`). Zoom-Knöpfe senden `camera:zoom` auf dem Bus (`World3D.zoomBy`).
   Tasche, Verkaufskiste, Geschenk- und Samenauswahl lassen sich mit Pfeiltasten durchlaufen (Leertaste wählt/markiert, Enter
-  verkauft bzw. schenkt/pflanzt). **Alle anderen Fenster & Menüs** (Menü, Post, Katalog, Werkbank, Küche, Apotheke, Sammelbuch,
+  verkauft bzw. schenkt/pflanzt). Der **Möbelkatalog** hat eine eigene Zustandsmaschine (`ui/catalogNav.ts`: Zeilen
+  Kategorie → Typ → Stil → Raster → Farbe, ohne DOM getestet). **Alle anderen Fenster & Menüs** (Menü, Post, Werkbank, Küche, Apotheke, Sammelbuch,
   Karte, Galerie, TV, Bank, Rückfragen, Titel, Charakter-Editor) navigiert `ui/navigation.ts`: ein Fang-Listener in `App`
   schickt die Pfeile ans oberste Fenster (`.modal-layer`/`.title-layer`), `pickNext` wählt den nächsten Knopf in der Richtung
   (geradeaus vor schräg, am Zeilenende in Leserichtung weiter), Enter/Leertaste drückt den Fokus-Knopf wie im Browser üblich.

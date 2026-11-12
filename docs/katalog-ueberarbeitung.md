@@ -245,6 +245,36 @@ Tastatur (eine kleine Zustandsmaschine in `src/ui/catalogNav.ts`, ohne DOM testb
 - Die aktive Zeile ist sichtbar umrandet, der Hinweis unten zeigt die Tasten.
 - Bewegungen von Lina/Kamera sind schon gesperrt, solange ein Fenster offen ist (`session.uiBlocking`).
 
-## 8. Offene Entscheidungen ❓
+## 8. Entscheidungen (mit dem Auftraggeber geklärt)
 
-Siehe Rückfragen im Chat (Mehrfachstile, Layout, Umfang des neuen Sortiments, Freischaltung der neuen Stile).
+- ✅ **Mehrfachstile:** ja, 0–n Stile pro Stück.
+- ✅ **Layout:** drei Filterzeilen (Kategorie, Typ, Stil), darunter Raster und Details.
+- ✅ **Umfang:** schrittweise – dieser Schritt bringt Menü, Tastatur und die Zuordnung des Bestands; das Kernsortiment
+  der neuen Stile folgt in eigenen PRs (je 3–4 Stile).
+- ✅ **Freischaltung:** einige Stile kommen mit Einzügen (Zuordnung in `DESIGN_STYLES`, leicht änderbar):
+
+| Einzug | bringt |
+|---|---|
+| von Anfang an | Japanisch, Japandi, Contemporary, Mid-Century-Modern, Cottagecore, Retro-Oma-Chic |
+| Olaf & Christin (ordentlich, Ostsee) | Minimalismus, Skandinavisch |
+| Jens (Kunst, Dandy) | Französisches Bistro (wie bisher), Art déco, Memphis |
+| Thalia (Bücher, Karten, Gestein) | Dark Academia, Brutalismus |
+| Lars | Industrial |
+| Oli (Zocken, Sterne gucken) | Space Age, Cyberpunk |
+
+Wichtig: Die Freischaltung hängt an der **Linie** eines Stücks (`FurnitureDef.style`), nicht an seinen Stil-Schildern.
+Bestehende Stücke behalten ihre Linie und bleiben deshalb immer im Katalog (Test „nichts verschwindet“); ein Stil-Chip
+erscheint erst, wenn der Stil frei ist. Neue Stücke der neuen Stile bekommen später ihren Stil als Linie und erscheinen
+dann mit dem Einzug.
+
+## 9. Backlog: Kernsortiment der neuen Stile 🗓️ (Vorschlag, priorisiert)
+
+1. **Japandi, Skandinavisch, Minimalismus** – hell, ruhig, passt zu Linas Haus; viele Teile wiederverwendbar
+   (Daybed/Bank, Lattenregal, Papier-Pendelleuchte, Wollteppich, Kalkputz-Wand, helle Eiche).
+2. **Dark Academia, Art déco, Industrial** – starker Bezug zu Thalia, Jens und Lars
+   (Bücherwand, Sekretär, Chesterfield, Fächer-Sessel, Messing-Stehlampe, Fabrikleuchte, Stahlregal, Ledersofa).
+3. **Space Age, Cyberpunk** – Oli (Kugelsessel, Tulpentisch, Lavalampe, Gaming-Stuhl, Neonröhren, Monitorwand).
+4. **Brutalismus, Memphis** – mutig, eher Akzente (Betonbank, Blockregal, Squiggle-Teppich, Totem-Regal, Memphis-Tapete).
+
+💡 Später denkbar: Reaktionen der Bewohner auch für die neuen Stile (`game/erinnerungen.ts`, Tags `stil-…`),
+dezentes „neu“ am Chip eines frisch freigeschalteten Stils (ohne Druck), Suchfeld.

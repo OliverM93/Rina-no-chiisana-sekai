@@ -33,7 +33,7 @@ describe('Katalog-Tastatur', () => {
   });
 
   it('←/→ in den Zeilen ändert Kategorie, Typ und Stil – mit Umlauf', () => {
-    let s = { ...initialNav('moebel'), row: 'kategorie' as const };
+    let s: NavState = { ...initialNav('moebel'), row: 'kategorie' };
     s = press(s, ['right']);
     expect(s.category).toBe('pflanzen');
     s = press(s, ['left', 'left']);
