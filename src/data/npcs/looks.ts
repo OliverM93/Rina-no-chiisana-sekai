@@ -94,7 +94,7 @@ export const LOOKS: Readonly<Record<string, Appearance>> = {
     eyeColor: palette.eyeColors.blau,
     smile: 'grinsen',
   },
-  /** Jens (Onkel): dunkle, zerzauste Haare, kein Bart, rundes Gesicht, untersetzt, schwarzer Hoodie, Zahnlücken-Grinsen */
+  /** Jens (Onkel): dunkle, zerzauste Haare mit Strähnen (Ohren frei), kein Bart, rundes Gesicht, untersetzt, schwarzer Hoodie, Zahnlücken-Grinsen */
   jens: {
     ...base,
     hairStyle: 'zerzaust',
@@ -126,10 +126,10 @@ export const LOOKS: Readonly<Record<string, Appearance>> = {
     scarf: '#3f7a62',
     earrings: true,
   },
-  /** Oli (Linas Freund): kurze dunkelblonde Haare, Schnurrbart, schwarzer Troyer-Pulli, strahlendes Lächeln */
+  /** Oli (Linas Freund): dunkelblonder Fade (Seiten & Nacken kurz, oben längeres Deckhaar), Schnurrbart, schwarzer Troyer-Pulli, strahlendes Lächeln */
   oli: {
     ...base,
-    hairStyle: 'kurz',
+    hairStyle: 'fade',
     hairColor: '#8c6a48',
     beard: 'schnurrbart',
     beardColor: '#7a5a3c',

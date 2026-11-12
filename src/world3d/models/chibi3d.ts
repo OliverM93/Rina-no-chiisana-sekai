@@ -423,16 +423,35 @@ function addHair(head: THREE.Group, a: Appearance, R: number) {
       backCap(1.7, 1.01, buzz, 1.05);
       break;
     }
+    case 'fade': {
+      // Fade: Seiten und Nacken ganz kurz (nach unten immer hautnäher), oben etwas längeres, glattes Deckhaar (ohne Tolle).
+      // Breitere (kräftigere) Köpfe brauchen etwas größere Kappen, sonst sticht die Haut durch.
+      const w = 1 + (a.build - 1) * 0.35;
+      const k = Math.max(1, w);
+      const buzz = mixHex(a.skinTone, col, 0.55);
+      const graded = mixHex(a.skinTone, col, 0.8);
+      backCap(1.9, 1.012 * k + 0.012, buzz, 0.95);
+      backCap(1.5, 1.03 * k + 0.02, graded, 0.95);
+      topCap(1.02, 1.085 * k);
+      head.add(shell(R * 1.1 * k, col, FRONT - 0.95, 1.9, 0.3, 0.5)); // kurzer, glatter Pony
+      break;
+    }
     case 'zerzaust': {
-      topCap(1.1, 1.06);
-      backCap(1.85, 1.05);
-      head.add(shell(R * 1.07, col, FRONT - 1.0, 2.0, 0.42, 0.4));
-      // abstehende, wuschelige Strähnen
+      // Breitere (kräftigere) Köpfe brauchen etwas größere Kappen, sonst sticht die Haut zackig durch
+      const k = Math.max(1, 1 + (a.build - 1) * 0.35);
+      topCap(1.1, 1.06 * k);
+      // volles Seitenhaar wie früher; das Ohr schaut als kleines Oval aus dem Haar (wie bei den anderen)
+      const hairR = 1.05 * k + 0.01;
+      backCap(1.85, hairR);
+      for (const sd of [-1, 1]) head.add(part(sphere, a.skinTone, R * 0.17, R * 0.21, R * 0.12, sd * R * hairR * 0.97, -R * 0.05, 0));
+      head.add(shell(R * 1.07 * k, col, FRONT - 1.0, 2.0, 0.42, 0.4));
+      // abstehende, wuschelige Strähnen / Fransen (nicht direkt am Ohr)
       for (let i = 0; i < 40; i++) {
         const theta = 0.15 + rnd() * 1.0;
         const phi = rnd() * Math.PI * 2;
         if (theta > 0.8 && fromFront(phi) < openFace) continue;
-        const p = onSphere(R * 1.02, theta, phi);
+        if (theta > 0.85 && fromFront(phi) > 1.3 && fromFront(phi) < 1.85) continue;
+        const p = onSphere(R * 1.05 * k, theta, phi);
         const tuft = part(cone, shades[i % 3], R * 0.16, R * (0.2 + rnd() * 0.12), R * 0.16, p.x, p.y, p.z);
         const n = p.clone().normalize();
         tuft.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), n.add(new THREE.Vector3((rnd() - 0.5) * 1.4, -0.1, (rnd() - 0.5) * 1.4)).normalize());
