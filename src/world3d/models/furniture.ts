@@ -3544,6 +3544,184 @@ export function makeFurniture(itemId: string, links: FenceLinks = { n: false, e:
       }
       break;
     }
+    // ---------------------------------------------------------------- Besondere Stücke
+    case 'haengesessel': {
+      const steel = '#2f2f35';
+      g.add(c(0.24, 0.03, steel, 0, 0.015, -0.1));
+      // Bogengestell: Stange hinten hoch, oben nach vorn gebogen
+      const pts = [new THREE.Vector3(0, 0.03, -0.1), new THREE.Vector3(0, 1.0, -0.3), new THREE.Vector3(0, 1.55, -0.1), new THREE.Vector3(0, 1.6, 0.1)];
+      g.add(mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts), 16, 0.025, 6, false), toon(steel)));
+      g.add(c(0.008, 0.36, '#c9a24a', 0, 1.42, 0.1));
+      // geflochtener Ei-Korb, vorne weit offen (Lücke um phi = 0 → mit +90° nach vorn gedreht)
+      const basket = mesh(new THREE.SphereGeometry(0.34, 18, 14, Math.PI * 0.3, Math.PI * 1.4), toon('#c9a06e', { side: THREE.DoubleSide }));
+      basket.rotation.y = Math.PI / 2;
+      basket.scale.set(1, 1.25, 1);
+      basket.position.set(0, 0.84, 0.08);
+      g.add(basket);
+      for (let i = 0; i < 5; i++) g.add(c(0.345 * Math.sin(Math.PI * (0.2 + i * 0.15)), 0.008, '#a9875e', 0, 0.84 - 0.42 * Math.cos(Math.PI * (0.2 + i * 0.15)), 0.08, new THREE.CylinderGeometry(1, 1, 1, 18, 1, true, Math.PI * 0.8, Math.PI * 1.4)));
+      g.add(s(0.27, 0.07, 0.24, col, 0, 0.66, 0.12));
+      g.add(s(0.2, 0.16, 0.06, lighten(col, 0.1), 0, 0.84, -0.12));
+      seatY = 0.66;
+      break;
+    }
+    case 'kuehlschrank': {
+      const body = mesh(new THREE.CapsuleGeometry(0.34, 0.9, 6, 16), toon(col));
+      body.scale.set(1, 1, 0.8);
+      body.position.y = 0.82;
+      g.add(body);
+      g.add(b(0.62, 0.012, 0.02, darken(col, 0.15), 0, 0.98, 0.28));
+      for (const y of [1.15, 0.7]) g.add(b(0.04, 0.2, 0.05, '#d9d9e0', 0.24, y, 0.3));
+      g.add(b(0.16, 0.05, 0.01, '#d9d9e0', 0, 1.42, 0.28));
+      for (const x of [-0.22, 0.22]) g.add(c(0.03, 0.08, '#2a2a30', x, 0.04, 0));
+      // Magnet mit Herz
+      g.add(s(0.03, 0.03, 0.01, '#f07ab0', -0.12, 1.1, 0.285));
+      break;
+    }
+    case 'wandkamin': {
+      const stone = '#d9d4cc';
+      g.add(b(1.5, 1.0, 0.36, stone, 0, 0.5, -0.3));
+      g.add(b(1.66, 0.08, 0.44, darken(stone, 0.06), 0, 1.04, -0.28));
+      g.add(b(0.8, 0.56, 0.2, '#2a2224', 0, 0.36, -0.2));
+      g.add(b(1.0, 0.06, 0.42, darken(stone, 0.1), 0, 0.03, -0.18));
+      // Holzscheite & Feuer
+      for (const [x, r] of [[-0.12, 0.3], [0.1, -0.3]] as const) g.add(c(0.05, 0.4, '#7a4a2a', x, 0.16, -0.12).rotateZ(Math.PI / 2).rotateY(r));
+      glow = glowMat('#ffb347');
+      for (const [x, h] of [[-0.12, 0.26], [0.04, 0.34], [0.16, 0.22]] as const) {
+        const flame = mesh(new THREE.ConeGeometry(0.07, h, 8), glow);
+        flame.position.set(x, 0.2 + h / 2, -0.12);
+        g.add(flame);
+      }
+      // Deko auf dem Sims
+      g.add(c(0.04, 0.2, '#f3ead8', -0.5, 1.18, -0.28));
+      g.add(c(0.04, 0.14, '#f3ead8', -0.4, 1.15, -0.28));
+      g.add(b(0.24, 0.3, 0.03, '#c9a24a', 0.35, 1.23, -0.38));
+      g.add(b(0.2, 0.26, 0.01, '#9fc4e8', 0.35, 1.23, -0.36));
+      lightAt = new THREE.Vector3(0, 0.4, 0.3);
+      break;
+    }
+    case 'aquarium': {
+      g.add(b(1.5, 0.62, 0.48, '#5a3a2a', 0, 0.31, 0));
+      g.add(b(1.52, 0.04, 0.5, '#4a2e20', 0, 0.64, 0));
+      glow = glowMat('#7fc4e8');
+      const water = mesh(new THREE.BoxGeometry(1.4, 0.5, 0.4), new THREE.MeshToonMaterial({ color: '#9fd4f0', transparent: true, opacity: 0.55, emissive: '#7fc4e8', emissiveIntensity: 0.12 }));
+      water.position.y = 0.92;
+      g.add(water);
+      g.add(b(1.44, 0.04, 0.44, '#2a2a30', 0, 1.19, 0));
+      g.add(b(1.4, 0.04, 0.4, '#e3cfa0', 0, 0.68, 0));
+      for (const [x, z, cc] of [[-0.5, 0.05, '#4f9a5a'], [-0.42, -0.08, '#6fb06a'], [0.45, -0.05, '#4f9a5a']] as const) g.add(c(0.03, 0.34, cc, x, 0.86, z));
+      for (const [x, cc] of [[0.2, '#a9a6a0'], [0.3, '#8a8a94']] as const) g.add(s(0.06, 0.04, 0.05, cc, x, 0.72, 0.05));
+      for (const [x, y, z, cc] of [[-0.2, 0.95, 0.05, '#f08a3a'], [0.05, 1.02, -0.06, '#f7d26a'], [0.25, 0.88, 0.08, '#f07ab0'], [-0.05, 0.82, 0.1, '#4ad8e8']] as const) {
+        g.add(s(0.045, 0.028, 0.018, cc, x, y, z));
+        const tail = c(0.022, 0.03, cc, x - 0.055, y, z, new THREE.ConeGeometry(1, 1, 4));
+        tail.rotation.z = Math.PI / 2;
+        g.add(tail);
+      }
+      const lamp = mesh(new THREE.BoxGeometry(1.3, 0.02, 0.1), glow);
+      lamp.position.set(0, 1.22, 0);
+      g.add(lamp);
+      lightAt = new THREE.Vector3(0, 1.0, 0.3);
+      break;
+    }
+    case 'spielautomat': {
+      const body = '#3a3a42';
+      g.add(b(0.62, 1.5, 0.56, body, 0, 0.75, 0));
+      for (const x of [-0.32, 0.32]) g.add(b(0.03, 1.5, 0.58, '#f07ab0', x, 0.75, 0));
+      // schräge Bedienplatte
+      const panel = b(0.6, 0.06, 0.3, '#2a2a30', 0, 0.86, 0.3);
+      panel.rotation.x = 0.35;
+      g.add(panel);
+      g.add(c(0.012, 0.1, '#2a2a30', -0.14, 0.94, 0.33));
+      g.add(s(0.035, 0.035, 0.035, '#d9483b', -0.14, 0.99, 0.33));
+      for (const [x, cc] of [[0.04, '#4ad8e8'], [0.14, '#f7d26a'], [0.24, '#7ad86a']] as const) g.add(c(0.03, 0.02, cc, x, 0.92, 0.31).rotateX(0.35));
+      glow = glowMat('#9a6ad8');
+      const screen = mesh(new THREE.BoxGeometry(0.5, 0.38, 0.02), glow);
+      screen.position.set(0, 1.17, 0.27);
+      screen.rotation.x = -0.12;
+      g.add(screen);
+      for (let i = 0; i < 4; i++) g.add(b(0.06, 0.06, 0.01, ['#f7d26a', '#f07ab0', '#4ad8e8', '#7ad86a'][i], -0.15 + i * 0.1, 1.15 + (i % 2) * 0.06, 0.29));
+      const marquee = mesh(new THREE.BoxGeometry(0.6, 0.16, 0.04), new THREE.MeshToonMaterial({ color: '#f7d26a', emissive: '#f7d26a', emissiveIntensity: 0.12 }));
+      marquee.position.set(0, 1.42, 0.27);
+      g.add(marquee);
+      lightAt = new THREE.Vector3(0, 1.2, 0.5);
+      break;
+    }
+    case 'jukebox': {
+      const wood = '#8a5a3a';
+      g.add(b(0.66, 0.9, 0.44, wood, 0, 0.45, 0));
+      const top = c(0.33, 0.44, wood, 0, 0.9, 0, new THREE.CylinderGeometry(1, 1, 1, 20, 1, false, -Math.PI / 2, Math.PI));
+      top.rotation.x = Math.PI / 2;
+      top.rotation.z = Math.PI / 2;
+      g.add(top);
+      glow = glowMat('#ffb347');
+      // leuchtende Bögen vorn
+      for (const [r, mat] of [[0.3, glow], [0.24, toon('#c9a24a')], [0.18, toon('#ffd27a')]] as const) {
+        const arc = mesh(new THREE.TorusGeometry(r, 0.02, 6, 20, Math.PI), mat);
+        arc.position.set(0, 0.9, 0.225);
+        g.add(arc);
+      }
+      g.add(b(0.4, 0.2, 0.02, '#f3ead8', 0, 0.62, 0.225));
+      for (let i = 0; i < 6; i++) g.add(b(0.04, 0.03, 0.01, '#d9483b', -0.12 + i * 0.048, 0.62, 0.238));
+      g.add(b(0.46, 0.22, 0.02, '#c9a24a', 0, 0.26, 0.225));
+      for (let i = 0; i < 5; i++) g.add(b(0.02, 0.18, 0.01, '#8a5a3a', -0.18 + i * 0.09, 0.26, 0.24));
+      lightAt = new THREE.Vector3(0, 0.9, 0.5);
+      break;
+    }
+    case 'popcornmaschine': {
+      g.add(b(0.22, 0.06, 0.18, '#d9483b', 0, 0.03, 0));
+      g.add(b(0.22, 0.2, 0.18, new THREE.MeshToonMaterial({ color: '#e8f4ff', transparent: true, opacity: 0.5 }), 0, 0.16, 0));
+      for (let i = 0; i < 14; i++) g.add(s(0.025, 0.022, 0.025, i % 3 ? '#fff6dc' : '#f7e3a0', -0.07 + (i % 5) * 0.035, 0.08 + Math.floor(i / 5) * 0.03, -0.05 + ((i * 3) % 4) * 0.03));
+      const roof = c(0.15, 0.08, '#d9483b', 0, 0.3, 0, new THREE.ConeGeometry(1, 1, 4));
+      roof.rotation.y = Math.PI / 4;
+      g.add(roof);
+      for (const x of [-0.12, 0.12]) g.add(c(0.012, 0.05, '#2a2a30', x, -0.01, 0.1));
+      break;
+    }
+    case 'teleskop': {
+      const wood = '#8a5a3a';
+      for (let i = 0; i < 3; i++) {
+        const a = (i / 3) * Math.PI * 2;
+        const leg = c(0.018, 0.9, wood, Math.cos(a) * 0.16, 0.43, Math.sin(a) * 0.16);
+        leg.rotation.set(Math.sin(a) * 0.35, 0, -Math.cos(a) * 0.35);
+        g.add(leg);
+      }
+      g.add(s(0.05, 0.05, 0.05, '#c9a24a', 0, 0.86, 0));
+      // Fernrohr schräg nach oben rechts – so sieht man es auch von oben gut
+      const dir = new THREE.Vector3(Math.sin(1.0), Math.cos(1.0), 0);
+      const at = (t: number) => new THREE.Vector3(0, 0.88, 0).addScaledVector(dir, t);
+      const tube = c(0.06, 0.8, '#c9a24a');
+      tube.position.copy(at(0.2));
+      tube.rotation.z = -1.0;
+      g.add(tube);
+      const lens = c(0.078, 0.06, '#2a2a30');
+      lens.position.copy(at(0.6));
+      lens.rotation.z = -1.0;
+      g.add(lens);
+      const eye = c(0.03, 0.12, '#2a2a30');
+      eye.position.copy(at(-0.24));
+      eye.rotation.z = -1.0;
+      g.add(eye);
+      break;
+    }
+    case 'pflanzenleiter': {
+      const wood = '#c9a06e';
+      for (const x of [-0.3, 0.3]) {
+        const rail = b(0.04, 1.3, 0.04, wood, x, 0.62, -0.05);
+        rail.rotation.x = 0.28;
+        g.add(rail);
+      }
+      for (const [y, z] of [[0.3, 0.12], [0.65, 0.02], [1.0, -0.08]] as const) {
+        g.add(b(0.62, 0.03, 0.18, wood, 0, y, z));
+        for (const [x, kind] of [[-0.16, 0], [0.16, 1]] as const) {
+          g.add(c(0.07, 0.1, ['#e8a07a', '#f2efe9'][(kind + Math.round(y * 10)) % 2], x, y + 0.065, z));
+          if (kind === 0) for (let k = 0; k < 4; k++) g.add(s(0.06, 0.02, 0.04, '#4f9a5a', x + Math.cos(k * 1.6) * 0.05, y + 0.16 + k * 0.02, z + Math.sin(k * 1.6) * 0.04).rotateY(k));
+          else g.add(s(0.08, 0.1, 0.08, '#6fb06a', x, y + 0.2, z));
+        }
+      }
+      // Ranke von der obersten Stufe
+      const pts = [new THREE.Vector3(0.16, 1.1, -0.08), new THREE.Vector3(0.3, 0.9, 0.05), new THREE.Vector3(0.36, 0.6, 0.12)];
+      g.add(mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts), 10, 0.01, 4, false), toon('#4f9a5a')));
+      break;
+    }
     default:
       g.add(b(0.6, 0.6, 0.6, col, 0, 0.3, 0));
   }

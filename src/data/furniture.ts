@@ -319,6 +319,16 @@ export const FURNITURE: readonly FurnitureDef[] = [
   { id: 'totemregal', name: 'Totem-Regal', style: 'memphis', surface: true, surfaceHeight: 1.4, price: 1400, w: 1, d: 1, description: 'Ein schiefes Regal aus bunten Formen, eins über dem anderen. Ein bisschen Kunst, ein bisschen Kletterturm.' },
   { id: 'memphislampe', name: 'Kegel-Lampe', style: 'memphis', light: true, price: 700, w: 1, d: 1, description: 'Ein gestreifter Kegel als Fuß, oben eine leuchtende Kugel mit Zackenkranz.' },
   { id: 'kringelteppich', name: 'Kringel-Teppich', style: 'memphis', rug: true, price: 800, w: 2, d: 2, description: 'Ein Teppich voller Kringel, Dreiecke und Punkte. Unmöglich, darauf schlechte Laune zu haben.' },
+  // ---- Besondere Stücke (immer im Katalog) ----
+  { id: 'haengesessel', name: 'Hängesessel', style: 'basis', sit: 'sitzen', price: 1300, w: 1, d: 1, description: 'Ein geflochtener Korb, der an einem Bogengestell schaukelt, mit dickem Kissen drin. Rein, zurücklehnen, sanft schwingen – Winston schaut neidisch zu.', variants: { creme: '#f3ead8', rosa: '#f4a3b8', salbei: '#a9c4a0', anthrazit: '#56565e' }, baseVariant: 'creme' },
+  { id: 'kuehlschrank', name: 'Retro-Kühlschrank', style: 'retro', price: 1600, w: 1, d: 1, description: 'Rund, glänzend und mit Chromgriff. Drin: frisches Gemüse, Omas Pflaumenmus und ein kühles Feierabendbier. Eins.', variants: { mint: '#9ad8c0', rosa: '#f4b6c2', creme: '#f3ead8', himmel: '#9fc4e8', rot: '#d9534f' }, baseVariant: 'mint' },
+  { id: 'wandkamin', name: 'Kamin', style: 'basis', light: true, price: 2600, w: 2, d: 1, description: 'Ein Kamin mit Steinsims und knisterndem Feuer – das ganze Jahr. Oma wärmt sich die Hände und erzählt von Ludwig.' },
+  { id: 'aquarium', name: 'Aquarium', style: 'basis', light: true, price: 1800, w: 2, d: 1, description: 'Ein Becken auf einem Schränkchen, mit Wasserpflanzen, Steinen und kleinen bunten Fischen. Abends leuchtet es blau. Sehr beruhigend.' },
+  { id: 'spielautomat', name: 'Spielautomat', style: 'basis', light: true, price: 2400, w: 1, d: 1, description: 'Ein alter Arcade-Automat mit Joystick und bunten Knöpfen. Oli und Lars spielen um die Ehre. Und um den letzten Keks.' },
+  { id: 'jukebox', name: 'Jukebox', style: 'retro', light: true, price: 2200, w: 1, d: 1, description: 'Eine gewölbte Musikbox mit leuchtenden Bögen. Oli hat heimlich eine Hardcore-Platte reingeschmuggelt.' },
+  { id: 'popcornmaschine', name: 'Popcorn-Maschine', style: 'lieblinge', small: true, price: 450, w: 1, d: 1, description: 'Ein kleiner roter Popcornwagen für den Tisch. Pflicht bei Horrorfilmabenden – damit man was zum Festhalten hat.' },
+  { id: 'teleskop', name: 'Teleskop', style: 'basis', price: 1300, w: 1, d: 1, description: 'Ein Messingfernrohr auf einem Holzstativ. Oli zeigt dir damit jedes Sternbild – und erfindet manchmal eins dazu.' },
+  { id: 'pflanzenleiter', name: 'Pflanzenleiter', style: 'basis', price: 700, w: 1, d: 1, description: 'Eine schräge Holzleiter mit drei Stufen voller Topfpflanzen. Die Pflanzen im Haus werden wirklich immer mehr.' },
   { id: 'topfpflanze', name: 'Monstera', style: 'basis', price: 300, w: 1, d: 1, description: 'Große, grüne Blätter mit Löchern. Sehr fotogen.' },
 ];
 

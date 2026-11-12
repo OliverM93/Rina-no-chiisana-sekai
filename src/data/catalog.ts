@@ -96,6 +96,7 @@ export const CATEGORIES: readonly CategoryDef[] = [
       { id: 'wanddeko', name: 'Wanddeko' },
       { id: 'deko', name: 'Kleine Deko' },
       { id: 'technik', name: 'Küche & Technik' },
+      { id: 'besonderes', name: 'Besonderes' },
     ],
   },
   {
@@ -326,6 +327,16 @@ const FURNITURE_META: Record<string, Row> = {
   totemregal: ['moebel', 'regale', ['memphis']],
   memphislampe: ['moebel', 'lampen', ['memphis']],
   kringelteppich: ['moebel', 'teppiche', ['memphis']],
+  // Besondere Stücke
+  haengesessel: ['moebel', 'sofas', ['skandinavisch', 'cottage']],
+  kuehlschrank: ['moebel', 'technik', ['retro', 'midcentury']],
+  wandkamin: ['moebel', 'besonderes', ['darkacademia', 'cottage', 'retro']],
+  aquarium: ['moebel', 'besonderes'],
+  spielautomat: ['moebel', 'besonderes', ['cyberpunk']],
+  jukebox: ['moebel', 'besonderes', ['retro', 'midcentury']],
+  popcornmaschine: ['lieblinge', 'filme'],
+  teleskop: ['moebel', 'besonderes', ['spaceage', 'darkacademia']],
+  pflanzenleiter: ['pflanzen', 'gross', ['skandinavisch', 'japandi']],
   // Garten
   'zaun-weiss': ['garten', 'zaun'],
   gartentor: ['garten', 'zaun'],

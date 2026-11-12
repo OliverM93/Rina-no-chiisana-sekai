@@ -100,4 +100,9 @@ describe('Katalog-Ordnung: Inhalt', () => {
       expect(cats.has('boden'), `${style}: Boden`).toBe(true);
     }
   });
+
+  it('besondere Stücke stehen unter „Besonderes“ und sind sofort da', () => {
+    for (const id of ['wandkamin', 'aquarium', 'spielautomat', 'jukebox', 'teleskop']) expect(catalogMeta(id)?.type, id).toBe('besonderes');
+    for (const id of ['wandkamin', 'aquarium', 'spielautomat', 'teleskop', 'haengesessel', 'pflanzenleiter']) expect(FURNITURE.find((f) => f.id === id)?.style, id).toBe('basis');
+  });
 });
