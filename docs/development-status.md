@@ -149,7 +149,7 @@ Legende: ✅ erledigt · 🚧 in Arbeit · ⬜ geplant
 
 **M7b ✅ Onkel Jens & sein Bistro**
 - ✅ Ankündigungsbrief, Bistro „Chez Jens“ auf dem Bauplatz neben Oma (Markise, Café-Tischchen, Staffelei,
-  Kreide-Aufsteller, Regenbogenfähnchen), Begrüßungsszene
+  Kreide-Aufsteller), Begrüßungsszene
 - ✅ Kochstudio: 7 Gerichte aus Eiern, Obst, Fisch, Lavendel & Keksen (Rührei, Obstsalat, Fischbrötchen,
   Apfelkuchen, Crêpes …) – Rezepte von Anfang an, beim ersten Lavendel und als Herz-Briefe
 - ✅ Jens reist (ungefähr jeden 7. Tag): Postkarte aus Paris, Venedig, Amsterdam, Sevilla, New York, Kyoto –

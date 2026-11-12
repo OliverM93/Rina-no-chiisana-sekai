@@ -108,6 +108,11 @@ export const OLI: NpcDef = {
       { text: ['Lini ist richtig lustig, wenn sie ein Feierabendbier hatte. Am liebsten ein Budweiser, du weißt schon.','Sie imitiert dann Winston. Winston ist stolz. Ich auch.'] },
       { text: ['Lini hat schon wieder einen Plan, wie wir Thalia verkuppeln.','Ich bin der Fahrer. Ich weiß nicht, wohin. Aber ich fahre.'] },
       { text: ['Eure Studienreise nach Tschechien, du und Thalia: eine Woche, bestimmt hat Thalia jeden Hügel kartiert.','Du musst mir mal alle Fotos zeigen, Lini. Ich verspreche auch, nicht zu viel zu kommentieren.'] },
+      { text: ['Mo hat geschrieben. Er lässt dich grüßen, Lini.', 'Wir wollen bald mal wieder zu dritt kochen. Du kochst, Mo und ich bewundern. Das ist unsere Stärke.'] },
+      { text: ['Wollen wir heute Abend weiter „Berserk“ gucken, Lini?', 'Ich bin emotional bereit. Bin ich nicht. Aber mit dir auf dem Sofa schon.'] },
+      { text: ['Ich hab heute Morgen „Capicola“ gesagt wie Tony in den „Sopranos“.', 'Du hast gelacht. Mission erfüllt. Morgen mach ich das mit „Gabagool“.'] },
+      { text: ['Hab gestern nochmal „Blade Runner“ geguckt. Dieser Regen, dieses Neonlicht …', 'Lini, ich glaube, unser Zuhause braucht mehr Neon. Nur ein bisschen. Ein Schild. Mit Herz.'] },
+      { text: ['Seit ich „Dune“ gesehen hab, laufe ich am Strand ohne Rhythmus.', 'Damit kein Sandwurm kommt. Bisher klappt’s hervorragend.'] },
     ],
     gifts: {
       liebt: [['Lini! Das ist ja genau mein Ding! 😍', 'Du kennst mich einfach am besten.']],

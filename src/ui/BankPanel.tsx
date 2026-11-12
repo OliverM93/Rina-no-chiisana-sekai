@@ -62,6 +62,8 @@ export function BankPanel({ session, panel }: { session: Session; panel: Extract
       <div class="card bank pop-in">
         <h2 class="card-title">🏦 Dorfkasse</h2>
         <p class="soft center">„Hier bekommst du alles für deinen Hausausbau – ganz ohne Zinsen. Und was übrig ist, legen wir aufs Sparbuch!“ – Olaf</p>
+        <div class="bank-cols">
+        <div class="bank-col">
         <div class="bank-row">
           <span>Dein Haus:</span>
           <b>{current.name}</b>
@@ -105,6 +107,8 @@ export function BankPanel({ session, panel }: { session: Session; panel: Extract
           </div>
         )}
 
+        </div>
+        <div class="bank-col">
         <h3 class="bank-sub">📒 Sparbuch</h3>
         <div class="bank-row">
           <span>Guthaben:</span>
@@ -139,6 +143,8 @@ export function BankPanel({ session, panel }: { session: Session; panel: Extract
             </button>
           </div>
         )}
+        </div>
+        </div>
         <div class="card-actions">
           <button class="btn ghost" onClick={close}>
             Schließen

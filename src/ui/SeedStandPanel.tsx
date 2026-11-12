@@ -86,6 +86,7 @@ export function SeedStandPanel({ session }: { session: Session }) {
             🥕 Gemüse &amp; Kräuter
           </button>
         </div>
+        <div class="seed-scroll">
         {tab === 'blumen' ? (
           <>
             <h3 class="bank-sub">Heute im Angebot</h3>
@@ -102,6 +103,7 @@ export function SeedStandPanel({ session }: { session: Session }) {
             {crops.away.length > 0 && <p class="soft small-text">Gerade nicht da: {crops.away.map((c) => c.name).join(', ')} – die gibt es nur in anderen Jahreszeiten.</p>}
           </>
         )}
+        </div>
         <div class="card-actions">
           <button class="btn primary" onClick={close}>
             Fertig
