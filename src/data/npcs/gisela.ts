@@ -127,6 +127,7 @@ export const GISELA: NpcDef = {
       { text: ['Ich komme eigentlich aus Dessau, Kind. Bauhaus-Stadt!','Da sind die Fenster groß und die Meinungen noch größer. Deshalb hab ich immer das letzte Wort.'] },
       { text: ['Bier? Gutes Bier ist wie gute Kekse: köstlich, aber in Maßen.','Lars trinkt zu gern davon, pfui. Und du auch, hör ich. … Ich sage nichts. Ich habe nur das letzte Wort.'] },
       { text: ['Lars und Oli sitzen vor ihren flimmernden Kisten und nennen das Spaß?','Frische Luft, Kind! … Ludwig hätte natürlich Fußball geguckt. Aber das ist was anderes.'] },
+      { text: ['Kind, dieses weiße Monster-Zeug … da ist doch nur Zucker und Strom drin!', 'Gib mal her. Ich probier nur. Rein wissenschaftlich. … Pfui! … Noch einen Schluck.'] },
     ],
     gifts: {
       liebt: [

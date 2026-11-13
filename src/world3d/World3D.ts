@@ -2396,7 +2396,19 @@ export class World3D {
     if (!jens) return;
     const title = 'Chez Jens';
     if (jens.away) {
-      this.session.bus.emit('dialog:open', { title, lines: ['An der Tür hängt ein Schild:', '„Bin auf Reisen! ✈️ Postkarte kommt. Bisous, Jens“'] });
+      // Jens ist verreist – aber kochen darf Lina trotzdem: Der Schlüssel liegt unter der Fußmatte.
+      this.session.bus.emit('dialog:open', {
+        title,
+        lines: [
+          'An der Tür hängt ein Schild:',
+          '„Bin auf Reisen! ✈️ Postkarte kommt. Der Schlüssel fürs Kochstudio liegt unter der Fußmatte – koch was Schönes, chérie! Bisous, Jens“',
+          'Gekocht wird natürlich auch zu Hause an deiner Küchenzeile.',
+        ],
+        choices: [
+          { label: '🍳 Ins Kochstudio', onSelect: () => this.session.bus.emit('ui:open', { kind: 'kochstudio' }) },
+          { label: '👋 Später', onSelect: () => undefined },
+        ],
+      });
       return;
     }
     if (jens.isSleeping) {
