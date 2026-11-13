@@ -78,7 +78,7 @@ häufige Arten (Gewicht ≥ 20) ≤ 120 ⭐ und teure Arten (≥ 500 ⭐) selten
 Inhaltswellen (neue Stile, Möbel-Kits) vergrößern die Sternchen-Senken, aber nicht das Einkommen. Beim Katalog-Umbau im November 2026
 wuchs der Katalog von ≈ 125 000 auf ≈ 255 000 ⭐; erst Lina fiel auf, dass das Sammeln dadurch länger dauerte. Deshalb:
 
-- **Grenzen:** Summe aller Katalogpreise (alle Stile frei, mit Winterware) **≤ 300 000 ⭐**, Möbel-Median **≤ 1 000 ⭐** (Stand: ≈ 255 000 / 850).
+- **Grenzen:** Summe aller Katalogpreise (alle Stile frei, mit Winterware) **≤ 300 000 ⭐**, Möbel-Median **≤ 1 000 ⭐** (Stand: ≈ 259 000 / 850).
   Zusammen mit dem Hausausbau (≈ 200 800 ⭐) soll „alles besitzen“ in der Größenordnung von höchstens **~35–40 Stunden Angeln** bleiben (📏).
 - **Test:** `game/catalogBudget.test.ts`. Er schlägt fehl, wenn eine Welle die Grenze reißt – das ist gewollt: Dann **bewusst entscheiden**,
   ob Einkommen/Ausbaupreise mitwachsen (Beispiel: PR „Sternchen-Balancing“) *und erst dann* die Grenze im Test anheben.
