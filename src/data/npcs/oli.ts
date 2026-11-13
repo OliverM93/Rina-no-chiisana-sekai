@@ -113,6 +113,7 @@ export const OLI: NpcDef = {
       { text: ['Ich hab heute Morgen „Capicola“ gesagt wie Tony in den „Sopranos“.', 'Du hast gelacht. Mission erfüllt. Morgen mach ich das mit „Gabagool“.'] },
       { text: ['Hab gestern nochmal „Blade Runner“ geguckt. Dieser Regen, dieses Neonlicht …', 'Lini, ich glaube, unser Zuhause braucht mehr Neon. Nur ein bisschen. Ein Schild. Mit Herz.'] },
       { text: ['Seit ich „Dune“ gesehen hab, laufe ich am Strand ohne Rhythmus.', 'Damit kein Sandwurm kommt. Bisher klappt’s hervorragend.'] },
+      { text: ['Ich hab den Kühlschrank aufgefüllt, Lini: Cola Zero ganz vorne, Monster Energy White in der Tür.', 'Für Gemüse war leider kein Platz mehr. Rein zufällig.'] },
     ],
     gifts: {
       liebt: [['Lini! Das ist ja genau mein Ding! 😍', 'Du kennst mich einfach am besten.']],

@@ -92,6 +92,7 @@ export const LARS: NpcDef = {
       { text: ['Mein Kumpel Ronny ist Polizist. Wenn ich zu schnell rede, sagt er: „Führerschein und Fahrzeugpapiere, bitte.“', 'Ich hab ihm einmal meinen Arztausweis gezeigt. Er hat trotzdem gepustet. Ich auch – war ein Witz.'] },
       { text: ['Ich hab gestern Sumo geguckt. Zwei Riesen, ein Kreis, drei Sekunden.', 'Effizienter als jede Sprechstunde. Und keiner fragt nach einem Rezept.'] },
       { text: ['Beim Sumo werfen sie vor dem Kampf Salz in den Ring. Zur Reinigung.', 'Ich hab überlegt, das im Wartezimmer einzuführen. Christin würde sofort den Staubsauger holen.'] },
+      { text: ['Lina, das wievielte Monster White ist das heute?', 'Ich frag als Arzt. Und als Bruder klau ich dir gleich eins.'] },
     ],
     gifts: {
       liebt: [['Oh, Lina! Das ist ja großartig!', 'Das verschreib ich mir ab sofort selbst. Dreimal täglich.']],
