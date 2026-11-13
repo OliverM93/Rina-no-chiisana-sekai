@@ -181,6 +181,8 @@ export class Session {
   coffeeUntil = 0;
   /** Wie schummrig Lina gerade ist (Bier & Wein, siehe `core/tipsy.ts`) – wird nicht gespeichert */
   readonly tipsy: Tipsy = createTipsy();
+  /** Wann ein Bewohner Lina zuletzt auf ihren Schwips angesprochen hat (Spielzeit in ms, nicht gespeichert) */
+  readonly tipsySpoken = new Map<string, number>();
   /** Werkzeug in Linas Hand (wird nicht gespeichert) */
   tool: ToolId | null = null;
   /** Erzwungenes Wetter (`?wetter=regen`, zum Testen) */
