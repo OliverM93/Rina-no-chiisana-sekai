@@ -12,6 +12,7 @@ import type { Appearance } from '../core/appearance';
 import { Emitter } from '../core/events';
 import { createNpcState } from '../core/friendship';
 import { hashString } from '../core/rng';
+import { createTipsy, type Tipsy } from '../core/tipsy';
 import {
   createNewSave,
   exportFileName,
@@ -178,6 +179,8 @@ export class Session {
   decorActive = false;
   /** Bis wann (Spielzeit in Sekunden, `playTime()`) Lina vom Kaffee-Kick flotter läuft – wird nicht gespeichert */
   coffeeUntil = 0;
+  /** Wie schummrig Lina gerade ist (Bier & Wein, siehe `core/tipsy.ts`) – wird nicht gespeichert */
+  readonly tipsy: Tipsy = createTipsy();
   /** Werkzeug in Linas Hand (wird nicht gespeichert) */
   tool: ToolId | null = null;
   /** Erzwungenes Wetter (`?wetter=regen`, zum Testen) */

@@ -244,3 +244,16 @@ Bausparen bleibt jetzt etwa 6 Wochen lang die bessere Wahl gegenüber „Kredit 
 **Verworfen:** Zinsen deckeln (nimmt den Anreiz, den Lina wollte), Zinsen bei offenem Kredit aussetzen (fühlt sich wie Strafe an), eine Freundschafts-Übersichtsseite
 (erst im Playtest schauen, ob Lina sie vermisst).
 **Designprüfung (kurz):** 1 Sparen lohnt sich spürbar · 2 Meta-Loop Hausausbau · 5 Ausbau insgesamt ≈ 12 % günstiger (Einnahmen unverändert) · 6 Prämie weiter nur beim Bestellen, einmal je Stufe, keine Ein-/Auszahlungs-Tricks · 7 Säule 2 · 8 einfacher: nichts ändern (Audit-Empfehlung) – von Oli bewusst anders entschieden.
+
+### D31 · Schummrig werden (Bier & Wein) und ruhigere Musik draußen (Nov. 2026)
+
+**Anlass:** Wunsch von Oli: Lina soll im Café bei Jens oder zu Hause Bier und Wein trinken und kurz schummrig werden (unscharfes, wackliges Bild,
+schwierigere Steuerung, Torkeln), das bald wieder nachlässt. Außerdem wechselte die Musik draußen zu oft.
+**Entscheidung:** (1) `core/tipsy.ts`: Schwips-Wert, ein Glas ≈ 1 Minute, Obergrenze, Wasser macht klar; Wirkung nur optisch/leicht in der Steuerung
+(Blur ≤ 3 px, Neigung ≤ 2°, Laufrichtung pendelt höchstens um ±32°, Tempo ≥ 80 %). Orte: Tresen, Retro-Kühlschrank, Weinregal; kostenlos. (2) Lieder 3 Runden lang, Stimmungs-Dämpfer `gateMood`.
+**Begründung:** Passt zu Linas Charakter (Feierabendbier, „wird richtig lustig“) und zu Säule 5; bleibt freundlich, weil Lina sich selbst bremst und alles von allein
+vergeht. Kein Fortschritt, keine Belohnung, keine Zahlen, nichts gespeichert – nie glorifizierend.
+**Designprüfung:** 1 Ein lustiger, kurzer Moment („Ups, alles wackelt“) · 2 Mikro-Loop, kein Tagesloop · 3 Dynamik: etwas Neues an Steuerung & Bild, danach wieder normal ·
+4 Charakter und Humor, kein Langzeitziel · 5 keine Wirtschaftsänderung (aufs Haus) · 6 Exploits: keine (Schwips bringt nichts; Obergrenze verhindert Dauer-Zustand; nach dem Neuladen weg) ·
+7 Säulen: kein Zwang, kein Scheitern, nie glorifizierend (Oma-Regel gilt hier ebenso) · 8 Einfachere Lösung: nur ein Text-Gag – ohne Bild- und Steuerungseffekt wäre es kaum spürbar.
+**Verworfen:** Preise im Café (zusätzliche Sternchen-Logik ohne Mehrwert), Rausch-Stufen mit Folgen (Übelkeit, „Kater“) – wäre eine Strafe und passt nicht zu Linas Welt.

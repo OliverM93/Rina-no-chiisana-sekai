@@ -38,7 +38,8 @@ src/
     rng.ts         reproduzierbarer Zufall
     festivals.ts   welches Fest an welchem Datum (Ostern berechnet)
     progress.ts    Zähler (verkauft, gekauft, gebaut, gekocht), Meilenstein-Bedingungen, Wartezeit in Spielzeit
-    music.ts       Musik-Themen (Tempo, Tonart, Akkordfolgen, Instrumente, 4/4 oder Walzer) + Lieder komponieren
+    music.ts       Musik-Themen (Tempo, Tonart, Akkordfolgen, Instrumente, 4/4 oder Walzer) + Lieder komponieren + Stimmungs-Dämpfer (`gateMood`)
+    tipsy.ts       Schummrig werden (Bier & Wein): Schwips-Wert, Nachlassen, Wirkung auf Bild und Steuerung (rein, ohne DOM)
                    (Motiv, Form A–A'–B–A'–C), Thema nach Zeit/Wetter/Ort (`placeMood`)
     babble.ts      Brabbelsprache: Silbe (Mitlaut, Selbstlaut) + Satzmelodie aus einer Textzeile
   audio/       Audio.ts – Web-Audio-Klang: Sequenzer, Instrumente, Umgebung (Vögel, Grillen, Regen, Wellen), Geräusche
@@ -134,7 +135,9 @@ src/
   ein Lied der Jahreszeit dazu, `themesFor`); bei jedem neuen Lied nimmt `pickTheme` reihum das nächste, `GameAudio` merkt sich
   Familie (`family`) und laufendes Lied (`mood`). Nahe an Häusern das Thema der Bewohner (`data/music.ts`:
   Olaf & Christin, Oma, Bistro, Praxis, Thalia), zu Hause „Lini & Oli“ (ab Olis Einzug). Ortswechsel greift am
-  nächsten Taktende. Zum Anhören `?musik=bistro` (oder ein einzelnes Lied wie `?musik=tag-bach`) an die URL hängen. **Stimmen:** `data/voices.ts` (Tonhöhe,
+  nächsten Taktende. **Nicht zu oft wechseln (Nov. 2026):** Ein Thema spielt `SONG_ROUNDS` (3) Runden à ~50 s, bevor das nächste Lied der
+  Familie kommt, und `main.ts` schaltet die Stimmung über `gateMood` (`core/music.ts`): Orts-, Wetter- und Tageszeitwechsel draußen gelten erst nach
+  20 s und wenn das Lied mindestens 75 s lief; rein/raus aus dem Haus, Party und Titelbild wechseln sofort. Zum Anhören `?musik=bistro` (oder ein einzelnes Lied wie `?musik=tag-bach`) an die URL hängen. **Stimmen:** `data/voices.ts` (Tonhöhe,
   Kopfgröße/Formanten, Lebhaftigkeit, Hauch; Männer tiefer), Silben aus `core/babble.ts`. Geräusche
   laufen über das Bus-Event `sfx` (`session.bus.emit('sfx', 'muenzen')`), Lautstärke über `settings:changed`.
   `main.ts` setzt alle 2 s Stimmung (`moodFor`) und Umgebung. Hörprobe ohne Lautsprecher:

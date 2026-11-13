@@ -7,7 +7,7 @@
  * Zeitplanung in echter Zeit (setInterval + AudioContext-Zeit), damit die Musik
  * auch in Hintergrund-Tabs nicht stolpert.
  */
-import { composeSection, FORM, midiToHz, type Lead, type Mood, MOODS, type NoteEvent, pickTheme, sectionSteps } from '../core/music';
+import { composeSection, FORM, midiToHz, SONG_ROUNDS, type Lead, type Mood, MOODS, type NoteEvent, pickTheme, sectionSteps } from '../core/music';
 import type { Season } from '../core/time';
 import { BABBLE_EVERY, type Voice } from '../data/voices';
 import { syllableAt, type Syllable } from '../core/babble';
@@ -206,13 +206,14 @@ export class GameAudio {
       // nächster Abschnitt erst, wenn der laufende zu Ende ist (sonst rutscht die Startzeit weg)
       if (this.scheduled < this.phrase.length || this.phraseEnd > ahead) break;
       const start = Math.max(this.phraseEnd, now + 0.05);
-      if (this.family !== this.nextMood) this.sectionIndex = Math.ceil(this.sectionIndex / FORM.length) * FORM.length; // neues Lied
+      const block = FORM.length * SONG_ROUNDS;
+      if (this.family !== this.nextMood) this.sectionIndex = Math.ceil(this.sectionIndex / block) * block; // neues Lied
       this.family = this.nextMood;
       this.cutFor = null;
       const song = Math.floor(this.sectionIndex / FORM.length);
       const part = FORM[this.sectionIndex % FORM.length];
-      // Zu Beginn jedes Liedes kommt reihum das nächste Thema der Familie dran – so wiederholt sich draußen nichts
-      if (this.sectionIndex % FORM.length === 0) this.mood = pickTheme(this.family, song, this.seed, this.season);
+      // Ein Thema spielt mehrere Runden (leicht variiert); erst danach kommt reihum das nächste Lied der Familie dran
+      if (this.sectionIndex % block === 0) this.mood = pickTheme(this.family, Math.floor(this.sectionIndex / block), this.seed, this.season);
       this.sectionIndex++;
       this.phrase = composeSection(this.mood, this.seed + song * 13, part);
       this.phraseStart = start;
