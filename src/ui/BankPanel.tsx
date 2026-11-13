@@ -1,13 +1,13 @@
 /**
  * Olafs Dorfkasse: Hausausbau bestellen (als zinsloser Kredit) und
- * zurückzahlen – wann und wie viel man möchte. Dazu das Sparbuch mit
- * kleinen Zinsen am Monatsanfang.
+ * zurückzahlen – wann und wie viel man möchte – oder vom Sparbuch bezahlen
+ * („Olafs Bausparen“: Papa legt 15 % dazu). Das Sparbuch bringt jeden Montag Zinsen.
  */
 import { useEffect } from 'preact/hooks';
 import { HOUSE_STAGES } from '../data/house';
 import { formatMoney } from '../game/gameplay';
 import { depositSavings, nextStage, orderExpansion, repayLoan, withdrawSavings } from '../game/home';
-import { INTEREST_CAP, INTEREST_RATE, interestFor } from '../core/bank';
+import { bausparShare, INTEREST_CAP, INTEREST_RATE, interestFor } from '../core/bank';
 import type { Session, UiPanel } from '../game/session';
 import { showToast, ui, useSessionVersion } from './store';
 
@@ -36,10 +36,12 @@ export function BankPanel({ session, panel }: { session: Session; panel: Extract
   const next = nextStage(session);
   const current = HOUSE_STAGES[house.stage];
 
-  const order = () => {
-    const r = orderExpansion(session);
-    if (r === 'ok') showToast('Abgemacht! In ein paar Minuten ist dein Ausbau fertig. 🔨');
+  const order = (pay: 'kredit' | 'sparbuch') => {
+    const r = orderExpansion(session, pay);
+    if (r === 'ok' && pay === 'sparbuch') showToast(`Bezahlt vom Sparbuch – Papa hat ${formatMoney(next ? next.price - bausparShare(next.price) : 0)} dazugelegt! In ein paar Minuten ist alles fertig. 🔨`);
+    else if (r === 'ok') showToast('Abgemacht! In ein paar Minuten ist dein Ausbau fertig. 🔨');
     else if (r === 'kredit-offen') showToast('Erst den alten Kredit abbezahlen – dann bauen wir weiter.');
+    else if (r === 'zu-wenig-gespart') showToast('Auf dem Sparbuch liegt noch nicht genug.');
   };
   const savings = data.bank.savings;
   const put = (amount: number) => {
@@ -83,10 +85,19 @@ export function BankPanel({ session, panel }: { session: Session; panel: Extract
           <div class="bank-box">
             <div class="item-name">Nächster Ausbau: {next.name}</div>
             <div class="item-desc">{next.description}</div>
-            <div class="item-price">Kosten: {formatMoney(next.price)} (als Kredit)</div>
-            <button class="btn primary" disabled={loan > 0} onClick={order}>
-              🔨 Ausbau beauftragen
-            </button>
+            <div class="item-price">Kosten: {formatMoney(next.price)}</div>
+            <div class="bank-order">
+              <button class="btn primary" disabled={loan > 0 || data.bank.savings < bausparShare(next.price)} onClick={() => order('sparbuch')} title="Olafs Bausparen: Papa legt 15 % dazu">
+                📒 Vom Sparbuch: {formatMoney(bausparShare(next.price))}
+              </button>
+              <button class="btn" disabled={loan > 0} onClick={() => order('kredit')}>
+                🔨 Als Kredit
+              </button>
+            </div>
+            <div class="soft small-text">
+              Olafs Bausparen: Zahlst du vom Sparbuch, legt Papa 15 % dazu ({formatMoney(next.price - bausparShare(next.price))}).
+              {data.bank.savings < bausparShare(next.price) ? ` Noch ${formatMoney(bausparShare(next.price) - data.bank.savings)} sparen.` : ''}
+            </div>
             {loan > 0 && <div class="soft small-text">Erst den offenen Kredit abbezahlen, dann geht es weiter.</div>}
           </div>
         ) : (
@@ -115,7 +126,7 @@ export function BankPanel({ session, panel }: { session: Session; panel: Extract
           <b>{formatMoney(savings)}</b>
         </div>
         <div class="soft small-text">
-          Am Monatsanfang gibt es {Math.round(INTEREST_RATE * 100)} % Zinsen (höchstens {formatMoney(INTEREST_CAP)}).
+          Jeden Montag gibt es {Math.round(INTEREST_RATE * 100)} % Zinsen (höchstens {formatMoney(INTEREST_CAP)} pro Woche).
           {savings > 0 && interestFor(savings) > 0 ? ` Nächstes Mal: etwa ${formatMoney(interestFor(savings))}.` : ''}
           {data.bank.lastInterest > 0 ? ` Zuletzt: ${formatMoney(data.bank.lastInterest)}.` : ''}
         </div>

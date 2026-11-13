@@ -14,7 +14,7 @@ import { type Appearance, DEFAULT_LINA, normalizeAppearance } from './appearance
 import { createNpcState, type NpcState, normalizeNpcState } from './friendship';
 import { type Collection, normalizeCollection } from './catching';
 import { type Garden, normalizeGarden } from './garden';
-import { createBank, type Bank, normalizeBank } from './bank';
+import { createBank, type Bank, normalizeBank, weekFromLegacyMonth } from './bank';
 import { normalizeRecipeBook, type RecipeBook } from './crafting';
 import { createPet, normalizePet, type PetState } from './pet';
 import { type House, type HouseRules, type InfoFn, normalizeHouse, normalizeRoom, type Room, type RoomLayout } from './room';
@@ -22,7 +22,7 @@ import { createInventory, type Inventory, normalizeInventory, STORAGE_SIZE } fro
 import { createMailbox, type Mailbox, normalizeMailbox } from './mail';
 import { type DayMonth, DEFAULT_LINA_BIRTHDAY, formatIsoDay } from './time';
 
-export const SAVE_VERSION = 14;
+export const SAVE_VERSION = 15;
 export const SAVE_KEY = 'rina-no-chiisana-sekai.save';
 export const BACKUP_KEY = 'rina-no-chiisana-sekai.save.backup';
 
@@ -243,6 +243,14 @@ export const MIGRATIONS: Record<number, (old: RawSave) => RawSave> = {
   },
   // v13 → v14 (Vorratstruhe): Lagerplätze außerhalb der Tasche. `normalizeSave` legt sie leer an.
   13: (old) => ({ ...old }),
+  // v14 → v15 (Sternchen-Balancing): Sparbuch-Zinsen kommen jetzt wöchentlich. Der alte Zinsmonat
+  // („JJJJ-MM“) wird zur Woche des Monatsersten – so gehen keine Zinsen verloren und keine doppelt.
+  14: (old) => {
+    const bank = old.bank as Record<string, unknown> | undefined;
+    if (!bank || typeof bank !== 'object') return { ...old };
+    const { interestMonth, ...rest } = bank;
+    return { ...old, bank: { ...rest, interestWeek: typeof interestMonth === 'string' ? weekFromLegacyMonth(interestMonth) : '' } };
+  },
 };
 
 export function migrate(raw: RawSave, migrations = MIGRATIONS, target = SAVE_VERSION): RawSave {

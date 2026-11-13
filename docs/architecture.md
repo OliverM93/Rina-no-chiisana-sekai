@@ -27,7 +27,7 @@ src/
     catching.ts    Wann welche Art unterwegs ist (Monat/Uhrzeit/Regen), Sammelbuch
     garden.ts      Beet: pflanzen, gießen, wachsen (1 Stufe pro gegossenem Tag), pflücken – nie vertrocknen
     room.ts        Haus mit Räumen (Größe, Ausgänge) als Raster: platzieren, drehen, verschieben, Deko, Teppiche
-    bank.ts        Olafs Dorfkasse: zinsloser Kredit, zurückzahlen wann man will; Sparbuch (1 % am Monatsanfang, max. 2000)
+    bank.ts        Olafs Dorfkasse: zinsloser Kredit, zurückzahlen wann man will; Sparbuch (5 % jeden Montag, max. 2 500/Woche; Bausparen 15 %) – früher (1 % am Monatsanfang, max. 2000)
     crafting.ts    Werkbank: Rezepte lernen, Zutaten prüfen, bauen (alles oder nichts)
     pet.ts         Winston: Streicheln, einmal am Tag buddeln
     coop.ts        Ställe: Eier pro Tag (reproduzierbar), einmal am Tag abholen

@@ -388,7 +388,7 @@ export function checkDailyMail(session: Session) {
   if (data.mail.lastCheckDay === day) return;
   const firstCheck = data.mail.lastCheckDay === '';
   data.mail.lastCheckDay = day;
-  creditMonthlyInterest(session);
+  creditWeeklyInterest(session);
   checkOliAnniversaries(session);
   checkSammlungen(session);
   checkMatteoLetters(session);
@@ -400,8 +400,8 @@ export function checkDailyMail(session: Session) {
   }
 }
 
-/** Monatsanfang: Zinsen aufs Sparbuch, dazu ein Kontoauszug-Brief von Papa (Olaf) */
-export function creditMonthlyInterest(session: Session): number {
+/** Wochenanfang: Zinsen aufs Sparbuch; höchstens einmal im Monat ein Kontoauszug-Brief von Papa (Olaf) */
+export function creditWeeklyInterest(session: Session): number {
   const data = session.data;
   if (!data) return 0;
   const olaf = NPC_BY_ID.olaf;
@@ -413,7 +413,7 @@ export function creditMonthlyInterest(session: Session): number {
       session,
       olaf,
       { ...tmpl, body: tmpl.body.replace('{zinsen}', formatMoney(z)).replace('{guthaben}', formatMoney(data.bank.savings)) },
-      `olaf-zinsen-${data.bank.interestMonth}`,
+      `olaf-zinsen-${data.bank.interestWeek.slice(0, 7)}`,
     );
   }
   return z;

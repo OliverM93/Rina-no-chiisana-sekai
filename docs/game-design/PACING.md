@@ -25,6 +25,7 @@
 | alle paar Minuten | neue Art im Sammelbuch (anfangs häufig, später selten), Verkaufserlös, fertiges Gericht |
 | jede Sitzung | Brief, Gespräche, neues Tagesangebot, evtl. Herz |
 | jede Woche | Party, Sonntagsessen, Postkarte von Jens, Treffen |
+| jede Woche | Sparbuch-Zinsen (Montag) |
 | jeden Monat | Kontoauszug, Saisonwechsel bei Arten/Tassen |
 | mehrmals im Jahr | Feste, Geburtstage, Hausausbau-Stufe |
 

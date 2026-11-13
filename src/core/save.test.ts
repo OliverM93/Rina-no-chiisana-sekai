@@ -225,7 +225,7 @@ describe('Version 6 (M6 Ausbau)', () => {
     if (!result.ok) return;
     expect(result.data.house.rooms[0]).toMatchObject({ id: 'haupt', wallpaper: 'tapete-shoji', floor: 'boden-tatami' });
     expect(result.data.house.rooms[0].items.map((i) => i.itemId)).toEqual(['andon']);
-    expect(result.data.bank).toEqual({ loan: 0, savings: 0, interestMonth: '', lastInterest: 0 });
+    expect(result.data.bank).toEqual({ loan: 0, savings: 0, interestWeek: '', lastInterest: 0 });
   });
 });
 
@@ -302,7 +302,16 @@ describe('Version 12 (M8d Sparbuch)', () => {
     const v11 = { ...freshSave(), version: 11, bank: { loan: 4200 } } as Record<string, unknown>;
     const r = parseSave(JSON.stringify(v11), SPAWN, NOW);
     expect(r.ok && r.data.version).toBe(SAVE_VERSION);
-    expect(r.ok && r.data.bank).toEqual({ loan: 4200, savings: 0, interestMonth: '', lastInterest: 0 });
+    expect(r.ok && r.data.bank).toEqual({ loan: 4200, savings: 0, interestWeek: '', lastInterest: 0 });
+  });
+});
+
+describe('Version 15 (wöchentliche Zinsen)', () => {
+  it('macht aus dem Zinsmonat die Woche des Monatsersten, Guthaben bleibt', () => {
+    const v14 = { ...freshSave(), version: 14, bank: { loan: 0, savings: 12345, interestMonth: '2026-04', lastInterest: 100 } } as Record<string, unknown>;
+    const r = parseSave(JSON.stringify(v14), SPAWN, NOW);
+    expect(r.ok && r.data.version).toBe(15);
+    expect(r.ok && r.data.bank).toEqual({ loan: 0, savings: 12345, interestWeek: '2026-03-30', lastInterest: 100 });
   });
 });
 
