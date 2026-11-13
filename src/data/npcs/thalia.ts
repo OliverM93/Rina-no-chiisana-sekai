@@ -4,6 +4,7 @@
  * Dorfplatz. Herzlich, abenteuerlustig, lacht gern laut.
  */
 import { LOOKS } from './looks';
+import { STYLE_ARRIVAL_LINES } from '../catalog';
 import type { NpcDef } from './types';
 
 const WIESE = { x: 4, y: 20, w: 14, h: 8 };
@@ -135,6 +136,7 @@ export const THALIA_WELCOME: readonly string[] = [
   'Eine Schaufel! Wenn du im Boden kleine Risse siehst, grab dort. Da stecken Fossilien und Kristalle drin!',
   'Und eine Karte von {dorf}, frisch gezeichnet. Mit der Taste M kannst du sie dir jederzeit anschauen.',
   'Ach ja: Samstags ab 19 Uhr ist Party auf dem Dorfplatz. Pflichttermin! … Na gut, kein Pflichttermin. Aber komm!',
+  STYLE_ARRIVAL_LINES.thalia,
 ];
 
 export const PARTY_LINES: readonly (readonly string[])[] = [

@@ -6,6 +6,7 @@
  */
 import { hashString } from '../../core/rng';
 import { LOOKS } from './looks';
+import { STYLE_ARRIVAL_LINES } from '../catalog';
 import type { LetterTemplate, NpcDef } from './types';
 
 const PLATZ = { x: 23, y: 16, w: 9, h: 7 };
@@ -142,6 +143,7 @@ export const JENS_WELCOME: readonly string[] = [
   'Ich hab mein Bistro gleich da drüben aufgemacht – „Chez Jens“. Klingt fabelhaft, oder?',
   'Komm mich besuchen, dann kochen wir zusammen! Rührei, Obstsalat … und wenn du brav bist, mein Geheimrezept.',
   'Und ab und zu bin ich auf Reisen. Dann schick ich dir Postkarten. Mit Andenken!',
+  STYLE_ARRIVAL_LINES.jens,
   'Bisous! 💋',
 ];
 

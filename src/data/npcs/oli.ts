@@ -5,6 +5,7 @@
  * Nennt Lina „Lini“.
  */
 import { LOOKS, OLI_WARDROBE } from './looks';
+import { STYLE_ARRIVAL_LINES } from '../catalog';
 import type { NpcDef } from './types';
 
 const WIESE = { x: 4, y: 19, w: 12, h: 8 };
@@ -163,6 +164,7 @@ export const OLI_WELCOME: readonly string[] = [
   'Ich hab dich so vermisst.',
   'Und jetzt wohnen wir zusammen. In deinem kleinen Häuschen. Ich freu mich so!',
   'Meinen Schreibtisch und die Hantelbank hab ich dir in die Tasche gepackt – stell sie hin, wo du magst. Du hast das bessere Auge dafür.',
+  STYLE_ARRIVAL_LINES.oli,
 ];
 
 /** Picknick (Oli, tagsüber) */

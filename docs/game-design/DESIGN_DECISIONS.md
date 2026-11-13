@@ -219,3 +219,17 @@ Zuschuss auf jede Einzahlung (Ein-/Auszahlen wäre ausnutzbar).
 | O7 | Fotomodus/Tagebuch – welche Form? | Besitz & Erinnerung | Screenshot-Modus · automatisches Tagebuch schöner Momente · beides |
 | O8 | Lieblingsessen/-farben/-hobbys der Bewohner | Glaubwürdige Geschenk-Vorlieben | Infos von Lina/Oli |
 | O9 | Soll Angeln mehr **Geschick** bekommen? | Kompetenz vs. Entspannung | (Empfehlung: nein – Entspannung ist hier Absicht) |
+
+### D29 · Audit 4: neue Stile ankündigen, Ökonomie-Doku, Katalog-Budget (Nov. 2026)
+
+**Anlass:** Audit 4 ([`GAME_DESIGN_AUDIT_4.md`](GAME_DESIGN_AUDIT_4.md)): Die Einzüge schalten 71 Katalog-Einträge frei, aber nichts sagt es Lina (A2);
+der Katalog hat sich verdoppelt, ohne dass eine Regel das Einkommen mitzieht (A3); `GAME_ECONOMY.md` war wieder veraltet (A8).
+**Entscheidung:** (K1) Jede Einzugsszene endet mit einem Satz der Person, welche Stile sie mitbringt (`STYLE_ARRIVAL_LINES`), und der Stil-Chip
+im Katalog trägt „neu“, bis Lina den Stil einmal angeschaut hat (Flag `stil-gesehen-<stil>`, kein neues Spielstand-Format). (K2) `GAME_ECONOMY.md` und
+`PROGRESSION.md` auf den Stand gebracht. (K3) Katalog-Budget: Summe ≤ 300 000 ⭐, Möbel-Median ≤ 1 000 ⭐ als Test (`game/catalogBudget.test.ts`) plus
+Leitlinie in `BALANCING_GUIDELINES.md`.
+**Begründung:** Die Kopplung „Einzug → neue Stile“ war als Vorfreude gedacht; ohne Ankündigung verpufft sie. Der Test zwingt bei der nächsten großen
+Welle zu einer bewussten Entscheidung statt zu nachträglichem Gegensteuern.
+**Designprüfung (kurz):** 1 „Mit Thalia kommt etwas Neues“ · 2 Meta-Loop (Einzüge) · 3 Neugier auf den Katalog · 4 jeder Einzug bleibt ein kleines Ereignis ·
+5 keine Änderung · 6 keine Exploits · 7 Säule 2 (ein Satz, keine Liste) und Säule 5 · 8 einfacher: nur ein Toast – weniger persönlich und flüchtig.
+**Verworfen:** Aufgabenliste „X neue Stile“ im Notizbuch (Quest-Log-Gefühl); Pop-up-Fenster beim Einzug.
