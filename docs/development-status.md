@@ -189,7 +189,7 @@ Legende: ✅ erledigt · 🚧 in Arbeit · ⬜ geplant
 - ✅ Lars: Praxis/Apotheke (Tees, Gesundheits-Check) → M7c
 - ✅ Olaf: Sparbuch mit kleinen Zinsen (M8d)
 - ✅ Jens: Bistro/Kochstudio (Rezepte) & Galerie (Kunstwerke sammeln/ausstellen) → M7b, M7f
-- ✅ Thalia: Partys, Dorfkarte, Gesteine/Fossilien → M7d · ⬜ Wetterstation, neue Gebiete
+- ✅ Thalia: Partys, Dorfkarte, Schaufel/Ausgraben → M7d · ✅ Nov. 2026: Charakter neu betont – Fitnessstudio (gern mit Lina) und Partys (Clubs, Hauspartys) statt Gesteine (Gespräche, Wohnung, Tagesablauf, Briefe) · ⬜ Wetterstation, neue Gebiete
 - ✅ Oli: romantische Szenen (Picknick, Sterne gucken, Küsschen), gemeinsames Haus/Zimmer → M7a, M8e
 **M7h ✅ Fernsehabend & Linas Küche**
 - ✅ Fernseher (Katalog): Datingshow „Blind Date am Leuchtturm“, Doku „Großer Weg – Mein neues Leben“

@@ -50,7 +50,7 @@ export const TASSEN: readonly TasseDef[] = [
   tasse('stadt-honolulu', 'Honolulu', 'stadt', '#f2845a', '#fff3b0', 0, 'Mit Blumenkette, Palme und Sonnenuntergang. Aus dem Urlaub mit Onkel Jens – „ich hab mich stilvoll verbrannt“.'),
   tasse('stadt-nara', 'Nara', 'stadt', '#c9a77a', '#3f7a62', 0, 'Mit einem kleinen Reh und rotem Torbogen. Aus dem Urlaub mit Onkel Jens – „Matcha und Stille, ma chérie“.'),
   tasse('stadt-montecielo', 'Montecielo', 'stadt', '#b8845a', '#f7f5ec', 0, 'Mit einem Kirchturm zwischen Zypressen. Von Pater Matteo – „für besondere Gäste“, sagt Signora Rosa.'),
-  tasse('stadt-berlin', 'Berlin', 'stadt', '#5a5a64', '#f2c94c', 0, 'Mit Fernsehturm und Bär. Von Thalia, mit Gesteinsstaub am Henkel.'),
+  tasse('stadt-berlin', 'Berlin', 'stadt', '#5a5a64', '#f2c94c', 0, 'Mit Fernsehturm und Bär. Von Thalia, mit Konfetti am Henkel – aus einem Wochenende, das sie nur halb erinnert.'),
   tasse('stadt-reykjavik', 'Reykjavík', 'stadt', '#6ab8c8', '#f7f5ec', 0, 'Mit Vulkan, Nordlicht und einem Papageitaucher. Von Thalia, von ihrer Island-Exkursion.'),
 ];
 

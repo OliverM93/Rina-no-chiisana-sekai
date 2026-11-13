@@ -111,15 +111,15 @@ export const MEETUPS: readonly MeetupDef[] = [
       thalia: { x: 32, y: 31, facing: 'right' },
       jens: { x: 33, y: 30, facing: 'left' },
     },
-    emotes: ['🪨', '🎨', '💬', '✨'],
+    emotes: ['💪', '🎨', '💬', '✨'],
     talks: [
-      ['Thalia: „Jens, halt still! Du stehst auf einem Ammoniten!“', 'Jens: „Ma chérie, ich stehe auf meinen neuen Schuhen. Das ist wichtiger.“'],
-      ['Jens malt Thalia, wie sie Steine sammelt. Thalia sammelt Steine, die aussehen wie Jens.', 'Beide finden ihre Arbeit sehr wichtig.'],
-      ['Thalia: „Dieser Stein ist 300 Millionen Jahre alt!“', 'Jens: „Und trotzdem sieht er besser aus als Olaf morgens.“ – Thalia prustet los.'],
+      ['Thalia: „Jens, halt still! Ich zeig dir die Dehnübung. Nein, nicht so. Das ist ein Spagat, kein Kniefall.“', 'Jens: „Ma chérie, ich dehne mich geistig. Das ist wichtiger.“'],
+      ['Jens malt Thalia in Sportkleidung mit Hantel. Thalia findet das Bild schmeichelhaft. Jens findet die Hantel zu klein.', 'Beide finden ihre Arbeit sehr wichtig.'],
+      ['Thalia: „Wir machen am Samstag eine Party. Du bringst die Deko, ich die Playlist.“', 'Jens: „Und trotzdem hab ich den besseren Geschmack. Frag Olaf.“ – Thalia prustet los.'],
     ],
     replies: {
-      thalia: ['Jens malt mich gerade. Ich halte still. Ich hab gesagt, er soll den Stein mit aufs Bild malen.', 'Jens erklärt mir den Farbkreis, ich ihm das Erdzeitalter. Wir sind quitt.'],
-      jens: ['Ma chérie, Thalia beschreibt mir den Stein seit zehn Minuten. Ich male ihn trotzdem schöner.', 'Thalia hält still, ich male. Das ist ein Meisterwerk, gell? Wenn sie sich nicht bewegt.'],
+      thalia: ['Jens malt mich gerade. Ich halte still. Ich hab gesagt, er soll die Muskeln nicht zu klein malen.', 'Jens erklärt mir den Farbkreis, ich ihm den Beinbeuger. Wir sind quitt.'],
+      jens: ['Ma chérie, Thalia zeigt mir seit zehn Minuten Dehnübungen. Ich male sie trotzdem schöner.', 'Thalia hält still, ich male. Das ist ein Meisterwerk, gell? Wenn sie sich nicht bewegt.'],
     },
   },
   {
@@ -132,16 +132,16 @@ export const MEETUPS: readonly MeetupDef[] = [
       thalia: { x: 28, y: 31, facing: 'down' },
       lars: { x: 29, y: 31, facing: 'down' },
     },
-    emotes: ['🌅', '🪨', '💬', '✨'],
+    emotes: ['🌅', '🎶', '💬', '✨'],
     talks: [
       ['Thalia: „Der Sonnenuntergang ist heute 0,3 Prozent schöner als gestern. Ich hab nachgemessen.“', 'Lars: „Als Arzt sage ich: Genieß ihn einfach.“ – Thalia: „Ich genieße ihn ja. Mit Messwerten.“'],
       ['Lars: „Feierabend. Sieben Patienten, davon fünf mit Schnupfen.“', 'Thalia: „Und die zwei anderen?“ – Lars: „Wollten nur reden. Das ist auch Medizin.“'],
-      ['Thalia hat einen Stein gefunden, der aussieht wie ein kleines Herz.', 'Lars: „Das ist Quarz mit Einschlüssen.“ – Thalia: „Das ist ein Herz.“ – Lars: „… Das ist ein Herz.“'],
+      ['Thalia hat ihre Lieblingsplaylist für Samstag dabei und hält Lars einen Kopfhörer hin.', 'Lars: „Das ist … sehr laut.“ – Thalia: „Das ist ein Banger.“ – Lars: „… Das ist ein Banger.“'],
       ['Die beiden sitzen einfach da und gucken aufs Meer.', 'Lars: „Weißt du, warum ich das so gern mag?“ – Thalia: „Weil es nichts kostet?“ – Lars: „Weil es mich nichts fragt.“'],
     ],
     replies: {
       thalia: ['Lars und ich messen den Sonnenuntergang. Er misst mit Gefühl, ich mit Lineal. Wir kommen auf dasselbe.', 'Lars hat gerade gefragt, wie alt der Sand ist. Ich hab es ihm erklärt. Er hat genickt. Zweimal.'],
-      lars: ['Thalia hat gerade erklärt, wie alt der Sand ist. Ich hab gefragt: „Älter als meine Patienten?“ – „Viel älter.“', 'Feierabend, Strand, Thalia redet über Steine. Medizinisch gesehen entspannend. Ich merke es mir.'],
+      lars: ['Thalia hat gerade ihren Trainingsplan für die Woche erklärt. Ich hab gefragt: „Wann schläfst du?“ – „Samstag nach der Party.“', 'Feierabend, Strand, Thalia redet über Hanteln und Playlists. Medizinisch gesehen entspannend. Ich merke es mir.'],
     },
   },
 ];
