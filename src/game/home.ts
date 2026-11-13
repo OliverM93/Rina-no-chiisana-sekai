@@ -12,7 +12,7 @@ import { spotKey } from '../core/garden';
 import { cellsOf, checkPlacement, footprint, misfits, moveItem, placeItem, type PlacedItem, type Room, type RoomLayout, type Rotation, removeItem } from '../core/room';
 import { waitOver } from '../core/progress';
 import { FURNITURE_BY_ITEM, furnitureInfo, type FurnitureStyle, SURFACE_BY_ID, variantItemId } from '../data/furniture';
-import { GUEST_LAYOUT, guestRoom } from '../data/gastHaeuser';
+import { guestLayout, guestRoom } from '../data/gastHaeuser';
 import { emptyRoom, HOUSE_STAGES, layoutOf, MAX_STAGE, roomLayouts } from '../data/house';
 import { itemDef, maxStackOf } from '../data/items';
 import { lineUnlocked } from './catalog';
@@ -129,7 +129,7 @@ export function currentRoom(session: Session): { room: Room; layout: RoomLayout 
   if (!house) return null;
   if (session.inside && session.visiting) {
     const room = guestRoom(session.visiting);
-    return room ? { room, layout: GUEST_LAYOUT } : null;
+    return room ? { room, layout: guestLayout(session.visiting) } : null;
   }
   if (!session.inside) return session.data ? { room: session.data.yard, layout: session.yardLayout } : null;
   const room = house.rooms.find((r) => r.id === session.roomId) ?? house.rooms[0];

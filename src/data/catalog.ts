@@ -271,6 +271,10 @@ const FURNITURE_META: Record<string, Row> = {
   // Französisches Bistro
   bistrotisch: ['moebel', 'tische', ['bistro']],
   bistrostuhl: ['moebel', 'stuehle', ['bistro']],
+  bistrobank: ['moebel', 'sofas', ['bistro']],
+  kugelleuchte: ['moebel', 'lampen', ['bistro', 'artdeco']],
+  messingleuchte: ['moebel', 'lampen', ['bistro', 'artdeco']],
+  'schild-toilette': ['moebel', 'wanddeko', ['bistro']],
   barhocker: ['moebel', 'stuehle', ['bistro']],
   zinktheke: ['moebel', 'tische', ['bistro', 'industrial']],
   kreidetafel: ['moebel', 'wanddeko', ['bistro']],
@@ -441,6 +445,7 @@ const SURFACE_STYLES: Record<string, DesignStyle[]> = {
   'tapete-formen': ['midcentury', 'bauhaus'],
   'tapete-atomic': ['midcentury', 'spaceage'],
   'tapete-bistro': ['bistro'],
+  'tapete-bistro-putz': ['bistro'],
   'tapete-metro': ['bistro'],
   'tapete-backstein': ['industrial'],
   'boden-tatami': ['japanisch'],
@@ -471,6 +476,7 @@ const SURFACE_STYLES: Record<string, DesignStyle[]> = {
   'boden-tafel-eiche': ['midcentury'],
   'boden-tafel-nuss': ['midcentury', 'darkacademia'],
   'boden-bistro': ['bistro'],
+  'boden-hexmosaik': ['bistro'],
 };
 
 const WALL_MATERIAL = new Set(['kacheln', 'backstein', 'glas', 'vertaefelung', 'shoji', 'putz', 'latten', 'sichtbeton']);
@@ -482,6 +488,7 @@ const FLOOR_TYPE: Record<string, string> = {
   flecht: 'parkett',
   tafel: 'parkett',
   schach: 'fliesen',
+  hexmosaik: 'fliesen',
   terrakotta: 'fliesen',
   beton: 'fliesen',
   putz: 'fliesen',

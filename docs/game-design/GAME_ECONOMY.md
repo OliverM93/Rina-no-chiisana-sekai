@@ -43,7 +43,7 @@ realistisch **~10–15 k ⭐/h vor dem ×1,5, jetzt eher ~15–25 k ⭐/h** (�
 | Senke | Umfang |
 |---|---|
 | **Hausausbau** | 200 800 ⭐ für alle 6 Stufen (9 800 → 59 800), mit Bausparen ≈ 151 k |
-| **Möbelkatalog** (alle Stile frei, mit Winterware) | **281 Einträge, zusammen ≈ 255 000 ⭐** (Möbel 138 · 142 570, Tapeten 46 · 28 250, Böden 39 · 33 400, Garten 20 · 17 460, Lieblinge 19 · 20 530, Winter 9 · 8 730, Pflanzen 10 · 4 040); Möbel-Median 850, max. 2 600. Davon sind 201 Einträge (≈ 176 000 ⭐) schon ohne Einzug sichtbar |
+| **Möbelkatalog** (alle Stile frei, mit Winterware) | **287 Einträge, zusammen ≈ 259 000 ⭐** (Möbel 142 · 144 820, Tapeten 47 · 28 950, Böden 40 · 34 350, Garten 20 · 17 460, Lieblinge 19 · 20 530, Winter 9 · 8 730, Pflanzen 10 · 4 040); Möbel-Median 850, max. 2 600. Davon sind 201 Einträge (≈ 176 000 ⭐) schon ohne Einzug sichtbar |
 | Galerie | 13 Bilder, zusammen 18 800 ⭐ (900–2 200 je Bild, 1 Angebot/Tag) |
 | Kaffeemaschinen | 650 / 3 200 / 8 800 |
 | Gewächshaus / Frühbeet | 4 200 / 1 800 |
@@ -51,7 +51,7 @@ realistisch **~10–15 k ⭐/h vor dem ×1,5, jetzt eher ~15–25 k ⭐/h** (�
 | Herzenswünsche ✅ | Materialien + ≈ 8 000 ⭐ Sternchen-Anteil (Olafs Steg 3 000, Thalias Aussichtspunkt 2 000 …) |
 | Saisonware (Winter, Saison-Tassen) | wiederkehrend |
 
-**Gesamtbedarf** für „alles einmal besitzen“: **≈ 483 k ⭐** (Katalog 255 k + Hausausbau 200,8 k + Galerie 18,8 k + Wünsche ≈ 8 k; Audit 3: 425 k bei halb so großem Katalog).
+**Gesamtbedarf** für „alles einmal besitzen“: **≈ 483 k ⭐** (Katalog 259 k + Hausausbau 200,8 k + Galerie 18,8 k + Wünsche ≈ 8 k; Audit 3: 425 k bei halb so großem Katalog).
 📏 Das sind ≈ 3 800 Fänge à ~128 ⭐, also **≈ 12–25 Stunden reines Angeln** (Audit 3: 17–35 h); gemütlich gemischt ein Mehrfaches.
 Der Katalog soll nicht unbemerkt weiter wachsen: siehe **Katalog-Budget** in `BALANCING_GUIDELINES.md` und `game/catalogBudget.test.ts`.
 

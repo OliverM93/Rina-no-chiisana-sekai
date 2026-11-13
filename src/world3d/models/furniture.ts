@@ -2465,8 +2465,13 @@ export function makeFurniture(itemId: string, links: FenceLinks = { n: false, e:
     }
     // ---------------------------------------------------------------- Französisches Bistro
     case 'bistrotisch': {
-      g.add(c(0.34, 0.04, '#f4f2ee', 0, 0.7, 0));
-      for (const [x, z, r] of [[-0.1, 0.05, 0.4], [0.1, -0.1, -0.6]] as const) g.add(b(0.3, 0.004, 0.01, '#b9b6c0', x, 0.722, z).rotateY(r));
+      g.add(c(0.34, 0.04, col, 0, 0.7, 0));
+      // Messingrand wie bei den Café-Tischen in Paris
+      const rim = mesh(new THREE.TorusGeometry(0.345, 0.011, 6, 30), toon('#c9a24a'));
+      rim.rotation.x = Math.PI / 2;
+      rim.position.y = 0.718;
+      g.add(rim);
+      if (col === '#f4f2ee') for (const [x, z, r] of [[-0.1, 0.05, 0.4], [0.1, -0.1, -0.6]] as const) g.add(b(0.3, 0.004, 0.01, '#b9b6c0', x, 0.722, z).rotateY(r));
       g.add(c(0.37, 0.016, '#2a2a30', 0, 0.676, 0));
       g.add(c(0.035, 0.64, '#2a2a30', 0, 0.34, 0));
       g.add(c(0.2, 0.025, '#2a2a30', 0, 0.0125, 0));
@@ -2520,6 +2525,64 @@ export function makeFurniture(itemId: string, links: FenceLinks = { n: false, e:
       for (const [y, w] of [[0.15, 0.4], [0.05, 0.5], [-0.05, 0.34], [-0.15, 0.44]] as const) g.add(b(w, 0.014, 0.004, '#f4f2ee', -0.05, HANG + y, z + 0.054));
       g.add(s(0.03, 0.026, 0.004, '#f4a3b8', 0.28, HANG - 0.17, z + 0.054));
       g.add(b(0.3, 0.02, 0.004, '#f4f2ee', 0, HANG + 0.22, z + 0.054));
+      break;
+    }
+    case 'bistrobank': {
+      // Gepolsterte Wandbank (Banquette) mit Steppnähten, Rücken zur Wand
+      const wood = '#3a2a22';
+      const seam = darken(col, 0.3);
+      g.add(b(1.92, 0.12, 0.46, wood, 0, 0.1, 0.02));
+      g.add(b(1.9, 0.16, 0.48, col, 0, 0.26, 0.02));
+      g.add(b(1.9, 0.5, 0.14, col, 0, 0.6, -0.3));
+      for (const x of [-0.72, -0.48, -0.24, 0, 0.24, 0.48, 0.72]) g.add(b(0.008, 0.46, 0.006, seam, x, 0.6, -0.227));
+      g.add(b(1.88, 0.008, 0.006, seam, 0, 0.26, 0.262));
+      g.add(b(1.94, 0.03, 0.18, wood, 0, 0.87, -0.3));
+      for (const x of [-0.86, 0.86]) g.add(c(0.035, 0.05, wood, x, 0.025, 0.1));
+      seatY = 0.36;
+      break;
+    }
+    case 'kugelleuchte': {
+      // Milchglaskugel an geschwungenem Messingarm
+      const z = WALL_Z;
+      const brass = '#c9a24a';
+      g.add(c(0.05, 0.02, brass, 0, HANG + 0.18, z + 0.012).rotateX(Math.PI / 2));
+      g.add(b(0.014, 0.014, 0.2, brass, 0, HANG + 0.18, z + 0.11));
+      const bend = mesh(new THREE.TorusGeometry(0.06, 0.007, 6, 12, Math.PI / 2), toon(brass));
+      bend.position.set(0, HANG + 0.12, z + 0.21);
+      bend.rotation.y = Math.PI / 2;
+      g.add(bend);
+      g.add(c(0.008, 0.06, brass, 0, HANG + 0.08, z + 0.27));
+      g.add(c(0.035, 0.035, brass, 0, HANG + 0.035, z + 0.27));
+      glow = glowMat('#fff3d6');
+      const globe = mesh(new THREE.SphereGeometry(0.105, 16, 12), glow);
+      globe.position.set(0, HANG - 0.07, z + 0.27);
+      g.add(globe);
+      lightAt = new THREE.Vector3(0, HANG, z + 0.4);
+      break;
+    }
+    case 'messingleuchte': {
+      // kleine Wandleuchte mit cremefarbenem Stoffschirm
+      const z = WALL_Z;
+      const brass = '#c9a24a';
+      g.add(c(0.045, 0.018, brass, 0, HANG + 0.02, z + 0.012).rotateX(Math.PI / 2));
+      g.add(b(0.012, 0.012, 0.12, brass, 0, HANG + 0.02, z + 0.07));
+      g.add(c(0.016, 0.05, brass, 0, HANG + 0.045, z + 0.13));
+      glow = glowMat('#ffe9b8');
+      const shade = mesh(new THREE.CylinderGeometry(0.05, 0.1, 0.15, 14, 1, true), glow);
+      shade.position.set(0, HANG + 0.12, z + 0.13);
+      g.add(shade);
+      g.add(c(0.1, 0.008, '#f6eed8', 0, HANG + 0.045, z + 0.13));
+      lightAt = new THREE.Vector3(0, HANG + 0.1, z + 0.35);
+      break;
+    }
+    case 'schild-toilette': {
+      // Emailleschild: weiß mit goldenem Rand und Schriftzug (als dunkle Balken angedeutet)
+      const z = WALL_Z;
+      g.add(b(0.4, 0.12, 0.02, '#f6f2e8', 0, HANG, z + 0.012));
+      for (const y of [0.054, -0.054]) g.add(b(0.4, 0.009, 0.006, '#c9a24a', 0, HANG + y, z + 0.024));
+      for (const x of [-0.196, 0.196]) g.add(b(0.009, 0.12, 0.006, '#c9a24a', x, HANG, z + 0.024));
+      const heights = [0.05, 0.036, 0.05, 0.036, 0.05, 0.036, 0.05, 0.036];
+      for (let i = 0; i < 8; i++) g.add(b(0.018, heights[i], 0.005, '#2a2a30', -0.14 + i * 0.04, HANG, z + 0.027));
       break;
     }
     case 'weinregal': {

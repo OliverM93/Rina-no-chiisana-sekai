@@ -106,7 +106,7 @@ Bewohner einen Brief mit Geschenk** (vorher fehlten 12 – siehe `DESIGN_DECISIO
 | Rezepte | 68 (32 Werkbank inkl. Binden, 31 Küche, 5 Apotheke) | `data/recipes.ts` |
 | Sammeltassen | 19 | `data/tassen.ts` |
 | Kunstwerke | 12 | `data/art.ts` |
-| Möbel im Katalog | 138 Möbel (281 Katalog-Einträge) in 17 Stilen (plus Varianten) | `data/furniture.ts`, `data/catalog.ts` |
+| Möbel im Katalog | 142 Möbel (287 Katalog-Einträge) in 17 Stilen (plus Varianten) | `data/furniture.ts`, `data/catalog.ts` |
 
 **Bewertung**
 - ✅ Saisonale Arten machen das Sammelbuch zu einem **Ganzjahresziel** – ein vollständiges Buch braucht
