@@ -198,7 +198,7 @@ genau ein Stil je Stück.
 Katalog 185 k + Flächen 62 k ≈ 520 k ⭐ bei gemütlich ~3–5 k ⭐/h – allein der Ausbau 55–90 Stunden. Der Katalog ist seit dem
 letzten Audit um ~80 % gewachsen, die Einnahmen nicht.
 **Entscheidung:** (1) Fische & Insekten × 1,5 (zentraler Faktor, Fischgerichte mitgezogen); (2) Ausbau-Stufen 2–6 günstiger
-(zusammen 200,8 k, Zuwachs weiter 8–12 k je Stufe); (3) Sparbuch-Zinsen wöchentlich (2 %, max. 600, 26 Wochen nachholbar);
+(zusammen 200,8 k, Zuwachs weiter 8–12 k je Stufe); (3) Sparbuch-Zinsen wöchentlich (5 %, max. 2 500, 26 Wochen nachholbar);
 (4) „Olafs Bausparen“: Ausbau vom Sparbuch → Papa übernimmt 15 %.
 **Begründung:** Einnahmen heben wirkt überall gleichzeitig und braucht keine 200 Einzelpreise. Bausparen gibt dem Sparbuch
 einen *sofort spürbaren* Zweck (Sparziel mit Belohnung) statt eines kaum merklichen Zinses; es ist einmalig je Stufe und nicht

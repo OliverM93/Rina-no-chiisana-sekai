@@ -60,7 +60,7 @@ export const OLAF: NpcDef = {
       { text: ['Was sagt die Null zur Acht?', '„Schicker Gürtel!“ … Ich liebe den. Zahlen sind eben mein Fachgebiet. Und mein Humor.'] },
       { text: ['Christin sagt, ich hab ein Haushaltsdefizit an Ernsthaftigkeit.', 'Ich sage: Das ist die einzige Schuld, die ich gern mache. Hehe.'] },
       { text: ['Lina: „Papa, bitte nicht noch ein Wortspiel.“', 'Olaf: „Zu spät! Ich hab schon eins im Anflug. Es heißt: „Hallo, ich bin Olaf – und das ist meine Steuernummer.““'], weight: 2 },
-      { text: ['Schon ans Sparbuch gedacht, Lina?', 'Jeden Montag gibt es zwei Prozent Zinsen. Und wenn du deinen Ausbau vom Sparbuch bezahlst, leg ich fünfzehn Prozent dazu. Bausparen! Herrlich!'], weight: 2 },
+      { text: ['Schon ans Sparbuch gedacht, Lina?', 'Jeden Montag gibt es fünf Prozent Zinsen. Und wenn du deinen Ausbau vom Sparbuch bezahlst, leg ich fünfzehn Prozent dazu. Bausparen! Herrlich!'], weight: 2 },
       { text: ['Weißt du, was das Schönste an meinem Beruf ist?', 'Zahlen lügen nicht. Christin übrigens auch nicht. Gerade hat sie mir gesagt, dass meine Weste schief sitzt.'] },
       { text: ['Wusstest du, dass Jens und ich Zwillinge sind?', 'Er sagt immer, er ist der Hübschere. Ich sage: Ich bin der Pünktlichere. Fünf Minuten älter, nämlich.'], when: { tags: ['jens-da'] }, weight: 2 },
       { text: ['Als Kinder haben Jens und ich uns manchmal ausgetauscht.', 'Ich bin für ihn in den Kunstunterricht, er für mich in Mathe.', 'Er hatte eine Eins. Ich eine Vier. Wir haben nie wieder getauscht.'], when: { tags: ['jens-da'] } },

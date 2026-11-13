@@ -32,16 +32,16 @@ describe('Dorfkasse', () => {
     expect(weeksBetween('2026-03-09', '2026-03-30')).toBe(3);
   });
 
-  it('Zinsen: 2 % jede Woche, Zinseszins, verpasste Wochen werden nachgeholt', () => {
+  it('Zinsen: 5 % jede Woche, Zinseszins, verpasste Wochen werden nachgeholt', () => {
     const b = createBank();
     deposit(b, 10000, 10000, '2026-03-14');
     expect(creditInterest(b, '2026-03-15')).toBe(0); // gleiche Woche
-    expect(creditInterest(b, '2026-03-16')).toBe(200);
-    expect(b.savings).toBe(10200);
+    expect(creditInterest(b, '2026-03-16')).toBe(500);
+    expect(b.savings).toBe(10500);
     expect(creditInterest(b, '2026-03-20')).toBe(0); // nur einmal pro Woche
-    expect(creditInterest(b, '2026-04-01')).toBe(204 + 208); // zwei Wochen nachgeholt
-    expect(b.savings).toBe(10612);
-    expect(b.lastInterest).toBe(412);
+    expect(creditInterest(b, '2026-04-01')).toBe(525 + 551); // zwei Wochen nachgeholt
+    expect(b.savings).toBe(11576);
+    expect(b.lastInterest).toBe(1076);
   });
 
   it('Zinsen haben eine Obergrenze und starten erst mit dem Sparbuch', () => {

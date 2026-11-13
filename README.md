@@ -140,7 +140,7 @@ Herzchen steigen auf, beim Bauen regnet es Konfetti – und in Sommernächten ta
 Freudensprünge, und die Bewohner winken, wenn sie sie anspricht.
 
 **Sparbuch (M8d):** In Papas Dorfkasse kann Lina Sternchen aufs Sparbuch legen und jederzeit wieder abheben.
-Jeden Montag gibt es Zinsen (2 %, höchstens 600 ⭐), einmal im Monat einen Kontoauszug-Brief von Olaf. Zahlt Lina
+Jeden Montag gibt es Zinsen (5 %, höchstens 2 500 ⭐), einmal im Monat einen Kontoauszug-Brief von Olaf. Zahlt Lina
 einen Ausbau direkt vom Sparbuch, legt Papa 15 % dazu („Olafs Bausparen“).
 **Küsschen (M8e):** Lina und Oli smoochen gern und oft: im Gespräch „😘 Küsschen geben“ – so oft man möchte.
 Kommt Lina nach Hause, holt Oli sie mit einem Begrüßungsküsschen ab, und zwischendurch gibt's einfach so eins.

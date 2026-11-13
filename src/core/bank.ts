@@ -1,7 +1,7 @@
 /**
  * Olafs Dorfkasse:
  * - zinsloser Kredit für den Hausausbau – zurückzahlen, wann und wie viel man möchte
- * - Sparbuch: jede Woche (ab Montag) 2 % Zinsen, höchstens 600 Sternchen pro Woche; verpasste Wochen
+ * - Sparbuch: jede Woche (ab Montag) 5 % Zinsen, höchstens 2 500 Sternchen pro Woche; verpasste Wochen
  *   werden nachgeholt (bis zu 26). Ein- und Auszahlen geht jederzeit und kostet nichts.
  * - „Olafs Bausparen“: Wer einen Ausbau direkt vom Sparbuch bezahlt, bekommt 15 % von Papa dazu
  *   (siehe `game/home.ts → orderExpansion`).
@@ -19,9 +19,9 @@ export interface Bank {
 }
 
 /** Zinssatz pro Woche */
-export const INTEREST_RATE = 0.02;
+export const INTEREST_RATE = 0.05;
 /** höchstens so viele Zinsen pro Woche */
-export const INTEREST_CAP = 600;
+export const INTEREST_CAP = 2500;
 /** so viele verpasste Wochen werden höchstens nachgeholt (ein halbes Jahr) */
 const MAX_WEEKS = 26;
 /** Olafs Bauspar-Zuschuss: Anteil am Ausbaupreis, den Papa übernimmt, wenn vom Sparbuch bezahlt wird */
