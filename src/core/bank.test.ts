@@ -53,9 +53,9 @@ describe('Dorfkasse', () => {
     expect(none.interestWeek).toBe('');
   });
 
-  it('Bausparen: Olaf übernimmt 15 % des Ausbaus', () => {
-    expect(bausparShare(10000)).toBe(8500);
-    expect(bausparShare(59800)).toBe(50830);
+  it('Bausparen: Olaf übernimmt 25 % des Ausbaus', () => {
+    expect(bausparShare(10000)).toBe(7500);
+    expect(bausparShare(59800)).toBe(44850);
   });
 
   it('alte Spielstände: Sparbuch ergänzt, alter Zinsmonat wird zur Woche des Monatsersten', () => {

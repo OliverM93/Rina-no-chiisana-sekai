@@ -219,7 +219,7 @@ Legende: ✅ erledigt · 🚧 in Arbeit · ⬜ geplant
 - ✅ **M8b Kleidung & Gruselkanal:** Linas Lieblings-Sweatshirts (Hawaii, Sport, Radierkopf) mit weiter Anzughose,
   im Herbst/Frühling täglich wechselnd · Oli zieht sich um (alles in Schwarz: Bandshirts, Polo, Überjacke; Hosen schwarz/beige/Jeans; Chunky-Sneaker) ·
   Gruselkanal im Fernseher („Gänsehaut um Mitternacht“), Sprüche der Bewohner zu Linas Horror-Liebe
-- ✅ **Sternchen-Balancing (Nov. 2026):** Fänge × 1,5, Hausausbau 273,8 k → 200,8 k, Sparbuch-Zinsen wöchentlich (5 %, max. 2 500), „Olafs Bausparen“ (15 % Zuschuss beim Ausbau vom Sparbuch). Spielstand v15.
+- ✅ **Sternchen-Balancing (Nov. 2026):** Fänge × 1,5, Hausausbau 273,8 k → 200,8 k, Sparbuch-Zinsen wöchentlich (5 %, max. 2 500), „Olafs Bausparen“ (15 %, seit Audit 4 25 % Zuschuss beim Ausbau vom Sparbuch). Spielstand v15.
 - ✅ **M8d Sparbuch:** In Olafs Dorfkasse einzahlen & abheben, wann man will. Am Monatsanfang gibt es 1 % Zinsen
   (mit Zinseszins, höchstens 2000 ⭐ im Monat, verpasste Monate werden nachgeholt) und einen Kontoauszug-Brief von
   Papa. Spielstand v12

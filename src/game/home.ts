@@ -272,7 +272,7 @@ export type OrderResult = 'ok' | 'kredit-offen' | 'fertig' | 'laeuft' | 'zu-weni
 /**
  * Ausbau bestellen, fertig nach kurzer Spielzeit (`WAIT_SECONDS`):
  * - `kredit`: als zinsloser Kredit (wie bisher)
- * - `sparbuch`: „Olafs Bausparen“ – Lina zahlt 85 % vom Sparbuch, Papa legt 15 % dazu, kein Kredit
+ * - `sparbuch`: „Olafs Bausparen“ – Lina zahlt 75 % vom Sparbuch, Papa legt 25 % dazu, kein Kredit
  */
 export function orderExpansion(session: Session, pay: 'kredit' | 'sparbuch' = 'kredit'): OrderResult {
   const data = session.data;

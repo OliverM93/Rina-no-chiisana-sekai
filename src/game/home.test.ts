@@ -96,14 +96,14 @@ describe('Einrichten: Farbe wechseln & Rückgängig', () => {
 });
 
 describe('Olafs Bausparen', () => {
-  it('Ausbau vom Sparbuch: Lina zahlt 85 %, kein Kredit', () => {
+  it('Ausbau vom Sparbuch: Lina zahlt 75 %, kein Kredit', () => {
     const s = newSession();
     const price = nextStage(s)!.price;
     s.data!.bank.savings = 1000;
     expect(orderExpansion(s, 'sparbuch')).toBe('zu-wenig-gespart');
     s.data!.bank.savings = price;
     expect(orderExpansion(s, 'sparbuch')).toBe('ok');
-    expect(s.data!.bank.savings).toBe(price - Math.ceil(price * 0.85));
+    expect(s.data!.bank.savings).toBe(price - Math.ceil(price * 0.75));
     expect(s.data!.bank.loan).toBe(0);
     expect(s.data!.house.pending?.stage).toBe(1);
   });
