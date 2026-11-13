@@ -25,11 +25,11 @@ export const PAIR_CHATS: Readonly<Record<string, readonly Exchange[]>> = {
     ['Oli, mach die Hände locker beim Training.', 'Ich bin locker!', 'Du hältst die Kaffeetasse mit der Faust.'],
   ],
   'thalia+jens': [
-    ['Jens, dieser Stein hat die Farbe deines Hoodies.', 'Ma chérie, das ist ein Kompliment. Sag es nochmal!'],
-    ['Thalia, ich male dich als Gesteinsschicht.', 'Dann bitte mit Sediment. Richtig, nicht Pastell.'],
+    ['Jens, dein Hoodie hat genau die Farbe meiner Trainingshose.', 'Ma chérie, das ist ein Kompliment. Sag es nochmal!'],
+    ['Thalia, ich male dich als Tänzerin.', 'Dann bitte mit Konfetti. Richtig viel, nicht nur Pastell.'],
   ],
   'thalia+lars': [
-    ['Lars, der Sand hier ist über zwanzig Millionen Jahre alt.', 'Und ich bin nicht sicher, ob ich das wissen musste.', 'Musstest du nicht. Aber jetzt weißt du es.'],
+    ['Lars, ich war heute schon zweimal laufen.', 'Und ich bin nicht sicher, ob ich das wissen musste.', 'Musstest du nicht. Aber jetzt weißt du es.'],
     ['Thalia, trink mal was.', 'Ich trinke. Wasser. Ernsthaft.'],
   ],
   'jens+lars': [
@@ -41,8 +41,8 @@ export const PAIR_CHATS: Readonly<Record<string, readonly Exchange[]>> = {
     ['Soll ich dir was aus Paris mitbringen, Gisela?', 'Eine anständige Wollmütze.'],
   ],
   'oli+thalia': [
-    ['Oli, Hardcore und Granit haben dieselbe Bruchkante.', 'Das stimmt nicht, Thalia.', 'Gefühlt.'],
-    ['Thalia, hast du schon mal einen Moshpit gesehen?', 'Ja. Das ist Erosion mit Musik.'],
+    ['Oli, Hardcore und Techno haben dieselbe Bruchkante.', 'Das stimmt nicht, Thalia.', 'Gefühlt.'],
+    ['Thalia, hast du schon mal einen Moshpit gesehen?', 'Ja. Das ist Tanzen mit Körpereinsatz. Ich bin Fan.'],
   ],
   'gisela+lars': [
     ['Lars, hast du wieder jemandem Geld abgenommen?', 'Oma, ich hab nur eine Rechnung geschrieben.'],
