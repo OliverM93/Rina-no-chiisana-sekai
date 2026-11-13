@@ -33,6 +33,7 @@ import { checkMatteoLetters } from './matteo';
 import { checkSammlungen } from './sammlungen';
 import { memoryLinesFor, memoryTags, takeMemory } from './erinnerungen';
 import { winstonOmaLines } from './pet';
+import { tipsyComment } from './tipsy';
 
 // ---------------------------------------------------------------------------
 // Tasche & Sternchen
@@ -256,7 +257,7 @@ export function talkToNpc(session: Session, npcId: string): TalkOutcome {
   const st = npcState(session, npcId);
   const result = talk(st, session.today());
   const ctx = dialogueContext(session, npcId, result.firstToday);
-  const lines: string[] = [];
+  const lines: string[] = [...tipsyComment(session, npcId)];
   if (result.firstToday) {
     const fest = festTalk(session, npcId);
     if (npc.birthday && npc.birthdayLines && isSameDayMonth(session.clock(), npc.birthday)) lines.push(...npc.birthdayLines.greeting);
@@ -291,7 +292,7 @@ export function chatWithNpc(session: Session, npcId: string): TalkOutcome {
   // beim Weiterplaudern ab und zu (jedes dritte Mal) wieder ein Hinweis
   const hint = st.talksToday % 3 === 0 ? progressHint(session, npcId) : null;
   const lines = hint ? [...hint] : pickLine([...npc.dialogue.chat, ...memoryLinesFor(session, npcId)], dialogueContext(session, npcId, false));
-  return { lines: fill(session, lines), hearts: heartsFor(st.points) };
+  return { lines: fill(session, [...tipsyComment(session, npcId), ...lines]), hearts: heartsFor(st.points) };
 }
 
 export interface GiftOutcome extends TalkOutcome {

@@ -257,3 +257,4 @@ vergeht. Kein Fortschritt, keine Belohnung, keine Zahlen, nichts gespeichert –
 4 Charakter und Humor, kein Langzeitziel · 5 keine Wirtschaftsänderung (aufs Haus) · 6 Exploits: keine (Schwips bringt nichts; Obergrenze verhindert Dauer-Zustand; nach dem Neuladen weg) ·
 7 Säulen: kein Zwang, kein Scheitern, nie glorifizierend (Oma-Regel gilt hier ebenso) · 8 Einfachere Lösung: nur ein Text-Gag – ohne Bild- und Steuerungseffekt wäre es kaum spürbar.
 **Verworfen:** Preise im Café (zusätzliche Sternchen-Logik ohne Mehrwert), Rausch-Stufen mit Folgen (Übelkeit, „Kater“) – wäre eine Strafe und passt nicht zu Linas Welt.
+**Nachtrag:** Die Bewohner kommentieren Linas Schwips in zwei Stufen, liebevoll und nie verurteilend (Oma: „Ich frag nur für mich“, Lars: „Rezept vom Doktor: Wasser, Brot, Sofa“, Thalia: „Ich hol dir ein Wasser – mein Beitrag zur Freundschaft“). Höchstens alle 25 s je Bewohner, damit es nicht nervt.
