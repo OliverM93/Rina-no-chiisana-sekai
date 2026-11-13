@@ -15,6 +15,9 @@ export interface StageScene {
   lines: readonly string[];
 }
 
+/** Einleitung, wenn eine Szene am Anfang des nächsten Gesprächs zu Hause von selbst beginnt (kein Menüpunkt) */
+export const STAGE_LEAD = 'Oli klopft aufs Sofa neben sich. „Komm, setz dich kurz zu mir, Lini.“';
+
 export const STAGE_SCENES: readonly StageScene[] = [
   {
     hearts: 1,

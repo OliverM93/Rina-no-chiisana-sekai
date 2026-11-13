@@ -275,6 +275,7 @@ Legende: ✅ erledigt · 🚧 in Arbeit · ⬜ geplant
 - ✅ **Einrichten im Fluss:** Katalog im Einrichtungsmodus (Kaufen = in die Hand), Vorrat aus Tasche + Truhe, C „noch eins“, V/1–9 Farbe, Strg+Z rückgängig
 - ✅ **Audit 3 umgesetzt:** Linas Notizbuch (N), Einzüge über Spielen statt Warten (winter-sicher), Enter für Hauptknöpfe, Snake-Rekord gespeichert, Balancing-Test
 - ✅ **Audit 4 umgesetzt (K1–K3):** neue Stile werden bei Einzügen angekündigt + „neu“ am Stil-Chip, Ökonomie-Doku aktualisiert, Katalog-Budget-Test
+- ✅ **Zeit zu zweit ohne Menüpunkt** (Szene beginnt beim nächsten Gespräch mit Oli zu Hause von selbst) · **Schwips-Fix:** Nachlassen lief fälschlich in Millisekunden statt Sekunden – jetzt nach ~1 Minute
 - ✅ **Schummrig werden (Bier & Wein)** am Tresen, Kühlschrank und Weinregal · **Musik draußen wechselt seltener** (3 Runden je Lied, Stimmungs-Dämpfer)
 - ✅ **Game-Design-Audit 4 (13. Nov. 2026):** [`GAME_DESIGN_AUDIT_4.md`](game-design/GAME_DESIGN_AUDIT_4.md) – Katalog 125 → 272 Einträge (≈ 255 k ⭐), neue Stile kommen stumm mit den Einzügen, Zins/Kredit/Bausparen überlappen, ×1,5 verkürzt Lars' Bedingung; Empfehlung: **Playtest vor weiteren Inhaltswellen**, K1 (Stile ankündigen), K2 (Doku), K3 (Katalog-Budget-Test) nach Freigabe
 - ✅ **Hantelbank-Training (Lina stemmt viel, Oli ist begeistert) & Minispiel Dackel-Snake am Computer** · Türen bleiben nutzbar, wenn ein Bewohner davor steht

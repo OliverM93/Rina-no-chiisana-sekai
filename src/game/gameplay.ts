@@ -28,7 +28,8 @@ import { itemIconUrl } from '../gfx/items';
 import { onItemObtained } from './crafting';
 import { festTalk } from './festivals';
 import { isPartyTime } from './party';
-import { checkOliAnniversaries } from './romance';
+import { checkOliAnniversaries, playStageScene } from './romance';
+import { STAGE_LEAD } from '../data/oliStufen';
 import { checkMatteoLetters } from './matteo';
 import { checkSammlungen } from './sammlungen';
 import { memoryLinesFor, memoryTags, takeMemory } from './erinnerungen';
@@ -258,6 +259,11 @@ export function talkToNpc(session: Session, npcId: string): TalkOutcome {
   const result = talk(st, session.today());
   const ctx = dialogueContext(session, npcId, result.firstToday);
   const lines: string[] = [...tipsyComment(session, npcId)];
+  // Oli zu Hause: Hat Lina ein neues Herz erreicht, beginnt die nächste „Zeit zu zweit“-Szene von selbst (eine je Gespräch, ohne Menüpunkt)
+  if (npcId === 'oli' && session.inside && !session.visiting) {
+    const scene = playStageScene(session);
+    if (scene) lines.push(STAGE_LEAD, ...scene.lines);
+  }
   if (result.firstToday) {
     const fest = festTalk(session, npcId);
     if (npc.birthday && npc.birthdayLines && isSameDayMonth(session.clock(), npc.birthday)) lines.push(...npc.birthdayLines.greeting);

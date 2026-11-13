@@ -7,8 +7,8 @@ import { hashString } from '../core/rng';
 import { TIPSY_NPC_LINES } from '../data/tipsy';
 import type { Session } from './session';
 
-/** So lange wartet derselbe Bewohner, bevor er Lina noch einmal darauf anspricht (Spielzeit in ms) */
-export const COMMENT_PAUSE_MS = 25_000;
+/** So lange wartet derselbe Bewohner, bevor er Lina noch einmal darauf anspricht (Spielzeit in Sekunden) */
+export const COMMENT_PAUSE_SEC = 25;
 
 /** Kommentar des Bewohners zu Linas Zustand (leer, wenn sie nüchtern ist oder er es gerade erst gesagt hat) */
 export function tipsyComment(session: Session, npcId: string): string[] {
@@ -18,8 +18,8 @@ export function tipsyComment(session: Session, npcId: string): string[] {
   const st = stage(buzzAt(session.tipsy, now));
   if (st === 0) return [];
   const last = session.tipsySpoken.get(npcId);
-  if (last !== undefined && now - last < COMMENT_PAUSE_MS) return [];
+  if (last !== undefined && now - last < COMMENT_PAUSE_SEC) return [];
   session.tipsySpoken.set(npcId, now);
   const pool = st === 1 ? reaction.leicht : reaction.schummrig;
-  return [...pool[hashString(`${npcId}:${session.today()}:${Math.floor(now / COMMENT_PAUSE_MS)}`) % pool.length]];
+  return [...pool[hashString(`${npcId}:${session.today()}:${Math.floor(now / COMMENT_PAUSE_SEC)}`) % pool.length]];
 }

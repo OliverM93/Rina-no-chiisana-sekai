@@ -65,7 +65,7 @@ import { CHECKUP_GIFTS, CHECKUP_LINES, LARS_WELCOME } from '../data/npcs/lars';
 import { hashString } from '../core/rng';
 import { buzzAt, drinkAlcohol, drinkWater, effectOf, NO_EFFECT, stage as tipsyStage } from '../core/tipsy';
 import { DRINK_LINES, type DrinkKind, HICCUP_TOASTS, REFUSE_LINES, SOBER_TOAST, STAGE_LINES, WATER_CLEARS_LINES, WATER_PLAIN_LINES } from '../data/tipsy';
-import { canDate, canKiss, type DateKind, giveKiss, haveDate, nextStageScene, playStageScene } from '../game/romance';
+import { canDate, canKiss, type DateKind, giveKiss, haveDate } from '../game/romance';
 import { SPONTANEOUS_KISS_LINES, WELCOME_KISS_LINES } from '../data/npcs/oli';
 import { KISS } from './Character3D';
 
@@ -1724,23 +1724,6 @@ export class World3D {
               }))
           : []),
         ...(activeWish(this.session, id) ? [{ label: '💭 Herzenswunsch', onSelect: () => this.wishDialog(npc) }] : []),
-        ...(id === 'oli' && nextStageScene(this.session)
-          ? [
-              {
-                label: '💬 Zeit zu zweit',
-                onSelect: () => {
-                  const scene = playStageScene(this.session);
-                  if (!scene) return this.npcDialog(npc, ['Ich bin gleich bei dir, Lini.'], npcHearts(this.session, id));
-                  this.session.bus.emit('dialog:open', {
-                    title: scene.title,
-                    hearts: npcHearts(this.session, id),
-                    lines: scene.lines,
-                    onClose: () => this.npcDialog(npc, ['Das war schön, Lini. 💕'], npcHearts(this.session, id)),
-                  });
-                },
-              },
-            ]
-          : []),
         ...(id === 'thalia' && isPartyTime(this.session) && this.session.data?.world.dates.party !== this.session.today()
           ? [{ label: '💃 Tanzen!', onSelect: () => this.dance(npc) }]
           : []),

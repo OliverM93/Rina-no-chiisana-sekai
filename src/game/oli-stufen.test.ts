@@ -1,9 +1,10 @@
 import { describe, expect, it, vi } from 'vitest';
 import { DEFAULT_LINA } from '../core/appearance';
 import type { StorageLike } from '../core/save';
-import { BENCH_LINES, OLI_ANNIVERSARIES, STAGE_SCENES } from '../data/oliStufen';
+import { BENCH_LINES, OLI_ANNIVERSARIES, STAGE_LEAD, STAGE_SCENES } from '../data/oliStufen';
 import { isKnownItem } from '../data/items';
 import { wishFlag } from '../data/wishes';
+import { talkToNpc } from './gameplay';
 import { canDate, checkOliAnniversaries, daysWithOli, haveDate, nextStageScene, playStageScene } from './romance';
 import { Session } from './session';
 
@@ -65,6 +66,31 @@ describe('Zeit zu zweit – die Beziehung in Stufen', () => {
     withPoints(s, 400);
     delete s.data!.flags.oliEingezogen;
     expect(nextStageScene(s)).toBeNull();
+  });
+});
+
+describe('Zeit zu zweit beginnt von selbst (kein Menüpunkt)', () => {
+  it('zu Hause: das nächste Gespräch mit Oli beginnt mit der offenen Szene – eine je Gespräch, danach nicht wieder', () => {
+    const { s } = fresh();
+    s.inside = true;
+    withPoints(s, 100); // 2 Herzen: zwei Szenen offen
+    const first = talkToNpc(s, 'oli').lines;
+    expect(first[0]).toBe(STAGE_LEAD);
+    expect(first.join(' ')).toContain('Testdorf'); // Szene „Ankommen“
+    const second = talkToNpc(s, 'oli').lines;
+    expect(second[0]).toBe(STAGE_LEAD); // Szene „Pläne fürs Zimmer“
+    expect(second.join(' ')).toContain('Blatt Papier');
+    const third = talkToNpc(s, 'oli').lines;
+    expect(third[0]).not.toBe(STAGE_LEAD); // alle erlebt
+  });
+
+  it('draußen oder ohne neues Herz gibt es keine Szene im Gespräch', () => {
+    const { s } = fresh();
+    withPoints(s, 100);
+    expect(talkToNpc(s, 'oli').lines[0]).not.toBe(STAGE_LEAD); // draußen
+    s.inside = true;
+    withPoints(s, 0);
+    expect(talkToNpc(s, 'oli').lines[0]).not.toBe(STAGE_LEAD); // kein Herz
   });
 });
 

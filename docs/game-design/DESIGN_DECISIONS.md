@@ -258,3 +258,10 @@ vergeht. Kein Fortschritt, keine Belohnung, keine Zahlen, nichts gespeichert –
 7 Säulen: kein Zwang, kein Scheitern, nie glorifizierend (Oma-Regel gilt hier ebenso) · 8 Einfachere Lösung: nur ein Text-Gag – ohne Bild- und Steuerungseffekt wäre es kaum spürbar.
 **Verworfen:** Preise im Café (zusätzliche Sternchen-Logik ohne Mehrwert), Rausch-Stufen mit Folgen (Übelkeit, „Kater“) – wäre eine Strafe und passt nicht zu Linas Welt.
 **Nachtrag:** Die Bewohner kommentieren Linas Schwips in zwei Stufen, liebevoll und nie verurteilend (Oma: „Ich frag nur für mich“, Lars: „Rezept vom Doktor: Wasser, Brot, Sofa“, Thalia: „Ich hol dir ein Wasser – mein Beitrag zur Freundschaft“). Höchstens alle 25 s je Bewohner, damit es nicht nervt.
+
+### D32 · „Zeit zu zweit“ ohne Menüpunkt (Nov. 2026)
+
+**Anlass:** Der Menüpunkt „💬 Zeit zu zweit“ war missverständlich (klang wie Picknick/Sterne/Herzbank), tauchte nur kurz auf und war eine reine Textszene ohne Aktion.
+**Entscheidung:** Die fünf Szenen (eine je Herz) bleiben, aber ohne Menüpunkt: Das nächste Gespräch mit Oli zu Hause beginnt mit „Komm, setz dich kurz zu mir, Lini“ und der offenen Szene (eine je Gespräch, ohne Punkte).
+**Begründung:** weniger Knöpfe, nichts bleibt versteckt, die Szene fühlt sich wie ein Moment an statt wie Verwaltung. **Verworfen:** nur umbenennen („Ein ruhiger Moment“) – bliebe ein unsichtbarer Menüpunkt.
+**Designprüfung (kurz):** 1 ein ruhiger Moment mit Oli beim Wiedersehen · 2 Mikro-/Wochenloop, kein Tagesloop (jede Szene nur einmal) · 5 keine Punkte, keine Wirtschaft · 6 keine Exploits · 7 Säule 2 (nichts Verpflichtendes: Lina kann das Gespräch jederzeit schließen) · 8 einfacher: Menüpunkt nur umbenennen.
