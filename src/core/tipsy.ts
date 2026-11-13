@@ -4,7 +4,7 @@
  * Alles ist **kurz und freundlich**: Ein Glas lässt nach etwa einer Minute nach, nach drei Gläsern sagt Lina selbst
  * „jetzt lieber ein Wasser“, und Wasser macht sofort wieder klarer. Nichts wird gespeichert, nichts hat Folgen.
  *
- * Reine Logik (ohne DOM): Zeitangaben sind Spielzeit in Millisekunden (`session.playTime()`).
+ * Reine Logik (ohne DOM): Zeitangaben sind Spielzeit in **Sekunden** (`session.playTime()`).
  */
 
 /** Zustand: „Schwips“ zum Zeitpunkt `at` (0 = nüchtern, `MAX_BUZZ` = ganz schön schummrig) */
@@ -19,8 +19,8 @@ export const GLASS: Readonly<Record<'bier' | 'wein', number>> = { bier: 1, wein:
 export const MAX_BUZZ = 3;
 /** Ab diesem Schwips lehnt Lina weitere Gläser selbst ab */
 export const REFUSE_AT = 2.1;
-/** Ein Glas lässt in so vielen Millisekunden nach (1 Minute) */
-export const DECAY_MS = 60_000;
+/** Ein Glas lässt in so vielen Sekunden nach (1 Minute) */
+export const DECAY_SEC = 60;
 /** Ein Glas Wasser macht so viel klarer */
 export const WATER_CLEARS = 1.5;
 
@@ -30,7 +30,7 @@ export function createTipsy(): Tipsy {
 
 /** Aktueller Schwips (sinkt von selbst) */
 export function buzzAt(t: Tipsy, now: number): number {
-  return Math.max(0, t.buzz - Math.max(0, now - t.at) / DECAY_MS);
+  return Math.max(0, t.buzz - Math.max(0, now - t.at) / DECAY_SEC);
 }
 
 export type DrinkOutcome = 'ok' | 'genug';

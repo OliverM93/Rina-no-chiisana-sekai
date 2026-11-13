@@ -1,12 +1,12 @@
 import { describe, expect, it, vi } from 'vitest';
 import { DEFAULT_LINA } from '../core/appearance';
 import type { StorageLike } from '../core/save';
-import { drinkAlcohol } from '../core/tipsy';
+import { buzzAt, DECAY_SEC, drinkAlcohol } from '../core/tipsy';
 import { TIPSY_NPC_LINES } from '../data/tipsy';
 import { NPCS } from '../data/npcs';
 import { chatWithNpc, talkToNpc } from './gameplay';
 import { Session } from './session';
-import { COMMENT_PAUSE_MS, tipsyComment } from './tipsy';
+import { COMMENT_PAUSE_SEC, tipsyComment } from './tipsy';
 
 vi.mock('../gfx/items', () => ({ itemIconUrl: () => '' }));
 
@@ -58,7 +58,15 @@ describe('Bewohner reagieren auf Linas Schwips', () => {
     const s = newSession();
     drinkAlcohol(s.tipsy, s.playTime(), 'bier');
     expect(tipsyComment(s, 'lars').length).toBeGreaterThan(0);
-    s.tipsySpoken.set('lars', s.playTime() - COMMENT_PAUSE_MS - 1);
+    s.tipsySpoken.set('lars', s.playTime() - COMMENT_PAUSE_SEC - 1);
     expect(tipsyComment(s, 'lars').length).toBeGreaterThan(0);
+  });
+
+  it('Einheit: Spielzeit läuft in Sekunden – nach einer Minute Spielzeit ist ein Glas wirklich weg', () => {
+    const s = newSession();
+    drinkAlcohol(s.tipsy, s.playTime(), 'bier');
+    expect(buzzAt(s.tipsy, s.playTime())).toBeGreaterThan(0.9);
+    s.data!.playTimeSec += DECAY_SEC + 1; // eine Minute später
+    expect(buzzAt(s.tipsy, s.playTime())).toBe(0);
   });
 });
