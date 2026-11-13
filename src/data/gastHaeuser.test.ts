@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { exitAt } from '../core/room';
 import { FURNITURE_BY_ITEM, SURFACE_BY_ID } from './furniture';
-import { GUEST_HOUSES, GUEST_LAYOUT, guestItemId, guestRoom } from './gastHaeuser';
+import { GUEST_HOUSES, guestItemId, guestLayout, guestRoom } from './gastHaeuser';
 import { NPC_BY_ID } from './npcs';
 
 describe('Häuser der Bewohner von innen', () => {
@@ -14,9 +14,9 @@ describe('Häuser der Bewohner von innen', () => {
       for (const it of h.items) {
         const f = FURNITURE_BY_ITEM[guestItemId(it.id, it.variant)];
         expect(f, `${id}: ${it.id}`).toBeTruthy();
-        expect(it.x >= 0 && it.y >= 0 && it.x < GUEST_LAYOUT.w && it.y < GUEST_LAYOUT.h, `${id}: ${it.id} im Raum`).toBe(true);
+        expect(it.x >= 0 && it.y >= 0 && it.x < guestLayout(id).w && it.y < guestLayout(id).h, `${id}: ${it.id} im Raum`).toBe(true);
         // nichts auf dem Ausgang
-        if (!f.def.wall && !f.def.rug && !it.on) expect(exitAt(GUEST_LAYOUT, it.x, it.y), `${id}: ${it.id} auf dem Ausgang`).toBeNull();
+        if (!f.def.wall && !f.def.rug && !it.on) expect(exitAt(guestLayout(id), it.x, it.y), `${id}: ${it.id} auf dem Ausgang`).toBeNull();
       }
     }
   });
@@ -49,7 +49,7 @@ describe('Häuser der Bewohner von innen', () => {
         const rot = it.rot ?? 0;
         const w = rot % 2 ? f.d : f.w;
         const d = rot % 2 ? f.w : f.d;
-        const atWall = it.x === 0 || it.y === 0 || it.x + w === GUEST_LAYOUT.w || it.y + d === GUEST_LAYOUT.h;
+        const atWall = it.x === 0 || it.y === 0 || it.x + w === guestLayout(id).w || it.y + d === guestLayout(id).h;
         expect(atWall, `${id}: ${it.id} steht mitten im Raum`).toBe(true);
       }
     }

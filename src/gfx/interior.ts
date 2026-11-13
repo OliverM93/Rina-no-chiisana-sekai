@@ -681,6 +681,36 @@ export function drawPattern(ctx: CanvasRenderingContext2D, def: SurfaceDef, s: n
       ctx.globalAlpha = 1;
       break;
     }
+    case 'hexmosaik': {
+      // Sechseck-Mosaik wie in einem alten Pariser Café: cremefarbene Steinchen, dazwischen braune Sechsecke im Dreiergitter
+      const nx = 9;
+      const ny = 20;
+      const w = s / nx;
+      const pitch = s / ny;
+      const rx = w / 2;
+      const ry = pitch / 1.5;
+      ctx.fillStyle = darken(color, 0.28);
+      ctx.fillRect(0, 0, s, s);
+      for (let j = -1; j <= ny; j++) {
+        for (let i = -1; i <= nx; i++) {
+          const cx = (i + (((j % 2) + 2) % 2) * 0.5 + 0.5) * w;
+          const cy = (j + 0.5) * pitch;
+          const q = i - (j - (((j % 2) + 2) % 2)) / 2;
+          const c3 = (((q - j) % 3) + 3) % 3;
+          ctx.fillStyle = c3 === 0 ? accent : c3 === 1 ? color : lighten(color, 0.12);
+          ctx.beginPath();
+          ctx.moveTo(cx, cy - ry * 0.92);
+          ctx.lineTo(cx + rx * 0.92, cy - ry * 0.46);
+          ctx.lineTo(cx + rx * 0.92, cy + ry * 0.46);
+          ctx.lineTo(cx, cy + ry * 0.92);
+          ctx.lineTo(cx - rx * 0.92, cy + ry * 0.46);
+          ctx.lineTo(cx - rx * 0.92, cy - ry * 0.46);
+          ctx.closePath();
+          ctx.fill();
+        }
+      }
+      break;
+    }
     case 'kacheln': {
       // weiße Fliesen mit Fugen, unten eine farbige Bordüre
       const n = 6;

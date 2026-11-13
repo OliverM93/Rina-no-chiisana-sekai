@@ -37,6 +37,17 @@ const DOOR: RoomLayout['exits'][number] = { cells: [[3, 5]], to: 'draussen', dir
 
 export const GUEST_LAYOUT: RoomLayout = { id: 'haupt', name: 'Zu Besuch', w: 8, h: 6, exits: [DOOR] };
 
+/** Größere Häuser (z. B. Chez Jens) haben einen eigenen Grundriss: Tür unten in der Mitte */
+function sizedLayout(w: number, h: number): RoomLayout {
+  return { id: 'haupt', name: 'Zu Besuch', w, h, exits: [{ ...DOOR, cells: [[Math.floor(w / 2) - 1, h - 1]] }] };
+}
+const LAYOUT_BY_HOUSE: Readonly<Record<string, RoomLayout>> = { 'bistro-jens': sizedLayout(10, 7) };
+
+/** Grundriss eines Gasthauses (Standard 8 × 6) */
+export function guestLayout(houseId: string): RoomLayout {
+  return LAYOUT_BY_HOUSE[houseId] ?? GUEST_LAYOUT;
+}
+
 export const GUEST_HOUSES: Readonly<Record<string, GuestHouse>> = {
   'haus-gisela': {
     npc: 'gisela',
@@ -200,42 +211,84 @@ export const GUEST_HOUSES: Readonly<Record<string, GuestHouse>> = {
   'bistro-jens': {
     npc: 'jens',
     name: 'Chez Jens',
-    wallpaper: 'tapete-bistro',
-    floor: 'boden-bistro',
-    // Tresen mit Hockern quer als bewusster Raumteiler vorn, Regale & Kunst an den Wänden, Tische mit Stühlen am Rand
+    wallpaper: 'tapete-bistro-putz',
+    floor: 'boden-hexmosaik',
+    // Wie ein richtiges Pariser Café: Wandbänke links und rechts, runde Tische mit Bugholzstühlen, Zinktresen hinten rechts, Kugellampen an den Wänden
     items: [
-      { id: 'zinktheke', x: 1, y: 0 },
-      { id: 'bistrolampe', x: 1, y: 0, on: 'zinktheke' },
-      { id: 'eiffelmodell', x: 2, y: 0, on: 'zinktheke' },
-      { id: 'barhocker', x: 1, y: 1 },
-      { id: 'barhocker', x: 2, y: 1 },
-      { id: 'weinregal', x: 4, y: 0 },
-      { id: 'gemaelde-jens', x: 5, y: 0 },
-      { id: 'yucca', x: 7, y: 0 },
-      { id: 'goldspiegel', x: 0, y: 1, rot: 3 },
-      { id: 'kreidetafel', x: 7, y: 2, rot: 1 },
-      { id: 'bistrotisch', x: 0, y: 3 },
-      { id: 'etagere', x: 0, y: 3, on: 'bistrotisch' },
-      { id: 'bistrostuhl', x: 1, y: 3, rot: 1 },
-      { id: 'bistrotisch', x: 7, y: 4 },
-      { id: 'bistrostuhl', x: 6, y: 4, rot: 3 },
-      { id: 'bistrolaeufer', x: 3, y: 3 },
+      // --- Tresen hinten rechts
+      { id: 'zinktheke', x: 7, y: 0 },
+      { id: 'bistrolampe', x: 7, y: 0, on: 'zinktheke' },
+      { id: 'etagere', x: 8, y: 0, on: 'zinktheke' },
+      { id: 'barhocker', x: 7, y: 1 },
+      { id: 'barhocker', x: 8, y: 1 },
+      { id: 'weinregal', x: 9, y: 0 },
+      { id: 'yucca', x: 0, y: 0 },
+      // --- linke Wandbank mit vier Tischen
+      { id: 'bistrobank', x: 0, y: 1, rot: 3 },
+      { id: 'bistrobank', x: 0, y: 4, rot: 3 },
+      { id: 'bistrotisch', x: 1, y: 1 },
+      { id: 'bistrotisch', x: 1, y: 2 },
+      { id: 'bistrotisch', x: 1, y: 4, variant: 'bordeaux' },
+      { id: 'bistrotisch', x: 1, y: 5, variant: 'bordeaux' },
+      { id: 'bistrolampe', x: 1, y: 2, on: 'bistrotisch' },
+      { id: 'bistrostuhl', x: 2, y: 1, rot: 1 },
+      { id: 'bistrostuhl', x: 2, y: 2, rot: 1 },
+      { id: 'bistrostuhl', x: 2, y: 4, rot: 1 },
+      { id: 'bistrostuhl', x: 2, y: 5, rot: 1 },
+      // --- rechte Wandbank mit vier Tischen
+      { id: 'bistrobank', x: 9, y: 2, rot: 1 },
+      { id: 'bistrobank', x: 9, y: 4, rot: 1 },
+      { id: 'bistrotisch', x: 8, y: 2 },
+      { id: 'bistrotisch', x: 8, y: 3, variant: 'bordeaux' },
+      { id: 'bistrotisch', x: 8, y: 4 },
+      { id: 'bistrotisch', x: 8, y: 5, variant: 'bordeaux' },
+      { id: 'bistrolampe', x: 8, y: 4, on: 'bistrotisch' },
+      { id: 'bistrostuhl', x: 7, y: 2, rot: 3 },
+      { id: 'bistrostuhl', x: 7, y: 3, rot: 3 },
+      { id: 'bistrostuhl', x: 7, y: 4, rot: 3 },
+      { id: 'bistrostuhl', x: 7, y: 5, rot: 3 },
+      // --- zwei Tische in der Mitte
+      { id: 'bistrotisch', x: 4, y: 1 },
+      { id: 'bistrotisch', x: 4, y: 3 },
+      { id: 'etagere', x: 4, y: 1, on: 'bistrotisch' },
+      { id: 'bistrostuhl', x: 3, y: 1, rot: 3 },
+      { id: 'bistrostuhl', x: 5, y: 1, rot: 1 },
+      { id: 'bistrostuhl', x: 3, y: 3, rot: 3 },
+      { id: 'bistrostuhl', x: 5, y: 3, rot: 1 },
+      { id: 'bistrolaeufer', x: 4, y: 5 },
+      // --- Wände: Tafel, Bilder, Lampen, Schild
+      { id: 'kugelleuchte', x: 3, y: 0, rot: 0 },
+      { id: 'gemaelde-jens', x: 4, y: 0, rot: 0 },
+      { id: 'kugelleuchte', x: 5, y: 0, rot: 0 },
+      { id: 'poster-kaffee', x: 6, y: 0, rot: 0 },
+      { id: 'schild-toilette', x: 9, y: 0, rot: 0 },
+      { id: 'kreidetafel', x: 0, y: 3, rot: 3 },
+      { id: 'messingleuchte', x: 0, y: 2, rot: 3 },
+      { id: 'messingleuchte', x: 0, y: 5, rot: 3 },
+      { id: 'goldspiegel', x: 9, y: 1, rot: 1 },
+      { id: 'kugelleuchte', x: 9, y: 3, rot: 1 },
+      { id: 'messingleuchte', x: 9, y: 2, rot: 1 },
+      { id: 'messingleuchte', x: 9, y: 5, rot: 1 },
     ],
-    intro: ['Chez Jens von innen! Marmortische, Bugholzstühle, ein Zinktresen – und überall ein bisschen Paris.', 'Und natürlich: Kunst. Ein Dackel unter rosa Himmel, in einem goldenen Rahmen. Sehr fabelhaft.'],
+    intro: ['Chez Jens von innen! Wandbänke in Bordeaux, runde Tische mit Messingrand, Bugholzstühle – und das Mosaik auf dem Boden ist sicher älter als wir alle.', 'Und natürlich: Kunst. Ein Dackel unter rosa Himmel, in einem goldenen Rahmen. Sehr fabelhaft.'],
     comments: {
       zinktheke: ['Der Tresen glänzt. Jens poliert ihn jeden Morgen. Und redet dabei mit sich selbst auf Französisch.'],
       bistrolampe: ['Die grüne Lampe wirft ein warmes Licht. Ich würde hier einziehen. Aber ohne Croissants wär ich bald dick.'],
-      eiffelmodell: ['Ein kleiner Turm aus Eisen. Jens sagt: „Da war ich schon. Und dort. Und dort.“'],
       barhocker: ['Die Barhocker drehen sich. Ich drehe mich einmal. Nur einmal. Zweimal.'],
-      bistrotisch: ['Ein runder Marmortisch. Zwei Croissants passen drauf, ein Kaffee sowieso.'],
+      bistrotisch: ['Ein runder Tisch mit Messingrand. Zwei Croissants passen drauf, ein Kaffee sowieso.'],
       etagere: ['Eine Etagere mit Croissants. Jens sagt: „Eins ist für dich.“ Es sind immer drei.'],
       bistrostuhl: ['Ein Bugholzstuhl. Der wackelt nicht. Jens schwört darauf.'],
+      bistrobank: ['Eine Wandbank in Bordeaux mit Steppnähten. Hier sitzen die Stammgäste. Jens sagt: „Nur die Plätze am Fenster sind besser.“'],
       kreidetafel: ['Tagesgericht: Fischbrötchen à la Jens – mit Herzchen. Die Schrift ist von Hand, leicht sächsisch.'],
       goldspiegel: ['Ein goldener Spiegel. Ich sehe mich lächeln. Jens hat ihn extra dafür aufgehängt.'],
       weinregal: ['Flaschen, ordentlich gelagert. Lars sagt „in Maßen“. Oma sagt: „Wo sind die Gläser?“'],
       'gemaelde-jens': ['Ein echter Jens: der Dackel unter rosa Himmel. Winston sieht ihm ein bisschen ähnlich. Oder umgekehrt.'],
+      'poster-kaffee': ['„Café Fabuleux“ – das Plakat hängt hier, seit Jens eröffnet hat. Er sagt: „Das ist unser Motto.“'],
       bistrolaeufer: ['Ein roter Läufer wie in einem Pariser Bistro. Ich geh extra langsam drüber.'],
       yucca: ['Eine Yucca-Palme am Fenster. Jens sagt, sie sorgt für „Côte d\'Azur im Winter“.'],
+      kugelleuchte: ['Eine Kugellampe an einem Messingarm. Abends sieht das Café damit aus wie auf einer Postkarte.'],
+      messingleuchte: ['Eine kleine Wandleuchte mit Stoffschirm. Jens sagt: „Licht ist die halbe Küche.“'],
+      'schild-toilette': ['„TOILETTE“. Jens hat darauf bestanden, dass es auf Französisch bleibt. Es ist dasselbe Wort. Er findet es trotzdem eleganter.'],
     },
   },
 };
