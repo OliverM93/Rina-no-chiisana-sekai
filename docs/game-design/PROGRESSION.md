@@ -52,7 +52,7 @@ der alte abbezahlt ist), Bau dauert Spielzeit.
 | 6 | Keller | 59 800 | 200 800 |
 
 ✅ *Sternchen-Balancing (Nov. 2026):* vorher 19 800 / 34 800 / 49 800 / 69 800 / 89 800 (zusammen 273 800). Gesenkt, weil der
-Katalog inzwischen ≈ 185 k ⭐ Möbel + 62 k ⭐ Flächen umfasst. Mit Bausparen (Papa übernimmt 15 %) zahlt Lina ≈ 171 k.
+Katalog inzwischen ≈ 185 k ⭐ Möbel + 62 k ⭐ Flächen umfasst. Mit Bausparen (Papa übernimmt 25 %) zahlt Lina ≈ 151 k.
 
 **Bewertung**
 - ✅ Gute Kurve: Kosten wachsen ungefähr linear (+10–20 k je Stufe), jede Stufe bringt *neuen Raum* – eine

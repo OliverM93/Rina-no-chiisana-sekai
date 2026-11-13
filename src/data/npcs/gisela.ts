@@ -217,6 +217,8 @@ export const GISELA_WELCOME: readonly string[] = [
 export const GISELA_WELCOME_2: readonly string[] = [
   'Und hör zu: Wenn du an den Bäumen rüttelst, fällt manchmal Obst runter. Am Strand liegen Muscheln.',
   'Was du nicht brauchst, steckst du in die Verkaufskiste vor deinem Haus. Dafür gibt\'s Sternchen.',
+  'Und noch was, Kind: Wer sich mit den Leuten unterhält, ihnen mal eine Kleinigkeit schenkt oder einfach dazusitzt, dem wachsen Herzen. Die siehst du oben im Gespräch.',
+  'Aber nur, wenn du magst. Mitzählen tut hier keiner. Ich bin Oma, nicht vom Finanzamt.',
   'So. Ich geh jetzt Kaffee kochen. Besuch mich mal!',
   '… Und zwar bald. Ich hab das letzte Wort.',
 ];

@@ -247,3 +247,4 @@ anfühlt, ob Neues auffällt und ob der Katalog noch übersichtlich ist.*
 | K2 Ökonomie-Doku | ✅ `GAME_ECONOMY.md`, `PROGRESSION.md` aktualisiert (Katalog 281 Einträge / ≈ 255 k ⭐, Gesamtbedarf ≈ 483 k, Zinsen, Margen) |
 | K3 Katalog-Budget | ✅ Leitlinie in `BALANCING_GUIDELINES.md` §7c, Test `game/catalogBudget.test.ts` (≤ 300 000 ⭐, Möbel-Median ≤ 1 000 ⭐) |
 | Playtest, M1–M3, G1/G2 | ⏸️ unverändert offen |
+| A4 Zins/Kredit/Bausparen | ✅ Variante B: Bauspar-Prämie 15 → 25 % (D30) |

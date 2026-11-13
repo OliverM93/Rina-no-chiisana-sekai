@@ -15,7 +15,7 @@ und Freundschaft als „weiche Währung“. Alle Zahlen hier stammen aus den Dat
   📏 *Einordnung:* 20 000 ⭐ Guthaben → 1 000 ⭐/Woche; die Obergrenze (2 500/Woche, ab 50 000 Guthaben) entspricht grob
   **einer halben bis dreiviertel Stunde gemütlichem Spielen**. Spürbar, aber Fangen bleibt die Hauptquelle. Nach langer Pause
   (max. 26 Wochen nachgeholt) kann es einen schönen Batzen geben (≤ 65 000) – gewollt als Willkommensgeschenk, nicht als Pflicht.
-- **Olafs Bausparen:** Ausbau direkt vom Sparbuch bezahlen → Papa übernimmt 15 % (einmal je Stufe, kein Exploit, weil nur beim Bestellen).
+- **Olafs Bausparen:** Ausbau direkt vom Sparbuch bezahlen → Papa übernimmt 25 % (bis Nov. 2026: 15 %; einmal je Stufe, kein Exploit, weil nur beim Bestellen).
 - **Fänge × 1,5:** Fische und Insekten verkaufen sich seit Nov. 2026 für das 1,5-Fache ihres Grundwerts (`CATCH_PRICE_FACTOR` in `data/species.ts`); Fischgerichte entsprechend teurer (Marge wieder ≈ 1,6×).
 
 ## Quellen (Faucets)
@@ -42,7 +42,7 @@ realistisch **~10–15 k ⭐/h vor dem ×1,5, jetzt eher ~15–25 k ⭐/h** (�
 
 | Senke | Umfang |
 |---|---|
-| **Hausausbau** | 200 800 ⭐ für alle 6 Stufen (9 800 → 59 800), mit Bausparen ≈ 171 k |
+| **Hausausbau** | 200 800 ⭐ für alle 6 Stufen (9 800 → 59 800), mit Bausparen ≈ 151 k |
 | **Möbelkatalog** (alle Stile frei, mit Winterware) | **281 Einträge, zusammen ≈ 255 000 ⭐** (Möbel 138 · 142 570, Tapeten 46 · 28 250, Böden 39 · 33 400, Garten 20 · 17 460, Lieblinge 19 · 20 530, Winter 9 · 8 730, Pflanzen 10 · 4 040); Möbel-Median 850, max. 2 600. Davon sind 201 Einträge (≈ 176 000 ⭐) schon ohne Einzug sichtbar |
 | Galerie | 13 Bilder, zusammen 18 800 ⭐ (900–2 200 je Bild, 1 Angebot/Tag) |
 | Kaffeemaschinen | 650 / 3 200 / 8 800 |

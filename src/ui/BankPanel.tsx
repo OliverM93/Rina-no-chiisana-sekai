@@ -1,7 +1,7 @@
 /**
  * Olafs Dorfkasse: Hausausbau bestellen (als zinsloser Kredit) und
  * zurückzahlen – wann und wie viel man möchte – oder vom Sparbuch bezahlen
- * („Olafs Bausparen“: Papa legt 15 % dazu). Das Sparbuch bringt jeden Montag Zinsen.
+ * („Olafs Bausparen“: Papa legt 25 % dazu). Das Sparbuch bringt jeden Montag Zinsen.
  */
 import { useEffect } from 'preact/hooks';
 import { HOUSE_STAGES } from '../data/house';
@@ -87,7 +87,7 @@ export function BankPanel({ session, panel }: { session: Session; panel: Extract
             <div class="item-desc">{next.description}</div>
             <div class="item-price">Kosten: {formatMoney(next.price)}</div>
             <div class="bank-order">
-              <button class="btn primary" disabled={loan > 0 || data.bank.savings < bausparShare(next.price)} onClick={() => order('sparbuch')} title="Olafs Bausparen: Papa legt 15 % dazu">
+              <button class="btn primary" disabled={loan > 0 || data.bank.savings < bausparShare(next.price)} onClick={() => order('sparbuch')} title="Olafs Bausparen: Papa legt 25 % dazu">
                 📒 Vom Sparbuch: {formatMoney(bausparShare(next.price))}
               </button>
               <button class="btn" disabled={loan > 0} onClick={() => order('kredit')}>
@@ -95,7 +95,7 @@ export function BankPanel({ session, panel }: { session: Session; panel: Extract
               </button>
             </div>
             <div class="soft small-text">
-              Olafs Bausparen: Zahlst du vom Sparbuch, legt Papa 15 % dazu ({formatMoney(next.price - bausparShare(next.price))}).
+              Olafs Bausparen: Zahlst du vom Sparbuch, legt Papa 25 % dazu ({formatMoney(next.price - bausparShare(next.price))}).
               {data.bank.savings < bausparShare(next.price) ? ` Noch ${formatMoney(bausparShare(next.price) - data.bank.savings)} sparen.` : ''}
             </div>
             {loan > 0 && <div class="soft small-text">Erst den offenen Kredit abbezahlen, dann geht es weiter.</div>}

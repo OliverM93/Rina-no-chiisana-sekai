@@ -233,3 +233,14 @@ Welle zu einer bewussten Entscheidung statt zu nachträglichem Gegensteuern.
 **Designprüfung (kurz):** 1 „Mit Thalia kommt etwas Neues“ · 2 Meta-Loop (Einzüge) · 3 Neugier auf den Katalog · 4 jeder Einzug bleibt ein kleines Ereignis ·
 5 keine Änderung · 6 keine Exploits · 7 Säule 2 (ein Satz, keine Liste) und Säule 5 · 8 einfacher: nur ein Toast – weniger persönlich und flüchtig.
 **Verworfen:** Aufgabenliste „X neue Stile“ im Notizbuch (Quest-Log-Gefühl); Pop-up-Fenster beim Einzug.
+
+### D30 · Bauspar-Prämie 25 %, Herzen-Hinweis von Oma (Nov. 2026)
+
+**Anlass:** Audit 4, A4: „Kredit nehmen und das Sparbuch behalten“ schlug die 15 %-Prämie nach ≈ 3,5 Wochen. Außerdem erfährt Lina nirgends, dass Plaudern,
+Geschenke und gemeinsame Momente die Herzen füllen.
+**Entscheidung:** (1) „Olafs Bausparen“ von 15 % auf **25 %** (`BAUSPAR_BONUS`): Lina zahlt 75 % vom Sparbuch, alle sechs Stufen kosten so ≈ 151 000 statt ≈ 171 000 ⭐;
+Bausparen bleibt jetzt etwa 6 Wochen lang die bessere Wahl gegenüber „Kredit + Sparbuch behalten“. Zinsen und Kredit bleiben unverändert (Variante B der Optionen A–D).
+(2) Oma Gisela sagt bei der ersten Begegnung einen Satz zu den Herzen (`GISELA_WELCOME_2`) – bewusst ohne Zahlen und ohne Pflicht.
+**Verworfen:** Zinsen deckeln (nimmt den Anreiz, den Lina wollte), Zinsen bei offenem Kredit aussetzen (fühlt sich wie Strafe an), eine Freundschafts-Übersichtsseite
+(erst im Playtest schauen, ob Lina sie vermisst).
+**Designprüfung (kurz):** 1 Sparen lohnt sich spürbar · 2 Meta-Loop Hausausbau · 5 Ausbau insgesamt ≈ 12 % günstiger (Einnahmen unverändert) · 6 Prämie weiter nur beim Bestellen, einmal je Stufe, keine Ein-/Auszahlungs-Tricks · 7 Säule 2 · 8 einfacher: nichts ändern (Audit-Empfehlung) – von Oli bewusst anders entschieden.
