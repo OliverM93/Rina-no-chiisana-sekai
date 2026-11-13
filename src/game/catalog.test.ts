@@ -1,7 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import type { Season } from '../core/time';
 import { FLOORS, FURNITURE, WALLPAPERS } from '../data/furniture';
-import { availableCategories, availableStyles, availableTypes, type CatalogContext, catalogEntries, designStyleUnlocked, effectiveFilter, filterEntries } from './catalog';
+import { DESIGN_STYLES, STYLE_ARRIVAL_LINES } from '../data/catalog';
+import { availableCategories, availableStyles, availableTypes, type CatalogContext, catalogEntries, designStyleUnlocked, effectiveFilter, filterEntries, isNewStyle, styleSeenFlag } from './catalog';
 
 const SEASONS: Season[] = ['fruehling', 'sommer', 'herbst', 'winter'];
 const ALL_FLAGS = { olafBegruesst: true, oliBegruesst: true, jensBegruesst: true, larsBegruesst: true, thaliaBegruesst: true };
@@ -131,5 +132,36 @@ describe('Katalog: Filter Stil × Kategorie × Typ', () => {
 
   it('Garten hat keine Stil-Zeile', () => {
     expect(availableStyles(entries, 'garten')).toEqual([]);
+  });
+});
+
+describe('Katalog: neue Stile werden angekündigt', () => {
+  it('jeder Stil, der mit einem Einzug kommt, steht in der Einzugs-Zeile dieser Person', () => {
+    for (const st of DESIGN_STYLES.filter((x) => x.arrivesWith)) {
+      expect(STYLE_ARRIVAL_LINES[st.arrivesWith!], st.id).toContain(st.name);
+    }
+  });
+
+  it('die Zeile steht wirklich in den Begrüßungstexten (letzter Satz der Einzugsszene)', async () => {
+    const welcome: Record<string, readonly string[]> = {
+      olaf: (await import('../data/npcs/olaf')).OLAF_WELCOME,
+      oli: (await import('../data/npcs/oli')).OLI_WELCOME,
+      jens: (await import('../data/npcs/jens')).JENS_WELCOME,
+      lars: (await import('../data/npcs/lars')).LARS_WELCOME,
+      thalia: (await import('../data/npcs/thalia')).THALIA_WELCOME,
+    };
+    for (const [npc, line] of Object.entries(STYLE_ARRIVAL_LINES)) expect(welcome[npc], npc).toContain(line);
+  });
+
+  it('„neu“ nur für Einzugs-Stile, die frei und noch nicht angeschaut sind', () => {
+    const none = ctx('sommer');
+    expect(isNewStyle(none, 'darkacademia')).toBe(false); // noch gesperrt
+    expect(isNewStyle(none, 'japandi')).toBe(false); // von Anfang an da, nie „neu“
+    const thalia = ctx('sommer', { thaliaBegruesst: true });
+    expect(isNewStyle(thalia, 'darkacademia')).toBe(true);
+    expect(isNewStyle(thalia, 'brutalismus')).toBe(true);
+    const seen = ctx('sommer', { thaliaBegruesst: true, [styleSeenFlag('darkacademia')]: true });
+    expect(isNewStyle(seen, 'darkacademia')).toBe(false);
+    expect(isNewStyle(seen, 'brutalismus')).toBe(true);
   });
 });

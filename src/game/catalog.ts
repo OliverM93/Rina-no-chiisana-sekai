@@ -48,6 +48,22 @@ export function lineUnlocked(ctx: CatalogContext, line: string): boolean {
   return !(line in DESIGN_STYLE_BY_ID) || designStyleUnlocked(ctx, line as DesignStyle);
 }
 
+/** Merk-Flag: Lina hat diesen Stil im Katalog schon einmal angeschaut (dann verschwindet das „neu“ am Chip) */
+export const styleSeenFlag = (style: DesignStyle): string => `stil-gesehen-${style}`;
+
+/** Gibt es zu diesem Stil ein „neu“? – nur Stile, die mit einem Einzug kommen, schon frei sind und noch nicht angeschaut wurden */
+export function isNewStyle(ctx: CatalogContext, style: DesignStyle): boolean {
+  return !!DESIGN_STYLE_BY_ID[style].arrivesWith && designStyleUnlocked(ctx, style) && !ctx.flags[styleSeenFlag(style)];
+}
+
+/** Lina schaut einen Stil an → das „neu“ geht weg (kein Spielstand-Formatwechsel: ein einfaches Flag) */
+export function markStyleSeen(session: Session, style: DesignStyle): void {
+  if (!session.data || session.data.flags[styleSeenFlag(style)]) return;
+  session.setFlag(styleSeenFlag(style));
+  session.changed();
+  session.save();
+}
+
 /** Nur die Stile, die schon frei sind (für Filter-Chips und die Detailzeile) */
 export function shownStyles(ctx: CatalogContext, styles: readonly DesignStyle[]): DesignStyle[] {
   return styles.filter((s) => designStyleUnlocked(ctx, s));

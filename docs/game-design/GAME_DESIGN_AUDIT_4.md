@@ -180,8 +180,7 @@ erreicht (Finding A9).
 an einem Reisetag von Jens (Dialogzweig, nur Code-Review + Screenshot der Fenstergröße). Beides ist klein; in den Playtest aufnehmen.
 
 **A8 · Ökonomie-Doku ist wieder veraltet [N]** – `GAME_ECONOMY.md` nennt noch „125 Modelle / ≈ 103 300 ⭐“, „Gesamtbedarf ≈ 425 k“,
-in der Quellen-Tabelle „Sparbuch 2 000 ⭐/Monat“, „Insekten/Fische haben fast keine Verwendung“ (seit W6 überholt), Galerie doppelt. Die Küchen-Ausreißerliste (Crêpes 5,8× usw.) habe ich mit meiner einfachen Nachrechnung nicht
-reproduzieren können (dort: nur Bratapfel 6,3× über 3,5×; Balancing-Test ≤ 6,5× grün) – Rechenweg beim Aktualisieren klären.
+in der Quellen-Tabelle „Sparbuch 2 000 ⭐/Monat“, „Insekten/Fische haben fast keine Verwendung“ (seit W6 überholt), Galerie doppelt. Die Küchen-Margen im Dokument stimmen (beim Umsetzen von K2 nachgerechnet; meine erste Nachrechnung im Audit hatte die Stückzahl je Rezept vergessen).
 Empfehlung K2: nach Freigabe aktualisieren (Doku, keine Spiel-Änderung).
 
 **A9 · Preisklassen der Stile ohne erkennbare Logik [N, Wirkung P]** – Ø 569 (Bistro) bis 1 487 (Modern) ohne Bezug dazu, *wann* ein Stil
@@ -239,3 +238,12 @@ trennen (ohne Verhaltensänderung). Passt zur Feature-Pause.
 
 *Auch dieser Audit ersetzt den Playtest nicht. Er zeigt aber, wo ein Playtest zuerst hinschauen sollte: wie sich das Geld jetzt
 anfühlt, ob Neues auffällt und ob der Katalog noch übersichtlich ist.*
+
+## 9. Umsetzung (13. Nov. 2026)
+
+| Maßnahme | Status |
+|---|---|
+| K1 Neue Stile ankündigen | ✅ Satz am Ende jeder Einzugsszene (`STYLE_ARRIVAL_LINES`) + „neu“ am Stil-Chip, bis der Stil einmal angeschaut wurde |
+| K2 Ökonomie-Doku | ✅ `GAME_ECONOMY.md`, `PROGRESSION.md` aktualisiert (Katalog 281 Einträge / ≈ 255 k ⭐, Gesamtbedarf ≈ 483 k, Zinsen, Margen) |
+| K3 Katalog-Budget | ✅ Leitlinie in `BALANCING_GUIDELINES.md` §7c, Test `game/catalogBudget.test.ts` (≤ 300 000 ⭐, Möbel-Median ≤ 1 000 ⭐) |
+| Playtest, M1–M3, G1/G2 | ⏸️ unverändert offen |

@@ -4,6 +4,7 @@
  * erzählt gern trockene Papa-Witze über Steuern und Quittungen.
  */
 import { LOOKS } from './looks';
+import { STYLE_ARRIVAL_LINES } from '../catalog';
 import type { LetterTemplate, NpcDef } from './types';
 
 const STRAND = { x: 30, y: 30, w: 14, h: 3 };
@@ -131,6 +132,7 @@ export const OLAF_WELCOME: readonly string[] = [
   '… und Christin hat schon zweimal den Boden gewischt.',
   'Und hier ist jetzt die Dorfkasse. Wenn du dein Haus ausbauen möchtest, komm einfach zu mir.',
   'Ich leih dir die Sternchen – ganz ohne Zinsen. Zurückzahlen kannst du, wann es dir passt.',
+  STYLE_ARRIVAL_LINES.olaf,
 ];
 
 /** Kontoauszug (höchstens einmal im Monat; `{zinsen}` = letzte Gutschrift, `{guthaben}` werden ersetzt) */

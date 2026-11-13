@@ -4,6 +4,7 @@
  * Mit Oma Gisela liefert er sich liebevolle Wortgefechte („Die Ärzte wollen nur dein Geld!“).
  */
 import { LOOKS } from './looks';
+import { STYLE_ARRIVAL_LINES } from '../catalog';
 import type { NpcDef } from './types';
 
 const STRAND = { x: 20, y: 30, w: 14, h: 3 };
@@ -136,6 +137,7 @@ export const LARS_WELCOME: readonly string[] = [
   'Lass dich drücken. … Okay, du bist kleiner geworden. Oder ich größer.',
   'Meine Praxis steht jetzt am Dorfplatz – mit einer kleinen Apotheke drin.',
   'Da kannst du aus Kräutern Tee machen. Kamille, Pfefferminze … Samen schenk ich dir.',
+  STYLE_ARRIVAL_LINES.lars,
   'Und einmal am Tag check ich dich durch. Ärztliche Anordnung!',
   'So. Und jetzt muss ich zu Oma. Die hat schon dreimal angerufen, dass sie gesund ist.',
 ];

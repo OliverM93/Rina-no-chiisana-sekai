@@ -68,6 +68,18 @@ export const DESIGN_STYLES: readonly DesignStyleDef[] = [
   { id: 'cyberpunk', name: 'Cyberpunk', blurb: 'Neonlicht, Kabel und Bildschirme – Zockerabende mit Stil.', arrivesWith: 'oli' },
 ];
 
+/**
+ * Ein Satz am Ende der Einzugsszene: Wer einzieht, bringt neue Einrichtungsstile mit (siehe `arrivesWith`) und sagt es –
+ * in seiner eigenen Stimme, ohne Aufgabenliste. Ein Test sorgt dafür, dass jeder Stil darin vorkommt.
+ */
+export const STYLE_ARRIVAL_LINES: Readonly<Record<'olaf' | 'oli' | 'jens' | 'lars' | 'thalia', string>> = {
+  olaf: 'Und weil Christin Ordnung liebt: Im Möbelkatalog gibt es jetzt Minimalismus und Skandinavisch – nur das Nötige, schön sortiert.',
+  oli: 'Ach ja, im Möbelkatalog gibt es jetzt Space Age und Cyberpunk. Rein zufällig meine Lieblingsstile. 😇',
+  jens: 'Und im Möbelkatalog gibt es jetzt Französisches Bistro, Art déco und Memphis – très chic, ma chérie!',
+  lars: 'Und für jedes Loft: Im Möbelkatalog gibt es jetzt Industrial – Backstein, Stahl, olle Fabriklampen. Sehr ich.',
+  thalia: 'Ich hab dem Möbelkatalog übrigens Dark Academia und Brutalismus mitgebracht. Beton ist gemütlich, wenn man genug Kissen hat!',
+};
+
 export const DESIGN_STYLE_BY_ID: Readonly<Record<DesignStyle, DesignStyleDef>> = Object.fromEntries(DESIGN_STYLES.map((s) => [s.id, s])) as Record<DesignStyle, DesignStyleDef>;
 
 // ---------------------------------------------------------------- Kategorien & Typen

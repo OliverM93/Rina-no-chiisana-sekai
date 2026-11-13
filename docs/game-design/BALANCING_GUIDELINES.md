@@ -73,6 +73,17 @@ sein, ein häufiger nicht – sonst kippt der Erwartungswert beim Angeln.
 `data/balancing.test.ts` (Audit 3, K5) prüft: Küchen-/Apotheken-Margen 1,3–6,5×, Katalogpreise 50–9 000 ⭐ (über 5 000 nur mit Funktion),
 häufige Arten (Gewicht ≥ 20) ≤ 120 ⭐ und teure Arten (≥ 500 ⭐) selten (Gewicht ≤ 5), Wunsch-Sternchen ≤ 5 000, Hausausbau-Zuwachs 5 000–25 000.
 
+## 7c. Katalog-Budget ✅ (Audit 4, K3)
+
+Inhaltswellen (neue Stile, Möbel-Kits) vergrößern die Sternchen-Senken, aber nicht das Einkommen. Beim Katalog-Umbau im November 2026
+wuchs der Katalog von ≈ 125 000 auf ≈ 255 000 ⭐; erst Lina fiel auf, dass das Sammeln dadurch länger dauerte. Deshalb:
+
+- **Grenzen:** Summe aller Katalogpreise (alle Stile frei, mit Winterware) **≤ 300 000 ⭐**, Möbel-Median **≤ 1 000 ⭐** (Stand: ≈ 255 000 / 850).
+  Zusammen mit dem Hausausbau (≈ 200 800 ⭐) soll „alles besitzen“ in der Größenordnung von höchstens **~35–40 Stunden Angeln** bleiben (📏).
+- **Test:** `game/catalogBudget.test.ts`. Er schlägt fehl, wenn eine Welle die Grenze reißt – das ist gewollt: Dann **bewusst entscheiden**,
+  ob Einkommen/Ausbaupreise mitwachsen (Beispiel: PR „Sternchen-Balancing“) *und erst dann* die Grenze im Test anheben.
+- **Im PR zu jeder Stil-Welle ein Satz**, was sie für Katalog-Summe und Einkommen bedeutet.
+
 ## 8. Was beim Balancing **nicht** gemacht wird
 
 - Keine künstlichen Wartezeiten zum Strecken (Ausnahme: die 10 Min Spielzeit vor Einzügen/Bau – sie sind Pause

@@ -274,6 +274,7 @@ Legende: ✅ erledigt · 🚧 in Arbeit · ⬜ geplant
 - ✅ **Oli in Stufen:** „Zeit zu zweit“-Szenen (eine je Herz), „Zur Herzbank“ mit Jahreszeiten-Zeilen, Jubiläums-Briefe nach 100 Tagen und einem Jahr (Audit F6)
 - ✅ **Einrichten im Fluss:** Katalog im Einrichtungsmodus (Kaufen = in die Hand), Vorrat aus Tasche + Truhe, C „noch eins“, V/1–9 Farbe, Strg+Z rückgängig
 - ✅ **Audit 3 umgesetzt:** Linas Notizbuch (N), Einzüge über Spielen statt Warten (winter-sicher), Enter für Hauptknöpfe, Snake-Rekord gespeichert, Balancing-Test
+- ✅ **Audit 4 umgesetzt (K1–K3):** neue Stile werden bei Einzügen angekündigt + „neu“ am Stil-Chip, Ökonomie-Doku aktualisiert, Katalog-Budget-Test
 - ✅ **Game-Design-Audit 4 (13. Nov. 2026):** [`GAME_DESIGN_AUDIT_4.md`](game-design/GAME_DESIGN_AUDIT_4.md) – Katalog 125 → 272 Einträge (≈ 255 k ⭐), neue Stile kommen stumm mit den Einzügen, Zins/Kredit/Bausparen überlappen, ×1,5 verkürzt Lars' Bedingung; Empfehlung: **Playtest vor weiteren Inhaltswellen**, K1 (Stile ankündigen), K2 (Doku), K3 (Katalog-Budget-Test) nach Freigabe
 - ✅ **Hantelbank-Training (Lina stemmt viel, Oli ist begeistert) & Minispiel Dackel-Snake am Computer** · Türen bleiben nutzbar, wenn ein Bewohner davor steht
 - ✅ **Besuch bei den Bewohnern:** Omas Haus, Olaf & Christins Haus, Thalias Häuschen, Lars' Praxis und Chez Jens von innen, mit Linas Kommentaren zur Einrichtung · **Werkbank/Küche/Apotheke:** zweispaltiges Fenster mit fester Größe (Bauen-Knopf immer sichtbar)

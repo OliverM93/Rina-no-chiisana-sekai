@@ -1,7 +1,7 @@
 # Spielökonomie
 
 Eine Währung: **Sternchen ⭐** (`data/items.ts`, `CURRENCY`). Dazu Materialien (Äste, Steine, Blumen, Ernte …)
-und Freundschaft als „weiche Währung“. Alle Zahlen hier stammen aus den Daten (Stand Nov. 2026).
+und Freundschaft als „weiche Währung“. Alle Zahlen hier stammen aus den Daten (Stand 13. Nov. 2026, nachgerechnet im Audit 4).
 
 ## Grundregeln ✅
 
@@ -22,7 +22,7 @@ und Freundschaft als „weiche Währung“. Alle Zahlen hier stammen aus den Dat
 
 | Quelle | Grenze | Wert (📏) |
 |---|---|---|
-| **Angeln** (17 Arten) | unbegrenzt | Ø 83–104 ⭐ je Fang (gewichtet, je nach Monat); 15–1 200 ⭐ |
+| **Angeln** (17 Arten) | unbegrenzt | Ø ≈ 125–155 ⭐ je Fang (📏 gewichtet, je nach Monat; Audit 3 hatte 83–104 vor dem ×1,5); 30–1 800 ⭐ |
 | **Insekten** (27 Arten) | unbegrenzt, aber man muss sie finden | Ø 51–73 ⭐ je Fang tagsüber, 86–171 ⭐ nachts; Winter wenige, teure Arten (~120 ⭐) |
 | Muscheln & Seesterne | 7 Funde/Tag | 12–60 ⭐ |
 | Felsen | 1×/Tag je Felsen | Kiesel 4 ⭐, Glitzerstein 120 ⭐ (12 %) |
@@ -31,36 +31,36 @@ und Freundschaft als „weiche Währung“. Alle Zahlen hier stammen aus den Dat
 | Eier | Hühner 2–3, Wachteln 3–4 je Tag | 20 / 14 ⭐ |
 | Beet (Blumen, Gemüse, Kräuter) | Plätze & 1 Stufe/Tag | Blumen 22–40 ⭐, Gemüse 10–45 ⭐ × Ertrag |
 | Kochen / Tees / Binden | Zutaten | siehe Margen |
-| Sparbuch-Zinsen | 2 000 ⭐/Monat | vernachlässigbar bis ~200 k Guthaben |
+| Sparbuch-Zinsen | 5 %/Woche, max. 2 500 ⭐/Woche | ab 20 000 ⭐ Guthaben ≈ 1 000 ⭐/Woche (siehe Einordnung oben) |
 | Briefe, Feste, Daily Treats | Ereignisse | Gegenstände, selten Sternchen |
 
 📏 **Grobe Stundenleistung beim Angeln:** Zyklus aus Auswerfen, 2–5,5 s Warten, Einholen und Laufen ≈ 10–15 s
 → etwa 250–350 Fänge/h theoretisch. Mit Wegen zur Verkaufskiste (20 Taschenplätze, 10er-Stapel)
-realistisch **~10–15 k ⭐/h**. **Im Playtest messen!**
+realistisch **~10–15 k ⭐/h vor dem ×1,5, jetzt eher ~15–25 k ⭐/h** (📏). **Im Playtest messen!**
 
 ## Senken (Sinks)
 
 | Senke | Umfang |
 |---|---|
 | **Hausausbau** | 200 800 ⭐ für alle 6 Stufen (9 800 → 59 800), mit Bausparen ≈ 171 k |
-| **Möbelkatalog** | 125 Modelle, zusammen ≈ 103 300 ⭐ (Median 520, max. 8 800) · Tapeten/Böden 21 350 ⭐ |
-| Galerie | 13 Bilder, zusammen 18 800 ⭐ |
+| **Möbelkatalog** (alle Stile frei, mit Winterware) | **281 Einträge, zusammen ≈ 255 000 ⭐** (Möbel 138 · 142 570, Tapeten 46 · 28 250, Böden 39 · 33 400, Garten 20 · 17 460, Lieblinge 19 · 20 530, Winter 9 · 8 730, Pflanzen 10 · 4 040); Möbel-Median 850, max. 2 600. Davon sind 201 Einträge (≈ 176 000 ⭐) schon ohne Einzug sichtbar |
+| Galerie | 13 Bilder, zusammen 18 800 ⭐ (900–2 200 je Bild, 1 Angebot/Tag) |
 | Kaffeemaschinen | 650 / 3 200 / 8 800 |
 | Gewächshaus / Frühbeet | 4 200 / 1 800 |
-| Galerie | 900–2 200 je Bild, 1 Angebot/Tag |
 | Samen | 12–20 ⭐ je Tüte |
-| Herzenswünsche ✅ | Materialien + 5 000 ⭐ (Olafs Steg 3 000, Thalias Aussichtspunkt 2 000) |
+| Herzenswünsche ✅ | Materialien + ≈ 8 000 ⭐ Sternchen-Anteil (Olafs Steg 3 000, Thalias Aussichtspunkt 2 000 …) |
 | Saisonware (Winter, Saison-Tassen) | wiederkehrend |
 
-**Gesamtbedarf** für „alles einmal besitzen“: **≈ 425 k ⭐** (Audit 3, nachgerechnet). Danach gibt es kaum noch Senken außer Samen
-und Galerie.
+**Gesamtbedarf** für „alles einmal besitzen“: **≈ 483 k ⭐** (Katalog 255 k + Hausausbau 200,8 k + Galerie 18,8 k + Wünsche ≈ 8 k; Audit 3: 425 k bei halb so großem Katalog).
+📏 Das sind ≈ 3 800 Fänge à ~128 ⭐, also **≈ 12–25 Stunden reines Angeln** (Audit 3: 17–35 h); gemütlich gemischt ein Mehrfaches.
+Der Katalog soll nicht unbemerkt weiter wachsen: siehe **Katalog-Budget** in `BALANCING_GUIDELINES.md` und `game/catalogBudget.test.ts`.
 
 ## Verarbeitungs-Margen (Ergebnis-Wert ÷ Zutaten-Wert)
 
 | Station | Spanne | Auffällig |
 |---|---|---|
-| Küche (31, davon 7 Fischgerichte 1,6–1,8×) | 1,6 – 6,3× | über 3,5×: Bratapfel 6,3×, Crêpes 5,8×, Lavendelkekse 4,5×, Apfelpfannkuchen 4,4×, Zimtsterne 4,0× – unkritisch, weil Zutaten begrenzt und Kochen keine Geldquelle ist |
-| Apotheke (4) | 1,5 – 2,2× | – |
+| Küche (31, davon 9 Fischgerichte ≈ 1,6×) | 1,6 – 6,3× | über 3,5×: Bratapfel 6,3×, Crêpes 5,8×, Lavendelkekse 4,5×, Apfelpfannkuchen 4,4×, Zimtsterne 4,0× – unkritisch, weil Zutaten begrenzt und Kochen keine Geldquelle ist |
+| Apotheke (5) | 1,5 – 4,3× | Kräutermischung 4,3× (Kräuter-Ernte, begrenzt) |
 | Werkbank-Möbel | 0,8 – 3,2× | Möbelwert zählt nur ¼ → Verkaufen lohnt nicht; sie sind **Deko**, keine Einnahme |
 | Sträuße | 1,2 – 1,8× | Schwarz-Strauß 700 ⭐ (seltene Mischfarbe) |
 | Vasen | **1,0×** | bewusst wertneutral: Deko, keine Geldquelle |
@@ -102,7 +102,8 @@ Zutat (gemischter Salat). Das passt zur Absicht.
    damit Angeln/Fangen verliert seinen extrinsischen Sinn.
 3. **Viele Tagesquellen sind wertmäßig klein** (Muscheln, Obst, Eier, Kiesel). Sie sind als *Ritual* gedacht,
    nicht als Einkommen – das sollte so bleiben, sie dürfen nur nicht zur Pflichtrunde werden.
-4. **Insekten/Fische haben fast keine Verwendung** außer Verkauf (nur Barsch und Hering in Rezepten).
+4. ~~Insekten/Fische haben fast keine Verwendung~~ – seit W6 gibt es 9 Fischgerichte und Schaukästen (Vitrine, Insektenkasten, Fischtafel); Insekten gehen weiter fast nur in den Verkauf.
+5. **Inhaltswellen vergrößern die Senken, nicht das Einkommen** (Audit 4, A3): Der Katalog wuchs seit Audit 3 von ≈ 125 k auf ≈ 255 k ⭐. Gegenmittel: Katalog-Budget (Leitlinie + Test).
 
 ## Empfehlungen 💡
 

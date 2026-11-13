@@ -581,6 +581,19 @@ body {
   flex: none;
 }
 
+/* „neu“ an einem Stil, der mit einem Einzug gekommen ist und noch nicht angeschaut wurde */
+.chip-new {
+  margin-left: 6px;
+  padding: 1px 6px;
+  border-radius: 999px;
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--ui-text);
+  background: var(--ui-butter);
+}
+
 .chip.active {
   background: var(--ui-accent);
   border-color: var(--ui-accent-dark);

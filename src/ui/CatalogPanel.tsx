@@ -10,7 +10,7 @@ import { useEffect, useLayoutEffect, useRef, useState } from 'preact/hooks';
 import { CATEGORY_BY_ID, DESIGN_STYLE_BY_ID } from '../data/catalog';
 import { CURRENCY } from '../data/items';
 import { getSeason } from '../core/time';
-import { availableCategories, availableStyles, availableTypes, type CatalogEntry, catalogContext, catalogEntries, effectiveFilter, filterEntries, type StyleFilter, styleFilterLabel } from '../game/catalog';
+import { availableCategories, availableStyles, availableTypes, type CatalogEntry, catalogContext, catalogEntries, effectiveFilter, filterEntries, isNewStyle, markStyleSeen, type StyleFilter, styleFilterLabel } from '../game/catalog';
 import { formatMoney } from '../game/gameplay';
 import { buyFromCatalog, isSurface } from '../game/home';
 import type { Session } from '../game/session';
@@ -41,7 +41,8 @@ function styleLine(e: CatalogEntry): string {
 export function CatalogPanel({ session }: { session: Session }) {
   useSessionVersion(session);
   const season = getSeason(session.clock());
-  const entries = catalogEntries(catalogContext(session, season));
+  const catCtx = catalogContext(session, season);
+  const entries = catalogEntries(catCtx);
   const categories = availableCategories(entries);
   const [rawNav, setNav] = useState<NavState>(() => {
     const r = remembered && categories.includes(remembered.category) ? remembered : initialNav(categories[0] ?? 'moebel');
@@ -136,6 +137,10 @@ export function CatalogPanel({ session }: { session: Session }) {
     const long = !!d && d.scrollHeight > d.clientHeight + 2;
     if (long !== descLong) setDescLong(long);
   });
+  // Einen neuen Stil anzuschauen (angeklickt oder mit ←/→ erreicht) nimmt das „neu“ weg
+  useEffect(() => {
+    if (filter.style !== 'alle' && filter.style !== 'ohne') markStyleSeen(session, filter.style);
+  }, [filter.style]);
   // neuer Eintrag → ganzer Text wieder zu
   const selKey = `${nav.category}|${nav.type}|${nav.style}|${nav.index}`;
   useEffect(() => setDescOpen(false), [selKey]);
@@ -184,6 +189,7 @@ export function CatalogPanel({ session }: { session: Session }) {
               styles.map((st: StyleFilter) => (
                 <button key={st} tabIndex={-1} class={`chip small ${filter.style === st ? 'active' : ''}`} title={st !== 'alle' && st !== 'ohne' ? DESIGN_STYLE_BY_ID[st].blurb : undefined} onClick={() => pick({ row: 'stil', style: st, index: 0, variant: 0 })}>
                   {styleFilterLabel(st)}
+                  {st !== 'alle' && st !== 'ohne' && isNewStyle(catCtx, st) && <span class="chip-new">neu</span>}
                 </button>
               ))
             )}
