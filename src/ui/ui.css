@@ -1895,6 +1895,13 @@ body:has(.dialog-layer) .decor-bar {
   font-size: 1.05rem;
 }
 
+.bank-order {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 6px 0 4px;
+}
+
 .card.bank .bank-pay {
   margin-top: 8px;
 }

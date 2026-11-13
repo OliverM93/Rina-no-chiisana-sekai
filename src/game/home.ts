@@ -3,7 +3,7 @@
  * verschieben, wegräumen, Tapete & Boden wechseln – und der Hausausbau
  * über Olafs Dorfkasse.
  */
-import { borrow, canBorrow, deposit, repay, withdraw } from '../core/bank';
+import { bausparShare, borrow, canBorrow, deposit, repay, withdraw } from '../core/bank';
 import { addItem as invAdd, countItem, freeSlots, removeItem as invRemove, spaceFor } from '../core/inventory';
 import { keepsAccess, yardBlockedTiles } from '../core/yard';
 import { tileOf } from '../core/worldmap';
@@ -267,17 +267,26 @@ export function nextStage(session: Session) {
   return HOUSE_STAGES[house.stage + 1];
 }
 
-export type OrderResult = 'ok' | 'kredit-offen' | 'fertig' | 'laeuft';
+export type OrderResult = 'ok' | 'kredit-offen' | 'fertig' | 'laeuft' | 'zu-wenig-gespart';
 
-/** Ausbau bestellen: wird als zinsloser Kredit verbucht, fertig nach kurzer Spielzeit (`WAIT_SECONDS`). */
-export function orderExpansion(session: Session): OrderResult {
+/**
+ * Ausbau bestellen, fertig nach kurzer Spielzeit (`WAIT_SECONDS`):
+ * - `kredit`: als zinsloser Kredit (wie bisher)
+ * - `sparbuch`: „Olafs Bausparen“ – Lina zahlt 85 % vom Sparbuch, Papa legt 15 % dazu, kein Kredit
+ */
+export function orderExpansion(session: Session, pay: 'kredit' | 'sparbuch' = 'kredit'): OrderResult {
   const data = session.data;
   if (!data) return 'fertig';
   if (data.house.pending) return 'laeuft';
   const next = nextStage(session);
   if (!next) return 'fertig';
   if (!canBorrow(data.bank)) return 'kredit-offen';
-  borrow(data.bank, next.price);
+  if (pay === 'sparbuch') {
+    const share = bausparShare(next.price);
+    if (data.bank.savings < share) return 'zu-wenig-gespart';
+    data.bank.savings -= share;
+    session.bus.emit('sfx', 'muenzen');
+  } else borrow(data.bank, next.price);
   data.house.pending = { stage: next.stage, day: session.today(), at: session.playTime() };
   session.changed();
   session.save();

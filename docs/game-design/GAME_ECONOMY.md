@@ -11,7 +11,12 @@ und Freundschaft als „weiche Währung“. Alle Zahlen hier stammen aus den Dat
 - **Erinnerungsstücke** (Werkzeuge, einmalige Geschenke) sind unverkäuflich und kommen zurück, falls sie fehlen.
 - **Samen am Samenstand:** Verkaufswert × 2,5, mindestens 12 ⭐ (`data/seedstand.ts`). Misch-Farben nie käuflich.
 - **Kredit** für den Hausausbau: zinslos, ohne Frist, nächster Ausbau erst nach Rückzahlung.
-- **Sparbuch:** 1 %/Monat, max. 2 000 ⭐/Monat, bis zu 12 verpasste Monate werden nachgeholt.
+- **Sparbuch:** 5 % jeden Montag, max. 2 500 ⭐/Woche, bis zu 26 verpasste Wochen werden nachgeholt (bis Nov. 2026: 1 %/Monat, max. 2 000).
+  📏 *Einordnung:* 20 000 ⭐ Guthaben → 1 000 ⭐/Woche; die Obergrenze (2 500/Woche, ab 50 000 Guthaben) entspricht grob
+  **einer halben bis dreiviertel Stunde gemütlichem Spielen**. Spürbar, aber Fangen bleibt die Hauptquelle. Nach langer Pause
+  (max. 26 Wochen nachgeholt) kann es einen schönen Batzen geben (≤ 65 000) – gewollt als Willkommensgeschenk, nicht als Pflicht.
+- **Olafs Bausparen:** Ausbau direkt vom Sparbuch bezahlen → Papa übernimmt 15 % (einmal je Stufe, kein Exploit, weil nur beim Bestellen).
+- **Fänge × 1,5:** Fische und Insekten verkaufen sich seit Nov. 2026 für das 1,5-Fache ihres Grundwerts (`CATCH_PRICE_FACTOR` in `data/species.ts`); Fischgerichte entsprechend teurer (Marge wieder ≈ 1,6×).
 
 ## Quellen (Faucets)
 
@@ -37,7 +42,7 @@ realistisch **~10–15 k ⭐/h**. **Im Playtest messen!**
 
 | Senke | Umfang |
 |---|---|
-| **Hausausbau** | 273 800 ⭐ für alle 6 Stufen (9 800 → 89 800) |
+| **Hausausbau** | 200 800 ⭐ für alle 6 Stufen (9 800 → 59 800), mit Bausparen ≈ 171 k |
 | **Möbelkatalog** | 125 Modelle, zusammen ≈ 103 300 ⭐ (Median 520, max. 8 800) · Tapeten/Böden 21 350 ⭐ |
 | Galerie | 13 Bilder, zusammen 18 800 ⭐ |
 | Kaffeemaschinen | 650 / 3 200 / 8 800 |

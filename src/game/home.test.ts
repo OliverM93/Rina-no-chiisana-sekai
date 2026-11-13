@@ -3,7 +3,7 @@ import { DEFAULT_LINA } from '../core/appearance';
 import { addItem } from '../core/inventory';
 import type { StorageLike } from '../core/save';
 import { INVENTORY_SIZE } from '../core/inventory';
-import { buyFromCatalog, decorStock, moveFurniture, pickUpFurniture, placeFromBag, restoreFurniture, stockCount, variantsOf } from './home';
+import { buyFromCatalog, decorStock, moveFurniture, nextStage, orderExpansion, pickUpFurniture, placeFromBag, restoreFurniture, stockCount, variantsOf } from './home';
 import { giveItem } from './gameplay';
 import { Session } from './session';
 
@@ -94,3 +94,27 @@ describe('Einrichten: Farbe wechseln & Rückgängig', () => {
     expect(variantsOf('herd')).toEqual([]);
   });
 });
+
+describe('Olafs Bausparen', () => {
+  it('Ausbau vom Sparbuch: Lina zahlt 85 %, kein Kredit', () => {
+    const s = newSession();
+    const price = nextStage(s)!.price;
+    s.data!.bank.savings = 1000;
+    expect(orderExpansion(s, 'sparbuch')).toBe('zu-wenig-gespart');
+    s.data!.bank.savings = price;
+    expect(orderExpansion(s, 'sparbuch')).toBe('ok');
+    expect(s.data!.bank.savings).toBe(price - Math.ceil(price * 0.85));
+    expect(s.data!.bank.loan).toBe(0);
+    expect(s.data!.house.pending?.stage).toBe(1);
+  });
+
+  it('als Kredit wie bisher', () => {
+    const s = newSession();
+    expect(orderExpansion(s, 'kredit')).toBe('ok');
+    expect(s.data!.bank.loan).toBe(nextStageLoan());
+  });
+});
+
+function nextStageLoan() {
+  return 9800;
+}

@@ -49,7 +49,14 @@ const ALL = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12] as const;
 const range = (a: number, b: number) => (a <= b ? ALL.filter((m) => m >= a && m <= b) : ALL.filter((m) => m >= a || m <= b));
 const DAY: Hours = [0, 24];
 
-export const FISH: readonly FishDef[] = [
+/**
+ * Verkaufswert von Fängen: Grundwerte unten × 1,5 (Sternchen-Balancing Nov. 2026 – mit dem gewachsenen Katalog
+ * sollen sich Angel- und Kescher-Runden spürbar lohnen). Gerundet auf 5.
+ */
+export const CATCH_PRICE_FACTOR = 1.5;
+const catchPrice = (base: number) => Math.max(5, Math.round((base * CATCH_PRICE_FACTOR) / 5) * 5);
+
+const FISH_BASE: readonly FishDef[] = [
   // Fluss
   { id: 'rotauge', name: 'Rotauge', plural: 'Rotaugen', habitat: 'fluss', months: ALL, hours: DAY, size: 2, price: 40, weight: 40, color: '#b9c6cf', accent: '#d9534f', description: 'Ein silbriger Schwarmfisch mit leuchtend roten Augen. Sehr häufig – und trotzdem hübsch.' },
   { id: 'stichling', name: 'Dreistachliger Stichling', plural: 'Dreistachlige Stichlinge', habitat: 'fluss', months: range(3, 9), hours: DAY, size: 1, price: 25, weight: 30, color: '#9fae8f', accent: '#e0614a', description: 'Winzig, aber mutig! Im Frühling bekommen die Männchen einen roten Bauch.' },
@@ -72,7 +79,9 @@ export const FISH: readonly FishDef[] = [
   { id: 'seepferdchen', name: 'Seepferdchen', plural: 'Seepferdchen', habitat: 'meer', months: range(6, 9), hours: [8, 20], size: 1, shape: 'seepferdchen', price: 1200, weight: 2, color: '#e8b04f', accent: '#c7792f', description: 'Selten! Bei Seepferdchen bekommen die Papas die Babys. 🐴' },
 ];
 
-export const INSECTS: readonly InsectDef[] = [
+export const FISH: readonly FishDef[] = FISH_BASE.map((f) => ({ ...f, price: catchPrice(f.price) }));
+
+const INSECTS_BASE: readonly InsectDef[] = [
   // Blumen
   { id: 'kohlweissling', name: 'Kohlweißling', plural: 'Kohlweißlinge', habitat: 'blumen', shape: 'falter', months: range(4, 10), hours: [7, 20], noRain: true, price: 30, weight: 34, color: '#f7f5ec', accent: '#4a4a4a', description: 'Weiß mit schwarzen Tupfen – der häufigste Schmetterling im Garten.' },
   { id: 'zitronenfalter', name: 'Zitronenfalter', plural: 'Zitronenfalter', habitat: 'blumen', shape: 'falter', months: range(2, 10), hours: [8, 20], noRain: true, price: 70, weight: 22, color: '#f3e45a', accent: '#e08a3a', description: 'Zitronengelb und schon im Februar unterwegs. Er überwintert einfach draußen!' },
@@ -111,6 +120,8 @@ export const INSECTS: readonly InsectDef[] = [
   { id: 'wintermuecke', name: 'Wintermücke', plural: 'Wintermücken', habitat: 'wiese', shape: 'biene', months: range(11, 3), hours: [10, 20], noRain: true, price: 60, weight: 20, color: '#8a8f94', accent: '#d9dde3', description: 'Tanzt an milden Wintertagen in kleinen Schwärmen im Sonnenlicht. Sticht nicht und stört niemanden.' },
   { id: 'schneeschnake', name: 'Schneeschnake', plural: 'Schneeschnaken', habitat: 'wiese', shape: 'ameise', months: range(12, 2), hours: [10, 20], price: 320, weight: 6, color: '#6f6a66', accent: '#c9c4bf', description: 'Eine flügellose Schnake, die mitten im Schnee herumspaziert. Wirkt wie eine zu groß geratene Spinne – ist aber ganz harmlos.' },
 ];
+
+export const INSECTS: readonly InsectDef[] = INSECTS_BASE.map((x) => ({ ...x, price: catchPrice(x.price) }));
 
 export const FISH_BY_ID: Readonly<Record<string, FishDef>> = Object.fromEntries(FISH.map((f) => [f.id, f]));
 export const INSECT_BY_ID: Readonly<Record<string, InsectDef>> = Object.fromEntries(INSECTS.map((i) => [i.id, i]));
