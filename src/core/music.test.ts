@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { composeSection, degreeToMidi, FORM, midiToHz, type Mood, MOODS, moodFor, pickTheme, placeMood, sectionSteps, THEMES, themesFor } from './music';
+import { composeSection, createMoodGate, degreeToMidi, FORM, gateMood, midiToHz, MIN_DWELL_MS, SOFT_DELAY_MS, SONG_ROUNDS, type Mood, MOODS, moodFor, pickTheme, placeMood, sectionSteps, THEMES, themesFor } from './music';
 
 const ALL = Object.keys(MOODS) as Mood[];
 
@@ -89,5 +89,38 @@ describe('Musik', () => {
   it('Hilfsfunktionen', () => {
     expect(midiToHz(69)).toBeCloseTo(440);
     expect(degreeToMidi(MOODS.tag, 7)).toBe(72);
+  });
+});
+
+describe('Musik draußen wechselt nicht ständig', () => {
+  it('ein Lied dauert mehrere Runden (statt nach einer Minute zu wechseln)', () => {
+    expect(SONG_ROUNDS).toBeGreaterThanOrEqual(3);
+  });
+
+  it('weiche Wechsel (Ort, Wetter) brauchen Geduld: erst nach Verzögerung und Mindestdauer', () => {
+    const g = createMoodGate('tag', 0);
+    // Lina läuft an einem Haus vorbei: kurz Ortsthema, dann wieder weg → bleibt beim Tagesthema
+    expect(gateMood(g, 'zuhause', 1000, false)).toBe('tag');
+    expect(gateMood(g, 'zuhause', 1000 + SOFT_DELAY_MS - 1, false)).toBe('tag');
+    expect(gateMood(g, 'tag', 1000 + SOFT_DELAY_MS, false)).toBe('tag');
+    // bleibt der Wunsch lange genug, wechselt es – aber nicht vor der Mindestdauer des aktuellen Liedes
+    expect(gateMood(g, 'regen', 5000, false)).toBe('tag');
+    expect(gateMood(g, 'regen', 5000 + SOFT_DELAY_MS, false)).toBe('tag');
+    expect(gateMood(g, 'regen', MIN_DWELL_MS, false)).toBe('regen');
+  });
+
+  it('hin und her flackernde Wünsche lösen keinen Wechsel aus', () => {
+    const g = createMoodGate('tag', 0);
+    let t = 0;
+    for (let i = 0; i < 20; i++) {
+      t += 4000;
+      expect(gateMood(g, i % 2 ? 'regen' : 'abend', t, false)).toBe('tag');
+    }
+  });
+
+  it('harte Wechsel (ins Haus, Party) gelten sofort', () => {
+    const g = createMoodGate('tag', 0);
+    expect(gateMood(g, 'zuhause', 500, true)).toBe('zuhause');
+    expect(gateMood(g, 'party', 600, true)).toBe('party');
   });
 });

@@ -63,6 +63,8 @@ import { dinnerGuests, isDinnerTime } from '../game/dinner';
 import { activeMeetups, joinMeetup, meetupOf, meetupReply } from '../game/meetups';
 import { CHECKUP_GIFTS, CHECKUP_LINES, LARS_WELCOME } from '../data/npcs/lars';
 import { hashString } from '../core/rng';
+import { buzzAt, drinkAlcohol, drinkWater, effectOf, NO_EFFECT, stage as tipsyStage } from '../core/tipsy';
+import { DRINK_LINES, type DrinkKind, HICCUP_TOASTS, REFUSE_LINES, SOBER_TOAST, STAGE_LINES, WATER_CLEARS_LINES, WATER_PLAIN_LINES } from '../data/tipsy';
 import { canDate, canKiss, type DateKind, giveKiss, haveDate, nextStageScene, playStageScene } from '../game/romance';
 import { SPONTANEOUS_KISS_LINES, WELCOME_KISS_LINES } from '../data/npcs/oli';
 import { KISS } from './Character3D';
@@ -473,6 +475,7 @@ export class World3D {
       // beim Durch-die-Tür-Gehen: keine Kollision (sonst stünde Lina vor der Hauswand)
       // Kaffee-Kick: ein paar Minuten flotter unterwegs
       player.speedFactor = kickActive(this.session) ? KICK_SPEED : 1;
+      this.updateTipsy(player, now / 1000);
       player.update(dtMs, intent, auto ? () => false : solid);
       // Schritte: bei jedem zweiten halben Schritt ein leises Geräusch
       if (player.moving) {
@@ -3466,6 +3469,10 @@ export class World3D {
       this.coffeeMenu(item.itemId, itemDef(item.itemId)?.name ?? f.def.name);
       return;
     }
+    if (f.def.id === 'zinktheke' || f.def.id === 'kuehlschrank' || f.def.id === 'weinregal') {
+      this.drinkMenu(f.def.id);
+      return;
+    }
     if (f.def.coop) {
       this.session.bus.emit('sfx', 'gackern');
       if (this.player) this.fxAt('funkeln', this.player.x, this.player.y);
@@ -3514,6 +3521,83 @@ export class World3D {
     const baseId = f.def.id;
     const guest = this.session.visiting ? GUEST_HOUSES[this.session.visiting]?.comments[baseId] : undefined;
     this.session.bus.emit('dialog:open', { title: guest ? 'Lina' : name, lines: guest ? [...guest] : [f.def.description] });
+  }
+
+  /** Schummrig (Bier & Wein): Bild unscharf und wackelig, Lina torkelt – schwächt sich von selbst ab (`core/tipsy.ts`) */
+  private tipsyOn = false;
+  private nextHiccup = 0;
+  private updateTipsy(player: Character, t: number) {
+    const buzz = buzzAt(this.session.tipsy, this.session.playTime());
+    const fx = buzz >= 0.03 ? effectOf(buzz) : NO_EFFECT;
+    player.speedFactor *= fx.speed;
+    player.drift = fx.drift;
+    player.lean = fx.lean;
+    const style = this.canvas.style;
+    if (fx !== NO_EFFECT) {
+      const roll = Math.sin(t * fx.rollHz * Math.PI * 2) * fx.rollDeg + Math.sin(t * 0.9) * 0.3 * fx.rollDeg;
+      style.filter = `blur(${fx.blur.toFixed(2)}px) saturate(${(1 + 0.12 * fx.lean).toFixed(2)})`;
+      style.transform = `rotate(${roll.toFixed(2)}deg) scale(${fx.zoom.toFixed(3)})`;
+      if (!this.tipsyOn) this.nextHiccup = t + 12;
+      this.tipsyOn = true;
+      if (buzz > 0.7 && t > this.nextHiccup && !this.session.uiBlocking) {
+        this.nextHiccup = t + 18 + (hashString(`hicks:${Math.floor(t)}`) % 14);
+        this.session.bus.emit('toast', { text: HICCUP_TOASTS[hashString(`hicks:${Math.floor(t)}`) % HICCUP_TOASTS.length] });
+      }
+    } else if (this.tipsyOn) {
+      this.tipsyOn = false;
+      style.filter = '';
+      style.transform = '';
+      this.session.bus.emit('toast', { text: SOBER_TOAST });
+    }
+  }
+
+  /** Tresen (Café bei Jens), Retro-Kühlschrank und Weinregal: etwas zu trinken */
+  private drinkMenu(furnitureId: string) {
+    const cafe = this.session.visiting === 'bistro-jens';
+    const pick = (label: string, kind: DrinkKind) => ({ label, onSelect: () => this.serveDrink(kind) });
+    const nothing = { label: '👋 Doch nichts', onSelect: () => undefined };
+    if (furnitureId === 'kuehlschrank') {
+      this.session.bus.emit('dialog:open', {
+        title: 'Kühlschrank',
+        lines: ['Gemüse, Omas Pflaumenmus, Cola Zero … und ganz hinten ein paar Bier. Hm.'],
+        choices: [pick('🍺 Ein Bier', 'bier'), pick('🥤 Cola Zero', 'cola'), pick('💧 Wasser', 'wasser'), nothing],
+      });
+      return;
+    }
+    if (furnitureId === 'weinregal') {
+      this.session.bus.emit('dialog:open', {
+        title: 'Weinregal',
+        lines: ['Flaschen, ordentlich gelagert. Eine davon ist schon offen.'],
+        choices: [pick('🍷 Ein Glas Wein', 'wein'), pick('💧 Wasser', 'wasser'), nothing],
+      });
+      return;
+    }
+    this.session.bus.emit('dialog:open', {
+      title: cafe ? 'Tresen bei Jens' : 'Hausbar',
+      lines: [cafe ? 'Jens strahlt: „Was darf es sein, ma chérie?“' : 'Der Tresen glänzt. Gläser, ein Zapfhahn, ein bisschen Paris.'],
+      choices: [pick('🍺 Ein Bier', 'bier'), pick('🍷 Ein Glas Wein', 'wein'), pick('💧 Wasser', 'wasser'), nothing],
+    });
+  }
+
+  private serveDrink(kind: DrinkKind) {
+    const s = this.session;
+    const now = s.playTime();
+    const place = s.visiting === 'bistro-jens' ? 'cafe' : 'zuhause';
+    const seed = hashString(`${s.today()}:${Math.floor(now / 1000)}:${kind}`);
+    const pickOf = <T,>(list: readonly T[]): T => list[seed % list.length];
+    let lines: string[];
+    if (kind === 'bier' || kind === 'wein') {
+      if (drinkAlcohol(s.tipsy, now, kind) === 'genug') lines = [...pickOf(REFUSE_LINES)];
+      else {
+        const st = tipsyStage(buzzAt(s.tipsy, now));
+        lines = [...DRINK_LINES[kind][place], ...(st === 0 ? [] : [pickOf(STAGE_LINES[st])])];
+      }
+    } else if (kind === 'wasser') {
+      const was = buzzAt(s.tipsy, now);
+      drinkWater(s.tipsy, now);
+      lines = [...DRINK_LINES.wasser[place], pickOf(was > 0.05 ? WATER_CLEARS_LINES : WATER_PLAIN_LINES)];
+    } else lines = [...DRINK_LINES.cola[place]];
+    s.bus.emit('dialog:open', { title: kind === 'bier' ? '🍺 Bier' : kind === 'wein' ? '🍷 Wein' : kind === 'wasser' ? '💧 Wasser' : '🥤 Cola Zero', lines, onClose: () => this.player?.cheer() });
   }
 
   /** Siebträgermaschine: erst Klassiker oder Milchschaum, dann das Getränk */

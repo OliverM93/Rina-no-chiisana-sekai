@@ -40,6 +40,9 @@ export class Character {
   sitting = false;
   running = false;
   speedFactor = 1;
+  /** Schummrig (Bier & Wein): Ablenkung der Laufrichtung (Bogenmaß) und Schwanken des Körpers 0..1 */
+  drift = 0;
+  lean = 0;
   /** Höhe über dem Boden (z. B. Sitzfläche einer Bank), in Kacheln */
   seatHeight = 0;
   /** Für Kompatibilität (Tiefe wird in 3D automatisch richtig) */
@@ -237,6 +240,13 @@ export class Character {
       }
     }
 
+    // Schummrig: die Laufrichtung pendelt sanft hin und her (Tasten und Mausklick-Wege gleichermaßen)
+    if (this.drift > 0 && (dx !== 0 || dy !== 0)) {
+      const a = this.drift * (Math.sin(this.time * 1.7) + 0.6 * Math.sin(this.time * 4.1 + 1));
+      const co = Math.cos(a);
+      const si = Math.sin(a);
+      [dx, dy] = [dx * co - dy * si, dx * si + dy * co];
+    }
     const len = Math.hypot(dx, dy);
     this.moving = len > 0.01 && !this.sitting;
     this.running = this.moving && run;
@@ -299,6 +309,7 @@ export class Character {
     const ground = this.sitting ? 0 : Math.max(0, this.heightAt(px, pz));
     this.chibi.root.position.set(px, ground + this.seatHeight, pz);
     this.chibi.root.rotation.y = this.angle;
+    this.chibi.root.rotation.z = this.lean > 0 ? Math.sin(this.time * 2.3) * 0.09 * this.lean : 0;
     const actK = this.act ? { id: this.act.id, k: 1 - this.act.left / this.act.dur } : undefined;
     this.chibi.pose({ step: this.stepPhase, moving: this.moving, running: this.running, sitting: this.sitting, blink: this.blinkLeft > 0 || (this.kissLeft > 0.25 && this.kissLeft < KISS - 0.25) || (!!actK && actClosesEyes(actK.id, actK.k)), t: this.time, armForward: this.armForward, work: this.sitting ? this.work : undefined, cheer: this.cheerLeft > 0 ? 1 - this.cheerLeft / CHEER : undefined, wave: this.waveLeft > 0 ? 1 - this.waveLeft / WAVE : undefined, idle: this.idleTime, kiss: this.kissLeft > 0 ? 1 - this.kissLeft / KISS : undefined, tiptoe: this.kissTiptoe, act: actK });
   }

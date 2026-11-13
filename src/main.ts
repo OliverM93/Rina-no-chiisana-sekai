@@ -3,7 +3,7 @@
  */
 import { VOICES } from './data/voices';
 import { GameAudio } from './audio/Audio';
-import { moodFor, MOODS, placeMood, type Mood } from './core/music';
+import { createMoodGate, gateMood, moodFor, MOODS, placeMood, type Mood } from './core/music';
 import { homeMood, MUSIC_PLACES } from './data/music';
 import { objectById } from './core/worldmap';
 import { isPrecipitation } from './core/weather';
@@ -93,6 +93,8 @@ async function start() {
   // Stimmung & Umgebung alle 2 Sekunden (echte Zeit); `?musik=bistro` erzwingt ein Thema zum Anhören
   const forcedMood = new URLSearchParams(location.search).get('musik');
   const forced = forcedMood && forcedMood in MOODS ? (forcedMood as Mood) : null;
+  const moodGate = createMoodGate('tag', performance.now());
+  let lastMoodCtx = '';
   window.setInterval(() => {
     const now = session.clock();
     const h = now.getHours();
@@ -113,7 +115,12 @@ async function start() {
         : null;
     const home = homeMood(session.data?.flags ?? {});
     const season = getSeason(now);
-    audio.setMood(forced ?? (title ? 'morgen' : moodFor(h, { raining, snowing: w.kind === 'schnee', inside, party: isPartyTime(session), place, home })), season);
+    const wanted = forced ?? (title ? 'morgen' : moodFor(h, { raining, snowing: w.kind === 'schnee', inside, party: isPartyTime(session), place, home }));
+    // Rein/raus, Party und Titelbild wechseln sofort; Ort, Wetter und Tageszeit draußen nur gedämpft (nicht ständig ein anderes Lied)
+    const ctx = `${inside}|${isPartyTime(session)}|${title}|${forced ?? ''}`;
+    const hard = ctx !== lastMoodCtx;
+    lastMoodCtx = ctx;
+    audio.setMood(gateMood(moodGate, wanted, performance.now(), hard), season);
     audio.setAmbience({
       birds: inside || raining || h < 5 || h >= 20 ? 0 : season === 'winter' ? 0.3 : 1,
       crickets: inside || raining || (h >= 6 && h < 20) || season === 'winter' ? 0 : 1,

@@ -186,6 +186,8 @@ export interface NoteEvent {
 /** Teile eines Liedes: A, variiertes A, B (neue Akkorde & Motiv), C = ruhiges Durchatmen */
 export type Part = 'A' | 'A2' | 'B' | 'C';
 export const FORM: readonly Part[] = ['A', 'A2', 'B', 'A2', 'C'];
+/** So oft wird die Form eines Liedes gespielt (jedes Mal leicht variiert), bevor das nächste Lied beginnt – ca. 2–3 Minuten */
+export const SONG_ROUNDS = 3;
 
 /** Länge eines Abschnitts (4 Takte) in Achteln */
 export function sectionSteps(mood: Mood): number {
@@ -338,6 +340,50 @@ export function moodFor(
   if (hour < 9) return 'morgen';
   if (hour >= 18) return 'abend';
   return 'tag';
+}
+
+/**
+ * Stimmungs-Dämpfer: Draußen soll die Musik nicht ständig wechseln (früher bei jedem Haus, an dem Lina vorbeikam).
+ * Ein „weicher“ Wechsel (anderer Ort, Wetter, Tageszeit) gilt erst, wenn er `SOFT_DELAY_MS` lang anhält **und** die
+ * letzte Stimmung mindestens `MIN_DWELL_MS` lief. „Harte“ Wechsel (rein/raus aus dem Haus, Party, Titelbild) sofort.
+ */
+export const SOFT_DELAY_MS = 20_000;
+export const MIN_DWELL_MS = 75_000;
+
+export interface MoodGate {
+  mood: Mood;
+  since: number;
+  pending: Mood | null;
+  pendingSince: number;
+}
+
+export function createMoodGate(initial: Mood, now: number): MoodGate {
+  return { mood: initial, since: now, pending: null, pendingSince: 0 };
+}
+
+/** Welche Stimmung wird wirklich gespielt? (`wanted` = was `moodFor` gerade will) */
+export function gateMood(g: MoodGate, wanted: Mood, now: number, hard: boolean): Mood {
+  if (wanted === g.mood) {
+    g.pending = null;
+    return g.mood;
+  }
+  if (hard) {
+    g.mood = wanted;
+    g.since = now;
+    g.pending = null;
+    return g.mood;
+  }
+  if (g.pending !== wanted) {
+    g.pending = wanted;
+    g.pendingSince = now;
+    return g.mood;
+  }
+  if (now - g.pendingSince >= SOFT_DELAY_MS && now - g.since >= MIN_DWELL_MS) {
+    g.mood = wanted;
+    g.since = now;
+    g.pending = null;
+  }
+  return g.mood;
 }
 
 /** Frequenz einer MIDI-Note */
