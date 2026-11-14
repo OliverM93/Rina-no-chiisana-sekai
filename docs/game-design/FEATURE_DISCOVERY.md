@@ -201,7 +201,7 @@ Bewertung: ●●● hoch · ●● mittel · ● gering. Wirkung ist [V], bis e
 | B2 | Album der Momente (Text) | ●●● | ● | ● | **1 – jetzt** |
 | – | **Playtest mit Lina** | ●●● | ●● | – | **vor Welle 2** |
 | B1 | Fotos im Spiel + Wandbild | ●●● | ●● | ●● | 2 |
-| C | Besuch bei Lina (auf Einladung) | ●●● | ●● | ●● | 2 |
+| C | Besuch bei Lina (auf Einladung) | ●●● | ●● | ●● | ✅ umgesetzt |
 | D | Rekordfänge | ●● | ● | ● | 2 |
 | E | Seltene Momente (2 als Test) | ●● | ● | ● | 2 |
 | H | Bewohner besuchen einander | ●● | ●● | ●● | 3 |
