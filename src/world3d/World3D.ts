@@ -58,7 +58,7 @@ import { OLI_WELCOME } from '../data/npcs/oli';
 import { DINNER_LINES, DINNER_OPENERS, JENS_WELCOME } from '../data/npcs/jens';
 import { pairChatKey, PAIR_CHATS } from '../data/gespraeche';
 import { GUEST_HOUSES } from '../data/gastHaeuser';
-import { TRAINING_OLI, TRAINING_REPS, TRAINING_SOLO } from '../data/training';
+import { TRAINING_OLI, TRAINING_REPS, TRAINING_SOLO, TRAINING_THALIA, TRAINING_THALIA_ABSENT, TRAINING_THALIA_LEAD } from '../data/training';
 import { dinnerGuests, isDinnerTime } from '../game/dinner';
 import { activeMeetups, joinMeetup, meetupOf, meetupReply } from '../game/meetups';
 import { CHECKUP_GIFTS, CHECKUP_LINES, LARS_WELCOME } from '../data/npcs/lars';
@@ -80,6 +80,7 @@ import { OLAF_CALENDAR_JOKES } from '../data/npcs/olaf';
 import type { DecorCommand, FxKind } from '../game/session';
 import { Particles3D } from './Particles3D';
 import {
+  activeBait,
   biteFish,
   catchFish,
   catchInsect,
@@ -1346,6 +1347,8 @@ export class World3D {
       this.session.bus.emit('toast', { text: 'Hier beißt gerade nichts. Vielleicht später?' });
       return true;
     }
+    const bait = activeBait(this.session);
+    if (bait) this.session.bus.emit('toast', { text: `${itemDef(bait)?.name ?? 'Köder'} am Haken – das wird bestimmt etwas Besonderes! 🪱`, icon: itemIconUrl(bait) });
     player.armForward = -1.0;
     const tip = this.rodTip() ?? new THREE.Vector3(player.x * UNIT, 1, player.y * UNIT);
     this.fishing.cast(tip, water.point, fish);
@@ -1382,6 +1385,7 @@ export class World3D {
       }, 250);
     }
     const result = catchFish(this.session, fish);
+    if (result.pracht && player) window.setTimeout(() => { this.fxAt('funkeln', player.x, player.y); this.session.bus.emit('sfx', 'fang'); }, 700);
     // Beschreibung nur beim ersten Fang (neu im Sammelbuch) – sonst nur kurz oben melden, ohne Unterbrechung
     if (result.isNew) this.session.bus.emit('dialog:open', { title: fish.name, lines: [...catchMessage(fish.name, 'fisch', result), FISH_BY_ID[fish.id].description] });
     else this.session.bus.emit('toast', { text: catchMessage(fish.name, 'fisch', result).join(' '), icon: itemIconUrl(fish.id) });
@@ -3565,7 +3569,7 @@ export class World3D {
       this.yard.updateLight(this.night);
       return;
     }
-    if (item.itemId === 'hantelbank' && !this.session.visiting) {
+    if (item.itemId === 'hantelbank' && (!this.session.visiting || this.session.visiting === 'haus-thalia')) {
       this.trainDialog(uid);
       return;
     }
@@ -3723,6 +3727,22 @@ export class World3D {
 
   /** Hantelbank: Lina darf stemmen (Gag: viel Gewicht, süßes Lächeln) */
   private trainDialog(uid: string) {
+    if (this.session.visiting === 'haus-thalia') {
+      const thalia = this.guestChars.get('thalia');
+      if (!thalia?.visible) {
+        this.session.bus.emit('dialog:open', { title: 'Lina', lines: [...TRAINING_THALIA_ABSENT] });
+        return;
+      }
+      this.session.bus.emit('dialog:open', {
+        title: 'Thalia',
+        lines: [...TRAINING_THALIA_LEAD],
+        choices: [
+          { label: '💪 Zusammen trainieren', onSelect: () => this.trainLina(uid) },
+          { label: '👋 Später', onSelect: () => undefined },
+        ],
+      });
+      return;
+    }
     const oliHere = !!this.homeOli?.visible;
     if (oliHere && this.homeOliBench === uid) {
       this.session.bus.emit('dialog:open', { title: 'Hantelbank', lines: ['Oli ist gerade dran. „Nur ein Satz noch, Lini!“'] });
@@ -3764,7 +3784,9 @@ export class World3D {
       extra.children.forEach((pl) => (pl.visible = false));
     }
     this.session.bus.emit('sfx', 'klick');
-    const oli = this.homeOli?.visible ? this.homeOli : null;
+    // Partner beim Training: Oli zu Hause, bei Thalia sie selbst (ohne Freundschaftspunkte)
+    const thaliaChar = this.session.visiting === 'haus-thalia' && this.guestChars.get('thalia')?.visible ? this.guestChars.get('thalia')! : null;
+    const oli = thaliaChar ?? (this.homeOli?.visible && !this.session.visiting ? this.homeOli : null);
     if (oli) oli.faceTowards(player.x, player.y);
     const total = 9000;
     let shown = -1;
@@ -3786,8 +3808,9 @@ export class World3D {
       this.cutscene = false;
       // Bewusst ohne Freundschaftspunkte (Audit 3, K2): ein Gag-Moment, kein weiteres „heute schon?“
       const day = this.session.today();
-      const lines = oli ? [...TRAINING_OLI[hashString(day) % TRAINING_OLI.length]] : [...TRAINING_SOLO[hashString(day) % TRAINING_SOLO.length]];
-      this.session.bus.emit('dialog:open', { title: oli ? 'Oli' : 'Lina', lines });
+      const pool = thaliaChar ? TRAINING_THALIA : TRAINING_OLI;
+      const lines = oli ? [...pool[hashString(day) % pool.length]] : [...TRAINING_SOLO[hashString(day) % TRAINING_SOLO.length]];
+      this.session.bus.emit('dialog:open', { title: thaliaChar ? 'Thalia' : oli ? 'Oli' : 'Lina', lines });
     });
   }
 

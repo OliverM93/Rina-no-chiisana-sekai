@@ -48,6 +48,8 @@ export interface CollectionEntry {
   count: number;
   /** Tag des ersten Fangs (JJJJ-MM-TT) */
   firstDay: string;
+  /** Größter Fang in cm (nur Fische; ältere Spielstände haben noch keinen) */
+  bestCm?: number;
 }
 
 export type Collection = Record<string, CollectionEntry>;
@@ -63,14 +65,54 @@ export function registerCatch(c: Collection, id: string, day: string): boolean {
   return true;
 }
 
+// ---------------------------------------------------------------------------
+// Fanggröße (Rekordfänge)
+// ---------------------------------------------------------------------------
+
+/** [klein, groß] in cm */
+export type LengthRange = readonly [number, number];
+
+/** Ab diesem Anteil der Spanne ist ein Fang ein Prachtexemplar */
+export const PRACHT_FROM = 0.9;
+
+/** Ab wie viel cm ist es ein Prachtexemplar? */
+export function prachtFrom(range: LengthRange): number {
+  return Math.round(range[0] + PRACHT_FROM * (range[1] - range[0]));
+}
+
+export function isPracht(cm: number, range: LengthRange): boolean {
+  return cm >= prachtFrom(range);
+}
+
+/**
+ * Länge eines Fangs (r = 0..1). Ohne Köder meist klein bis mittel (u^1,8 → rund 6 % Prachtexemplare);
+ * mit Spezialköder immer ein Prachtexemplar.
+ */
+export function rollLength(range: LengthRange, r: number, bait = false): number {
+  const [min, max] = range;
+  const t = bait ? PRACHT_FROM + (1 - PRACHT_FROM) * r : Math.pow(r, 1.8);
+  const cm = Math.round(min + t * (max - min));
+  return bait ? Math.max(cm, prachtFrom(range)) : cm;
+}
+
+/** Merkt sich den größten Fang. Gibt die bisherige Bestmarke zurück (undefiniert = noch keine bekannt). */
+export function recordLength(c: Collection, id: string, cm: number): number | undefined {
+  const e = c[id];
+  if (!e) return undefined;
+  const before = e.bestCm;
+  if (before === undefined || cm > before) e.bestCm = cm;
+  return before;
+}
+
 export function normalizeCollection(raw: unknown, isKnown: (id: string) => boolean): Collection {
   const out: Collection = {};
   if (!raw || typeof raw !== 'object' || Array.isArray(raw)) return out;
   for (const [id, e] of Object.entries(raw as Record<string, unknown>)) {
     if (!isKnown(id) || !e || typeof e !== 'object') continue;
-    const { count, firstDay } = e as Record<string, unknown>;
+    const { count, firstDay, bestCm } = e as Record<string, unknown>;
     if (typeof count !== 'number' || !Number.isFinite(count) || count < 1) continue;
     out[id] = { count: Math.floor(count), firstDay: typeof firstDay === 'string' ? firstDay : '' };
+    if (typeof bestCm === 'number' && Number.isFinite(bestCm) && bestCm > 0) out[id].bestCm = Math.min(1000, Math.round(bestCm));
   }
   return out;
 }

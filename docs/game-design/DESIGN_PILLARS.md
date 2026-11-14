@@ -46,6 +46,7 @@ Echtzeit-Tage, Jahreszeiten, Wetter, Tagesabläufe, Treffen, Feste. Die Welt ist
 - ✅ Bewohner haben Tagesabläufe, treffen sich (Kaffeeklatsch, Angeln, Training), feiern Samstagsparty,
   Sonntagsessen bei Jens, Jens verreist und schreibt Postkarten.
 - **Prüffrage:** Macht es die Welt glaubwürdiger, oder ist es ein Knopf, der an einem Gebäude klebt?
+- **Prüffrage (Entdecken, seit Feature Discovery):** Kann Lina hier etwas selbst entdecken, statt es nur aus einer Liste abzuhaken?
 - **Grenze:** Echtzeit darf *Abwechslung* schaffen, aber nie *Warten* erzwingen (Fortschritt hängt deshalb an
   Meilensteinen und Spielzeit, nicht an Kalendertagen – Entscheidung M8j).
 

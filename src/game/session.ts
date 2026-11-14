@@ -32,6 +32,7 @@ import { annexOffsets, emptyRoom, HOUSE_RULES, MAX_STAGE, roomLayouts, STARTER_H
 import { VILLAGE_LAYOUT, VILLAGE_OBJECTS, VILLAGE_SPAWN } from '../data/maps/village';
 import { NPCS } from '../data/npcs';
 import type { InteractionContext } from '../data/interactions';
+import { syncAlbum } from './album';
 
 /** Arten von Partikel-Effekten */
 export type FxKind = 'staub' | 'platsch' | 'funkeln' | 'herzen' | 'erde' | 'konfetti' | 'atem';
@@ -207,6 +208,7 @@ export class Session {
 
   /** Meldet der Oberfläche, dass sich Spielzustand geändert hat. */
   changed() {
+    syncAlbum(this);
     this.bus.emit('state:changed', undefined);
   }
 

@@ -35,6 +35,7 @@ import { checkSammlungen } from './sammlungen';
 import { memoryLinesFor, memoryTags, takeMemory } from './erinnerungen';
 import { winstonOmaLines } from './pet';
 import { tipsyComment } from './tipsy';
+import { noteTaste } from './friends';
 
 // ---------------------------------------------------------------------------
 // Tasche & Sternchen
@@ -326,6 +327,7 @@ export function giftToNpc(session: Session, npcId: string, itemId: string): Gift
   if (!npc || isKeepsake(itemId) || !takeItem(session, itemId, 1)) return null;
   const st = npcState(session, npcId);
   const r = giveGift(st, giftPreferences(npc.preferences, itemId), itemId, session.today());
+  noteTaste(session, npcId, r.reaction, itemId);
   const lines: string[] = [];
   if (r.repeatToday) {
     lines.push(...npc.dialogue.giftRepeat);

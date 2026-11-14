@@ -204,6 +204,44 @@ const DRAW: Record<string, Draw> = {
     ellipse(ctx, 16, 19, 11, 8, c, darken(c, 0.3), 1.5);
     shine(ctx, 12, 15, 3, 0.7);
   },
+  'koeder-gluckswurm': (ctx) => {
+    const c = '#e58fb0';
+    ctx.strokeStyle = darken(c, 0.3);
+    ctx.lineWidth = 8;
+    ctx.beginPath();
+    ctx.moveTo(6, 22);
+    ctx.bezierCurveTo(10, 10, 18, 26, 22, 12);
+    ctx.stroke();
+    ctx.strokeStyle = c;
+    ctx.lineWidth = 5.4;
+    ctx.beginPath();
+    ctx.moveTo(6, 22);
+    ctx.bezierCurveTo(10, 10, 18, 26, 22, 12);
+    ctx.stroke();
+    ellipse(ctx, 24, 10, 3.6, 3.4, lighten(c, 0.1), darken(c, 0.3), 1);
+    ellipse(ctx, 25, 9, 0.9, 0.9, '#4a2a35');
+    for (const [x, y] of [[8, 6], [27, 22], [14, 6]]) {
+      ctx.fillStyle = '#ffe58a';
+      ctx.beginPath();
+      ctx.arc(x, y, 1.4, 0, Math.PI * 2);
+      ctx.fill();
+    }
+  },
+  'koeder-teig': (ctx) => {
+    const c = '#e9c08a';
+    ellipse(ctx, 16, 19, 11, 8, c, darken(c, 0.3), 1.5);
+    ellipse(ctx, 13, 17, 5, 3.4, lighten(c, 0.15));
+    ellipse(ctx, 20, 21, 3, 2, darken(c, 0.12));
+    shine(ctx, 11, 15, 2.4, 0.7);
+    ctx.strokeStyle = '#8aa86b';
+    ctx.lineWidth = 1.6;
+    for (const dx of [-5, 0, 5]) {
+      ctx.beginPath();
+      ctx.moveTo(16 + dx, 10);
+      ctx.bezierCurveTo(14 + dx, 7, 18 + dx, 5, 16 + dx, 2);
+      ctx.stroke();
+    }
+  },
   glitzerstein: (ctx) => {
     const c = '#b9a6f2';
     ctx.beginPath();
