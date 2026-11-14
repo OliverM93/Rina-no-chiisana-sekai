@@ -196,9 +196,9 @@ Bewertung: ●●● hoch · ●● mittel · ● gering. Wirkung ist [V], bis e
 
 | # | Idee | Wirkung | Aufwand | Risiko | Welle |
 |---|---|---|---|---|---|
-| A | Freundschaften-Seite | ●●● | ● | ● | **1 – jetzt** |
-| F | Mit Thalia trainieren | ●● | ● | ● | **1 – jetzt** |
-| B2 | Album der Momente (Text) | ●●● | ● | ● | **1 – jetzt** |
+| A | Freundschaften-Seite | ●●● | ● | ● | ✅ umgesetzt (Welle 1) |
+| F | Mit Thalia trainieren | ●● | ● | ● | ✅ umgesetzt (Welle 1) |
+| B2 | Album der Momente (Text) | ●●● | ● | ● | ✅ umgesetzt (Welle 1) |
 | – | **Playtest mit Lina** | ●●● | ●● | – | **vor Welle 2** |
 | B1 | Fotos im Spiel + Wandbild | ●●● | ●● | ●● | 2 |
 | C | Besuch bei Lina (auf Einladung) | ●●● | ●● | ●● | 2 |
@@ -278,3 +278,7 @@ Bewertung: ●●● hoch · ●● mittel · ● gering. Wirkung ist [V], bis e
 - **Die Audits 2, 3 und 4 haben jeweils „erst Playtest“ empfohlen, und jedes Mal wurde weitergebaut.** Welle 1 ist eine vierte Ausnahme. Ich halte sie für vertretbar, weil sie nichts Neues aufmacht. Wer streng sein will, wählt bei E1 den Playtest zuerst.
 - **Meine Aufwandsschätzungen waren zuletzt zu niedrig**, wenn 3D-Wegfindung im Spiel war (Café, Häuser von innen). C und H habe ich deshalb mit mittlerem Risiko angesetzt.
 - **Das Raster belohnt Vollständigkeit.** Ein Spiel für eine Person muss nicht alle 12 Kästchen füllen. Händler, Turniere und Gebiete fehlen – und ich empfehle, es dabei zu lassen.
+
+## Entscheidungen der Nutzerin/des Nutzers (14. Nov. 2026)
+
+E1 Welle 1 jetzt ✅ · E2 Album erst als Text ✅ · E3 Hundekörbchen nicht im Katalog ✅ · E4 Omas Geburtstag: erst einmal offen ❓ · E5 Prüffrage „Kann Lina hier etwas selbst entdecken?“ ja · E6 Besuch bei Lina nur auf Einladung ✅ (🗓️). Dazu: **Rekordfänge ja** – und zusätzlich seltenere Exemplare, besondere Fänge und bastelbare bzw. von Winston ausgebuddelte Spezialköder, die garantiert ein besonderes Exemplar bringen (🗓️, eigener PR).
