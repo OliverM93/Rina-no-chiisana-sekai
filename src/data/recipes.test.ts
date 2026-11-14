@@ -9,6 +9,7 @@ describe('Rezepte', () => {
   it('ergeben Möbel und brauchen echte Zutaten', () => {
     for (const r of RECIPES) {
       if (r.group === 'blumen') expect(!!FURNITURE_BY_ITEM[r.result] || itemDef(r.result)?.category === 'blume', r.id).toBe(true);
+      else if (r.result.startsWith('koeder-')) expect(itemDef(r.result)?.category, r.id).toBe('material'); // Angelköder
       else if ((r.station ?? 'werkbank') === 'werkbank') expect(FURNITURE_BY_ITEM[r.result], r.id).toBeTruthy();
       else expect(itemDef(r.result)?.category, r.id).toBe('essen');
       for (const i of r.ingredients) expect(isKnownItem(i.itemId), `${r.id}: ${i.itemId}`).toBe(true);

@@ -266,6 +266,12 @@ vergeht. Kein Fortschritt, keine Belohnung, keine Zahlen, nichts gespeichert –
 **Begründung:** weniger Knöpfe, nichts bleibt versteckt, die Szene fühlt sich wie ein Moment an statt wie Verwaltung. **Verworfen:** nur umbenennen („Ein ruhiger Moment“) – bliebe ein unsichtbarer Menüpunkt.
 **Designprüfung (kurz):** 1 ein ruhiger Moment mit Oli beim Wiedersehen · 2 Mikro-/Wochenloop, kein Tagesloop (jede Szene nur einmal) · 5 keine Punkte, keine Wirtschaft · 6 keine Exploits · 7 Säule 2 (nichts Verpflichtendes: Lina kann das Gespräch jederzeit schließen) · 8 einfacher: Menüpunkt nur umbenennen.
 
+### D34 · Rekordfänge und Spezialköder (Nov. 2026)
+
+**Anlass:** [`FEATURE_DISCOVERY.md`](FEATURE_DISCOVERY.md) D: Angeln ist die häufigste Tätigkeit, hat aber die geringste Tiefe; der 50. Barsch ist wie der erste. Lina wünschte sich Rekordfänge, selteneres und besondere Köder, die man bauen oder von Winston ausbuddeln lassen kann.
+**Entscheidung:** Jeder Fisch hat eine Länge; das Sammelbuch zeigt den größten Fang und markiert Prachtexemplare (≈ 6 %). Zwei Köder, die automatisch benutzt werden: **Duftköder** (Werkbank) und **Glückswurm** (Winston, ≈ 10 % seiner Funde, lockt auch Seltenes). Beide garantieren ein Prachtexemplar.
+**Bewusst nicht:** Preisaufschlag für Größe (sonst dominiert Angeln die Wirtschaft), Ranglisten, Rekord-Ziel im Notizbuch, neue Pflicht-Fische (würden die Urkunde „Alle Fische“ wieder öffnen).
+**Designprüfung:** 1 „Oh, der ist größer als mein alter!“ · 2 Mikro-Loop im häufigsten Handgriff; Köder = kleines Wochenziel · 3 Jeder Wurf kann etwas Besonderes sein, Winston hat einen Grund zum Buddeln · 4 hält Angeln auch nach dem vollen Sammelbuch interessant · 5 keine Wirtschaftsänderung (Köder 15–25 ⭐, Prachtexemplare gleich viel wert) · 6 Risiko „Grind“: Köder halten nur für einen Fang, es gibt kein Rekord-Ziel, Rekorde fallen nebenbei; Risiko „versehentlich verbraucht“: Toast beim Auswerfen, Lagern in der Truhe · 7 stärkt Säulen 2 und 4 · 8 einfachere Lösung: nur Prachtexemplar als seltener Moment ohne Zahlen, ginge, aber ohne Rekord-Gefühl.
 ### D33 · Welle 1 der Feature Discovery: Freundschaften, Album, Training mit Thalia (Nov. 2026)
 
 **Anlass:** [`FEATURE_DISCOVERY.md`](FEATURE_DISCOVERY.md): Herzen und Vorlieben sind nur im Dialog sichtbar, Momente hinterlassen keine Spur, Thalias neue Persönlichkeit hat keine Handlung.

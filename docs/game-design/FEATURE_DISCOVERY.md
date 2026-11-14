@@ -202,7 +202,7 @@ Bewertung: ●●● hoch · ●● mittel · ● gering. Wirkung ist [V], bis e
 | – | **Playtest mit Lina** | ●●● | ●● | – | **vor Welle 2** |
 | B1 | Fotos im Spiel + Wandbild | ●●● | ●● | ●● | 2 |
 | C | Besuch bei Lina (auf Einladung) | ●●● | ●● | ●● | 2 |
-| D | Rekordfänge | ●● | ● | ● | 2 |
+| D | Rekordfänge (mit Köder) | ●● | ● | ● | ✅ umgesetzt |
 | E | Seltene Momente (2 als Test) | ●● | ● | ● | 2 |
 | H | Bewohner besuchen einander | ●● | ●● | ●● | 3 |
 | G | Dorf-Verschönerungen | ●● | ●●● | ●●● | 3 – nur wenn Sternchen leer wirken |

@@ -123,6 +123,30 @@ const INSECTS_BASE: readonly InsectDef[] = [
 
 export const INSECTS: readonly InsectDef[] = INSECTS_BASE.map((x) => ({ ...x, price: catchPrice(x.price) }));
 
+/**
+ * Länge je Fischart in cm [klein, groß] – echte Größenordnungen der Arten (Quallen: Schirmdurchmesser).
+ * Der Fang wird meist klein bis mittel, selten ein Prachtexemplar (siehe `core/catching.ts`).
+ */
+export const FISH_CM: Readonly<Record<string, readonly [number, number]>> = {
+  rotauge: [12, 30],
+  stichling: [4, 8],
+  barsch: [15, 45],
+  bachforelle: [20, 55],
+  karpfen: [30, 90],
+  schleie: [20, 55],
+  hecht: [40, 130],
+  aal: [40, 110],
+  wels: [80, 250],
+  hering: [15, 35],
+  scholle: [20, 55],
+  makrele: [25, 50],
+  dorsch: [30, 100],
+  hornhecht: [40, 90],
+  ohrenqualle: [10, 40],
+  steinbutt: [30, 75],
+  seepferdchen: [8, 15],
+};
+
 export const FISH_BY_ID: Readonly<Record<string, FishDef>> = Object.fromEntries(FISH.map((f) => [f.id, f]));
 export const INSECT_BY_ID: Readonly<Record<string, InsectDef>> = Object.fromEntries(INSECTS.map((i) => [i.id, i]));
 

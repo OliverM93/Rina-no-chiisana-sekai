@@ -44,6 +44,7 @@ export const RECIPES: readonly RecipeDef[] = [
   { id: 'wachtel-spiegelei', station: 'kueche', result: 'wachtel-spiegelei', ingredients: [{ itemId: 'wachtelei', count: 3 }], start: true, hint: '' },
   { id: 'obstsalat', station: 'kueche', result: 'obstsalat', ingredients: [{ itemId: 'apfel', count: 1 }, { itemId: 'birne', count: 1 }, { itemId: 'pfirsich', count: 1 }], start: true, hint: '' },
   { id: 'lavendelkekse', station: 'kueche', result: 'lavendelkekse', count: 2, ingredients: [{ itemId: 'lavendel', count: 1 }, { itemId: 'keks', count: 2 }], fund: 'lavendel', hint: 'Pflanz doch mal Lavendel im Beet …' },
+  { id: 'koeder-teig', result: 'koeder-teig', count: 3, ingredients: [{ itemId: 'keks', count: 1 }, { itemId: 'hering', count: 1 }], fund: 'hering', hint: 'Fang mal einen Hering …' },
   { id: 'forelle-kraeuter', station: 'kueche', result: 'forelle-kraeuter', ingredients: [{ itemId: 'bachforelle', count: 1 }, { itemId: 'petersilie', count: 1 }, { itemId: 'thymian', count: 1 }], fund: 'bachforelle', hint: 'Fang mal eine Bachforelle …' },
   { id: 'karpfen-kartoffeln', station: 'kueche', result: 'karpfen-kartoffeln', ingredients: [{ itemId: 'karpfen', count: 1 }, { itemId: 'kartoffel', count: 2 }, { itemId: 'schnittlauch', count: 1 }], fund: 'karpfen', hint: 'Fang mal einen Karpfen …' },
   { id: 'scholle-kartoffel', station: 'kueche', result: 'scholle-kartoffel', ingredients: [{ itemId: 'scholle', count: 1 }, { itemId: 'kartoffel', count: 1 }], fund: 'scholle', hint: 'Fang mal eine Scholle …' },

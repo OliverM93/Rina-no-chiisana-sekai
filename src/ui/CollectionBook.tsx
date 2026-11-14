@@ -3,11 +3,12 @@
  * Beschreibung, Ort, Monate und Uhrzeiten – unbekannte nur einen Schatten.
  */
 import { useEffect, useState } from 'preact/hooks';
+import { isPracht } from '../core/catching';
 import { MONTHS } from '../core/time';
 import { CURRENCY, itemDef } from '../data/items';
 import { FINDS } from '../data/fossils';
 import { COLORS, FLOWER_SPECIES, MIXES, paletteOf, variantId } from '../data/flowers';
-import { FISH, FISH_HABITAT_LABELS, type FishDef, INSECT_HABITAT_LABELS, INSECTS, type InsectDef } from '../data/species';
+import { FISH, FISH_CM, FISH_HABITAT_LABELS, type FishDef, INSECT_HABITAT_LABELS, INSECTS, type InsectDef } from '../data/species';
 import type { Session } from '../game/session';
 import { itemIconUrl } from '../gfx/items';
 import { ui, useSessionVersion } from './store';
@@ -255,6 +256,11 @@ export function CollectionBook({ session }: { session: Session }) {
                   Wert: {sel.price} {CURRENCY.icon}
                   {entry.firstDay ? ` · zuerst gefangen am ${entry.firstDay.split('-').reverse().join('.')}` : ''}
                 </div>
+                {entry.bestCm !== undefined && FISH_CM[sel.id] && (
+                  <div class="item-record">
+                    📏 Größter Fang: {entry.bestCm} cm{isPracht(entry.bestCm, FISH_CM[sel.id]) ? ' · ✨ Prachtexemplar' : ''}
+                  </div>
+                )}
               </div>
             </>
           ) : sel ? (
