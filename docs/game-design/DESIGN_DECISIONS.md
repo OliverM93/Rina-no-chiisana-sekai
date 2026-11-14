@@ -266,6 +266,12 @@ vergeht. Kein Fortschritt, keine Belohnung, keine Zahlen, nichts gespeichert –
 **Begründung:** weniger Knöpfe, nichts bleibt versteckt, die Szene fühlt sich wie ein Moment an statt wie Verwaltung. **Verworfen:** nur umbenennen („Ein ruhiger Moment“) – bliebe ein unsichtbarer Menüpunkt.
 **Designprüfung (kurz):** 1 ein ruhiger Moment mit Oli beim Wiedersehen · 2 Mikro-/Wochenloop, kein Tagesloop (jede Szene nur einmal) · 5 keine Punkte, keine Wirtschaft · 6 keine Exploits · 7 Säule 2 (nichts Verpflichtendes: Lina kann das Gespräch jederzeit schließen) · 8 einfacher: Menüpunkt nur umbenennen.
 
+### D35 · Besuch bei Lina auf Einladung (Nov. 2026)
+
+**Anlass:** [`FEATURE_DISCOVERY.md`](FEATURE_DISCOVERY.md) C: Niemand außer Oli betritt Linas Haus; Stil-Reaktionen gab es nur als Plauderzeile. Entscheidung E6: erst nur auf Einladung, kein spontanes Klopfen.
+**Entscheidung:** „🏠 Zu mir einladen“ im Gesprächsmenü (ab einem Herz, eine offene Einladung je Person). Der Gast kommt, sobald Lina tagsüber im Haupthaus ist, und sagt Sätze zu dem, was wirklich im Haus steht (vorhandene Erinnerungszeilen), sonst allgemeine warme Sätze. Beim Verlassen des Hauses geht er mit einem Gruß.
+**Bewusst nicht:** Punkte, Bewertung, Kritik am Haus, spontanes Klopfen, Ablaufdatum, Pflicht-Besuche.
+**Designprüfung:** 1 Stolz: „Jens steht in meinem Wohnzimmer und findet es fabelhaft“ · 2 Wochen-Loop (neuer Umbau → neue Einladung) · 3 Einrichten bekommt Publikum, die 94 Erinnerungszeilen werden zur Szene · 4 jeder Umbau ist ein Anlass für einen neuen Besuch · 5 keine Wirtschaftsänderung · 6 Risiko „Bewertungsgefühl“: nur Lob, Christin rückt höchstens ein Kissen; Risiko „Einladung verfällt“: tut sie nie · 7 stärkt Säulen 3 (Zuhause) und 4 (Systeme füttern sich) · 8 einfachere Lösung: nur Text ohne Figur im Haus, aber das Haus wäre wieder leer.
 ### D34 · Rekordfänge und Spezialköder (Nov. 2026)
 
 **Anlass:** [`FEATURE_DISCOVERY.md`](FEATURE_DISCOVERY.md) D: Angeln ist die häufigste Tätigkeit, hat aber die geringste Tiefe; der 50. Barsch ist wie der erste. Lina wünschte sich Rekordfänge, selteneres und besondere Köder, die man bauen oder von Winston ausbuddeln lassen kann.
