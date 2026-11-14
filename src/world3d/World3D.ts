@@ -74,6 +74,7 @@ const KISS_DISTANCE = 0.84;
 import { isPartyTime } from '../game/party';
 import { makePartyLights, makePicnic } from './models/buildings';
 import { cafeGuests, cafeTalk } from '../game/cafe';
+import { tipsyComment } from '../game/tipsy';
 import { arrivalLines, canInvite, finishVisit, inviteNpc, visitDue, visitCount, visitLine } from '../game/besuch';
 import { addFriendship, catchUpHeartLetters } from '../game/gameplay';
 import { activeWish, askWish, canFolkDance, checkWishLetter, folkDance, fulfillWish, wardrobeFor, wishTeaser } from '../game/wishes';
@@ -274,6 +275,8 @@ export class World3D {
   private visitorChars = new Map<string, Character>();
   private visitorId = '';
   private visitorTalks = 0;
+  /** Hat der Gast Linas Schwips in diesem Besuch schon einmal kommentiert? (danach wieder ganz normal) */
+  private visitorTipsyDone = false;
   /** Bewohner, die zu Hause angetroffen werden, wenn Lina zu Besuch ist (Schlüssel: Bewohner-ID) */
   private guestChars = new Map<string, Character>();
   /** uid der Hantelbank, auf der Oli gerade trainiert (für die Langhantel) */
@@ -2190,6 +2193,7 @@ export class World3D {
         if (bye) this.session.bus.emit('toast', { text: bye });
         this.visitorId = '';
         this.visitorTalks = 0;
+        this.visitorTipsyDone = false;
       }
       if (this.visitor?.visible) this.visitor.setVisible(false);
       return;
@@ -2201,6 +2205,7 @@ export class World3D {
       if (id && npc) {
         this.visitorId = id;
         this.visitorTalks = visitCount(this.session, id);
+        this.visitorTipsyDone = false;
         const day = this.session.today();
         let vc = this.visitorChars.get(id);
         if (!vc) {
@@ -2223,7 +2228,10 @@ export class World3D {
           this.session.bus.emit('sfx', 'klick');
           this.visitor?.faceTowards(this.player.x, this.player.y);
           this.visitor?.wave();
-          this.session.bus.emit('dialog:open', { title: npc.def.name, lines: arrivalLines(this.session, id) });
+          // Ist Lina angetrunken, kommentiert der Gast das einmal gleich zur Begrüßung
+          const tipsy = this.visitorTipsyDone ? [] : tipsyComment(this.session, id);
+          if (tipsy.length > 0) this.visitorTipsyDone = true;
+          this.session.bus.emit('dialog:open', { title: npc.def.name, lines: [...tipsy, ...arrivalLines(this.session, id)] });
           this.visitorTalks++;
         }, 1600);
       }
@@ -2247,6 +2255,13 @@ export class World3D {
     player.faceTowards(c.x, c.y);
     c.faceTowards(player.x, player.y);
     c.wave();
+    // Angetrunken? Einmal pro Besuch kommentiert der Gast das (ohne dass ein Satz zum Haus verloren geht)
+    const tipsy = this.visitorTipsyDone ? [] : tipsyComment(this.session, id);
+    if (tipsy.length > 0) {
+      this.visitorTipsyDone = true;
+      this.session.bus.emit('dialog:open', { title: npc.def.name, hearts: npcHearts(this.session, id), lines: tipsy });
+      return;
+    }
     const lines = visitLine(this.session, id, this.visitorTalks++);
     this.session.bus.emit('dialog:open', { title: npc.def.name, hearts: npcHearts(this.session, id), lines: lines.length > 0 ? lines : ['Schön hast du es hier!'] });
   }
