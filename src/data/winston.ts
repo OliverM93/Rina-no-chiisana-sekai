@@ -50,6 +50,8 @@ export const DIG_FINDS = [
   { itemId: 'samen-rose', weight: 6 },
   { itemId: 'schneckenhaus', weight: 8 },
   { itemId: 'glitzerstein', weight: 8 },
+  // Spezialköder: ein besonderer Fang beim nächsten Angeln (Rekordfänge)
+  { itemId: 'koeder-gluckswurm', weight: 12 },
 ] as const;
 
 export const DIG_LINES: readonly string[] = [

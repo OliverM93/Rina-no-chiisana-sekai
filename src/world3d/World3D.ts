@@ -58,7 +58,7 @@ import { OLI_WELCOME } from '../data/npcs/oli';
 import { DINNER_LINES, DINNER_OPENERS, JENS_WELCOME } from '../data/npcs/jens';
 import { pairChatKey, PAIR_CHATS } from '../data/gespraeche';
 import { GUEST_HOUSES } from '../data/gastHaeuser';
-import { TRAINING_OLI, TRAINING_REPS, TRAINING_SOLO } from '../data/training';
+import { TRAINING_OLI, TRAINING_REPS, TRAINING_SOLO, TRAINING_THALIA, TRAINING_THALIA_ABSENT, TRAINING_THALIA_LEAD } from '../data/training';
 import { dinnerGuests, isDinnerTime } from '../game/dinner';
 import { activeMeetups, joinMeetup, meetupOf, meetupReply } from '../game/meetups';
 import { CHECKUP_GIFTS, CHECKUP_LINES, LARS_WELCOME } from '../data/npcs/lars';
@@ -74,12 +74,14 @@ const KISS_DISTANCE = 0.84;
 import { isPartyTime } from '../game/party';
 import { makePartyLights, makePicnic } from './models/buildings';
 import { cafeGuests, cafeTalk } from '../game/cafe';
+import { arrivalLines, canInvite, finishVisit, inviteNpc, visitDue, visitCount, visitLine } from '../game/besuch';
 import { addFriendship, catchUpHeartLetters } from '../game/gameplay';
 import { activeWish, askWish, canFolkDance, checkWishLetter, folkDance, fulfillWish, wardrobeFor, wishTeaser } from '../game/wishes';
 import { OLAF_CALENDAR_JOKES } from '../data/npcs/olaf';
 import type { DecorCommand, FxKind } from '../game/session';
 import { Particles3D } from './Particles3D';
 import {
+  activeBait,
   biteFish,
   catchFish,
   catchInsect,
@@ -138,6 +140,7 @@ type Target =
   | { kind: 'moebel'; uid: string }
   | { kind: 'katalog' }
   | { kind: 'winston' }
+  | { kind: 'besucher'; id: string }
   | { kind: 'tier'; index: number };
 
 const SPECIAL_OBJECTS = ['verkaufskiste', 'haus-gisela', 'haus-olaf', 'briefkasten-lina', 'werkbank-lina', 'bistro-jens', 'praxis-lars', 'haus-thalia', 'punschstand', 'samenstand'];
@@ -266,6 +269,11 @@ export class World3D {
   /** Oli drinnen (wenn er zu Hause ist und Lina auch) */
   private homeOli: Character | null = null;
   private homeOliKey = '';
+  /** Gast bei Lina zu Hause (Besuch auf Einladung) */
+  private visitor: Character | null = null;
+  private visitorChars = new Map<string, Character>();
+  private visitorId = '';
+  private visitorTalks = 0;
   /** Bewohner, die zu Hause angetroffen werden, wenn Lina zu Besuch ist (Schlüssel: Bewohner-ID) */
   private guestChars = new Map<string, Character>();
   /** uid der Hantelbank, auf der Oli gerade trainiert (für die Langhantel) */
@@ -492,6 +500,7 @@ export class World3D {
       this.updateWinston(dtMs, player, blocked, solid);
       this.updateIdle(player, blocked);
       this.updateHomeOli(dtMs);
+      this.updateVisitor(dtMs);
       this.updateGuestResidents(dtMs);
       this.updateWallFade(player, dtMs / 1000);
       if (this.session.inside && !this.session.decorActive) {
@@ -1001,6 +1010,9 @@ export class World3D {
     if (target.kind === 'winston' && this.winston) {
       return { key: 'winston', talk: true, pos: this.winston.dog.root.position.clone().add(new THREE.Vector3(0, 0.62, 0)) };
     }
+    if (target.kind === 'besucher' && this.visitor?.visible) {
+      return { key: `npc:${target.id}-besuch`, talk: true, pos: this.visitor.root.position.clone().add(new THREE.Vector3(0, 1.15, 0)) };
+    }
     if (target.kind === 'npc' && this.session.inside && this.homeOli?.visible && target.npc.def.id === 'oli') {
       return { key: 'npc:oli-home', talk: true, pos: this.homeOli.root.position.clone().add(new THREE.Vector3(0, this.homeOli.sitting ? 0.9 : 1.15, 0)) };
     }
@@ -1135,6 +1147,13 @@ export class World3D {
 
   private resolveTarget(player: Character): Target | null {
     const tile = player.tile;
+    if (this.session.inside && this.visitor?.visible && this.visitorId) {
+      const [hx, hy] = DIRS[player.facing];
+      const dx = this.visitor.x - player.x;
+      const dy = this.visitor.y - player.y;
+      const d = Math.hypot(dx, dy);
+      if (d < TILE * 1.4 && dx * hx + dy * hy > d * 0.3) return { kind: 'besucher', id: this.visitorId };
+    }
     if (this.session.inside && this.homeOli?.visible) {
       const [hx, hy] = DIRS[player.facing];
       const dx = this.homeOli.x - player.x;
@@ -1329,6 +1348,8 @@ export class World3D {
       this.session.bus.emit('toast', { text: 'Hier beißt gerade nichts. Vielleicht später?' });
       return true;
     }
+    const bait = activeBait(this.session);
+    if (bait) this.session.bus.emit('toast', { text: `${itemDef(bait)?.name ?? 'Köder'} am Haken – das wird bestimmt etwas Besonderes! 🪱`, icon: itemIconUrl(bait) });
     player.armForward = -1.0;
     const tip = this.rodTip() ?? new THREE.Vector3(player.x * UNIT, 1, player.y * UNIT);
     this.fishing.cast(tip, water.point, fish);
@@ -1365,6 +1386,7 @@ export class World3D {
       }, 250);
     }
     const result = catchFish(this.session, fish);
+    if (result.pracht && player) window.setTimeout(() => { this.fxAt('funkeln', player.x, player.y); this.session.bus.emit('sfx', 'fang'); }, 700);
     // Beschreibung nur beim ersten Fang (neu im Sammelbuch) – sonst nur kurz oben melden, ohne Unterbrechung
     if (result.isNew) this.session.bus.emit('dialog:open', { title: fish.name, lines: [...catchMessage(fish.name, 'fisch', result), FISH_BY_ID[fish.id].description] });
     else this.session.bus.emit('toast', { text: catchMessage(fish.name, 'fisch', result).join(' '), icon: itemIconUrl(fish.id) });
@@ -1476,6 +1498,9 @@ export class World3D {
         return;
       case 'npc':
         this.talkTo(target.npc);
+        return;
+      case 'besucher':
+        this.talkToVisitor();
         return;
       case 'flowers':
         this.collectibles.pickFlowers(target.tile);
@@ -1724,6 +1749,7 @@ export class World3D {
                 },
               }))
           : []),
+        ...(canInvite(this.session, id) ? [{ label: '🏠 Zu mir einladen', onSelect: () => this.npcDialog(npc, inviteNpc(this.session, id), npcHearts(this.session, id)) }] : []),
         ...(activeWish(this.session, id) ? [{ label: '💭 Herzenswunsch', onSelect: () => this.wishDialog(npc) }] : []),
         ...(id === 'thalia' && isPartyTime(this.session) && this.session.data?.world.dates.party !== this.session.today()
           ? [{ label: '💃 Tanzen!', onSelect: () => this.dance(npc) }]
@@ -2149,6 +2175,80 @@ export class World3D {
     const ch = chairs[pick];
     if (!ch) return null;
     return { x: ch.x, y: ch.y, facing: (['down', 'left', 'up', 'right'] as const)[ch.rot ?? 0] };
+  }
+
+  /**
+   * Besuch bei Lina (Feature Discovery C): Wer eingeladen ist, kommt, sobald Lina tagsüber im Haupthaus ist, steht im
+   * Zimmer und lässt sich ansprechen. Verlässt Lina das Haus, geht der Gast mit einem Gruß.
+   */
+  private updateVisitor(dtMs: number) {
+    const inHaupt = this.session.inside && !this.session.visiting && currentRoom(this.session)?.room.id === 'haupt';
+    // Haus verlassen: Besuch beendet
+    if (!this.session.inside || this.session.visiting) {
+      if (this.visitorId) {
+        const bye = finishVisit(this.session, this.visitorId);
+        if (bye) this.session.bus.emit('toast', { text: bye });
+        this.visitorId = '';
+        this.visitorTalks = 0;
+      }
+      if (this.visitor?.visible) this.visitor.setVisible(false);
+      return;
+    }
+    // Ein Gast soll kommen? (nicht beim Einrichten, nicht in einer Szene)
+    if (!this.visitorId && inHaupt && !this.cutscene && !this.session.decorActive && !this.session.uiBlocking) {
+      const id = visitDue(this.session);
+      const npc = id ? this.npcs.get(id) : undefined;
+      if (id && npc) {
+        this.visitorId = id;
+        this.visitorTalks = visitCount(this.session, id);
+        const day = this.session.today();
+        let vc = this.visitorChars.get(id);
+        if (!vc) {
+          vc = new Character(this.scene, dressFor(npc.def.appearance, wardrobeFor(this.session, npc.def), day, id), 0, 0, 'down', () => 0, this.session.season, day);
+          vc.speedFactor = 0.7;
+          this.visitorChars.set(id, vc);
+        }
+        this.visitor?.setVisible(false);
+        this.visitor = vc;
+        const w = this.lay.w;
+        const h = this.lay.h;
+        // Gesamtgitter des Stockwerks: das Zimmer beginnt bei (ox − ROOM_X, oy − ROOM_Y)
+        const free = nearestWalkable(this.roomGrid(), { x: this.ox - ROOM_X + Math.floor(w / 2) + 2, y: this.oy - ROOM_Y + Math.floor(h / 2) });
+        this.visitor.setVisible(true);
+        this.visitor.teleport((ROOM_X + (free?.x ?? 4)) * TILE + 32, (ROOM_Y + (free?.y ?? 3)) * TILE + 40);
+        this.visitor.face('down');
+        // kurz warten, bis Lina ganz drin ist, dann begrüßt der Gast sie
+        window.setTimeout(() => {
+          if (!this.visitorId || !this.session.inside || this.session.visiting || !this.player) return;
+          this.session.bus.emit('sfx', 'klick');
+          this.visitor?.faceTowards(this.player.x, this.player.y);
+          this.visitor?.wave();
+          this.session.bus.emit('dialog:open', { title: npc.def.name, lines: arrivalLines(this.session, id) });
+          this.visitorTalks++;
+        }, 1600);
+      }
+    }
+    const c = this.visitor;
+    if (!c || !this.visitorId) return;
+    if (c.visible !== inHaupt) c.setVisible(inHaupt);
+    if (!c.visible) return;
+    const p = this.player;
+    if (p && Math.hypot(p.x - c.x, p.y - c.y) < TILE * 4) c.faceTowards(p.x, p.y);
+    c.update(dtMs, { dx: 0, dy: 0, run: false }, () => true);
+  }
+
+  /** Den Gast ansprechen: der Reihe nach etwas Passendes zum Haus */
+  private talkToVisitor() {
+    const id = this.visitorId;
+    const c = this.visitor;
+    const player = this.player;
+    const npc = this.npcs.get(id);
+    if (!id || !c || !player || !npc) return;
+    player.faceTowards(c.x, c.y);
+    c.faceTowards(player.x, player.y);
+    c.wave();
+    const lines = visitLine(this.session, id, this.visitorTalks++);
+    this.session.bus.emit('dialog:open', { title: npc.def.name, hearts: npcHearts(this.session, id), lines: lines.length > 0 ? lines : ['Schön hast du es hier!'] });
   }
 
   /**
@@ -3512,7 +3612,7 @@ export class World3D {
       this.yard.updateLight(this.night);
       return;
     }
-    if (item.itemId === 'hantelbank' && !this.session.visiting) {
+    if (item.itemId === 'hantelbank' && (!this.session.visiting || this.session.visiting === 'haus-thalia')) {
       this.trainDialog(uid);
       return;
     }
@@ -3670,6 +3770,22 @@ export class World3D {
 
   /** Hantelbank: Lina darf stemmen (Gag: viel Gewicht, süßes Lächeln) */
   private trainDialog(uid: string) {
+    if (this.session.visiting === 'haus-thalia') {
+      const thalia = this.guestChars.get('thalia');
+      if (!thalia?.visible) {
+        this.session.bus.emit('dialog:open', { title: 'Lina', lines: [...TRAINING_THALIA_ABSENT] });
+        return;
+      }
+      this.session.bus.emit('dialog:open', {
+        title: 'Thalia',
+        lines: [...TRAINING_THALIA_LEAD],
+        choices: [
+          { label: '💪 Zusammen trainieren', onSelect: () => this.trainLina(uid) },
+          { label: '👋 Später', onSelect: () => undefined },
+        ],
+      });
+      return;
+    }
     const oliHere = !!this.homeOli?.visible;
     if (oliHere && this.homeOliBench === uid) {
       this.session.bus.emit('dialog:open', { title: 'Hantelbank', lines: ['Oli ist gerade dran. „Nur ein Satz noch, Lini!“'] });
@@ -3711,7 +3827,9 @@ export class World3D {
       extra.children.forEach((pl) => (pl.visible = false));
     }
     this.session.bus.emit('sfx', 'klick');
-    const oli = this.homeOli?.visible ? this.homeOli : null;
+    // Partner beim Training: Oli zu Hause, bei Thalia sie selbst (ohne Freundschaftspunkte)
+    const thaliaChar = this.session.visiting === 'haus-thalia' && this.guestChars.get('thalia')?.visible ? this.guestChars.get('thalia')! : null;
+    const oli = thaliaChar ?? (this.homeOli?.visible && !this.session.visiting ? this.homeOli : null);
     if (oli) oli.faceTowards(player.x, player.y);
     const total = 9000;
     let shown = -1;
@@ -3733,8 +3851,9 @@ export class World3D {
       this.cutscene = false;
       // Bewusst ohne Freundschaftspunkte (Audit 3, K2): ein Gag-Moment, kein weiteres „heute schon?“
       const day = this.session.today();
-      const lines = oli ? [...TRAINING_OLI[hashString(day) % TRAINING_OLI.length]] : [...TRAINING_SOLO[hashString(day) % TRAINING_SOLO.length]];
-      this.session.bus.emit('dialog:open', { title: oli ? 'Oli' : 'Lina', lines });
+      const pool = thaliaChar ? TRAINING_THALIA : TRAINING_OLI;
+      const lines = oli ? [...pool[hashString(day) % pool.length]] : [...TRAINING_SOLO[hashString(day) % TRAINING_SOLO.length]];
+      this.session.bus.emit('dialog:open', { title: thaliaChar ? 'Thalia' : oli ? 'Oli' : 'Lina', lines });
     });
   }
 

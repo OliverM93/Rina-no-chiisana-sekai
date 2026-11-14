@@ -48,6 +48,8 @@ const list: ItemDef[] = [
   // Materialien & Funde
   { id: 'ast', name: 'Ast', plural: 'Äste', category: 'material', price: 3, description: 'Ein ordentlicher Ast. Bestimmt nützlich für später.' },
   { id: 'stein', name: 'Kieselstein', plural: 'Kieselsteine', category: 'material', price: 4, description: 'Glatt und rund, liegt schön in der Hand.' },
+  { id: 'koeder-gluckswurm', name: 'Glückswurm', plural: 'Glückswürmer', category: 'material', price: 25, description: 'Winston hat ihn ausgebuddelt. Zappelt fröhlich. Wird beim nächsten Angeln automatisch benutzt: ein besonderer Fang, und selten ist er auch.' },
+  { id: 'koeder-teig', name: 'Duftköder', plural: 'Duftköder', category: 'material', price: 15, description: 'Oma-Keks mit Hering vermengt. Riecht furchtbar, wirkt wunderbar. Wird beim nächsten Angeln automatisch benutzt: garantiert ein Prachtexemplar.' },
   { id: 'glitzerstein', name: 'Glitzerstein', plural: 'Glitzersteine', category: 'fund', price: 120, description: 'Funkelt in allen Farben! Ein echter Schatz.' },
 
   // Gartenblumen
