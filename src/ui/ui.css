@@ -1159,6 +1159,12 @@ body:has(.dialog-layer) .decor-bar {
   line-height: 1.4;
 }
 
+.item-record {
+  margin-top: 4px;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--ui-accent);
+}
 .item-price {
   font-size: 13px;
   font-weight: 800;

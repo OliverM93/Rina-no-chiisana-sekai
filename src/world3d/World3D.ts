@@ -79,6 +79,7 @@ import { OLAF_CALENDAR_JOKES } from '../data/npcs/olaf';
 import type { DecorCommand, FxKind } from '../game/session';
 import { Particles3D } from './Particles3D';
 import {
+  activeBait,
   biteFish,
   catchFish,
   catchInsect,
@@ -1328,6 +1329,8 @@ export class World3D {
       this.session.bus.emit('toast', { text: 'Hier beißt gerade nichts. Vielleicht später?' });
       return true;
     }
+    const bait = activeBait(this.session);
+    if (bait) this.session.bus.emit('toast', { text: `${itemDef(bait)?.name ?? 'Köder'} am Haken – das wird bestimmt etwas Besonderes! 🪱`, icon: itemIconUrl(bait) });
     player.armForward = -1.0;
     const tip = this.rodTip() ?? new THREE.Vector3(player.x * UNIT, 1, player.y * UNIT);
     this.fishing.cast(tip, water.point, fish);
@@ -1364,6 +1367,7 @@ export class World3D {
       }, 250);
     }
     const result = catchFish(this.session, fish);
+    if (result.pracht && player) window.setTimeout(() => { this.fxAt('funkeln', player.x, player.y); this.session.bus.emit('sfx', 'fang'); }, 700);
     // Beschreibung nur beim ersten Fang (neu im Sammelbuch) – sonst nur kurz oben melden, ohne Unterbrechung
     if (result.isNew) this.session.bus.emit('dialog:open', { title: fish.name, lines: [...catchMessage(fish.name, 'fisch', result), FISH_BY_ID[fish.id].description] });
     else this.session.bus.emit('toast', { text: catchMessage(fish.name, 'fisch', result).join(' '), icon: itemIconUrl(fish.id) });

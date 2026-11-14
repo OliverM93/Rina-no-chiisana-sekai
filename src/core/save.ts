@@ -22,7 +22,7 @@ import { createInventory, type Inventory, normalizeInventory, STORAGE_SIZE } fro
 import { createMailbox, type Mailbox, normalizeMailbox } from './mail';
 import { type DayMonth, DEFAULT_LINA_BIRTHDAY, formatIsoDay } from './time';
 
-export const SAVE_VERSION = 15;
+export const SAVE_VERSION = 16;
 export const SAVE_KEY = 'rina-no-chiisana-sekai.save';
 export const BACKUP_KEY = 'rina-no-chiisana-sekai.save.backup';
 
@@ -251,6 +251,9 @@ export const MIGRATIONS: Record<number, (old: RawSave) => RawSave> = {
     const { interestMonth, ...rest } = bank;
     return { ...old, bank: { ...rest, interestWeek: typeof interestMonth === 'string' ? weekFromLegacyMonth(interestMonth) : '' } };
   },
+  // v15 → v16 (Rekordfänge): Sammelbuch-Einträge von Fischen können einen größten Fang (`bestCm`) tragen.
+  // Alte Einträge bleiben unverändert; die erste Länge wird beim nächsten Fang vermerkt.
+  15: (old) => ({ ...old }),
 };
 
 export function migrate(raw: RawSave, migrations = MIGRATIONS, target = SAVE_VERSION): RawSave {

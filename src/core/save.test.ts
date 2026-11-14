@@ -310,8 +310,19 @@ describe('Version 15 (wöchentliche Zinsen)', () => {
   it('macht aus dem Zinsmonat die Woche des Monatsersten, Guthaben bleibt', () => {
     const v14 = { ...freshSave(), version: 14, bank: { loan: 0, savings: 12345, interestMonth: '2026-04', lastInterest: 100 } } as Record<string, unknown>;
     const r = parseSave(JSON.stringify(v14), SPAWN, NOW);
-    expect(r.ok && r.data.version).toBe(15);
+    expect(r.ok && r.data.version).toBe(SAVE_VERSION);
     expect(r.ok && r.data.bank).toEqual({ loan: 0, savings: 12345, interestWeek: '2026-03-30', lastInterest: 100 });
+  });
+});
+
+describe('Version 16 (Rekordfänge)', () => {
+  it('alte Sammelbuch-Einträge bleiben, größter Fang wird nur gültig übernommen', () => {
+    const v15 = { ...freshSave(), version: 15, collection: { barsch: { count: 3, firstDay: '2026-05-01' }, hecht: { count: 1, firstDay: '2026-05-02', bestCm: 87.4 }, karpfen: { count: 1, firstDay: '', bestCm: -5 } } } as Record<string, unknown>;
+    const r = parseSave(JSON.stringify(v15), SPAWN, NOW);
+    expect(r.ok && r.data.version).toBe(SAVE_VERSION);
+    expect(r.ok && r.data.collection.barsch).toEqual({ count: 3, firstDay: '2026-05-01' });
+    expect(r.ok && r.data.collection.hecht.bestCm).toBe(87);
+    expect(r.ok && r.data.collection.karpfen.bestCm).toBeUndefined();
   });
 });
 
