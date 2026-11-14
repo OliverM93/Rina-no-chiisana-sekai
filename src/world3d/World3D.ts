@@ -73,6 +73,7 @@ import { KISS } from './Character3D';
 const KISS_DISTANCE = 0.84;
 import { isPartyTime } from '../game/party';
 import { makePartyLights, makePicnic } from './models/buildings';
+import { cafeGuests, cafeTalk } from '../game/cafe';
 import { addFriendship, catchUpHeartLetters } from '../game/gameplay';
 import { activeWish, askWish, canFolkDance, checkWishLetter, folkDance, fulfillWish, wardrobeFor, wishTeaser } from '../game/wishes';
 import { OLAF_CALENDAR_JOKES } from '../data/npcs/olaf';
@@ -1664,7 +1665,7 @@ export class World3D {
       });
       return;
     }
-    const chatLead = this.chatLead(npc);
+    const chatLead = [...this.chatLead(npc), ...this.cafeLead(npc)];
     const out = talkToNpc(this.session, npc.def.id);
     const teaser = wishTeaser(this.session, npc.def.id);
     // Läuft gerade ein Treffen, geht der Bewohner zuerst auf das Gespräch mit den anderen ein
@@ -2131,17 +2132,39 @@ export class World3D {
     }
   }
 
+  /** Stuhl für einen Café-Gast: reproduzierbar je Tag, jeder Stuhl nur einmal */
+  private cafeSeat(id: string, guests: readonly string[]): { x: number; y: number; facing: 'down' | 'left' | 'up' | 'right' } | null {
+    const items = GUEST_HOUSES['bistro-jens']?.items ?? [];
+    const chairs = items.filter((i) => i.id === 'bistrostuhl');
+    if (chairs.length === 0) return null;
+    const day = this.session.today();
+    const taken = new Set<number>();
+    let pick = -1;
+    for (const g of guests) {
+      let k = hashString(`stuhl:${day}:${g}`) % chairs.length;
+      while (taken.has(k)) k = (k + 1) % chairs.length;
+      taken.add(k);
+      if (g === id) pick = k;
+    }
+    const ch = chairs[pick];
+    if (!ch) return null;
+    return { x: ch.x, y: ch.y, facing: (['down', 'left', 'up', 'right'] as const)[ch.rot ?? 0] };
+  }
+
   /**
    * Zu Besuch: Ist die Bewohnerin / der Bewohner gerade zu Hause (und wach), steht sie/er im Zimmer und lässt sich
    * ansprechen. Beim Besuch bei Olaf & Christin sind beide da, wenn sie beide zu Hause sind.
    */
   private updateGuestResidents(dtMs: number) {
     const house = this.session.inside && this.session.visiting ? GUEST_HOUSES[this.session.visiting] : undefined;
-    const owners = house ? (this.session.visiting === 'haus-olaf' ? ['olaf', 'christin'] : [house.npc]) : [];
+    const cafe = this.session.visiting === 'bistro-jens';
+    const guests = cafe ? cafeGuests(this.session) : [];
+    const owners = house ? [...(this.session.visiting === 'haus-olaf' ? ['olaf', 'christin'] : [house.npc]), ...guests] : [];
     const day = this.session.today();
     owners.forEach((id, i) => {
       const npc = this.npcs.get(id);
-      const want = !!npc && npc.movedIn && npc.atHome && !npc.isSleeping && !this.cutscene;
+      const isGuest = guests.includes(id);
+      const want = !!npc && npc.movedIn && (isGuest ? !this.cutscene : npc.atHome && !npc.isSleeping && !this.cutscene);
       let c = this.guestChars.get(id);
       if (!want || !npc) {
         if (c?.visible) c.setVisible(false);
@@ -2154,11 +2177,21 @@ export class World3D {
         this.guestChars.set(id, c);
       }
       if (!c.visible) {
-        const free = nearestWalkable(this.roomGrid(), { x: i === 0 ? 5 : 2, y: 2 });
-        c.setVisible(true);
-        c.setSitting(false);
-        c.teleport((ROOM_X + (free?.x ?? 4)) * TILE + 32, (ROOM_Y + (free?.y ?? 2)) * TILE + 40);
-        c.face('down');
+        const seat = isGuest ? this.cafeSeat(id, guests) : null;
+        if (seat) {
+          // Café-Gast: sitzt auf einem Bugholzstuhl und schaut zum Tisch
+          c.setVisible(true);
+          c.setSitting(true);
+          c.seatHeight = 0.42;
+          c.teleport((ROOM_X + seat.x + 0.5) * TILE, (ROOM_Y + seat.y + 0.5) * TILE);
+          c.face(seat.facing);
+        } else {
+          const free = nearestWalkable(this.roomGrid(), { x: i === 0 ? 5 : 2, y: 2 });
+          c.setVisible(true);
+          c.setSitting(false);
+          c.teleport((ROOM_X + (free?.x ?? 4)) * TILE + 32, (ROOM_Y + (free?.y ?? 2)) * TILE + 40);
+          c.face('down');
+        }
       }
       c.update(dtMs, { dx: 0, dy: 0, run: false }, () => true);
     });
@@ -2617,6 +2650,16 @@ export class World3D {
   }
 
   /** Spricht Lina einen der beiden während des Gesprächs an, geht er zuerst darauf ein */
+  /** Im Café: ein Schluck aus der Tasse (Toast) und ein Satz zum Café */
+  private cafeTalks = 0;
+  private cafeLead(npc: Npc): string[] {
+    if (this.session.visiting !== 'bistro-jens' || npc.def.id === 'jens' || !this.guestChars.get(npc.def.id)?.visible) return [];
+    const t = cafeTalk(this.session, npc.def.id, this.cafeTalks++);
+    if (!t) return [];
+    this.session.bus.emit('toast', { text: t.drink });
+    return t.lines;
+  }
+
   private chatLead(npc: Npc): string[] {
     const c = this.npcChat;
     if (!c || (c.a !== npc && c.b !== npc)) return [];

@@ -265,3 +265,10 @@ vergeht. Kein Fortschritt, keine Belohnung, keine Zahlen, nichts gespeichert –
 **Entscheidung:** Die fünf Szenen (eine je Herz) bleiben, aber ohne Menüpunkt: Das nächste Gespräch mit Oli zu Hause beginnt mit „Komm, setz dich kurz zu mir, Lini“ und der offenen Szene (eine je Gespräch, ohne Punkte).
 **Begründung:** weniger Knöpfe, nichts bleibt versteckt, die Szene fühlt sich wie ein Moment an statt wie Verwaltung. **Verworfen:** nur umbenennen („Ein ruhiger Moment“) – bliebe ein unsichtbarer Menüpunkt.
 **Designprüfung (kurz):** 1 ein ruhiger Moment mit Oli beim Wiedersehen · 2 Mikro-/Wochenloop, kein Tagesloop (jede Szene nur einmal) · 5 keine Punkte, keine Wirtschaft · 6 keine Exploits · 7 Säule 2 (nichts Verpflichtendes: Lina kann das Gespräch jederzeit schließen) · 8 einfacher: Menüpunkt nur umbenennen.
+
+### D36 · Bewohner im Café (Nov. 2026)
+
+**Anlass:** Wunsch von Lina: Das Café soll lebendiger sein; Bewohner sollen dort ab und zu zu finden sein, das Café kommentieren und etwas trinken.
+**Entscheidung:** Sechs Bewohner (nicht Jens selbst) sitzen ab und zu im Café, reproduzierbar je Tag und in festem Zeitfenster. Sie sitzen auf Stühlen, trinken etwas (Toast) und sagen beim Ansprechen einen Satz zum Café. Die Mechanik nutzt den vorhandenen Tagesablauf-Ersatz (wie Sonntagsessen).
+**Bewusst nicht:** Pflicht-Treffen, Belohnungen oder Punkte, Preise, Alkohol als Mittelpunkt (Wein, Bier und Likör nur dezent und humorvoll).
+**Designprüfung:** 1 „Oh, Thalia sitzt bei Jens und trinkt Wein!“ · 2 Tages-/Wochen-Loop: ein Blick ins Café lohnt sich · 3 Überraschung statt Termin: nicht jeden Tag, nicht jede Stunde · 4 Charakter und Zusammenhalt (Welt lebt ohne Lina) · 5 keine Wirtschaftsänderung · 6 Risiko „Unsichtbarkeit“: nur mit Hinweis wirken sie erst, wenn Lina hineinschaut; kein Muss; Risiko „Alkohol“: dezent, humorvoll, mit Tee- und Kaffee-Alternativen · 7 stärkt Säule 5 (Die Welt lebt auch ohne Lina) · 8 einfachere Lösung: nur Text im Gespräch ohne Figur im Café.
