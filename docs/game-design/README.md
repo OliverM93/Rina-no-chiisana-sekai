@@ -37,6 +37,7 @@ Stand der Bestandsaufnahme: November 2026 (nach Merge von Beet & Samen, Phasen 1
 | [`GAME_DESIGN_AUDIT_2.md`](GAME_DESIGN_AUDIT_2.md) | Nachprüfung (Nov. 2026): Status von F1–F18, neue Findings N1–N8, Empfehlung: Playtest vor neuen Features |
 | [`GAME_DESIGN_AUDIT_3.md`](GAME_DESIGN_AUDIT_3.md) | Audit 3 (Nov. 2026): Sternchen-Wirtschaft nachgerechnet, Tempo der Einzüge, Oli-Tempo, Orientierung, Maßnahmen K1–K5 / M1–M3 / G1–G2 |
 | [`GAME_DESIGN_AUDIT_4.md`](GAME_DESIGN_AUDIT_4.md) | Audit 4 (Nov. 2026): Katalog-Verdopplung, Stil-Freischaltung ohne Ankündigung, Sparbuch/Kredit/Bausparen, Story-Tempo nach ×1,5; Empfehlung: Playtest vor weiteren Wellen, K1–K3 |
+| [`FEATURE_DISCOVERY.md`](FEATURE_DISCOVERY.md) | Feature Discovery (Nov. 2026): Bestandsaufnahme entlang von 12 Life-Sim-Systemen (Ampeln), Bruchstellen im Loop, Kandidaten A–K mit Designprüfung, Wellen, offene Entscheidungen E1–E6 |
 
 ## Designprüfung vor jedem neuen Feature
 
