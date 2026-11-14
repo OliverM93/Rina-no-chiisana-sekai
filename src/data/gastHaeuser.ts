@@ -219,8 +219,6 @@ export const GUEST_HOUSES: Readonly<Record<string, GuestHouse>> = {
       { id: 'zinktheke', x: 7, y: 0 },
       { id: 'bistrolampe', x: 7, y: 0, on: 'zinktheke' },
       { id: 'etagere', x: 8, y: 0, on: 'zinktheke' },
-      { id: 'barhocker', x: 7, y: 1 },
-      { id: 'barhocker', x: 8, y: 1 },
       { id: 'weinregal', x: 9, y: 0 },
       { id: 'yucca', x: 0, y: 0 },
       // --- linke Wandbank mit vier Tischen
@@ -274,7 +272,6 @@ export const GUEST_HOUSES: Readonly<Record<string, GuestHouse>> = {
     comments: {
       zinktheke: ['Der Tresen glänzt. Jens poliert ihn jeden Morgen. Und redet dabei mit sich selbst auf Französisch.'],
       bistrolampe: ['Die grüne Lampe wirft ein warmes Licht. Ich würde hier einziehen. Aber ohne Croissants wär ich bald dick.'],
-      barhocker: ['Die Barhocker drehen sich. Ich drehe mich einmal. Nur einmal. Zweimal.'],
       bistrotisch: ['Ein runder Tisch mit Messingrand. Zwei Croissants passen drauf, ein Kaffee sowieso.'],
       etagere: ['Eine Etagere mit Croissants. Jens sagt: „Eins ist für dich.“ Es sind immer drei.'],
       bistrostuhl: ['Ein Bugholzstuhl. Der wackelt nicht. Jens schwört darauf.'],
