@@ -202,7 +202,7 @@ const fill = (session: Session, lines: readonly string[]) => {
   return lines.map((l) => fillPlaceholders(l, ctx));
 };
 
-function pickByDay<T>(session: Session, key: string, list: readonly T[]): T {
+export function pickByDay<T>(session: Session, key: string, list: readonly T[]): T {
   return list[hashString(`${session.today()}:${key}`) % list.length];
 }
 

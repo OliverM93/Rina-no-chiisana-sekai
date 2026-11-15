@@ -19,6 +19,21 @@ export interface Memory {
 }
 
 export const MEMORIES: readonly Memory[] = [
+  // ---- Kater (gehört zu Lina, Olaf und Christin; taucht auf, sobald die beiden im Dorf wohnen) ----
+  { id: 'olaf-kater-1', npc: 'olaf', tag: 'kater', text: ['Kater hat heute wieder Mäuse gefangen. Drei Stück! Er legt sie mir immer vor die Tür.', 'Ich hab sie nach Größe sortiert. Aus Respekt. Und Christin gerufen.'] },
+  { id: 'olaf-kater-2', npc: 'olaf', tag: 'kater', text: ['Ich habe Kater gestern beim Mittagsschlaf auf meinem Aktenordner erwischt. Genau auf dem Bescheid.', 'Fachlich gesehen: ein Katzenhaar im Verfahren. Ich lasse es durchgehen.'] },
+  { id: 'olaf-kater-3', npc: 'olaf', tag: 'kater', text: ['Kater ist wie ein kleiner Prüfer. Er kommt, schaut sich um, nickt und geht.', 'Wenn ich nichts zu essen dabei habe, jedenfalls.'] },
+  { id: 'christin-kater-1', npc: 'christin', tag: 'kater', text: ['Kater hat wieder Mäuse gefangen. Auf der Fußmatte. Ordentlich nebeneinander.', 'Ich weiß nicht, ob ich stolz sein soll oder schreien. Ich mache beides, leise.'] },
+  { id: 'christin-kater-2', npc: 'christin', tag: 'kater', text: ['Kater schläft am liebsten auf dem frisch gewaschenen Pullover. Auf dem schwarzen, versteht sich. Man sieht jedes Haar.', 'Ich habe aufgegeben. Teilweise.'] },
+  { id: 'christin-kater-3', npc: 'christin', tag: 'kater', text: ['Kater sitzt jeden Morgen auf dem Fensterbrett, als würde er den Tag abnehmen.', 'Ich lasse ihn. Er ist wenigstens pünktlich.'] },
+
+  // ---- Igor (Linas verstorbener Hund, gehörte auch zu Olaf) – warm, nie schwer ----
+  { id: 'olaf-igor', npc: 'olaf', tag: 'igor', text: ['Ich hab neulich Igors alte Leine gefunden. Ich hab sie nicht weggeräumt.', 'Man vermisst so einen Hund. Das lässt sich nicht verbuchen. Ich hab es versucht.'] },
+  { id: 'christin-igor', npc: 'christin', tag: 'igor', text: ['Ich denke manchmal an Igor. Das Haus war lauter mit ihm. Und irgendwie auch wärmer.', 'Ich vermisse ihn. Das sag ich jetzt einfach mal.'] },
+  { id: 'gisela-igor', npc: 'gisela', tag: 'igor', text: ['Dem Igor hab ich immer heimlich ein Stück Keks gegeben. Hab ich nie zugegeben. Jetzt sag ich’s.', 'Er fehlt mir, der Kerl. Das darfst du gern weitererzählen. Aber nicht zu laut.'] },
+  { id: 'oli-igor', npc: 'oli', tag: 'igor', text: ['Lini, wenn du an Igor denkst … ich bin da. Ein Hund wie er bleibt im Herzen.', 'Und Winston ist ein ziemlich guter Nachfolger. Nicht Ersatz. Nachfolger.'] },
+  { id: 'lars-igor', npc: 'lars', tag: 'igor', text: ['Wenn ich an Igor denke, wird mir ganz warm ums Herz. Und ein bisschen eng.', 'Ein guter Hund. Ein sehr guter Hund. Ärztliches Urteil.'] },
+
   // ---- Oma Gisela ----
   { id: 'gisela-haus-dach', npc: 'gisela', tag: 'haus-dach', text: ['Ich war oben in deinem Dachzimmer, Kind. Die Treppe ist steil.', 'Ich hab nicht gemeckert. Na gut. Ein bisschen. Aber leise.'] },
   { id: 'gisela-haus-keller', npc: 'gisela', tag: 'haus-keller', text: ['Ein Keller! Jetzt hast du Platz für Eingemachtes.', 'Ich hab Pflaumenmus. Sehr viel Pflaumenmus. Das kommt zu dir, keine Widerrede.'] },

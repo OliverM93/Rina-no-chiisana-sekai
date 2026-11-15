@@ -123,6 +123,9 @@ import { YARD_AREA } from '../data/yard';
 import { makeCan, makeNet, makeRod, makeShovel, type ToolModel } from './models/critters';
 import { Weather3D } from './Weather3D';
 import { Winston } from './Winston';
+import { katerDraussen, katerHello, katerPet } from '../game/kater';
+import { Kater } from './Kater';
+import { KATER_NAME } from '../data/kater';
 import { petWinston, winstonAppeared, winstonDig, winstonDue, winstonFound, winstonMayDig, winstonState } from '../game/pet';
 import { DIG_LINES, WINSTON_APPEARS_TOAST, WINSTON_FIND_LINES, WINSTON_FREED_LINES, WINSTON_SPOT } from '../data/winston';
 import { setModelSeason } from './models/furniture';
@@ -142,6 +145,7 @@ type Target =
   | { kind: 'katalog' }
   | { kind: 'winston' }
   | { kind: 'besucher'; id: string }
+  | { kind: 'kater' }
   | { kind: 'tier'; index: number };
 
 const SPECIAL_OBJECTS = ['verkaufskiste', 'haus-gisela', 'haus-olaf', 'briefkasten-lina', 'werkbank-lina', 'bistro-jens', 'praxis-lars', 'haus-thalia', 'punschstand', 'samenstand'];
@@ -235,6 +239,8 @@ export class World3D {
   /** erst nach dem Verlassen eines Ausgangs-Feldes darf er wieder auslösen */
   private exitArmed = true;
   private winston: Winston | null = null;
+  /** Kater, der schwarze Kater (erst, wenn Olaf und Christin da sind) */
+  private kater: Kater | null = null;
   /** Das Gestrüpp, in dem sich Winston verfangen hat (bis Lina ihn befreit) */
   private winstonBush: THREE.Object3D | null = null;
   private stepAcc = 0;
@@ -501,6 +507,7 @@ export class World3D {
       } else this.stepAcc = 0.2;
       this.updatePrints(dtMs, player);
       this.updateWinston(dtMs, player, blocked, solid);
+      this.updateKater(dtMs, player);
       this.updateIdle(player, blocked);
       this.updateHomeOli(dtMs);
       this.updateVisitor(dtMs);
@@ -1010,6 +1017,9 @@ export class World3D {
   /** Wohin das Symbol über dem Ziel gehört – Sprechblase bei Figuren, Funkeln bei Dingen */
   private bubbleFor(target: Target | null): { key: string; pos: THREE.Vector3; talk: boolean } | null {
     if (!target) return null;
+    if (target.kind === 'kater' && this.kater?.visible) {
+      return { key: 'kater', talk: true, pos: this.kater.cat.root.position.clone().add(new THREE.Vector3(0, 0.5, 0)) };
+    }
     if (target.kind === 'winston' && this.winston) {
       return { key: 'winston', talk: true, pos: this.winston.dog.root.position.clone().add(new THREE.Vector3(0, 0.62, 0)) };
     }
@@ -1196,6 +1206,13 @@ export class World3D {
         if (isDoor && !directlyInFront) break;
         return { kind: 'npc', npc };
       }
+    }
+    // Kater direkt davor (nur wenn kein Bewohner näher ist)
+    if (this.kater?.visible) {
+      const dx = this.kater.x - player.x;
+      const dy = this.kater.y - player.y;
+      const d = Math.hypot(dx, dy);
+      if (d < TILE * 1.3 && dx * fx + dy * fy > d * 0.35) return { kind: 'kater' };
     }
     // Stall direkt davor geht vor (Eier abholen), sonst Tiere streicheln
     const coop = this.yardItemAt(front.x, front.y);
@@ -1513,6 +1530,9 @@ export class World3D {
         return;
       case 'katalog':
         this.session.bus.emit('ui:open', { kind: 'catalog' });
+        return;
+      case 'kater':
+        this.talkToKater();
         return;
       case 'winston':
         if (this.winston?.stranded) this.rescueWinston();
@@ -3139,6 +3159,55 @@ export class World3D {
     const dy = w.y - player.y;
     const d = Math.hypot(dx, dy);
     return d < TILE * 1.25 && dx * fx + dy * fy > d * 0.3;
+  }
+
+  // -------------------------------------------------------------------------
+  // Kater
+  // -------------------------------------------------------------------------
+
+  /** Kater streunert tagsüber draußen umher (erst wenn Olaf und Christin im Dorf wohnen); nachts und bei Regen ist er drin */
+  private updateKater(dtMs: number, player: Character) {
+    const out = !this.session.inside && katerDraussen(this.session);
+    if (!out) {
+      if (this.kater?.visible) this.kater.setVisible(false);
+      return;
+    }
+    if (!this.kater) {
+      const house = objectById(this.session.map, 'haus-olaf');
+      const home = house ? { x: house.x + 2, y: house.y + 4 } : { x: 40, y: 20 };
+      this.kater = new Kater(this.scene, this.session.map, home, this.view.terrain.heightAt, hashString('kater'));
+    }
+    if (!this.kater.isPlaced) this.kater.place();
+    if (!this.kater.visible) this.kater.setVisible(true);
+    this.kater.heightAt = this.view.terrain.heightAt;
+    this.kater.update(dtMs, { x: player.x, y: player.y });
+  }
+
+  private talkToKater() {
+    const k = this.kater;
+    const player = this.player;
+    if (!k || !player) return;
+    player.faceTowards(k.x, k.y);
+    k.attend(player.x, player.y, 10);
+    this.session.bus.emit('dialog:open', {
+      title: KATER_NAME,
+      lines: katerHello(this.session),
+      choices: [{ label: '🐾 Streicheln', onSelect: () => this.petKater() }, { label: '👋 Weiter', onSelect: () => undefined }],
+    });
+  }
+
+  private petKater() {
+    const k = this.kater;
+    const player = this.player;
+    if (!k || !player) return;
+    const r = katerPet(this.session);
+    k.purr();
+    this.fxAt('herzen', k.x, k.y, -0.3);
+    this.session.bus.emit('dialog:open', {
+      title: KATER_NAME,
+      lines: r.lines,
+      choices: [{ label: '🐾 Noch einmal', onSelect: () => this.petKater() }, { label: '👋 Weiter', onSelect: () => undefined }],
+    });
   }
 
   private petDog() {
