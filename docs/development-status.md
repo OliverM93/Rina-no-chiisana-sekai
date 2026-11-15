@@ -275,6 +275,7 @@ Legende: ✅ erledigt · 🚧 in Arbeit · ⬜ geplant
 - ✅ **Einrichten im Fluss:** Katalog im Einrichtungsmodus (Kaufen = in die Hand), Vorrat aus Tasche + Truhe, C „noch eins“, V/1–9 Farbe, Strg+Z rückgängig
 - ✅ **Café-Gäste (Nov. 2026):** Bewohner sitzen ab und zu in Chez Jens, trinken etwas und kommentieren das Café. 🗓️ Offen: Gäste, die an den Tischen miteinander reden; Jens' Reaktion auf Gäste
 - ✅ **Kater und Igor (Nov. 2026):** Linas schwarzer Kater streunert durchs Dorf (ab Einzug von Olaf und Christin), lässt sich streicheln; Olaf und Christin erzählen von ihm, mehrere Bewohner erinnern sich liebevoll an Igor. 🗓️ Offen: Kater im Haus (Körbchen, Fensterbrett), Mäuse-Geschenke, Kater im Café
+- ✅ **Pflanzen ausgraben (Nov. 2026):** Schaufel am Beet gräbt eine Pflanze aus (Samen kommt zurück), dann lässt sich neu einsetzen
 - ✅ **Audit 3 umgesetzt:** Linas Notizbuch (N), Einzüge über Spielen statt Warten (winter-sicher), Enter für Hauptknöpfe, Snake-Rekord gespeichert, Balancing-Test
 - ✅ **Audit 4 umgesetzt (K1–K3):** neue Stile werden bei Einzügen angekündigt + „neu“ am Stil-Chip, Ökonomie-Doku aktualisiert, Katalog-Budget-Test
 - ✅ **Zeit zu zweit ohne Menüpunkt** (Szene beginnt beim nächsten Gespräch mit Oli zu Hause von selbst) · **Schwips-Fix:** Nachlassen lief fälschlich in Millisekunden statt Sekunden – jetzt nach ~1 Minute

@@ -10,7 +10,7 @@ import { growGarden, pickBloom, plantSeed, removePlant, spotKey, water } from '.
 import { hashString, mulberry32 } from '../core/rng';
 import { isPrecipitation, weatherAt, type WeatherNow } from '../core/weather';
 import { CROP_BY_ID, harvestCount } from '../data/crops';
-import { FLOWER_BY_SEED, itemDef, maxStackOf, STARTER_TOOLS, type ToolId, TOOLS } from '../data/items';
+import { FLOWER_BY_SEED, GARDEN_FLOWER, itemDef, maxStackOf, STARTER_TOOLS, type ToolId, TOOLS } from '../data/items';
 import { spaceFor } from '../core/inventory';
 import { type FishDef, type FishHabitat, FISH, FISH_CM, type InsectDef, INSECTS } from '../data/species';
 import { countItem } from '../core/inventory';
@@ -248,6 +248,25 @@ export function plantAt(session: Session, x: number, y: number, seedId: string):
   session.changed();
   session.save();
   return true;
+}
+
+/**
+ * Pflanze mit der Schaufel ausgraben: der Platz wird frei, der Samen kommt zurück in die Tasche
+ * (nichts geht verloren – so kostet Umpflanzen nichts). Gibt Pflanze und Samen zurück, oder null.
+ */
+export function digUpPlant(session: Session, x: number, y: number): { flower: string; seedId: string } | null {
+  const data = session.data;
+  if (!data) return null;
+  const key = spotKey(x, y);
+  const plant = data.world.garden[key];
+  if (!plant) return null;
+  const seedId = GARDEN_FLOWER[plant.flower]?.seed;
+  if (!seedId) return null;
+  removePlant(data.world.garden, key);
+  giveItem(session, seedId, 1, false);
+  session.changed();
+  session.save();
+  return { flower: plant.flower, seedId };
 }
 
 export function waterAt(session: Session, x: number, y: number): boolean {

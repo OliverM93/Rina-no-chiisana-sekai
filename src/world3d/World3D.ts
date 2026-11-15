@@ -85,6 +85,7 @@ import {
   activeBait,
   biteFish,
   catchFish,
+  digUpPlant,
   catchInsect,
   catchMessage,
   currentWeather,
@@ -1470,6 +1471,28 @@ export class World3D {
       return;
     }
     const name = flowerName(plant.flower);
+    // Mit der Schaufel (Taste 4): ausgraben und etwas anderes einsetzen – der Samen kommt zurück in die Tasche
+    if (this.session.tool === 'schaufel') {
+      this.session.bus.emit('dialog:open', {
+        title: name,
+        lines: [`Die ${name} vorsichtig ausgraben? Der Samen kommt zurück in deine Tasche, und der Platz ist wieder frei.`],
+        choices: [
+          {
+            label: '⛏️ Ausgraben',
+            onSelect: () => {
+              const got = digUpPlant(this.session, t.x, t.y);
+              if (!got) return;
+              this.garden.bounce(t);
+              this.session.bus.emit('sfx', 'klick');
+              this.fxAt('staub', (t.x + 0.5) * TILE, (t.y + 0.5) * TILE);
+              this.session.bus.emit('toast', { text: `Ausgegraben! ${itemDef(got.seedId)?.name ?? 'Der Samen'} ist wieder in der Tasche. 🌱`, icon: itemIconUrl(got.seedId) });
+            },
+          },
+          { label: '👋 Lieber nicht', onSelect: () => undefined },
+        ],
+      });
+      return;
+    }
     if (plant.stage === 3) {
       const got = pickGardenFlower(this.session, t.x, t.y);
       if (got) {
