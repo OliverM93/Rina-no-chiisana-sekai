@@ -184,6 +184,8 @@ export class Session {
   readonly tipsy: Tipsy = createTipsy();
   /** Wann ein Bewohner Lina zuletzt auf ihren Schwips angesprochen hat (Spielzeit in Sekunden, nicht gespeichert) */
   readonly tipsySpoken = new Map<string, number>();
+  /** Was Lina zuletzt getrunken hat (Bier, Wein, Highball) – Oli erkennt ihr Lieblingsgetränk; nicht gespeichert */
+  lastAlcohol: 'bier' | 'wein' | 'highball' | '' = '';
   /** Werkzeug in Linas Hand (wird nicht gespeichert) */
   tool: ToolId | null = null;
   /** Erzwungenes Wetter (`?wetter=regen`, zum Testen) */

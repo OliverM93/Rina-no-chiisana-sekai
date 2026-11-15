@@ -14,7 +14,7 @@ export interface Tipsy {
 }
 
 /** So viel Schwips gibt ein einzelnes Glas */
-export const GLASS: Readonly<Record<'bier' | 'wein', number>> = { bier: 1, wein: 1.1 };
+export const GLASS: Readonly<Record<'bier' | 'wein' | 'highball', number>> = { bier: 1, wein: 1.1, highball: 0.9 };
 /** Mehr als das wird Lina nie */
 export const MAX_BUZZ = 3;
 /** Ab diesem Schwips lehnt Lina weitere Gläser selbst ab */

@@ -2,7 +2,7 @@ import { describe, expect, it, vi } from 'vitest';
 import { DEFAULT_LINA } from '../core/appearance';
 import type { StorageLike } from '../core/save';
 import { buzzAt, DECAY_SEC, drinkAlcohol } from '../core/tipsy';
-import { TIPSY_NPC_LINES } from '../data/tipsy';
+import { OLI_HIGHBALL_LINES, TIPSY_NPC_LINES } from '../data/tipsy';
 import { NPCS } from '../data/npcs';
 import { chatWithNpc, talkToNpc } from './gameplay';
 import { Session } from './session';
@@ -26,6 +26,22 @@ describe('Bewohner reagieren auf Linas Schwips', () => {
       expect(r.leicht.length, npc.id).toBeGreaterThanOrEqual(2);
       expect(r.schummrig.length, npc.id).toBeGreaterThanOrEqual(2);
     }
+  });
+
+  it('Lieblingsgetränk Highball: Oli sagt, dass Lina davon immer so lustig wird – andere Bewohner reagieren wie sonst', () => {
+    const s = newSession();
+    drinkAlcohol(s.tipsy, s.playTime(), 'highball');
+    s.lastAlcohol = 'highball';
+    const oli = tipsyComment(s, 'oli').join(' ');
+    expect(OLI_HIGHBALL_LINES.leicht.flat().join(' ')).toContain(oli.slice(0, 30));
+    expect(oli).toContain('lustig');
+    const lars = tipsyComment(s, 'lars');
+    expect(TIPSY_NPC_LINES.lars.leicht.flat()).toEqual(expect.arrayContaining([lars[0]]));
+    // nach Bier wieder die normalen Zeilen
+    const t = newSession();
+    drinkAlcohol(t.tipsy, t.playTime(), 'bier');
+    t.lastAlcohol = 'bier';
+    expect(tipsyComment(t, 'oli').join(' ')).not.toContain('Zitronen');
   });
 
   it('nüchtern: kein Kommentar', () => {

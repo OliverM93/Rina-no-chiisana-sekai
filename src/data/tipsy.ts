@@ -3,7 +3,7 @@
  * Lina bremst sich selbst, und Wasser ist immer die freundliche Alternative. Logik: `core/tipsy.ts`.
  */
 
-export type DrinkKind = 'bier' | 'wein' | 'wasser' | 'cola';
+export type DrinkKind = 'bier' | 'wein' | 'highball' | 'wasser' | 'cola';
 export type DrinkPlace = 'cafe' | 'zuhause';
 
 /** Zeilen zum Getränk, je nach Ort */
@@ -16,6 +16,10 @@ export const DRINK_LINES: Readonly<Record<DrinkKind, Readonly<Record<DrinkPlace,
     cafe: ['Jens schenkt einen Rotwein ein und schwenkt ihn sehr wichtig. 🍷', '„Santé! Der kommt aus einer ganz kleinen Gegend. Ich weiß nur nicht, aus welcher.“'],
     zuhause: ['Ein Glas Rotwein. 🍷', 'Lina schwenkt es ganz wichtig. Sie hat keine Ahnung, warum. Es sieht gut aus.'],
   },
+  highball: {
+    cafe: ['Jens kramt eine Dose hervor: „Dein -196 Double Lemon, ma chérie. Ich habe extra welche bestellt.“ 🍋', '„Santé! Zitrone, kalt und ein bisschen frech.“'],
+    zuhause: ['Suntory -196 Double Lemon: die Dose zischt, und es duftet nach Zitrone. 🍋', 'Lina nimmt einen großen Schluck. Zitronig, eiskalt, perfekt.'],
+  },
   wasser: {
     cafe: ['Jens stellt ein Glas Wasser mit Zitronenscheibe hin. „Très chic, nicht wahr?“ 💧'],
     zuhause: ['Ein großes Glas Wasser. Kalt und klar. 💧'],
@@ -24,6 +28,21 @@ export const DRINK_LINES: Readonly<Record<DrinkKind, Readonly<Record<DrinkPlace,
     cafe: ['Cola Zero. Eiskalt.'],
     zuhause: ['Cola Zero! Es zischt, Lina seufzt glücklich. 🥤', 'Das erste Schlückchen ist immer das beste.'],
   },
+};
+
+/**
+ * Oli kennt Linas Lieblingsgetränk: Hat sie den Double-Lemon-Highball getrunken, sagt er, dass sie davon immer so
+ * lustig wird (statt der allgemeinen Zeilen). Gilt für beide Stufen; liebevoll, nie verurteilend.
+ */
+export const OLI_HIGHBALL_LINES: Readonly<Record<'leicht' | 'schummrig', readonly (readonly string[])[]>> = {
+  leicht: [
+    ['Lini, du hast wieder diesen Zitronen-Highball getrunken, oder? Du wirst davon immer so lustig.', 'Ich frag dann extra nichts. Ich hör einfach zu.'],
+    ['Die Dose mit dem Zitronen-Ding? Das erkenn ich sofort. Du kicherst nach der Hälfte schon.'],
+  ],
+  schummrig: [
+    ['Lini … das war nicht nur eine Dose, hm? Aber du bist so unglaublich lustig, wenn du das trinkst.', 'Setz dich, ich bleib bei dir. Und Wasser kommt auch.'],
+    ['Der Zitronen-Highball, ich wusste es. Du wirst davon immer so lustig – und ein kleines bisschen schwankig.', 'Komm, Wasser und ein Platz neben mir.'],
+  ],
 };
 
 /** Kurzer Kommentar nach dem Trinken, je nach Stufe (1 beschwipst, 2 schummrig, 3 ganz schön schummrig) */
