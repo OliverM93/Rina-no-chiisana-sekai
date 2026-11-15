@@ -291,6 +291,12 @@ vergeht. Kein Fortschritt, keine Belohnung, keine Zahlen, nichts gespeichert –
 **Bewusst nicht:** Fotos im Album (erst Text, E2), Hundekörbchen im Katalog (E3 nein), Ranglisten, Streaks, Pflichtfelder.
 **Designprüfung:** 1 „Ach, Oma mag Pfirsiche, das wusste ich schon!“ / „Weißt du noch?“ / ein gemeinsamer Moment mit der besten Freundin · 2 Wochen-Loop (Wiedereinstieg), Mikro bei Thalia · 3 Nachschlagen statt Raten, Schenken wird zum kleinen Entdecken · 4 das Album wächst mit jeder Spielstunde und wird nie „fertig“ · 5 keine Wirtschaftsänderung · 6 Risiko „Aufgabenliste“: gelöst durch „nur Entdecktes“, keine Zahlen, keine leeren Felder zum Abhaken; Risiko „falsches Datum bei alten Spielständen“: gelöst durch „Früher“ · 7 stärkt Säule 4 (Beziehungen) und 2 (Entdecken) · 8 einfachere Lösung: nur Füllstand im Dialogfenster, löst die Vorlieben nicht.
 
+### D38 · Kater und Igor (Nov. 2026)
+
+**Anlass:** Wunsch von Lina: Ihr schwarzer Kater („Kater“) soll im Dorf streunern, auch Olaf und Christin gehören dazu; Igor, ihr verstorbener Hund (auch Olafs), soll in ein paar warmen Zeilen vorkommen.
+**Entscheidung:** Kater streunert tagsüber draußen (nicht bei Regen, nachts drin), erst nachdem Olaf und Christin eingezogen sind. Ansprechen und Streicheln als kleiner Moment ohne Punkte. Olaf und Christin erzählen von ihm über das vorhandene Erinnerungssystem; Igor kommt nur in Erinnerungszeilen vor (nie schwer, nie dramatisch, keine erfundene Vorgeschichte).
+**Bewusst nicht:** Futter-/Pflege-Pflichten, Bedürfnisse, Kater im Haus (Körbchen) – das wäre ein Anschluss für später.
+**Designprüfung:** 1 „Kater! Da bist du ja.“ · 2 Mikro-Moment beim Spazieren, kein Tagesloop · 3 Überraschung beim Dorfspaziergang · 4 Charakter und Zusammenhalt, kein Ziel · 5 keine Wirtschaft · 6 Risiko „Trauer-Mechanik“: Igor nur als warme Erinnerung; Risiko „Pflege-Druck“: keine · 7 Säulen 1 (persönlich) und 5 (die Welt lebt) · 8 einfachere Lösung: nur Textzeilen ohne Figur, aber Lina hat ihn ausdrücklich als Figur gewünscht.
 ### D37 · Linas Highball und Winstons Kopf (Nov. 2026)
 
 **Anlass:** Lina liebt den Suntory -196 Double Lemon; Winstons Kopf saß optisch auf dem Rücken statt vor dem Rumpf.

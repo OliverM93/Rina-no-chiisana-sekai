@@ -68,6 +68,8 @@ export function memoryTags(session: Session): string[] {
   if (data.flags['wunsch-thalia-matteo']) tags.push('matteo');
   if (data.flags['wunsch-oli-kino']) tags.push('kino');
   if (data.flags['wunsch-oli-bandshirt']) tags.push('tourshirt');
+  // Olaf und Christin sind da: Kater streunert durchs Dorf, und man erinnert sich an Igor
+  if (data.flags.olafEingezogen && data.flags.olafBegruesst) tags.push('kater', 'igor');
   const days = daysBetween(data.createdAt.slice(0, 10), session.today());
   if (days >= 30) tags.push('monat-1');
   if (days >= 365) tags.push('jahr-1');
