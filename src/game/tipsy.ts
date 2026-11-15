@@ -4,7 +4,7 @@
  */
 import { buzzAt, stage } from '../core/tipsy';
 import { hashString } from '../core/rng';
-import { TIPSY_NPC_LINES } from '../data/tipsy';
+import { OLI_HIGHBALL_LINES, TIPSY_NPC_LINES } from '../data/tipsy';
 import type { Session } from './session';
 
 /** So lange wartet derselbe Bewohner, bevor er Lina noch einmal darauf anspricht (Spielzeit in Sekunden) */
@@ -20,6 +20,7 @@ export function tipsyComment(session: Session, npcId: string): string[] {
   const last = session.tipsySpoken.get(npcId);
   if (last !== undefined && now - last < COMMENT_PAUSE_SEC) return [];
   session.tipsySpoken.set(npcId, now);
-  const pool = st === 1 ? reaction.leicht : reaction.schummrig;
+  const own = npcId === 'oli' && session.lastAlcohol === 'highball' ? OLI_HIGHBALL_LINES : reaction;
+  const pool = st === 1 ? own.leicht : own.schummrig;
   return [...pool[hashString(`${npcId}:${session.today()}:${Math.floor(now / COMMENT_PAUSE_SEC)}`) % pool.length]];
 }

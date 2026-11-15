@@ -3769,8 +3769,8 @@ export class World3D {
     if (furnitureId === 'kuehlschrank') {
       this.session.bus.emit('dialog:open', {
         title: 'Kühlschrank',
-        lines: ['Gemüse, Omas Pflaumenmus, Cola Zero … und ganz hinten ein paar Bier. Hm.'],
-        choices: [pick('🍺 Ein Bier', 'bier'), pick('🥤 Cola Zero', 'cola'), pick('💧 Wasser', 'wasser'), nothing],
+        lines: ['Gemüse, Omas Pflaumenmus, Cola Zero, ein paar Dosen Zitronen-Highball … und ganz hinten ein paar Bier. Hm.'],
+        choices: [pick('🍋 -196 Double Lemon', 'highball'), pick('🍺 Ein Bier', 'bier'), pick('🥤 Cola Zero', 'cola'), pick('💧 Wasser', 'wasser'), nothing],
       });
       return;
     }
@@ -3785,7 +3785,7 @@ export class World3D {
     this.session.bus.emit('dialog:open', {
       title: cafe ? 'Tresen bei Jens' : 'Hausbar',
       lines: [cafe ? 'Jens strahlt: „Was darf es sein, ma chérie?“' : 'Der Tresen glänzt. Gläser, ein Zapfhahn, ein bisschen Paris.'],
-      choices: [pick('🍺 Ein Bier', 'bier'), pick('🍷 Ein Glas Wein', 'wein'), pick('💧 Wasser', 'wasser'), nothing],
+      choices: [pick('🍺 Ein Bier', 'bier'), pick('🍷 Ein Glas Wein', 'wein'), pick('🍋 -196 Double Lemon', 'highball'), pick('💧 Wasser', 'wasser'), nothing],
     });
   }
 
@@ -3796,9 +3796,10 @@ export class World3D {
     const seed = hashString(`${s.today()}:${Math.floor(now / 1000)}:${kind}`);
     const pickOf = <T,>(list: readonly T[]): T => list[seed % list.length];
     let lines: string[];
-    if (kind === 'bier' || kind === 'wein') {
+    if (kind === 'bier' || kind === 'wein' || kind === 'highball') {
       if (drinkAlcohol(s.tipsy, now, kind) === 'genug') lines = [...pickOf(REFUSE_LINES)];
       else {
+        s.lastAlcohol = kind;
         const st = tipsyStage(buzzAt(s.tipsy, now));
         lines = [...DRINK_LINES[kind][place], ...(st === 0 ? [] : [pickOf(STAGE_LINES[st])])];
       }
@@ -3807,7 +3808,7 @@ export class World3D {
       drinkWater(s.tipsy, now);
       lines = [...DRINK_LINES.wasser[place], pickOf(was > 0.05 ? WATER_CLEARS_LINES : WATER_PLAIN_LINES)];
     } else lines = [...DRINK_LINES.cola[place]];
-    s.bus.emit('dialog:open', { title: kind === 'bier' ? '🍺 Bier' : kind === 'wein' ? '🍷 Wein' : kind === 'wasser' ? '💧 Wasser' : '🥤 Cola Zero', lines, onClose: () => this.player?.cheer() });
+    s.bus.emit('dialog:open', { title: kind === 'bier' ? '🍺 Bier' : kind === 'wein' ? '🍷 Wein' : kind === 'highball' ? '🍋 Highball' : kind === 'wasser' ? '💧 Wasser' : '🥤 Cola Zero', lines, onClose: () => this.player?.cheer() });
   }
 
   /** Siebträgermaschine: erst Klassiker oder Milchschaum, dann das Getränk */

@@ -59,7 +59,7 @@ export class Dog3D {
     const torso = part(capsule, fur, 0.1, 0.27, 0.1, 0, 0, 0);
     torso.rotation.x = Math.PI / 2;
     this.body.add(torso);
-    const chest = part(sphere, belly, 0.075, 0.07, 0.08, 0, -0.04, 0.15);
+    const chest = part(sphere, belly, 0.075, 0.07, 0.08, 0, -0.04, 0.2);
     this.body.add(chest);
 
     // Beinchen (Drehpunkt oben)
@@ -73,7 +73,8 @@ export class Dog3D {
     }
 
     // Kopf
-    this.head.position.set(0, 0.11, 0.26);
+    // Der Kopf sitzt vor dem Körper (der Rumpf reicht bis z ≈ 0,4), nicht darüber
+    this.head.position.set(0, 0.1, 0.4);
     this.body.add(this.head);
     this.head.add(part(sphere, fur, 0.115, 0.105, 0.11));
     // Schnauze
@@ -103,10 +104,10 @@ export class Dog3D {
     // Halsband mit Marke
     const band = mesh(torus, toon(collar));
     band.scale.setScalar(0.078);
-    band.position.set(0, 0.05, 0.2);
+    band.position.set(0, 0.06, 0.32);
     band.rotation.x = Math.PI / 2 - 0.5;
     this.body.add(band);
-    this.body.add(part(sphere, tag, 0.018, 0.018, 0.008, 0, -0.01, 0.255));
+    this.body.add(part(sphere, tag, 0.018, 0.018, 0.008, 0, -0.01, 0.375));
 
     // Schwanz (Drehpunkt an der Wurzel)
     this.tail.position.set(0, 0.04, -0.3);
@@ -164,7 +165,7 @@ export class Dog3D {
     const lookDown = p.digging ? 0.55 : p.rest === 2 ? 0.25 : 0;
     this.head.rotation.x = lookDown + (p.rest === 1 ? 0.42 : 0) + Math.sin(p.t * 1.3) * 0.03;
     this.head.rotation.z = p.tilt * 0.35;
-    this.head.position.y = p.rest === 2 ? 0.06 : 0.11;
+    this.head.position.y = p.rest === 2 ? 0.05 : 0.1;
 
     // Ohren flattern beim Laufen
     const flap = p.moving ? Math.sin(p.step * Math.PI * 2 + 1) * 0.25 : 0;
