@@ -34,6 +34,15 @@ export const MEMORIES: readonly Memory[] = [
   { id: 'oli-igor', npc: 'oli', tag: 'igor', text: ['Lini, wenn du an Igor denkst … ich bin da. Ein Hund wie er bleibt im Herzen.', 'Und Winston ist ein ziemlich guter Nachfolger. Nicht Ersatz. Nachfolger.'] },
   { id: 'lars-igor', npc: 'lars', tag: 'igor', text: ['Wenn ich an Igor denke, wird mir ganz warm ums Herz. Und ein bisschen eng.', 'Ein guter Hund. Ein sehr guter Hund. Ärztliches Urteil.'] },
 
+  // ---- Blumendeko: Vase mit Strauß oder Kranz im Haus (sagen auch Gäste beim Besuch) ----
+  { id: 'gisela-blumendeko', npc: 'gisela', tag: 'blumendeko', text: ['Blümchen im Haus, Kind. Das gehört sich so. Da sieht man gleich, dass hier jemand wohnt.'] },
+  { id: 'olaf-blumendeko', npc: 'olaf', tag: 'blumendeko', text: ['Frische Blumen im Haus: Kosten-Nutzen sehr gut. Stimmung pro Euro unschlagbar.'] },
+  { id: 'christin-blumendeko', npc: 'christin', tag: 'blumendeko', text: ['Die Blumen stehen so gerade in der Vase. Und die Stiele sind gleich lang. Ich bin gerührt.'] },
+  { id: 'jens-blumendeko', npc: 'jens', tag: 'blumendeko', text: ['Blumen im Haus, Lina! Une maison sans fleurs, c’est une maison triste. Bei dir: magnifique!'] },
+  { id: 'lars-blumendeko', npc: 'lars', tag: 'blumendeko', text: ['Frische Blumen sind nachweislich gut für die Stimmung. Ärztlicher Rat: bitte weitermachen.'] },
+  { id: 'thalia-blumendeko', npc: 'thalia', tag: 'blumendeko', text: ['Blumen in der Vase! Dadurch wirkt das ganze Zimmer wie aus einem Magazin. Ich will ein Foto.'] },
+  { id: 'oli-blumendeko', npc: 'oli', tag: 'blumendeko', text: ['Du hast Blumen aufgestellt, Lini. Das fällt mir jedes Mal auf, wenn ich reinkomme. Es macht das Zuhause schöner.'] },
+
   // ---- Oma Gisela ----
   { id: 'gisela-haus-dach', npc: 'gisela', tag: 'haus-dach', text: ['Ich war oben in deinem Dachzimmer, Kind. Die Treppe ist steil.', 'Ich hab nicht gemeckert. Na gut. Ein bisschen. Aber leise.'] },
   { id: 'gisela-haus-keller', npc: 'gisela', tag: 'haus-keller', text: ['Ein Keller! Jetzt hast du Platz für Eingemachtes.', 'Ich hab Pflaumenmus. Sehr viel Pflaumenmus. Das kommt zu dir, keine Widerrede.'] },

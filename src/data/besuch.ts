@@ -67,7 +67,7 @@ export const VISITS: Readonly<Record<string, VisitDef>> = {
 export const VISITORS: readonly string[] = Object.keys(VISITS);
 
 /** Erinnerungs-Tags, die etwas Sichtbares im Haus beschreiben (nur dazu sagt ein Gast etwas) */
-export const HOUSE_MEMORY_TAGS: readonly string[] = ['haus-anbau', 'haus-dach', 'haus-kueche', 'haus-keller', 'huehner', 'gewaechshaus', 'tassen-viele', 'pflanzen-viele', 'bett', 'waermflasche', 'parkett-edel', 'tapete-uni', 'garten-deko'];
+export const HOUSE_MEMORY_TAGS: readonly string[] = ['haus-anbau', 'haus-dach', 'haus-kueche', 'haus-keller', 'huehner', 'gewaechshaus', 'tassen-viele', 'pflanzen-viele', 'bett', 'waermflasche', 'parkett-edel', 'tapete-uni', 'garten-deko', 'blumendeko'];
 
 /** Uhrzeiten, zu denen Besuch kommt (von–bis, Stunden) */
 export const VISIT_HOURS = [9, 21] as const;
