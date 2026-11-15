@@ -45,6 +45,8 @@ export function memoryTags(session: Session): string[] {
   const PLANTS = ['topfpflanze', 'gummibaum', 'kaktus', 'sukkulenten', 'yucca', 'haengepflanze', 'bonsai'];
   if (data.house.rooms.flatMap((r) => r.items).filter((i) => PLANTS.includes(FURNITURE_BY_ITEM[i.itemId]?.def.id ?? '')).length >= 5) tags.push('pflanzen-viele');
   if (data.house.rooms.some((r) => r.items.some((i) => i.itemId.startsWith('bett')))) tags.push('bett');
+  // Blumendeko: eine gebundene Vase oder ein Kranz im Haus
+  if (data.house.rooms.some((r) => r.items.some((i) => i.itemId.startsWith('vase-strauss-') || i.itemId.startsWith('kranz-')))) tags.push('blumendeko');
   if (data.house.rooms.some((r) => r.items.some((i) => i.itemId === 'waermflasche'))) tags.push('waermflasche');
   // Einrichtung: Stile (ab vier Stücken im Haus), Boden & Wand, Garten
   const houseItems = data.house.rooms.flatMap((r) => r.items);

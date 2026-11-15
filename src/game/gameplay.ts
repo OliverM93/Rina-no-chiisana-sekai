@@ -36,6 +36,7 @@ import { memoryLinesFor, memoryTags, takeMemory } from './erinnerungen';
 import { winstonOmaLines } from './pet';
 import { tipsyComment } from './tipsy';
 import { noteTaste } from './friends';
+import { bouquetBonus, straussLustLines } from './straussLust';
 
 // ---------------------------------------------------------------------------
 // Tasche & Sternchen
@@ -271,6 +272,7 @@ export function talkToNpc(session: Session, npcId: string): TalkOutcome {
     else if (fest.length > 0) lines.push(...fest);
     else lines.push(...pickLine(npc.dialogue.greetings, ctx));
     lines.push(...takeMemory(session, npcId));
+    lines.push(...straussLustLines(session, npcId));
     lines.push(...winstonOmaLines(session, npcId));
     // sanfter Hinweis, was für den nächsten Einzug noch fehlt (einmal am Tag zur Begrüßung)
     const hint = progressHint(session, npcId);
@@ -335,6 +337,14 @@ export function giftToNpc(session: Session, npcId: string, itemId: string): Gift
     const special = npc.dialogue.giftsByItem[itemId] ?? npc.dialogue.giftsByItem[speciesOfFlower(itemId)];
     lines.push(...(special ?? pickByDay(session, `${npcId}:gift:${itemId}`, npc.dialogue.gifts[r.reaction])));
   }
+  // Strauß als besonderes Geschenk: mehr Freude und eine eigene Dankes-Zeile (Lust auf einen Strauß: noch mehr)
+  const bonus = bouquetBonus(session, npcId, itemId, r.reaction, r.repeatToday);
+  if (bonus.points > 0) {
+    const before = heartsFor(st.points);
+    st.points += bonus.points;
+    lines.push(...bonus.lines);
+    if (!r.heartUp && heartsFor(st.points) > before) handleHeartUp(session, npc, st, lines);
+  } else lines.push(...bonus.lines);
   // Geburtstagsgeschenk: doppelte Freude
   if (!r.repeatToday && npc.birthday && isSameDayMonth(session.clock(), npc.birthday)) {
     const before = heartsFor(st.points);

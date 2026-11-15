@@ -302,3 +302,10 @@ vergeht. Kein Fortschritt, keine Belohnung, keine Zahlen, nichts gespeichert –
 **Anlass:** Lina liebt den Suntory -196 Double Lemon; Winstons Kopf saß optisch auf dem Rücken statt vor dem Rumpf.
 **Entscheidung:** Der Highball ist ein weiteres Getränk im Schwips-System (Kühlschrank, Tresen), etwas milder als Bier; Oli kommentiert, dass Lina davon immer so lustig wird. Der Markenname steht nur als Text, ohne Logo. Winstons Kopf (und Halsband, Marke, Brust) sitzt jetzt vor dem Rumpf; geprüft in Stehen, Sitzen, Liegen.
 **Designprüfung (kurz):** 1 Wiedererkennen: „Das ist wirklich Linas Getränk“ · 2 Mikro-Moment · 5 keine Wirtschaft (aufs Haus) · 6 Alkohol bleibt dezent: gleiche Obergrenze, kein Bonus, Wasser macht klar · 7 Säule 1 (persönlich) · 8 einfachere Lösung: nur ein Textgag ohne Getränk.
+
+### D39 · Sträuße sollen sich lohnen (Nov. 2026)
+
+**Anlass:** Lina hat kaum etwas an der Werkbank gebastelt. Sträuße waren nur ~20 % mehr wert als die Blumen, als Geschenk nicht besser als rohe Blumen, und es gab keinen Grund, sie zu binden.
+**Entscheidung:** (1) Geliebter Strauß: +10 Punkte und eigene Dankes-Zeile. (2) Alle vier Wochen hat jemand Lust auf einen bestimmten Strauß (+10 mehr), ohne Ablauf und ohne Strafe. (3) Vase und Kränze im Haus werden von Gästen und beim Plaudern bemerkt.
+**Bewusst nicht:** Preiserhöhung der Sträuße, Pflicht-Wünsche, Fristen, Streaks, Wochenlisten im Notizbuch.
+**Designprüfung:** 1 „Genau den wollte ich!“ · 2 Wochen-Loop, ohne Druck · 3 Basteln hat einen sichtbaren Zweck (Geschenk, Wunsch, Deko) · 4 hält Beet und Werkbank im Spiel · 5 keine Preisänderung; der Punktegewinn bleibt durch „ein Geschenk pro Tag mit vollen Punkten“ begrenzt · 6 Risiko „Pflichtgefühl“: Lust ist nur ein Satz im Gespräch, kein Eintrag, keine Frist; Risiko „zu viele Punkte“: höchstens +20 je Person und Woche · 7 stärkt Säulen 4 (Systeme füttern sich: Beet → Werkbank → Geschenk) und 3 (Zuhause) · 8 einfachere Lösung: nur Bonus für geliebte Sträuße, aber ohne Anlass.
