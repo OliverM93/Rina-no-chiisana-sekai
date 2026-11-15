@@ -277,6 +277,7 @@ Legende: ✅ erledigt · 🚧 in Arbeit · ⬜ geplant
 - ✅ **Kater und Igor (Nov. 2026):** Linas schwarzer Kater streunert durchs Dorf (ab Einzug von Olaf und Christin), lässt sich streicheln; Olaf und Christin erzählen von ihm, mehrere Bewohner erinnern sich liebevoll an Igor. 🗓️ Offen: Kater im Haus (Körbchen, Fensterbrett), Mäuse-Geschenke, Kater im Café
 - ✅ **Pflanzen ausgraben (Nov. 2026):** Schaufel am Beet gräbt eine Pflanze aus (Samen kommt zurück), dann lässt sich neu einsetzen
 - ✅ **Sträuße lohnen sich (Nov. 2026):** Geliebter Strauß +10 Punkte, wöchentliche „Lust auf einen Strauß“ (+10 mehr), Vase/Kranz im Haus wird von Gästen und Bewohnern bemerkt
+- ✅ **Strauß-Preise angehoben (Nov. 2026):** Verkaufswert ≈ 2,5–3× der Zutaten (vorher 1,2–1,8×), Test hält 2–4×
 - ✅ **Audit 3 umgesetzt:** Linas Notizbuch (N), Einzüge über Spielen statt Warten (winter-sicher), Enter für Hauptknöpfe, Snake-Rekord gespeichert, Balancing-Test
 - ✅ **Audit 4 umgesetzt (K1–K3):** neue Stile werden bei Einzügen angekündigt + „neu“ am Stil-Chip, Ökonomie-Doku aktualisiert, Katalog-Budget-Test
 - ✅ **Zeit zu zweit ohne Menüpunkt** (Szene beginnt beim nächsten Gespräch mit Oli zu Hause von selbst) · **Schwips-Fix:** Nachlassen lief fälschlich in Millisekunden statt Sekunden – jetzt nach ~1 Minute
