@@ -2737,3 +2737,66 @@ body:has(.dialog-layer) .decor-bar {
   box-shadow: 0 0 0 1.5px var(--ui-border);
   color: var(--ui-text, #5b4a4f);
 }
+
+/* Ukulele (Strand-Jam) */
+.card.ukulele {
+  width: min(460px, 94vw);
+}
+.uke-neck {
+  display: flex;
+  justify-content: space-between;
+  height: 64px;
+  margin: 10px 24px 14px;
+  padding: 0 28px;
+  border-radius: 14px;
+  background: linear-gradient(180deg, #d9a066, #c98a50);
+  align-items: stretch;
+}
+.uke-string {
+  width: 3px;
+  background: #fbf3e2;
+  border-radius: 2px;
+  transform-origin: center;
+}
+.uke-string.buzz {
+  animation: uke-buzz 0.18s linear;
+}
+@keyframes uke-buzz {
+  0% { transform: scaleX(3) translateX(1px); }
+  50% { transform: scaleX(2) translateX(-1px); }
+  100% { transform: scaleX(1); }
+}
+.uke-chords {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  margin-bottom: 8px;
+}
+.uke-chord {
+  border: 0;
+  border-radius: 16px;
+  padding: 14px 4px 8px;
+  font: inherit;
+  cursor: pointer;
+  background: var(--rose-100, #fde8ef);
+  color: inherit;
+  box-shadow: 0 3px 0 rgba(0, 0, 0, 0.12);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+.uke-chord.on {
+  background: var(--ui-accent);
+  color: #fff;
+  transform: translateY(2px);
+  box-shadow: none;
+}
+.uke-name {
+  font-size: 1.5rem;
+  font-weight: 800;
+}
+.uke-key {
+  font-size: 0.8rem;
+  opacity: 0.65;
+}

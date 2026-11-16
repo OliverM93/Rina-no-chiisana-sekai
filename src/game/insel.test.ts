@@ -105,3 +105,15 @@ describe('Versteckte Insel', () => {
     expect(ids).toContain('insel-fest');
   });
 });
+
+describe('Inselhütte & Ukulele', () => {
+  it('die Hütte erscheint erst nach dem Fest und hat ein Haus mit Bar und Ukulele', async () => {
+    const { INSEL_OBJECTS } = await import('../data/maps/insel');
+    const { GUEST_HOUSES } = await import('../data/gastHaeuser');
+    const hut = INSEL_OBJECTS.find((o) => o.id === 'inselhuette');
+    expect(hut?.requires).toBe('inselFest');
+    const ids = GUEST_HOUSES['inselhuette'].items.map((i) => i.id);
+    expect(ids).toContain('ukulele');
+    expect(ids).toContain('zinktheke');
+  });
+});

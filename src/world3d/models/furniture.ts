@@ -2486,6 +2486,21 @@ export function makeFurniture(itemId: string, links: FenceLinks = { n: false, e:
       seatY = 0.45;
       break;
     }
+    case 'ukulele': {
+      // Wand-Deko: Ukulele mit Blumenband (Korpus, Hals, Schalloch, vier Saiten)
+      const z = WALL_Z + 0.06;
+      const wood = '#d9a066';
+      g.add(s(0.13, 0.15, 0.03, wood, 0, 1.0, z));
+      g.add(s(0.09, 0.1, 0.03, wood, 0, 1.17, z));
+      g.add(b(0.045, 0.45, 0.02, '#6e4630', 0, 1.42, z));
+      g.add(b(0.07, 0.09, 0.02, '#4a2f20', 0, 1.69, z));
+      g.add(c(0.045, 0.01, '#2b2931', 0, 1.05, z + 0.025, cyl).rotateX(Math.PI / 2));
+      for (const x of [-0.012, -0.004, 0.004, 0.012]) g.add(b(0.003, 0.85, 0.004, '#f4f1ea', x, 1.2, z + 0.03));
+      // Blumenband
+      for (const [i, col] of ['#ff7b8a', '#ffd166', '#06b6a4', '#ff7b8a'].entries()) g.add(s(0.025, 0.025, 0.012, col, -0.09 + i * 0.06, 0.82, z + 0.018));
+      g.add(b(0.28, 0.012, 0.008, '#8a5a3a', 0, 0.82, z + 0.012));
+      break;
+    }
     case 'surfbrett': {
       // Wand-Deko: Surfbrett mit Streifen und kleiner Finne
       const z = WALL_Z + 0.07;

@@ -31,7 +31,20 @@ export type Sfx =
   | 'gackern'
   | 'graben'
   | 'herz'
-  | 'post';
+  | 'post'
+  // Ukulele-Akkorde (Strand-Jam auf der Insel)
+  | 'uke-c'
+  | 'uke-am'
+  | 'uke-f'
+  | 'uke-g';
+
+/** Ukulele-Akkorde (vier Saiten, Frequenzen in Hz) */
+export const UKE_CHORDS: Readonly<Record<'uke-c' | 'uke-am' | 'uke-f' | 'uke-g', readonly number[]>> = {
+  'uke-c': [392, 261.6, 329.6, 523.3],
+  'uke-am': [440, 261.6, 329.6, 440],
+  'uke-f': [349.2, 261.6, 349.2, 440],
+  'uke-g': [392, 293.7, 392, 493.9],
+};
 
 /** Musik deutlich hörbar über Umgebung & Geräuschen (vorher ging sie darin unter) */
 const MUSIC_GAIN = 2.2;
@@ -697,6 +710,13 @@ export class GameAudio {
         break;
       case 'dialog':
         this.tone(t, 740 + Math.random() * 120, 0.06, 0.05, 'triangle');
+        break;
+      case 'uke-c':
+      case 'uke-am':
+      case 'uke-f':
+      case 'uke-g':
+        // Anschlag von oben nach unten: die vier Saiten kurz nacheinander
+        UKE_CHORDS[s].forEach((f, i) => this.pluck(out, t + i * 0.022, f, 0.16));
         break;
       case 'klick':
         this.tone(t, 1200, 0.04, 0.06, 'triangle');

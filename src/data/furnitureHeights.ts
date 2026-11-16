@@ -173,6 +173,7 @@ export const FURNITURE_HEIGHTS: Readonly<Record<string, number>> = {
   'tripodlampe': 1.40,
   'trockenkranz': 1.10,
   'tiki-fackel': 1.5,
+  'ukulele': 0.72,
   'tsukubai': 0.78,
   'tulpentisch': 0.72,
   'urkunde-blumen': 1.06,
