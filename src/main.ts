@@ -135,6 +135,8 @@ async function start() {
     // `?ausbau=5` in der Adresse: neue Spiele starten mit fertig ausgebautem Haus (nur zum Testen)
     const stage = Number(new URLSearchParams(window.location.search).get('ausbau'));
     if (Number.isFinite(stage) && stage > 0) session.devHouseStage = Math.floor(stage);
+    // `?insel=1`: neue Spiele starten mit allen Bewohnern, vollen Herzen und dem Boot am Dorfstrand (nur zum Testen)
+    session.devInsel = new URLSearchParams(window.location.search).get('insel') === '1';
   }
 
   // Automatisch speichern
