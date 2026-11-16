@@ -126,8 +126,8 @@ export const GUEST_HOUSES: Readonly<Record<string, GuestHouse>> = {
   'haus-thalia': {
     npc: 'thalia',
     name: 'Thalias Häuschen',
-    wallpaper: 'tapete-uni-sand',
-    floor: 'boden-dielen-esche',
+    wallpaper: 'tapete-shack',
+    floor: 'boden-dielen',
     // Schlicht und Mid-Century: wenige gute Stücke, viel Luft
     items: [
       { id: 'teaksideboard', x: 3, y: 0 },
@@ -292,8 +292,8 @@ export const GUEST_HOUSES: Readonly<Record<string, GuestHouse>> = {
   inselhuette: {
     npc: '',
     name: 'Strandhütte',
-    wallpaper: 'tapete-uni-sand',
-    floor: 'boden-dielen-esche',
+    wallpaper: 'tapete-shack',
+    floor: 'boden-dielen',
     items: [
       { id: 'surfbrett', x: 1, y: 0, rot: 0 },
       { id: 'ukulele', x: 3, y: 0, rot: 0 },

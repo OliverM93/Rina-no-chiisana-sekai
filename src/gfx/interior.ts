@@ -495,6 +495,27 @@ export function drawPattern(ctx: CanvasRenderingContext2D, def: SurfaceDef, s: n
       }
       break;
     }
+    case 'bretter': {
+      // breite, verwitterte Bretter mit deutlichen Fugen, Maserung und Nagelköpfen (Strand-Shack)
+      const n = 5;
+      const w = s / n;
+      for (let i = 0; i < n; i++) {
+        ctx.fillStyle = i % 2 ? darken(color, 0.06) : lighten(color, 0.04);
+        ctx.fillRect(i * w, 0, w, s);
+        ctx.globalAlpha = 0.25;
+        ctx.fillStyle = darken(color, 0.25);
+        for (let k = 0; k < 4; k++) ctx.fillRect(i * w + w * (0.2 + 0.18 * k), 0, Math.max(1, s / 160), s);
+        ctx.globalAlpha = 1;
+        ctx.fillStyle = darken(accent, 0.25);
+        ctx.fillRect(i * w, 0, Math.max(2, w * 0.05), s);
+        for (const y of [s * 0.12, s * 0.88]) {
+          ctx.beginPath();
+          ctx.arc(i * w + w / 2, y, s / 140, 0, Math.PI * 2);
+          ctx.fill();
+        }
+      }
+      break;
+    }
     case 'vertaefelung': {
       // senkrechte Holzleisten mit Fugen + Abschlussleiste oben
       ctx.fillStyle = accent;

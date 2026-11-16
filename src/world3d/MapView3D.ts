@@ -17,6 +17,7 @@ import {
   makeBridge,
   makeFountain,
   makeHouse,
+  makeShack,
   makeLantern,
   makeMailbox,
   makePlotMarks,
@@ -113,7 +114,7 @@ export function buildMapView3D(scene: THREE.Scene, map: WorldMap, season: Season
         node = makeRock(seed);
         break;
       case 'house': {
-        const h: HouseModel = makeHouse(ROOF[o.variant ?? 'rose'] ?? palette.roof.rose);
+        const h: HouseModel = o.variant === 'shack' ? makeShack() : makeHouse(ROOF[o.variant ?? 'rose'] ?? palette.roof.rose);
         node = h.group;
         for (const w of h.windows) windows.push(w.clone().add(new THREE.Vector3(c.x, 0, c.z)));
         occluders.push({ id: o.id, node, x: c.x, z: c.z, w: o.w, h: o.h });
