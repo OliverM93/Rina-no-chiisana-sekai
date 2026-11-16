@@ -117,7 +117,7 @@ src/
 - **Modelle:** Ursprung = Mitte der Grundfläche auf Bodenhöhe, Tür/Blick zeigt nach +Z.
   Kollision nur über eine kleine Fuß-Box. Bäume/Häuser zwischen Kamera und Lina werden halbtransparent.
 - **Gelände:** Höhenraster (Fluss/Meer abgesenkt) + Textur, die per „Dual-Grid“-Autotiling mit runden Kanten
-  gemalt wird (`gfx/terrain.ts`, `world3d/terrain3d.ts`). Karte = ASCII in `data/maps/village.ts`.
+  gemalt wird (`gfx/terrain.ts`, `world3d/terrain3d.ts`). Karte = ASCII in `data/maps/village.ts` (Dorf, Reihen 0–39; darunter die versteckte Insel aus `data/maps/insel.ts`).
 - **Objekte** (Häuser, Schilder, Laternen …) stehen in `VILLAGE_OBJECTS`; Größe, Kollision und
   Interaktionspunkte pro Art in `OBJECT_KINDS` (`core/worldmap.ts`). Ausnahmen mit eigener Größe (`w`/`h` am Objekt):
   `landmark` (Orte aus den Herzenswünschen, ansehbar von allen Seiten – `interactOffsets`, Modelle in

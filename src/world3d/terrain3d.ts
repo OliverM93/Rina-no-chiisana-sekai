@@ -4,6 +4,7 @@
  * (runde Übergänge zwischen Wiese, Weg, Sand und Wasser).
  */
 import * as THREE from 'three';
+import { INSEL_Y0 } from '../data/maps/insel';
 import { TILE } from '../config';
 import { tileNoise } from '../core/rng';
 import type { Season } from '../core/time';
@@ -114,7 +115,14 @@ export function buildTerrain(map: WorldMap, season: Season, anisotropy: number):
   for (let i = 0; i < pos.count; i++) pos.setY(i, heightAt(pos.getX(i), pos.getZ(i)));
   geo.computeVertexNormals();
 
-  const tex = new THREE.CanvasTexture(paintGround(map, season));
+  const ground2d = paintGround(map, season);
+  // Die Insel ist immer sommerlich (auch wenn im Dorf Schnee liegt): ihr Teil kommt aus der Sommer-Textur
+  if (season !== 'sommer' && map.height > INSEL_Y0) {
+    const summer = paintGround(map, 'sommer');
+    const y0 = Math.round((INSEL_Y0 - 0.5) * PX);
+    (ground2d.getContext('2d') as CanvasRenderingContext2D).drawImage(summer, 0, y0, summer.width, summer.height - y0, 0, y0, summer.width, summer.height - y0);
+  }
+  const tex = new THREE.CanvasTexture(ground2d);
   tex.colorSpace = THREE.SRGBColorSpace;
   tex.anisotropy = anisotropy;
   const ground = new THREE.Mesh(geo, new THREE.MeshLambertMaterial({ map: tex }));

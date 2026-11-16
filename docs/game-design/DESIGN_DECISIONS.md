@@ -310,6 +310,12 @@ vergeht. Kein Fortschritt, keine Belohnung, keine Zahlen, nichts gespeichert –
 **Bewusst nicht:** Preiserhöhung der Sträuße, Pflicht-Wünsche, Fristen, Streaks, Wochenlisten im Notizbuch.
 **Designprüfung:** 1 „Genau den wollte ich!“ · 2 Wochen-Loop, ohne Druck · 3 Basteln hat einen sichtbaren Zweck (Geschenk, Wunsch, Deko) · 4 hält Beet und Werkbank im Spiel · 5 keine Preisänderung; der Punktegewinn bleibt durch „ein Geschenk pro Tag mit vollen Punkten“ begrenzt · 6 Risiko „Pflichtgefühl“: Lust ist nur ein Satz im Gespräch, kein Eintrag, keine Frist; Risiko „zu viele Punkte“: höchstens +20 je Person und Woche · 7 stärkt Säulen 4 (Systeme füttern sich: Beet → Werkbank → Geschenk) und 3 (Zuhause) · 8 einfachere Lösung: nur Bonus für geliebte Sträuße, aber ohne Anlass.
 
+### D41 · Die versteckte Insel als Belohnung für alle Herzen (Nov. 2026)
+
+**Anlass:** Lina wünschte sich eine Belohnung für „alle Herzen bei allen“: ein Boot zu einer versteckten, sonnigen Hawaii-Insel mit eigener Musik und einer großen Belohnung.
+**Entscheidung:** Sind bei allen sieben Bewohnern alle fünf Herzen voll, liegt ein Boot am Dorfstrand. Die Insel ist immer sonnig (auch im Winter), hat Hawaii-Musik, beim ersten Besuch eine Überraschungsparty aller Bewohner und als große Belohnung das Inselset (vier Deko-Stücke, nur als Geschenk). Technisch ein Kartenteil unterhalb des Dorfes (kein Kartenwechsel), erreichbar nur per Boot.
+**Bewusst nicht:** Zeitdruck, Pflicht-Besuche, Sternchen-Belohnung (Balancing), neue Fische oder Arten nur dort (würden Sammlungen wieder öffnen), Kopplung an Kalender oder Tageszeit.
+**Designprüfung:** 1 „Alle sind da, nur für mich“ · 2 Monats-Loop (erst mit allen Herzen), danach beliebig oft für ein bisschen Sonne · 3 Abschluss der Beziehungsreise, großer emotionaler Höhepunkt · 4 Langzeit: Insel bleibt als Ort (Fischen, Ausruhen) · 5 Belohnung sind Deko-Stücke ohne Sternchen, keine Wirtschaftsänderung · 6 Risiko „zu spät erreichbar“: sie ist das Spielende der Beziehungen, nicht Pflicht; Risiko „Technik“: Insel im selben Raster, Funde und Karte lassen sie aus · 7 Säule 4 (Beziehungen) und 5 (Welt) · 8 einfachere Lösung: nur ein Brief mit dem Inselset, ohne Ort; verworfen, weil Lina ausdrücklich einen Ort mit Musik wollte.
 ### D40 · Verstecke auf der Dorfkarte (Nov. 2026)
 
 **Anlass:** Feature Discovery, Lücke „Erkunden“: Die Karte ist nach wenigen Stunden bekannt, in der Welt ist nichts Verstecktes. Lina wünschte sich Verstecke, die ich selbst auswähle.

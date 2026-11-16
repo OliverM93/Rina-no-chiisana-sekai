@@ -35,6 +35,7 @@ import { checkSammlungen } from './sammlungen';
 import { memoryLinesFor, memoryTags, takeMemory } from './erinnerungen';
 import { winstonOmaLines } from './pet';
 import { tipsyComment } from './tipsy';
+import { isInselRow } from '../data/maps/insel';
 import { noteTaste } from './friends';
 import { bouquetBonus, straussLustLines } from './straussLust';
 import { thaliaMapLines } from './verstecke';
@@ -104,7 +105,7 @@ export function beachTiles(session: Session) {
   if (beachTilesCache) return beachTilesCache;
   const map = session.map;
   const tiles: Array<{ x: number; y: number }> = [];
-  for (let y = 0; y < map.height; y++) {
+  for (let y = 0; y < map.height && !isInselRow(y); y++) {
     for (let x = 0; x < map.width; x++) {
       if (terrainAt(map, x, y) === 'sand' && !map.grid.isBlocked(x, y)) tiles.push({ x, y });
     }

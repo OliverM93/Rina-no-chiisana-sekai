@@ -229,6 +229,36 @@ export function makeSteg(w: number): THREE.Group {
 }
 
 /** Ort zu einer `variant` (siehe `VILLAGE_OBJECTS`) */
+/** Kleines Ruderboot (2 × 1): Rumpf aus Brettern, zwei Bänke, Ruder, bunter Streifen – schaukelt leicht */
+function boot(): THREE.Group {
+  const g = new THREE.Group();
+  const hull = '#e8b178';
+  const dark = '#b9764a';
+  // Boden und Seitenwände
+  g.add(b(1.5, 0.1, 0.54, dark, 0, 0.1, 0));
+  for (const z of [-0.3, 0.3]) g.add(b(1.55, 0.26, 0.07, hull, 0, 0.22, z));
+  // Bug und Heck
+  for (const [x, rot] of [[-0.78, 0.25], [0.78, -0.25]] as const) {
+    const end = b(0.07, 0.3, 0.58, hull, x, 0.24, 0);
+    end.rotation.z = rot;
+    g.add(end);
+  }
+  for (const z of [-0.3, 0.3]) g.add(b(1.56, 0.05, 0.08, '#5fb7c9', 0, 0.355, z));
+  // Sitzbänke
+  for (const x of [-0.35, 0.3]) g.add(b(0.14, 0.05, 0.56, dark, x, 0.3, 0));
+  // Ruder
+  const oar = c(0.025, 0.85, '#8a5a3a');
+  oar.rotation.x = Math.PI / 2;
+  oar.position.set(0.1, 0.38, 0.42);
+  oar.rotation.z = 0.5;
+  g.add(oar);
+  g.add(b(0.18, 0.02, 0.1, '#f4f1ea', 0.58, 0.38, 0.12));
+  // kleine Wimpelkette am Heck
+  g.add(c(0.012, 0.5, '#6e4630', 0.74, 0.55, 0.22));
+  g.add(b(0.16, 0.09, 0.01, '#ff7b8a', 0.82, 0.74, 0.22));
+  return g;
+}
+
 export function makeLandmark(variant: string, w: number, h: number): THREE.Group {
   void h;
   switch (variant) {
@@ -242,6 +272,8 @@ export function makeLandmark(variant: string, w: number, h: number): THREE.Group
       return insektenhotel();
     case 'aussichtspunkt':
       return aussichtspunkt();
+    case 'boot':
+      return boot();
     default:
       return new THREE.Group();
   }
