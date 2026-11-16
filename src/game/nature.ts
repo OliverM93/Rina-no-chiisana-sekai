@@ -140,7 +140,8 @@ export function activeBait(session: Session): (typeof BAITS)[number] | null {
 export function biteFish(session: Session, habitat: FishHabitat, r = Math.random()): FishDef | null {
   const now = session.clock();
   const raining = isRaining(session);
-  const here = FISH.filter((f) => f.habitat === habitat && isAvailable(f, now, raining));
+  // Inselfische beißen nur vor der Insel
+  const here = FISH.filter((f) => f.habitat === habitat && (!f.insel || session.onIsland) && isAvailable(f, now, raining));
   // Der Glückswurm lockt auch Seltenes: Gewichte werden „flacher“ (Wurzel), Seltenes beißt häufiger
   if (activeBait(session) === 'koeder-gluckswurm') return pickSpecies(here.map((f) => ({ f, weight: Math.sqrt(f.weight) })), r)?.f ?? null;
   return pickSpecies(here, r);

@@ -65,3 +65,18 @@ export const ANKUNFT_WIEDER: readonly string[] = [
   'Warmer Sand unter den Füßen, Palmen im Wind. Hier ist immer Sommer. 🌺',
   'Das Wasser glitzert. Irgendwo knackt eine Kokosnuss. 🥥',
 ];
+
+/** Palmen schütteln: Kokosnüsse (jede Palme einmal am Tag, nicht jede hat etwas) */
+export const KOKOS_CHANCE = 45;
+export const KOKOS_GEFUNDEN: readonly string[] = ['🥥 Plong! Eine Kokosnuss fällt aus der Krone.', '🥥 Es raschelt, und eine Kokosnuss plumpst in den Sand.', '🥥 Ein dumpfes Geräusch: Da lag eine Kokosnuss im Blattschopf!'];
+export const KOKOS_LEER: readonly string[] = ['Die Palme raschelt, aber heute fällt nichts herunter. 🌴', 'Nur ein paar Blätter wirbeln durch die Luft. Heute nicht. 🌴'];
+export const KOKOS_SCHON: readonly string[] = ['Diese Palme hat heute schon alles hergegeben. Morgen wieder! 🌴'];
+
+/** Tägliche Strandfunde auf der Insel (nach der Party): mehr Seesterne als im Dorf */
+export const INSEL_FINDS_PER_DAY = 5;
+export const INSEL_FINDS = [
+  { itemId: 'herzmuschel', weight: 30 },
+  { itemId: 'jakobsmuschel', weight: 26 },
+  { itemId: 'schneckenhaus', weight: 24 },
+  { itemId: 'seestern', weight: 20 },
+] as const;

@@ -7,7 +7,7 @@ import { FINDS } from '../data/fossils';
 import { GARDEN_FLOWERS } from '../data/items';
 import { NPC_BY_ID } from '../data/npcs';
 import { SAMMLUNGEN, type SammlungDef, urkundeId } from '../data/sammlungen';
-import { FISH, INSECTS } from '../data/species';
+import { INSECTS, VILLAGE_FISH } from '../data/species';
 import { TASSEN } from '../data/tassen';
 import { hasMovedIn, sendLetter } from './gameplay';
 import { ownsAnywhere } from './nature';
@@ -24,7 +24,7 @@ export function sammlungFortschritt(session: Session, id: SammlungDef['id']): Fo
   const count = (ids: readonly string[]) => ({ have: ids.filter((x) => !!c[x]).length, total: ids.length });
   switch (id) {
     case 'fische':
-      return count(FISH.map((f) => f.id));
+      return count(VILLAGE_FISH.map((f) => f.id));
     case 'insekten':
       return count(INSECTS.map((i) => i.id));
     case 'funde':

@@ -280,6 +280,7 @@ Legende: ✅ erledigt · 🚧 in Arbeit · ⬜ geplant
 - ✅ **Strauß-Preise angehoben (Nov. 2026):** Verkaufswert ≈ 2,5–3× der Zutaten (vorher 1,2–1,8×), Test hält 2–4×
 - ✅ **Versteckte Insel (Nov. 2026):** Boot am Dorfstrand, sobald alle Herzen bei allen Bewohnern voll sind; sonnige Hawaii-Insel mit eigener Musik, Überraschungsparty aller Bewohner und Inselset als große Belohnung. ✅ Kokosnüsse, Inselfische, Strandfunde (PR 154), Strandhütte mit Bar und Ukulele-Minispiel (Nov. 2026).
 - ✅ **Verstecke (Nov. 2026):** vier geheime Orte auf der Dorfkarte (Schaufel, Winston-Schnüffeln, Thalias alte Karte mit ✕ auf der Dorfkarte). 🗓️ Nächster Schritt: versteckte Insel mit Boot (Belohnung für alle Herzen)
+- ✅ **Insel-Nachspiel 1 (Nov. 2026):** Kokosnüsse von den Palmen, Kokoskekse, vier Inselfische, tägliche Strandfunde auf der Insel. 🗓️ Noch offen: Ukulele-Minispiel, Inselhütte
 - ✅ **Audit 3 umgesetzt:** Linas Notizbuch (N), Einzüge über Spielen statt Warten (winter-sicher), Enter für Hauptknöpfe, Snake-Rekord gespeichert, Balancing-Test
 - ✅ **Audit 4 umgesetzt (K1–K3):** neue Stile werden bei Einzügen angekündigt + „neu“ am Stil-Chip, Ökonomie-Doku aktualisiert, Katalog-Budget-Test
 - ✅ **Zeit zu zweit ohne Menüpunkt** (Szene beginnt beim nächsten Gespräch mit Oli zu Hause von selbst) · **Schwips-Fix:** Nachlassen lief fälschlich in Millisekunden statt Sekunden – jetzt nach ~1 Minute

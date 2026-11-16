@@ -35,7 +35,9 @@ import { checkSammlungen } from './sammlungen';
 import { memoryLinesFor, memoryTags, takeMemory } from './erinnerungen';
 import { winstonOmaLines } from './pet';
 import { tipsyComment } from './tipsy';
+import { INSEL_FEST_FLAG, INSEL_FINDS, INSEL_FINDS_PER_DAY } from '../data/insel';
 import { isInselRow } from '../data/maps/insel';
+import { inselStrandTiles } from './insel';
 import { noteTaste } from './friends';
 import { bouquetBonus, straussLustLines } from './straussLust';
 import { thaliaMapLines } from './verstecke';
@@ -121,7 +123,10 @@ export function todaysBeachFinds(session: Session): DailySpawn[] {
   const day = session.today();
   if (data.world.picked.day !== day) data.world.picked = { day, ids: [] };
   const picked = new Set(data.world.picked.ids);
-  return dailySpawns(day, beachTiles(session), BEACH_FINDS_PER_DAY, BEACH_FINDS, 'strand').filter((s) => !picked.has(s.id));
+  const village = dailySpawns(day, beachTiles(session), BEACH_FINDS_PER_DAY, BEACH_FINDS, 'strand');
+  // Nach der Überraschungsparty liegen auch auf der Insel täglich Muscheln
+  const insel = data.flags[INSEL_FEST_FLAG] ? dailySpawns(day, inselStrandTiles(session), INSEL_FINDS_PER_DAY, INSEL_FINDS, 'insel-strand') : [];
+  return [...village, ...insel].filter((s) => !picked.has(s.id));
 }
 
 export function markPicked(session: Session, id: string) {

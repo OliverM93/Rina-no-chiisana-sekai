@@ -127,6 +127,7 @@ import { Winston } from './Winston';
 import { katerDraussen, katerHello, katerPet } from '../game/kater';
 import { ANKUNFT_ERSTMALS, ANKUNFT_WIEDER, BOOT_DORF_LINES, BOOT_INSEL_LINES, FAHRT_HIN, FAHRT_ZURUECK, FEST_FINALE, FEST_LINES, INSEL_BELOHNUNG, INSEL_FEST_FLAG } from '../data/insel';
 import { DORF_BOOT_RETURN, INSEL_ARRIVAL, INSEL_FEST, INSEL_Y0 } from '../data/maps/insel';
+import { palmeSchuetteln } from '../game/insel';
 import { findVersteck, hint as hintVersteck, unhintedNear, versteckAt } from '../game/verstecke';
 import { WINSTON_SNIFF_RANGE, WINSTON_SNIFF_TOAST } from '../data/verstecke';
 import { Kater } from './Kater';
@@ -327,7 +328,7 @@ export class World3D {
 
     for (const id of Object.keys(INTERACTIONS)) this.interactive.add(id);
     for (const id of SPECIAL_OBJECTS) this.interactive.add(id);
-    for (const o of map.objects) if (o.kind === 'tree' || o.kind === 'rock') this.interactive.add(o.id);
+    for (const o of map.objects) if (o.kind === 'tree' || o.kind === 'rock' || o.kind === 'palme') this.interactive.add(o.id);
     for (const [id, node] of this.view.nodes) node.userData.objectId = id;
     this.syncMapObjects();
 
@@ -1652,6 +1653,10 @@ export class World3D {
           { label: '👋 Später', onSelect: () => undefined },
         ],
       });
+      return;
+    }
+    if (obj.kind === 'palme') {
+      this.shakePalm(obj.id);
       return;
     }
     if (obj.kind === 'tree') {
@@ -3265,6 +3270,24 @@ export class World3D {
     if (on === this.session.onIsland) return;
     this.session.onIsland = on;
     this.applyLight();
+  }
+
+  /** Palme schütteln: jede Palme einmal am Tag, vielleicht fällt eine Kokosnuss */
+  private shakePalm(id: string) {
+    const player = this.player;
+    const node = this.view.nodes.get(id);
+    if (!player || !node) return;
+    player.faceTowards(node.position.x / UNIT, node.position.z / UNIT);
+    this.tweens.add(380, (t) => {
+      node.rotation.z = Math.sin(t * Math.PI * 5) * 0.09 * (1 - t);
+    }, () => (node.rotation.z = 0));
+    this.session.bus.emit('sfx', 'kescher');
+    const res = palmeSchuetteln(this.session, id);
+    if (res.itemId) {
+      this.fxAt('funkeln', node.position.x / UNIT, node.position.z / UNIT + 40, 0.4);
+      if (res.left) this.dropLeftover(res.itemId, res.left);
+      this.session.bus.emit('toast', { text: res.text, icon: itemIconUrl(res.itemId) });
+    } else this.session.bus.emit('toast', { text: res.text });
   }
 
   private useBoat(id: string) {

@@ -116,6 +116,8 @@ const list: ItemDef[] = [
   { id: 'kaese', name: 'Käse', plural: 'Stücke Käse', category: 'essen', price: 45, description: 'Ein schönes Stück Käse. Lina riecht kurz daran und lächelt. Der Käse ist nicht lange sicher.' },
   { id: 'kaeseomelett', name: 'Käse-Omelett', plural: 'Käse-Omeletts', category: 'essen', price: 170, description: 'Goldgelb, außen zart und innen schön schmelzig. Linas Lieblings-Frühstück.' },
   { id: 'ueberbackene-kartoffeln', name: 'Überbackene Kartoffeln', plural: 'Portionen überbackene Kartoffeln', category: 'essen', price: 140, description: 'Mit einer Käsehaube, die Blasen wirft. Man muss kurz pusten. Und dann sofort.' },
+  { id: 'kokosnuss', name: 'Kokosnuss', plural: 'Kokosnüsse', category: 'obst', price: 25, description: 'Von den Palmen der versteckten Insel. Haarig, schwer und innen voller Kokoswasser. Jens würde sofort eine Schale daraus machen.' },
+  { id: 'kokoskekse', name: 'Kokoskekse', plural: 'Kokoskekse', category: 'essen', price: 75, description: 'Omas Keks trifft Inselkokos: knusprig, weiß bestäubt, nach Urlaub duftend.' },
   { id: 'kaesebrett', name: 'Käsebrett', plural: 'Käsebretter', category: 'essen', price: 230, description: 'Ein Brett mit Käse, Apfelspalten und Keksen. Ideal für Filmabende (und Linas Herz).' },
   { id: 'bento', name: 'Bento-Box', plural: 'Bento-Boxen', category: 'essen', price: 120, description: 'Ein Fach mit Omelett, eins mit Möhrchen, eins mit Apfelhäschen. Lina packt sie mit viel Liebe – jedes Fach genau passend.' },
   { id: 'blumensalat', name: 'Blumensalat', plural: 'Schüsseln Blumensalat', category: 'essen', price: 140, description: 'Ein bunter Salat mit essbaren Blüten. Zu schön zum Essen. Fast.' },
