@@ -33,6 +33,8 @@ import { VILLAGE_LAYOUT, VILLAGE_OBJECTS, VILLAGE_SPAWN } from '../data/maps/vil
 import { NPCS } from '../data/npcs';
 import type { InteractionContext } from '../data/interactions';
 import { syncAlbum } from './album';
+import { INSEL_BOOT_TOAST } from '../data/insel';
+import { syncInsel } from './insel';
 
 /** Arten von Partikel-Effekten */
 export type FxKind = 'staub' | 'platsch' | 'funkeln' | 'herzen' | 'erde' | 'konfetti' | 'atem';
@@ -186,6 +188,8 @@ export class Session {
   readonly tipsySpoken = new Map<string, number>();
   /** Was Lina zuletzt getrunken hat (Bier, Wein, Highball) – Oli erkennt ihr Lieblingsgetränk; nicht gespeichert */
   lastAlcohol: 'bier' | 'wein' | 'highball' | '' = '';
+  /** Steht Lina gerade auf der Insel? (setzt die 3D-Welt; dort scheint immer die Sonne) */
+  onIsland = false;
   /** Werkzeug in Linas Hand (wird nicht gespeichert) */
   tool: ToolId | null = null;
   /** Erzwungenes Wetter (`?wetter=regen`, zum Testen) */
@@ -211,6 +215,7 @@ export class Session {
   /** Meldet der Oberfläche, dass sich Spielzustand geändert hat. */
   changed() {
     syncAlbum(this);
+    if (syncInsel(this)) this.bus.emit('toast', { text: INSEL_BOOT_TOAST });
     this.bus.emit('state:changed', undefined);
   }
 

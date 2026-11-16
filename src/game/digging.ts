@@ -7,6 +7,7 @@ import { checkSammlungen } from './sammlungen';
 import { dailySpawns, type DailySpawn } from '../core/daily';
 import { terrainAt } from '../core/worldmap';
 import { DIG_SPOTS_PER_DAY, FINDS } from '../data/fossils';
+import { isInselRow } from '../data/maps/insel';
 import { YARD_AREA } from '../data/yard';
 import { giveItem, markPicked } from './gameplay';
 import type { Session } from './session';
@@ -19,7 +20,7 @@ export function grassTiles(session: Session) {
   const map = session.map;
   const out: Array<{ x: number; y: number }> = [];
   const inYard = (x: number, y: number) => x >= YARD_AREA.x && x < YARD_AREA.x + YARD_AREA.w && y >= YARD_AREA.y && y < YARD_AREA.y + YARD_AREA.h;
-  for (let y = 1; y < map.height - 1; y++) for (let x = 1; x < map.width - 1; x++) if (terrainAt(map, x, y) === 'grass' && !map.staticBlocked[y * map.width + x] && !inYard(x, y)) out.push({ x, y });
+  for (let y = 1; y < map.height - 1 && !isInselRow(y); y++) for (let x = 1; x < map.width - 1; x++) if (terrainAt(map, x, y) === 'grass' && !map.staticBlocked[y * map.width + x] && !inYard(x, y)) out.push({ x, y });
   grassCache = out;
   return out;
 }

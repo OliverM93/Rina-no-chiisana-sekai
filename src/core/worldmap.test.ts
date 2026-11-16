@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { VILLAGE_LAYOUT, VILLAGE_OBJECTS, VILLAGE_SPAWN } from '../data/maps/village';
+import { INSEL_ARRIVAL, INSEL_Y0 } from '../data/maps/insel';
 import { INTERACTIONS } from '../data/interactions';
 import { NPCS } from '../data/npcs';
 import { findPath, nearestWalkable } from './grid';
@@ -30,6 +31,7 @@ describe('Dorfkarte', () => {
     // Objekte, die nur bis zu einem Einzug da sind (Bauplatz), überlappen das spätere Haus – das ist gewollt
     for (const obj of VILLAGE_OBJECTS) {
       if (obj.kind === 'bridge' || obj.kind === 'steg') continue; // Brücke & Steg dürfen übers Wasser
+      if (obj.id.startsWith('boot-')) continue; // Boote liegen im flachen Wasser am Strand
       if (obj.until) continue;
       const info = OBJECT_KINDS[obj.kind];
       const sized = obj.kind === 'landmark';
@@ -103,7 +105,7 @@ describe('Dorfkarte', () => {
     }
     for (const o of all.objects) {
       const from = interactOffsets(o);
-      if (all.inactive.has(o.id) || !from || ['tree', 'pine', 'bush', 'rock'].includes(o.kind)) continue;
+      if (all.inactive.has(o.id) || !from || ['tree', 'pine', 'bush', 'rock', 'palme'].includes(o.kind) || o.y >= INSEL_Y0) continue; // die Insel prüft der nächste Test
       const spots = from.map(([dx, dy]) => [o.x + dx, o.y + dy] as const).filter(([x, y]) => x >= 0 && y >= 0 && x < W && y < all.height && !all.grid.isBlocked(x, y));
       expect(spots.some(([x, y]) => seen.has(y * W + x)), `${o.id} ist nicht erreichbar`).toBe(true);
     }
@@ -223,5 +225,60 @@ describe('Interaktion', () => {
   it('findet den Briefkasten von der Seite', () => {
     const mb = objectById(map, 'briefkasten-lina')!;
     expect(findInteraction(map, { x: mb.x - 1, y: mb.y }, 'right', ids)).toBe('briefkasten-lina');
+  });
+});
+
+describe('Insel', () => {
+  const all = buildWorldMap(VILLAGE_LAYOUT, VILLAGE_OBJECTS, VILLAGE_SPAWN);
+  applyMapFlags(all, { inselOffen: true });
+  const W = all.width;
+  const reach = (from: { x: number; y: number }) => {
+    const seen = new Set<number>([from.y * W + from.x]);
+    const stack = [from.y * W + from.x];
+    while (stack.length) {
+      const i = stack.pop() as number;
+      for (const [dx, dy] of [[1, 0], [-1, 0], [0, 1], [0, -1]]) {
+        const nx = (i % W) + dx;
+        const ny = Math.floor(i / W) + dy;
+        if (nx < 0 || ny < 0 || nx >= W || ny >= all.height || all.grid.isBlocked(nx, ny)) continue;
+        if (!seen.has(ny * W + nx)) {
+          seen.add(ny * W + nx);
+          stack.push(ny * W + nx);
+        }
+      }
+    }
+    return seen;
+  };
+
+  it('liegt unter dem Dorf, ist zu Fuß nicht vom Dorf aus erreichbar, aber vom Landeplatz aus', () => {
+    expect(all.height).toBeGreaterThan(INSEL_Y0 + 15);
+    const fromVillage = reach(VILLAGE_SPAWN);
+    for (let y = INSEL_Y0; y < all.height; y++) for (let x = 0; x < W; x++) expect(fromVillage.has(y * W + x), `Insel-Kachel (${x},${y}) vom Dorf aus erreichbar`).toBe(false);
+    expect(all.grid.isBlocked(INSEL_ARRIVAL.x, INSEL_ARRIVAL.y)).toBe(false);
+  });
+
+  it('vom Landeplatz aus ist die ganze Insel begehbar, auch das Boot ist erreichbar', () => {
+    const seen = reach(INSEL_ARRIVAL);
+    let land = 0;
+    let reached = 0;
+    for (let y = INSEL_Y0; y < all.height; y++) {
+      for (let x = 0; x < W; x++) {
+        const t = terrainAt(all, x, y);
+        if ((t === 'grass' || t === 'sand') && !all.grid.isBlocked(x, y)) {
+          land++;
+          if (seen.has(y * W + x)) reached++;
+        }
+      }
+    }
+    expect(land).toBeGreaterThan(120);
+    expect(reached).toBe(land);
+    const boat = objectById(all, 'boot-insel')!;
+    expect(interactOffsets(boat)!.some(([dx, dy]) => seen.has((boat.y + dy) * W + boat.x + dx))).toBe(true);
+  });
+
+  it('das Dorfboot ist vom Strand aus erreichbar', () => {
+    const seen = reach(VILLAGE_SPAWN);
+    const boat = objectById(all, 'boot-dorf')!;
+    expect(interactOffsets(boat)!.some(([dx, dy]) => seen.has((boat.y + dy) * W + boat.x + dx))).toBe(true);
   });
 });

@@ -4,6 +4,7 @@
  */
 import { useEffect, useRef } from 'preact/hooks';
 import { isActive, type Terrain, terrainAt } from '../core/worldmap';
+import { INSEL_Y0 } from '../data/maps/insel';
 import { NPCS } from '../data/npcs';
 import type { Session } from '../game/session';
 import { activeWish } from '../game/wishes';
@@ -61,10 +62,12 @@ export function MapPanel({ session }: { session: Session }) {
     const c = canvas.current;
     if (!c) return;
     const map = session.map;
+    // Thalias Karte zeigt das Dorf; die versteckte Insel steht nicht darauf
+    const rows = Math.min(map.height, INSEL_Y0);
     c.width = map.width * CELL;
-    c.height = map.height * CELL;
+    c.height = rows * CELL;
     const ctx = c.getContext('2d') as CanvasRenderingContext2D;
-    for (let y = 0; y < map.height; y++) for (let x = 0; x < map.width; x++) {
+    for (let y = 0; y < rows; y++) for (let x = 0; x < map.width; x++) {
       ctx.fillStyle = TERRAIN_COLOR[terrainAt(map, x, y) ?? 'grass'];
       ctx.fillRect(x * CELL, y * CELL, CELL, CELL);
     }

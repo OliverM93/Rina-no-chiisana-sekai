@@ -2422,6 +2422,86 @@ export function makeFurniture(itemId: string, links: FenceLinks = { n: false, e:
       }
       break;
     }
+    case 'inselpalme': {
+      // Kokospalme im Topf (Inselset): geschwungener Stamm, ein Schopf aus Wedeln, zwei Nüsse
+      const pot = mesh(new THREE.CylinderGeometry(0.22, 0.17, 0.3, 14), toon('#e9a37a'));
+      pot.position.y = 0.15;
+      g.add(pot);
+      g.add(c(0.21, 0.04, '#7a5236', 0, 0.3, 0));
+      let tx = 0;
+      let ty = 0.3;
+      for (let i = 0; i < 5; i++) {
+        const seg = c(0.055 - i * 0.004, 0.25, i % 2 === 0 ? '#a9784f' : '#8a5e3c', tx, ty + 0.125, 0);
+        seg.rotation.z = -0.1;
+        g.add(seg);
+        tx += 0.028;
+        ty += 0.23;
+      }
+      const crown = new THREE.Group();
+      crown.position.set(tx, ty, 0);
+      g.add(crown);
+      for (let i = 0; i < 8; i++) {
+        const pivot = new THREE.Group();
+        pivot.rotation.y = (i / 8) * Math.PI * 2;
+        const frond = c(0.045, 0.62, i % 2 === 0 ? '#59b863' : '#6fcc72', 0, 0, 0.3, cone);
+        frond.scale.set(0.09, 0.62, 0.03);
+        frond.rotation.x = Math.PI / 2 + 0.55;
+        pivot.add(frond);
+        crown.add(pivot);
+      }
+      for (const dx of [-0.05, 0.06]) crown.add(s(0.045, 0.045, 0.045, '#7a4b2c', dx, -0.05, 0.02));
+      break;
+    }
+    case 'tiki-fackel': {
+      // Holzstab mit geschnitztem Kopf und warmer Flamme
+      g.add(c(0.16, 0.05, '#6e4630', 0, 0.025, 0));
+      g.add(c(0.045, 1.15, '#8a5a3a', 0, 0.62, 0));
+      g.add(c(0.05, 0.02, '#4a2f20', 0, 0.45, 0));
+      g.add(c(0.05, 0.02, '#4a2f20', 0, 0.75, 0));
+      g.add(b(0.16, 0.18, 0.14, '#a9784f', 0, 1.2, 0));
+      for (const x of [-0.04, 0.04]) g.add(s(0.018, 0.018, 0.01, '#2b2931', x, 1.23, 0.07));
+      g.add(b(0.07, 0.015, 0.01, '#2b2931', 0, 1.16, 0.07));
+      glow = glowMat('#ffb347');
+      const flame = mesh(cone, glow);
+      flame.scale.set(0.07, 0.2, 0.07);
+      flame.position.set(0, 1.4, 0);
+      g.add(flame);
+      lightAt = new THREE.Vector3(0, 1.4, 0);
+      break;
+    }
+    case 'haengematte': {
+      // 2 × 1: zwei Pfosten, dazwischen ein durchhängendes, buntes Netz
+      for (const x of [-0.9, 0.9]) {
+        g.add(c(0.04, 0.78, '#8a5a3a', x, 0.39, 0));
+        g.add(c(0.07, 0.03, '#6e4630', x, 0.015, 0));
+      }
+      const colors = ['#ff8a7a', '#ffd166', '#06b6a4'];
+      for (let i = 0; i < 21; i++) {
+        const t = i / 20;
+        const x = -0.82 + t * 1.64;
+        const y = 0.66 - Math.sin(t * Math.PI) * 0.3;
+        g.add(b(0.1, 0.03, 0.46, colors[Math.floor(i / 2) % 3], x, y, 0));
+      }
+      g.add(s(0.15, 0.06, 0.12, '#fbf3e2', -0.55, 0.52, 0));
+      seatY = 0.45;
+      break;
+    }
+    case 'surfbrett': {
+      // Wand-Deko: Surfbrett mit Streifen und kleiner Finne
+      const z = WALL_Z + 0.07;
+      const board = mesh(sphere, toon('#ffd166'));
+      board.scale.set(0.15, 0.62, 0.035);
+      board.position.set(0, 1.12, z);
+      g.add(board);
+      g.add(b(0.07, 1.0, 0.01, '#ff6f61', 0, 1.12, z + 0.034));
+      g.add(b(0.19, 0.04, 0.012, '#06b6a4', 0, 1.0, z + 0.036));
+      g.add(b(0.19, 0.04, 0.012, '#06b6a4', 0, 1.24, z + 0.036));
+      const fin = mesh(cone, toon('#8a5a3a'));
+      fin.scale.set(0.05, 0.1, 0.02);
+      fin.position.set(0, 0.55, z + 0.03);
+      g.add(fin);
+      break;
+    }
     case 'yucca': {
       g.add(c(0.2, 0.36, '#c9a24a', 0, 0.18, 0));
       g.add(c(0.05, 0.62, '#8a6a4a', 0, 0.62, 0));

@@ -27,7 +27,8 @@ import {
   makeSign,
   makeBeet,
 } from './models/buildings';
-import { FLOWER_COLORS, makeBush, makeFlower, makePine, makeRock, makeTree, type TreeModel } from './models/nature';
+import { FLOWER_COLORS, makeBush, makeFlower, makePalm, makePine, makeRock, makeTree, type TreeModel } from './models/nature';
+import { isInselRow } from '../data/maps/insel';
 import { buildTerrain, type Terrain3D } from './terrain3d';
 import { makeHeartBench, makeLandmark, makeSteg } from './models/landmarks';
 
@@ -102,7 +103,11 @@ export function buildMapView3D(scene: THREE.Scene, map: WorldMap, season: Season
         occluders.push({ id: o.id, node, x: c.x, z: c.z, w: 1.4, h: 1 });
         break;
       case 'bush':
-        node = makeBush(season, seed);
+        // auf der Insel ist immer Sommer
+        node = makeBush(isInselRow(o.y) ? 'sommer' : season, seed);
+        break;
+      case 'palme':
+        node = makePalm(seed);
         break;
       case 'rock':
         node = makeRock(seed);
@@ -182,12 +187,12 @@ export function buildMapView3D(scene: THREE.Scene, map: WorldMap, season: Season
     nodes.set(o.id, node);
   }
 
-  // Blümchen auf den Blumenwiesen (im Winter keine)
-  if (season !== 'winter') {
+  // Blümchen auf den Blumenwiesen (im Winter keine – auf der Insel immer)
+  {
     for (let y = 0; y < map.height; y++) {
       for (let x = 0; x < map.width; x++) {
         const idx = y * map.width + x;
-        if (!map.flowers[idx]) continue;
+        if (!map.flowers[idx] || (season === 'winter' && !isInselRow(y))) continue;
         const list: THREE.Object3D[] = [];
         const count = 2 + Math.floor(tileNoise(x, y, 1) * 3);
         for (let k = 0; k < count; k++) {

@@ -25,6 +25,8 @@ import type { Session } from './session';
 // ---------------------------------------------------------------------------
 
 export function currentWeather(session: Session): WeatherNow {
+  // Auf der Insel scheint immer die Sonne
+  if (session.onIsland) return weatherAt(session.clock(), 'sonnig');
   return weatherAt(session.clock(), session.weatherOverride);
 }
 

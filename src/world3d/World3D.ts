@@ -125,6 +125,8 @@ import { makeCan, makeNet, makeRod, makeShovel, type ToolModel } from './models/
 import { Weather3D } from './Weather3D';
 import { Winston } from './Winston';
 import { katerDraussen, katerHello, katerPet } from '../game/kater';
+import { ANKUNFT_ERSTMALS, ANKUNFT_WIEDER, BOOT_DORF_LINES, BOOT_INSEL_LINES, FAHRT_HIN, FAHRT_ZURUECK, FEST_FINALE, FEST_LINES, INSEL_BELOHNUNG, INSEL_FEST_FLAG } from '../data/insel';
+import { DORF_BOOT_RETURN, INSEL_ARRIVAL, INSEL_FEST, INSEL_Y0 } from '../data/maps/insel';
 import { Kater } from './Kater';
 import { KATER_NAME } from '../data/kater';
 import { petWinston, winstonAppeared, winstonDig, winstonDue, winstonFound, winstonMayDig, winstonState } from '../game/pet';
@@ -149,7 +151,7 @@ type Target =
   | { kind: 'kater' }
   | { kind: 'tier'; index: number };
 
-const SPECIAL_OBJECTS = ['verkaufskiste', 'haus-gisela', 'haus-olaf', 'briefkasten-lina', 'werkbank-lina', 'bistro-jens', 'praxis-lars', 'haus-thalia', 'punschstand', 'samenstand'];
+const SPECIAL_OBJECTS = ['verkaufskiste', 'haus-gisela', 'haus-olaf', 'briefkasten-lina', 'werkbank-lina', 'bistro-jens', 'praxis-lars', 'haus-thalia', 'punschstand', 'samenstand', 'boot-dorf', 'boot-insel'];
 const DIRS = { down: [0, 1], up: [0, -1], left: [-1, 0], right: [1, 0] } as const;
 
 /** Kamera-Versatz zum Blickziel (schräg von oben, wie im Vorbild) */
@@ -388,6 +390,7 @@ export class World3D {
       session.bus.on('appearance:changed', (a) => this.player?.setAppearance(a)),
       session.bus.on('fx', (f) => this.playFx(f.kind, f.npc, f.x, f.y)),
       session.bus.on('state:changed', () => {
+        this.syncMapObjects();
         this.updateMailbox();
         this.garden.refresh();
         this.refreshRoom();
@@ -509,6 +512,7 @@ export class World3D {
       this.updatePrints(dtMs, player);
       this.updateWinston(dtMs, player, blocked, solid);
       this.updateKater(dtMs, player);
+      this.updateIslandState(player);
       this.updateIdle(player, blocked);
       this.updateHomeOli(dtMs);
       this.updateVisitor(dtMs);
@@ -628,7 +632,8 @@ export class World3D {
     this.partyLights.group.visible = party;
     this.partyLight.intensity = party ? 2.5 : 0;
     this.weather.setEnabled(!this.session.inside);
-    this.leaves.visible = !this.session.inside;
+    // auf der Insel wehen im Winter keine Flocken
+    this.leaves.visible = !this.session.inside && !(this.session.onIsland && this.session.season === 'winter');
     (this.scene.background as THREE.Color | null) ?? (this.scene.background = new THREE.Color());
     (this.scene.background as THREE.Color).set(sky);
     (this.scene.fog as THREE.Fog).color.set(sky);
@@ -1118,7 +1123,7 @@ export class World3D {
         hour: this.session.clock().getHours(),
         raining: isPrecipitation(kind) && kind !== 'schnee',
         snowing: kind === 'schnee',
-        winter: getSeason(this.session.clock()) === 'winter' || kind === 'schnee',
+        winter: !this.session.onIsland && (getSeason(this.session.clock()) === 'winter' || kind === 'schnee'),
         inside: this.session.inside,
         winstonNear,
       },
@@ -1583,6 +1588,10 @@ export class World3D {
     const player = this.player;
     const obj = objectById(this.session.map, id);
     if (!obj || !player) return;
+    if (id === 'boot-dorf' || id === 'boot-insel') {
+      this.useBoat(id);
+      return;
+    }
     if (obj.kind === 'tree') {
       const msg = this.collectibles.shakeTree(obj, player.tile);
       if (msg) this.session.bus.emit('toast', { text: msg });
@@ -3185,6 +3194,122 @@ export class World3D {
   }
 
   // -------------------------------------------------------------------------
+  // Versteckte Insel
+  // -------------------------------------------------------------------------
+
+  /** Steht Lina auf der Insel? Dort scheint immer die Sonne (Licht, Wetter und Musik passen sich an) */
+  private updateIslandState(player: Character) {
+    const on = !this.session.inside && player.tile.y >= INSEL_Y0;
+    if (on === this.session.onIsland) return;
+    this.session.onIsland = on;
+    this.applyLight();
+  }
+
+  private useBoat(id: string) {
+    const toIsland = id === 'boot-dorf';
+    const first = !this.session.data?.flags[INSEL_FEST_FLAG];
+    const lines = toIsland ? (first ? BOOT_DORF_LINES : ['Das Boot wartet. Zur Insel rudern?']) : BOOT_INSEL_LINES;
+    this.session.bus.emit('dialog:open', {
+      title: 'Ruderboot',
+      lines: [...lines],
+      choices: [
+        { label: toIsland ? '⛵ Zur Insel rudern' : '⛵ Zurück ins Dorf', onSelect: () => this.row(toIsland) },
+        { label: '👋 Lieber nicht', onSelect: () => undefined },
+      ],
+    });
+  }
+
+  /** Überfahrt: Bild blendet ab, Lina steht am anderen Ufer. Beim allerersten Mal wartet die Überraschungsparty. */
+  private row(toIsland: boolean) {
+    const player = this.player;
+    if (!player || this.cutscene) return;
+    this.cutscene = true;
+    this.stopFishing();
+    this.marker.visible = false;
+    player.cancelPath();
+    this.session.bus.emit('overlay:fade', true);
+    this.session.bus.emit('sfx', 'platsch');
+    this.session.bus.emit('toast', { text: toIsland ? FAHRT_HIN : FAHRT_ZURUECK });
+    window.setTimeout(() => {
+      const t = toIsland ? INSEL_ARRIVAL : DORF_BOOT_RETURN;
+      player.teleport((t.x + 0.5) * TILE, (t.y + 0.5) * TILE + 10);
+      player.face(toIsland ? 'right' : 'up');
+      this.session.onIsland = toIsland;
+      this.camTarget.set(player.x * UNIT, 0, player.y * UNIT);
+      this.applyLight();
+      this.dogFollow();
+      window.setTimeout(() => {
+        this.session.bus.emit('overlay:fade', false);
+        const data = this.session.data;
+        if (toIsland && data && !data.flags[INSEL_FEST_FLAG]) {
+          this.inselFest();
+          return;
+        }
+        this.cutscene = false;
+        if (toIsland) this.session.bus.emit('toast', { text: ANKUNFT_WIEDER[hashString(this.session.today()) % ANKUNFT_WIEDER.length] });
+      }, 650);
+    }, 1100);
+  }
+
+  /** Erster Besuch: Alle sind schon da und warten mit einer Überraschung – dann die große Belohnung */
+  private inselFest() {
+    const player = this.player;
+    const data = this.session.data;
+    if (!player || !data) return;
+    this.cutscene = true;
+    const grid = this.session.map.grid;
+    const spots: Tile[] = [{ x: 26, y: 50 }, { x: 26, y: 54 }, { x: 28, y: 49 }, { x: 28, y: 55 }, { x: 30, y: 50 }, { x: 30, y: 54 }, { x: 31, y: 52 }];
+    const guests: Npc[] = [];
+    FEST_LINES.forEach((f, i) => {
+      const npc = this.npcs.get(f.npc);
+      if (!npc) return;
+      const spot = nearestWalkable(grid, spots[i % spots.length], INSEL_ARRIVAL) ?? spots[i % spots.length];
+      npc.scriptPlace(spot);
+      npc.char.faceTowards((INSEL_FEST.x - 3) * TILE, INSEL_FEST.y * TILE);
+      guests.push(npc);
+    });
+    const finish = () => {
+      for (const n of guests) n.scriptDone();
+      data.flags[INSEL_FEST_FLAG] = true;
+      data.world.dates['insel:fest'] = this.session.today();
+      for (const r of INSEL_BELOHNUNG) this.giveOrDrop(r.itemId, r.count);
+      this.session.bus.emit('fx', { kind: 'konfetti' });
+      this.session.bus.emit('sfx', 'fang');
+      this.session.changed();
+      this.session.save();
+      this.cutscene = false;
+    };
+    const finale = () => this.session.bus.emit('dialog:open', { title: 'Überraschung!', lines: [...FEST_FINALE], onClose: finish });
+    const speak = (i: number) => {
+      if (i >= FEST_LINES.length) {
+        finale();
+        return;
+      }
+      const f = FEST_LINES[i];
+      const npc = this.npcs.get(f.npc);
+      npc?.char.wave();
+      this.session.bus.emit('dialog:open', { title: npc?.def.name ?? '', lines: [...f.lines], onClose: () => speak(i + 1) });
+    };
+    // Lina schaut sich um, geht dann zum Festplatz, dann spricht einer nach dem anderen
+    this.session.bus.emit('dialog:open', {
+      title: 'Lina',
+      lines: [...ANKUNFT_ERSTMALS],
+      onClose: () => {
+        const target = nearestWalkable(grid, { x: INSEL_FEST.x - 3, y: INSEL_FEST.y }, INSEL_ARRIVAL) ?? INSEL_FEST;
+        const path = findPath(grid, player.tile, target);
+        if (!path || path.length === 0) {
+          speak(0);
+          return;
+        }
+        player.followPath(path, () => {
+          this.dogFollow();
+          window.setTimeout(() => speak(0), 400);
+        });
+      },
+    });
+  }
+
+  // -------------------------------------------------------------------------
   // Kater
   // -------------------------------------------------------------------------
 
@@ -4451,7 +4576,7 @@ export class World3D {
 
   /** Liegt hier Schnee? (Winter, draußen) */
   private get snowy(): boolean {
-    return this.session.season === 'winter' && !this.session.inside;
+    return this.session.season === 'winter' && !this.session.inside && !this.session.onIsland;
   }
 
   /** Fußspuren im Schnee hinter Lina und Winston */

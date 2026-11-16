@@ -9,6 +9,7 @@
  *   s  Strand           w  Meer (flach)        W  Meer (tief)
  *   T  Laubbaum         P  Tanne
  *   b  Busch            r  Felsen
+ *   Y  Palme (nur auf der Insel, `insel.ts`)
  *
  * Gebäude, Schilder, Laternen usw. stehen in `VILLAGE_OBJECTS`, weil sie
  * mehrere Kacheln groß sind oder besondere Eigenschaften haben.
@@ -17,9 +18,10 @@
  * (`src/core/worldmap.test.ts`) prüft das automatisch.
  */
 import type { MapObjectDef } from '../../core/worldmap';
+import { INSEL_OBJECTS, INSEL_ROWS } from './insel';
 
 // prettier-ignore
-export const VILLAGE_LAYOUT: readonly string[] = [
+const VILLAGE_ROWS: readonly string[] = [
   '..T.P.T.....P.T.T...T.P.T.T.T.T...T.T.~~T.T.T.T...T.T.T.',
   '.P...T.T.P.P.T.....T.P.P...P.T.T.P.P.P.~~T.T.T...T...P.T',
   '..T.T.P.T...P...P.T...T...P.T.....P.P.T~~...P...T.....P.',
@@ -61,6 +63,9 @@ export const VILLAGE_LAYOUT: readonly string[] = [
   'wwwwWWWWWWWWWWWWWWWWWwwwwwwWWWWWWWWWWWWWWWWWwwwwwwWWWWWW',
   'WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW',
 ];
+
+/** Dorf (Reihen 0–39) und darunter die versteckte Insel (`insel.ts`) */
+export const VILLAGE_LAYOUT: readonly string[] = [...VILLAGE_ROWS, ...INSEL_ROWS];
 
 export const VILLAGE_OBJECTS: readonly MapObjectDef[] = [
   // Linas Häuschen (Tür unten in der Mitte)
@@ -121,6 +126,9 @@ export const VILLAGE_OBJECTS: readonly MapObjectDef[] = [
   { id: 'laterne-strand', kind: 'lantern', x: 28, y: 30 },
   { id: 'bank-strand', kind: 'bench', x: 24, y: 31 },
   { id: 'bank-wiese', kind: 'bench', x: 7, y: 18 },
+
+  // Boote zur versteckten Insel (erscheinen, sobald alle Herzen voll sind)
+  ...INSEL_OBJECTS,
 ];
 
 /** Hier steht Lina nach dem Einzug – direkt vor ihrer Haustür. */

@@ -9,7 +9,7 @@ export const TILE = 64;
 
 export type Terrain = 'grass' | 'path' | 'plaza' | 'sand' | 'water' | 'sea' | 'deep';
 
-export type NatureKind = 'tree' | 'pine' | 'bush' | 'rock';
+export type NatureKind = 'tree' | 'pine' | 'bush' | 'rock' | 'palme';
 
 export type ObjectKind =
   | 'house'
@@ -96,6 +96,7 @@ export const OBJECT_KINDS: Record<ObjectKind, KindInfo> = {
   pine: { w: 1, h: 1, blocks: 'all' },
   bush: { w: 1, h: 1, blocks: 'all' },
   rock: { w: 1, h: 1, blocks: 'all', interactFrom: AROUND },
+  palme: { w: 1, h: 1, blocks: 'all' },
 };
 
 export interface MapObject extends MapObjectDef {
@@ -138,9 +139,10 @@ const CHAR_TERRAIN: Record<string, Terrain> = {
   P: 'grass',
   b: 'grass',
   r: 'grass',
+  Y: 'grass',
 };
 
-const CHAR_NATURE: Record<string, NatureKind> = { T: 'tree', P: 'pine', b: 'bush', r: 'rock' };
+const CHAR_NATURE: Record<string, NatureKind> = { T: 'tree', P: 'pine', b: 'bush', r: 'rock', Y: 'palme' };
 
 export const KNOWN_CHARS = Object.keys(CHAR_TERRAIN);
 

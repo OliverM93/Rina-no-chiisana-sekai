@@ -66,6 +66,8 @@ export const MOMENTS: readonly MomentDef[] = [
   { id: 'sammlung-insekten', source: { dateKey: 'sammlung:insekten' }, text: 'Alle Insekten sind im Buch. Ich schaue Schmetterlinge jetzt anders an.' },
   { id: 'sammlung-funde', source: { dateKey: 'sammlung:funde' }, text: 'Alle Funde ausgegraben. Winston hat den größten Anteil, aber das gibt er nicht zu.' },
   { id: 'sammlung-blumen', source: { dateKey: 'sammlung:blumen' }, text: 'Alle Blumen in jeder Farbe. Das Beet ist ein kleines Wunder geworden.' },
+  { id: 'insel-boot', source: { dateKey: 'insel:boot' }, text: 'Bei allen Fünf-Herzen-Freunden ist alles voll. Am Strand liegt ein kleines Boot, und alle sehen sehr geheimnisvoll aus.' },
+  { id: 'insel-fest', source: { dateKey: 'insel:fest' }, text: 'Die versteckte Insel! Alle waren da, mit Kokosnüssen, Kuchen und einer Überraschung. Ich glaube, ich habe noch nie so viel gelacht.' },
   { id: 'sammlung-tassen', source: { dateKey: 'sammlung:tassen' }, text: 'Alle Sammeltassen stehen im Regal. Kaffee schmeckt daraus besser, ganz sicher.' },
 ];
 

@@ -11,6 +11,7 @@ import type { InsectDef, InsectHabitat } from '../data/species';
 import { hourRandom, insectsNow } from '../game/nature';
 import type { Session } from '../game/session';
 import { type CritterModel, makeCritter } from './models/critters';
+import { isInselRow } from '../data/maps/insel';
 import type { MapView3D } from './MapView3D';
 import type { Tweens } from './tweens';
 import { WATER_LEVEL } from './terrain3d';
@@ -56,7 +57,7 @@ export class Insects3D {
       if (o.kind === 'tree') out.baum.push(new THREE.Vector3(o.x + 0.5, 0.55, o.y + 0.5 + 0.2));
       if (o.kind === 'rock') out.felsen.push(new THREE.Vector3(o.x + 0.5, 0.02, o.y + 1.05));
     }
-    for (let y = 0; y < map.height; y++) {
+    for (let y = 0; y < map.height && !isInselRow(y); y++) {
       for (let x = 0; x < map.width; x++) {
         const t = terrainAt(map, x, y);
         if (t === 'grass' && !map.grid.isBlocked(x, y)) {
