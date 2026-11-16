@@ -3,10 +3,10 @@
  * zwischen Spielwelt (Phaser) und Oberfläche (Preact).
  */
 import type { Syllable } from '../core/babble';
-import { buildYardLayout, yardBlockedTiles } from '../core/yard';
+import { buildYardLayout, yardBlockedTiles, YARD_INSEL_ID } from '../core/yard';
 import { setExtraBlocked } from '../core/worldmap';
-import type { RoomLayout } from '../core/room';
-import { YARD_AREA } from '../data/yard';
+import type { PlacedItem, Room, RoomLayout } from '../core/room';
+import { INSEL_YARD_AREA, YARD_AREA, YARD_AREAS, type YardId } from '../data/yard';
 import { RECIPE_BY_ID, START_RECIPES } from '../data/recipes';
 import type { Appearance } from '../core/appearance';
 import { Emitter } from '../core/events';
@@ -160,6 +160,8 @@ export class Session {
   readonly map: WorldMap;
   /** Form von Linas Garten (aus der Karte berechnet) */
   readonly yardLayout: RoomLayout;
+  /** Form des Inselgartens vor der Strandhütte */
+  readonly yardLayoutInsel: RoomLayout;
   /** Wo sind Lina & die Bewohner gerade (Welteinheiten)? Setzt die 3D-Welt – für Thalias Karte */
   livePositions: () => Record<string, { x: number; y: number }> = () => ({});
   /** Steht Lina gerade in ihrem Garten? */
@@ -202,7 +204,8 @@ export class Session {
   ) {
     this.map = buildWorldMap(VILLAGE_LAYOUT, VILLAGE_OBJECTS, VILLAGE_SPAWN);
     this.yardLayout = buildYardLayout(this.map, YARD_AREA);
-    this.saves = new SaveManager(storage, this.spawnPoint(), clock, { ...this.saveOptions, yardLayout: this.yardLayout });
+    this.yardLayoutInsel = buildYardLayout(this.map, INSEL_YARD_AREA, YARD_INSEL_ID, 'Inselgarten');
+    this.saves = new SaveManager(storage, this.spawnPoint(), clock, { ...this.saveOptions, yardLayout: this.yardLayout, yardInselLayout: this.yardLayoutInsel });
     this.season = getSeason(clock());
   }
 
@@ -312,8 +315,47 @@ export class Session {
   /** Gartenmöbel und Hausanbauten als Hindernisse in die Karte übernehmen */
   syncYardCollision() {
     const yard = this.data?.yard;
+    const insel = this.data?.yardInsel;
     const garden = yard ? yardBlockedTiles(this.map, YARD_AREA, yard, this.yardLayout, furnitureInfo) : [];
-    setExtraBlocked(this.map, [...garden, ...this.houseAnnexTiles()]);
+    const gardenInsel = insel ? yardBlockedTiles(this.map, INSEL_YARD_AREA, insel, this.yardLayoutInsel, furnitureInfo) : [];
+    setExtraBlocked(this.map, [...garden, ...gardenInsel, ...this.houseAnnexTiles()]);
+  }
+
+  /** In welchem Garten steht Lina gerade (Dorf oder Insel)? */
+  yardId(): YardId {
+    return this.onIsland ? 'insel' : 'dorf';
+  }
+
+  yardArea(id: YardId = this.yardId()) {
+    return YARD_AREAS[id];
+  }
+
+  yardLayoutOf(id: YardId = this.yardId()): RoomLayout {
+    return id === 'insel' ? this.yardLayoutInsel : this.yardLayout;
+  }
+
+  /** Der Garten-Raum (Möbel) des Dorfs oder der Insel */
+  yardRoom(id: YardId = this.yardId()): Room | undefined {
+    return id === 'insel' ? this.data?.yardInsel : this.data?.yard;
+  }
+
+  /** Alle Gartenmöbel (Dorf und Insel) */
+  allYardItems(): PlacedItem[] {
+    return [...(this.data?.yard.items ?? []), ...(this.data?.yardInsel.items ?? [])];
+  }
+
+  /** Gartenmöbel (Dorf oder Insel) mit Garten-ID suchen */
+  findYardItem(uid: string): { item: PlacedItem; id: YardId } | undefined {
+    for (const id of ['dorf', 'insel'] as const) {
+      const item = this.yardRoom(id)?.items.find((i) => i.uid === uid);
+      if (item) return { item, id };
+    }
+    return undefined;
+  }
+
+  /** Liegt die Kachel im Garten (Dorf oder Insel)? */
+  inAnyYard(x: number, y: number): boolean {
+    return Object.values(YARD_AREAS).some((a) => x >= a.x && x < a.x + a.w && y >= a.y && y < a.y + a.h);
   }
 
   /** Bisherige Spielzeit in Sekunden (inkl. der laufenden Sitzung) */

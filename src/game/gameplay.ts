@@ -189,8 +189,8 @@ function dialogueContext(session: Session, npcId: string, firstToday: boolean): 
     if (d === 0) tags.push(`geburtstag-${n.id}`);
     else if (d <= 7) tags.push(`bald-geburtstag-${n.id}`);
   }
-  if (session.data?.yard.items.some((i) => FURNITURE_BY_ITEM[i.itemId]?.def.coop === 'huhn')) tags.push('huehner');
-  if (session.data?.yard.items.some((i) => FURNITURE_BY_ITEM[i.itemId]?.def.coop === 'wachtel')) tags.push('wachteln');
+  if (session.allYardItems().some((i) => FURNITURE_BY_ITEM[i.itemId]?.def.coop === 'huhn')) tags.push('huehner');
+  if (session.allYardItems().some((i) => FURNITURE_BY_ITEM[i.itemId]?.def.coop === 'wachtel')) tags.push('wachteln');
   if (w.rainbow) tags.push('regenbogen');
   tags.push(...memoryTags(session));
   return {

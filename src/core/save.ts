@@ -22,7 +22,7 @@ import { createInventory, type Inventory, normalizeInventory, STORAGE_SIZE } fro
 import { createMailbox, type Mailbox, normalizeMailbox } from './mail';
 import { type DayMonth, DEFAULT_LINA_BIRTHDAY, formatIsoDay } from './time';
 
-export const SAVE_VERSION = 16;
+export const SAVE_VERSION = 17;
 export const SAVE_KEY = 'rina-no-chiisana-sekai.save';
 export const BACKUP_KEY = 'rina-no-chiisana-sekai.save.backup';
 
@@ -108,6 +108,8 @@ export interface SaveData {
   pet: PetState;
   /** Linas Garten: Zäune, Wege, Gartenmöbel … */
   yard: Room;
+  /** Garten vor der Strandhütte auf der Insel */
+  yardInsel: Room;
   /** Kunstwerke, die Lina der Galerie von Jens gestiftet hat */
   gallery: string[];
   /** Zähler für den Fortschritt (Verkauft, Gekauft, Gebaut, Gekocht) */
@@ -133,6 +135,8 @@ export interface SaveOptions {
   startRecipes?: readonly string[];
   /** Form des Gartens (Größe, freizuhaltende Felder) */
   yardLayout?: RoomLayout;
+  /** Form des Inselgartens */
+  yardInselLayout?: RoomLayout;
 }
 
 const EMPTY_HOUSE: House = { stage: 0, rooms: [{ id: 'haupt', wallpaper: '', floor: '', items: [] }] };
@@ -184,6 +188,7 @@ export function createNewSave(opts: NewGameOptions): SaveData {
     recipes: [...(opts.recipes ?? [])],
     pet: createPet(),
     yard: emptyYard(),
+    yardInsel: emptyYard('garten-insel'),
     gallery: [],
     stats: createStats(),
     story: {},
@@ -254,6 +259,8 @@ export const MIGRATIONS: Record<number, (old: RawSave) => RawSave> = {
   // v15 → v16 (Rekordfänge): Sammelbuch-Einträge von Fischen können einen größten Fang (`bestCm`) tragen.
   // Alte Einträge bleiben unverändert; die erste Länge wird beim nächsten Fang vermerkt.
   15: (old) => ({ ...old }),
+  // v16 → v17 (Inselgarten): Garten vor der Strandhütte. `normalizeSave` legt ihn leer an.
+  16: (old) => ({ ...old }),
 };
 
 export function migrate(raw: RawSave, migrations = MIGRATIONS, target = SAVE_VERSION): RawSave {
@@ -329,8 +336,8 @@ export function normalizeWorld(raw: unknown, isKnownItem: (id: string) => boolea
   return w;
 }
 
-export function emptyYard(): Room {
-  return { id: 'garten', wallpaper: '', floor: '', items: [] };
+export function emptyYard(id = 'garten'): Room {
+  return { id, wallpaper: '', floor: '', items: [] };
 }
 
 function withStart(book: RecipeBook, start: readonly string[]): RecipeBook {
@@ -383,6 +390,7 @@ export function normalizeSave(raw: RawSave, spawn: { x: number; y: number }, now
     gallery: Array.isArray(raw.gallery) ? [...new Set(raw.gallery.filter((g): g is string => typeof g === 'string' && isKnownItem(g)))] : [],
     stats: normalizeStats(raw.stats),
     story: normalizeNumberRecord(raw.story),
+    yardInsel: normalizeRoom(raw.yardInsel, emptyYard('garten-insel'), opts.yardInselLayout ?? { id: 'garten-insel', name: 'Inselgarten', w: 0, h: 0, exits: [] }, isKnownItem, opts.furnitureInfo ?? (() => undefined)),
     yard: normalizeRoom(raw.yard, emptyYard(), opts.yardLayout ?? { id: 'garten', name: 'Garten', w: 0, h: 0, exits: [] }, isKnownItem, opts.furnitureInfo ?? (() => undefined)),
   };
 }

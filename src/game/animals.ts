@@ -22,7 +22,7 @@ export function coopHasEggs(session: Session, uid: string): boolean {
 /** Eier am Stall abholen – mit Meldung. Gibt die Anzahl zurück. */
 export function collectCoop(session: Session, uid: string): number {
   const data = session.data;
-  const item = data?.yard.items.find((i) => i.uid === uid);
+  const item = session.findYardItem(uid)?.item;
   const kind = item ? coopKindOf(item.itemId) : null;
   if (!data || !item || !kind) return 0;
   const def = COOPS[kind];

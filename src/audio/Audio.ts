@@ -255,6 +255,24 @@ export class GameAudio {
       this.noiseBurst(out, t, 0.05, 7000, 0.12 * n.vel, 'highpass');
       return;
     }
+    if (n.voice === 'ipu') {
+      // Ipu: hohle Kürbistrommel – kurzer dumpfer Ton mit fallender Tonhöhe und leisem Klopfen
+      const o = ctx.createOscillator();
+      const g = ctx.createGain();
+      o.frequency.setValueAtTime(210, t);
+      o.frequency.exponentialRampToValueAtTime(110, t + 0.1);
+      g.gain.setValueAtTime(0.32 * n.vel, t);
+      g.gain.exponentialRampToValueAtTime(0.001, t + 0.22);
+      o.connect(g).connect(out);
+      o.start(t);
+      o.stop(t + 0.25);
+      this.noiseBurst(out, t, 0.03, 1800, 0.05 * n.vel, 'bandpass');
+      return;
+    }
+    if (n.voice === 'strum') {
+      this.ukulele(out, t + (n.delay ?? 0), midiToHz(n.midi), 0.12 * n.vel, 0.45);
+      return;
+    }
     if (n.voice === 'besen') {
       // Jazzbesen: weiches, kurzes Wischen
       this.noiseBurst(out, t, 0.09, 4200, 0.05 * n.vel, 'bandpass');
@@ -316,6 +334,8 @@ export class GameAudio {
     const ctx = this.ctx as BaseAudioContext;
     if (inst === 'epiano') return this.epiano(out, t, f, 0.17 * vel, 1.6);
     if (inst === 'zupf') return this.pluck(out, t, f, 0.2 * vel);
+    if (inst === 'ukulele') return this.ukulele(out, t, f * 2, 0.22 * vel, 0.7);
+    if (inst === 'steel') return this.steel(out, t, f, dur, 0.1 * vel);
     if (inst === 'akkordeon') return this.reed(out, t, f, dur, 0.075 * vel, true);
     if (inst === 'glocke') {
       // Vibraphon/Glocke: Sinus + unharmonischer Oberton, sanftes Tremolo
@@ -393,6 +413,64 @@ export class GameAudio {
     o.connect(lp).connect(g).connect(out);
     o.start(t);
     o.stop(t + 0.95);
+  }
+
+  /** Ukulele: heller, kurzer Nylon-Anschlag (zwei leicht verstimmte Saiten, schnell abfallender Filter) */
+  private ukulele(out: AudioNode, t: number, f: number, vol: number, decay: number) {
+    const ctx = this.ctx as BaseAudioContext;
+    const lp = ctx.createBiquadFilter();
+    lp.type = 'lowpass';
+    lp.Q.value = 1.5;
+    lp.frequency.setValueAtTime(Math.min(7000, f * 6), t);
+    lp.frequency.exponentialRampToValueAtTime(Math.max(300, f * 1.5), t + 0.18);
+    const g = ctx.createGain();
+    g.gain.setValueAtTime(0, t);
+    g.gain.linearRampToValueAtTime(vol, t + 0.003);
+    g.gain.exponentialRampToValueAtTime(0.001, t + decay);
+    for (const [type, det] of [['triangle', -4], ['sawtooth', 5]] as const) {
+      const o = ctx.createOscillator();
+      o.type = type;
+      o.frequency.value = f;
+      o.detune.value = det;
+      o.connect(lp);
+      o.start(t);
+      o.stop(t + decay + 0.05);
+    }
+    lp.connect(g).connect(out);
+  }
+
+  /** Hawaii-Steelgitarre: gleitet von unten in den Ton, Vibrato, singender langer Klang */
+  private steel(out: AudioNode, t: number, f: number, dur: number, vol: number) {
+    const ctx = this.ctx as BaseAudioContext;
+    const lp = ctx.createBiquadFilter();
+    lp.type = 'lowpass';
+    lp.frequency.value = Math.min(3200, f * 5);
+    const g = ctx.createGain();
+    const len = Math.max(0.35, dur) + 0.25;
+    g.gain.setValueAtTime(0, t);
+    g.gain.linearRampToValueAtTime(vol, t + 0.04);
+    g.gain.exponentialRampToValueAtTime(vol * 0.55, t + len * 0.6);
+    g.gain.linearRampToValueAtTime(0, t + len);
+    const vib = ctx.createOscillator();
+    const vg = ctx.createGain();
+    vib.frequency.value = 5.2;
+    vg.gain.setValueAtTime(0, t);
+    vg.gain.linearRampToValueAtTime(f * 0.012, t + 0.3);
+    vib.connect(vg);
+    vib.start(t);
+    vib.stop(t + len + 0.1);
+    for (const [type, det] of [['sawtooth', -6], ['triangle', 6]] as const) {
+      const o = ctx.createOscillator();
+      o.type = type;
+      o.detune.value = det;
+      o.frequency.setValueAtTime(f * 0.93, t);
+      o.frequency.exponentialRampToValueAtTime(f, t + 0.13);
+      vg.connect(o.frequency);
+      o.connect(lp);
+      o.start(t);
+      o.stop(t + len + 0.1);
+    }
+    lp.connect(g).connect(out);
   }
 
   /** Akkordeon: zwei leicht verstimmte Zungen (Schwebung), gefiltert */

@@ -9,7 +9,7 @@ import type { CollisionGrid } from '../core/grid';
 import { footprint, type Room } from '../core/room';
 import { COOPS } from '../data/animals';
 import { FURNITURE_BY_ITEM } from '../data/furniture';
-import { YARD_AREA } from '../data/yard';
+import type { YardArea } from '../core/yard';
 import { type BirdModel, makeHen, makeQuail } from './models/critters';
 
 interface Bird {
@@ -40,6 +40,7 @@ export class Animals3D {
     scene: THREE.Scene,
     private readonly grid: CollisionGrid,
     private readonly heightAt: (x: number, z: number) => number,
+    private readonly area: YardArea,
   ) {
     scene.add(this.group);
   }
@@ -77,8 +78,8 @@ export class Animals3D {
     if (!c || !f) return null;
     const { w, d } = footprint(f.def, c.rot);
     const front = [[0, 1], [-1, 0], [0, -1], [1, 0]][c.rot];
-    const cx = YARD_AREA.x + c.x + w / 2;
-    const cz = YARD_AREA.y + c.y + d / 2;
+    const cx = this.area.x + c.x + w / 2;
+    const cz = this.area.y + c.y + d / 2;
     return { x: cx + front[0] * (d / 2 + 0.6), z: cz + front[1] * (d / 2 + 0.6) };
   }
 

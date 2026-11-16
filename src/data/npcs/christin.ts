@@ -135,7 +135,7 @@ export const CHRISTIN_WELCOME: readonly string[] = [
 export const CHRISTIN_TIPS: readonly (readonly string[])[] = [
   ['Ordnungstipp: In deiner Tasche gibt es einen Knopf „Sortieren“.', 'Ein Klick – und alles liegt ordentlich nebeneinander. Herrlich.'],
   ['Ordnungstipp: Was du nicht brauchst, kommt in die Verkaufskiste vor deinem Haus.', 'Platz schaffen UND Sternchen verdienen. Zwei Fliegen, eine Klappe.'],
-  ['Ordnungstipp: Äste und Steine nicht herumliegen lassen!', 'An Opas Werkbank wird daraus ein Hocker, ein Zaun oder ein Gartenweg.'],
+  ['Ordnungstipp: Äste und Steine nicht herumliegen lassen!', 'An Ludwigs Werkbank wird daraus ein Hocker, ein Zaun oder ein Gartenweg.'],
   ['Ordnungstipp: Beim Einrichten – Taste G – drehst du Möbel mit R.', 'Gerade ausgerichtet sieht alles gleich doppelt so schön aus.'],
   ['Ordnungstipp: Das Sammelbuch – Taste B – ist wie ein Aktenordner.', 'Jeder Fisch und jeder Käfer bekommt seinen eigenen Platz. Sehr befriedigend.'],
   ['Ordnungstipp: Ein Hochbeet im Garten bringt zwei Pflanzplätze mehr.', 'Und man muss sich nicht so bücken. Mein Rücken sagt Danke.'],

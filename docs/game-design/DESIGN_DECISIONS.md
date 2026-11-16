@@ -335,3 +335,11 @@ vergeht. Kein Fortschritt, keine Belohnung, keine Zahlen, nichts gespeichert –
 **Entscheidung:** Palmen schütteln (einmal am Tag je Palme, 45 % Chance), vier Inselfische (nur dort), tägliche Strandfunde auf dem Inselsand; dazu Kokoskekse als Küchenrezept. Die Inselfische zählen nicht für „Alle Fische“ (bestehende Urkunde bleibt gültig, Vitrine und Fischtafel unverändert).
 **Bewusst nicht:** Fristen, Zähler, neue Sammlungs-Urkunde (erst bei Bedarf), Sternchen-Geldmaschine (ca. 5 Nüsse ≈ 125 ⭐ am Tag, nur wer rudert; Inselfische 220–700 ⭐ wie Dorffische vergleichbarer Seltenheit).
 **Designprüfung:** 1 „Mal schauen, was die Palmen heute haben“ · 2 Tagesloop, nebenbei, kein Muss · 3 Insel bleibt abwechslungsreich · 4 hält die Insel auch nach Wochen interessant · 5 Preise im Rahmen von Fischen und Muscheln, Rezept 1,3–6,5× (Test grün) · 6 Risiko Grind: keine Fristen, Zufall pro Palme · 7 Säulen 2 (Entdecken) und 3 (Ownership: Küche, Sammelbuch) · 8 einfachere Lösung: nur Kokosnüsse ohne Fische, aber das Angeln würde dort nichts Neues bieten.
+
+### D44 · Inselgarten und Wachtelfarm auf Hawaii (Nov. 2026)
+
+**Anlass:** Linas großer Traum ist ein kleines Hüttchen auf Hawaii mit einer Wachtelfarm. Die Insel soll nach dem Fest ein Ort sein, den sie selbst gestaltet, nicht nur besucht.
+**Entscheidung:** Der Garten vor der Strandhütte funktioniert wie Linas Garten im Dorf (eigener Spielstand-Teil, gleiche Regeln, Wachtelställe erlaubt). Auf der Insel ist immer Sommer, daher kein Einfrieren. Oli nennt den Traum bei der Überraschungsparty.
+**Bewusst nicht:** Pflicht, die Farm zu pflegen; Wachtel-Aufgaben; neue Währung; Zeitdruck. Eier und Beete bleiben wie im Dorf optional.
+**Designprüfung:** 1 „Mein Traum ist wahr geworden“ · 2 Beliebig oft, nebenbei · 3 Kreativität und Besitz nach dem großen Ziel · 4 Kein Druck, nichts verfällt · 5 Preise wie im Dorf, kein neuer Sternchen-Kreislauf · 6 Passt zu Gemütlichkeit und Persönlichkeit · 7 Keine Balance-Änderung · 8 Mittel: zweiter Garten als Spielstand-Teil statt einer Sonderlösung.
+
