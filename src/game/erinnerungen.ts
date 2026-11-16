@@ -38,7 +38,7 @@ export function memoryTags(session: Session): string[] {
   if (stage >= 6) tags.push('haus-keller');
   const n = speciesCount(session);
   for (const k of [10, 20, 30]) if (n >= k) tags.push(`buch-${k}`);
-  const items = [...data.house.rooms.flatMap((r) => r.items), ...data.yard.items];
+  const items = [...data.house.rooms.flatMap((r) => r.items), ...data.yard.items, ...data.yardInsel.items];
   if (items.some((i) => FURNITURE_BY_ITEM[i.itemId]?.def.coop === 'huhn')) tags.push('huehner');
   if (items.some((i) => FURNITURE_BY_ITEM[i.itemId]?.def.greenhouse)) tags.push('gewaechshaus');
   if (data.house.rooms.flatMap((r) => r.items).filter((i) => i.itemId.startsWith('tasse-')).length >= 6) tags.push('tassen-viele');
@@ -63,7 +63,7 @@ export function memoryTags(session: Session): string[] {
   ] as const) if (styleCount(style) >= min) tags.push(`stil-${style}`);
   if (data.house.rooms.some((r) => /^boden-(chevron|fischgraet|flecht|schiff|tafel)/.test(r.floor))) tags.push('parkett-edel');
   if (data.house.rooms.some((r) => r.wallpaper.startsWith('tapete-uni-'))) tags.push('tapete-uni');
-  if (data.yard.items.length >= 8) tags.push('garten-deko');
+  if (data.yard.items.length + data.yardInsel.items.length >= 8) tags.push('garten-deko');
   if (data.bank.savings > 0) tags.push('sparbuch');
   if (Object.keys(data.collection).some((id) => GARDEN_FLOWER[id]?.crossOnly && id.includes('schwarz'))) tags.push('schwarze-blume');
   if (lastTravelCity(session)) tags.push('jens-reise');

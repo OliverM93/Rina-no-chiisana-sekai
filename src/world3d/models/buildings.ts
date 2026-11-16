@@ -620,19 +620,24 @@ export function makeBistro(): HouseModel {
 
 /**
  * Strand-Shack (Inselhütte): niedriges Holzhaus mit rostigem Wellblechdach, hellen verwitterten Brettern,
- * weißen Sprossenfenstern, kleiner Veranda und blauem Schild – nach einem Kaffee-Shack an einer Hawaii-Küste.
+ * weißen Sprossenfenstern, kleiner Veranda und tropischen Pflanzen – nach einem Kaffee-Shack an einer Hawaii-Küste.
+ * Alles liegt innerhalb der 5 × 3 Kacheln Grundfläche (Veranda und Stufen enden vor der Vorderkante), sodass die
+ * Hütte als Ganzes blockiert und man nicht durch das Geländer läuft.
  */
 export function makeShack(): HouseModel {
+  const root = new THREE.Group();
   const g = new THREE.Group();
+  g.position.z = -0.55; // Hütte nach hinten schieben, damit die Veranda noch in die Grundfläche passt
+  root.add(g);
   const P = palette.shack;
   const W = 4.5;
-  const D = 2.4;
+  const D = 1.8;
   const wallH = 1.35;
   const y0 = 0.3; // Hütte steht auf kleinen Pfählen
   const zf = D / 2;
 
   // Pfähle und Bodenbalken
-  for (const x of [-2.1, -0.7, 0.7, 2.1]) for (const z of [-1, 1]) g.add(b(0.14, y0, 0.14, P.boardDark, x, y0 / 2, z));
+  for (const x of [-2.1, -0.7, 0.7, 2.1]) for (const z of [-0.8, 0.8]) g.add(b(0.14, y0, 0.14, P.boardDark, x, y0 / 2, z));
   g.add(b(W + 0.1, 0.08, D + 0.1, P.boardDark, 0, y0, 0));
 
   // Wand aus senkrechten Brettern (abwechselnd helle und dunkle Töne), Fugen als dünne dunkle Leisten
@@ -645,8 +650,8 @@ export function makeShack(): HouseModel {
   for (let i = 0; i < boards; i += 3) g.add(b(W / boards, wallH, 0.02, i % 2 ? P.boardDark : P.board, -W / 2 + ((i + 0.5) / boards) * W, y0 + wallH / 2, zf + 0.015));
 
   // flaches Satteldach aus rostigem Wellblech
-  const roofH = 0.75;
-  const over = 0.4;
+  const roofH = 0.7;
+  const over = 0.3;
   const tri = new THREE.Shape();
   tri.moveTo(-(D / 2 + over), 0);
   tri.lineTo(D / 2 + over, 0);
@@ -674,21 +679,24 @@ export function makeShack(): HouseModel {
   // Blechrohr
   g.add(c(0.1, 0.5, P.roofMetal, 1.4, y0 + wallH + roofH * 0.7, -0.3));
 
-  // Veranda: Boden, Geländer und Pfosten
-  const vz = zf + 0.5;
-  g.add(b(W - 0.8, 0.07, 0.9, P.boardDark, -0.05, y0 + 0.02, vz - 0.05));
-  g.add(b(0.1, wallH - 0.1, 0.1, P.board, -W / 2 + 0.55, y0 + wallH / 2, vz + 0.35));
-  g.add(b(0.1, wallH - 0.1, 0.1, P.board, W / 2 - 0.65, y0 + wallH / 2, vz + 0.35));
-  g.add(b(W - 1.2, 0.07, 0.07, P.board, -0.05, y0 + 0.52, vz + 0.38));
-  for (let i = 0; i < 11; i++) g.add(b(0.04, 0.4, 0.04, P.board, -W / 2 + 0.7 + (i / 10) * (W - 1.4), y0 + 0.3, vz + 0.38));
-  // Stufen
-  g.add(b(0.9, 0.08, 0.3, P.boardDark, 0, 0.18, vz + 0.55));
+  // Veranda: Boden, Pfosten, Geländer (mit Lücke vor der Tür) und Stufen
+  const vz = zf + 0.35;
+  g.add(b(W - 0.8, 0.07, 0.7, P.boardDark, 0, y0 + 0.02, vz));
+  const rz = zf + 0.66;
+  for (const x of [-W / 2 + 0.55, W / 2 - 0.55]) g.add(b(0.1, wallH - 0.1, 0.1, P.board, x, y0 + wallH / 2, rz));
+  for (const [x0, x1] of [[-W / 2 + 0.55, -0.55], [0.55, W / 2 - 0.55]] as const) {
+    const mid = (x0 + x1) / 2;
+    g.add(b(x1 - x0, 0.07, 0.07, P.board, mid, y0 + 0.52, rz));
+    const n = Math.max(2, Math.round((x1 - x0) / 0.22));
+    for (let i = 0; i <= n; i++) g.add(b(0.04, 0.4, 0.04, P.board, x0 + (i / n) * (x1 - x0), y0 + 0.3, rz));
+  }
+  g.add(b(0.9, 0.08, 0.22, P.boardDark, 0, 0.18, zf + 0.78));
 
   // Tür (Sprossentür)
   g.add(b(0.62, 1.0, 0.07, '#ffffff', 0, y0 + 0.55, zf + 0.04));
   g.add(b(0.5, 0.86, 0.06, palette.door.base, 0, y0 + 0.55, zf + 0.07));
 
-  // Fenster: weiße Rahmen mit Sprossen, je mit kleinen Blattpflanzen darunter
+  // Fenster: weiße Rahmen mit Sprossen
   const windows: THREE.Vector3[] = [];
   for (const x of [-1.5, 1.5]) {
     const y = y0 + 0.85;
@@ -696,37 +704,37 @@ export function makeShack(): HouseModel {
     g.add(b(0.64, 0.58, 0.05, windowGlass, x, y, zf + 0.06));
     for (const dx of [-0.16, 0, 0.16]) g.add(b(0.025, 0.58, 0.05, '#ffffff', x + dx, y, zf + 0.09));
     for (const dy of [-0.15, 0.15]) g.add(b(0.64, 0.025, 0.05, '#ffffff', x, y + dy, zf + 0.09));
-    windows.push(new THREE.Vector3(x, y, zf + 0.1));
-  }
-  // Topfpflanzen auf der Veranda (rot-grüne Blätter)
-  for (const [x, col] of [[-1.7, '#b0434d'], [1.6, '#4c9a55']] as const) {
-    g.add(c(0.14, 0.2, '#c77a52', x, y0 + 0.16, vz + 0.2));
-    g.add(s(0.22, 0.2, 0.22, col, x, y0 + 0.4, vz + 0.2));
+    windows.push(new THREE.Vector3(x, y - 0.55, zf + 0.1 - 0.55));
   }
 
-  // Schild über dem Dach: blaues Brett mit orangefarbener Schrift
-  const sign = document.createElement('canvas');
-  sign.width = 400;
-  sign.height = 80;
-  const ctx = sign.getContext('2d') as CanvasRenderingContext2D;
-  ctx.fillStyle = P.sign;
-  ctx.fillRect(0, 0, 400, 80);
-  ctx.textAlign = 'center';
-  ctx.textBaseline = 'middle';
-  ctx.fillStyle = P.signText;
-  ctx.font = '800 44px "Nunito Variable", Nunito, sans-serif';
-  ctx.fillText('Strand-Shack', 200, 42);
-  const tex = new THREE.CanvasTexture(sign);
-  tex.colorSpace = THREE.SRGBColorSpace;
-  const board = new THREE.Mesh(new THREE.PlaneGeometry(2.1, 0.42), new THREE.MeshLambertMaterial({ map: tex }));
-  board.position.set(-0.3, y0 + wallH + roofH + 0.45, 0.3);
-  g.add(board);
-  for (const x of [-1.3, 0.7]) g.add(b(0.05, 0.4, 0.05, P.boardDark, x, y0 + wallH + roofH + 0.2, 0.28));
+  // Tropische Pflanzen neben der Veranda (außerhalb der Holzkonstruktion): links Hibiskus, rechts Bananenstaude
+  const bush = new THREE.Group();
+  bush.position.set(-2.3, 0, zf + 0.35);
+  bush.add(s(0.34, 0.3, 0.3, '#3f9a52', 0, 0.3, 0));
+  bush.add(s(0.26, 0.24, 0.24, '#55b565', 0.1, 0.5, 0.05));
+  for (const [x, y, z, col] of [[-0.18, 0.5, 0.2, '#e8394f'], [0.14, 0.64, 0.18, '#ff6f91'], [0.22, 0.38, 0.22, '#e8394f'], [-0.12, 0.7, 0.04, '#ffb347'], [0.02, 0.42, 0.28, '#ff6f91']] as const) {
+    bush.add(s(0.075, 0.07, 0.04, col, x, y, z));
+    bush.add(s(0.03, 0.03, 0.02, '#ffe27a', x, y, z + 0.03));
+  }
+  g.add(bush);
+  const banana = new THREE.Group();
+  banana.position.set(2.3, 0, zf + 0.3);
+  banana.add(c(0.07, 0.8, '#7bb15a', 0, 0.4, 0));
+  for (let i = 0; i < 6; i++) {
+    const a = (i / 6) * Math.PI * 2;
+    const leaf = b(0.16, 0.025, 0.7, i % 2 ? '#4aa35a' : '#5fbb6a', Math.sin(a) * 0.32, 0.88, Math.cos(a) * 0.32);
+    leaf.rotation.set(0.5 * Math.cos(a), a, 0, 'YXZ');
+    leaf.rotation.x = -0.45;
+    leaf.rotation.y = a;
+    banana.add(leaf);
+  }
+  banana.add(s(0.06, 0.1, 0.06, '#e8c34a', 0.1, 0.72, 0.1));
+  g.add(banana);
 
   g.traverse((o) => {
     if ((o as THREE.Mesh).isMesh) o.castShadow = true;
   });
-  return { group: g, windows };
+  return { group: root, windows };
 }
 
 /** Lars' Praxis mit kleiner Apotheke: weißes Haus mit grünem Kreuz, Schild, Kräuterkübeln & Bank */

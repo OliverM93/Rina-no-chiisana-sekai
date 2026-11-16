@@ -3,7 +3,7 @@
  *
  * Aus Blumen und Kräutern aus Linas Beet bindet Lina Sträuße. Die kann sie verschenken (Bewohner mögen
  * sie je nach Geschmack), verkaufen oder mit einer Glasvase zu einer Vase fürs Zimmer machen. Dazu gibt es
- * Kränze für die Wand. Gebunden wird an Opas Werkbank (Reiter „Blumen“, Rezepte in `recipes.ts`).
+ * Kränze für die Wand. Gebunden wird an Ludwigs Werkbank (Reiter „Blumen“, Rezepte in `recipes.ts`).
  *
  * Gegenstands-IDs: Strauß `strauss-<name>`, Vase `vase-strauss-<name>`, Kranz `kranz-<name>`.
  */

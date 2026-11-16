@@ -1,5 +1,5 @@
 /**
- * Opas Werkbank: Rezepte lernen und bauen.
+ * Ludwigs Werkbank: Rezepte lernen und bauen.
  */
 import { craft, type CraftResult, learn, missing } from '../core/crafting';
 import { itemDef, maxStackOf } from '../data/items';

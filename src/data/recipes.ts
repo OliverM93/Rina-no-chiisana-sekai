@@ -1,5 +1,5 @@
 /**
- * Rezepte für Opas Werkbank.
+ * Rezepte für Ludwigs Werkbank.
  *
  * Woher kommen Rezepte?
  * - `start`: kennt Lina von Anfang an

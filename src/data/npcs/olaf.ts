@@ -68,7 +68,7 @@ export const OLAF: NpcDef = {
       { text: ['Eine Party! Ich hab ein Budget für Konfetti aufgestellt.', 'Wir liegen voll im Plan. Christin tanzt schon.'], when: { tags: ['party'] }, weight: 8 },
       { text: ['Eigene Hühner – sehr vernünftig!', 'Ein Ei am Tag spart im Jahr … warte … ziemlich viele Sternchen. Ich rechne das nachher aus.'], when: { tags: ['huehner'] }, weight: 3 },
       { text: ['Winston ist der Einzige im Dorf, der nie nach Belegen fragt.', 'Ein sehr angenehmer Zeitgenosse.'] },
-      { text: ['Hast du schon was an Opas Werkbank gebaut?', 'Selbermachen spart Geld. Und Geld sparen macht glücklich. Mich jedenfalls.'] },
+      { text: ['Hast du schon was an Ludwigs Werkbank gebaut?', 'Selbermachen spart Geld. Und Geld sparen macht glücklich. Mich jedenfalls.'] },
       { text: ['Weißt du, was ein Steuerberater zum Frühstück isst?', 'Belege!', '… Christin lacht nie über den.'] },
       { text: ['Ordnung in den Zahlen ist wie Ordnung im Herzen.', 'Wenn alles aufgeht, schläft man besser.'] },
       { text: ['Dein Haus wird langsam zu klein, oder?', 'Wenn du ausbauen möchtest: Die Dorfkasse hilft. Ohne Zinsen, ohne Eile. Für dich doch immer.'] },

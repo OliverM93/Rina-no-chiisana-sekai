@@ -33,7 +33,7 @@ export const ANKUNFT_ERSTMALS: readonly string[] = [
 
 /** Überraschungsparty: jeder sagt etwas (Reihenfolge = Reihenfolge der Sprecher) */
 export const FEST_LINES: ReadonlyArray<{ npc: string; lines: readonly string[] }> = [
-  { npc: 'oli', lines: ['ÜBERRASCHUNG, Lini!', 'Wir wollten dir was zeigen. Weil du uns allen so ein Zuhause gebaut hast.'] },
+  { npc: 'oli', lines: ['ÜBERRASCHUNG, Lini!', 'Wir wollten dir was zeigen. Weil du uns allen so ein Zuhause gebaut hast.', 'Du hast doch immer von einem kleinen Hüttchen auf Hawaii geträumt. Mit einer eigenen Wachtelfarm.', 'Dein Traum ist jetzt wahr. Die Hütte steht da hinten, und der Garten davor gehört dir. 🌺🐦'] },
   { npc: 'gisela', lines: ['Ich hab Kekse mitgebracht. Und meinen Sonnenhut. Das hier ist ja fast wie Urlaub, Kind.', 'Hawaii. Pfui, kein Strickmuster dafür. Aber köstlich!'] },
   { npc: 'olaf', lines: ['Ich habe ausgerechnet: Fünf Herzen bei sieben Personen. Das ist eine hervorragende Quote. Dafür gibt es eine Insel.'] },
   { npc: 'christin', lines: ['Sand an den Schuhen. Normalerweise würde mich das stören. Heute nicht. Heute ist besonders.'] },
@@ -47,6 +47,7 @@ export const FEST_FINALE: readonly string[] = [
   'Zwischen den Palmen steht eine Kiste aus hellem Holz, mit einer Muschelschleife.',
   'Oli: „Mach sie auf, Lini. Das ist von uns allen.“',
   'Drin: ein Inselset für dein Zuhause – eine Palme im Topf, zwei Tiki-Fackeln, eine Hängematte, ein Surfbrett und eine kleine Ukulele für die Wand. 🌺',
+  'Hinten steht deine Hütte, mit einem Garten davor – ganz für dich. Für Wachteln wäre da auch noch Platz.',
   'Und das Boot gehört dir. Du kannst jederzeit zur Insel rudern, wenn dir nach Sonne ist.',
 ];
 
@@ -80,3 +81,6 @@ export const INSEL_FINDS = [
   { itemId: 'schneckenhaus', weight: 24 },
   { itemId: 'seestern', weight: 20 },
 ] as const;
+
+/** Erstes Mal im Inselgarten (Toast): hier darf Lina ihren Traum bauen */
+export const GARTEN_HINWEIS = 'Das ist dein Garten vor der Hütte. 🌺 Hier passt ein Wachtelstall hin – und Beete, Wege, was du willst. Über „Garten gestalten“ geht’s los.';

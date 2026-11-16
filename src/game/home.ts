@@ -131,7 +131,10 @@ export function currentRoom(session: Session): { room: Room; layout: RoomLayout 
     const room = guestRoom(session.visiting);
     return room ? { room, layout: guestLayout(session.visiting) } : null;
   }
-  if (!session.inside) return session.data ? { room: session.data.yard, layout: session.yardLayout } : null;
+  if (!session.inside) {
+    const yard = session.yardRoom();
+    return yard ? { room: yard, layout: session.yardLayoutOf() } : null;
+  }
   const room = house.rooms.find((r) => r.id === session.roomId) ?? house.rooms[0];
   return room ? { room, layout: layoutOf(house.stage, room.id) } : null;
 }
@@ -149,7 +152,7 @@ export function canPlace(session: Session, itemId: string, x: number, y: number,
   // nicht auf die Anbauten von Linas Haus
   const info = furnitureInfo(itemId);
   const annex = new Set(session.houseAnnexTiles());
-  if (info && cellsOf(x, y, info, rot).some(([cx, cy]) => annex.has((cy + YARD_AREA.y) * session.map.width + cx + YARD_AREA.x))) return false;
+  if (info && cellsOf(x, y, info, rot).some(([cx, cy]) => annex.has((cy + session.yardArea().y) * session.map.width + cx + session.yardArea().x))) return false;
   // Garten: Probe-Aufstellung → niemand wird eingesperrt, Lina steht nicht im Weg
   const trial: Room = structuredClone(c.room);
   if (moving) {
@@ -162,10 +165,11 @@ export function canPlace(session: Session, itemId: string, x: number, y: number,
 function yardOk(session: Session, yard: Room): boolean {
   const data = session.data;
   if (!data) return false;
-  const tiles = [...yardBlockedTiles(session.map, YARD_AREA, yard, session.yardLayout, furnitureInfo), ...session.houseAnnexTiles()];
+  const area = session.yardArea();
+  const tiles = [...yardBlockedTiles(session.map, area, yard, session.yardLayoutOf(), furnitureInfo), ...session.houseAnnexTiles()];
   const lina = tileOf(data.player.x, data.player.y);
   if (tiles.includes(lina.y * session.map.width + lina.x)) return false;
-  return keepsAccess(session.map, YARD_AREA, tiles);
+  return keepsAccess(session.map, area, tiles);
 }
 
 /** Nach Änderungen im Garten: Kollision & Speichern */
@@ -203,12 +207,14 @@ export function moveFurniture(session: Session, uid: string, x: number, y: numbe
 
 /** Felder eines Hochbeets im Garten als Weltkacheln */
 export function bedTiles(session: Session, uid: string): Array<{ x: number; y: number }> {
-  const item = session.data?.yard.items.find((i) => i.uid === uid);
+  const found = session.findYardItem(uid);
+  const item = found?.item;
   const f = item ? FURNITURE_BY_ITEM[item.itemId] : undefined;
   if (!item || !f?.def.bed) return [];
+  const area = session.yardArea(found?.id);
   const { w, d } = footprint(f.def, item.rot);
   const out: Array<{ x: number; y: number }> = [];
-  for (let dx = 0; dx < w; dx++) for (let dy = 0; dy < d; dy++) out.push({ x: YARD_AREA.x + item.x + dx, y: YARD_AREA.y + item.y + dy });
+  for (let dx = 0; dx < w; dx++) for (let dy = 0; dy < d; dy++) out.push({ x: area.x + item.x + dx, y: area.y + item.y + dy });
   return out;
 }
 
