@@ -125,6 +125,7 @@ import { makeCan, makeNet, makeRod, makeShovel, type ToolModel } from './models/
 import { Weather3D } from './Weather3D';
 import { Winston } from './Winston';
 import { katerDraussen, katerHello, katerPet } from '../game/kater';
+import { TASCHE_VOLL, TASCHE_VOLL_MEHRERE } from '../data/texts';
 import { GARTEN_HINWEIS, ANKUNFT_ERSTMALS, ANKUNFT_WIEDER, BOOT_DORF_LINES, BOOT_INSEL_LINES, FAHRT_HIN, FAHRT_ZURUECK, FEST_FINALE, FEST_LINES, INSEL_BELOHNUNG, INSEL_FEST_FLAG } from '../data/insel';
 import { DORF_BOOT_RETURN, INSEL_ARRIVAL, INSEL_FEST, INSEL_Y0 } from '../data/maps/insel';
 import { palmeSchuetteln } from '../game/insel';
@@ -865,14 +866,22 @@ export class World3D {
   }
 
   /** Wichtiges in die Tasche – passt es nicht mehr hinein, fällt es vor Lina auf den Boden (geht nie verloren) */
-  private giveOrDrop(itemId: string, count = 1) {
+  private giveOrDrop(itemId: string, count = 1, notify = true): number {
     const left = giveItem(this.session, itemId, count);
     const p = this.player;
     for (let i = 0; i < left && p; i++) {
       const [fx, fy] = DIRS[p.facing];
       this.collectibles.drop(itemId, new THREE.Vector3(p.x * UNIT, 1.1, p.y * UNIT), { x: p.x + fx * 40 + i * 14, y: p.y + fy * 40 + 8 });
     }
-    if (left > 0) this.session.bus.emit('toast', { text: 'Deine Tasche ist voll – es liegt vor deinen Füßen. 🎒' });
+    if (left > 0 && notify) this.session.bus.emit('toast', { text: TASCHE_VOLL });
+    return left;
+  }
+
+  /** Mehrere Gegenstände auf einmal: passt etwas nicht in die Tasche, gibt es nur einen einzigen Hinweis */
+  private giveOrDropAll(list: ReadonlyArray<{ itemId: string; count: number }>) {
+    let left = 0;
+    for (const r of list) left += this.giveOrDrop(r.itemId, r.count, false);
+    if (left > 0) this.session.bus.emit('toast', { text: left > 1 ? TASCHE_VOLL_MEHRERE : TASCHE_VOLL });
   }
 
   /** Jede Einzugsszene nur einmal anstoßen (bis sie gelaufen ist, steht das Flag „begrüßt“ noch aus) */
@@ -1984,7 +1993,7 @@ export class World3D {
       lines: lines.map((l) => fillPlaceholders(l, this.session.interactionContext())),
       onClose: () => {
         npc.endTalk();
-        for (const r of result.rewards) for (let i = 0; i < r.count; i++) this.giveOrDrop(r.itemId);
+        this.giveOrDropAll(result.rewards);
         const gift = result.rewards.map((r) => itemDef(r.itemId)?.name ?? r.itemId).join(', ');
         this.session.bus.emit('toast', {
           text: wish.place ? `✨ Neu im Dorf: ${wish.title}! Schau doch gleich mal vorbei.` : gift ? `🎁 ${gift} – als Dank für „${wish.title}“!` : `✨ Wunsch erfüllt: ${wish.title}!`,
@@ -2639,8 +2648,7 @@ export class World3D {
         title: oli.def.name,
         lines: OLI_WELCOME.map((l) => fillPlaceholders(l, ctx)),
         onClose: () => {
-          this.giveOrDrop('schreibtisch-pc');
-          this.giveOrDrop('hantelbank');
+          this.giveOrDropAll([{ itemId: 'schreibtisch-pc', count: 1 }, { itemId: 'hantelbank', count: 1 }]);
           // Oli startet mit einem Herz (und schickt gleich seinen ersten Herz-Brief)
           addFriendship(this.session, 'oli', 40);
           this.session.setFlag('oliBegruesst');
@@ -2720,8 +2728,7 @@ export class World3D {
   /** Lars eröffnet seine Praxis und begrüßt Lina (und schenkt ihr Kräutersamen) */
   private larsArrival() {
     this.npcArrival('lars', LARS_WELCOME, 1, () => {
-      this.giveOrDrop('samen-kamille', 2);
-      this.giveOrDrop('samen-pfefferminze', 2);
+      this.giveOrDropAll([{ itemId: 'samen-kamille', count: 2 }, { itemId: 'samen-pfefferminze', count: 2 }]);
     });
   }
 
@@ -3376,7 +3383,7 @@ export class World3D {
         for (const n of guests) n.scriptDone();
         data.flags[INSEL_FEST_FLAG] = true;
         data.world.dates['insel:fest'] = this.session.today();
-        for (const r of INSEL_BELOHNUNG) this.giveOrDrop(r.itemId, r.count);
+        this.giveOrDropAll(INSEL_BELOHNUNG);
         this.session.changed();
         this.session.save();
         this.session.bus.emit('overlay:fade', false);
