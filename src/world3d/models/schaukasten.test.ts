@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { FINDS } from '../../data/fossils';
-import { FISH, INSECTS } from '../../data/species';
+import { INSECTS, VILLAGE_FISH as FISH } from '../../data/species';
 import { FURNITURE_BY_ITEM } from '../../data/furniture';
 import { makeFurniture } from './furniture';
 

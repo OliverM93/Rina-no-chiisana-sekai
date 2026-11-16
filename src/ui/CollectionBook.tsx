@@ -206,7 +206,7 @@ export function CollectionBook({ session }: { session: Session }) {
   const caught = list.filter((s) => collection[s.id]).length;
   const sel = list.find((s) => s.id === selected) ?? null;
   const entry = sel ? collection[sel.id] : undefined;
-  const place = (s: Species) => ('size' in s ? FISH_HABITAT_LABELS[s.habitat] : INSECT_HABITAT_LABELS[s.habitat]);
+  const place = (s: Species) => ('size' in s ? (s.insel ? 'Meer vor der versteckten Insel' : FISH_HABITAT_LABELS[s.habitat]) : INSECT_HABITAT_LABELS[s.habitat]);
 
   return (
     <div class="modal-layer" onPointerUp={(e) => e.target === e.currentTarget && close()}>
