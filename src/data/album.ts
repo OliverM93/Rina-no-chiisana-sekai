@@ -67,6 +67,10 @@ export const MOMENTS: readonly MomentDef[] = [
   { id: 'sammlung-funde', source: { dateKey: 'sammlung:funde' }, text: 'Alle Funde ausgegraben. Winston hat den größten Anteil, aber das gibt er nicht zu.' },
   { id: 'sammlung-blumen', source: { dateKey: 'sammlung:blumen' }, text: 'Alle Blumen in jeder Farbe. Das Beet ist ein kleines Wunder geworden.' },
   { id: 'sammlung-tassen', source: { dateKey: 'sammlung:tassen' }, text: 'Alle Sammeltassen stehen im Regal. Kaffee schmeckt daraus besser, ganz sicher.' },
+  { id: 'versteck-feenlichtung', source: { dateKey: 'versteck:feenlichtung' }, text: 'Ich habe die stille Lichtung gefunden. Zwischen den Bäumen glitzert es, als würden Lichter im Gras wohnen.' },
+  { id: 'versteck-waldwinkel', source: { dateKey: 'versteck:waldwinkel' }, text: 'Im Waldwinkel stand eine Vogeltränke. Zwei Spatzen waren empört, aber sie kommen drüber weg.' },
+  { id: 'versteck-felsnische', source: { dateKey: 'versteck:felsnische' }, text: 'Neben dem großen Felsen lag ein kleines Steinmännchen. Jemand hat sich Mühe gegeben, ich hab es mitgenommen.' },
+  { id: 'versteck-treibgut', source: { dateKey: 'versteck:treibgut' }, text: 'Im Treibgut steckte eine Flaschenpost: „Such weiter, wo der Sand aufhört.“ Ich bin gespannt, was das heißt.' },
 ];
 
 /** Ein Herzenswunsch ist erfüllt: Text wird in `game/album.ts` je Wunsch erzeugt. */
