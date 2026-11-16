@@ -125,6 +125,8 @@ import { makeCan, makeNet, makeRod, makeShovel, type ToolModel } from './models/
 import { Weather3D } from './Weather3D';
 import { Winston } from './Winston';
 import { katerDraussen, katerHello, katerPet } from '../game/kater';
+import { findVersteck, hint as hintVersteck, unhintedNear, versteckAt } from '../game/verstecke';
+import { WINSTON_SNIFF_RANGE, WINSTON_SNIFF_TOAST } from '../data/verstecke';
 import { Kater } from './Kater';
 import { KATER_NAME } from '../data/kater';
 import { petWinston, winstonAppeared, winstonDig, winstonDue, winstonFound, winstonMayDig, winstonState } from '../game/pet';
@@ -509,6 +511,7 @@ export class World3D {
       this.updatePrints(dtMs, player);
       this.updateWinston(dtMs, player, blocked, solid);
       this.updateKater(dtMs, player);
+      this.updateVersteckSniff(dtMs / 1000, player);
       this.updateIdle(player, blocked);
       this.updateHomeOli(dtMs);
       this.updateVisitor(dtMs);
@@ -1265,13 +1268,57 @@ export class World3D {
     else if (tool === 'schaufel') this.session.bus.emit('toast', { text: 'Hier ist nichts. Such nach kleinen Rissen im Boden, die funkeln! ✨' });
   }
 
+  /** Ein Versteck ist gefunden: Linas Gedanken, Gegenstände in die Tasche (Rest vor die Füße) */
+  private openVersteck(id: string, spot: { x: number; y: number }) {
+    const res = findVersteck(this.session, id);
+    if (!res) return;
+    const player = this.player;
+    this.digSpots.refresh();
+    this.fxAt('funkeln', (spot.x + 0.5) * TILE, (spot.y + 0.5) * TILE);
+    this.session.bus.emit('sfx', 'fang');
+    player?.cheer();
+    this.winston?.burst('herz');
+    for (const it of res.leftover) this.dropLeftover(it.itemId, it.count);
+    this.session.bus.emit('dialog:open', { title: 'Ein Versteck!', lines: res.lines });
+  }
+
+  private dropLeftover(itemId: string, count: number) {
+    const p = this.player;
+    for (let i = 0; i < count && p; i++) {
+      const [fx, fy] = DIRS[p.facing];
+      this.collectibles.drop(itemId, new THREE.Vector3(p.x * UNIT, 1.1, p.y * UNIT), { x: p.x + fx * 40 + i * 14, y: p.y + fy * 40 + 8 });
+    }
+    this.session.bus.emit('toast', { text: 'Deine Tasche ist voll – es liegt vor deinen Füßen. 🎒' });
+  }
+
+  /** Winston wird aufgeregt, wenn Lina in der Nähe eines unbekannten Verstecks ist (das Versteck funkelt dann) */
+  private sniffCheck = 0;
+  private updateVersteckSniff(dt: number, player: Character) {
+    this.sniffCheck -= dt;
+    if (this.sniffCheck > 0 || this.session.inside || !this.winston || !this.winston.dog.root.visible || this.winston.stranded) return;
+    this.sniffCheck = 1;
+    const t = player.tile;
+    const v = unhintedNear(this.session, t.x, t.y, WINSTON_SNIFF_RANGE);
+    if (!v) return;
+    hintVersteck(this.session, v.id);
+    this.digSpots.refresh();
+    this.winston.burst('note');
+    this.session.bus.emit('sfx', 'bellen');
+    this.session.bus.emit('toast', { text: WINSTON_SNIFF_TOAST });
+  }
+
   /** Mit der Schaufel an einer Grabstelle graben (vor Lina oder unter ihr) */
   private dig(): boolean {
     const player = this.player;
     if (!player || this.digging) return this.digging;
     const t = player.tile;
     const [fx, fy] = DIRS[player.facing];
-    const spot = this.digSpots.spotAt(t.x + fx, t.y + fy) ?? this.digSpots.spotAt(t.x, t.y);
+    let spot = this.digSpots.spotAt(t.x + fx, t.y + fy) ?? this.digSpots.spotAt(t.x, t.y);
+    // Ein Versteck lässt sich auch ohne Hinweis finden: einfach an genau der Stelle graben
+    if (!spot) {
+      const v = versteckAt(this.session, t.x + fx, t.y + fy) ?? versteckAt(this.session, t.x, t.y);
+      if (v) spot = { id: `versteck:${v.id}`, itemId: '', x: v.x, y: v.y };
+    }
     if (!spot) return false;
     this.digging = true;
     this.session.bus.emit('sfx', 'graben');
@@ -1285,6 +1332,10 @@ export class World3D {
       if (tool) tool.rotation.x = 0.9;
       player.armForward = -0.35;
       this.digging = false;
+      if (spot.id.startsWith('versteck:')) {
+        this.openVersteck(spot.id.slice('versteck:'.length), spot);
+        return;
+      }
       const res = digSpot(this.session, spot);
       if (!res) return;
       if (res.full) {

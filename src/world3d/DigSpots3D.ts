@@ -5,6 +5,7 @@ import * as THREE from 'three';
 import type { DailySpawn } from '../core/daily';
 import type { Session } from '../game/session';
 import { todaysDigSpots } from '../game/digging';
+import { hintedUnfound } from '../game/verstecke';
 import type { MapView3D } from './MapView3D';
 
 function crackTexture(): THREE.CanvasTexture {
@@ -70,7 +71,8 @@ export class DigSpots3D {
   }
 
   refresh() {
-    this.spots = todaysDigSpots(this.session);
+    // Bekannte Verstecke funkeln wie Grabstellen (Fund beim Graben: `game/verstecke.ts`)
+    this.spots = [...todaysDigSpots(this.session), ...hintedUnfound(this.session).map((v): DailySpawn => ({ id: `versteck:${v.id}`, itemId: '', x: v.x, y: v.y }))];
     const sig = this.spots.map((s) => s.id).join('|');
     if (sig === this.sig) return;
     this.sig = sig;
