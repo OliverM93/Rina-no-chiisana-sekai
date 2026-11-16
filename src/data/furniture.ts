@@ -111,6 +111,11 @@ export const FURNITURE: readonly FurnitureDef[] = [
   { id: 'kieselmosaik', name: 'Kieselmosaik', style: 'handgemacht', crafted: true, price: 200, w: 2, d: 2, rug: true, description: 'Viele glatte Kiesel, zu einem runden Muster gelegt. Kühl unter den Füßen.' },
   // Olis Sachen (bringt er beim Einzug mit bzw. schenkt sie per Brief) – nicht im Katalog
   { id: 'schreibtisch-pc', name: 'Olis Schreibtisch', style: 'basis', gift: true, price: 1600, w: 2, d: 1, description: 'Olis Schreibtisch mit Computer, zwei Bildschirmen und einer Tastatur, die in allen Farben leuchtet.' },
+  // Inselset: Belohnung für die Überraschungsparty auf der versteckten Insel (nur als Geschenk)
+  { id: 'inselpalme', name: 'Inselpalme', style: 'basis', gift: true, price: 800, w: 1, d: 1, description: 'Eine kleine Kokospalme im Topf von der versteckten Insel. Bringt Sommer mit, auch im Dezember.' },
+  { id: 'tiki-fackel', name: 'Tiki-Fackel', style: 'basis', gift: true, light: true, price: 400, w: 1, d: 1, description: 'Ein Holzstab mit geschnitztem Gesicht und warmem Licht. Abends fehlt nur noch die Ukulele.' },
+  { id: 'haengematte', name: 'Hängematte', style: 'basis', gift: true, sit: 'liegen', price: 900, w: 2, d: 1, description: 'Zwischen zwei Pfosten gespannt, in bunten Farben. Hier schläft man ein, bevor man „nur kurz“ gesagt hat.' },
+  { id: 'surfbrett', name: 'Surfbrett', style: 'basis', gift: true, wall: true, price: 500, w: 1, d: 1, description: 'Ein gelbes Surfbrett mit rotem Streifen für die Wand. Lina surft nicht. Es sieht trotzdem sehr nach Urlaub aus.' },
   { id: 'hantelbank', name: 'Hantelbank', style: 'basis', gift: true, price: 900, w: 2, d: 1, description: 'Olis Hantelbank mit Langhantel. „Nur ein Satz noch, Lini!“' },
   // Kaffee: Siebträgermaschinen in vier Preisklassen (Olis `kaffeemaschine` ist die zweite) – Getränke in `data/coffee.ts`
   { id: 'espresso-einsteiger', name: 'Einsteiger-Siebträger', style: 'basis', small: true, price: 650, w: 1, d: 1, description: 'Eine kleine, rote Siebträgermaschine. Kann Espresso und Lungo – und das gar nicht schlecht. Ein guter Anfang.' },

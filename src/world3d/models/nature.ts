@@ -118,6 +118,56 @@ export function makePine(season: Season, seed: number): TreeModel {
   return { group, fruitSpots: [], crown };
 }
 
+/** Palme für die Insel: schwach gebogener Stamm, ein Schopf aus Wedeln und ein paar Kokosnüsse */
+export function makePalm(seed: number): THREE.Group {
+  const rnd = mulberry32(seed);
+  const g = new THREE.Group();
+  const lean = (rnd() - 0.5) * 0.5;
+  const trunkColor = '#a9784f';
+  const rings = '#8a5e3c';
+  // Stamm aus fünf Stücken, nach oben leicht gebogen
+  let x = 0;
+  let y = 0;
+  const segs = 5;
+  for (let i = 0; i < segs; i++) {
+    const seg = mesh(geo.trunk, toon(i % 2 === 0 ? trunkColor : rings));
+    const h = 0.36;
+    seg.scale.set(0.62 - i * 0.04, h, 0.62 - i * 0.04);
+    seg.position.set(x, y + h / 2, 0);
+    seg.rotation.z = -lean * 0.35;
+    g.add(seg);
+    x += lean * 0.12;
+    y += h * 0.92;
+  }
+  const top = new THREE.Group();
+  top.position.set(x, y, 0);
+  g.add(top);
+  // Wedel: lange, flache Blätter, die nach außen fallen
+  const n = 8;
+  for (let i = 0; i < n; i++) {
+    const a = (i / n) * Math.PI * 2 + rnd() * 0.3;
+    const pivot = new THREE.Group();
+    pivot.rotation.y = a;
+    const frond = mesh(geo.cone, toon(i % 2 === 0 ? '#59b863' : '#6fcc72'));
+    frond.scale.set(0.1, 0.78, 0.035);
+    frond.position.set(0, 0, 0.4);
+    frond.rotation.x = Math.PI / 2 + 0.55; // zeigt nach außen und hängt etwas
+    pivot.add(frond);
+    top.add(pivot);
+  }
+  const mid = mesh(geo.sphere, toon('#4ea85a'));
+  mid.scale.set(0.12, 0.08, 0.12);
+  top.add(mid);
+  for (const [dx, dz] of [[0.07, 0.04], [-0.06, 0.06], [0.0, -0.08]] as const) {
+    const nut = mesh(geo.sphere, toon('#7a4b2c'));
+    nut.scale.setScalar(0.06);
+    nut.position.set(dx, -0.05, dz);
+    top.add(nut);
+  }
+  g.rotation.y = rnd() * Math.PI * 2;
+  return g;
+}
+
 export function makeBush(season: Season, seed: number): THREE.Group {
   const rnd = mulberry32(seed);
   const [main, light] = palette.leaves[season === 'herbst' ? 'sommer' : season];

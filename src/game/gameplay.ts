@@ -35,8 +35,10 @@ import { checkSammlungen } from './sammlungen';
 import { memoryLinesFor, memoryTags, takeMemory } from './erinnerungen';
 import { winstonOmaLines } from './pet';
 import { tipsyComment } from './tipsy';
+import { isInselRow } from '../data/maps/insel';
 import { noteTaste } from './friends';
 import { bouquetBonus, straussLustLines } from './straussLust';
+import { thaliaMapLines } from './verstecke';
 
 // ---------------------------------------------------------------------------
 // Tasche & Sternchen
@@ -103,7 +105,7 @@ export function beachTiles(session: Session) {
   if (beachTilesCache) return beachTilesCache;
   const map = session.map;
   const tiles: Array<{ x: number; y: number }> = [];
-  for (let y = 0; y < map.height; y++) {
+  for (let y = 0; y < map.height && !isInselRow(y); y++) {
     for (let x = 0; x < map.width; x++) {
       if (terrainAt(map, x, y) === 'sand' && !map.grid.isBlocked(x, y)) tiles.push({ x, y });
     }
@@ -273,6 +275,7 @@ export function talkToNpc(session: Session, npcId: string): TalkOutcome {
     else lines.push(...pickLine(npc.dialogue.greetings, ctx));
     lines.push(...takeMemory(session, npcId));
     lines.push(...straussLustLines(session, npcId));
+    if (npcId === 'thalia') lines.push(...thaliaMapLines(session));
     lines.push(...winstonOmaLines(session, npcId));
     // sanfter Hinweis, was für den nächsten Einzug noch fehlt (einmal am Tag zur Begrüßung)
     const hint = progressHint(session, npcId);

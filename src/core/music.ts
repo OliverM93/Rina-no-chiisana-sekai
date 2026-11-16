@@ -47,7 +47,12 @@ export type Mood =
   | 'regen-schirm'
   | 'schnee-schlitten'
   | 'schnee-kamin'
-  | 'schnee-wald';
+  | 'schnee-wald'
+  // --- die versteckte Insel: Hawaii-Stimmung (Ukulele, Marimba, sanfter Swing), immer sonnig
+  | 'insel'
+  | 'insel-lagune'
+  | 'insel-hula'
+  | 'insel-abendrot';
 
 export type Lead = 'spieluhr' | 'marimba' | 'floete' | 'epiano' | 'akkordeon' | 'zupf' | 'glocke';
 
@@ -138,6 +143,11 @@ export const MOODS: Record<Mood, MoodDef> = {
   // Schnee
   'schnee-schlitten': { ...base, name: 'Schlittenfahrt', bpm: 112, root: 62, scale: MAJOR, progressions: [[0, 3, 4, 0], [0, 5, 3, 4]], density: 0.65, lead: 'glocke', lead2: 'marimba', accomp: 'zupf', drums: 'besen' },
   'schnee-kamin': { ...base, name: 'Warme Stube', bpm: 64, root: 60, scale: MAJOR, progressions: [[0, 5, 3, 4], [3, 0, 1, 4]], density: 0.35, lead: 'epiano', lead2: 'spieluhr', accomp: 'pad', sevenths: true },
+  // Insel: Ukulele (Zupf), Marimba, Besen-Beat, leichter Swing – wie ein Strandabend mit Blumenkette
+  insel: { ...base, name: 'Aloha-Brise', bpm: 100, root: 60, scale: MAJOR, progressions: [[0, 5, 3, 4], [0, 3, 0, 4], [0, 5, 1, 4]], density: 0.58, lead: 'zupf', lead2: 'marimba', accomp: 'zupf', swing: 0.17, drums: 'besen' },
+  'insel-lagune': { ...base, name: 'Türkise Lagune', bpm: 84, root: 62, scale: LYDIAN, progressions: [[0, 1, 0, 4], [0, 3, 1, 4]], density: 0.42, lead: 'floete', lead2: 'zupf', accomp: 'pad', sevenths: true, swing: 0.12 },
+  'insel-hula': { ...base, name: 'Hula unter Palmen', bpm: 112, root: 65, scale: MAJOR, progressions: [[0, 3, 4, 0], [0, 4, 5, 3]], density: 0.68, lead: 'marimba', lead2: 'zupf', accomp: 'zupf', swing: 0.2, drums: 'besen' },
+  'insel-abendrot': { ...base, name: 'Abendrot am Strand', bpm: 76, root: 57, scale: MAJOR, progressions: [[0, 5, 3, 4], [3, 4, 0, 5]], density: 0.4, lead: 'zupf', lead2: 'epiano', accomp: 'pad', sevenths: true, swing: 0.15 },
   'schnee-wald': { ...base, name: 'Verschneiter Wald', bpm: 58, root: 65, scale: MAJOR_PENTA, progressions: [[0, 2, 3, 0], [0, 3, 4, 3]], density: 0.28, lead: 'spieluhr', lead2: 'glocke', accomp: 'pad', bass: false },
 };
 
@@ -152,6 +162,7 @@ export const THEMES: Partial<Record<Mood, readonly Mood[]>> = {
   nacht: ['nacht', 'nacht-mond', 'nacht-eule', 'nacht-sternschnuppe'],
   regen: ['regen', 'regen-pfuetze', 'regen-fenster', 'regen-schirm'],
   schnee: ['schnee', 'schnee-schlitten', 'schnee-kamin', 'schnee-wald'],
+  insel: ['insel', 'insel-lagune', 'insel-hula', 'insel-abendrot'],
 };
 
 /** Zusätzliche Tageslieder je Jahreszeit */
@@ -328,8 +339,10 @@ export function composePhrase(mood: Mood, seed: number): NoteEvent[] {
 /** Stimmung aus Uhrzeit, Wetter & Ort (`place` = Thema des nahen Gebäudes, `home` = Thema zu Hause) */
 export function moodFor(
   hour: number,
-  opts: { raining: boolean; snowing: boolean; inside: boolean; party: boolean; place?: Mood | null; home?: Mood },
+  opts: { raining: boolean; snowing: boolean; inside: boolean; party: boolean; place?: Mood | null; home?: Mood; island?: boolean },
 ): Mood {
+  // Auf der versteckten Insel läuft immer die Hawaii-Musik (zu jeder Tageszeit, immer sonnig)
+  if (opts.island && !opts.inside) return 'insel';
   const night = hour >= 22 || hour < 5;
   if (opts.party) return 'party';
   if (opts.inside) return hour >= 23 || hour < 6 ? 'nacht' : (opts.home ?? 'zuhause');
