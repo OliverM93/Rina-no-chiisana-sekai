@@ -126,8 +126,8 @@ export const GUEST_HOUSES: Readonly<Record<string, GuestHouse>> = {
   'haus-thalia': {
     npc: 'thalia',
     name: 'Thalias Häuschen',
-    wallpaper: 'tapete-uni-sand',
-    floor: 'boden-dielen-esche',
+    wallpaper: 'tapete-shack',
+    floor: 'boden-dielen',
     // Schlicht und Mid-Century: wenige gute Stücke, viel Luft
     items: [
       { id: 'teaksideboard', x: 3, y: 0 },
@@ -286,6 +286,34 @@ export const GUEST_HOUSES: Readonly<Record<string, GuestHouse>> = {
       kugelleuchte: ['Eine Kugellampe an einem Messingarm. Abends sieht das Café damit aus wie auf einer Postkarte.'],
       messingleuchte: ['Eine kleine Wandleuchte mit Stoffschirm. Jens sagt: „Licht ist die halbe Küche.“'],
       'schild-toilette': ['„TOILETTE“. Jens hat darauf bestanden, dass es auf Französisch bleibt. Es ist dasselbe Wort. Er findet es trotzdem eleganter.'],
+    },
+  },
+  // Die Strandhütte auf der versteckten Insel (Belohnung nach dem ersten Fest): niemand wohnt hier – sie gehört Lina
+  inselhuette: {
+    npc: '',
+    name: 'Strandhütte',
+    wallpaper: 'tapete-shack',
+    floor: 'boden-dielen',
+    items: [
+      { id: 'surfbrett', x: 1, y: 0, rot: 0 },
+      { id: 'ukulele', x: 3, y: 0, rot: 0 },
+      { id: 'tiki-fackel', x: 0, y: 0 },
+      { id: 'tiki-fackel', x: 7, y: 0 },
+      { id: 'zinktheke', x: 5, y: 0 },
+      { id: 'barhocker', x: 5, y: 1, variant: 'mint' },
+      { id: 'barhocker', x: 6, y: 1, variant: 'senf' },
+      { id: 'haengematte', x: 1, y: 3, rot: 0 },
+      { id: 'inselpalme', x: 7, y: 3 },
+    ],
+    intro: ['Sand zwischen den Zehen, Holz unter den Füßen und irgendwo Wellen. Das ist … unsere Hütte?', 'Ein bisschen Urlaub für jeden Tag. Hier darf einfach alles ganz langsam sein. 🌺'],
+    comments: {
+      surfbrett: ['Ein Surfbrett an der Wand. Ich kann nicht surfen. Aber es sieht aus, als könnte ich.'],
+      ukulele: ['Die Ukulele hängt bereit. Ich kann zwar nur vier Akkorde – aber die reichen am Strand völlig.'],
+      'tiki-fackel': ['Die Tiki-Fackeln werfen abends ein warmes Licht. Fast wie Lagerfeuer, nur ohne Rauch in den Haaren.'],
+      zinktheke: ['Eine Bar aus Treibholz! Hinter dem Tresen hängen Muscheln – und es gibt Kokoswasser.'],
+      barhocker: ['Barhocker in Minze und Senf. Von hier hört man das Meer am besten.'],
+      haengematte: ['Die Hängematte schaukelt ganz von allein. Nur kurz hinlegen. Bestimmt nur kurz.'],
+      inselpalme: ['Eine kleine Palme, mitten in der Hütte. Warum auch nicht? Sie hat eine Nuss für mich aufgehoben, glaub ich.'],
     },
   },
 };

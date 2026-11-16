@@ -3,7 +3,7 @@
  * Lina bremst sich selbst, und Wasser ist immer die freundliche Alternative. Logik: `core/tipsy.ts`.
  */
 
-export type DrinkKind = 'bier' | 'wein' | 'highball' | 'wasser' | 'cola';
+export type DrinkKind = 'bier' | 'wein' | 'highball' | 'wasser' | 'cola' | 'kokos';
 export type DrinkPlace = 'cafe' | 'zuhause';
 
 /** Zeilen zum Getränk, je nach Ort */
@@ -23,6 +23,10 @@ export const DRINK_LINES: Readonly<Record<DrinkKind, Readonly<Record<DrinkPlace,
   wasser: {
     cafe: ['Jens stellt ein Glas Wasser mit Zitronenscheibe hin. „Très chic, nicht wahr?“ 💧'],
     zuhause: ['Ein großes Glas Wasser. Kalt und klar. 💧'],
+  },
+  kokos: {
+    cafe: ['Frisches Kokoswasser, direkt aus der Nuss. 🥥'],
+    zuhause: ['Frisches Kokoswasser, direkt aus der Nuss, mit Strohhalm und Blümchen. 🥥', 'Schmeckt nach Urlaub. Lina wippt kurz mit den Füßen.'],
   },
   cola: {
     cafe: ['Cola Zero. Eiskalt.'],

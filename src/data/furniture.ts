@@ -112,6 +112,7 @@ export const FURNITURE: readonly FurnitureDef[] = [
   // Olis Sachen (bringt er beim Einzug mit bzw. schenkt sie per Brief) – nicht im Katalog
   { id: 'schreibtisch-pc', name: 'Olis Schreibtisch', style: 'basis', gift: true, price: 1600, w: 2, d: 1, description: 'Olis Schreibtisch mit Computer, zwei Bildschirmen und einer Tastatur, die in allen Farben leuchtet.' },
   // Inselset: Belohnung für die Überraschungsparty auf der versteckten Insel (nur als Geschenk)
+  { id: 'ukulele', name: 'Ukulele', style: 'basis', gift: true, wall: true, price: 450, w: 1, d: 1, description: 'Eine kleine Ukulele mit Blumenband. Anspielen geht mit einem Klick, falsche Töne gibt es nicht.' },
   { id: 'inselpalme', name: 'Inselpalme', style: 'basis', gift: true, price: 800, w: 1, d: 1, description: 'Eine kleine Kokospalme im Topf von der versteckten Insel. Bringt Sommer mit, auch im Dezember.' },
   { id: 'tiki-fackel', name: 'Tiki-Fackel', style: 'basis', gift: true, light: true, price: 400, w: 1, d: 1, description: 'Ein Holzstab mit geschnitztem Gesicht und warmem Licht. Abends fehlt nur noch die Ukulele.' },
   { id: 'haengematte', name: 'Hängematte', style: 'basis', gift: true, sit: 'liegen', price: 900, w: 2, d: 1, description: 'Zwischen zwei Pfosten gespannt, in bunten Farben. Hier schläft man ein, bevor man „nur kurz“ gesagt hat.' },
@@ -409,6 +410,7 @@ export const WALLPAPERS: readonly SurfaceDef[] = [
   { id: 'tapete-uni-bordeaux', name: 'Einfarbig Bordeaux', style: 'retro', price: 450, kind: 'tapete', pattern: 'flach', color: '#8d3b45', accent: '#8d3b45', description: 'Satt und gemütlich wie ein Samtsessel.' },
   { id: 'tapete-uni-nachtblau', name: 'Einfarbig Nachtblau', style: 'modern', price: 450, kind: 'tapete', pattern: 'flach', color: '#34406b', accent: '#34406b', description: 'Wie der Himmel um Mitternacht.' },
   { id: 'tapete-kalkputz', name: 'Lehmputz', style: 'japandi', price: 650, kind: 'tapete', pattern: 'putz', color: '#e6dccb', accent: '#cdbfa8', description: 'Eine Wand wie von Hand verputzt – warm, matt und ganz leicht wolkig.' },
+  { id: 'tapete-shack', name: 'Verwitterte Holzbretter', style: 'basis', price: 800, kind: 'tapete', pattern: 'bretter', color: '#dcc3a3', accent: '#b89a74', description: 'Helle, von Sonne und Salz gebleichte Bretter wie an einer kleinen Strandhütte.' },
   { id: 'tapete-holzlatten', name: 'Holzlatten-Wand', style: 'japandi', price: 950, kind: 'tapete', pattern: 'latten', color: '#d9b98c', accent: '#a9875e', description: 'Schmale Eichenlatten mit dunklen Fugen. Riecht ein bisschen nach Sauna im Wald.' },
   { id: 'tapete-bibliothek', name: 'Dunkle Holzvertäfelung', style: 'darkacademia', price: 1000, kind: 'tapete', pattern: 'vertaefelung', color: '#5a3a2a', accent: '#4a2e20', description: 'Halbhohe Paneele aus dunklem Holz – wie im Lesesaal einer alten Universität.' },
   { id: 'tapete-faecher', name: 'Fächer-Tapete', style: 'artdeco', price: 900, kind: 'tapete', pattern: 'faecher', color: '#1f3a33', accent: '#d9b45a', description: 'Goldene Fächer auf dunklem Smaragd. Ein bisschen Zwanziger-Jahre-Glamour.' },

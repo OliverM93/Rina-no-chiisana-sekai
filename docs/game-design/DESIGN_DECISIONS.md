@@ -323,6 +323,12 @@ vergeht. Kein Fortschritt, keine Belohnung, keine Zahlen, nichts gespeichert –
 **Bewusst nicht:** Zähler oder Liste im Notizbuch („3 von 4“), Fristen, verpassbare Funde, Pflicht-Suche, große Belohnungen (die gehören zur Insel).
 **Designprüfung:** 1 „Huch, was ist das?“ · 2 Wochen-Loop, nebenbei beim Spazieren · 3 Erkunden lohnt wieder; die Karte ist nicht mehr nach drei Stunden ausgeschöpft · 4 Welt bleibt ein bisschen unvorhersehbar · 5 Funde sind einmalig und klein (Möbel, Seesterne), keine Sternchen-Quelle · 6 Risiko FOMO: nichts verfällt, jeder Fund ist jederzeit möglich; Risiko Frust: drei Hinweiswege, Thalias Karte nennt Region und Landmarke · 7 stärkt Säule 2 (Entdecken) und 4 (Winston, Thalia, Karte hängen zusammen) · 8 einfachere Lösung: nur zufällige Funde, ohne feste Orte, aber dann wäre nichts „ein Ort“.
 
+### D43 · Strandhütte und Ukulele auf der Insel (Nov. 2026)
+
+**Anlass:** Weiterführung der Inselideen: Die Insel soll nach dem Fest ein Ort zum Ausruhen sein, nicht nur ein Besuch.
+**Entscheidung:** Nach dem ersten Fest steht eine Strandhütte mit Bar (Kokoswasser) und Ukulele auf der Insel. Die Ukulele ist ein reines Spielzeug: vier Akkorde, keine Punkte, keine falschen Töne, keine Belohnung. Sie gehört auch zum Inselset und lässt sich im eigenen Haus aufhängen.
+**Bewusst nicht:** Rhythmus-Spiel mit Punkten oder Rängen, Ukulele-Lieder als Sammelaufgabe, Zeitdruck, Pflicht-Besuche, neue Währung.
+**Designprüfung:** 1 „Ich klimpere einfach ein bisschen“ · 2 Beliebig oft, kurze Pausen · 3 Ruhe und Kreativität nach dem großen Ziel · 4 Kein Druck, nichts zu verlieren · 5 Keine Stärkung von Verpflichtung · 6 Passt zu Gemütlichkeit und Persönlichkeit (Hawaii-Stimmung, Linas Hang zu Getränken ohne Alkohol-Zwang) · 7 Keine Balance-Auswirkung (nichts verkaufbar) · 8 Niedrig: Daten und eine kleine Oberfläche.
 ### D42 · Mehr zu tun auf der Insel: Kokosnüsse, Inselfische, Strandfunde (Nov. 2026)
 
 **Anlass:** Die Insel war nach der Party nur noch ein Ort zum Ausruhen. Die Ideen aus dem Insel-PR (Kokosnüsse, Fische nur dort) sollen sie zu einem Ort machen, den man gern wieder besucht.

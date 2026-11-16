@@ -67,6 +67,7 @@ export type UiPanel =
   | { kind: 'galerie' }
   | { kind: 'tv'; withOli: boolean }
   | { kind: 'minispiel' }
+  | { kind: 'ukulele' }
   | { kind: 'notizbuch' }
   | { kind: 'herd' }
   | { kind: 'samenstand' }
@@ -138,7 +139,7 @@ export type GameEvents = {
   /** Lautstärke geändert */
   'settings:changed': { musicVolume: number; sfxVolume: number };
   /** Ein Geräusch abspielen (siehe audio/Audio.ts) */
-  sfx: 'kuss' | 'schritt' | 'schritt-holz' | 'aufheben' | 'tuer' | 'platsch' | 'biss' | 'fang' | 'kescher' | 'dialog' | 'klick' | 'muenzen' | 'bauen' | 'bellen' | 'gackern' | 'graben' | 'herz' | 'post' | 'foto';
+  sfx: 'kuss' | 'schritt' | 'schritt-holz' | 'aufheben' | 'tuer' | 'platsch' | 'biss' | 'fang' | 'kescher' | 'dialog' | 'klick' | 'muenzen' | 'bauen' | 'bellen' | 'gackern' | 'graben' | 'herz' | 'post' | 'foto' | 'uke-c' | 'uke-am' | 'uke-f' | 'uke-g';
   /**
    * Partikel-Effekt (siehe world3d/Particles3D.ts). Ort in Welteinheiten, `npc` = über diesem Bewohner,
    * ohne Ort = bei Lina.

@@ -479,7 +479,7 @@ const SURFACE_STYLES: Record<string, DesignStyle[]> = {
   'boden-hexmosaik': ['bistro'],
 };
 
-const WALL_MATERIAL = new Set(['kacheln', 'backstein', 'glas', 'vertaefelung', 'shoji', 'putz', 'latten', 'sichtbeton']);
+const WALL_MATERIAL = new Set(['kacheln', 'backstein', 'glas', 'vertaefelung', 'shoji', 'putz', 'latten', 'bretter', 'sichtbeton']);
 const FLOOR_TYPE: Record<string, string> = {
   dielen: 'dielen',
   schiff: 'dielen',

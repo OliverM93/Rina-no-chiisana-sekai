@@ -46,7 +46,7 @@ export const FEST_LINES: ReadonlyArray<{ npc: string; lines: readonly string[] }
 export const FEST_FINALE: readonly string[] = [
   'Zwischen den Palmen steht eine Kiste aus hellem Holz, mit einer Muschelschleife.',
   'Oli: „Mach sie auf, Lini. Das ist von uns allen.“',
-  'Drin: ein Inselset für dein Zuhause – eine Palme im Topf, eine Tiki-Fackel, eine Hängematte und ein Surfbrett für die Wand. 🌺',
+  'Drin: ein Inselset für dein Zuhause – eine Palme im Topf, zwei Tiki-Fackeln, eine Hängematte, ein Surfbrett und eine kleine Ukulele für die Wand. 🌺',
   'Und das Boot gehört dir. Du kannst jederzeit zur Insel rudern, wenn dir nach Sonne ist.',
 ];
 
@@ -56,6 +56,7 @@ export const INSEL_BELOHNUNG: ReadonlyArray<{ itemId: string; count: number }> =
   { itemId: 'tiki-fackel', count: 2 },
   { itemId: 'haengematte', count: 1 },
   { itemId: 'surfbrett', count: 1 },
+  { itemId: 'ukulele', count: 1 },
 ];
 
 /** Kurze Sätze, wenn Lina danach wieder auf der Insel ist (Toast beim Ankommen, abwechselnd) */

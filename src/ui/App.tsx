@@ -24,6 +24,7 @@ import { CraftPanel } from './CraftPanel';
 import { MapPanel } from './MapPanel';
 import { GalleryPanel } from './GalleryPanel';
 import { MiniGamePanel } from './MiniGamePanel';
+import { UkulelePanel } from './UkulelePanel';
 import { NotebookPanel } from './NotebookPanel';
 import { TvPanel } from './TvPanel';
 import { handleArrowKey } from './navigation';
@@ -144,8 +145,9 @@ export function App({ session }: { session: Session }) {
       {state.panel?.kind === 'tv' && <TvPanel session={session} withOli={state.panel.withOli} />}
       {state.panel?.kind === 'notizbuch' && <NotebookPanel session={session} />}
       {state.panel?.kind === 'minispiel' && <MiniGamePanel session={session} />}
+      {state.panel?.kind === 'ukulele' && <UkulelePanel session={session} />}
       {state.panel?.kind === 'herd' && <CraftPanel session={session} station="herd" />}
-      {state.panel && !['mail', 'book', 'catalog', 'bank', 'werkbank', 'kochstudio', 'apotheke', 'karte', 'galerie', 'tv', 'minispiel', 'notizbuch', 'herd', 'samenstand', 'truhe', 'foto'].includes(state.panel.kind) && <InventoryPanel session={session} panel={state.panel} />}
+      {state.panel && !['mail', 'book', 'catalog', 'bank', 'werkbank', 'kochstudio', 'apotheke', 'karte', 'galerie', 'tv', 'minispiel', 'ukulele', 'notizbuch', 'herd', 'samenstand', 'truhe', 'foto'].includes(state.panel.kind) && <InventoryPanel session={session} panel={state.panel} />}
       {state.dialog && (
         <DialogBox
           dialog={state.dialog}

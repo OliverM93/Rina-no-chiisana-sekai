@@ -7,7 +7,7 @@ import { NPC_BY_ID } from './npcs';
 describe('Häuser der Bewohner von innen', () => {
   it('jedes Haus nutzt vorhandene Möbel, Tapete und Boden und liegt im Raum', () => {
     for (const [id, h] of Object.entries(GUEST_HOUSES)) {
-      expect(NPC_BY_ID[h.npc], id).toBeTruthy();
+      if (h.npc) expect(NPC_BY_ID[h.npc], id).toBeTruthy();
       expect(SURFACE_BY_ID[h.wallpaper], `${id}: ${h.wallpaper}`).toBeTruthy();
       expect(SURFACE_BY_ID[h.floor], `${id}: ${h.floor}`).toBeTruthy();
       expect(h.intro.length, id).toBeGreaterThanOrEqual(1);

@@ -42,6 +42,8 @@ export const palette = {
     sky: '#a9cdf2',
   },
   wall: { cream: '#fff5e3', shade: '#f1e2c8', trim: '#ffffff' },
+  /** Strand-Shack: verwittertes Holz, rostiges Wellblech, blaues Schild */
+  shack: { board: '#dcc3a3', boardDark: '#c9ad8a', rust: '#b86a3e', rustDark: '#8f4a2a', rustLight: '#d08a55', sign: '#4f8fd0', signText: '#f0a55a', roofMetal: '#8a9097' },
   window: { glass: '#cfeefc', frame: '#ffffff', glow: '#ffe6a3' },
   door: { base: '#d99c78', dark: '#b97f5f' },
 

@@ -618,6 +618,117 @@ export function makeBistro(): HouseModel {
   return h;
 }
 
+/**
+ * Strand-Shack (Inselhütte): niedriges Holzhaus mit rostigem Wellblechdach, hellen verwitterten Brettern,
+ * weißen Sprossenfenstern, kleiner Veranda und blauem Schild – nach einem Kaffee-Shack an einer Hawaii-Küste.
+ */
+export function makeShack(): HouseModel {
+  const g = new THREE.Group();
+  const P = palette.shack;
+  const W = 4.5;
+  const D = 2.4;
+  const wallH = 1.35;
+  const y0 = 0.3; // Hütte steht auf kleinen Pfählen
+  const zf = D / 2;
+
+  // Pfähle und Bodenbalken
+  for (const x of [-2.1, -0.7, 0.7, 2.1]) for (const z of [-1, 1]) g.add(b(0.14, y0, 0.14, P.boardDark, x, y0 / 2, z));
+  g.add(b(W + 0.1, 0.08, D + 0.1, P.boardDark, 0, y0, 0));
+
+  // Wand aus senkrechten Brettern (abwechselnd helle und dunkle Töne), Fugen als dünne dunkle Leisten
+  g.add(b(W, wallH, D, P.board, 0, y0 + wallH / 2, 0));
+  const boards = 26;
+  for (let i = 0; i <= boards; i++) {
+    const x = -W / 2 + (i / boards) * W;
+    g.add(b(0.025, wallH, 0.03, P.boardDark, x, y0 + wallH / 2, zf + 0.01));
+  }
+  for (let i = 0; i < boards; i += 3) g.add(b(W / boards, wallH, 0.02, i % 2 ? P.boardDark : P.board, -W / 2 + ((i + 0.5) / boards) * W, y0 + wallH / 2, zf + 0.015));
+
+  // flaches Satteldach aus rostigem Wellblech
+  const roofH = 0.75;
+  const over = 0.4;
+  const tri = new THREE.Shape();
+  tri.moveTo(-(D / 2 + over), 0);
+  tri.lineTo(D / 2 + over, 0);
+  tri.lineTo(0, roofH);
+  tri.closePath();
+  const roofGeo = new THREE.ExtrudeGeometry(tri, { depth: W + over * 2, bevelEnabled: false });
+  roofGeo.rotateY(Math.PI / 2);
+  roofGeo.translate(-(W / 2 + over), y0 + wallH, 0);
+  g.add(mesh(roofGeo, toon(P.rust)));
+  // Wellen: schmale Leisten, die vom First zur Traufe laufen, in wechselnden Rosttönen
+  const slope = Math.atan2(roofH, D / 2 + over);
+  const slopeLen = Math.hypot(roofH, D / 2 + over);
+  const ribs = 34;
+  for (const side of [1, -1]) {
+    for (let i = 0; i < ribs; i++) {
+      const x = -(W / 2 + over) + ((i + 0.5) / ribs) * (W + over * 2);
+      const color = i % 5 === 0 ? P.rustDark : i % 2 ? P.rust : P.rustLight;
+      const rib = b(0.05, 0.03, slopeLen, color, x, 0, 0);
+      rib.rotation.x = side * slope;
+      rib.position.set(x, y0 + wallH + roofH / 2 + 0.02, side * ((D / 2 + over) / 2));
+      g.add(rib);
+    }
+  }
+  g.add(b(W + over * 2 + 0.1, 0.06, 0.12, P.rustDark, 0, y0 + wallH + roofH + 0.03, 0));
+  // Blechrohr
+  g.add(c(0.1, 0.5, P.roofMetal, 1.4, y0 + wallH + roofH * 0.7, -0.3));
+
+  // Veranda: Boden, Geländer und Pfosten
+  const vz = zf + 0.5;
+  g.add(b(W - 0.8, 0.07, 0.9, P.boardDark, -0.05, y0 + 0.02, vz - 0.05));
+  g.add(b(0.1, wallH - 0.1, 0.1, P.board, -W / 2 + 0.55, y0 + wallH / 2, vz + 0.35));
+  g.add(b(0.1, wallH - 0.1, 0.1, P.board, W / 2 - 0.65, y0 + wallH / 2, vz + 0.35));
+  g.add(b(W - 1.2, 0.07, 0.07, P.board, -0.05, y0 + 0.52, vz + 0.38));
+  for (let i = 0; i < 11; i++) g.add(b(0.04, 0.4, 0.04, P.board, -W / 2 + 0.7 + (i / 10) * (W - 1.4), y0 + 0.3, vz + 0.38));
+  // Stufen
+  g.add(b(0.9, 0.08, 0.3, P.boardDark, 0, 0.18, vz + 0.55));
+
+  // Tür (Sprossentür)
+  g.add(b(0.62, 1.0, 0.07, '#ffffff', 0, y0 + 0.55, zf + 0.04));
+  g.add(b(0.5, 0.86, 0.06, palette.door.base, 0, y0 + 0.55, zf + 0.07));
+
+  // Fenster: weiße Rahmen mit Sprossen, je mit kleinen Blattpflanzen darunter
+  const windows: THREE.Vector3[] = [];
+  for (const x of [-1.5, 1.5]) {
+    const y = y0 + 0.85;
+    g.add(b(0.78, 0.72, 0.06, '#ffffff', x, y, zf + 0.03));
+    g.add(b(0.64, 0.58, 0.05, windowGlass, x, y, zf + 0.06));
+    for (const dx of [-0.16, 0, 0.16]) g.add(b(0.025, 0.58, 0.05, '#ffffff', x + dx, y, zf + 0.09));
+    for (const dy of [-0.15, 0.15]) g.add(b(0.64, 0.025, 0.05, '#ffffff', x, y + dy, zf + 0.09));
+    windows.push(new THREE.Vector3(x, y, zf + 0.1));
+  }
+  // Topfpflanzen auf der Veranda (rot-grüne Blätter)
+  for (const [x, col] of [[-1.7, '#b0434d'], [1.6, '#4c9a55']] as const) {
+    g.add(c(0.14, 0.2, '#c77a52', x, y0 + 0.16, vz + 0.2));
+    g.add(s(0.22, 0.2, 0.22, col, x, y0 + 0.4, vz + 0.2));
+  }
+
+  // Schild über dem Dach: blaues Brett mit orangefarbener Schrift
+  const sign = document.createElement('canvas');
+  sign.width = 400;
+  sign.height = 80;
+  const ctx = sign.getContext('2d') as CanvasRenderingContext2D;
+  ctx.fillStyle = P.sign;
+  ctx.fillRect(0, 0, 400, 80);
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillStyle = P.signText;
+  ctx.font = '800 44px "Nunito Variable", Nunito, sans-serif';
+  ctx.fillText('Strand-Shack', 200, 42);
+  const tex = new THREE.CanvasTexture(sign);
+  tex.colorSpace = THREE.SRGBColorSpace;
+  const board = new THREE.Mesh(new THREE.PlaneGeometry(2.1, 0.42), new THREE.MeshLambertMaterial({ map: tex }));
+  board.position.set(-0.3, y0 + wallH + roofH + 0.45, 0.3);
+  g.add(board);
+  for (const x of [-1.3, 0.7]) g.add(b(0.05, 0.4, 0.05, P.boardDark, x, y0 + wallH + roofH + 0.2, 0.28));
+
+  g.traverse((o) => {
+    if ((o as THREE.Mesh).isMesh) o.castShadow = true;
+  });
+  return { group: g, windows };
+}
+
 /** Lars' Praxis mit kleiner Apotheke: weißes Haus mit grünem Kreuz, Schild, Kräuterkübeln & Bank */
 export function makePraxis(): HouseModel {
   const h = makeHouse(palette.roof.mint);

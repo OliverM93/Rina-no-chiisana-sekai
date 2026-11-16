@@ -154,7 +154,7 @@ type Target =
   | { kind: 'kater' }
   | { kind: 'tier'; index: number };
 
-const SPECIAL_OBJECTS = ['verkaufskiste', 'haus-gisela', 'haus-olaf', 'briefkasten-lina', 'werkbank-lina', 'bistro-jens', 'praxis-lars', 'haus-thalia', 'punschstand', 'samenstand', 'boot-dorf', 'boot-insel'];
+const SPECIAL_OBJECTS = ['verkaufskiste', 'haus-gisela', 'haus-olaf', 'briefkasten-lina', 'werkbank-lina', 'bistro-jens', 'praxis-lars', 'haus-thalia', 'punschstand', 'samenstand', 'boot-dorf', 'boot-insel', 'inselhuette'];
 const DIRS = { down: [0, 1], up: [0, -1], left: [-1, 0], right: [1, 0] } as const;
 
 /** Kamera-Versatz zum Blickziel (schräg von oben, wie im Vorbild) */
@@ -1642,6 +1642,17 @@ export class World3D {
     if (!obj || !player) return;
     if (id === 'boot-dorf' || id === 'boot-insel') {
       this.useBoat(id);
+      return;
+    }
+    if (id === 'inselhuette') {
+      this.session.bus.emit('dialog:open', {
+        title: 'Strandhütte',
+        lines: ['Eine kleine Hütte im Sand, mit Blumenkranz an der Tür. Sie steht offen – wie für dich gebaut.'],
+        choices: [
+          { label: '🚪 Hineingehen', onSelect: () => this.doorTransition('up', () => this.enterGuest('inselhuette'), 'up') },
+          { label: '👋 Später', onSelect: () => undefined },
+        ],
+      });
       return;
     }
     if (obj.kind === 'palme') {
@@ -3901,6 +3912,17 @@ export class World3D {
       this.coffeeMenu(item.itemId, itemDef(item.itemId)?.name ?? f.def.name);
       return;
     }
+    if (item.itemId === 'ukulele') {
+      this.session.bus.emit('dialog:open', {
+        title: 'Ukulele',
+        lines: ['Eine kleine Ukulele mit Blumenband. Man kann einfach drauflosklimpern – es klingt immer schön.'],
+        choices: [
+          { label: '🎶 Spielen', onSelect: () => this.session.bus.emit('ui:open', { kind: 'ukulele' }) },
+          { label: '👋 Lieber nicht', onSelect: () => undefined },
+        ],
+      });
+      return;
+    }
     if (f.def.id === 'zinktheke' || f.def.id === 'kuehlschrank' || f.def.id === 'weinregal') {
       this.drinkMenu(f.def.id);
       return;
@@ -4004,6 +4026,14 @@ export class World3D {
       });
       return;
     }
+    if (this.session.visiting === 'inselhuette') {
+      this.session.bus.emit('dialog:open', {
+        title: 'Strandbar',
+        lines: ['Eine kleine Bar aus Treibholz. Hinter dem Tresen hängen Muscheln, und es duftet nach Kokos und Zitrone.'],
+        choices: [pick('🥥 Kokoswasser', 'kokos'), pick('🍋 -196 Double Lemon', 'highball'), pick('🍺 Ein Bier', 'bier'), pick('💧 Wasser', 'wasser'), nothing],
+      });
+      return;
+    }
     this.session.bus.emit('dialog:open', {
       title: cafe ? 'Tresen bei Jens' : 'Hausbar',
       lines: [cafe ? 'Jens strahlt: „Was darf es sein, ma chérie?“' : 'Der Tresen glänzt. Gläser, ein Zapfhahn, ein bisschen Paris.'],
@@ -4029,8 +4059,8 @@ export class World3D {
       const was = buzzAt(s.tipsy, now);
       drinkWater(s.tipsy, now);
       lines = [...DRINK_LINES.wasser[place], pickOf(was > 0.05 ? WATER_CLEARS_LINES : WATER_PLAIN_LINES)];
-    } else lines = [...DRINK_LINES.cola[place]];
-    s.bus.emit('dialog:open', { title: kind === 'bier' ? '🍺 Bier' : kind === 'wein' ? '🍷 Wein' : kind === 'highball' ? '🍋 Highball' : kind === 'wasser' ? '💧 Wasser' : '🥤 Cola Zero', lines, onClose: () => this.player?.cheer() });
+    } else lines = [...DRINK_LINES[kind === 'kokos' ? 'kokos' : 'cola'][place]];
+    s.bus.emit('dialog:open', { title: kind === 'bier' ? '🍺 Bier' : kind === 'wein' ? '🍷 Wein' : kind === 'highball' ? '🍋 Highball' : kind === 'wasser' ? '💧 Wasser' : kind === 'kokos' ? '🥥 Kokoswasser' : '🥤 Cola Zero', lines, onClose: () => this.player?.cheer() });
   }
 
   /** Siebträgermaschine: erst Klassiker oder Milchschaum, dann das Getränk */
