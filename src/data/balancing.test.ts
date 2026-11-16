@@ -10,6 +10,7 @@ import { RECIPES } from './recipes';
 import { CATCH_PRICE_FACTOR, FISH, INSECTS } from './species';
 import { ALL_WISHES } from './wishes';
 import { HOUSE_STAGES } from './house';
+import { BOUQUETS } from './straeusse';
 
 const price = (id: string) => ITEMS[id]?.price ?? 0;
 
@@ -22,6 +23,15 @@ describe('Balancing-Spannen', () => {
       const m = output / input;
       expect(m, `${r.id}: ${input} → ${output}`).toBeGreaterThanOrEqual(1.3);
       expect(m, `${r.id}: ${input} → ${output}`).toBeLessThanOrEqual(6.5);
+    }
+  });
+
+  it('Sträuße: Binden lohnt sich spürbar (≥ 2×), ist aber keine Geldmaschine (≤ 4×)', () => {
+    for (const b of BOUQUETS) {
+      const input = b.ingredients.reduce((a, i) => a + price(i.itemId) * i.count, 0);
+      const x = b.price / input;
+      expect(x, `${b.id}: ${x.toFixed(2)}×`).toBeGreaterThanOrEqual(2);
+      expect(x, `${b.id}: ${x.toFixed(2)}×`).toBeLessThanOrEqual(4);
     }
   });
 

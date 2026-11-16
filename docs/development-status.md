@@ -277,6 +277,7 @@ Legende: ✅ erledigt · 🚧 in Arbeit · ⬜ geplant
 - ✅ **Kater und Igor (Nov. 2026):** Linas schwarzer Kater streunert durchs Dorf (ab Einzug von Olaf und Christin), lässt sich streicheln; Olaf und Christin erzählen von ihm, mehrere Bewohner erinnern sich liebevoll an Igor. 🗓️ Offen: Kater im Haus (Körbchen, Fensterbrett), Mäuse-Geschenke, Kater im Café
 - ✅ **Pflanzen ausgraben (Nov. 2026):** Schaufel am Beet gräbt eine Pflanze aus (Samen kommt zurück), dann lässt sich neu einsetzen
 - ✅ **Sträuße lohnen sich (Nov. 2026):** Geliebter Strauß +10 Punkte, wöchentliche „Lust auf einen Strauß“ (+10 mehr), Vase/Kranz im Haus wird von Gästen und Bewohnern bemerkt
+- ✅ **Strauß-Preise angehoben (Nov. 2026):** Verkaufswert ≈ 2,5–3× der Zutaten (vorher 1,2–1,8×), Test hält 2–4×
 - ✅ **Versteckte Insel (Nov. 2026):** Boot am Dorfstrand, sobald alle Herzen bei allen Bewohnern voll sind; sonnige Hawaii-Insel mit eigener Musik, Überraschungsparty aller Bewohner und Inselset als große Belohnung. 🗓️ Offen: Kokosnüsse von den Palmen, Fische und Muscheln nur auf der Insel, Ukulele-Minispiel, Inselhütte
 - ✅ **Verstecke (Nov. 2026):** vier geheime Orte auf der Dorfkarte (Schaufel, Winston-Schnüffeln, Thalias alte Karte mit ✕ auf der Dorfkarte). 🗓️ Nächster Schritt: versteckte Insel mit Boot (Belohnung für alle Herzen)
 - ✅ **Audit 3 umgesetzt:** Linas Notizbuch (N), Einzüge über Spielen statt Warten (winter-sicher), Enter für Hauptknöpfe, Snake-Rekord gespeichert, Balancing-Test

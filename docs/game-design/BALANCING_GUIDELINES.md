@@ -35,6 +35,7 @@ sein, ein häufiger nicht – sonst kippt der Erwartungswert beim Angeln.
   Kochen ist keine Geldquelle (ein Gericht bringt so viel wie wenige Fänge), sondern Geschenk, Wunsch und Lieblingsbeschäftigung.
   Heute darüber: Bratapfel 6,3×, Crêpes 5,8×, Lavendelkekse 4,5×, Apfelpfannkuchen 4,4×, Kräutermischung 4,3×, Zimtsterne 4,0× (Audit 3).
   Der Test `data/balancing.test.ts` hält alle Rezepte zwischen 1,3× und 6,5×.
+- **Sträuße** (Nov. 2026): Verkaufswert ≈ 2,5–3× der Zutaten (vorher 1,2–1,8×, zu wenig Anreiz zum Binden). Rosen-, Bunter, Lavendelstrauß 340–360 ⭐, Sonnenblumen 250, Kräuterbund 180, Mischfarben 540, Schwarz 1 200. Der Test `data/balancing.test.ts` hält Sträuße zwischen 2× und 4×. Vasen bleiben wertneutral (Strauß + Vase − 5).
 - Deko-Crafting: Wert egal, weil Möbel zu ¼ verkauft werden. Wichtig ist nur, dass das *Rezept erreichbar* ist
   (Test vorhanden).
 - Vasen: **genau wertneutral** (Strauß + Vase − 5). Kein Geldkreislauf über Möbel.
