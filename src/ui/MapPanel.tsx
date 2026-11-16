@@ -7,6 +7,7 @@ import { isActive, type Terrain, terrainAt } from '../core/worldmap';
 import { INSEL_Y0 } from '../data/maps/insel';
 import { NPCS } from '../data/npcs';
 import type { Session } from '../game/session';
+import { hintedUnfound } from '../game/verstecke';
 import { activeWish } from '../game/wishes';
 import { palette } from '../style/palette';
 import { ui } from './store';
@@ -107,6 +108,11 @@ export function MapPanel({ session }: { session: Session }) {
       ctx.fillStyle = palette.ui.text;
       ctx.fillText(label, cx, cy + 1);
     }
+    // Verstecke, von denen Lina weiß (Winston oder Thalias alte Karte): ein ✕ – gefundene verschwinden
+    ctx.fillStyle = '#d94a58';
+    ctx.font = '800 14px "Nunito Variable", Nunito, sans-serif';
+    ctx.textAlign = 'center';
+    for (const v of hintedUnfound(session)) ctx.fillText('✕', (v.x + 0.5) * CELL, (v.y + 0.5) * CELL + 5);
     // Bewohner & Lina
     const pos = session.livePositions();
     for (const n of NPCS) {
@@ -137,7 +143,7 @@ export function MapPanel({ session }: { session: Session }) {
       <div class="card map-card pop-in">
         <h2 class="card-title">🗺️ Thalias Karte von {session.data?.villageName}</h2>
         <canvas ref={canvas} class="village-map" />
-        <p class="soft small-text center">💗 = du · Punkte = Bewohner · 💭 = hat einen Herzenswunsch · gezeichnet von Thalia mit viel Liebe (und Lineal)</p>
+        <p class="soft small-text center">💗 = du · Punkte = Bewohner · 💭 = hat einen Herzenswunsch · ✕ = ein Versteck, von dem du weißt · gezeichnet von Thalia mit viel Liebe (und Lineal)</p>
         <div class="card-actions">
           <button class="btn ghost" onClick={close}>
             Schließen (M)

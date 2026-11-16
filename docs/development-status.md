@@ -278,6 +278,7 @@ Legende: ✅ erledigt · 🚧 in Arbeit · ⬜ geplant
 - ✅ **Pflanzen ausgraben (Nov. 2026):** Schaufel am Beet gräbt eine Pflanze aus (Samen kommt zurück), dann lässt sich neu einsetzen
 - ✅ **Sträuße lohnen sich (Nov. 2026):** Geliebter Strauß +10 Punkte, wöchentliche „Lust auf einen Strauß“ (+10 mehr), Vase/Kranz im Haus wird von Gästen und Bewohnern bemerkt
 - ✅ **Versteckte Insel (Nov. 2026):** Boot am Dorfstrand, sobald alle Herzen bei allen Bewohnern voll sind; sonnige Hawaii-Insel mit eigener Musik, Überraschungsparty aller Bewohner und Inselset als große Belohnung. 🗓️ Offen: Kokosnüsse von den Palmen, Fische und Muscheln nur auf der Insel, Ukulele-Minispiel, Inselhütte
+- ✅ **Verstecke (Nov. 2026):** vier geheime Orte auf der Dorfkarte (Schaufel, Winston-Schnüffeln, Thalias alte Karte mit ✕ auf der Dorfkarte). 🗓️ Nächster Schritt: versteckte Insel mit Boot (Belohnung für alle Herzen)
 - ✅ **Audit 3 umgesetzt:** Linas Notizbuch (N), Einzüge über Spielen statt Warten (winter-sicher), Enter für Hauptknöpfe, Snake-Rekord gespeichert, Balancing-Test
 - ✅ **Audit 4 umgesetzt (K1–K3):** neue Stile werden bei Einzügen angekündigt + „neu“ am Stil-Chip, Ökonomie-Doku aktualisiert, Katalog-Budget-Test
 - ✅ **Zeit zu zweit ohne Menüpunkt** (Szene beginnt beim nächsten Gespräch mit Oli zu Hause von selbst) · **Schwips-Fix:** Nachlassen lief fälschlich in Millisekunden statt Sekunden – jetzt nach ~1 Minute

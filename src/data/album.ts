@@ -69,6 +69,10 @@ export const MOMENTS: readonly MomentDef[] = [
   { id: 'insel-boot', source: { dateKey: 'insel:boot' }, text: 'Bei allen Fünf-Herzen-Freunden ist alles voll. Am Strand liegt ein kleines Boot, und alle sehen sehr geheimnisvoll aus.' },
   { id: 'insel-fest', source: { dateKey: 'insel:fest' }, text: 'Die versteckte Insel! Alle waren da, mit Kokosnüssen, Kuchen und einer Überraschung. Ich glaube, ich habe noch nie so viel gelacht.' },
   { id: 'sammlung-tassen', source: { dateKey: 'sammlung:tassen' }, text: 'Alle Sammeltassen stehen im Regal. Kaffee schmeckt daraus besser, ganz sicher.' },
+  { id: 'versteck-feenlichtung', source: { dateKey: 'versteck:feenlichtung' }, text: 'Ich habe die stille Lichtung gefunden. Zwischen den Bäumen glitzert es, als würden Lichter im Gras wohnen.' },
+  { id: 'versteck-waldwinkel', source: { dateKey: 'versteck:waldwinkel' }, text: 'Im Waldwinkel stand eine Vogeltränke. Zwei Spatzen waren empört, aber sie kommen drüber weg.' },
+  { id: 'versteck-felsnische', source: { dateKey: 'versteck:felsnische' }, text: 'Neben dem großen Felsen lag ein kleines Steinmännchen. Jemand hat sich Mühe gegeben, ich hab es mitgenommen.' },
+  { id: 'versteck-treibgut', source: { dateKey: 'versteck:treibgut' }, text: 'Im Treibgut steckte eine Flaschenpost: „Such weiter, wo der Sand aufhört.“ Ich bin gespannt, was das heißt.' },
 ];
 
 /** Ein Herzenswunsch ist erfüllt: Text wird in `game/album.ts` je Wunsch erzeugt. */
