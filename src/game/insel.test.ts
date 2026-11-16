@@ -117,3 +117,15 @@ describe('Inselhütte & Ukulele', () => {
     expect(ids).toContain('zinktheke');
   });
 });
+
+describe('Entwicklungs-Abkürzung ?insel=1', () => {
+  it('neues Spiel startet mit allen Herzen und offenem Boot', () => {
+    const m = new Map<string, string>();
+    const storage: StorageLike = { getItem: (k) => m.get(k) ?? null, setItem: (k, v) => void m.set(k, v), removeItem: (k) => void m.delete(k) };
+    const s = new Session(storage, () => new Date('2026-06-10T12:00:00'));
+    s.devInsel = true;
+    s.startNewGame(DEFAULT_LINA, 'Testdorf');
+    expect(alleHerzen(s)).toBe(true);
+    expect(s.data!.flags[INSEL_OFFEN_FLAG]).toBe(true);
+  });
+});

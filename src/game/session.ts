@@ -264,6 +264,8 @@ export class Session {
 
   /** Nur Entwicklungsmodus: Ausbaustufe für neue Spiele (`?ausbau=5`) */
   devHouseStage = 0;
+  /** Nur Entwicklungsmodus: neues Spiel mit allen Bewohnern eingezogen, alle Herzen voll, Boot am Dorfstrand (`?insel=1`) */
+  devInsel = false;
 
   startNewGame(appearance: Appearance, villageName: string) {
     const data = createNewSave({ appearance, villageName, spawn: this.spawnPoint(), now: this.clock(), house: STARTER_HOUSE, recipes: START_RECIPES });
@@ -275,7 +277,18 @@ export class Session {
       for (const l of roomLayouts(data.house.stage)) if (!data.house.rooms.some((r) => r.id === l.id)) data.house.rooms.push(emptyRoom(l.id));
       data.money = Math.max(data.money, 50000);
     }
+    if (this.devInsel) {
+      for (const npc of NPCS) {
+        data.npcs[npc.id] = { ...createNpcState(), points: 500, rewards: [1, 2, 3, 4, 5] };
+        if (npc.movesIn) {
+          data.flags[npc.movesIn] = true;
+          data.flags[npc.movesIn.replace('Eingezogen', 'Begruesst')] = true;
+        }
+      }
+      data.flags.winstonGefunden = true;
+    }
     this.begin(data);
+    if (this.devInsel) syncInsel(this); // Boot erscheint sofort
     this.save();
   }
 
