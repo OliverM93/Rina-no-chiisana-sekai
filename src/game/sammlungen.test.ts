@@ -4,7 +4,7 @@ import type { StorageLike } from '../core/save';
 import { FURNITURE_BY_ITEM } from '../data/furniture';
 import { SAMMLUNGEN, urkundeId } from '../data/sammlungen';
 import { FINDS } from '../data/fossils';
-import { FISH, INSECTS } from '../data/species';
+import { INSECTS, VILLAGE_FISH as FISH } from '../data/species';
 import { NPC_BY_ID } from '../data/npcs';
 import { catchFish } from './nature';
 import { checkSammlungen, sammlungFortschritt } from './sammlungen';

@@ -96,7 +96,7 @@ export const OBJECT_KINDS: Record<ObjectKind, KindInfo> = {
   pine: { w: 1, h: 1, blocks: 'all' },
   bush: { w: 1, h: 1, blocks: 'all' },
   rock: { w: 1, h: 1, blocks: 'all', interactFrom: AROUND },
-  palme: { w: 1, h: 1, blocks: 'all' },
+  palme: { w: 1, h: 1, blocks: 'all', interactFrom: AROUND },
 };
 
 export interface MapObject extends MapObjectDef {

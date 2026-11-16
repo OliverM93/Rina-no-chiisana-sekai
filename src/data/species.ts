@@ -38,6 +38,8 @@ export interface FishDef extends SpeciesBase {
   /** Größe 1 (winzig) – 6 (riesig) */
   size: number;
   shape?: 'fisch' | 'qualle' | 'seepferdchen' | 'platt' | 'aal';
+  /** Beißt nur vor der versteckten Insel (und zählt nicht für die Sammlung „Alle Fische“) */
+  insel?: boolean;
 }
 
 export interface InsectDef extends SpeciesBase {
@@ -77,9 +79,17 @@ const FISH_BASE: readonly FishDef[] = [
   { id: 'ohrenqualle', name: 'Ohrenqualle', plural: 'Ohrenquallen', habitat: 'meer', months: range(6, 9), hours: DAY, size: 2, shape: 'qualle', price: 20, weight: 20, color: '#dfe6f7', accent: '#c8a6e8', description: 'Ganz harmlos und durchsichtig, mit vier lila Ringen. Huch – das ist ja gar kein Fisch!' },
   { id: 'steinbutt', name: 'Steinbutt', plural: 'Steinbutte', habitat: 'meer', months: range(5, 8), hours: DAY, size: 5, shape: 'platt', price: 500, weight: 4, color: '#8d7c60', accent: '#5d503c', description: 'Ein runder Plattfisch, der sich perfekt am Meeresgrund tarnt.' },
   { id: 'seepferdchen', name: 'Seepferdchen', plural: 'Seepferdchen', habitat: 'meer', months: range(6, 9), hours: [8, 20], size: 1, shape: 'seepferdchen', price: 1200, weight: 2, color: '#e8b04f', accent: '#c7792f', description: 'Selten! Bei Seepferdchen bekommen die Papas die Babys. 🐴' },
-];
+
+  // Vor der versteckten Insel (Sommerlagune, immer sonnig) – nur dort zu fangen
+  { id: 'papageifisch', name: 'Papageifisch', plural: 'Papageifische', habitat: 'meer', insel: true, months: ALL, hours: DAY, size: 3, price: 220, weight: 14, color: '#3fc4b5', accent: '#f08aa8', description: 'Bunt wie ein Obstsalat und mit einem Maul wie ein Schnabel. Knabbert Korallen und schläft nachts in einer Schleimhülle. Sehr gemütlich.' },
+  { id: 'doktorfisch', name: 'Doktorfisch', plural: 'Doktorfische', habitat: 'meer', insel: true, months: ALL, hours: DAY, size: 3, price: 260, weight: 12, color: '#3b6fd8', accent: '#f2c94c', description: 'Leuchtend blau mit gelbem Schwanz. Lars: „Der heißt Doktor, ist aber kein Arzt. Ich beobachte das mit Interesse.“' },
+  { id: 'kofferfisch', name: 'Kofferfisch', plural: 'Kofferfische', habitat: 'meer', insel: true, months: ALL, hours: DAY, size: 2, price: 320, weight: 8, color: '#f2d04a', accent: '#2b2931', description: 'Gelb mit schwarzen Punkten, rund wie ein kleiner Koffer – und trotzdem erstaunlich flink. Passt in jede Strandtasche.' },
+  { id: 'goldmakrele', name: 'Goldmakrele', plural: 'Goldmakrelen', habitat: 'meer', insel: true, months: ALL, hours: [6, 19], size: 5, price: 700, weight: 3, color: '#4fb8c9', accent: '#f2c94c', description: 'Ein schneller, goldgrün schillernder Brocken mit stumpfer Stirn. Ein Fang, den man nicht so schnell vergisst.' },];
 
 export const FISH: readonly FishDef[] = FISH_BASE.map((f) => ({ ...f, price: catchPrice(f.price) }));
+
+/** Die Fische des Dorfes (ohne die Inselfische): so viele zählt die Sammlung „Alle Fische“ */
+export const VILLAGE_FISH: readonly FishDef[] = FISH.filter((f) => !f.insel);
 
 const INSECTS_BASE: readonly InsectDef[] = [
   // Blumen
@@ -145,6 +155,10 @@ export const FISH_CM: Readonly<Record<string, readonly [number, number]>> = {
   ohrenqualle: [10, 40],
   steinbutt: [30, 75],
   seepferdchen: [8, 15],
+  papageifisch: [30, 90],
+  doktorfisch: [15, 30],
+  kofferfisch: [15, 45],
+  goldmakrele: [70, 180],
 };
 
 export const FISH_BY_ID: Readonly<Record<string, FishDef>> = Object.fromEntries(FISH.map((f) => [f.id, f]));

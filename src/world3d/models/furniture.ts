@@ -1066,7 +1066,7 @@ export function makeFurniture(itemId: string, links: FenceLinks = { n: false, e:
       const z = WALL_Z;
       g.add(b(1.3, 0.7, 0.08, '#6e4630', 0, HANG, z + 0.03));
       g.add(b(1.22, 0.62, 0.02, '#cfe6ef', 0, HANG, z + 0.065));
-      specimenGrid(g, FISH.map((i) => i.id), collected, 6, 3, [0.2, 0.19], fishSpecimen);
+      specimenGrid(g, FISH.filter((i) => !i.insel).map((i) => i.id), collected, 6, 3, [0.2, 0.19], fishSpecimen);
       break;
     }
     case 'globus': {

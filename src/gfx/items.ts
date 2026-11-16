@@ -242,6 +242,26 @@ const DRAW: Record<string, Draw> = {
       ctx.stroke();
     }
   },
+  kokosnuss: (ctx) => {
+    const c = '#8a5a3a';
+    ellipse(ctx, 16, 17, 11, 11.5, c, darken(c, 0.35), 1.5);
+    ctx.strokeStyle = darken(c, 0.25);
+    ctx.lineWidth = 1;
+    for (let i = 0; i < 7; i++) {
+      ctx.beginPath();
+      ctx.moveTo(8 + i * 2.6, 9 + (i % 2) * 2);
+      ctx.lineTo(9 + i * 2.5, 25 - (i % 3));
+      ctx.stroke();
+    }
+    for (const [x, y] of [[12, 12], [20, 12], [16, 17]]) ellipse(ctx, x, y, 1.9, 1.9, '#3d2616');
+    shine(ctx, 11, 9, 2.4, 0.5);
+  },
+  kokoskekse: (ctx) => {
+    const c = '#e9c08a';
+    ellipse(ctx, 16, 17, 11, 9.5, c, darken(c, 0.3), 1.5);
+    ellipse(ctx, 16, 16, 7.5, 6, lighten(c, 0.15));
+    for (const [x, y] of [[11, 13], [19, 12], [14, 19], [21, 18], [16, 15]]) ellipse(ctx, x, y, 2.2, 1.4, '#ffffff', '#e4e4e4', 0.4);
+  },
   glitzerstein: (ctx) => {
     const c = '#b9a6f2';
     ctx.beginPath();
