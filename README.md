@@ -32,7 +32,7 @@ Läuft in jedem modernen Browser auf Laptop oder PC. Der Spielstand wird automat
 schenken, Bäume schütteln, Muscheln sammeln, Blumen pflücken, an Felsen klopfen, Gesammeltes in der
 Verkaufskiste gegen Sternchen ⭐ tauschen und Briefe im Briefkasten lesen.
 
-**Natur (M4):** Von Oma Gisela gibt's Opas alte Angel, einen Kescher, eine Gießkanne und Blumensamen.
+**Natur (M4):** Von Oma Gisela gibt's Ludwigs alte Angel, einen Kescher, eine Gießkanne und Blumensamen.
 - **Angeln** im Fluss und im Meer – ganz entspannt: auswerfen, warten, bis der Schwimmer abtaucht, Leertaste.
   Zu früh oder zu spät? Macht nichts, der Fisch knabbert einfach nochmal.
 - **Insekten** mit dem Kescher fangen – Schmetterlinge an Blumen, Käfer an Bäumen, Libellen am Wasser,
@@ -65,10 +65,10 @@ Lina den **Hausausbau** (großes Zimmer → Schlafzimmer-Anbau → Dachzimmer �
 zurück, wann sie möchte. Nach ein paar Minuten Spielzeit ist der Ausbau fertig – auch von außen sieht man Erker, Anbau,
 Dachgaube, Küchen-Ofenrohr, Wintergarten und Kellerfenster. Christin achtet auf Ordnung und Sauberkeit („Schuhe abputzen!“).
 
-**Winston & Opas Werkbank (M6b):** Linas kleiner Dackel **Winston** trippelt ihr überallhin nach – auch ins
+**Winston & Ludwigs Werkbank (M6b):** Linas kleiner Dackel **Winston** trippelt ihr überallhin nach – auch ins
 Haus. Bleibt sie stehen, setzt er sich neben sie; nachts schläft er (gern im selbstgebauten Hundekörbchen).
 Mit Leertaste oder Klick wird er gestreichelt, und einmal am Tag buddelt er etwas aus (Äste, Steine, Samen,
-manchmal sogar einen Glitzerstein). Neben dem Haus steht **Opas alte Werkbank**: Aus Ästen, Steinen, Muscheln
+manchmal sogar einen Glitzerstein). Neben dem Haus steht **Ludwigs alte Werkbank**: Aus Ästen, Steinen, Muscheln
 und Blumen baut Lina handgemachte Möbel (Ast-Hocker, Steinlaterne, Muschellampe, Kieselmosaik …). Neue
 Rezepte gibt's beim ersten Fund besonderer Dinge und als Herz-Briefe von Oma, Olaf und Christin.
 
@@ -180,7 +180,7 @@ und jede Jahreszeit sieht anders aus.
 |---|---|---|---|
 | ![Einzug](docs/screenshots/3d-einzug.png) | ![Dorfkasse](docs/screenshots/3d-dorfkasse.png) | ![Schlafzimmer](docs/screenshots/3d-schlafzimmer.png) | ![Dachzimmer](docs/screenshots/3d-dachzimmer.png) |
 
-| Winston & Opas Werkbank | Winston buddelt | Werkbank | Handgemachtes (Winston schläft im Körbchen) |
+| Winston & Ludwigs Werkbank | Winston buddelt | Werkbank | Handgemachtes (Winston schläft im Körbchen) |
 |---|---|---|---|
 | ![Winston](docs/screenshots/3d-winston.png) | ![Buddeln](docs/screenshots/3d-buddeln.png) | ![Werkbank](docs/screenshots/3d-werkbank.png) | ![Handgemacht](docs/screenshots/3d-handgemacht.png) |
 

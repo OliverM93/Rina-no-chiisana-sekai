@@ -99,7 +99,7 @@ export const FURNITURE: readonly FurnitureDef[] = [
   { id: 'regal', name: 'Holzregal', style: 'basis', price: 500, w: 2, d: 1, surface: true, surfaceHeight: 0.9, description: 'Ein schlichtes Regal aus hellem Holz.', variants: { honig: '#e6c59c', weiss: '#f2efe9', schwarz: '#2f2f35', mint: '#a8d8c4', rosa: '#f4c6d2' }, baseVariant: 'honig' },
   { id: 'vorratstruhe', name: 'Vorratstruhe', style: 'basis', storage: true, surface: true, surfaceHeight: 0.68, price: 650, w: 2, d: 1, description: 'Eine große Holztruhe mit Eisenbeschlägen. Hier ist Platz für 60 Dinge, die nicht in die Tasche müssen. Alle Truhen teilen sich denselben Vorrat.' },
   { id: 'stehlampe', name: 'Stehlampe', style: 'basis', price: 400, w: 1, d: 1, light: true, description: 'Eine Lampe mit rundem Schirm für gemütliches Licht.', variants: { pflaume: '#5a4a52', weiss: '#f2efe9', messing: '#c9a24a', mint: '#9ad8c0', schwarz: '#2a2a30' }, baseVariant: 'pflaume' },
-  // Handgemacht an Opas Werkbank (siehe `recipes.ts`) – Preis = Verkaufswert × 4
+  // Handgemacht an Ludwigs Werkbank (siehe `recipes.ts`) – Preis = Verkaufswert × 4
   { id: 'ast-hocker', name: 'Ast-Hocker', style: 'handgemacht', crafted: true, price: 120, w: 1, d: 1, sit: 'sitzen', description: 'Ein kleiner Hocker aus Ästen. Wackelt ein bisschen – das gehört so.' },
   { id: 'blumenvase', name: 'Wildblumenvase', style: 'handgemacht', crafted: true, price: 100, w: 1, d: 1, small: true, description: 'Ein Kieselstein-Töpfchen voller Wildblumen. Bringt die Wiese ins Haus.' },
   { id: 'hundekoerbchen', name: 'Hundekörbchen', style: 'handgemacht', crafted: true, price: 200, w: 1, d: 1, description: 'Ein geflochtenes Körbchen mit Kissen. Genau dackelgroß.' },
@@ -478,7 +478,7 @@ for (const t of TASSEN) {
 (FURNITURE as FurnitureDef[]).push({ id: 'tassenregal', name: 'Langes Tassenregal', style: 'lieblinge', retired: true, surface: true, surfaceHeight: 0.95, price: 900, w: 4, d: 1, description: 'Das erste Tassenregal: lang, aus hellem Holz, mit vier Brettern. Das schmale Tassenbord an der Wand ist platzsparender.' });
 
 // Blumendeko (Beet/Samen Phase 4): leere Glasvase im Katalog, Vasen mit Strauß und Wandkränze werden gebunden
-(FURNITURE as FurnitureDef[]).push({ id: EMPTY_VASE, name: 'Glasvase', style: 'basis', small: true, price: 180, w: 1, d: 1, description: 'Eine schlichte Glasvase mit etwas Wasser. Es fehlen nur noch Blumen – einen Strauß bindest du an Opas Werkbank.' });
+(FURNITURE as FurnitureDef[]).push({ id: EMPTY_VASE, name: 'Glasvase', style: 'basis', small: true, price: 180, w: 1, d: 1, description: 'Eine schlichte Glasvase mit etwas Wasser. Es fehlen nur noch Blumen – einen Strauß bindest du an Ludwigs Werkbank.' });
 for (const b of BOUQUETS) {
   (FURNITURE as FurnitureDef[]).push({ id: vaseId(b.id), name: `Vase: ${b.name}`, style: 'handgemacht', crafted: true, small: true, price: (b.price + 40) * 4, w: 1, d: 1, description: `${b.name} in der Glasvase. Frische Blumen machen jeden Tisch gemütlich.` });
 }

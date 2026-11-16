@@ -54,7 +54,7 @@ export type Mood =
   | 'insel-hula'
   | 'insel-abendrot';
 
-export type Lead = 'spieluhr' | 'marimba' | 'floete' | 'epiano' | 'akkordeon' | 'zupf' | 'glocke';
+export type Lead = 'spieluhr' | 'marimba' | 'floete' | 'epiano' | 'akkordeon' | 'zupf' | 'glocke' | 'steel' | 'ukulele';
 
 export interface MoodDef {
   /** Titel fürs Menü/Debug */
@@ -75,11 +75,11 @@ export interface MoodDef {
   lead: Lead;
   lead2: Lead;
   /** Begleitung */
-  accomp: 'pad' | 'arp' | 'walzer' | 'zupf';
+  accomp: 'pad' | 'arp' | 'walzer' | 'zupf' | 'strum';
   /** Septimen in den Akkorden (jazzig, Lo-fi) */
   sevenths: boolean;
   bass: boolean;
-  drums: 'keine' | 'besen' | 'party';
+  drums: 'keine' | 'besen' | 'party' | 'ipu';
   /** Swing: wie weit die zweite Achtel nach hinten rutscht (0..0.3) */
   swing: number;
 }
@@ -144,10 +144,10 @@ export const MOODS: Record<Mood, MoodDef> = {
   'schnee-schlitten': { ...base, name: 'Schlittenfahrt', bpm: 112, root: 62, scale: MAJOR, progressions: [[0, 3, 4, 0], [0, 5, 3, 4]], density: 0.65, lead: 'glocke', lead2: 'marimba', accomp: 'zupf', drums: 'besen' },
   'schnee-kamin': { ...base, name: 'Warme Stube', bpm: 64, root: 60, scale: MAJOR, progressions: [[0, 5, 3, 4], [3, 0, 1, 4]], density: 0.35, lead: 'epiano', lead2: 'spieluhr', accomp: 'pad', sevenths: true },
   // Insel: Ukulele (Zupf), Marimba, Besen-Beat, leichter Swing – wie ein Strandabend mit Blumenkette
-  insel: { ...base, name: 'Aloha-Brise', bpm: 100, root: 60, scale: MAJOR, progressions: [[0, 5, 3, 4], [0, 3, 0, 4], [0, 5, 1, 4]], density: 0.58, lead: 'zupf', lead2: 'marimba', accomp: 'zupf', swing: 0.17, drums: 'besen' },
-  'insel-lagune': { ...base, name: 'Türkise Lagune', bpm: 84, root: 62, scale: LYDIAN, progressions: [[0, 1, 0, 4], [0, 3, 1, 4]], density: 0.42, lead: 'floete', lead2: 'zupf', accomp: 'pad', sevenths: true, swing: 0.12 },
-  'insel-hula': { ...base, name: 'Hula unter Palmen', bpm: 112, root: 65, scale: MAJOR, progressions: [[0, 3, 4, 0], [0, 4, 5, 3]], density: 0.68, lead: 'marimba', lead2: 'zupf', accomp: 'zupf', swing: 0.2, drums: 'besen' },
-  'insel-abendrot': { ...base, name: 'Abendrot am Strand', bpm: 76, root: 57, scale: MAJOR, progressions: [[0, 5, 3, 4], [3, 4, 0, 5]], density: 0.4, lead: 'zupf', lead2: 'epiano', accomp: 'pad', sevenths: true, swing: 0.15 },
+  insel: { ...base, name: 'Aloha-Brise', bpm: 104, root: 60, scale: MAJOR, progressions: [[0, 5, 1, 4], [0, 3, 0, 4], [0, 5, 1, 4]], density: 0.55, lead: 'ukulele', lead2: 'steel', accomp: 'strum', swing: 0.12, drums: 'ipu' },
+  'insel-lagune': { ...base, name: 'Türkise Lagune', bpm: 76, root: 62, scale: LYDIAN, progressions: [[0, 1, 0, 4], [0, 3, 1, 4]], density: 0.4, lead: 'steel', lead2: 'steel', accomp: 'strum', sevenths: true, swing: 0.1 },
+  'insel-hula': { ...base, name: 'Hula unter Palmen', bpm: 120, root: 65, scale: MAJOR, progressions: [[0, 3, 4, 0], [0, 5, 1, 4]], density: 0.66, lead: 'ukulele', lead2: 'ukulele', accomp: 'strum', swing: 0.15, drums: 'ipu' },
+  'insel-abendrot': { ...base, name: 'Abendrot am Strand', bpm: 70, root: 57, scale: MAJOR, progressions: [[0, 5, 1, 4], [3, 4, 0, 5]], density: 0.38, lead: 'steel', lead2: 'ukulele', accomp: 'strum', sevenths: true, swing: 0.1 },
   'schnee-wald': { ...base, name: 'Verschneiter Wald', bpm: 58, root: 65, scale: MAJOR_PENTA, progressions: [[0, 2, 3, 0], [0, 3, 4, 3]], density: 0.28, lead: 'spieluhr', lead2: 'glocke', accomp: 'pad', bass: false },
 };
 
@@ -187,11 +187,13 @@ export interface NoteEvent {
   /** Länge in Achteln */
   len: number;
   midi: number;
-  voice: 'lead' | 'pad' | 'chord' | 'arp' | 'bass' | 'kick' | 'hat' | 'besen';
+  voice: 'lead' | 'pad' | 'chord' | 'arp' | 'bass' | 'kick' | 'hat' | 'besen' | 'strum' | 'ipu';
   /** Instrument (nur Melodie) */
   inst?: Lead;
   /** Lautstärke 0..1 */
   vel: number;
+  /** Verzögerung in Sekunden (Rollen eines Gitarren-/Ukulele-Akkords) */
+  delay?: number;
 }
 
 /** Teile eines Liedes: A, variiertes A, B (neue Akkorde & Motiv), C = ruhiges Durchatmen */
@@ -289,6 +291,16 @@ export function composeSection(mood: Mood, songSeed: number, part: Part = 'A'): 
       const pat = B === 8 ? [2, 3, 5, 6, 7] : [2, 3, 4, 5];
       pat.forEach((i, j) => out.push({ step: s0 + i, len: 1, midi: degreeToMidi(def, chord + [2, 4, 7, 4, 2][j % 5]) - 12, voice: 'chord', vel: 0.32 }));
     }
+    if (def.accomp === 'strum' && part !== 'C') {
+      // Ukulele-Schlag („chuck-a-chuck“): Akkord von unten nach oben (Abschlag) oder von oben nach unten (Aufschlag)
+      const pat = B === 8 ? [0, 3, 4, 7] : [0, 2, 4];
+      const ks = def.sevenths ? [0, 2, 4, 6] : [0, 2, 4, 7];
+      pat.forEach((i, j) => {
+        const down = j % 2 === 0;
+        const order = down ? ks : [...ks].reverse();
+        order.forEach((k, n) => out.push({ step: s0 + i, len: 1, midi: degreeToMidi(def, chord + k) + 12, voice: 'strum', vel: (down ? 0.34 : 0.22) * (n === 0 ? 1.1 : 1), delay: n * 0.02 }));
+      });
+    }
     if (def.bass) {
       out.push({ step: s0, len: B === 6 ? 2 : 3, midi: degreeToMidi(def, chord) - 24, voice: 'bass', vel: 0.6 });
       if (B === 8 && part !== 'C') out.push({ step: s0 + 4, len: 3, midi: degreeToMidi(def, chord + (rnd() < 0.5 ? 4 : 0)) - 24, voice: 'bass', vel: 0.45 });
@@ -297,6 +309,9 @@ export function composeSection(mood: Mood, songSeed: number, part: Part = 'A'): 
     if (def.drums === 'party') {
       for (let i = 0; i < B; i += 2) out.push({ step: s0 + i, len: 1, midi: 0, voice: 'kick', vel: i % 4 === 0 ? 0.9 : 0.5 });
       for (let i = 1; i < B; i += 2) out.push({ step: s0 + i, len: 1, midi: 0, voice: 'hat', vel: 0.35 });
+    } else if (def.drums === 'ipu' && part !== 'C') {
+      // Ipu (hohle Kürbistrommel) beim Hula: dumpfer Schlag auf 1 und 3, leises Klopfen dazwischen
+      for (let i = 0; i < B; i += 2) out.push({ step: s0 + i, len: 1, midi: 0, voice: 'ipu', vel: i % 4 === 0 ? 0.8 : 0.4 });
     } else if (def.drums === 'besen' && part !== 'C') {
       out.push({ step: s0, len: 1, midi: 0, voice: 'kick', vel: 0.35 });
       for (let i = 0; i < B; i++) out.push({ step: s0 + i, len: 1, midi: 0, voice: 'besen', vel: i % 4 === 2 ? 0.7 : 0.3 });

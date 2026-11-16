@@ -5,6 +5,7 @@
 import { isAvailable, isPracht, pickSpecies, recordLength, registerCatch, rollLength } from '../core/catching';
 import { getSeason } from '../core/time';
 import { FURNITURE_BY_ITEM } from '../data/furniture';
+import { INSEL_Y0 } from '../data/maps/insel';
 import { bedTiles } from './home';
 import { growGarden, pickBloom, plantSeed, removePlant, spotKey, water } from '../core/garden';
 import { hashString, mulberry32 } from '../core/rng';
@@ -61,7 +62,7 @@ export function ownsAnywhere(session: Session, itemId: string): boolean {
   if (data.inventory.slots.some((s) => s?.itemId === itemId)) return true;
   if (data.storage.slots.some((s) => s?.itemId === itemId)) return true; // Vorratstruhe
   if (data.house.rooms.some((r) => r.items.some((i) => i.itemId === itemId))) return true;
-  if (data.yard.items.some((i) => i.itemId === itemId)) return true;
+  if (data.yard.items.some((i) => i.itemId === itemId) || data.yardInsel.items.some((i) => i.itemId === itemId)) return true;
   if (data.world.ground.some((g) => g.itemId === itemId)) return true;
   return data.mail.letters.some((l) => l.gift?.itemId === itemId && !l.giftTaken);
 }
@@ -222,13 +223,13 @@ export function isWinter(session: Session): boolean {
 /** Pflanzplätze (Schlüssel) in Gewächshäusern & Frühbeeten – dort wächst auch im Winter etwas */
 export function greenhouseKeys(session: Session): Set<string> {
   const out = new Set<string>();
-  const yard = session.data?.yard;
-  if (!yard) return out;
-  for (const i of yard.items) if (FURNITURE_BY_ITEM[i.itemId]?.def.greenhouse) for (const t of bedTiles(session, i.uid)) out.add(spotKey(t.x, t.y));
+  for (const i of session.allYardItems()) if (FURNITURE_BY_ITEM[i.itemId]?.def.greenhouse) for (const t of bedTiles(session, i.uid)) out.add(spotKey(t.x, t.y));
   return out;
 }
 
 function isFrozenKey(session: Session, key: string): boolean {
+  // Auf der Insel ist immer Sommer: dort friert kein Beet ein
+  if (Number(key.split(',')[1]) >= INSEL_Y0) return false;
   return isWinter(session) && !greenhouseKeys(session).has(key);
 }
 

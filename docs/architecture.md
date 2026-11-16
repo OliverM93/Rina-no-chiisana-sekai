@@ -31,7 +31,7 @@ src/
     crafting.ts    Werkbank: Rezepte lernen, Zutaten prüfen, bauen (alles oder nichts)
     pet.ts         Winston: Streicheln, einmal am Tag buddeln
     coop.ts        Ställe: Eier pro Tag (reproduzierbar), einmal am Tag abholen
-    yard.ts        Linas Garten: Raster aufs Grundstück, freizuhaltende Felder, niemand wird eingesperrt
+    yard.ts        Linas Gärten (Dorf und Insel): Raster aufs Grundstück, freizuhaltende Felder, niemand wird eingesperrt
     grid.ts        Kollisionsraster, A*-Wegfindung, nächste freie Kachel
     movement.ts    Bewegung mit Kollision (Fuß-Box), Um-Ecken-Gleiten
     events.ts      typisierter Event-Emitter

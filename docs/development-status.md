@@ -114,10 +114,10 @@ Legende: ✅ erledigt · 🚧 in Arbeit · ⬜ geplant
   jeder Raum mit eigener Tapete/Boden/Möbeln; Haus wächst auch von außen
 - ✅ Spielstand Version 6 (Haus mit Räumen, Dorfkasse)
 
-**M6b ✅ Winston & Opas Werkbank**
+**M6b ✅ Winston & Ludwigs Werkbank**
 - ✅ Winston, Linas Dackel: läuft überall mit (auch ins Haus), setzt sich neben Lina, schläft nachts,
   lässt sich streicheln, buddelt einmal am Tag etwas aus, schläft im Hundekörbchen
-- ✅ Opas Werkbank neben dem Haus: 9 Rezepte für handgemachte Möbel aus Ästen, Steinen, Muscheln, Blumen
+- ✅ Ludwigs Werkbank neben dem Haus: 9 Rezepte für handgemachte Möbel aus Ästen, Steinen, Muscheln, Blumen
 - ✅ Rezepte von Anfang an, beim ersten Fund (Herzmuschel, Seestern, Glitzerstein) und als
   Herz-Briefe von Oma, Olaf und Christin
 - ✅ Spielstand Version 7 (Rezepte, Winston)
@@ -280,7 +280,7 @@ Legende: ✅ erledigt · 🚧 in Arbeit · ⬜ geplant
 - ✅ **Strauß-Preise angehoben (Nov. 2026):** Verkaufswert ≈ 2,5–3× der Zutaten (vorher 1,2–1,8×), Test hält 2–4×
 - ✅ **Versteckte Insel (Nov. 2026):** Boot am Dorfstrand, sobald alle Herzen bei allen Bewohnern voll sind; sonnige Hawaii-Insel mit eigener Musik, Überraschungsparty aller Bewohner und Inselset als große Belohnung. ✅ Kokosnüsse, Inselfische, Strandfunde (PR 154), Strandhütte mit Bar und Ukulele-Minispiel (Nov. 2026).
 - ✅ **Verstecke (Nov. 2026):** vier geheime Orte auf der Dorfkarte (Schaufel, Winston-Schnüffeln, Thalias alte Karte mit ✕ auf der Dorfkarte). 🗓️ Nächster Schritt: versteckte Insel mit Boot (Belohnung für alle Herzen)
-- ✅ **Insel-Nachspiel 1 (Nov. 2026):** Kokosnüsse von den Palmen, Kokoskekse, vier Inselfische, tägliche Strandfunde auf der Insel. 🗓️ Noch offen: Ukulele-Minispiel, Inselhütte
+- ✅ **Insel-Nachspiel 1 (Nov. 2026):** Kokosnüsse von den Palmen, Kokoskekse, vier Inselfische, tägliche Strandfunde auf der Insel. ✅ Strandhütte mit Bar und Ukulele. ✅ **Inselgarten & Wachtelfarm** (Nov. 2026): eigener, gestaltbarer Garten vor der Hütte (Save v17), neue Inselmusik, Strand-Shack-Optik ohne Schild, Party blendet weich aus, „Ludwig“ statt „Opa Ludwig“.
 - ✅ **Audit 3 umgesetzt:** Linas Notizbuch (N), Einzüge über Spielen statt Warten (winter-sicher), Enter für Hauptknöpfe, Snake-Rekord gespeichert, Balancing-Test
 - ✅ **Audit 4 umgesetzt (K1–K3):** neue Stile werden bei Einzügen angekündigt + „neu“ am Stil-Chip, Ökonomie-Doku aktualisiert, Katalog-Budget-Test
 - ✅ **Zeit zu zweit ohne Menüpunkt** (Szene beginnt beim nächsten Gespräch mit Oli zu Hause von selbst) · **Schwips-Fix:** Nachlassen lief fälschlich in Millisekunden statt Sekunden – jetzt nach ~1 Minute

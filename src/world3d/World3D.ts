@@ -120,12 +120,12 @@ import { FIND_BY_ID } from '../data/fossils';
 import { Animals3D } from './Animals3D';
 import { coopHasEggs, coopKindOf, collectCoop } from '../game/animals';
 import { COOPS } from '../data/animals';
-import { YARD_AREA } from '../data/yard';
+import { INSEL_YARD_AREA, YARD_AREA } from '../data/yard';
 import { makeCan, makeNet, makeRod, makeShovel, type ToolModel } from './models/critters';
 import { Weather3D } from './Weather3D';
 import { Winston } from './Winston';
 import { katerDraussen, katerHello, katerPet } from '../game/kater';
-import { ANKUNFT_ERSTMALS, ANKUNFT_WIEDER, BOOT_DORF_LINES, BOOT_INSEL_LINES, FAHRT_HIN, FAHRT_ZURUECK, FEST_FINALE, FEST_LINES, INSEL_BELOHNUNG, INSEL_FEST_FLAG } from '../data/insel';
+import { GARTEN_HINWEIS, ANKUNFT_ERSTMALS, ANKUNFT_WIEDER, BOOT_DORF_LINES, BOOT_INSEL_LINES, FAHRT_HIN, FAHRT_ZURUECK, FEST_FINALE, FEST_LINES, INSEL_BELOHNUNG, INSEL_FEST_FLAG } from '../data/insel';
 import { DORF_BOOT_RETURN, INSEL_ARRIVAL, INSEL_FEST, INSEL_Y0 } from '../data/maps/insel';
 import { palmeSchuetteln } from '../game/insel';
 import { findVersteck, hint as hintVersteck, unhintedNear, versteckAt } from '../game/verstecke';
@@ -268,8 +268,17 @@ export class World3D {
   private kissCount = 0;
   /** Automatisches Gehen (Tür-Animation) */
   private autoWalk: { dx: number; dy: number; until: number } | null = null;
-  private yard: Yard3D;
-  private animals: Animals3D;
+  private yardDorf: Yard3D;
+  private yardInsel: Yard3D;
+  private animalsDorf: Animals3D;
+  private animalsInsel: Animals3D;
+  /** Der Garten, in dem Lina gerade steht (Dorf oder Insel) */
+  private get yard(): Yard3D {
+    return this.session.onIsland ? this.yardInsel : this.yardDorf;
+  }
+  private get animals(): Animals3D {
+    return this.session.onIsland ? this.animalsInsel : this.animalsDorf;
+  }
   private digSpots: DigSpots3D;
   private festivals: Festivals3D;
   private festToastDay = '';
@@ -361,7 +370,8 @@ export class World3D {
     this.garden = new Garden3D(this.scene, session, this.tweens);
     this.interactive.add('beet-lina');
     this.houseView = new HouseView3D(this.scene);
-    this.yard = new Yard3D(this.scene, this.view.terrain.heightAt);
+    this.yardDorf = new Yard3D(this.scene, this.view.terrain.heightAt, YARD_AREA);
+    this.yardInsel = new Yard3D(this.scene, this.view.terrain.heightAt, INSEL_YARD_AREA);
     this.digSpots = new DigSpots3D(this.scene, session, this.view);
     this.festivals = new Festivals3D(this.scene, session.map, this.view.terrain.heightAt);
     session.livePositions = () => {
@@ -376,7 +386,8 @@ export class World3D {
     this.partyLights.group.visible = false;
     this.partyLight.position.set(27.6, 2.4, 21);
     this.scene.add(this.partyLights.group, this.partyLight);
-    this.animals = new Animals3D(this.scene, session.map.grid, this.view.terrain.heightAt);
+    this.animalsDorf = new Animals3D(this.scene, session.map.grid, this.view.terrain.heightAt, YARD_AREA);
+    this.animalsInsel = new Animals3D(this.scene, session.map.grid, this.view.terrain.heightAt, INSEL_YARD_AREA);
     this.garden.extraSpots = () => this.yardBedSpots();
 
     canvas.addEventListener('pointerdown', this.onPointerDown);
@@ -453,7 +464,9 @@ export class World3D {
     this.festivals.update(dt, this.night, !this.session.inside);
     {
       const h = this.session.clock().getHours();
-      this.animals.update(dt, this.session.data?.yard, h >= 21 || h < 6, !this.session.inside);
+      const night = h >= 21 || h < 6;
+      this.animalsDorf.update(dt, this.session.data?.yard, night, !this.session.inside);
+      this.animalsInsel.update(dt, this.session.data?.yardInsel, night, !this.session.inside);
     }
 
     const player = this.player;
@@ -551,7 +564,8 @@ export class World3D {
       if (!this.session.inside) this.updateOccluders(player);
       if (!this.session.inside) {
         const t = player.tile;
-        this.setInYard(t.x >= YARD_AREA.x && t.x < YARD_AREA.x + YARD_AREA.w && t.y >= YARD_AREA.y && t.y < YARD_AREA.y + YARD_AREA.h);
+        const area = this.session.yardArea();
+        this.setInYard(t.x >= area.x && t.x < area.x + area.w && t.y >= area.y && t.y < area.y + area.h);
       }
       this.updateBubble(player, blocked || this.session.decorActive);
     } else {
@@ -630,7 +644,8 @@ export class World3D {
     const outside = mixHex(mixHex(mixHex('#bfe6f7', tint, 0.55), '#9aa6b4', clouds * 0.7), '#2a2e5c', n * 0.75);
     const sky = this.session.inside ? mixHex('#f3e3cf', '#3a3450', n * 0.7) : outside;
     this.houseView.updateLight(n, clouds);
-    this.yard.updateLight(n);
+    this.yardDorf.updateLight(n);
+    this.yardInsel.updateLight(n);
     const party = isPartyTime(this.session) && !this.session.inside;
     if (party && !this.partyLights.group.visible) this.session.bus.emit('toast', { text: '🎉 Party auf dem Dorfplatz! Thalia hat Musik mitgebracht.' });
     this.partyLights.group.visible = party;
@@ -1226,7 +1241,7 @@ export class World3D {
     }
     // Stall direkt davor geht vor (Eier abholen), sonst Tiere streicheln
     const coop = this.yardItemAt(front.x, front.y);
-    const coopItem = coop ? this.session.data?.yard.items.find((i) => i.uid === coop) : undefined;
+    const coopItem = coop ? this.session.findYardItem(coop)?.item : undefined;
     if (coop && coopItem && coopKindOf(coopItem.itemId)) return { kind: 'moebel', uid: coop };
     const bird = this.animals.nearest(player.x * UNIT, player.y * UNIT, fx, fy);
     if (bird >= 0) return { kind: 'tier', index: bird };
@@ -2045,11 +2060,12 @@ export class World3D {
       return;
     }
     const p = this.player;
-    const bx = p ? p.x * UNIT : YARD_AREA.x;
-    const bz = p ? p.y * UNIT : YARD_AREA.y;
+    const area = this.session.yardArea();
+    const bx = p ? p.x * UNIT : area.x;
+    const bz = p ? p.y * UNIT : area.y;
     // Die Kamera bleibt über dem Gartenbereich
-    this.decorPan.x = Math.max(YARD_AREA.x - bx, Math.min(YARD_AREA.x + YARD_AREA.w - bx, x));
-    this.decorPan.z = Math.max(YARD_AREA.y - bz, Math.min(YARD_AREA.y + YARD_AREA.h - bz, z));
+    this.decorPan.x = Math.max(area.x - bx, Math.min(area.x + area.w - bx, x));
+    this.decorPan.z = Math.max(area.y - bz, Math.min(area.y + area.h - bz, z));
   }
 
   private dragCamera(e: PointerEvent) {
@@ -2095,7 +2111,7 @@ export class World3D {
     if (this.session.decorActive) {
       this.hoverCell = this.yardCellAt(e);
       this.updateGhost();
-      const yard = this.session.data?.yard;
+      const yard = this.session.yardRoom();
       const t = this.hoverCell && yard ? this.yard.topAt(yard, this.hoverCell.x, this.hoverCell.y) : null;
       this.canvas.style.cursor = this.decor ? 'grabbing' : t ? 'grab' : '';
       return;
@@ -3354,15 +3370,22 @@ export class World3D {
       guests.push(npc);
     });
     const finish = () => {
-      for (const n of guests) n.scriptDone();
-      data.flags[INSEL_FEST_FLAG] = true;
-      data.world.dates['insel:fest'] = this.session.today();
-      for (const r of INSEL_BELOHNUNG) this.giveOrDrop(r.itemId, r.count);
-      this.session.bus.emit('fx', { kind: 'konfetti' });
-      this.session.bus.emit('sfx', 'fang');
-      this.session.changed();
-      this.session.save();
-      this.cutscene = false;
+      // Weich ausblenden: Die Gäste verschwinden erst im Dunkeln, dann blendet das Bild wieder auf (nicht abrupt)
+      this.session.bus.emit('overlay:fade', true);
+      window.setTimeout(() => {
+        for (const n of guests) n.scriptDone();
+        data.flags[INSEL_FEST_FLAG] = true;
+        data.world.dates['insel:fest'] = this.session.today();
+        for (const r of INSEL_BELOHNUNG) this.giveOrDrop(r.itemId, r.count);
+        this.session.changed();
+        this.session.save();
+        this.session.bus.emit('overlay:fade', false);
+        window.setTimeout(() => {
+          this.session.bus.emit('fx', { kind: 'konfetti' });
+          this.session.bus.emit('sfx', 'fang');
+          this.cutscene = false;
+        }, 500);
+      }, 900);
     };
     const finale = () => this.session.bus.emit('dialog:open', { title: 'Überraschung!', lines: [...FEST_FINALE], onClose: finish });
     const speak = (i: number) => {
@@ -3586,16 +3609,19 @@ export class World3D {
 
   /** Kachel-Ursprung des aktuellen Raums/Gartens */
   private get origin(): { x: number; y: number } {
-    return this.session.inside ? { x: this.ox, y: this.oy } : { x: YARD_AREA.x, y: YARD_AREA.y };
+    return this.session.inside ? { x: this.ox, y: this.oy } : { x: this.session.yardArea().x, y: this.session.yardArea().y };
   }
 
   private refreshYard(force = false) {
-    const yard = this.session.data?.yard;
-    if (!yard) return;
-    this.yard.refresh(yard, force);
-    this.animals.refresh(yard);
-    // Eier im Nest zeigen, wenn es heute welche gibt
-    for (const i of yard.items) if (coopKindOf(i.itemId)) this.yard.setEggs(i.uid, coopHasEggs(this.session, i.uid));
+    for (const id of ['dorf', 'insel'] as const) {
+      const room = this.session.yardRoom(id);
+      if (!room) continue;
+      const yard = id === 'insel' ? this.yardInsel : this.yardDorf;
+      yard.refresh(room, force);
+      (id === 'insel' ? this.animalsInsel : this.animalsDorf).refresh(room);
+      // Eier im Nest zeigen, wenn es heute welche gibt
+      for (const i of room.items) if (coopKindOf(i.itemId)) yard.setEggs(i.uid, coopHasEggs(this.session, i.uid));
+    }
   }
 
   /** Mauszeiger → Gartenzelle (über den Boden) */
@@ -3607,14 +3633,17 @@ export class World3D {
 
   /** Pflanzplätze in Hochbeeten (Weltkacheln + Höhe) */
   private yardBedSpots(): Array<{ x: number; y: number; h: number }> {
-    const yard = this.session.data?.yard;
-    if (!yard) return [];
-    return yard.items.filter((i) => FURNITURE_BY_ITEM[i.itemId]?.def.bed).flatMap((i) => bedTiles(this.session, i.uid).map((t) => ({ ...t, h: FURNITURE_BY_ITEM[i.itemId].def.soilHeight ?? 0.39 })));
+    return this.session.allYardItems().filter((i) => FURNITURE_BY_ITEM[i.itemId]?.def.bed).flatMap((i) => bedTiles(this.session, i.uid).map((t) => ({ ...t, h: FURNITURE_BY_ITEM[i.itemId].def.soilHeight ?? 0.39 })));
   }
 
   private setInYard(on: boolean) {
     if (this.session.inYard === on) return;
     this.session.inYard = on;
+    const flags = this.session.data?.flags;
+    if (on && this.session.onIsland && flags && !flags.inselGartenHinweis) {
+      flags.inselGartenHinweis = true;
+      this.session.bus.emit('toast', { text: GARTEN_HINWEIS });
+    }
     if (!on && this.session.decorActive && !this.session.inside) this.stopDecor();
     this.session.bus.emit('home:yard', on);
   }
@@ -3873,9 +3902,10 @@ export class World3D {
 
   /** Gartenmöbel auf einer Weltkachel (Wege & Zäune zählen nicht) */
   private yardItemAt(tx: number, ty: number): string | null {
-    const yard = this.session.data?.yard;
+    const yard = this.session.yardRoom();
     if (!yard) return null;
-    const top = this.yard.topAt(yard, tx - YARD_AREA.x, ty - YARD_AREA.y);
+    const area = this.session.yardArea();
+    const top = this.yard.topAt(yard, tx - area.x, ty - area.y);
     const def = top ? FURNITURE_BY_ITEM[top.itemId]?.def : undefined;
     return top && def && !def.rug && !def.fence && !def.bed ? top.uid : null;
   }
@@ -3937,7 +3967,8 @@ export class World3D {
     if (f.def.light) {
       this.dv.toggleLamp(uid);
       this.houseView.updateLight(this.night, currentWeather(this.session).clouds);
-      this.yard.updateLight(this.night);
+      this.yardDorf.updateLight(this.night);
+      this.yardInsel.updateLight(this.night);
       return;
     }
     if (item.itemId === 'hantelbank' && (!this.session.visiting || this.session.visiting === 'haus-thalia')) {
@@ -4572,7 +4603,7 @@ export class World3D {
     if (!d) {
       const top = this.dv.topAt(home, cell.x, cell.y, this.hoverWall);
       if (!top) {
-        if (!this.session.inside) this.askFellNature(YARD_AREA.x + cell.x, YARD_AREA.y + cell.y);
+        if (!this.session.inside) this.askFellNature(this.session.yardArea().x + cell.x, this.session.yardArea().y + cell.y);
         return;
       }
       this.decor = { itemId: top.itemId, uid: top.uid, rot: top.rot, origin: { x: top.x, y: top.y, rot: top.rot, itemId: top.itemId, roomId: this.session.roomId } };

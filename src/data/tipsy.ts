@@ -84,7 +84,7 @@ export interface TipsyReaction {
 export const TIPSY_NPC_LINES: Readonly<Record<string, TipsyReaction>> = {
   gisela: {
     leicht: [['Kindchen, du glühst ja so. Hast du etwa ein Likörchen gehabt?', '… Ich frag nur für mich. Rein fachlich.'], ['Du kicherst ja, ohne dass ich was gesagt hab. Das ist verdächtig. Bei mir kichert nur der Wasserkocher.']],
-    schummrig: [['Lina! Du schwankst wie ein Schiff im Sturm. Setz dich hin, Kind – und sag nichts.', 'Ich hab sowieso das letzte Wort.'], ['Ach du liebe Güte. Gleich Wasser und ein Keks! Ich hab Erfahrung, glaub mir. Opa Ludwig hat nach dem Sportfest auch so geguckt.']],
+    schummrig: [['Lina! Du schwankst wie ein Schiff im Sturm. Setz dich hin, Kind – und sag nichts.', 'Ich hab sowieso das letzte Wort.'], ['Ach du liebe Güte. Gleich Wasser und ein Keks! Ich hab Erfahrung, glaub mir. Ludwig hat nach dem Sportfest auch so geguckt.']],
   },
   olaf: {
     leicht: [['Du bist ein bisschen rot um die Nase, Lina. Ist das das Wetter? … Oder die Steuer?', 'Keine Sorge, ich buch das unter „Feierabend“.'], ['Ein Gläschen in Ehren? Völlig steuerfrei. Prost, Lina.']],

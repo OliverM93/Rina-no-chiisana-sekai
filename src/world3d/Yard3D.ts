@@ -1,12 +1,12 @@
 /**
  * Linas Garten in der 3D-Welt: Zäune (verbinden sich mit Nachbarn), Wege,
  * Gartenmöbel, Deko, Hochbeete – plus Vorschau beim Gestalten.
- * Zellen sind Gartenkoordinaten (0,0 = linke obere Ecke von `YARD_AREA`).
+ * Zellen sind Gartenkoordinaten (0,0 = linke obere Ecke von `YardArea`).
  */
 import * as THREE from 'three';
 import { footprint, itemsAt, type PlacedItem, type Room, type Rotation } from '../core/room';
 import { FURNITURE_BY_ITEM, furnitureInfo } from '../data/furniture';
-import { YARD_AREA } from '../data/yard';
+import type { YardArea } from '../core/yard';
 import { type FenceLinks, makeFurniture, type FurnitureModel, makeGhost } from './models/furniture';
 
 let haloTex: THREE.CanvasTexture | null = null;
@@ -49,14 +49,15 @@ export class Yard3D {
   constructor(
     scene: THREE.Scene,
     private readonly heightAt: (x: number, z: number) => number,
+    private readonly area: YardArea,
   ) {
-    this.group.position.set(YARD_AREA.x, 0, YARD_AREA.y);
+    this.group.position.set(this.area.x, 0, this.area.y);
     this.group.add(this.items);
     scene.add(this.group);
 
     const pts: number[] = [];
-    for (let x = 0; x <= YARD_AREA.w; x++) pts.push(x, 0, 0, x, 0, YARD_AREA.h);
-    for (let y = 0; y <= YARD_AREA.h; y++) pts.push(0, 0, y, YARD_AREA.w, 0, y);
+    for (let x = 0; x <= this.area.w; x++) pts.push(x, 0, 0, x, 0, this.area.h);
+    for (let y = 0; y <= this.area.h; y++) pts.push(0, 0, y, this.area.w, 0, y);
     const geo = new THREE.BufferGeometry();
     geo.setAttribute('position', new THREE.Float32BufferAttribute(pts, 3));
     this.grid = new THREE.LineSegments(geo, new THREE.LineBasicMaterial({ color: '#ffffff', transparent: true, opacity: 0.35, depthWrite: false }));
@@ -71,7 +72,7 @@ export class Yard3D {
   }
 
   private ground(x: number, y: number) {
-    return Math.max(0, this.heightAt(YARD_AREA.x + x, YARD_AREA.y + y));
+    return Math.max(0, this.heightAt(this.area.x + x, this.area.y + y));
   }
 
   refresh(yard: Room, force = false) {
@@ -150,9 +151,9 @@ export class Yard3D {
 
   /** Punkt auf dem Boden → Gartenzelle (oder null außerhalb) */
   cellFromPoint(p: THREE.Vector3): { x: number; y: number } | null {
-    const x = Math.floor(p.x - YARD_AREA.x);
-    const y = Math.floor(p.z - YARD_AREA.y);
-    return x < 0 || y < 0 || x >= YARD_AREA.w || y >= YARD_AREA.h ? null : { x, y };
+    const x = Math.floor(p.x - this.area.x);
+    const y = Math.floor(p.z - this.area.y);
+    return x < 0 || y < 0 || x >= this.area.w || y >= this.area.h ? null : { x, y };
   }
 
   showGhost(itemId: string, x: number, y: number, rot: Rotation, valid: boolean, onHeight = 0) {

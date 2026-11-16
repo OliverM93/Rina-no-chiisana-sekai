@@ -1,5 +1,5 @@
 /**
- * Opas Werkbank: gelernte Rezepte ansehen und aus Materialien bauen.
+ * Ludwigs Werkbank: gelernte Rezepte ansehen und aus Materialien bauen.
  * Unbekannte Rezepte erscheinen als Schatten mit einem kleinen Hinweis.
  */
 import { useEffect, useRef, useState } from 'preact/hooks';
@@ -16,7 +16,7 @@ import { enterForPrimary } from './navigation';
 import { showToast, ui, useSessionVersion } from './store';
 
 const TEXT = {
-  werkbank: { title: '🔨 Opas Werkbank', intro: 'Aus Ästen, Steinen, Muscheln & Blumen wird etwas Schönes.', button: '🔨 Bauen', done: 'gebaut! Ab in die Tasche – aufstellen mit „Einrichten“.' },
+  werkbank: { title: '🔨 Ludwigs Werkbank', intro: 'Aus Ästen, Steinen, Muscheln & Blumen wird etwas Schönes.', button: '🔨 Bauen', done: 'gebaut! Ab in die Tasche – aufstellen mit „Einrichten“.' },
   apotheke: { title: '🌿 Apotheke von Dr. Lars', intro: '„Tee hilft immer. Sagt Oma. Und ausnahmsweise geb ich ihr recht.“', button: '🫖 Aufbrühen', done: 'aufgebrüht! Wohl bekomm\'s!' },
   herd: { title: '🍳 Linas Küche', intro: 'Lina kocht für ihr Leben gern. Heute wird es bestimmt lecker!', button: '🍳 Kochen', done: 'gekocht! Riecht das gut! Ab in die Tasche.' },
   kueche: { title: '👨‍🍳 Kochstudio „Chez Jens“', intro: '„Kochen ist wie Malen, chérie – ein Klecks hiervon, ein Klecks davon!“', button: '🍳 Kochen', done: 'gekocht! Magnifique! Ab in die Tasche.' },

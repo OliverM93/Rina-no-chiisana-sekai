@@ -23,6 +23,7 @@ export interface YardArea {
 }
 
 export const YARD_ID = 'garten';
+export const YARD_INSEL_ID = 'garten-insel';
 
 /** Interaktionsfelder aller Objekte (Kachel-Indizes) */
 function interactionTiles(map: WorldMap): Set<number> {
@@ -38,7 +39,7 @@ function interactionTiles(map: WorldMap): Set<number> {
 }
 
 /** Form des Gartens: Größe + Felder, die frei bleiben müssen */
-export function buildYardLayout(map: WorldMap, area: YardArea): RoomLayout {
+export function buildYardLayout(map: WorldMap, area: YardArea, id = YARD_ID, name = 'Garten'): RoomLayout {
   const inter = interactionTiles(map);
   const reserved: Array<[number, number]> = [];
   for (let y = 0; y < area.h; y++) {
@@ -51,7 +52,7 @@ export function buildYardLayout(map: WorldMap, area: YardArea): RoomLayout {
       if (map.baseBlocked[i] || objectHere || inter.has(i) || terrainAt(map, tx, ty) === 'path') reserved.push([x, y]);
     }
   }
-  return { id: YARD_ID, name: 'Garten', w: area.w, h: area.h, exits: [], reserved };
+  return { id, name, w: area.w, h: area.h, exits: [], reserved };
 }
 
 /** Kachel-Indizes, die die Gartenmöbel blockieren */
