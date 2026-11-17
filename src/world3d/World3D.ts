@@ -73,7 +73,7 @@ import { KISS } from './Character3D';
 const KISS_DISTANCE = 0.84;
 import { isPartyTime } from '../game/party';
 import { makePartyLights, makePicnic } from './models/buildings';
-import { cafeGuests, cafeTalk } from '../game/cafe';
+import { cafeExchange, cafeGuests, cafeTalk } from '../game/cafe';
 import { tipsyComment } from '../game/tipsy';
 import { arrivalLines, canInvite, finishVisit, inviteNpc, visitDue, visitCount, visitLine } from '../game/besuch';
 import { addFriendship, catchUpHeartLetters } from '../game/gameplay';
@@ -545,6 +545,7 @@ export class World3D {
       this.updateHomeOli(dtMs);
       this.updateVisitor(dtMs);
       this.updateGuestResidents(dtMs);
+      this.updateCafeChatter(dtMs / 1000);
       this.updateWallFade(player, dtMs / 1000);
       if (this.session.inside && !this.session.decorActive) {
         const t = player.tile;
@@ -2930,6 +2931,49 @@ export class World3D {
   }
 
   /** Spricht Lina einen der beiden während des Gesprächs an, geht er zuerst darauf ein */
+  /** Café: Die Gäste reden miteinander und mit Jens (Sprechblasen), solange Lina im Café ist */
+  private cafeChat: { a: Character; b: Character; lines: string[]; t: number; step: number } | null = null;
+  private cafeChatTimer = 8;
+  private cafeChats = 0;
+
+  private updateCafeChatter(dt: number) {
+    const inCafe = this.session.inside && this.session.visiting === 'bistro-jens';
+    if (!inCafe || this.cutscene) {
+      this.cafeChat = null;
+      this.cafeChatTimer = Math.max(this.cafeChatTimer, 6);
+      return;
+    }
+    const speak = (c: Character, text: string) => this.popSpeech(c.root.position.clone().add(new THREE.Vector3(0, c.sitting ? 1.35 : 1.15, 0)), text);
+    const chat = this.cafeChat;
+    if (chat) {
+      chat.t += dt;
+      const STEP = 4.2;
+      if (chat.step < chat.lines.length && chat.t >= chat.step * STEP) {
+        const who = chat.step % 2 === 0 ? chat.a : chat.b;
+        speak(who, chat.lines[chat.step]);
+        chat.step += 1;
+      }
+      if (chat.t >= chat.lines.length * STEP + 1) {
+        this.cafeChat = null;
+        this.cafeChatTimer = 10 + Math.random() * 12;
+      }
+      return;
+    }
+    this.cafeChatTimer -= dt;
+    if (this.cafeChatTimer > 0 || this.session.uiBlocking) return;
+    this.cafeChatTimer = 4;
+    const present = ['jens', ...cafeGuests(this.session)].filter((id) => this.guestChars.get(id)?.visible);
+    const ex = cafeExchange(this.session, present, this.cafeChats);
+    if (!ex) return;
+    const a = this.guestChars.get(ex.first);
+    const b = this.guestChars.get(ex.second);
+    if (!a || !b) return;
+    this.cafeChats += 1;
+    a.faceTowards(b.x, b.y);
+    b.faceTowards(a.x, a.y);
+    this.cafeChat = { a, b, lines: ex.lines, t: 0, step: 0 };
+  }
+
   /** Im Café: ein Schluck aus der Tasse (Toast) und ein Satz zum Café */
   private cafeTalks = 0;
   private cafeLead(npc: Npc): string[] {

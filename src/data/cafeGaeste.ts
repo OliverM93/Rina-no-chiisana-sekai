@@ -79,3 +79,53 @@ export const CAFE_GUESTS: Readonly<Record<string, CafeGuestDef>> = {
 };
 
 export const CAFE_PLACE = 'bistro-jens';
+
+// ---------------------------------------------------------------------------
+// Gespräche im Café: Die Gäste reden miteinander und mit Jens (Sprechblasen, solange Lina im Café ist)
+// ---------------------------------------------------------------------------
+
+/** Jens spricht mit einem Gast: [Jens, Gast, optional wieder Jens] */
+export const JENS_CAFE_CHATS: Readonly<Record<string, ReadonlyArray<readonly [string, string] | readonly [string, string, string]>>> = {
+  gisela: [
+    ['Madame Gisela, noch einen Kaffee? Diesmal mit weniger Bohne und mehr Liebe.', 'Mehr Bohne, Jens. Und rühr nicht so viel.'],
+    ['Gisela, probier das Croissant, es ist ganz frisch!', 'Zu buttrig. Gib mir noch eins.', 'Bien sûr, Madame!'],
+  ],
+  olaf: [
+    ['Frère, Mittagsmenü? Heute mit Quittung!', 'Mit Beleg bitte. Und mit Mehrwertsteuer ausgewiesen.'],
+    ['Olaf, die Rechnung geht aufs Haus.', 'Das geht nicht, Jens. Das ist … Steuerhinterziehung. … Danke.'],
+  ],
+  christin: [
+    ['Christin, deine Tasse steht schon wieder parallel. Das ist mir ein Fest!', 'Danke, Jens. Dein Löffel liegt übrigens schief.', 'Ich … rücke ihn gleich gerade.'],
+    ['Kräutertee, ma chérie? Vom Haus?', 'Gern. Aber bitte ohne Zucker, ohne Zimt und ohne Überraschungen.'],
+  ],
+  oli: [
+    ['Oli, mein Lieber, wieder zu viel Espresso?', 'Nur der dritte, Jens.', 'Der dritte. Aha. Ich schreib’s mir auf.'],
+    ['Oli, gefällt dir die Musik?', 'Jens, das ist Akkordeon.', 'Das ist Kunst, Oli!'],
+  ],
+  lars: [
+    ['Lars, mon cher, noch ein Stück Kuchen?', 'Medizinisch betrachtet ist das ein Notfall. Gib her.'],
+    ['Lars, ein Gläschen für die Seele?', 'Das habe ich schon auf Rezept verschrieben. Heute ein kleines.'],
+  ],
+  thalia: [
+    ['Thalia, ma chérie, noch einen Spritz vor der Party?', 'Nur einen, Jens. Danach wird getanzt.'],
+    ['Thalia, ich habe dir einen Platz am Fenster reserviert.', 'Für die Landkarte? Die hab ich dabei!'],
+  ],
+};
+
+/** Gespräche zwischen Gästen im Café (zusätzlich zu den allgemeinen in `gespraeche.ts`); Schlüssel „erster+zweiter“ */
+export const CAFE_PAIR_CHATS: Readonly<Record<string, ReadonlyArray<readonly [string, string] | readonly [string, string, string]>>> = {
+  'gisela+olaf': [['Olaf, der Kaffee kostet hier drei Euro. Drei! Dafür gab es früher einen Sack Kartoffeln.', 'Gisela, das ist die Inflation. Ich habe eine Tabelle.', 'Ich will keine Tabelle. Ich will meinen Kaffee.']],
+  'gisela+christin': [['Christin, hast du Jens’ Tische gezählt?', 'Es sind acht, Gisela. Und alle stehen im Quadrat.', 'Köstlich. Wie bei mir.']],
+  'olaf+christin': [['Christin, wir sollten öfter hierher.', 'Das habe ich auch gedacht. Aber nur, wenn wir die Stühle gerade rücken dürfen.']],
+  'oli+lars': [['Lars, was gibt’s Neues in der Praxis?', 'Oli, ärztliche Schweigepflicht. Aber der Kaffee hier ist besser als meiner.']],
+  'thalia+lars': [['Lars, ich war heute früh im Studio.', 'Das war vor dem Frühstück, Thalia. Ich bewundere dich und sorge mich zugleich.']],
+  'oli+thalia': [['Thalia, kommt Mo am Samstag zur Party?', 'Ich hab ihn nicht gefragt!', 'Du hast ihn fünfmal gefragt.']],
+  'gisela+lars': [['Lars, du isst zu wenig.', 'Oma, ich bin Arzt. Ich esse ausgewogen.', 'Dann iss noch ein Stück Kuchen. Ausgewogen!']],
+  'olaf+lars': [['Lars, wie viel Zucker nimmst du?', 'Keinen, Papa. Medizinisch reicht der im Kuchen.']],
+  'christin+lars': [['Lars, deine Tasse steht auf dem Rand des Tellers.', 'Christin, das ist eine ärztlich begründete Schieflage.']],
+  'christin+oli': [['Oli, deine Jacke liegt über dem Stuhl.', 'Die ruht sich nur aus, Christin.', 'Dann soll sie sich bitte am Haken ausruhen.']],
+  'gisela+oli': [['Oli, du siehst dünn aus.', 'Oma Gisela, ich bin normal.', 'Du bist dünn. Iss ein Stück Torte.']],
+  'gisela+thalia': [['Thalia, trinkst du Wein am Nachmittag?', 'Spritz, Oma Gisela. Das ist praktisch Obst.', 'Köstlich. Pfui. Köstlich.']],
+  'olaf+thalia': [['Thalia, hast du die Kosten fürs Studio bedacht?', 'Olaf, das ist eine Investition in mich.', 'Das lasse ich gelten.']],
+  'christin+thalia': [['Thalia, du siehst müde aus.', 'Ich war trainieren, Christin. Das ist müde mit Stolz.']],
+};
