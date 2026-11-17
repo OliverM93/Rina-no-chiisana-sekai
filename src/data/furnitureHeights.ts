@@ -169,6 +169,7 @@ export const FURNITURE_HEIGHTS: Readonly<Record<string, number>> = {
   'teleskop': 1.29,
   'topfpflanze': 0.92,
   'totemregal': 1.44,
+  'muschelgirlande': 1.5,
   'treibholzregal': 0.95,
   'tripodlampe': 1.40,
   'trockenkranz': 1.10,

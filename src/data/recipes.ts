@@ -80,6 +80,7 @@ export const RECIPES: readonly RecipeDef[] = [
   { id: 'kieselmosaik', result: 'kieselmosaik', ingredients: [{ itemId: 'stein', count: 10 }], hint: 'Kommt vielleicht mit der Post von Olaf.' },
   { id: 'steinlaterne', result: 'steinlaterne', ingredients: [{ itemId: 'stein', count: 6 }, { itemId: 'ast', count: 1 }], hint: 'Freunde dich mit Olaf an.' },
   { id: 'treibholzregal', result: 'treibholzregal', ingredients: [{ itemId: 'ast', count: 8 }, { itemId: 'stein', count: 2 }], hint: 'Freunde dich mit Christin an.' },
+  { id: 'muschelgirlande', result: 'muschelgirlande', ingredients: [{ itemId: 'herzmuschel', count: 2 }, { itemId: 'jakobsmuschel', count: 2 }, { itemId: 'schneckenhaus', count: 1 }, { itemId: 'ast', count: 1 }], fund: 'schneckenhaus', hint: 'Sammle Muscheln und Schneckenhäuser am Strand – auf der Insel findest du besonders viele.' },
   { id: 'muschellampe', result: 'muschellampe', ingredients: [{ itemId: 'herzmuschel', count: 2 }, { itemId: 'jakobsmuschel', count: 1 }, { itemId: 'ast', count: 1 }], fund: 'herzmuschel', hint: 'Finde eine Herzmuschel am Strand.' },
   { id: 'seestern-deko', result: 'seestern-deko', ingredients: [{ itemId: 'seestern', count: 1 }, { itemId: 'jakobsmuschel', count: 2 }], fund: 'seestern', hint: 'Finde einen Seestern am Strand.' },
   { id: 'glitzerlampe', result: 'glitzerlampe', ingredients: [{ itemId: 'glitzerstein', count: 1 }, { itemId: 'stein', count: 2 }, { itemId: 'ast', count: 1 }], fund: 'glitzerstein', hint: 'Klopf an Felsen – vielleicht glitzert es.' },

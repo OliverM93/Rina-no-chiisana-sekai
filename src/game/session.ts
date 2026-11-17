@@ -193,6 +193,8 @@ export class Session {
   lastAlcohol: 'bier' | 'wein' | 'highball' | '' = '';
   /** Steht Lina gerade auf der Insel? (setzt die 3D-Welt; dort scheint immer die Sonne) */
   onIsland = false;
+  /** Ist heute Abend Luau am Inselstrand und Lina auf der Insel? (Musik) – setzt die 3D-Welt */
+  luau = false;
   /** Werkzeug in Linas Hand (wird nicht gespeichert) */
   tool: ToolId | null = null;
   /** Erzwungenes Wetter (`?wetter=regen`, zum Testen) */

@@ -52,5 +52,6 @@ export const INSEL_FEST = { x: 28, y: 52 };
 export const INSEL_OBJECTS: readonly MapObjectDef[] = [
   { id: 'boot-dorf', kind: 'landmark', variant: 'boot', x: 27, y: 36, w: 2, h: 1, requires: 'inselOffen' },
   { id: 'inselhuette', kind: 'house', variant: 'shack', x: 33, y: 49, requires: 'inselFest' },
+  { id: 'schildkroete', kind: 'landmark', variant: 'schildkroete', x: 22, y: 57, w: 1, h: 1, requires: 'inselFest' },
   { id: 'boot-insel', kind: 'landmark', variant: 'boot', x: 15, y: 52, w: 2, h: 1, requires: 'inselOffen' },
 ];

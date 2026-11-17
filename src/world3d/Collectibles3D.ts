@@ -10,6 +10,7 @@ import type { GroundItem } from '../core/save';
 import { type MapObject, tileOf } from '../core/worldmap';
 import { TREE_FRUITS } from '../data/items';
 import { dayRandom, giveItem, markPicked, todaysBeachFinds } from '../game/gameplay';
+import { flaschenpostOeffnen } from '../game/insel';
 import { todaysEasterEggs } from '../game/festivals';
 import { todaysSnowballs } from '../game/winter';
 import type { Session } from '../game/session';
@@ -144,7 +145,9 @@ export class Collectibles {
     const p = this.pickups.get(id);
     const data = this.session.data;
     if (!p || !data) return false;
-    if (giveItem(this.session, p.itemId, 1) > 0) return false;
+    // Flaschenpost: wird sofort geöffnet, der Brief kommt in den Briefkasten (nichts landet in der Tasche)
+    if (p.itemId === 'flaschenpost') this.session.bus.emit('toast', { text: flaschenpostOeffnen(this.session, p.id) });
+    else if (giveItem(this.session, p.itemId, 1) > 0) return false;
     this.session.bus.emit('sfx', 'aufheben');
     this.session.bus.emit('fx', { kind: 'funkeln', x: p.x, y: p.y });
     this.pickups.delete(id);

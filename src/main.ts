@@ -115,7 +115,7 @@ async function start() {
         : null;
     const home = homeMood(session.data?.flags ?? {});
     const season = getSeason(now);
-    const wanted = forced ?? (title ? 'morgen' : moodFor(h, { raining, snowing: w.kind === 'schnee', inside, party: isPartyTime(session), place, home, island: session.onIsland }));
+    const wanted = forced ?? (title ? 'morgen' : moodFor(h, { raining, snowing: w.kind === 'schnee', inside, party: isPartyTime(session), place, home, island: session.onIsland, luau: session.luau }));
     // Rein/raus, Party und Titelbild wechseln sofort; Ort, Wetter und Tageszeit draußen nur gedämpft (nicht ständig ein anderes Lied)
     const ctx = `${inside}|${isPartyTime(session)}|${title}|${forced ?? ''}|${session.onIsland}`;
     const hard = ctx !== lastMoodCtx;
