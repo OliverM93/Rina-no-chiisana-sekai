@@ -20,7 +20,7 @@ in den letzten Tagen gebaut habe: die Insel und alles, was daran hängt, den Hau
 1. **Der Playtest ist entschieden: Es gibt keinen [N].** Oli ist der Einzige, der das Spiel vor der Übergabe spielt, und meldet laufend, was ihm auffällt. Damit ist die
    Dauerempfehlung „erst Playtest“ (N1, A1) **abgelöst**: Der Audit verlangt ihn nicht mehr. Offen bleibt, *was* sich so nicht prüfen lässt: wie sich Tempo und
    Überraschung für Lina anfühlen (Oli kennt das Geschenk) – siehe B1.
-2. **Ein Drittel der Arbeit seit Audit 4 ging in die Insel [N].** 6 von 30 PRs tragen Insel-Titel, dazu Hütte, Garten, Musik, Luau, Flaschenpost – alles hinter der Tür
+2. **Gut ein Viertel der Arbeit seit Audit 4 ging in die Insel [N].** 8 von 30 PRs gehören dazu (#152–#158, #161: Insel, Verstecke, Hütte, Garten, Musik, Luau, Flaschenpost) – alles hinter der Tür
    „alle sieben Bewohner auf fünf Herzen“, **frühestens nach ≈ 11 echten Tagen** (siehe B3). Der Inhalt ist hochwertig, aber das **Frühspiel (Tag 1–10) hat im selben
    Zeitraum nur wenig bekommen** (B3). Die Wünsche aus Olis Rückmeldung (Café-Gespräche, Glühwürmchen, Winston-Tricks) gehen genau dorthin – das passt.
 3. **Neu: ein unbegrenzt skalierendes passives Einkommen [N].** Wachtelställe (49 ⭐/Tag je Stall, 1 900 ⭐) kann man in zwei Gärten fast beliebig oft aufstellen. Das ist
