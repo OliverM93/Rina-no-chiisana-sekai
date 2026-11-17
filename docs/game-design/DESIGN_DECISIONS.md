@@ -343,3 +343,10 @@ vergeht. Kein Fortschritt, keine Belohnung, keine Zahlen, nichts gespeichert –
 **Bewusst nicht:** Pflicht, die Farm zu pflegen; Wachtel-Aufgaben; neue Währung; Zeitdruck. Eier und Beete bleiben wie im Dorf optional.
 **Designprüfung:** 1 „Mein Traum ist wahr geworden“ · 2 Beliebig oft, nebenbei · 3 Kreativität und Besitz nach dem großen Ziel · 4 Kein Druck, nichts verfällt · 5 Preise wie im Dorf, kein neuer Sternchen-Kreislauf · 6 Passt zu Gemütlichkeit und Persönlichkeit · 7 Keine Balance-Änderung · 8 Mittel: zweiter Garten als Spielstand-Teil statt einer Sonderlösung.
 
+
+### D45 · Arbeitszimmer im Erdgeschoss statt Dachzimmer (Nov. 2026)
+
+**Anlass:** Lina gefiel die Dachetage nicht (Treppe, Umblenden, schräge Atmosphäre). Ausbaustufe 3 soll stattdessen ein weiterer Raum im Erdgeschoss sein.
+**Entscheidung:** Stufe 3 („Arbeitszimmer“, gleicher Preis) ist ein 8 × 6-Zimmer hinten links neben dem Schlafzimmer, erreichbar durch eine Tür in dessen linker Wand. Außen gibt es einen kleinen Anbau statt der Dachgaube. Alte Spielstände: Das Dachzimmer wird zum Arbeitszimmer (Spielstand v18), Möbel, Tapete und Boden bleiben.
+**Bewusst nicht:** Preis oder Stufenreihenfolge ändern; eine zweite Etage behalten.
+**Designprüfung:** 1 „Noch ein eigener Raum für mich“ · 2 einmalig, Ausbau wie bisher · 3 Kreativität, mehr Platz zum Einrichten ohne Treppen · 4 kein Druck, nichts verfällt · 5 gleiche Kosten · 6 passt zu Gemütlichkeit, weniger Umblenden · 7 keine Balance-Änderung · 8 Aufwand mittel: Grundriss, Migration und Texte.

@@ -24,7 +24,7 @@ function fresh(iso = '2026-05-12T12:00:00') {
 
 describe('Erinnerungen – Daten', () => {
   it('jede Zeile gehört zu einem Bewohner, hat eine eindeutige ID und einen bekannten Tag', () => {
-    const known = ['haus-anbau', 'haus-dach', 'haus-kueche', 'haus-keller', 'buch-10', 'buch-20', 'buch-30', 'huehner', 'gewaechshaus', 'tassen-viele', 'sparbuch', 'schwarze-blume', 'jens-reise', 'matteo', 'kino', 'tourshirt', 'pflanzen-viele', 'bett', 'waermflasche', 'monat-1', 'jahr-1', 'stil-japanisch', 'stil-cottage', 'stil-retro', 'stil-modern', 'stil-midcentury', 'stil-bistro', 'stil-japandi', 'stil-minimalismus', 'stil-skandinavisch', 'stil-industrial', 'stil-darkacademia', 'stil-artdeco', 'stil-spaceage', 'stil-cyberpunk', 'stil-brutalismus', 'stil-memphis', 'stil-bauhaus', 'parkett-edel', 'tapete-uni', 'garten-deko', 'kater', 'igor', 'blumendeko'];
+    const known = ['haus-anbau', 'haus-arbeitszimmer', 'haus-kueche', 'haus-keller', 'buch-10', 'buch-20', 'buch-30', 'huehner', 'gewaechshaus', 'tassen-viele', 'sparbuch', 'schwarze-blume', 'jens-reise', 'matteo', 'kino', 'tourshirt', 'pflanzen-viele', 'bett', 'waermflasche', 'monat-1', 'jahr-1', 'stil-japanisch', 'stil-cottage', 'stil-retro', 'stil-modern', 'stil-midcentury', 'stil-bistro', 'stil-japandi', 'stil-minimalismus', 'stil-skandinavisch', 'stil-industrial', 'stil-darkacademia', 'stil-artdeco', 'stil-spaceage', 'stil-cyberpunk', 'stil-brutalismus', 'stil-memphis', 'stil-bauhaus', 'parkett-edel', 'tapete-uni', 'garten-deko', 'kater', 'igor', 'blumendeko'];
     const ids = new Set<string>();
     for (const m of MEMORIES) {
       expect(NPC_BY_ID[m.npc], m.id).toBeTruthy();
@@ -99,7 +99,7 @@ describe('Erinnerungen – Ablauf', () => {
     for (const sp of [...FISH, ...INSECTS].slice(0, 12)) s.data!.collection[sp.id] = { count: 1, firstDay: '2026-05-12' };
     set('2026-07-01T12:00:00');
     const tags = memoryTags(s);
-    expect(tags).toEqual(expect.arrayContaining(['haus-anbau', 'haus-dach', 'haus-kueche', 'monat-1', 'buch-10']));
+    expect(tags).toEqual(expect.arrayContaining(['haus-anbau', 'haus-arbeitszimmer', 'haus-kueche', 'monat-1', 'buch-10']));
     expect(tags).not.toContain('haus-keller');
   });
 
@@ -107,17 +107,17 @@ describe('Erinnerungen – Ablauf', () => {
     const { s } = fresh();
     s.data!.house.stage = 3;
     const first = takeMemory(s, 'gisela');
-    expect(first.join(' ')).toContain('Dachzimmer');
+    expect(first.join(' ')).toContain('Arbeitszimmer');
     expect(takeMemory(s, 'gisela')).toEqual([]);
     // andere Bewohner erzählen ihre eigene
-    expect(takeMemory(s, 'oli').join(' ')).toContain('Dachzimmer');
+    expect(takeMemory(s, 'oli').join(' ')).toContain('Arbeitszimmer');
   });
 
   it('beim ersten Gespräch des Tages kommt die Erinnerung nach der Begrüßung', () => {
     const { s } = fresh();
     s.data!.house.stage = 6;
     const out = talkToNpc(s, 'gisela');
-    expect(out.lines.join(' ')).toMatch(/Keller|Dachzimmer/);
+    expect(out.lines.join(' ')).toMatch(/Keller|Arbeitszimmer/);
   });
 
   it('Jens erwähnt seine letzte Reise mit der echten Stadt', () => {
@@ -135,6 +135,6 @@ describe('Erinnerungen – Ablauf', () => {
     const { s } = fresh();
     s.data!.house.stage = 3;
     const lines = memoryLinesFor(s, 'gisela');
-    expect(lines.some((l) => l.when?.tags?.includes('haus-dach'))).toBe(true);
+    expect(lines.some((l) => l.when?.tags?.includes('haus-arbeitszimmer'))).toBe(true);
   });
 });

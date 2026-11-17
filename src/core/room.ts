@@ -130,7 +130,7 @@ export function backWindows(layout: RoomLayout): number[] {
   const backDoors = layout.exits.filter((e) => e.dir === 'up').flatMap((e) => e.cells.map(([x]) => x));
   // Wintergarten: die Wände sind ja schon aus Glas
   if (layout.id === 'wintergarten') return [];
-  const xs = layout.id === 'dach' ? [layout.w / 2] : layout.id === 'keller' ? [3, layout.w / 2, layout.w - 3] : [2, layout.w - 2];
+  const xs = layout.id === 'keller' ? [3, layout.w / 2, layout.w - 3] : [2, layout.w - 2];
   return xs.filter((x) => !backDoors.some((d) => Math.abs(d + 0.5 - x) < 1.2));
 }
 

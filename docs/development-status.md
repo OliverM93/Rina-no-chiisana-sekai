@@ -110,7 +110,7 @@ Legende: ✅ erledigt · 🚧 in Arbeit · ⬜ geplant
 - ✅ Olaf & Christin ziehen ein (Ankündigungsbrief, Einzug kurz danach, Begrüßungsszene, eigenes Haus
   auf dem Bauplatz), Tagesabläufe, Dialoge, Vorlieben, Briefe
 - ✅ Olafs Dorfkasse: Ausbau als zinsloser Kredit, zurückzahlen wann man will
-- ✅ Feste Ausbaustufen: großes Zimmer (10×7) → Schlafzimmer-Anbau → Dachzimmer; Durchgang & Treppe,
+- ✅ Feste Ausbaustufen: großes Zimmer (10×7) → Schlafzimmer-Anbau → Arbeitszimmer (früher Dachzimmer, Nov. 2026 ersetzt); Durchgang,
   jeder Raum mit eigener Tapete/Boden/Möbeln; Haus wächst auch von außen
 - ✅ Spielstand Version 6 (Haus mit Räumen, Dorfkasse)
 
