@@ -29,6 +29,9 @@ interface Pickup {
   shadow: THREE.Mesh;
 }
 
+/** So lange (Sekunden Spielzeit) bleibt Obst und ein Stock liegen, der vom Baum gefallen ist */
+export const GROUND_LIFETIME_SEC = 3600;
+
 const FRUIT_COLOR: Record<string, string> = { apfel: '#f2787f', birne: '#d8e07a', pfirsich: '#ffb38f' };
 const fruitGeo = new THREE.SphereGeometry(1, 12, 10);
 const shadowGeo = new THREE.CircleGeometry(1, 16).rotateX(-Math.PI / 2);
@@ -51,6 +54,7 @@ export class Collectibles {
   private trees: MapObject[];
   private day = '';
   private time = 0;
+  private expireTimer = 0;
 
   constructor(
     private readonly scene: THREE.Scene,
@@ -61,10 +65,30 @@ export class Collectibles {
     this.trees = session.map.objects.filter((o) => o.kind === 'tree');
   }
 
+  /** Von Bäumen gefallenes Obst und Stöcke verschwinden nach einer Stunde Spielzeit (damit nichts ewig an unzugänglichen Stellen liegt) */
+  private removeExpired() {
+    const data = this.session.data;
+    if (!data) return;
+    const now = this.session.playTime();
+    const gone = data.world.ground.filter((g) => g.expires !== undefined && g.expires <= now);
+    if (gone.length === 0) return;
+    data.world.ground = data.world.ground.filter((g) => !gone.includes(g));
+    for (const g of gone) {
+      const p = this.pickups.get(g.id);
+      if (!p) continue;
+      this.pickups.delete(g.id);
+      p.shadow.removeFromParent();
+      this.tweens.add(600, (t) => (p.sprite.material.opacity = 1 - t), () => this.destroyPickup(p));
+    }
+    this.session.changed();
+  }
+
   refresh() {
     const data = this.session.data;
     if (!data) return;
     this.day = this.session.today();
+    const now = this.session.playTime();
+    data.world.ground = data.world.ground.filter((g) => g.expires === undefined || g.expires > now);
     for (const p of this.pickups.values()) this.destroyPickup(p);
     this.pickups.clear();
     for (const g of data.world.ground) this.addPickup(g.id, g.itemId, g.x, g.y, false);
@@ -84,6 +108,11 @@ export class Collectibles {
   /** Sanftes Schweben der Gegenstände */
   update(dt: number) {
     this.time += dt;
+    this.expireTimer += dt;
+    if (this.expireTimer > 5) {
+      this.expireTimer = 0;
+      this.removeExpired();
+    }
     for (const p of this.pickups.values()) {
       p.sprite.position.y = 0.28 + Math.sin(this.time * 2.2 + p.x * 0.05) * 0.04;
     }
@@ -165,11 +194,11 @@ export class Collectibles {
   }
 
   /** Etwas fällt auf den Boden (bleibt gespeichert). `from` in Kacheln (3D), `to` in Welteinheiten. */
-  drop(itemId: string, from: THREE.Vector3, to: { x: number; y: number }) {
+  drop(itemId: string, from: THREE.Vector3, to: { x: number; y: number }, despawn = false) {
     const data = this.session.data;
     if (!data) return;
     const id = `boden-${Date.now().toString(36)}-${Math.floor(Math.random() * 1e6).toString(36)}`;
-    const g: GroundItem = { id, itemId, x: Math.round(to.x), y: Math.round(to.y) };
+    const g: GroundItem = { id, itemId, x: Math.round(to.x), y: Math.round(to.y), ...(despawn ? { expires: this.session.playTime() + GROUND_LIFETIME_SEC } : {}) };
     data.world.ground.push(g);
     const p = this.addPickup(id, itemId, g.x, g.y, false);
     const end = p.sprite.position.clone();
@@ -232,7 +261,7 @@ export class Collectibles {
           const from = new THREE.Vector3();
           f.getWorldPosition(from);
           f.removeFromParent();
-          this.drop(kind, from, spots[i % spots.length]);
+          this.drop(kind, from, spots[i % spots.length], true);
         }, 250 + i * 110);
       });
       dropped += fruits.length;
@@ -240,7 +269,7 @@ export class Collectibles {
     if (data.world.branchDay[tree.id] !== this.day && dayRandom(this.session, `ast:${tree.id}`)() < 0.35) {
       data.world.branchDay[tree.id] = this.day;
       const to = spots[(fruits.length + 1) % spots.length];
-      window.setTimeout(() => this.drop('ast', new THREE.Vector3(to.x * UNIT, 1.8, to.y * UNIT), to), 380);
+      window.setTimeout(() => this.drop('ast', new THREE.Vector3(to.x * UNIT, 1.8, to.y * UNIT), to, true), 380);
       dropped += 1;
     }
     this.session.changed();

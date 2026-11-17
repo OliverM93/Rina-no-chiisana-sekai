@@ -189,6 +189,22 @@ describe('Version 2 (M2)', () => {
   });
 });
 
+describe('Bodengegenstände mit Verfallszeit', () => {
+  it('behält `expires` (Obst & Stöcke von Bäumen) und ignoriert Unsinn', () => {
+    const s = freshSave();
+    s.world.ground.push({ id: 'a', itemId: 'apfel', x: 1, y: 1, expires: 3600 });
+    s.world.ground.push({ id: 'b', itemId: 'apfel', x: 2, y: 2 });
+    const raw = JSON.parse(serializeSave(s)) as { world: { ground: Array<Record<string, unknown>> } };
+    raw.world.ground.push({ id: 'c', itemId: 'apfel', x: 3, y: 3, expires: 'bald' });
+    const result = parseSave(JSON.stringify(raw), SPAWN, NOW, { isKnownItem: (id) => id === 'apfel' });
+    expect(result.ok && result.data.world.ground).toEqual([
+      { id: 'a', itemId: 'apfel', x: 1, y: 1, expires: 3600 },
+      { id: 'b', itemId: 'apfel', x: 2, y: 2 },
+      { id: 'c', itemId: 'apfel', x: 3, y: 3 },
+    ]);
+  });
+});
+
 describe('Version 4 (M4 Natur)', () => {
   it('ergänzt Sammelbuch und Beet, behält alles andere', () => {
     const v3 = { ...freshSave(), version: 3, money: 123 } as Record<string, unknown>;

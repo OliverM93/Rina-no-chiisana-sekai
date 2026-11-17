@@ -348,6 +348,10 @@ const FURNITURE_META: Record<string, Row> = {
   // Besondere Stücke
   haengesessel: ['moebel', 'sofas', ['skandinavisch', 'cottage']],
   kuehlschrank: ['moebel', 'technik', ['retro', 'midcentury']],
+  'kuehlschrank-modern': ['moebel', 'technik', ['modern', 'minimalismus']],
+  nachtschrank: ['moebel', 'regale', ['skandinavisch', 'minimalismus']],
+  kleiderstaender: ['moebel', 'regale', ['skandinavisch', 'cottage']],
+  buecherschrank: ['moebel', 'regale', ['darkacademia', 'cottage']],
   wandkamin: ['moebel', 'besonderes', ['darkacademia', 'cottage', 'retro']],
   aquarium: ['moebel', 'besonderes'],
   spielautomat: ['moebel', 'besonderes', ['cyberpunk']],

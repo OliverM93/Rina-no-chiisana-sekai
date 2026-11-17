@@ -15,7 +15,7 @@ const STRAND = { x: 18, y: 30, w: 16, h: 3 };
 export const GISELA: NpcDef = {
   id: 'gisela',
   name: 'Oma Gisela',
-  personality: 'herzlich, frech, misstrauisch, starke Meinungen, immer das letzte Wort; Witwe von Ludwig (Sportlehrer, Sportfan), an den sie gern zurückdenkt',
+  personality: 'herzlich, frech, misstrauisch, starke Meinungen, immer das letzte Wort, durchdenkt alles viel zu viel; Witwe von Ludwig (Sportlehrer, Sportfan), an den sie gern zurückdenkt',
   appearance: LOOKS.gisela,
   home: 'haus-gisela',
   schedule: [
@@ -53,6 +53,14 @@ export const GISELA: NpcDef = {
       { text: ['Kindchen! Mein Lieblingsbesuch.', '… Ja, ich weiß, du bist mein einziger Besuch. Trotzdem.'], when: { minHearts: 2 } },
     ],
     chat: [
+      // Oma durchdenkt alles viel zu viel
+      { text: ['Ich hab heute Morgen zwanzig Minuten überlegt, ob ich die Bank links oder rechts abwische.', 'Dann hab ich überlegt, warum ich überhaupt überlegt hab. Dann war der Kaffee kalt.', 'Köstlich. Also die Überlegung. Der Kaffee nicht.'], weight: 2 },
+      { text: ['Soll ich Kekse backen? Oder ist das zu viel? Oder zu wenig?', 'Wenn ich keine backe, fehlt was. Wenn ich welche backe, essen alle zu viel.', 'Ich hab sie gebacken. Nur das Nachdenken hat gedauert.'] },
+      { text: ['Man kann nicht einfach irgendwas machen, Kind. Man muss es bedenken.', 'Erst von vorn, dann von hinten, dann von der Seite.', '… Bei der Sache mit dem Briefkasten bin ich immer noch bei „von der Seite“.'] },
+      { text: ['Als ich hierher ziehen wollte, hab ich drei Wochen gegrübelt.', 'Ludwig hat gesagt: „Gisela, du denkst zu viel.“ Ich hab gesagt: „Das muss ich erst mal bedenken.“', 'Dann hab ich es bedacht. Er hatte recht. Aber das sag ich ihm nicht.'], weight: 2 },
+      // Omas Spruch
+      { text: ['Weißt du, was ich immer sage, Kind?', '„Wer nicht wagt, der nicht gewinnt. Wer nicht vögelt, bekommt kein Kind.“', 'Schau nicht so. Das hab ich nicht erfunden. Das sagt man so. Köstlich, oder?'], weight: 2 },
+      { text: ['Und wenn du die Thalia verkuppeln willst, Kind –', '„Wer nicht wagt, der nicht gewinnt. Wer nicht vögelt, bekommt kein Kind.“', 'Genau so. Ich hab nichts gesagt. Du hast nichts gehört.'] },
       { text: ['Du magst Käse, Kind? Das hast du von mir.', 'Käse geht bei mir immer. Köstlich! Nur der Schimmelkäse – pfui.'] },
       { text: ['Schlaf ruhig lang, Kind. Wer ausgeschlafen ist, hat weniger Ärger. Meistens.', 'Und iss was Ordentliches danach.'] },
       { text: ['Kartoffelsuppe! Mit Schnittlauch und einem Würstchen.', 'So hat Ludwig sie geliebt. Nach dem Training, mit einem Brot. Ach, der Ludwig.'], weight: 3 },
