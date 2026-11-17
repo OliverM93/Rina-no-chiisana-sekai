@@ -259,6 +259,33 @@ function boot(): THREE.Group {
   return g;
 }
 
+/** Meeresschildkröte am Strand: gewölbter Panzer mit Mustern, Kopf, vier Flossen */
+function schildkroete(): THREE.Group {
+  const g = new THREE.Group();
+  const shell = '#7aa65c';
+  const skin = '#b5c97a';
+  g.add(s(0.42, 0.2, 0.34, shell, 0, 0.2, 0));
+  g.add(s(0.34, 0.07, 0.26, '#a9cf7e', 0, 0.37, 0));
+  for (const [x, z] of [[-0.14, -0.08], [0.14, -0.08], [0, 0.12], [-0.12, 0.12], [0.12, 0.12]] as const) g.add(s(0.09, 0.03, 0.08, '#5b8a44', x, 0.4, z));
+  // Kopf nach vorn (+Z) mit kleinen Augen
+  g.add(s(0.12, 0.1, 0.14, skin, 0, 0.2, 0.42));
+  for (const sx of [-1, 1]) g.add(s(0.02, 0.025, 0.015, '#2b2a31', sx * 0.06, 0.24, 0.53));
+  // Flossen: vorn groß, hinten klein
+  for (const sx of [-1, 1]) {
+    const f1 = s(0.17, 0.04, 0.09, skin, sx * 0.4, 0.1, 0.18);
+    f1.rotation.y = sx * 0.5;
+    g.add(f1);
+    const f2 = s(0.1, 0.035, 0.07, skin, sx * 0.3, 0.09, -0.26);
+    f2.rotation.y = -sx * 0.4;
+    g.add(f2);
+  }
+  g.add(s(0.06, 0.03, 0.05, skin, 0, 0.12, -0.38));
+  g.traverse((o) => {
+    if ((o as THREE.Mesh).isMesh) o.castShadow = true;
+  });
+  return g;
+}
+
 export function makeLandmark(variant: string, w: number, h: number): THREE.Group {
   void h;
   switch (variant) {
@@ -274,6 +301,8 @@ export function makeLandmark(variant: string, w: number, h: number): THREE.Group
       return aussichtspunkt();
     case 'boot':
       return boot();
+    case 'schildkroete':
+      return schildkroete();
     default:
       return new THREE.Group();
   }

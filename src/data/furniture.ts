@@ -105,6 +105,7 @@ export const FURNITURE: readonly FurnitureDef[] = [
   { id: 'hundekoerbchen', name: 'Hundekörbchen', style: 'handgemacht', crafted: true, price: 200, w: 1, d: 1, description: 'Ein geflochtenes Körbchen mit Kissen. Genau dackelgroß.' },
   { id: 'steinlaterne', name: 'Steinlaterne', style: 'handgemacht', crafted: true, price: 240, w: 1, d: 1, light: true, description: 'Eine kleine Laterne aus aufgeschichteten Steinen. Leuchtet abends warm.' },
   { id: 'muschellampe', name: 'Muschellampe', style: 'handgemacht', crafted: true, price: 260, w: 1, d: 1, small: true, light: true, description: 'Ein Lämpchen mit Muschelschirm. Klingt fast nach Meer, wenn man es anknipst.' },
+  { id: 'muschelgirlande', name: 'Muschelgirlande', style: 'handgemacht', crafted: true, wall: true, price: 300, w: 1, d: 1, description: 'Muscheln, Schneckenhäuser und ein Ast an einer Schnur. Rauscht leise, wenn jemand vorbeigeht.' },
   { id: 'treibholzregal', name: 'Astregal', style: 'handgemacht', crafted: true, price: 320, w: 2, d: 1, surface: true, surfaceHeight: 0.8, description: 'Ein Regal aus vielen Ästen. Christin findet es „erstaunlich gerade“.' },
   { id: 'seestern-deko', name: 'Seestern-Deko', style: 'handgemacht', crafted: true, price: 360, w: 1, d: 1, small: true, description: 'Ein Seestern auf einem Muschelbett. Ein kleines Stück Strand.' },
   { id: 'glitzerlampe', name: 'Glitzerlicht', style: 'handgemacht', crafted: true, price: 600, w: 1, d: 1, small: true, light: true, description: 'Ein Glitzerstein auf einem Steinsockel. Funkelt abends in allen Farben.' },

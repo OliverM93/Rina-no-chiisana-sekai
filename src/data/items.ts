@@ -117,6 +117,7 @@ const list: ItemDef[] = [
   { id: 'kaeseomelett', name: 'Käse-Omelett', plural: 'Käse-Omeletts', category: 'essen', price: 170, description: 'Goldgelb, außen zart und innen schön schmelzig. Linas Lieblings-Frühstück.' },
   { id: 'ueberbackene-kartoffeln', name: 'Überbackene Kartoffeln', plural: 'Portionen überbackene Kartoffeln', category: 'essen', price: 140, description: 'Mit einer Käsehaube, die Blasen wirft. Man muss kurz pusten. Und dann sofort.' },
   { id: 'kokosnuss', name: 'Kokosnuss', plural: 'Kokosnüsse', category: 'obst', price: 25, description: 'Von den Palmen der versteckten Insel. Haarig, schwer und innen voller Kokoswasser. Jens würde sofort eine Schale daraus machen.' },
+  { id: 'flaschenpost', name: 'Flaschenpost', plural: 'Flaschenposten', category: 'geschenk', price: null, maxStack: 1, description: 'Eine Flasche mit einem Brief darin. Sie wird sofort geöffnet – der Brief landet im Briefkasten.' },
   { id: 'kokoskekse', name: 'Kokoskekse', plural: 'Kokoskekse', category: 'essen', price: 75, description: 'Omas Keks trifft Inselkokos: knusprig, weiß bestäubt, nach Urlaub duftend.' },
   { id: 'kaesebrett', name: 'Käsebrett', plural: 'Käsebretter', category: 'essen', price: 230, description: 'Ein Brett mit Käse, Apfelspalten und Keksen. Ideal für Filmabende (und Linas Herz).' },
   { id: 'bento', name: 'Bento-Box', plural: 'Bento-Boxen', category: 'essen', price: 120, description: 'Ein Fach mit Omelett, eins mit Möhrchen, eins mit Apfelhäschen. Lina packt sie mit viel Liebe – jedes Fach genau passend.' },

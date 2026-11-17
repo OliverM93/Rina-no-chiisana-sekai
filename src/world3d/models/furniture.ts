@@ -2486,6 +2486,25 @@ export function makeFurniture(itemId: string, links: FenceLinks = { n: false, e:
       seatY = 0.45;
       break;
     }
+    case 'muschelgirlande': {
+      // Wand-Deko: Schnur in weichem Bogen mit Muscheln, Schneckenhäusern und einem kleinen Ast
+      const z = WALL_Z + 0.05;
+      const n = 9;
+      for (let i = 0; i < n; i++) {
+        const t = i / (n - 1);
+        const x = -0.42 + t * 0.84;
+        const y = 1.62 - Math.sin(t * Math.PI) * 0.22;
+        const col = ['#ffbfd0', '#f6e3c4', '#ffa07a', '#f2d9a0', '#ffbfd0'][i % 5];
+        g.add(b(0.04, 0.05, 0.012, '#8a5a3a', x, y + 0.03, z));
+        if (i % 3 === 1) g.add(s(0.045, 0.05, 0.03, col, x, y - 0.03, z + 0.02));
+        else g.add(s(0.05, 0.04, 0.02, col, x, y - 0.03, z + 0.02));
+        g.add(b(0.035, 0.012, 0.006, darken(col, 0.18), x, y - 0.025, z + 0.035));
+      }
+      const twig = b(0.9, 0.025, 0.025, '#8a5a3a', 0, 1.68, z - 0.005);
+      twig.rotation.z = 0.02;
+      g.add(twig);
+      break;
+    }
     case 'ukulele': {
       // Wand-Deko: Ukulele mit Blumenband (Korpus, Hals, Schalloch, vier Saiten)
       const z = WALL_Z + 0.06;

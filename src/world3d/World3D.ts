@@ -128,7 +128,10 @@ import { katerDraussen, katerHello, katerPet } from '../game/kater';
 import { TASCHE_VOLL, TASCHE_VOLL_MEHRERE } from '../data/texts';
 import { GARTEN_HINWEIS, ANKUNFT_ERSTMALS, ANKUNFT_WIEDER, BOOT_DORF_LINES, BOOT_INSEL_LINES, FAHRT_HIN, FAHRT_ZURUECK, FEST_FINALE, FEST_LINES, INSEL_BELOHNUNG, INSEL_FEST_FLAG } from '../data/insel';
 import { DORF_BOOT_RETURN, INSEL_ARRIVAL, INSEL_FEST, INSEL_Y0 } from '../data/maps/insel';
-import { palmeSchuetteln } from '../game/insel';
+import { inselMoment, luauGuests, luauLine, luauTonight, palmeSchuetteln } from '../game/insel';
+import { DELFINE_GESEHEN, LUAU_HINWEIS, SCHILDKROETE_ERSTMALS, SCHILDKROETE_LINES } from '../data/insel';
+import { Dolphins3D } from './Dolphins3D';
+import { Luau3D } from './Luau3D';
 import { findVersteck, hint as hintVersteck, unhintedNear, versteckAt } from '../game/verstecke';
 import { WINSTON_SNIFF_RANGE, WINSTON_SNIFF_TOAST } from '../data/verstecke';
 import { Kater } from './Kater';
@@ -155,7 +158,7 @@ type Target =
   | { kind: 'kater' }
   | { kind: 'tier'; index: number };
 
-const SPECIAL_OBJECTS = ['verkaufskiste', 'haus-gisela', 'haus-olaf', 'briefkasten-lina', 'werkbank-lina', 'bistro-jens', 'praxis-lars', 'haus-thalia', 'punschstand', 'samenstand', 'boot-dorf', 'boot-insel', 'inselhuette'];
+const SPECIAL_OBJECTS = ['verkaufskiste', 'haus-gisela', 'haus-olaf', 'briefkasten-lina', 'werkbank-lina', 'bistro-jens', 'praxis-lars', 'haus-thalia', 'punschstand', 'samenstand', 'boot-dorf', 'boot-insel', 'inselhuette', 'schildkroete'];
 const DIRS = { down: [0, 1], up: [0, -1], left: [-1, 0], right: [1, 0] } as const;
 
 /** Kamera-Versatz zum Blickziel (schräg von oben, wie im Vorbild) */
@@ -269,6 +272,10 @@ export class World3D {
   private kissCount = 0;
   /** Automatisches Gehen (Tür-Animation) */
   private autoWalk: { dx: number; dy: number; until: number } | null = null;
+  private dolphins: Dolphins3D;
+  private luau3d: Luau3D;
+  /** Bewohner, die gerade beim Luau am Strand sitzen */
+  private luauGuestsNow = new Set<string>();
   private yardDorf: Yard3D;
   private yardInsel: Yard3D;
   private animalsDorf: Animals3D;
@@ -371,6 +378,8 @@ export class World3D {
     this.garden = new Garden3D(this.scene, session, this.tweens);
     this.interactive.add('beet-lina');
     this.houseView = new HouseView3D(this.scene);
+    this.dolphins = new Dolphins3D(this.scene);
+    this.luau3d = new Luau3D(this.scene, { x: 26.5, z: 53.5 }, this.view.terrain.heightAt);
     this.yardDorf = new Yard3D(this.scene, this.view.terrain.heightAt, YARD_AREA);
     this.yardInsel = new Yard3D(this.scene, this.view.terrain.heightAt, INSEL_YARD_AREA);
     this.digSpots = new DigSpots3D(this.scene, session, this.view);
@@ -530,6 +539,7 @@ export class World3D {
       this.updateWinston(dtMs, player, blocked, solid);
       this.updateKater(dtMs, player);
       this.updateIslandState(player);
+      this.updateInselExtras(dtMs / 1000, player);
       this.updateVersteckSniff(dtMs / 1000, player);
       this.updateIdle(player, blocked);
       this.updateHomeOli(dtMs);
@@ -1668,6 +1678,14 @@ export class World3D {
       this.useBoat(id);
       return;
     }
+    if (id === 'schildkroete') {
+      player.faceTowards((obj.x + 0.5) * TILE, (obj.y + 0.5) * TILE);
+      const first = inselMoment(this.session, 'schildkroete');
+      const lines = first ? SCHILDKROETE_ERSTMALS : SCHILDKROETE_LINES[hashString(`${this.session.today()}:schildkroete`) % SCHILDKROETE_LINES.length];
+      this.session.bus.emit('dialog:open', { title: 'Meeresschildkröte', lines: [...lines] });
+      if (first) this.session.changed();
+      return;
+    }
     if (id === 'inselhuette') {
       this.session.bus.emit('dialog:open', {
         title: 'Strandhütte',
@@ -1807,6 +1825,11 @@ export class World3D {
     } else {
       player.faceTowards(npc.x, npc.y);
       if (!npc.char.sitting) npc.char.wave();
+    }
+    // Luau am Strand: Der Gast erzählt etwas zum Abend (statt des üblichen Gesprächs)
+    if (this.luauGuestsNow.has(npc.def.id)) {
+      this.session.bus.emit('dialog:open', { title: npc.def.name, hearts: npcHearts(this.session, npc.def.id), lines: luauLine(this.session, npc.def.id), onClose: () => npc.endTalk() });
+      return;
     }
     const data = this.session.data;
     if (npc.def.id === 'gisela' && data?.flags.giselaWelcomed && !data.flags.toolsGiven) {
@@ -3293,6 +3316,56 @@ export class World3D {
     if (on === this.session.onIsland) return;
     this.session.onIsland = on;
     this.applyLight();
+  }
+
+  /** Delfine, Luau-Abend (Feuer, Gäste, Musik) und Album-Momente auf der Insel */
+  private updateInselExtras(dt: number, player: Character) {
+    const s = this.session;
+    const fest = !!s.data?.flags.inselFest;
+    const here = s.onIsland && fest && !s.inside;
+    // Delfine: tagsüber, nur auf der Insel
+    const seen = this.dolphins.update(dt, here && this.night < 0.6, { x: player.x * UNIT, z: player.y * UNIT });
+    if (seen && inselMoment(s, 'delfine')) {
+      s.bus.emit('toast', { text: DELFINE_GESEHEN });
+      s.bus.emit('sfx', 'bellen');
+    }
+    // Luau: abends, ab und zu
+    const luau = here && !this.cutscene && luauTonight(s);
+    if (luau !== s.luau) {
+      s.luau = luau;
+      this.luau3d.setActive(luau);
+      if (luau && s.data && s.data.world.dates['insel:luau-hinweis'] !== s.today()) {
+        s.data.world.dates['insel:luau-hinweis'] = s.today();
+        s.bus.emit('toast', { text: LUAU_HINWEIS });
+      }
+      if (luau) this.placeLuauGuests();
+      else this.removeLuauGuests();
+    }
+    this.luau3d.update(dt, this.night);
+    if (luau && Math.hypot(player.x / TILE - 26.5, player.y / TILE - 53.5) < 5 && inselMoment(s, 'luau')) s.bus.emit('toast', { text: '🌺 Ein gemeinsamer Abend am Feuer. Das kommt ins Album.' });
+  }
+
+  private placeLuauGuests() {
+    const spots: Tile[] = [{ x: 24, y: 52 }, { x: 24, y: 55 }, { x: 27, y: 56 }, { x: 28, y: 51 }, { x: 29, y: 54 }];
+    const grid = this.session.map.grid;
+    luauGuests(this.session).forEach((id, i) => {
+      const npc = this.npcs.get(id);
+      if (!npc || npc.present && this.luauGuestsNow.has(id)) return;
+      const spot = nearestWalkable(grid, spots[i % spots.length], INSEL_ARRIVAL) ?? spots[i % spots.length];
+      npc.scriptPlace(spot);
+      npc.char.faceTowards(26.5 * TILE, 53.5 * TILE);
+      this.luauGuestsNow.add(id);
+    });
+  }
+
+  private removeLuauGuests() {
+    for (const id of this.luauGuestsNow) {
+      const npc = this.npcs.get(id);
+      if (!npc) continue;
+      npc.scriptDone();
+      npc.snap();
+    }
+    this.luauGuestsNow.clear();
   }
 
   /** Palme schütteln: jede Palme einmal am Tag, vielleicht fällt eine Kokosnuss */

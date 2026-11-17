@@ -354,9 +354,11 @@ export function composePhrase(mood: Mood, seed: number): NoteEvent[] {
 /** Stimmung aus Uhrzeit, Wetter & Ort (`place` = Thema des nahen Gebäudes, `home` = Thema zu Hause) */
 export function moodFor(
   hour: number,
-  opts: { raining: boolean; snowing: boolean; inside: boolean; party: boolean; place?: Mood | null; home?: Mood; island?: boolean },
+  opts: { raining: boolean; snowing: boolean; inside: boolean; party: boolean; place?: Mood | null; home?: Mood; island?: boolean; luau?: boolean },
 ): Mood {
   // Auf der versteckten Insel läuft immer die Hawaii-Musik (zu jeder Tageszeit, immer sonnig)
+  // Beim Luau (Strandfeuer) spielen die Hula-Trommeln
+  if (opts.island && opts.luau && !opts.inside) return 'insel-hula';
   if (opts.island && !opts.inside) return 'insel';
   const night = hour >= 22 || hour < 5;
   if (opts.party) return 'party';

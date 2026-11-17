@@ -350,3 +350,11 @@ vergeht. Kein Fortschritt, keine Belohnung, keine Zahlen, nichts gespeichert –
 **Entscheidung:** Stufe 3 („Arbeitszimmer“, gleicher Preis) ist ein 8 × 6-Zimmer hinten links neben dem Schlafzimmer, erreichbar durch eine Tür in dessen linker Wand. Außen gibt es einen kleinen Anbau statt der Dachgaube. Alte Spielstände: Das Dachzimmer wird zum Arbeitszimmer (Spielstand v18), Möbel, Tapete und Boden bleiben.
 **Bewusst nicht:** Preis oder Stufenreihenfolge ändern; eine zweite Etage behalten.
 **Designprüfung:** 1 „Noch ein eigener Raum für mich“ · 2 einmalig, Ausbau wie bisher · 3 Kreativität, mehr Platz zum Einrichten ohne Treppen · 4 kein Druck, nichts verfällt · 5 gleiche Kosten · 6 passt zu Gemütlichkeit, weniger Umblenden · 7 keine Balance-Änderung · 8 Aufwand mittel: Grundriss, Migration und Texte.
+
+### D47 · Insel-Nachspiel 2: Flaschenpost, Tiere, Muschelgirlande, Luau (Nov. 2026)
+
+**Anlass:** Die ersten Insel-Ideen waren umgesetzt; Lina wollte vier weitere: Flaschenpost, Schildkröte und Delfine, Muschelketten, ein Sonnenuntergangs-Luau.
+**Entscheidung:** Alles bleibt klein, optional und ohne Fortschritt. Die Flaschenpost ist ein seltener Strandfund und bringt Briefe der Bewohner (jeder nur einmal, danach Sand). Schildkröte und Delfine sind Ruhepunkte mit einem Album-Moment, keine Sammelliste. Die Muschelgirlande nutzt die vorhandenen Strandmuscheln (Handwerk). Das Luau findet deterministisch an etwa jedem fünften Abend statt; wer nicht da ist, verpasst nichts.
+**Bewusst nicht:** Pflicht-Termine, Streaks oder „heute nur noch kurz“, Sammelliste für Briefe oder Tiere, neue Währung, Belohnungen fürs Hinkommen.
+**Designprüfung:** 1 „Was wohl in der Flasche steckt?“ · 2 beliebig, nebenbei, selten · 3 die Insel bleibt lebendig und persönlich · 4 hält die Insel über Wochen abwechslungsreich · 5 Preise im Rahmen der Handwerks-Regel · 6 kein Druck: Luau und Flaschenpost sind reiner Bonus · 7 Säulen Entdecken, Beziehungen, Gemütlichkeit · 8 einfacher wäre nur Text, aber Bilder und Musik machen den Ort.
+

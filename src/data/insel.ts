@@ -80,7 +80,76 @@ export const INSEL_FINDS = [
   { itemId: 'jakobsmuschel', weight: 26 },
   { itemId: 'schneckenhaus', weight: 24 },
   { itemId: 'seestern', weight: 20 },
+  // selten: eine Flaschenpost (wird beim Aufheben sofort geöffnet, siehe unten)
+  { itemId: 'flaschenpost', weight: 6 },
 ] as const;
 
 /** Erstes Mal im Inselgarten (Toast): hier darf Lina ihren Traum bauen */
 export const GARTEN_HINWEIS = 'Das ist dein Garten vor der Hütte. 🌺 Hier passt ein Wachtelstall hin – und Beete, Wege, was du willst. Über „Garten gestalten“ geht’s los.';
+
+// ---------------------------------------------------------------------------
+// Flaschenpost: gelegentlich spült eine Flasche an den Inselstrand (nur nach der Party)
+// ---------------------------------------------------------------------------
+
+export interface FlaschenBrief {
+  id: string;
+  npc: string;
+  subject: string;
+  body: string;
+  gift?: { itemId: string; count: number };
+}
+
+/** Briefe aus der Flasche – je Bewohner zwei, jeder kommt nur einmal */
+export const FLASCHEN_BRIEFE: readonly FlaschenBrief[] = [
+  { id: 'oli-1', npc: 'oli', subject: 'Aus dem Meer gefischt', body: 'Lini,\n\nich habe diese Flasche gestern Abend ins Wasser geworfen und gehofft, dass sie bei dir ankommt. Wenn du das liest: Es hat geklappt.\n\nIch denke gerade an dich, ganz genau jetzt. Komm bald nach Hause, ich koch uns was (oder bestelle was, aber ich tu so, als hätte ich gekocht).\n\nDein Oli' },
+  { id: 'oli-2', npc: 'oli', subject: 'Noch eine Flasche', body: 'Lini,\n\nich hab dir ja versprochen, dass die nächste Flasche kommt. Hier ist sie.\n\nWeißt du, wann ich zuletzt so ruhig war wie auf deiner Insel? Nie. Danke, dass du mich mitgenommen hast.\n\nDein Oli', gift: { itemId: 'seestern', count: 1 } },
+  { id: 'gisela-1', npc: 'gisela', subject: 'Flaschenpost von Oma', body: 'Liebes Kind,\n\nein Brief in einer Flasche. Der Postbote hat gesagt, das macht man nicht. Ich habe gesagt, das macht man doch.\n\nIss was Ordentliches und sitz nicht zu lange in der Sonne. Es sei denn, es ist ein Sonnenhut dabei. Köstlich!\n\nOma' },
+  { id: 'gisela-2', npc: 'gisela', subject: 'Schon wieder Oma', body: 'Liebes Kind,\n\nIch habe noch eine Flasche gefunden. Ludwig hätte jetzt gesagt: „Gisela, du hast zu viele Flaschen.“\n\nIch hab gesagt: „Ludwig, du hast zu viele Meinungen.“\n\nPass auf dich auf.\nOma', gift: { itemId: 'keks', count: 3 } },
+  { id: 'olaf-1', npc: 'olaf', subject: 'Offizielle Meldung per Flasche', body: 'Liebe Lina,\n\nich habe berechnet, dass die Chance, dass diese Flasche dich erreicht, bei etwa 0,3 % liegt. Ich habe sie trotzdem losgeschickt.\n\nDie Dorfkasse ist stolz auf dich. Ich übrigens auch, aber das steht nicht im Kontoauszug.\n\nPapa' },
+  { id: 'olaf-2', npc: 'olaf', subject: 'Zweite Meldung (ebenfalls per Flasche)', body: 'Liebe Lina,\n\nChristin sagt, ich soll dir ein Witzchen mitschicken: Warum sind Fische so schlau? Weil sie in Schwärmen lernen.\n\nSie sagt, der war schlecht. Ich finde ihn gut.\n\nPapa' },
+  { id: 'christin-1', npc: 'christin', subject: 'Eine ordentliche Flasche', body: 'Liebe Lina,\n\ndiese Flasche ist gespült, gut verschlossen und ordentlich beschriftet. Ich hoffe, du schaffst es, sie ebenso ordentlich zu öffnen.\n\nDie Insel sieht von weitem sehr aufgeräumt aus. Das gefällt mir.\n\nChristin' },
+  { id: 'christin-2', npc: 'christin', subject: 'Kleiner Gruß', body: 'Liebe Lina,\n\nich habe das Kräuterbeet gegossen und die Flaschenpost vorbereitet. Beides geht schneller, wenn man vorher alles an seinen Platz räumt.\n\nGrüß die Palmen von mir.\n\nChristin' },
+  { id: 'jens-1', npc: 'jens', subject: 'Message in a bottle, ma chérie!', body: 'Ma chérie,\n\nich habe mir sagen lassen, dass man auf Inseln Flaschenpost bekommt. Also schicke ich dir eine. Aus Kunstgründen.\n\nSteffen aus San Francisco lässt grüßen, er meint, deine Insel sei das hübscheste Hawaii, das er nie gesehen hat.\n\nDein Jens' },
+  { id: 'jens-2', npc: 'jens', subject: 'Zweite Flasche, zweite Weltreise', body: 'Ma chérie,\n\njede Flasche ist ein kleines Kunstwerk, findest du nicht? Diese hier ist von meiner letzten Reise: ein Hauch Meer, ein Hauch Wein, ein Hauch Übertreibung.\n\nBis Sonntag!\nJens' },
+  { id: 'lars-1', npc: 'lars', subject: 'Ärztlicher Rat in der Flasche', body: 'Liebe Lina,\n\nRezept: Sonne, Meer und mindestens zwei Nachtische. Dosierung: täglich. Nebenwirkungen: gute Laune.\n\nDie Flasche ist übrigens mit Pflaster verschlossen. Man muss improvisieren.\n\nLars' },
+  { id: 'lars-2', npc: 'lars', subject: 'Zweites Rezept', body: 'Liebe Lina,\n\nso, und nicht mit e, sonst ist es ein See: Das hier ist ein Meer. Und du bist die Einzige, die davon so viel Ahnung hat.\n\nBitte Sonnencreme nicht vergessen. Das ist ein ärztlicher Rat, kein Spruch.\n\nLars' },
+  { id: 'thalia-1', npc: 'thalia', subject: 'Karte aus der Flasche', body: 'Lina!\n\nich habe die Insel auf eine Karte gezeichnet und die Karte in die Flasche gesteckt. Nein, warte, doch nicht. Die Insel soll ein Geheimnis bleiben. Also steht hier nur eine Wolke.\n\nSamstag tanzen?\nThalia' },
+  { id: 'thalia-2', npc: 'thalia', subject: 'Noch ein Plan', body: 'Lina!\n\nplan für den Strand: erst Beintag am Wasser, dann Hula. Ich hab das schon im Kalender eingetragen. Du kommst mit. Keine Widerrede!\n\nUnd Mo findet das auch gut. Glaube ich. Frag ihn bitte nicht.\n\nThalia' },
+];
+
+export const FLASCHENPOST_GEFUNDEN = 'Eine Flaschenpost! 🍾 Sie ist schon geöffnet – der Brief liegt im Briefkasten.';
+export const FLASCHENPOST_LEER = 'Eine Flaschenpost! Diesmal steckt nur Sand darin – und ein kleiner Seestern, der mitgereist ist. 🍾';
+
+// ---------------------------------------------------------------------------
+// Meeresschildkröte & Delfine
+// ---------------------------------------------------------------------------
+
+export const SCHILDKROETE_ERSTMALS: readonly string[] = [
+  'Am Strand liegt eine Meeresschildkröte. Sie blinzelt langsam und sieht Lina an, als hätte sie schon auf sie gewartet.',
+  'Lina setzt sich daneben. Es ist ganz still, nur das Meer macht leise „schsch“.',
+];
+export const SCHILDKROETE_LINES: readonly (readonly string[])[] = [
+  ['Die Schildkröte blinzelt. Sie hat es nicht eilig. Hier hat niemand es eilig.'],
+  ['Lina streichelt vorsichtig den Panzer. Er ist warm von der Sonne.', 'Die Schildkröte seufzt. Oder ist das das Meer?'],
+  ['„Du hast Zeit“, scheint die Schildkröte zu sagen. „Mehr als du denkst.“'],
+  ['Die Schildkröte gräbt gemächlich im Sand und legt sich wieder hin. Sehr beschäftigt. Sehr gemütlich.'],
+];
+
+export const DELFINE_GESEHEN = '🐬 Delfine! Zwei springen draußen im Meer – einmal hoch, einmal Platsch. Winston bellt begeistert.';
+
+// ---------------------------------------------------------------------------
+// Sonnenuntergangs-Luau: ab und zu abends ein kleines Strandfest (nie Pflicht)
+// ---------------------------------------------------------------------------
+
+export const LUAU_HINWEIS = '🔥 Am Strand brennt ein Feuer, und die Tiki-Fackeln leuchten. Heute Abend ist Luau – wer mag, schaut vorbei.';
+
+/** Was die Gäste beim Luau sagen (je Bewohner) */
+export const LUAU_LINES: Readonly<Record<string, readonly (readonly string[])[]>> = {
+  oli: [['Lini! Setz dich zu mir, das Feuer ist gut für Sonnenuntergänge.', 'Ich hab die Ukulele mitgebracht. Ich kann nur zwei Akkorde. Aber mit viel Gefühl.'], ['Weißt du, was ich an der Insel mag? Man hört dich lachen, auch wenn ich dich nicht sehe.']],
+  gisela: [['Ein Feuer am Strand! Ludwig hätte Würstchen mitgebracht.', 'Ich habe Kekse. Und einen Hut. Hawaii steht mir, merkst du.'], ['Das Meer rauscht schön. Fast so schön wie meine Kaffeetafel. Fast.']],
+  olaf: [['Ich habe den Sonnenuntergang auf die Minute berechnet. Er ist pünktlich. Beeindruckend.'], ['Das Feuer kostet kein Geld. Das mag ich an ihm.']],
+  christin: [['Ich habe Sand im Schuh. Ich gebe zu: Es stört mich heute nicht.'], ['Alle sitzen in einem schönen Kreis. Das ist sehr ordentlich. Bravo.']],
+  jens: [['Ma chérie! Ein Strandfeuer, ein Sonnenuntergang und mein Lieblingsmensch. Was will man mehr?', 'Ich tanze gleich Hula. Ich hab es mir von einem Video beigebracht.'], ['Oh la la, wie schön das Licht ist! Ich muss es malen. Oder wenigstens fotografieren. Oder beides.']],
+  lars: [['Ärztlicher Rat: Feuer, Familie, Fladenbrot. Alles drei ist gut für die Seele.'], ['Ich hab gelesen, dass Strandabende die Stimmung um 37 % heben. Das habe ich gerade erfunden. Aber es stimmt.']],
+  thalia: [['Lina! Ich hab heute schon trainiert, und jetzt wird getanzt. Das ist Balance!', 'Der Sternenhimmel hier ist ein Traum. Ich zeichne ihn nachher. Oder ich schau einfach.'], ['Mo hätte hier auch gepasst. Ich sag nur: Er hätte hier gepasst.']],
+};

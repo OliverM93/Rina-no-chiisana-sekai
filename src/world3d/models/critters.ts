@@ -485,3 +485,22 @@ export function makeShovel(): ToolModel {
   g.add(blade);
   return { group: g };
 }
+
+/** Delfin (für die Sprünge vor der Insel): Körper entlang +Z, Rückenflosse, Schwanzflosse. Ursprung = Körpermitte. */
+export function makeDolphin(): THREE.Group {
+  const g = new THREE.Group();
+  const grey = '#8fb3cf';
+  const belly = '#e8f1f6';
+  g.add(p(sphere, grey, 0.14, 0.14, 0.42, 0, 0, 0));
+  g.add(p(sphere, belly, 0.1, 0.07, 0.34, 0, -0.07, 0.02));
+  // Schnauze
+  g.add(p(cone, grey, 0.045, 0.16, 0.045, 0, -0.01, 0.52).rotateX(Math.PI / 2));
+  // Rückenflosse und Seitenflossen
+  g.add(p(cone, darken(grey, 0.1), 0.045, 0.14, 0.05, 0, 0.17, -0.02).rotateX(-0.5));
+  for (const sx of [-1, 1]) g.add(p(sphere, darken(grey, 0.08), 0.07, 0.015, 0.06, sx * 0.15, -0.06, 0.15));
+  // Schwanz
+  g.add(p(cone, grey, 0.07, 0.22, 0.07, 0, 0, -0.5).rotateX(-Math.PI / 2));
+  for (const sx of [-1, 1]) g.add(p(sphere, darken(grey, 0.08), 0.12, 0.02, 0.05, sx * 0.1, 0, -0.66));
+  for (const sx of [-1, 1]) g.add(p(sphere, '#2b2a31', 0.014, 0.016, 0.01, sx * 0.1, 0.04, 0.3));
+  return g;
+}

@@ -256,6 +256,29 @@ const DRAW: Record<string, Draw> = {
     for (const [x, y] of [[12, 12], [20, 12], [16, 17]]) ellipse(ctx, x, y, 1.9, 1.9, '#3d2616');
     shine(ctx, 11, 9, 2.4, 0.5);
   },
+  flaschenpost: (ctx) => {
+    // Glasflasche mit Korken und einer Papierrolle darin
+    ellipse(ctx, 16, 19, 6.5, 9.5, '#bfe6f2', '#6fa8bd', 1.5);
+    ctx.fillStyle = '#bfe6f2';
+    ctx.fillRect(13.5, 6, 5, 7);
+    ctx.strokeStyle = '#6fa8bd';
+    ctx.lineWidth = 1.5;
+    ctx.strokeRect(13.5, 6, 5, 7);
+    ctx.fillStyle = '#c8905a';
+    ctx.fillRect(13, 3, 6, 4);
+    ctx.fillStyle = '#fff6e0';
+    ctx.fillRect(13.5, 15, 5, 9);
+    ctx.strokeStyle = '#d9c7a0';
+    ctx.lineWidth = 1;
+    ctx.strokeRect(13.5, 15, 5, 9);
+    ctx.strokeStyle = '#e88aa0';
+    ctx.beginPath();
+    ctx.moveTo(15, 18);
+    ctx.lineTo(17, 18);
+    ctx.moveTo(15, 20.5);
+    ctx.lineTo(17, 20.5);
+    ctx.stroke();
+  },
   kokoskekse: (ctx) => {
     const c = '#e9c08a';
     ellipse(ctx, 16, 17, 11, 9.5, c, darken(c, 0.3), 1.5);

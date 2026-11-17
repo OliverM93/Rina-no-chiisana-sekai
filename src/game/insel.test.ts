@@ -129,3 +129,85 @@ describe('Entwicklungs-Abkürzung ?insel=1', () => {
     expect(s.data!.flags[INSEL_OFFEN_FLAG]).toBe(true);
   });
 });
+
+describe('Insel-Nachspiel 2: Flaschenpost, Luau, Album', () => {
+  const free = () => {
+    const s = fresh('2026-06-10T19:00:00');
+    s.data!.flags.inselFest = true;
+    return s;
+  };
+
+  it('Flaschenbriefe gehören echten Bewohnern, haben Text und eindeutige IDs', async () => {
+    const { FLASCHEN_BRIEFE } = await import('../data/insel');
+    expect(new Set(FLASCHEN_BRIEFE.map((b) => b.id)).size).toBe(FLASCHEN_BRIEFE.length);
+    for (const b of FLASCHEN_BRIEFE) {
+      expect(NPCS.some((n) => n.id === b.npc), b.id).toBe(true);
+      expect(b.subject.length, b.id).toBeGreaterThan(3);
+      expect(b.body.length, b.id).toBeGreaterThan(60);
+    }
+    expect(FLASCHEN_BRIEFE.length).toBeGreaterThanOrEqual(NPCS.length * 2 - 2);
+  });
+
+  it('eine Flaschenpost liefert nacheinander verschiedene Briefe, am Ende nur Sand', async () => {
+    const { flaschenpostOeffnen } = await import('./insel');
+    const { FLASCHEN_BRIEFE, FLASCHENPOST_GEFUNDEN, FLASCHENPOST_LEER } = await import('../data/insel');
+    const s = free();
+    alleVoll(s);
+    const before = s.data!.mail.letters.length;
+    expect(flaschenpostOeffnen(s, 'insel-strand-1')).toBe(FLASCHENPOST_GEFUNDEN);
+    expect(s.data!.mail.letters.length).toBe(before + 1);
+    expect(s.data!.world.dates['insel:flaschenpost']).toBeTruthy();
+    for (let i = 0; i < FLASCHEN_BRIEFE.length - 1; i++) flaschenpostOeffnen(s, `insel-strand-${i + 2}`);
+    expect(s.data!.mail.letters.filter((l) => l.id.startsWith('flaschenpost-')).length).toBe(FLASCHEN_BRIEFE.length);
+    expect(flaschenpostOeffnen(s, 'insel-strand-99')).toBe(FLASCHENPOST_LEER);
+  });
+
+  it('Luau gibt es nur nach der Party, abends und an etwa jedem fünften Tag', async () => {
+    const { luauTonight, luauGuests } = await import('./insel');
+    const s = free();
+    alleVoll(s);
+    let n = 0;
+    // Zeit durchprobieren: ein Monat Abende
+    const days: boolean[] = [];
+    for (let d = 1; d <= 30; d++) {
+      const t = new Date(`2026-06-${String(d).padStart(2, '0')}T19:30:00`);
+      const sess = fresh(t.toISOString().slice(0, 19));
+      sess.data!.flags.inselFest = true;
+      days.push(luauTonight(sess));
+      if (days[days.length - 1]) n += 1;
+    }
+    expect(n).toBeGreaterThan(2);
+    expect(n).toBeLessThan(12);
+    expect(luauGuests(s)).toHaveLength(3);
+    expect(luauGuests(s)).toEqual(luauGuests(s));
+    // vor der Party und tagsüber nie
+    const early = fresh('2026-06-10T12:00:00');
+    early.data!.flags.inselFest = true;
+    expect(luauTonight(early)).toBe(false);
+    expect(luauTonight(fresh('2026-06-10T19:00:00'))).toBe(false);
+  });
+
+  it('Luau-Zeilen gibt es für alle Bewohner; beim Luau spielt Hula-Musik', async () => {
+    const { LUAU_LINES } = await import('../data/insel');
+    for (const n of NPCS) expect(LUAU_LINES[n.id]?.length, n.id).toBeGreaterThanOrEqual(1);
+    expect(moodFor(19, { raining: false, snowing: false, inside: false, party: false, island: true, luau: true })).toBe('insel-hula');
+    expect(moodFor(19, { raining: false, snowing: false, inside: false, party: false, island: true })).toBe('insel');
+  });
+
+  it('Insel-Momente (Schildkröte, Delfine, Flaschenpost, Luau) kommen ins Album', async () => {
+    const { inselMoment } = await import('./insel');
+    const s = free();
+    for (const k of ['schildkroete', 'delfine', 'flaschenpost', 'luau'] as const) expect(inselMoment(s, k)).toBe(true);
+    expect(inselMoment(s, 'delfine')).toBe(false);
+    syncAlbum(s);
+    const ids = albumEntries(s).map((e) => e.id);
+    expect(ids).toEqual(expect.arrayContaining(['insel-schildkroete', 'insel-delfine', 'insel-flaschenpost', 'insel-luau']));
+  });
+
+  it('Flaschenpost liegt unter den Insel-Funden, die Girlande ist am Strand-Rezept', async () => {
+    const { INSEL_FINDS } = await import('../data/insel');
+    const { RECIPES } = await import('../data/recipes');
+    expect(INSEL_FINDS.some((f) => f.itemId === 'flaschenpost')).toBe(true);
+    expect(RECIPES.some((r) => r.result === 'muschelgirlande')).toBe(true);
+  });
+});
