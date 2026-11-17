@@ -31,7 +31,10 @@ export class HouseView3D {
 
   /** Optionen für die Wände eines Raums: Türöffnungen, halbhohe Rückwand, alte Tür-Modelle aus */
   static shellFor(plan: FloorPlan, roomId: string) {
-    return { openings: openingsFor(plan, roomId), hideExits: false };
+    // Der rechte Raum eines Seitendurchgangs ragt um den Wandstreifen nach links (kein Zwischenraum, ein schmaler Durchgang)
+    const me = plan.rooms.find((r) => r.id === roomId);
+    const growLeft = !!me && wallStrips(plan).some((s) => s.vertical && s.x + 1 === me.x && s.y < me.y + me.h && s.y + s.h > me.y && s.openings.length > 0);
+    return { openings: openingsFor(plan, roomId), hideExits: false, growLeft };
   }
 
   /** Stockwerk wechseln bzw. neu aufbauen, wenn sich der Grundriss geändert hat. true = neu gebaut */
@@ -102,6 +105,8 @@ export class HouseView3D {
     const floorMat = toon('#9b846f');
     const sillMat = toon('#c9a77c');
     for (const s of wallStrips(plan)) {
+      // Seitendurchgänge: Der Boden des rechten Raums reicht über den Streifen (Interior3D, growLeft) – keine Platte
+      if (s.vertical && s.openings.length > 0) continue;
       for (let dx = 0; dx < s.w; dx++) {
         for (let dy = 0; dy < s.h; dy++) {
           const gx = s.x + dx;

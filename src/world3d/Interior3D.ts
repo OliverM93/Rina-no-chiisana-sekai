@@ -30,6 +30,12 @@ export interface WallOpening {
 export interface ShellOptions {
   openings?: readonly WallOpening[];
   hideExits?: boolean;
+  /**
+   * Der Raum „ragt“ um ein Feld nach links: Linke Wand und Boden rücken an die Außenkante des Wandstreifens zum
+   * linken Nachbarraum. Dann entfällt der Zwischenraum – statt zwei Türrahmen mit Lücke gibt es einen schmalen Durchgang.
+   * (Die Spielfelder bleiben gleich: das Feld dort ist weiter nur an der Tür begehbar.)
+   */
+  growLeft?: boolean;
 }
 
 export class Interior3D {
@@ -85,8 +91,9 @@ export class Interior3D {
     const { w: W, h: H } = layout;
     this.shell.clear();
     this.backDeco = [];
-    this.floor.scale.set(W, 1, H);
-    this.floor.position.set(W / 2, 0, H / 2);
+    const grow = this.shellOptions.growLeft ? 1 : 0;
+    this.floor.scale.set(W + grow, 1, H);
+    this.floor.position.set((W - grow) / 2, 0, H / 2);
     // Wände: hinten, links, rechts (vorne offen, wie ein Puppenhaus)
     const fullH = WALL_H;
     const openings = this.shellOptions.openings ?? [];
@@ -114,7 +121,7 @@ export class Interior3D {
         const geo = side === 'back' ? new THREE.BoxGeometry(len, h, 0.15) : new THREE.BoxGeometry(0.15, h, len);
         const m = new THREE.Mesh(geo, side === 'back' ? this.backMat : this.sideMats[side]);
         if (side === 'back') m.position.set(mid, y, -0.075);
-        else m.position.set(side === 'left' ? -0.075 : W + 0.075, y, mid);
+        else m.position.set(side === 'left' ? -0.075 - grow : W + 0.075, y, mid);
         m.userData.wall = side;
         m.receiveShadow = true;
         this.walls.push(m);
@@ -124,18 +131,27 @@ export class Interior3D {
           for (const edge of [from, to]) {
             const post = mesh(new THREE.BoxGeometry(side === 'back' ? 0.08 : 0.2, DOOR_H, side === 'back' ? 0.2 : 0.08), toon('#a97c56'));
             if (side === 'back') post.position.set(edge, DOOR_H / 2, -0.05);
-            else post.position.set(side === 'left' ? -0.05 : W + 0.05, DOOR_H / 2, edge);
+            else post.position.set(side === 'left' ? -0.05 - grow : W + 0.05, DOOR_H / 2, edge);
             this.shell.add(post);
           }
         }
       });
     };
     buildWall('back', W, 0.15);
+    if (grow) {
+      // Rückwand ein Feld nach links verlängern (samt Ecke)
+      const ext = new THREE.Mesh(new THREE.BoxGeometry(1.15, fullH, 0.15), this.backMat);
+      ext.position.set(-0.575, fullH / 2, -0.075);
+      ext.userData.wall = 'back';
+      ext.receiveShadow = true;
+      this.walls.push(ext);
+      this.shell.add(ext);
+    }
     buildWall('left', H, 0);
     buildWall('right', H, 0);
     // Fußleisten
     const trim = toon('#cfa175');
-    for (const [tw, td, x, z] of [[W, 0.06, W / 2, 0.03], [0.06, H, 0.03, H / 2], [0.06, H, W - 0.03, H / 2]] as const) {
+    for (const [tw, td, x, z] of [[W + grow, 0.06, (W - grow) / 2, 0.03], [0.06, H, 0.03 - grow, H / 2], [0.06, H, W - 0.03, H / 2]] as const) {
       const t = mesh(new THREE.BoxGeometry(tw, 0.12, td), trim);
       t.position.set(x, 0.06, z);
       this.shell.add(t);
@@ -228,7 +244,7 @@ export class Interior3D {
     const sig = JSON.stringify(home) + [...this.lit].join() + '|' + this.collected.size;
     if (!force && sig === this.signature) return;
     this.signature = sig;
-    this.applySurface(this.floorMat, home.floor, layout.w / 2, layout.h / 2);
+    this.applySurface(this.floorMat, home.floor, (layout.w + (this.shellOptions.growLeft ? 1 : 0)) / 2, layout.h / 2);
     this.applySurface(this.wallMat, home.wallpaper, layout.w / 2, 1);
     // die Rückwand trägt dieselbe Tapete (eigenes Material, damit sie allein durchsichtig werden kann)
     this.backMat.map = this.wallMat.map;
@@ -246,6 +262,8 @@ export class Interior3D {
       const model = makeFurniture(item.itemId, undefined, this.collected);
       const { w, d } = footprint(f.def, item.rot);
       model.group.position.set(item.x + w / 2, 0, item.y + d / 2);
+      // Wand-Deko an der (nach links gerückten) linken Wand rückt mit
+      if (f.def.wall && item.rot === 3 && this.shellOptions.growLeft) model.group.position.x -= 1;
       model.group.rotation.y = -item.rot * (Math.PI / 2);
       const base = item.on ? byUid.get(item.on) : undefined;
       if (base) {
