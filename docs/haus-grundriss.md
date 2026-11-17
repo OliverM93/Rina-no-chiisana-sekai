@@ -50,6 +50,12 @@ Damit **keine Spielstand-Migration** nötig ist und die gute Raster-Logik (`core
 ![Durchgang zum Schlafzimmer](screenshots/haus-durchgang.png)
 ![Einrichten: das ganze Haus](screenshots/haus-einrichten-ganz.png)
 
+## Schmale Seitendurchgänge (Nov. 2026)
+
+Zwischen zwei Räumen, die nebeneinander liegen (Wintergarten | Wohnzimmer | Küche, Arbeitszimmer | Schlafzimmer), gab es zwei Türrahmen mit einem Zwischenraum (dem Wandstreifen). Jetzt **ragt der rechte Raum eines Seitendurchgangs um den Wandstreifen nach links**: Wand, Türrahmen und Boden rücken an die Außenkante des Streifens (`ShellOptions.growLeft` in `Interior3D`, gesetzt in `HouseView3D.shellFor`), die Wandstreifen-Platte entfällt dort. Ergebnis: ein einziger, schmaler Durchgang wie bei allen anderen Türen. Rein optisch – die Spielfelder bleiben gleich (das Streifenfeld ist weiter nur an der Tür begehbar), Wand-Deko an der linken Wand rückt mit. Vorne/hinten-Durchgänge sind unverändert.
+
+![Schmaler Durchgang](screenshots/haus-durchgang-schmal.png)
+
 ## Phase B: so ist es umgesetzt ✅ (zuerst als Vorschau)
 
 - **Nur mit `?haus=neu` in der Adresse** (z. B. `http://localhost:5173/?haus=neu`): Lina betritt ihr Haus, und man sieht **das ganze Erdgeschoss**. Ohne den Zusatz bleibt alles wie bisher – Lina kann in dieser Phase noch nicht durch die Türen in die anderen Räume laufen (das ist Phase C).
