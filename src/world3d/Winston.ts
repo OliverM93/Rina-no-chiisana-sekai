@@ -54,6 +54,8 @@ export class Winston {
   private wag = 0.3;
   private tilt = 0;
   private digLeft = 0;
+  /** Läuft gerade eine Trick-Vorführung: Art, Dauer, Fortschritt (Sekunden) */
+  private trickNow: { kind: string; len: number; at: number; onDone: () => void } | null = null;
   private onDug: (() => void) | null = null;
   private zzz: THREE.Sprite;
   private zzzTime = 0;
@@ -103,7 +105,19 @@ export class Winston {
   }
 
   get busy() {
-    return this.digLeft > 0;
+    return this.digLeft > 0 || this.trickNow !== null;
+  }
+
+  /** Einen Trick vorführen (ca. 2,5 Sekunden), danach `done` */
+  doTrick(kind: string, towardsX: number, towardsY: number, done: () => void) {
+    if (this.busy || this.sleeping) {
+      done();
+      return;
+    }
+    this.angle = Math.atan2(towardsX - this.x, towardsY - this.y);
+    this.trickNow = { kind, len: kind === 'rolle' ? 2.4 : kind === 'singen' ? 3.2 : 2.6, at: 0, onDone: done };
+    this.wag = 1;
+    this.burst(kind === 'singen' ? 'note' : 'herz');
   }
 
   /** Steht/sitzt er gerade still? (für das Buddeln) */
@@ -306,6 +320,15 @@ export class Winston {
         if (s >= d - 0.01 && this.trail.length > 0) this.trail.shift();
       }
     }
+    if (this.trickNow) {
+      this.trickNow.at += dt;
+      // Läuft Lina los, ist die Vorführung vorbei – er läuft hinterher
+      if (lina.moving || this.trickNow.at >= this.trickNow.len) {
+        const cb = this.trickNow.onDone;
+        this.trickNow = null;
+        cb();
+      }
+    }
     this.moving = moved > 0.2;
     this.step += moved / 14;
     if (this.moving || this.busy) this.idle = 0;
@@ -335,8 +358,10 @@ export class Winston {
     const pz = this.y * UNIT;
     this.dog.root.position.set(px, Math.max(0, this.heightAt(px, pz)) + (this.inBasket ? 0.07 : 0), pz);
     this.dog.root.rotation.y = this.angle;
-    const rest: 0 | 1 | 2 = this.moving || this.busy ? 0 : this.sleeping || this.inBasket || this.idle > 14 ? 2 : this.idle > 1.2 ? 1 : 0;
-    this.dog.pose({ step: this.step, moving: this.moving, rest, wag: this.sleeping ? 0 : this.wag, digging: this.busy, tilt: this.tilt, eyesClosed: this.sleeping, t: this.time });
+    const trick = this.trickNow;
+    const sitTrick = !!trick && ['sitz', 'pfoetchen', 'singen'].includes(trick.kind);
+    const rest: 0 | 1 | 2 = sitTrick ? 1 : this.moving || this.busy ? 0 : this.sleeping || this.inBasket || this.idle > 14 ? 2 : this.idle > 1.2 ? 1 : 0;
+    this.dog.pose({ step: this.step, moving: this.moving, rest, wag: this.sleeping ? 0 : this.wag, digging: this.digLeft > 0, tilt: this.tilt, eyesClosed: this.sleeping, t: this.time, trick: trick ? { kind: trick.kind, k: trick.at / trick.len } : undefined });
 
     // Zzz über dem schlafenden Winston
     this.zzz.visible = this.sleeping && this.dog.root.visible;

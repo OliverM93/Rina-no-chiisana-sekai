@@ -254,7 +254,7 @@ describe('Version 7 (M6b Werkbank & Winston)', () => {
     expect(result.ok && result.data.version).toBe(SAVE_VERSION);
     if (!result.ok) return;
     expect(result.data.recipes).toEqual(['ast-hocker']);
-    expect(result.data.pet).toEqual({ pettedDay: '', pets: 0, digDay: '', digTokens: 0, digSeen: '' });
+    expect(result.data.pet).toEqual({ pettedDay: '', pets: 0, digDay: '', digTokens: 0, digSeen: '', tricks: [], practice: {} });
   });
 
   it('behält gelernte Rezepte und entfernt unbekannte', () => {

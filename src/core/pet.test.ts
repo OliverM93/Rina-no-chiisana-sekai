@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { canDig, createPet, DIG_DAYS_MAX, markDug, normalizePet, petDog } from './pet';
+import { canDig, createPet, DIG_DAYS_MAX, markDug, normalizePet, petDog, practiceTrick } from './pet';
 
 describe('Winston', () => {
   it('erstes Streicheln am Tag zählt besonders', () => {
@@ -45,6 +45,25 @@ describe('Winston', () => {
 
   it('normalisiert kaputte Daten', () => {
     expect(normalizePet(null)).toEqual(createPet());
-    expect(normalizePet({ pets: -3, digDay: 5, pettedDay: '2026-01-01' })).toEqual({ pets: 0, digDay: '', pettedDay: '2026-01-01', digTokens: 0, digSeen: '' });
+    expect(normalizePet({ pets: -3, digDay: 5, pettedDay: '2026-01-01' })).toEqual({ pets: 0, digDay: '', pettedDay: '2026-01-01', digTokens: 0, digSeen: '', tricks: [], practice: {} });
+  });
+});
+
+describe('Tricks', () => {
+  it('lernt einen Trick nach genug Übungen und merkt sich Fortschritt', () => {
+    const p = createPet();
+    expect(practiceTrick(p, 'sitz', 2)).toBe('ueben');
+    expect(p.practice.sitz).toBe(1);
+    expect(practiceTrick(p, 'sitz', 2)).toBe('gelernt');
+    expect(p.tricks).toEqual(['sitz']);
+    expect(p.practice.sitz).toBeUndefined();
+    expect(practiceTrick(p, 'sitz', 2)).toBe('gelernt');
+    expect(p.tricks).toEqual(['sitz']);
+  });
+  it('normalisiert alte und kaputte Spielstände', () => {
+    expect(normalizePet({}).tricks).toEqual([]);
+    const p = normalizePet({ tricks: ['sitz', 'sitz', 3], practice: { rolle: 2, kaputt: 'x', neg: -1 } });
+    expect(p.tricks).toEqual(['sitz']);
+    expect(p.practice).toEqual({ rolle: 2 });
   });
 });
