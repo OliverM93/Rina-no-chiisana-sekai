@@ -4,10 +4,10 @@ Status: 🚧 **in Arbeit** – **Phase A ✅**, **B ✅**, **C ✅** (Lina läuf
 
 ## Ziel
 
-Heute ist jeder Raum (Wohnzimmer, Schlafzimmer, Küche, Wintergarten, Dach, Keller) ein **eigener Bildschirm**; zwischen den Räumen blendet eine Tür-Animation um.
+Heute ist jeder Raum (Wohnzimmer, Schlafzimmer, Küche, Wintergarten, Arbeitszimmer, Keller) ein **eigener Bildschirm**; zwischen den Räumen blendet eine Tür-Animation um.
 Neu: Das Haus ist **ein Grundriss**. Lina läuft ohne Umblenden von Raum zu Raum, und man sieht das **ganze Haus** beim Einrichten – wie bei den Sims.
 
-Entschieden ✅: Erdgeschoss zusammenhängend; **Dach und Keller sind eigene Etagen** mit Treppe · Tapete & Boden bleiben **pro Raum** · Türen **1 Feld breit** (schon umgesetzt, PR #104).
+Entschieden ✅: Erdgeschoss zusammenhängend; **der Keller ist eine eigene Etage** mit Treppe (das frühere Dachzimmer ist seit Nov. 2026 das Arbeitszimmer im Erdgeschoss) · Tapete & Boden bleiben **pro Raum** · Türen **1 Feld breit** (schon umgesetzt, PR #104).
 
 ## Wie es heute gebaut ist (Auszug)
 
@@ -28,7 +28,7 @@ Damit **keine Spielstand-Migration** nötig ist und die gute Raster-Logik (`core
 
 - `core/floorplan.ts` (reine Logik): `FloorPlan` (Räume mit Lage im Gesamtgitter, Türen, Haustür), `buildPlanGrid` (begehbares Gesamtgitter – Möbel als Hindernisse), `validatePlan`, `toGlobal`/`roomAt`, `doorCells`.
 - **Wandstreifen statt Kanten-Logik:** Zwischen zwei Räumen liegt ein ein Feld breiter Streifen; er ist nur an Türen begehbar. Dadurch genügen die vorhandene Kachel-Kollision (`CollisionGrid`, `moveWithCollision`) und A* (`findPath`). Gezeichnet wird er nur noch als flache Bodenplatte (plus Türschwelle) – die Wände gehören den Räumen selbst, dadurch wirken die Trennwände schmal. Die Seitenwände zu Küche/Wintergarten (`roomsBeside`) werden wie die Rückwand bei Bedarf halbdurchsichtig (`setSideFade`), wenn Lina oder die Einrichtungsansicht dort ist.
-- `data/floorplan.ts`: `groundFloor(stage)`, `floorsOf(stage)` (Erdgeschoss, Dach, Keller), `stairsOf(stage)` (Treppen zwischen den Etagen).
+- `data/floorplan.ts`: `groundFloor(stage)`, `floorsOf(stage)` (Erdgeschoss, Keller), `stairsOf(stage)` (Treppen zwischen den Etagen).
 - **Wohnzimmer vorne, Schlafzimmer dahinter, Küche links, Wintergarten rechts** (Küche/Wintergarten über Türen in den Seitenwänden, Zeile 3). Die bisherigen Rückwand-Türen zu Küche und Wintergarten entfallen in Phase C, wenn die Räume zusammenwachsen (die Tür zum Schlafzimmer liegt schon heute an der richtigen Stelle).
 - Tests (`core/floorplan.test.ts`, `data/floorplan.test.ts`): Grundrisse gültig für jede Stufe, Größen passen zu `roomLayouts`, von der Haustür erreicht man jeden Raum, Treppen führen in vorhandene Räume.
 - **Am Spiel ändert sich noch nichts** – die neuen Module sind noch nirgends eingebunden.
@@ -74,7 +74,7 @@ Stufe 2:                 Stufe 4:                         Stufe 5:
 ```
 
 - Wohnzimmer vorne (dort ist die Haustür), die anderen Räume dahinter bzw. daneben. Genaue Maße und Versätze legt `FloorPlan` je Stufe fest; Küche/Schlafzimmer/Wintergarten liegen **nebeneinander in der hinteren Reihe**.
-- **Etagen:** Dachzimmer und Keller sind eigene Grundrisse; die Treppe wechselt die Etage (kurzes Umblenden bleibt hier sinnvoll – wie die Etagenansicht bei den Sims).
+- **Etagen:** Der Keller ist ein eigener Grundriss; die Treppe wechselt die Etage (kurzes Umblenden bleibt hier sinnvoll – wie die Etagenansicht bei den Sims).
 
 ## Wände (wichtig für „beschaubar“)
 
@@ -90,7 +90,7 @@ Die Kamera schaut schräg von vorn. Wände zwischen vorderer und hinterer Reihe 
 | **A** ✅ | Datenmodell `FloorPlan` + zusammengesetztes Gesamtgitter (Kollision, Wegfindung) mit Tests – noch ohne neue Darstellung | gering |
 | **B** ✅ | `Interior3D` zeichnet alle Räume des Erdgeschosses (Böden, Wände, Durchgänge, Tapeten je Raum); Kamera zeigt das ganze Haus – **als Vorschau mit `?haus=neu`** | mittel |
 | **C** ✅ | Lina, Oli und Winston laufen ohne Umblenden durch Durchgänge; Licht/Lampen je Raum; Einrichten raumübergreifend (Ghost, Treffer, Rückgängig) | **hoch** |
-| **D** | Etagen: Treppe zu Dach/Keller als Etagenwechsel; Hausansicht von außen passt zum Grundriss | mittel |
+| **D** | Etagen: Treppe zum Keller als Etagenwechsel; Hausansicht von außen passt zum Grundriss | mittel |
 | **E** | Feinschliff: Wandmodus, Spielstand-Test (alte Stände laden), Doku | gering |
 
 ## Risiken & Gegenmaßnahmen

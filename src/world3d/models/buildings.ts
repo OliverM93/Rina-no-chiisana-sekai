@@ -37,7 +37,7 @@ export interface HouseModel {
 
 /**
  * Häuschen mit 5 × 3 Kacheln Grundfläche. `stage` = Ausbaustufe:
- * 1 = Erker an der Seite, 2 = Anbau hinten, 3 = Dachgaube mit Fenster,
+ * 1 = Erker an der Seite, 2 = Anbau hinten, 3 = Arbeitszimmer hinten links,
  * 4 = Küche hinten rechts (Ofenrohr), 5 = Wintergarten links, 6 = Kellerfenster & Kellerluke.
  * Was außerhalb der 5 × 3 Kacheln liegt, belegt `HOUSE_ANNEX` in `data/house.ts`.
  */
@@ -152,22 +152,20 @@ export function makeHouse(roofColor: string, stage = 0): HouseModel {
     for (const x of [-1.3, 0.1]) g.add(b(0.5, 0.45, 0.05, windowGlass, x, 0.22 + 0.75, az - ad / 2 - 0.02));
   }
   if (stage >= 3) {
-    // Dachgaube vorne links mit Fenster
-    const dz = (D / 2 + over) * 0.35;
-    const dy = 0.22 + wallH + roofH * 0.42;
-    g.add(b(0.9, 0.6, 0.6, wall, -1.4, dy + 0.15, dz));
-    g.add(b(0.55, 0.38, 0.05, windowGlass, -1.4, dy + 0.15, dz + 0.31));
-    const dtri = new THREE.Shape();
-    dtri.moveTo(-0.6, 0);
-    dtri.lineTo(0.6, 0);
-    dtri.lineTo(0, 0.45);
-    dtri.closePath();
-    const dgeo = new THREE.ExtrudeGeometry(dtri, { depth: 0.8, bevelEnabled: false });
-    dgeo.translate(0, 0, -0.4);
-    const droof = mesh(dgeo, toon(roofColor));
-    droof.position.set(-1.4, dy + 0.45, dz);
-    g.add(droof);
-    windows.push(new THREE.Vector3(-1.4, dy + 0.15, dz + 0.35));
+    // Arbeitszimmer hinten links: kleiner Anbau mit Pultdach und Fenstern (Gegenstück zur Küche hinten rechts)
+    const sx = -W / 2 - 0.5;
+    const sw = 1.0;
+    const sd = 0.95;
+    const sz = -D / 2 - sd / 2 + 0.05;
+    const sh = 1.1;
+    g.add(b(sw, sh, sd, darken(wall, 0.02), sx, 0.22 + sh / 2, sz));
+    const slean = b(sw + 0.25, 0.1, sd + 0.3, darken(roofColor, 0.05), sx, 0.22 + sh + 0.12, sz - 0.05);
+    slean.rotation.x = 0.32;
+    g.add(slean);
+    // Fenster zur Seite (links) und nach hinten
+    g.add(b(0.05, 0.42, 0.5, windowGlass, sx - sw / 2 - 0.01, 0.22 + 0.62, sz));
+    g.add(b(0.5, 0.42, 0.05, windowGlass, sx, 0.22 + 0.62, sz - sd / 2 - 0.01));
+    windows.push(new THREE.Vector3(sx - sw / 2 - 0.05, 0.22 + 0.62, sz));
   }
   if (stage >= 4) {
     // Küche hinten rechts: kleiner Anbau mit Pultdach, Ofenrohr und Fenster

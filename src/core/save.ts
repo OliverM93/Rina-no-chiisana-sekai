@@ -22,7 +22,7 @@ import { createInventory, type Inventory, normalizeInventory, STORAGE_SIZE } fro
 import { createMailbox, type Mailbox, normalizeMailbox } from './mail';
 import { type DayMonth, DEFAULT_LINA_BIRTHDAY, formatIsoDay } from './time';
 
-export const SAVE_VERSION = 17;
+export const SAVE_VERSION = 18;
 export const SAVE_KEY = 'rina-no-chiisana-sekai.save';
 export const BACKUP_KEY = 'rina-no-chiisana-sekai.save.backup';
 
@@ -261,6 +261,13 @@ export const MIGRATIONS: Record<number, (old: RawSave) => RawSave> = {
   15: (old) => ({ ...old }),
   // v16 → v17 (Inselgarten): Garten vor der Strandhütte. `normalizeSave` legt ihn leer an.
   16: (old) => ({ ...old }),
+  // v17 → v18 (Arbeitszimmer statt Dachzimmer): Ausbaustufe 3 ist jetzt ein Zimmer im Erdgeschoss. Das alte Dachzimmer
+  // (Raum `dach`, ebenfalls 8 × 6) wird zum Arbeitszimmer – Möbel, Tapete und Boden bleiben erhalten.
+  17: (old) => {
+    const house = old.house as { rooms?: Array<Record<string, unknown>> } | undefined;
+    if (!house || !Array.isArray(house.rooms)) return { ...old };
+    return { ...old, house: { ...house, rooms: house.rooms.map((r) => (r && r.id === 'dach' ? { ...r, id: 'arbeitszimmer' } : r)) } };
+  },
 };
 
 export function migrate(raw: RawSave, migrations = MIGRATIONS, target = SAVE_VERSION): RawSave {

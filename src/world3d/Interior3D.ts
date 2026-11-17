@@ -87,10 +87,8 @@ export class Interior3D {
     this.backDeco = [];
     this.floor.scale.set(W, 1, H);
     this.floor.position.set(W / 2, 0, H / 2);
-    const attic = layout.id === 'dach';
     // Wände: hinten, links, rechts (vorne offen, wie ein Puppenhaus)
-    const fullH = attic ? 1.6 : WALL_H;
-    const wallH = fullH;
+    const fullH = WALL_H;
     const openings = this.shellOptions.openings ?? [];
     this.walls = [];
     const DOOR_H = 1.85;
@@ -135,11 +133,6 @@ export class Interior3D {
     buildWall('back', W, 0.15);
     buildWall('left', H, 0);
     buildWall('right', H, 0);
-    if (attic) {
-      const beam = mesh(new THREE.BoxGeometry(W, 0.14, 0.14), toon('#a97c56'));
-      beam.position.set(W / 2, wallH + 0.2, 0.2);
-      this.shell.add(beam);
-    }
     // Fußleisten
     const trim = toon('#cfa175');
     for (const [tw, td, x, z] of [[W, 0.06, W / 2, 0.03], [0.06, H, 0.03, H / 2], [0.06, H, W - 0.03, H / 2]] as const) {
@@ -156,7 +149,7 @@ export class Interior3D {
     const cellar = layout.id === 'keller';
     const [fw, fh] = cellar ? [0.8, 0.36] : [1.1, 0.9];
     for (const x of backWindows(layout)) {
-      const y = attic ? 0.95 : cellar ? 1.95 : 1.35;
+      const y = cellar ? 1.95 : 1.35;
       const frame = mesh(new THREE.BoxGeometry(fw, fh, 0.06), toon('#ffffff'));
       frame.position.set(x, y, 0.02);
       const glass = mesh(new THREE.BoxGeometry(fw - 0.15, fh - 0.15, 0.07), this.windowGlass, false, false);

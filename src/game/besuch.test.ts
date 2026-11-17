@@ -68,9 +68,9 @@ describe('Besuch bei Lina', () => {
     s.data!.npcs.gisela = { ...createNpcState(), points: 50 };
     const generic = VISITS.gisela.generic.map((g) => g.join(' '));
     expect(generic).toContain(visitLine(s, 'gisela', 0).join(' '));
-    s.data!.house.stage = 4; // Dachzimmer und Küche vorhanden
+    s.data!.house.stage = 4; // Arbeitszimmer und Küche vorhanden
     const lines = [0, 1, 2, 3].map((n) => visitLine(s, 'gisela', n).join(' '));
-    expect(lines.some((l) => l.includes('Dachzimmer'))).toBe(true);
+    expect(lines.some((l) => l.includes('Arbeitszimmer'))).toBe(true);
     // Rotation: nach dem letzten Satz geht es von vorn los
     const len = visitComments(s, 'gisela').length;
     expect(len).toBeGreaterThan(2);

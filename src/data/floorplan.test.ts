@@ -53,8 +53,8 @@ describe('Grundrisse des Hauses', () => {
       }
     }
     expect(stairsOf(2)).toHaveLength(0);
-    expect(stairsOf(3)).toHaveLength(1);
-    expect(stairsOf(6)).toHaveLength(2);
+    expect(stairsOf(3)).toHaveLength(0);
+    expect(stairsOf(6)).toHaveLength(1);
     expect(floorOfRoom(6, 'keller')).toBe('keller');
     expect(floorOfRoom(1, 'keller')).toBeNull();
   });

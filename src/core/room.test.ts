@@ -147,15 +147,17 @@ describe('Haus & Ausbau', () => {
   it('Ausbaustufen haben passende Räume und Ausgänge', () => {
     expect(HOUSE_RULES.layouts(0).map((l) => l.id)).toEqual(['haupt']);
     expect(layoutOf(1, 'haupt')).toMatchObject({ w: 10, h: 7 });
-    expect(HOUSE_RULES.layouts(3).map((l) => l.id)).toEqual(['haupt', 'schlafzimmer', 'dach']);
+    expect(HOUSE_RULES.layouts(3).map((l) => l.id)).toEqual(['haupt', 'schlafzimmer', 'arbeitszimmer']);
     const main3 = layoutOf(3, 'haupt');
     expect(exitAt(main3, 4, 6)?.to).toBe('draussen');
     expect(exitAt(main3, 5, 6), 'Tür ist ein Feld breit').toBeNull();
     // Schlafzimmer: keine Ausgangs-Tür mehr – man läuft durch die Tür im Grundriss; das Feld bleibt aber frei
     expect(exitAt(main3, 4, 0)).toBeNull();
     expect(main3.reserved).toContainEqual([4, 0]);
-    expect(exitAt(main3, 9, 0)?.to).toBe('dach');
-    expect(exitAt(layoutOf(3, 'dach'), 3, 5)?.to).toBe('haupt');
+    // Arbeitszimmer: ebenfalls keine Treppe, sondern eine Tür in der linken Wand des Schlafzimmers (Zeile 3)
+    expect(exitAt(main3, 9, 0)).toBeNull();
+    expect(layoutOf(3, 'schlafzimmer').reserved).toContainEqual([0, 3]);
+    expect(layoutOf(3, 'arbeitszimmer').reserved).toContainEqual([7, 3]);
   });
 
   it('nach dem Umbau stehen manche Möbel im Weg', () => {
