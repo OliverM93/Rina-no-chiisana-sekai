@@ -283,6 +283,7 @@ Legende: ✅ erledigt · 🚧 in Arbeit · ⬜ geplant
 - ✅ **Insel-Nachspiel 1 (Nov. 2026):** Kokosnüsse von den Palmen, Kokoskekse, vier Inselfische, tägliche Strandfunde auf der Insel. ✅ Strandhütte mit Bar und Ukulele. ✅ **Inselgarten & Wachtelfarm** (Nov. 2026): eigener, gestaltbarer Garten vor der Hütte (Save v17), neue Inselmusik, Strand-Shack-Optik ohne Schild, Party blendet weich aus, „Ludwig“ statt „Opa Ludwig“.
 - ✅ **Insel-Nachspiel 2 (Nov. 2026):** Flaschenpost mit Briefen der Bewohner, Meeresschildkröte und Delfine, Muschelgirlande (Handwerk), Sonnenuntergangs-Luau mit Hula-Musik.
 - ✅ **Kleinigkeiten (Nov. 2026):** Baumobst und Stöcke verschwinden nach einer Stunde; neue Möbel (Nachtschrank, Kleiderständer, Bücherschrank, moderner Kühlschrank); Oma Gisela durchdenkt alles zu viel plus neuer Spruch.
+- ✅ **Glühwürmchen (Nov. 2026):** Frühlings- und Sommerabende, rein als Stimmung.
 - ✅ **Audit 3 umgesetzt:** Linas Notizbuch (N), Einzüge über Spielen statt Warten (winter-sicher), Enter für Hauptknöpfe, Snake-Rekord gespeichert, Balancing-Test
 - ✅ **Audit 4 umgesetzt (K1–K3):** neue Stile werden bei Einzügen angekündigt + „neu“ am Stil-Chip, Ökonomie-Doku aktualisiert, Katalog-Budget-Test
 - ✅ **Zeit zu zweit ohne Menüpunkt** (Szene beginnt beim nächsten Gespräch mit Oli zu Hause von selbst) · **Schwips-Fix:** Nachlassen lief fälschlich in Millisekunden statt Sekunden – jetzt nach ~1 Minute
@@ -333,7 +334,7 @@ Legende: ✅ erledigt · 🚧 in Arbeit · ⬜ geplant
   weniger Bewegung als Einstellung
 
 - Fotomodus/Postkarten, Tagebuch mit schönen Momenten
-- Glühwürmchen im Sommer (Sternbilder beim Sterne gucken ✅)
+- Glühwürmchen im Sommer ✅ (Nov. 2026), Sternbilder beim Sterne gucken ✅
 
 ## ❓ Offene Fragen (bei Gelegenheit klären)
 
