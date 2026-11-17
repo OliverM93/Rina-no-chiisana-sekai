@@ -4033,7 +4033,7 @@ export class World3D {
       });
       return;
     }
-    if (f.def.id === 'zinktheke' || f.def.id === 'kuehlschrank' || f.def.id === 'weinregal') {
+    if (f.def.id === 'zinktheke' || f.def.id === 'kuehlschrank' || f.def.id === 'kuehlschrank-modern' || f.def.id === 'weinregal') {
       this.drinkMenu(f.def.id);
       return;
     }
@@ -4121,7 +4121,7 @@ export class World3D {
     const cafe = this.session.visiting === 'bistro-jens';
     const pick = (label: string, kind: DrinkKind) => ({ label, onSelect: () => this.serveDrink(kind) });
     const nothing = { label: '👋 Doch nichts', onSelect: () => undefined };
-    if (furnitureId === 'kuehlschrank') {
+    if (furnitureId === 'kuehlschrank' || furnitureId === 'kuehlschrank-modern') {
       this.session.bus.emit('dialog:open', {
         title: 'Kühlschrank',
         lines: ['Gemüse, Omas Pflaumenmus, Cola Zero, ein paar Dosen Zitronen-Highball … und ganz hinten ein paar Bier. Hm.'],

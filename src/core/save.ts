@@ -22,7 +22,7 @@ import { createInventory, type Inventory, normalizeInventory, STORAGE_SIZE } fro
 import { createMailbox, type Mailbox, normalizeMailbox } from './mail';
 import { type DayMonth, DEFAULT_LINA_BIRTHDAY, formatIsoDay } from './time';
 
-export const SAVE_VERSION = 18;
+export const SAVE_VERSION = 19;
 export const SAVE_KEY = 'rina-no-chiisana-sekai.save';
 export const BACKUP_KEY = 'rina-no-chiisana-sekai.save.backup';
 
@@ -49,6 +49,8 @@ export interface GroundItem {
   itemId: string;
   x: number;
   y: number;
+  /** Spielzeit (Sekunden), ab der der Gegenstand verschwindet (nur Obst & Stöcke, die von Bäumen gefallen sind) */
+  expires?: number;
 }
 
 /** Zustand der Welt, der sich durch Lina ändert. */
@@ -268,6 +270,8 @@ export const MIGRATIONS: Record<number, (old: RawSave) => RawSave> = {
     if (!house || !Array.isArray(house.rooms)) return { ...old };
     return { ...old, house: { ...house, rooms: house.rooms.map((r) => (r && r.id === 'dach' ? { ...r, id: 'arbeitszimmer' } : r)) } };
   },
+  // v18 → v19 (Obst & Stöcke verschwinden): Bodengegenstände können einen Zeitpunkt `expires` tragen. Alte bleiben unverändert.
+  18: (old) => ({ ...old }),
 };
 
 export function migrate(raw: RawSave, migrations = MIGRATIONS, target = SAVE_VERSION): RawSave {
@@ -331,9 +335,9 @@ export function normalizeWorld(raw: unknown, isKnownItem: (id: string) => boolea
   if (Array.isArray(raw.ground)) {
     for (const g of raw.ground) {
       if (!isObj(g)) continue;
-      const { id, itemId, x, y } = g;
+      const { id, itemId, x, y, expires } = g;
       if (typeof id === 'string' && typeof itemId === 'string' && isKnownItem(itemId) && typeof x === 'number' && typeof y === 'number') {
-        w.ground.push({ id, itemId, x, y });
+        w.ground.push({ id, itemId, x, y, ...(typeof expires === 'number' && Number.isFinite(expires) ? { expires } : {}) });
       }
     }
   }

@@ -3759,6 +3759,65 @@ export function makeFurniture(itemId: string, links: FenceLinks = { n: false, e:
       seatY = 0.66;
       break;
     }
+    case 'nachtschrank': {
+      // kleines Schränkchen: Korpus, Schublade mit Knauf, Tür darunter, vier Füße
+      g.add(b(0.62, 0.42, 0.5, col, 0, 0.28, 0));
+      g.add(b(0.68, 0.04, 0.56, darken(col, 0.06), 0, 0.5, 0));
+      g.add(b(0.52, 0.12, 0.02, darken(col, 0.1), 0, 0.42, 0.26));
+      g.add(b(0.52, 0.2, 0.02, darken(col, 0.05), 0, 0.22, 0.26));
+      g.add(s(0.025, 0.025, 0.02, '#d9b24a', 0, 0.42, 0.285));
+      g.add(s(0.025, 0.025, 0.02, '#d9b24a', 0.18, 0.28, 0.285));
+      for (const [x, z] of [[-0.26, -0.2], [0.26, -0.2], [-0.26, 0.2], [0.26, 0.2]] as const) g.add(c(0.03, 0.08, darken(col, 0.2), x, 0.04, z));
+      break;
+    }
+    case 'kleiderstaender': {
+      // Standfuß, Stange, Haken oben; daran eine Jacke, ein Schal und eine Mütze
+      g.add(c(0.2, 0.04, col, 0, 0.02, 0));
+      g.add(c(0.025, 1.7, col, 0, 0.88, 0));
+      for (const a of [0, 1.57, 3.14, 4.71]) {
+        const hook = b(0.2, 0.02, 0.02, col, Math.cos(a) * 0.1, 1.68, Math.sin(a) * 0.1);
+        hook.rotation.y = -a;
+        g.add(hook);
+        g.add(s(0.03, 0.03, 0.03, col, Math.cos(a) * 0.2, 1.7, Math.sin(a) * 0.2));
+      }
+      // Jacke (grün), Schal (rot), Mütze (gelb)
+      g.add(s(0.15, 0.3, 0.1, '#5f8f6a', 0.2, 1.48, 0));
+      g.add(b(0.04, 0.5, 0.1, '#e8484f', 0, 1.42, 0.2));
+      g.add(s(0.1, 0.07, 0.1, '#f2c14e', -0.2, 1.64, 0));
+      g.add(s(0.03, 0.03, 0.03, '#ffffff', -0.2, 1.72, 0));
+      break;
+    }
+    case 'buecherschrank': {
+      // Hoher Schrank mit sechs Fächern und bunten Buchrücken
+      for (const x of [-0.97, 0.97]) g.add(b(0.06, 1.9, 0.4, col, x, 0.95, 0));
+      for (const y of [0.04, 0.34, 0.66, 0.98, 1.3, 1.62, 1.9]) g.add(b(1.94, 0.04, 0.4, col, 0, y, 0));
+      g.add(b(1.9, 1.9, 0.02, darken(col, 0.08), 0, 0.95, -0.19));
+      const cols = ['#e8788c', '#7fb2e0', '#f2c14e', '#8fc79a', '#b99be0', '#e89a6a', '#5f8f8f', '#d9534f'];
+      for (let row = 0; row < 6; row++) {
+        const y0 = 0.06 + row * 0.32;
+        let x = -0.9;
+        let i = row * 3;
+        const fill = row === 5 ? 0.45 : 1.8;
+        while (x < -0.9 + fill) {
+          const w = 0.06 + ((i * 7) % 5) * 0.012;
+          const h = 0.2 + ((i * 11) % 7) * 0.013;
+          g.add(b(w, h, 0.24, cols[i % cols.length], x + w / 2, y0 + h / 2, 0.02));
+          x += w + 0.005;
+          i += 1;
+        }
+      }
+      break;
+    }
+    case 'kuehlschrank-modern': {
+      // Hoher Kasten: oben Kühlteil, unten Gefrierfach, durchgehende Griffleisten, kleines Display
+      g.add(b(0.72, 1.82, 0.62, col, 0, 0.93, 0));
+      g.add(b(0.7, 0.012, 0.02, darken(col, 0.15), 0, 0.62, 0.31));
+      for (const y of [1.0, 0.45]) g.add(b(0.03, 0.4, 0.04, '#9aa0a8', 0.28, y, 0.34));
+      g.add(b(0.14, 0.06, 0.01, '#1f2a34', 0, 1.5, 0.315));
+      g.add(b(0.08, 0.02, 0.012, '#7fe0c0', 0, 1.5, 0.32));
+      for (const x of [-0.28, 0.28]) g.add(c(0.03, 0.04, '#2a2a30', x, 0.02, 0.2));
+      break;
+    }
     case 'kuehlschrank': {
       const body = mesh(new THREE.CapsuleGeometry(0.34, 0.9, 6, 16), toon(col));
       body.scale.set(1, 1, 0.8);

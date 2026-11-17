@@ -68,3 +68,16 @@ describe('Farbvarianten', () => {
     }
   });
 });
+
+describe('Schlaf-, Garderoben- und Küchenmöbel (Nov. 2026)', () => {
+  it('Nachtschrank, Kleiderständer, Bücherschrank und moderner Kühlschrank sind im Katalog', () => {
+    for (const id of ['nachtschrank', 'kleiderstaender', 'buecherschrank', 'kuehlschrank-modern']) {
+      const f = FURNITURE.find((x) => x.id === id);
+      expect(f, id).toBeTruthy();
+      expect(f!.crafted, id).toBeFalsy();
+      expect(f!.gift, id).toBeFalsy();
+    }
+    expect(FURNITURE.find((x) => x.id === 'nachtschrank')!.surface).toBe(true);
+    expect(FURNITURE.find((x) => x.id === 'buecherschrank')!.w).toBe(2);
+  });
+});
