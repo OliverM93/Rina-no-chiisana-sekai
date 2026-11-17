@@ -37,7 +37,7 @@ export interface HouseModel {
 
 /**
  * Häuschen mit 5 × 3 Kacheln Grundfläche. `stage` = Ausbaustufe:
- * 1 = Erker an der Seite, 2 = Anbau hinten, 3 = Arbeitszimmer hinten links,
+ * 1 = Erker an der Seite, 2 = Anbau hinten, 3 = Schlafzimmer wächst nach links (Anbau hinten links),
  * 4 = Küche hinten rechts (Ofenrohr), 5 = Wintergarten links, 6 = Kellerfenster & Kellerluke.
  * Was außerhalb der 5 × 3 Kacheln liegt, belegt `HOUSE_ANNEX` in `data/house.ts`.
  */
@@ -152,9 +152,9 @@ export function makeHouse(roofColor: string, stage = 0): HouseModel {
     for (const x of [-1.3, 0.1]) g.add(b(0.5, 0.45, 0.05, windowGlass, x, 0.22 + 0.75, az - ad / 2 - 0.02));
   }
   if (stage >= 3) {
-    // Arbeitszimmer hinten links: kleiner Anbau mit Pultdach und Fenstern (Gegenstück zur Küche hinten rechts)
-    const sx = -W / 2 - 0.5;
-    const sw = 1.0;
+    // Schlafzimmer-Erweiterung hinten links: Flügel mit Pultdach und Fenstern an den Schlafzimmer-Anbau (Gegenstück zur Küche hinten rechts)
+    const sw = 1.5;
+    const sx = -W / 2 - sw / 2 + 0.3;
     const sd = 0.95;
     const sz = -D / 2 - sd / 2 + 0.05;
     const sh = 1.1;

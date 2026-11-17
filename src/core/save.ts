@@ -22,7 +22,7 @@ import { createInventory, type Inventory, normalizeInventory, STORAGE_SIZE } fro
 import { createMailbox, type Mailbox, normalizeMailbox } from './mail';
 import { type DayMonth, DEFAULT_LINA_BIRTHDAY, formatIsoDay } from './time';
 
-export const SAVE_VERSION = 18;
+export const SAVE_VERSION = 19;
 export const SAVE_KEY = 'rina-no-chiisana-sekai.save';
 export const BACKUP_KEY = 'rina-no-chiisana-sekai.save.backup';
 
@@ -267,6 +267,20 @@ export const MIGRATIONS: Record<number, (old: RawSave) => RawSave> = {
     const house = old.house as { rooms?: Array<Record<string, unknown>> } | undefined;
     if (!house || !Array.isArray(house.rooms)) return { ...old };
     return { ...old, house: { ...house, rooms: house.rooms.map((r) => (r && r.id === 'dach' ? { ...r, id: 'arbeitszimmer' } : r)) } };
+  },
+  // v18 → v19 (langes Schlafzimmer): Das Arbeitszimmer wird Teil des Schlafzimmers, das ab Stufe 3 um 8 Felder nach links
+  // wächst. Die Möbel des Schlafzimmers rücken um 8 nach rechts (bleiben bei der Tür), die des Arbeitszimmers behalten
+  // ihre Felder (liegen jetzt links). Tapete und Boden des Schlafzimmers gelten für den ganzen Raum.
+  18: (old) => {
+    const house = old.house as { rooms?: Array<Record<string, unknown>> } | undefined;
+    if (!house || !Array.isArray(house.rooms)) return { ...old };
+    const study = house.rooms.find((r) => r && r.id === 'arbeitszimmer');
+    if (!study) return { ...old };
+    const shift = (items: unknown, dx: number) => (Array.isArray(items) ? items.map((i) => (i && typeof i === 'object' && typeof (i as { x?: unknown }).x === 'number' ? { ...i, x: (i as { x: number }).x + dx } : i)) : []);
+    const rooms = house.rooms
+      .filter((r) => r !== study)
+      .map((r) => (r && r.id === 'schlafzimmer' ? { ...r, items: [...shift(study.items, 0), ...shift(r.items, 8)] } : r));
+    return { ...old, house: { ...house, rooms } };
   },
 };
 

@@ -45,7 +45,7 @@ const HEARTS_THREE: Readonly<Record<string, string>> = {
 const HOUSE_TEXTS: Readonly<Record<number, string>> = {
   1: 'Das Zimmer ist größer geworden. Plötzlich ist Platz für alles, was ich mir ausgedacht habe.',
   2: 'Der Anbau steht: ein zweites Zimmer, einfach durch die Tür. Ich bin dreimal hin- und hergelaufen.',
-  3: 'Das Arbeitszimmer ist fertig. Ein ganzer Raum für Ruhe, Bücher und gute Ideen.',
+  3: 'Das Schlafzimmer ist doppelt so lang geworden. Jetzt ist links Platz für Schreibtisch, Bücher und gute Ideen.',
   4: 'Die Wohnküche ist da. Ich habe sofort etwas gekocht, ganz ohne Grund.',
   5: 'Der Wintergarten leuchtet. Morgens fällt das Licht auf die Pflanzen, als hätte es das geplant.',
   6: 'Der Keller ist ausgebaut. Backstein, Ruhe und Platz für Hobbys. Mein Haus ist komplett.',

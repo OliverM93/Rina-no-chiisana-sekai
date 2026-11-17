@@ -44,7 +44,7 @@ export const MEMORIES: readonly Memory[] = [
   { id: 'oli-blumendeko', npc: 'oli', tag: 'blumendeko', text: ['Du hast Blumen aufgestellt, Lini. Das fällt mir jedes Mal auf, wenn ich reinkomme. Es macht das Zuhause schöner.'] },
 
   // ---- Oma Gisela ----
-  { id: 'gisela-haus-arbeitszimmer', npc: 'gisela', tag: 'haus-arbeitszimmer', text: ['Ich war in deinem Arbeitszimmer, Kind. Alles liegt gerade auf dem Schreibtisch. Wirklich ordentlich.', 'Ich hab nur einen Stift mitgenommen. Den bring ich wieder. Irgendwann.'] },
+  { id: 'gisela-haus-erweiterung', npc: 'gisela', tag: 'haus-erweiterung', text: ['Ich war in deinem Schlafzimmer, Kind. Es ist jetzt so lang wie ein Flur. Und alles liegt gerade auf dem Schreibtisch. Wirklich ordentlich.', 'Ich hab nur einen Stift mitgenommen. Den bring ich wieder. Irgendwann.'] },
   { id: 'gisela-haus-keller', npc: 'gisela', tag: 'haus-keller', text: ['Ein Keller! Jetzt hast du Platz für Eingemachtes.', 'Ich hab Pflaumenmus. Sehr viel Pflaumenmus. Das kommt zu dir, keine Widerrede.'] },
   { id: 'gisela-buch-20', npc: 'gisela', tag: 'buch-20', text: ['Zwanzig Tierchen in deinem Sammelbuch! Und ich dachte, du fängst nur Schnecken.', '… Die Schnecke ist übrigens auch drin. Ich hab nachgeschaut.'] },
   { id: 'gisela-huehner', npc: 'gisela', tag: 'huehner', text: ['Deine Hühner sind anständige Tiere. Das sag ich nicht über jeden.', 'Wenn die Eier zu viel werden, ich nehme sie. Für den Kuchen. Aus reiner Nächstenliebe.'] },
@@ -66,7 +66,7 @@ export const MEMORIES: readonly Memory[] = [
   { id: 'christin-schwarz', npc: 'christin', tag: 'schwarze-blume', text: ['Schwarze Blüten im Beet. Das hat Stil. Und sie sind in einer Reihe. Das hat noch mehr Stil.'] },
 
   // ---- Oli ----
-  { id: 'oli-arbeitszimmer', npc: 'oli', tag: 'haus-arbeitszimmer', text: ['Das Arbeitszimmer ist mein Lieblingsplatz geworden. Ruhig, ein bisschen Musik, und du nebenan, Lini.'] },
+  { id: 'oli-erweiterung', npc: 'oli', tag: 'haus-erweiterung', text: ['Das lange Schlafzimmer ist mein Lieblingsplatz geworden. Ruhig, ein bisschen Musik, und du am Schreibtisch nebenan, Lini.'] },
   { id: 'oli-keller', npc: 'oli', tag: 'haus-keller', text: ['Im Keller wäre Platz für einen Verstärker. Nur so als Idee. Ganz leise. Fast.'] },
   { id: 'oli-monat', npc: 'oli', tag: 'monat-1', text: ['Schon einen Monat im Dorf mit dir, Lini. Ich würde es genau so nochmal machen.'] },
   { id: 'oli-jahr', npc: 'oli', tag: 'jahr-1', text: ['Ein Jahr, Lini. Ein ganzes Jahr {dorf}. Ich hab mich noch nie so zu Hause gefühlt.', 'Das sag ich dir jetzt, bevor ich es wieder vergesse zu sagen. 💕'] },
@@ -76,7 +76,7 @@ export const MEMORIES: readonly Memory[] = [
   // ---- Jens ----
   { id: 'jens-reise', npc: 'jens', tag: 'jens-reise', text: ['Meine Reise nach {stadt}! Ich hab dir eine Karte geschickt – hast du sie bekommen?', 'Magnifique, gell? Und das Andenken steht hoffentlich an einem guten Platz.'] },
   { id: 'jens-tassen', npc: 'jens', tag: 'tassen-viele', text: ['Du bist meine beste Kundin für Tassen aus aller Welt! Ich reise nur noch für dein Regal.', 'Gut. Ein bisschen auch für mich.'] },
-  { id: 'jens-arbeitszimmer', npc: 'jens', tag: 'haus-arbeitszimmer', text: ['Dein Arbeitszimmer: Bücher, Licht und ein Hauch Bohème – parfait!'] },
+  { id: 'jens-erweiterung', npc: 'jens', tag: 'haus-erweiterung', text: ['Dein langes Schlafzimmer: Bücher, Licht und ein Hauch Bohème – parfait!'] },
   { id: 'jens-schwarz', npc: 'jens', tag: 'schwarze-blume', text: ['Schwarze Rosen, ma chérie! Das ist Kunst. Das ist ein Gedicht. Das ist – hast du eine abzugeben?'] },
   { id: 'jens-buch-30', npc: 'jens', tag: 'buch-30', text: ['Dreißig Arten im Sammelbuch! Du solltest ausstellen. In meiner Galerie. „Lina und die Natur“.'] },
 
@@ -92,7 +92,7 @@ export const MEMORIES: readonly Memory[] = [
   { id: 'lars-matteo', npc: 'lars', tag: 'matteo', text: ['Thalia und Pater Matteo. Ich hab ärztlich nichts einzuwenden – außer, dass sie ihm zu viele Kekse schickt. Zucker, Schwesterherz.'] },
   // ---- Thalia ----
   { id: 'thalia-buch-10', npc: 'thalia', tag: 'buch-10', text: ['Zehn Arten im Sammelbuch! Du bist offiziell Feldforscherin. Ich hab einen Stempel dafür. Fast.'] },
-  { id: 'thalia-arbeitszimmer', npc: 'thalia', tag: 'haus-arbeitszimmer', text: ['In deinem Arbeitszimmer fehlt nur noch eine Karte an der Wand. Ich such dir eine schöne aus. Ich muss das mal kartieren.'] },
+  { id: 'thalia-erweiterung', npc: 'thalia', tag: 'haus-erweiterung', text: ['In deinem langen Schlafzimmer fehlt nur noch eine Karte an der Wand. Ich such dir eine schöne aus. Ich muss das mal kartieren.'] },
   { id: 'thalia-schwarz', npc: 'thalia', tag: 'schwarze-blume', text: ['Eine schwarze Blume im Beet? Das ist biologisch fast unmöglich. Ich liebe es!'] },
   { id: 'thalia-monat', npc: 'thalia', tag: 'monat-1', text: ['Ein Monat {dorf}! Ich hab schon einen Plan, wohin wir als Nächstes wandern. Ich hab immer einen Plan.'] },
   { id: 'oli-kino', npc: 'oli', tag: 'kino', text: ['Ich denke immer noch an die „Verlorene Autobahn“, Lini. Ich glaube, ich habe es jetzt zu 4 Prozent verstanden.', 'Der Rest ist Nacht und eine Tür.'] },

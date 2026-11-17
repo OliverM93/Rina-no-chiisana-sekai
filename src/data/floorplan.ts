@@ -3,10 +3,10 @@
  *
  * Erdgeschoss, von oben gesehen (hinten = oben), Wandstreifen zwischen allen Räumen:
  *
- *  ┌───────────────┐ ┌───────────────┐
- *  │Arbeitszimmer  ├─┤  Schlafzimmer │      (Schlafzimmer ab Stufe 2, Tür in der Rückwand des Wohnzimmers;
- *  └───────────────┘ └───────┬───────┘       Arbeitszimmer ab Stufe 3, Tür in der linken Wand des Schlafzimmers)
- *  ┌──────────────┐ ┌───────┴───────┐ ┌──────┐
+ *  ┌─────────────────────────────────┐
+ *  │          Schlafzimmer           │      (ab Stufe 2, Tür in der Rückwand des Wohnzimmers;
+ *  └─────────────────┬───────────────┘       ab Stufe 3 nach links doppelt so lang, die Tür bleibt dieselbe)
+ *  ┌──────────────┐ ┌─┴─────────────┐ ┌──────┐
  *  │ Wintergarten ├─┤  Wohnzimmer   ├─┤Küche │   (Küche ab Stufe 4, Wintergarten ab Stufe 5; Türen in den Seitenwänden)
  *  └──────────────┘ └───────┬───────┘ └──────┘
  *                Haustür
@@ -29,9 +29,8 @@ export interface StairLink {
 /** Erdgeschoss für diese Ausbaustufe */
 export function groundFloor(stage: number): FloorPlan {
   const main = layoutOf(stage, 'haupt');
-  const size = (id: string) => (stage >= (id === 'schlafzimmer' ? 2 : id === 'arbeitszimmer' ? 3 : id === 'kueche' ? 4 : 5) ? layoutOf(stage, id) : null);
+  const size = (id: string) => (stage >= (id === 'schlafzimmer' ? 2 : id === 'kueche' ? 4 : 5) ? layoutOf(stage, id) : null);
   const bedroom = size('schlafzimmer');
-  const study = size('arbeitszimmer');
   const kitchen = size('kueche');
   const conservatory = size('wintergarten');
 
@@ -39,11 +38,10 @@ export function groundFloor(stage: number): FloorPlan {
   const frontY = bedroom ? bedroom.h + 1 : 0;
   const mainX = conservatory ? conservatory.w + 1 : 0;
   const placed: Record<string, { x: number; y: number }> = { haupt: { x: mainX, y: frontY } };
-  if (bedroom) placed.schlafzimmer = { x: mainX + Math.floor(main.w / 2) - 1 - 3, y: 0 };
+  // Die Tür vom Wohnzimmer führt in Feld 3 (+ Verlängerung nach links) der unteren Reihe des Schlafzimmers
+  if (bedroom) placed.schlafzimmer = { x: mainX + Math.floor(main.w / 2) - 1 - (3 + (bedroom.w - 8)), y: 0 };
   if (conservatory) placed.wintergarten = { x: 0, y: frontY };
   if (kitchen) placed.kueche = { x: mainX + main.w + 1, y: frontY };
-  // Arbeitszimmer: hinten links neben dem Schlafzimmer (Wandstreifen dazwischen)
-  if (study && bedroom) placed.arbeitszimmer = { x: placed.schlafzimmer.x - study.w - 1, y: 0 };
   // nichts darf links von der Gesamtfläche (x < 0) liegen: alles gemeinsam nach rechts schieben
   const shift = Math.max(0, -Math.min(...Object.values(placed).map((p) => p.x)));
   if (shift > 0) for (const p of Object.values(placed)) p.x += shift;

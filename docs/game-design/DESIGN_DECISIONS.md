@@ -350,3 +350,11 @@ vergeht. Kein Fortschritt, keine Belohnung, keine Zahlen, nichts gespeichert –
 **Entscheidung:** Stufe 3 („Arbeitszimmer“, gleicher Preis) ist ein 8 × 6-Zimmer hinten links neben dem Schlafzimmer, erreichbar durch eine Tür in dessen linker Wand. Außen gibt es einen kleinen Anbau statt der Dachgaube. Alte Spielstände: Das Dachzimmer wird zum Arbeitszimmer (Spielstand v18), Möbel, Tapete und Boden bleiben.
 **Bewusst nicht:** Preis oder Stufenreihenfolge ändern; eine zweite Etage behalten.
 **Designprüfung:** 1 „Noch ein eigener Raum für mich“ · 2 einmalig, Ausbau wie bisher · 3 Kreativität, mehr Platz zum Einrichten ohne Treppen · 4 kein Druck, nichts verfällt · 5 gleiche Kosten · 6 passt zu Gemütlichkeit, weniger Umblenden · 7 keine Balance-Änderung · 8 Aufwand mittel: Grundriss, Migration und Texte.
+
+### D46 · Das Schlafzimmer wird nach links länger statt eines eigenen Arbeitszimmers (Nov. 2026)
+
+**Anlass:** Das Arbeitszimmer aus D45 hing hinter einer zweiten Tür im Schlafzimmer. Im restlichen Haus hat jeder Raum nur eine Tür; Lina wollte das auch hier.
+**Entscheidung:** Ausbaustufe 3 („Langes Schlafzimmer“, gleicher Preis) verlängert das Schlafzimmer um 8 Felder nach links (16 × 6). Die Tür vom Wohnzimmer bleibt dieselbe, es gibt keinen weiteren Raum und keine weitere Tür. Außen wächst der Schlafzimmer-Anbau nach links. Beim Ausbau rücken die Möbel des Schlafzimmers um 8 nach rechts, damit sie bei der Tür bleiben. Spielstand v19: ein vorhandenes Arbeitszimmer (oder altes Dachzimmer) wird der linke Teil des Schlafzimmers.
+**Bewusst nicht:** eine zweite Tür, mehr Räume pro Stufe, andere Preise.
+**Designprüfung:** 1 „Mehr Platz, ohne dass es unübersichtlich wird“ · 2 einmalig · 3 Kreativität/Platz zum Einrichten · 4 kein Druck · 5 gleiche Kosten · 6 passt zum einheitlichen Grundriss (eine Tür je Raum) · 7 keine Balance-Änderung · 8 Aufwand mittel: Grundriss, Migration, Möbelverschiebung.
+

@@ -17,7 +17,7 @@ export const HOUSE_STAGES: readonly HouseStage[] = [
   { stage: 0, name: 'Gemütliches Zimmer', price: 0, description: 'Ein Zimmer mit 8 × 6 Feldern.' },
   { stage: 1, name: 'Großes Zimmer', price: 9800, description: 'Das Zimmer wird größer: 10 × 7 Felder.' },
   { stage: 2, name: 'Schlafzimmer-Anbau', price: 17800, description: 'Ein zweites Zimmer hinten am Haus – durch eine Tür in der Rückwand, man läuft einfach hindurch.' },
-  { stage: 3, name: 'Arbeitszimmer', price: 27800, description: 'Ein Zimmer links hinten am Haus, durch eine Tür in der Wand des Schlafzimmers – für Schreibtisch, Bücher und alles, was Ruhe braucht.' },
+  { stage: 3, name: 'Langes Schlafzimmer', price: 27800, description: 'Das Schlafzimmer wird nach links doppelt so lang – mit derselben einen Tür. Platz für Schreibtisch, Bücher und alles, was Ruhe braucht.' },
   { stage: 4, name: 'Wohnküche', price: 37800, description: 'Das Wohnzimmer wächst auf 12 × 8 Felder – und rechts kommt eine eigene Küche mit Herd dazu, durch eine Tür in der Seitenwand.' },
   { stage: 5, name: 'Wintergarten', price: 47800, description: 'Ein heller Glasanbau links, voller Licht und Pflanzen. Durch eine Tür in der linken Wand des Wohnzimmers.' },
   { stage: 6, name: 'Keller', price: 59800, description: 'Eine Treppe vorne rechts führt hinunter in einen großen Hobbykeller mit Backsteinwänden.' },
@@ -31,6 +31,12 @@ const frontDoor = (w: number, h: number, to: string, kind: 'haustuer' | 'durchga
   dir: 'down' as const,
   kind,
 });
+
+/** So viele Felder wächst das Schlafzimmer ab Stufe 3 nach links (die Tür vom Wohnzimmer bleibt, wo sie war) */
+export const BEDROOM_EXTRA = 8;
+
+/** Breite des Schlafzimmers auf dieser Stufe */
+export const bedroomWidth = (stage: number) => 8 + (stage >= 3 ? BEDROOM_EXTRA : 0);
 
 /** Zeile der Seitentüren (Küche/Wintergarten ↔ Wohnzimmer) */
 export const SIDE_DOOR_ROW = 3;
@@ -52,9 +58,7 @@ export function innerDoors(stage: number): InnerDoor[] {
   const out: InnerDoor[] = [];
   // Schlafzimmer hinter dem Wohnzimmer (Tür in der Rückwand), Wintergarten links, Küche rechts (Türen in den Seitenwänden)
   // – so liegen die Räume auch außen am Haus (Wintergarten links, Küche rechts hinten)
-  if (stage >= 2) out.push({ room: 'haupt', cell: [mainW / 2 - 1, 0], side: 'up', to: 'schlafzimmer', toCell: [3, 5] });
-  // Arbeitszimmer links neben dem Schlafzimmer (Tür in dessen linker Wand)
-  if (stage >= 3) out.push({ room: 'schlafzimmer', cell: [0, SIDE_DOOR_ROW], side: 'left', to: 'arbeitszimmer', toCell: [7, SIDE_DOOR_ROW] });
+  if (stage >= 2) out.push({ room: 'haupt', cell: [mainW / 2 - 1, 0], side: 'up', to: 'schlafzimmer', toCell: [3 + (bedroomWidth(stage) - 8), 5] });
   if (stage >= 4) out.push({ room: 'haupt', cell: [mainW - 1, SIDE_DOOR_ROW], side: 'right', to: 'kueche', toCell: [0, SIDE_DOOR_ROW] });
   if (stage >= 5) out.push({ room: 'wintergarten', cell: [9, SIDE_DOOR_ROW], side: 'right', to: 'haupt', toCell: [0, SIDE_DOOR_ROW] });
   return out;
@@ -78,8 +82,7 @@ export function roomLayouts(stage: number): readonly RoomLayout[] {
     ],
   };
   const rooms: RoomLayout[] = [main];
-  if (stage >= 2) rooms.push({ id: 'schlafzimmer', name: 'Schlafzimmer', w: 8, h: 6, exits: [] });
-  if (stage >= 3) rooms.push({ id: 'arbeitszimmer', name: 'Arbeitszimmer', w: 8, h: 6, exits: [] });
+  if (stage >= 2) rooms.push({ id: 'schlafzimmer', name: 'Schlafzimmer', w: bedroomWidth(stage), h: 6, exits: [] });
   if (stage >= 4) rooms.push({ id: 'kueche', name: 'Küche', w: 8, h: 6, exits: [] });
   if (stage >= 5) rooms.push({ id: 'wintergarten', name: 'Wintergarten', w: 10, h: 7, exits: [] });
   // Keller: die Treppe nach oben steht an der Rückwand
@@ -111,8 +114,6 @@ export function emptyRoom(id: string): Room {
           { uid: 'start-wg-bambus', itemId: 'bambus', x: 9, y: 0, rot: 0 },
         ],
       };
-    case 'arbeitszimmer':
-      return { id, wallpaper: 'tapete-salbei', floor: 'boden-dielen', items: [{ uid: 'start-az-pflanze', itemId: 'topfpflanze', x: 0, y: 0, rot: 0 }] };
     case 'keller':
       return { id, wallpaper: 'tapete-backstein', floor: 'boden-beton', items: [] };
     default:
@@ -126,7 +127,7 @@ export function emptyRoom(id: string): Room {
  */
 export const HOUSE_ANNEX: Readonly<Record<number, ReadonlyArray<readonly [number, number]>>> = {
   2: [[0, -1], [1, -1], [2, -1], [3, -1]], // Schlafzimmer-Anbau hinten
-  3: [[-1, -1]], // Arbeitszimmer hinten links
+  3: [[-1, -1]], // Schlafzimmer-Erweiterung: Anbau hinten links
   4: [[4, -1]], // Küche hinten rechts
   5: [[-1, 0], [-1, 1], [-1, 2]], // Wintergarten links
 };

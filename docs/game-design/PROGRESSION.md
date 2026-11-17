@@ -46,7 +46,7 @@ der alte abbezahlt ist), Bau dauert Spielzeit.
 |---|---|---|---|
 | 1 | Großes Zimmer (10×7) | 9 800 | 9 800 |
 | 2 | Schlafzimmer-Anbau | 17 800 | 27 600 |
-| 3 | Arbeitszimmer | 27 800 | 55 400 |
+| 3 | Langes Schlafzimmer | 27 800 | 55 400 |
 | 4 | Wohnküche (12×8 + Küche) | 37 800 | 93 200 |
 | 5 | Wintergarten | 47 800 | 141 000 |
 | 6 | Keller | 59 800 | 200 800 |

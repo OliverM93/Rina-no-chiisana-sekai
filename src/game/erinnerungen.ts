@@ -33,7 +33,7 @@ export function memoryTags(session: Session): string[] {
   const tags: string[] = [];
   const stage = data.house.stage;
   if (stage >= 2) tags.push('haus-anbau');
-  if (stage >= 3) tags.push('haus-arbeitszimmer');
+  if (stage >= 3) tags.push('haus-erweiterung');
   if (stage >= 4) tags.push('haus-kueche');
   if (stage >= 6) tags.push('haus-keller');
   const n = speciesCount(session);

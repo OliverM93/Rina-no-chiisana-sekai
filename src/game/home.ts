@@ -13,7 +13,7 @@ import { cellsOf, checkPlacement, footprint, misfits, moveItem, placeItem, type 
 import { waitOver } from '../core/progress';
 import { FURNITURE_BY_ITEM, furnitureInfo, type FurnitureStyle, SURFACE_BY_ID, variantItemId } from '../data/furniture';
 import { guestLayout, guestRoom } from '../data/gastHaeuser';
-import { emptyRoom, HOUSE_STAGES, layoutOf, MAX_STAGE, roomLayouts } from '../data/house';
+import { BEDROOM_EXTRA, emptyRoom, HOUSE_STAGES, layoutOf, MAX_STAGE, roomLayouts } from '../data/house';
 import { itemDef, maxStackOf } from '../data/items';
 import { lineUnlocked } from './catalog';
 import { giveItem, takeItem } from './gameplay';
@@ -348,6 +348,11 @@ export function finishExpansion(session: Session): number | null {
   const pend = data?.house.pending;
   if (!data || !pend || !waitOver(pend.at, session.playTime())) return null;
   const house = data.house;
+  // Das Schlafzimmer wächst nach links: die vorhandenen Möbel rücken mit, damit sie bei der Tür bleiben
+  if (house.stage < 3 && pend.stage >= 3) {
+    const bedroom = house.rooms.find((r) => r.id === 'schlafzimmer');
+    if (bedroom) for (const it of bedroom.items) it.x += BEDROOM_EXTRA;
+  }
   house.stage = pend.stage;
   delete house.pending;
   for (const layout of roomLayouts(house.stage)) {

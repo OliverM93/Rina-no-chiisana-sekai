@@ -4,10 +4,10 @@ Status: 🚧 **in Arbeit** – **Phase A ✅**, **B ✅**, **C ✅** (Lina läuf
 
 ## Ziel
 
-Heute ist jeder Raum (Wohnzimmer, Schlafzimmer, Küche, Wintergarten, Arbeitszimmer, Keller) ein **eigener Bildschirm**; zwischen den Räumen blendet eine Tür-Animation um.
+Heute ist jeder Raum (Wohnzimmer, Schlafzimmer, Küche, Wintergarten, Keller) ein **eigener Bildschirm**; zwischen den Räumen blendet eine Tür-Animation um.
 Neu: Das Haus ist **ein Grundriss**. Lina läuft ohne Umblenden von Raum zu Raum, und man sieht das **ganze Haus** beim Einrichten – wie bei den Sims.
 
-Entschieden ✅: Erdgeschoss zusammenhängend; **der Keller ist eine eigene Etage** mit Treppe (das frühere Dachzimmer ist seit Nov. 2026 das Arbeitszimmer im Erdgeschoss) · Tapete & Boden bleiben **pro Raum** · Türen **1 Feld breit** (schon umgesetzt, PR #104).
+Entschieden ✅: Erdgeschoss zusammenhängend; **der Keller ist eine eigene Etage** mit Treppe (das frühere Dachzimmer ist seit Nov. 2026 die Verlängerung des Schlafzimmers im Erdgeschoss) · Tapete & Boden bleiben **pro Raum** · Türen **1 Feld breit** (schon umgesetzt, PR #104).
 
 ## Wie es heute gebaut ist (Auszug)
 
