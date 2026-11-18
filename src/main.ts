@@ -47,6 +47,20 @@ const cssVars: Record<string, string> = {
 };
 for (const [k, v] of Object.entries(cssVars)) root.style.setProperty(k, v);
 
+/**
+ * Startet etwas nicht (z. B. WebGL nicht verfügbar), bliebe der Ladebildschirm sonst für immer stehen.
+ * Dann zeigen wir stattdessen die Fehlermeldung an, damit man weiß, woran es liegt.
+ */
+function showStartError(reason: unknown) {
+  const msg = reason instanceof Error ? reason.message : String(reason);
+  const p = document.querySelector('.loading-layer p');
+  if (!p || p.getAttribute('data-error')) return;
+  p.setAttribute('data-error', '1');
+  p.textContent = `Hoppla, das Dorf konnte nicht gemalt werden: ${msg} – bitte Seite neu laden (Strg+F5) oder einen anderen Browser probieren.`;
+}
+window.addEventListener('error', (e) => showStartError(e.error ?? e.message));
+window.addEventListener('unhandledrejection', (e) => showStartError(e.reason));
+
 async function start() {
   // Schrift vor dem Zeichnen der Texturen laden (z. B. für Schilder)
   try {
