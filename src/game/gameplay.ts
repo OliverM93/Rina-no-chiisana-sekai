@@ -39,6 +39,7 @@ import { INSEL_FEST_FLAG, INSEL_FINDS, INSEL_FINDS_PER_DAY } from '../data/insel
 import { isInselRow } from '../data/maps/insel';
 import { inselStrandTiles } from './insel';
 import { noteTaste } from './friends';
+import { EXTRA_CHANCE, GESCHENK_SPRUECHE } from '../data/geschenkSprueche';
 import { bouquetBonus, straussLustLines } from './straussLust';
 import { thaliaMapLines } from './verstecke';
 
@@ -331,6 +332,16 @@ export function giftPreferences(prefs: Preferences, itemId: string): Preferences
   };
 }
 
+/** Ein Extra-Satz zum Geschenk: nur manchmal (reproduzierbar je Tag), nur wo es für diese Person & diesen Gegenstand einen gibt */
+export function giftExtraLines(session: Session, npcId: string, itemId: string): readonly string[] {
+  const own = GESCHENK_SPRUECHE[npcId];
+  const species = speciesOfFlower(itemId);
+  const options = own?.[itemId] ?? (species ? own?.[species] : undefined) ?? (itemId.startsWith('strauss') ? own?.strauss : undefined);
+  if (!options || options.length === 0) return [];
+  if (hashString(`geschenk-extra:${session.today()}:${npcId}:${itemId}`) % 100 >= EXTRA_CHANCE * 100) return [];
+  return [pickByDay(session, `${npcId}:extra:${itemId}`, options)];
+}
+
 export function giftToNpc(session: Session, npcId: string, itemId: string): GiftOutcome | null {
   const npc = NPC_BY_ID[npcId];
   // Werkzeuge & Erinnerungsstücke behält Lina (sonst wären sie für immer weg)
@@ -344,6 +355,8 @@ export function giftToNpc(session: Session, npcId: string, itemId: string): Gift
   } else {
     const special = npc.dialogue.giftsByItem[itemId] ?? npc.dialogue.giftsByItem[speciesOfFlower(itemId)];
     lines.push(...(special ?? pickByDay(session, `${npcId}:gift:${itemId}`, npc.dialogue.gifts[r.reaction])));
+    // ab und zu noch ein Satz genau zu diesem Geschenk (in der Stimme der Person, passend zu „mag / mag nicht“)
+    if (!special) lines.push(...giftExtraLines(session, npcId, itemId));
   }
   // Strauß als besonderes Geschenk: mehr Freude und eine eigene Dankes-Zeile (Lust auf einen Strauß: noch mehr)
   const bonus = bouquetBonus(session, npcId, itemId, r.reaction, r.repeatToday);
