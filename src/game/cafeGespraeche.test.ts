@@ -3,7 +3,7 @@ import { DEFAULT_LINA } from '../core/appearance';
 import type { StorageLike } from '../core/save';
 import { CAFE_GUESTS, CAFE_PAIR_CHATS, JENS_CAFE_CHATS } from '../data/cafeGaeste';
 import { NPC_BY_ID } from '../data/npcs';
-import { cafeExchange } from './cafe';
+import { cafeExchange, cafeSeating } from './cafe';
 import { Session } from './session';
 
 vi.mock('../gfx/items', () => ({ itemIconUrl: () => '' }));
@@ -66,5 +66,17 @@ describe('Gespräche im Café', () => {
       pairs.add(`${ex.first}+${ex.second}`);
     }
     expect(pairs.size).toBeGreaterThanOrEqual(2);
+  });
+
+  it('Gäste sitzen beisammen: zwei teilen sich einen Tisch, jeder Stuhl nur einmal', () => {
+    const s = fresh();
+    const zwei = cafeSeating(s, ['thalia', 'lars']);
+    const [a, b] = Object.values(zwei);
+    expect(a[1]).toBe(1 + (a[1] === 1 ? 0 : 2)); // Mitteltisch: gleiche Reihe
+    expect(b[1]).toBe(a[1]);
+    expect(Math.abs(a[0] - b[0])).toBe(2);
+    const alle = cafeSeating(s, ['gisela', 'olaf', 'christin', 'oli', 'lars', 'thalia']);
+    const keys = Object.values(alle).map((v) => v.join(','));
+    expect(new Set(keys).size).toBe(6);
   });
 });

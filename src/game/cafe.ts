@@ -4,7 +4,7 @@
  */
 import { hashString } from '../core/rng';
 import type { ScheduleEntry } from '../core/schedule';
-import { CAFE_GUESTS, CAFE_PAIR_CHATS, CAFE_PLACE, JENS_CAFE_CHATS } from '../data/cafeGaeste';
+import { CAFE_GUESTS, CAFE_PAIR_CHATS, CAFE_PLACE, CAFE_SITZGRUPPEN, JENS_CAFE_CHATS } from '../data/cafeGaeste';
 import { pairChatKey, PAIR_CHATS } from '../data/gespraeche';
 import { NPC_BY_ID } from '../data/npcs';
 import { dinnerEntry } from './dinner';
@@ -96,4 +96,23 @@ export function cafeExchange(session: Session, present: readonly string[], n: nu
   const p = pairs[seed % pairs.length];
   const lines = p.list[Math.floor(seed / 7) % p.list.length];
   return { first: p.first, second: p.second, lines: [...lines] };
+}
+
+/**
+ * Wer sitzt wo? Die Gäste setzen sich **beisammen** (Gruppe für Gruppe, siehe `CAFE_SITZGRUPPEN`): zwei Gäste teilen sich einen
+ * Tisch, vier füllen beide Mitteltische usw. Reproduzierbar je Tag; jeder Stuhl nur einmal. Ergebnis: Stuhlfeld je Gast.
+ */
+export function cafeSeating(session: Session, guests: readonly string[]): Record<string, readonly [number, number]> {
+  const day = session.today();
+  const groups = [...CAFE_SITZGRUPPEN];
+  // welcher der beiden Mitteltische zuerst: wechselt je Tag
+  if (hashString(`cafe-sitz:${day}`) % 2 === 1) [groups[0], groups[1]] = [groups[1], groups[0]];
+  const seats = groups.flat();
+  // feste Reihenfolge der Gäste (Name), damit sich bei gleicher Gästeliste nichts umsortiert
+  const order = [...guests].sort();
+  const out: Record<string, readonly [number, number]> = {};
+  order.forEach((id, i) => {
+    if (seats[i]) out[id] = seats[i];
+  });
+  return out;
 }

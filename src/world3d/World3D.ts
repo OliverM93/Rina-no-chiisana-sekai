@@ -73,7 +73,7 @@ import { KISS } from './Character3D';
 const KISS_DISTANCE = 0.84;
 import { isPartyTime } from '../game/party';
 import { makePartyLights, makePicnic } from './models/buildings';
-import { cafeExchange, cafeGuests, cafeTalk } from '../game/cafe';
+import { cafeExchange, cafeGuests, cafeSeating, cafeTalk } from '../game/cafe';
 import { tipsyComment } from '../game/tipsy';
 import { arrivalLines, canInvite, finishVisit, inviteNpc, visitDue, visitCount, visitLine } from '../game/besuch';
 import { addFriendship, catchUpHeartLetters } from '../game/gameplay';
@@ -2340,21 +2340,14 @@ export class World3D {
     }
   }
 
-  /** Stuhl für einen Café-Gast: reproduzierbar je Tag, jeder Stuhl nur einmal */
+  /** Stuhl für einen Café-Gast: beisammen mit den anderen Gästen (`cafeSeating`), jeder Stuhl nur einmal */
   private cafeSeat(id: string, guests: readonly string[]): { x: number; y: number; facing: 'down' | 'left' | 'up' | 'right' } | null {
     const items = GUEST_HOUSES['bistro-jens']?.items ?? [];
     const chairs = items.filter((i) => i.id === 'bistrostuhl');
     if (chairs.length === 0) return null;
-    const day = this.session.today();
-    const taken = new Set<number>();
-    let pick = -1;
-    for (const g of guests) {
-      let k = hashString(`stuhl:${day}:${g}`) % chairs.length;
-      while (taken.has(k)) k = (k + 1) % chairs.length;
-      taken.add(k);
-      if (g === id) pick = k;
-    }
-    const ch = chairs[pick];
+    // Die Gäste sitzen beisammen (am selben Tisch bzw. nebeneinander), nicht über das ganze Café verteilt
+    const spot = cafeSeating(this.session, guests)[id];
+    const ch = spot ? chairs.find((c) => c.x === spot[0] && c.y === spot[1]) : undefined;
     if (!ch) return null;
     return { x: ch.x, y: ch.y, facing: (['down', 'left', 'up', 'right'] as const)[ch.rot ?? 0] };
   }

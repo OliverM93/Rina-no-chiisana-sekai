@@ -129,3 +129,17 @@ export const CAFE_PAIR_CHATS: Readonly<Record<string, ReadonlyArray<readonly [st
   'olaf+thalia': [['Thalia, hast du die Kosten fürs Studio bedacht?', 'Olaf, das ist eine Investition in mich.', 'Das lasse ich gelten.']],
   'christin+thalia': [['Thalia, du siehst müde aus.', 'Ich war trainieren, Christin. Das ist müde mit Stolz.']],
 };
+
+/**
+ * Wo sich die Gäste hinsetzen: **beisammen**, nicht über das ganze Café verteilt. Jede Gruppe sind Stühle, die zusammengehören
+ * (am selben Tisch oder direkt nebeneinander an der Wandbank); Koordinaten wie in `gastHaeuser.ts` (Stuhl-Felder von Chez Jens).
+ * Die ersten Gäste füllen die erste Gruppe, dann die nächste usw.; welche der beiden Tische in der Mitte zuerst dran ist, wechselt je Tag.
+ */
+export const CAFE_SITZGRUPPEN: ReadonlyArray<ReadonlyArray<readonly [number, number]>> = [
+  [[3, 1], [5, 1]], // Mitteltisch hinten
+  [[3, 3], [5, 3]], // Mitteltisch vorn
+  [[7, 2], [7, 3]], // rechte Wandbank, oben
+  [[7, 4], [7, 5]], // rechte Wandbank, unten
+  [[2, 1], [2, 2]], // linke Wandbank, oben
+  [[2, 4], [2, 5]], // linke Wandbank, unten
+];
