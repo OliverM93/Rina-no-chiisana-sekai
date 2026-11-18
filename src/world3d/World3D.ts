@@ -194,6 +194,8 @@ export class World3D {
   private interactive = new Set<string>();
   private cutscene = false;
   private camTarget = new THREE.Vector3(27.5, 0, 19);
+  /** Kamera-Versatz für Szenen (z. B. Training mit Thalia), relativ zu Lina */
+  private camShift: THREE.Vector3 | null = null;
   private camPos = new THREE.Vector3();
   private zoom = 1;
   private titleTime = 0;
@@ -585,6 +587,7 @@ export class World3D {
       const target = this.session.inside
         ? this.insideCamTarget()
         : new THREE.Vector3(player.x * UNIT, 0, player.y * UNIT).add(this.session.decorActive ? new THREE.Vector3(this.decorPan.x, 0, this.decorPan.z) : new THREE.Vector3());
+      if (this.camShift && !this.session.inside) target.add(this.camShift);
       this.camTarget.lerp(target, 1 - Math.pow(0.002, dt));
       if (!this.session.inside) this.updateOccluders(player);
       if (!this.session.inside) {
@@ -1889,20 +1892,69 @@ export class World3D {
       hearts: npcHearts(this.session, id),
       lines: [...introLines(this.session, def)],
       onClose: () => {
+        // Training: Lina stellt sich neben Thalia, beide machen die Kniebeugen im Takt der Anzeige
+        const endScene = def.game === 'takt' ? this.trainingScene(npc) : () => {};
         const n = this.session.data?.world.dates[`zusammen-n:${def.id}`] ?? '0';
         this.session.bus.emit('ui:open', {
           kind: 'zusammen',
           id: def.id,
           round: `${this.session.today()}:${n}`,
           onDone: (r) => {
+            endScene();
             const lines = finishActivity(this.session, def.id, r);
             this.session.bus.emit('fx', { kind: 'herzen', npc: id });
             this.npcDialog(npc, lines, npcHearts(this.session, id));
           },
-          onCancel: () => this.npcDialog(npc, [id === 'gisela' ? 'Na gut, Kindchen. Ein andermal. Ich übe solange.' : 'Kein Problem, ein andermal!'], npcHearts(this.session, id)),
+          onCancel: () => {
+            endScene();
+            this.npcDialog(npc, [id === 'gisela' ? 'Na gut, Kindchen. Ein andermal. Ich übe solange.' : 'Kein Problem, ein andermal!'], npcHearts(this.session, id));
+          },
         });
       },
     });
+  }
+
+  /**
+   * Kniebeugen mit Thalia: Lina stellt sich neben sie, beide schauen sich an (Profil); die Tiefe kommt aus dem Spiel
+   * (`zusammen:takt`). Gibt eine Funktion zurück, die alles wieder aufräumt.
+   */
+  private trainingScene(npc: Npc): () => void {
+    const player = this.player;
+    if (!player || this.session.inside) return () => {};
+    const grid = this.session.map.grid;
+    const t = npc.char.tile;
+    // Thalia bleibt für die Übung an ihrem Platz (sonst ginge sie nach dem Gespräch weiter ihrem Tagesablauf nach)
+    npc.scriptPlace(t);
+    const spot = [
+      { x: t.x - 1, y: t.y },
+      { x: t.x + 1, y: t.y },
+      { x: t.x, y: t.y + 1 },
+    ].find((p) => !grid.isBlocked(p.x, p.y));
+    player.cancelPath();
+    this.marker.visible = false;
+    if (spot) player.teleport((spot.x + 0.5) * TILE, (spot.y + 0.5) * TILE + 10);
+    // seitlich gegenüber, wie Trainingspartnerinnen: so sieht man die Kniebeuge im Profil
+    player.faceTowards(npc.char.x, npc.char.y);
+    npc.char.faceTowards(player.x, player.y);
+    // Kamera zwischen die beiden und etwas weiter südlich: sie stehen dann oben im Bild, das Fenster unten verdeckt sie nicht
+    this.camShift = new THREE.Vector3(((npc.char.x - player.x) / 2) * UNIT, 0, ((npc.char.y - player.y) / 2) * UNIT + 2.2);
+    this.cutscene = true;
+    const chars = [player, npc.char];
+    const offDepth = this.session.bus.on('zusammen:takt', (d) => {
+      for (const c of chars) c.squat = d === null ? undefined : d;
+    });
+    const offHit = this.session.bus.on('zusammen:takt-treffer', (h) => {
+      const head = npc.char.root.position.clone().add(new THREE.Vector3(0, npc.bubbleHeight + 0.2, 0));
+      this.popEmote(head, h === 'perfekt' ? '🔥' : h === 'gut' ? '💪' : '😅');
+    });
+    return () => {
+      offDepth();
+      offHit();
+      for (const c of chars) c.squat = undefined;
+      this.camShift = null;
+      npc.scriptDone();
+      this.cutscene = false;
+    };
   }
 
   private npcDialog(npc: Npc, lines: string[], hearts: number) {

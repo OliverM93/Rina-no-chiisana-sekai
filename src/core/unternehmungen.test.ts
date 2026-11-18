@@ -6,8 +6,19 @@ import {
   memoryDone,
   memoryRank,
   newMemory,
+  duelAnswer,
+  duelSequence,
+  duelUnlocksNext,
   newPuzzle,
+  newSumo,
   puzzleDone,
+  puzzleDoneWith,
+  puzzleRightAt,
+  sumoNextRound,
+  sumoOver,
+  sumoPush,
+  sumoRank,
+  sumoTick,
   quizRank,
   rhythmHit,
   rhythmPos,
@@ -91,5 +102,66 @@ describe('Takt, Pfeil-Duell, Quiz', () => {
     expect(quizRank(5, 5)).toBe('super');
     expect(quizRank(3, 5)).toBe('gut');
     expect(quizRank(0, 5)).toBe('gemuetlich');
+  });
+});
+
+describe('Puzzle mit gleichen Symbolen', () => {
+  it('vertauschte gleiche Bilder zählen als richtig', () => {
+    const pic = ['a', 'b', 'c', 'x', 'h', 'x', 'd', 'e'];
+    // Teile 4 und 6 haben dasselbe Symbol „x“ – vertauscht ist das Bild trotzdem richtig
+    const p = { tiles: [1, 2, 3, 6, 5, 4, 7, 8, 0], size: 3, moves: 0 };
+    expect(puzzleDone(p)).toBe(false);
+    expect(puzzleDoneWith(p, pic)).toBe(true);
+    expect(puzzleRightAt(p, pic, 3)).toBe(true);
+    const q = { tiles: [2, 1, 3, 4, 5, 6, 7, 8, 0], size: 3, moves: 0 };
+    expect(puzzleDoneWith(q, pic)).toBe(false);
+    expect(puzzleRightAt(q, pic, 0)).toBe(false);
+  });
+});
+
+describe('Pfeil-Duell in Leveln', () => {
+  it('Umkehr-Pfeile verlangen die Gegenrichtung; ohne Anteil gibt es keine', () => {
+    expect(duelSequence(3, 20, 0).some((a) => a.reverse)).toBe(false);
+    const seq = duelSequence(3, 40, 0.4);
+    expect(seq.some((a) => a.reverse)).toBe(true);
+    expect(seq[0].reverse).toBe(false);
+    expect(duelAnswer({ dir: 'up', reverse: true })).toBe('down');
+    expect(duelAnswer({ dir: 'left', reverse: false })).toBe('left');
+  });
+
+  it('nächstes Level ab 60 % Treffern', () => {
+    expect(duelUnlocksNext(6, 10)).toBe(true);
+    expect(duelUnlocksNext(5, 10)).toBe(false);
+  });
+});
+
+describe('Kissen-Sumo', () => {
+  it('nur abwechselnde Tasten schieben', () => {
+    const s = newSumo();
+    expect(sumoPush(s, 'left')).toBe(true);
+    expect(sumoPush(s, 'left')).toBe(false);
+    expect(sumoPush(s, 'right')).toBe(true);
+    expect(s.pos).toBeCloseTo(0.15);
+  });
+
+  it('wer nichts drückt, wird langsam rausgeschoben; zwei Runden entscheiden, nie „verloren“ als Rang', () => {
+    const s = newSumo();
+    let r = 'weiter';
+    for (let t = 0; t < 30 && r === 'weiter'; t += 0.1) r = sumoTick(s, 0.1, t);
+    expect(r).toBe('verloren');
+    sumoNextRound(s);
+    // flink abwechselnd drücken gewinnt
+    for (let i = 0; i < 40 && !sumoOver(s) && s.won < 1; i++) {
+      sumoPush(s, i % 2 ? 'left' : 'right');
+      if (s.pos >= 1) sumoTick(s, 0, 0);
+    }
+    expect(s.won).toBe(1);
+    sumoNextRound(s);
+    for (let i = 0; i < 40 && s.won < 2; i++) {
+      sumoPush(s, i % 2 ? 'left' : 'right');
+      if (s.pos >= 1) sumoTick(s, 0, 0);
+    }
+    expect(sumoOver(s)).toBe(true);
+    expect(sumoRank(s)).toBe('gut');
   });
 });

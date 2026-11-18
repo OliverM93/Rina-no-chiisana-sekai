@@ -34,6 +34,7 @@ const cssVars: Record<string, string> = {
   '--ui-accent': palette.ui.accent,
   '--ui-accent-dark': palette.ui.accentDark,
   '--ui-mint': palette.ui.mint,
+  '--ui-gold': palette.ui.gold,
   '--ui-butter': palette.ui.butter,
   '--ui-sky': palette.ui.sky,
   '--night-sky': palette.night.sky,

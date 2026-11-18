@@ -505,6 +505,8 @@ export interface ChibiPose {
   work?: 'tippen' | 'stemmen';
   /** Leerlauf-Animation (Strecken, Gähnen, Summen …), Fortschritt 0..1 */
   act?: { id: IdleAct; k: number };
+  /** Kniebeuge (Training mit Thalia): 0 = stehen, 1 = ganz unten */
+  squat?: number;
 }
 
 /** Weiche Hüllkurve: einblenden, halten, ausblenden */
@@ -1093,6 +1095,18 @@ export class Chibi3D {
     }
     this.body.rotation.x = 0;
     this.body.rotation.z = 0;
+    if (p.squat !== undefined && !p.moving) {
+      // Kniebeuge: Beine nach vorn, Hüfte so weit runter, dass die Füße am Boden bleiben; Arme gestreckt nach vorn
+      const a = Math.min(1, Math.max(0, p.squat)) * 1.15;
+      for (const leg of this.legs) leg.rotation.x = -a;
+      this.body.position.y = -this.hipY * (1 - Math.cos(a));
+      for (const [i, arm] of this.arms.entries()) {
+        arm.rotation.x = -0.4 - a * 1.0;
+        arm.rotation.z = (i === 0 ? -1 : 1) * 0.12;
+      }
+      this.head.rotation.x = -0.05 + a * 0.08;
+      this.body.scale.y = 1;
+    }
     if (p.kiss !== undefined && !p.moving && !p.sitting) {
       // weich vorbeugen, kurz halten, zurück – Kopf leicht schräg, Hände hinter den Rücken
       const k = p.kiss;

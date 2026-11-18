@@ -45,6 +45,8 @@ export class Character {
   lean = 0;
   /** Höhe über dem Boden (z. B. Sitzfläche einer Bank), in Kacheln */
   seatHeight = 0;
+  /** Kniebeuge 0..1 (Training mit Thalia), undefined = keine */
+  squat: number | undefined = undefined;
   /** Für Kompatibilität (Tiefe wird in 3D automatisch richtig) */
   depthBias = 0;
 
@@ -310,8 +312,13 @@ export class Character {
     this.chibi.root.position.set(px, ground + this.seatHeight, pz);
     this.chibi.root.rotation.y = this.angle;
     this.chibi.root.rotation.z = this.lean > 0 ? Math.sin(this.time * 2.3) * 0.09 * this.lean : 0;
+    // bei der Kniebeuge keine Leerlauf-Animation (die würde Arme und Kopf überschreiben)
+    if (this.squat !== undefined) {
+      this.act = null;
+      this.idleTime = 0;
+    }
     const actK = this.act ? { id: this.act.id, k: 1 - this.act.left / this.act.dur } : undefined;
-    this.chibi.pose({ step: this.stepPhase, moving: this.moving, running: this.running, sitting: this.sitting, blink: this.blinkLeft > 0 || (this.kissLeft > 0.25 && this.kissLeft < KISS - 0.25) || (!!actK && actClosesEyes(actK.id, actK.k)), t: this.time, armForward: this.armForward, work: this.sitting ? this.work : undefined, cheer: this.cheerLeft > 0 ? 1 - this.cheerLeft / CHEER : undefined, wave: this.waveLeft > 0 ? 1 - this.waveLeft / WAVE : undefined, idle: this.idleTime, kiss: this.kissLeft > 0 ? 1 - this.kissLeft / KISS : undefined, tiptoe: this.kissTiptoe, act: actK });
+    this.chibi.pose({ step: this.stepPhase, moving: this.moving, running: this.running, sitting: this.sitting, blink: this.blinkLeft > 0 || (this.kissLeft > 0.25 && this.kissLeft < KISS - 0.25) || (!!actK && actClosesEyes(actK.id, actK.k)), t: this.time, armForward: this.armForward, work: this.sitting ? this.work : undefined, cheer: this.cheerLeft > 0 ? 1 - this.cheerLeft / CHEER : undefined, wave: this.waveLeft > 0 ? 1 - this.waveLeft / WAVE : undefined, idle: this.idleTime, kiss: this.kissLeft > 0 ? 1 - this.kissLeft / KISS : undefined, tiptoe: this.kissTiptoe, act: actK, squat: this.squat });
   }
 
   destroy() {
