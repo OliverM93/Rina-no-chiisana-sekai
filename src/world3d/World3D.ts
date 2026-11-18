@@ -74,6 +74,8 @@ const KISS_DISTANCE = 0.84;
 import { isPartyTime } from '../game/party';
 import { makePartyLights, makePicnic } from './models/buildings';
 import { cafeExchange, cafeGuests, cafeSeating, cafeTalk } from '../game/cafe';
+import { activitiesFor, finishActivity, introLines } from '../game/unternehmungen';
+import type { UnternehmungDef } from '../data/unternehmungen';
 import { tipsyComment } from '../game/tipsy';
 import { arrivalLines, canInvite, finishVisit, inviteNpc, visitDue, visitCount, visitLine } from '../game/besuch';
 import { addFriendship, catchUpHeartLetters } from '../game/gameplay';
@@ -1879,6 +1881,30 @@ export class World3D {
     this.npcDialog(npc, [...chatLead, ...lead, ...(teaser ? [...out.lines, teaser] : out.lines)], out.hearts);
   }
 
+  /** Gemeinsame Unternehmung: die Person sagt etwas, dann das kleine Spiel, danach ihre Reaktion */
+  private startActivity(npc: Npc, def: UnternehmungDef) {
+    const id = npc.def.id;
+    this.session.bus.emit('dialog:open', {
+      title: npc.def.name,
+      hearts: npcHearts(this.session, id),
+      lines: [...introLines(this.session, def)],
+      onClose: () => {
+        const n = this.session.data?.world.dates[`zusammen-n:${def.id}`] ?? '0';
+        this.session.bus.emit('ui:open', {
+          kind: 'zusammen',
+          id: def.id,
+          round: `${this.session.today()}:${n}`,
+          onDone: (r) => {
+            const lines = finishActivity(this.session, def.id, r);
+            this.session.bus.emit('fx', { kind: 'herzen', npc: id });
+            this.npcDialog(npc, lines, npcHearts(this.session, id));
+          },
+          onCancel: () => this.npcDialog(npc, [id === 'gisela' ? 'Na gut, Kindchen. Ein andermal. Ich übe solange.' : 'Kein Problem, ein andermal!'], npcHearts(this.session, id)),
+        });
+      },
+    });
+  }
+
   private npcDialog(npc: Npc, lines: string[], hearts: number) {
     const id = npc.def.id;
     const title = npc.def.name;
@@ -1908,6 +1934,8 @@ export class World3D {
               onCancel: () => this.npcDialog(npc, [id === 'gisela' ? 'Na? Doch nichts? Macht nix, Kindchen.' : 'Doch nichts? Kein Problem!'], npcHearts(this.session, id)),
             }),
         },
+        // gemeinsame Unternehmung (kleines Spiel), beliebig oft
+        ...activitiesFor(this.session, id).map((u) => ({ label: u.label, onSelect: () => this.startActivity(npc, u) })),
         ...(id === 'oli' && canKiss(this.session)
           ? [
               {

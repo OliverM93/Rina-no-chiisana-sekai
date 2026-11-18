@@ -94,6 +94,12 @@ export const palette = {
   sparkle: '#ffffff',
 
   // --- Benutzeroberfläche ----------------------------------------------------
+  /** Malen mit Jens: Farbstimmungen der Leinwand */
+  malen: {
+    pastell: ['#f7c6d4', '#c9e7f2', '#fbe7a8', '#cfe9c4'],
+    kraeftig: ['#e8484f', '#f08a2a', '#f7d26a', '#4a9fd8'],
+    schwarz: ['#1e1b22', '#3a3540', '#5a5462', '#b7a9c2'],
+  },
   ui: {
     bg: '#fff8ef',
     panel: '#fffdf9',

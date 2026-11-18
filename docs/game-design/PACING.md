@@ -13,7 +13,7 @@
 |---|---|---|
 | **1–5 Min** | Post holen, Oli küssen, Eier, Beet gießen, ein Gespräch, eine TV-Folge, ein Kaffee | ✅ lohnt sich – immer eine kleine Freude erreichbar |
 | **15–30 Min** | Dorfrunde, Angeln/Fangen, Verkaufen, Kochen, ein paar Möbel umstellen | ✅ Kernsitzung, gut gefüllt |
-| **1–2 Std** | Großes Umgestalten, Kreuzungen planen, Sparen für einen Ausbau, Sammelbuch-Jagd zu bestimmten Uhrzeiten | ✅ in der Story-Phase sehr gut · ⚠️ im Spätspiel fehlt ein „Projekt“, das eine lange Sitzung strukturiert |
+| **1–2 Std** | Großes Umgestalten, Kreuzungen planen, Sparen für einen Ausbau, Sammelbuch-Jagd zu bestimmten Uhrzeiten | ✅ in der Story-Phase sehr gut · ⚠️ im Spätspiel fehlt ein „Projekt“, das eine lange Sitzung strukturiert · ✅ seit Nov. 2026: **gemeinsame Unternehmungen** (kleine Spiele mit jedem Bewohner, beliebig oft, D48) |
 | **über Tage** | Beet wächst, Treffen, Wochenrhythmus, Einzüge (Story-Phase) | ✅ |
 | **Wochen/Monate** | Jahreszeiten, Feste, Hausausbau, Sammelbuch | ✅ Jahreszyklus stark · ⚠️ keine erzählerischen Ereignisse nach dem letzten Einzug |
 

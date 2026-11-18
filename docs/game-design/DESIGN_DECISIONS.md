@@ -358,3 +358,10 @@ vergeht. Kein Fortschritt, keine Belohnung, keine Zahlen, nichts gespeichert –
 **Bewusst nicht:** Pflicht-Termine, Streaks oder „heute nur noch kurz“, Sammelliste für Briefe oder Tiere, neue Währung, Belohnungen fürs Hinkommen.
 **Designprüfung:** 1 „Was wohl in der Flasche steckt?“ · 2 beliebig, nebenbei, selten · 3 die Insel bleibt lebendig und persönlich · 4 hält die Insel über Wochen abwechslungsreich · 5 Preise im Rahmen der Handwerks-Regel · 6 kein Druck: Luau und Flaschenpost sind reiner Bonus · 7 Säulen Entdecken, Beziehungen, Gemütlichkeit · 8 einfacher wäre nur Text, aber Bilder und Musik machen den Ort.
 
+### D48 · Gemeinsame Unternehmungen mit den Bewohnern (Nov. 2026)
+
+**Anlass:** Lina hatte im Spätspiel Leerlauf: Nach Insekten und Schätzen blieben nur noch Angeln und Bäume schütteln. Mehr Respawns hätten das Sammeln entwertet und nur „mehr vom Gleichen“ gebracht.
+**Entscheidung:** ✅ Je Bewohner eine **Unternehmung** im Gesprächsmenü, ein kleines, beliebig wiederholbares Spiel ohne Ressourcen-Limit: Memory mit Oma, Training mit Thalia (im Takt drücken), Puzzle mit Christin (Schiebepuzzle), Zocken mit Oli und mit Lars (Pfeil-Duell gegen einen ausgedachten Boss), Rätselecke mit Papa (Quiz, 5 aus 18 Fragen), Malen mit Jens (Motiv + Farben, Jens bewertet). Es gibt **kein Scheitern**: Das Ergebnis wählt nur den Abschluss-Satz. **Herzen höchstens einmal am Tag je Person** (+10), danach nur noch zum Spaß; das erste Mal kommt ins Album; einen neuen Bestwert kommentiert die Person.
+**Bewusst nicht:** Ranglisten, Streaks, tägliche Pflicht, Belohnungen in Sternen oder Gegenständen (sonst wird es Farmen), Zeitdruck außerhalb des Spiels selbst, Strafe für schwache Runden.
+**Designprüfung:** 1 „Ich hab noch Lust – was machen wir zusammen?“ · 2 beliebig oft, wenige Minuten je Runde · 3 Bewohner mit Charakter, Zeit mit den Liebsten · 4 trägt lange Sitzungen im Spätspiel ohne Ressourcen-Druck · 5 keine Wirtschaftswirkung, Herzen gedeckelt · 6 Risiko Wiederholung → viele Satz-Varianten, Rekord-Kommentare, Quiz zufällig gemischt · 7 kein FOMO, nichts verfällt · 8 ✅ getestet (`core/unternehmungen.test.ts`, `game/unternehmungen.test.ts`).
+
