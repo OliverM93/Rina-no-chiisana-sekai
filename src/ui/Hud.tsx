@@ -101,8 +101,9 @@ export function Hud({ session }: { session: Session }) {
       </div>
       {/* außerhalb der Knopfleiste: sonst landet sie durch deren Einblend-Animation unter dem Rucksack */}
       {hasUnreadMail(session) && (
-        <div class="hud-mail" title="Neue Post im Briefkasten">
-          ✉️ Neue Post!
+        // nur der Briefumschlag als Hinweis – der Text steht im Tooltip und für Screenreader
+        <div class="hud-mail" title="Neue Post im Briefkasten" role="status" aria-label="Neue Post im Briefkasten">
+          ✉️
         </div>
       )}
       {(inside || inYard) && <DecorBar session={session} decor={decor} />}
