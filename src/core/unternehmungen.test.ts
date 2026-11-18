@@ -25,7 +25,10 @@ import {
   rhythmRank,
   slidePuzzle,
   slidePuzzleDir,
+  sumoWon,
+  type SumoLevel,
 } from './unternehmungen';
+import { UNTERNEHMUNG_BY_ID } from '../data/unternehmungen';
 
 describe('Memory', () => {
   it('jedes Symbol liegt genau zweimal, reproduzierbar gemischt', () => {
@@ -138,30 +141,59 @@ describe('Pfeil-Duell in Leveln', () => {
 describe('Kissen-Sumo', () => {
   it('nur abwechselnde Tasten schieben', () => {
     const s = newSumo();
-    expect(sumoPush(s, 'left')).toBe(true);
-    expect(sumoPush(s, 'left')).toBe(false);
-    expect(sumoPush(s, 'right')).toBe(true);
-    expect(s.pos).toBeCloseTo(0.15);
+    expect(sumoPush(s, 'left')).toBe('ok');
+    expect(sumoPush(s, 'left')).toBe('rutsch');
+    expect(sumoPush(s, 'right')).toBe('ok');
+    expect(s.pos).toBeCloseTo(s.level.push * 2);
   });
 
-  it('wer nichts drückt, wird langsam rausgeschoben; zwei Runden entscheiden, nie „verloren“ als Rang', () => {
+  it('der Stoß über den Rand gewinnt die Runde sofort (früher fraß der Gegendruck den Sieg auf)', () => {
     const s = newSumo();
-    let r = 'weiter';
-    for (let t = 0; t < 30 && r === 'weiter'; t += 0.1) r = sumoTick(s, 0.1, t);
-    expect(r).toBe('verloren');
-    sumoNextRound(s);
-    // flink abwechselnd drücken gewinnt
-    for (let i = 0; i < 40 && !sumoOver(s) && s.won < 1; i++) {
-      sumoPush(s, i % 2 ? 'left' : 'right');
-      if (s.pos >= 1) sumoTick(s, 0, 0);
-    }
+    s.pos = 0.99;
+    expect(sumoPush(s, 'left')).toBe('gewonnen');
     expect(s.won).toBe(1);
+    // danach zählt nichts mehr bis zur nächsten Runde
+    expect(sumoTick(s, 0.5, 1)).toBe('weiter');
+    expect(sumoPush(s, 'right')).toBe('aus');
     sumoNextRound(s);
-    for (let i = 0; i < 40 && s.won < 2; i++) {
-      sumoPush(s, i % 2 ? 'left' : 'right');
-      if (s.pos >= 1) sumoTick(s, 0, 0);
+    expect(s.pos).toBe(0);
+    expect(s.roundOver).toBe(false);
+  });
+
+  /** Ein Match in echter Zeit (60 Bilder/s), `rate` = Tastendrücke je Sekunde im Wechsel */
+  function play(level: SumoLevel, rate: number) {
+    const s = newSumo(level);
+    let t = 0;
+    let nextTap = 0;
+    let side: 'left' | 'right' = 'left';
+    while (!sumoOver(s) && t < 300) {
+      const dt = 1 / 60;
+      t += dt;
+      if (s.roundOver) {
+        sumoNextRound(s);
+        continue;
+      }
+      sumoTick(s, dt, t);
+      if (t >= nextTap && !s.roundOver) {
+        sumoPush(s, side);
+        side = side === 'left' ? 'right' : 'left';
+        nextTap = t + 1 / rate;
+      }
     }
-    expect(sumoOver(s)).toBe(true);
-    expect(sumoRank(s)).toBe('gut');
+    return s;
+  }
+
+  it('jedes Lars-Level ist mit flinken Fingern gewinnbar; zu langsam verliert man (ohne Strafe)', () => {
+    const levels = UNTERNEHMUNG_BY_ID['sumo-lars'].sumo!.levels;
+    expect(levels.length).toBe(5);
+    // Level 1 gemütlich mit 4 Drücken/s, das schwerste mit 8/s
+    expect(sumoWon(play(levels[0], 4))).toBe(true);
+    for (const lv of levels) expect(sumoWon(play(lv, 8)), lv.name).toBe(true);
+    // das schwerste Level ist mit 4/s nicht zu schaffen – es wird also wirklich schwieriger
+    expect(sumoWon(play(levels[levels.length - 1], 4))).toBe(false);
+    // wer gar nicht drückt, verliert – das Spiel endet trotzdem
+    const idle = play(levels[0], 0.01);
+    expect(sumoOver(idle)).toBe(true);
+    expect(sumoRank(idle)).toBe('gemuetlich');
   });
 });

@@ -118,4 +118,14 @@ describe('Gemeinsame Unternehmungen', () => {
     expect(lars[0].game).toBe('sumo');
     expect(lars[0].game).not.toBe(oli[0].game);
   });
+
+  it('Kissen-Sumo: gewonnenes Match schaltet den nächsten Rang frei, verlorenes nicht', () => {
+    const { s } = fresh();
+    expect(unlockedLevels(s, 'sumo-lars')).toBe(1);
+    finishActivity(s, 'sumo-lars', { rank: 'gemuetlich', score: 1, level: 0 });
+    expect(unlockedLevels(s, 'sumo-lars')).toBe(1);
+    const lines = finishActivity(s, 'sumo-lars', { rank: 'gut', score: 2, level: 0 });
+    expect(unlockedLevels(s, 'sumo-lars')).toBe(2);
+    expect(lines.some((l) => l.includes('Level 2'))).toBe(true);
+  });
 });

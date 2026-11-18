@@ -243,6 +243,18 @@ export function quizRank(correct: number, total: number): Rank {
 // Kissen-Sumo: abwechselnd ← und → drücken schiebt nach vorn, der Gegner drückt dagegen
 // ---------------------------------------------------------------------------
 
+/** Ein Sumo-Level: wie stark der Gegner drückt, wie viel ein Stoß von Lina bringt, ob er plötzlich nachschiebt */
+export interface SumoLevel {
+  /** Gegner-Kraft je Sekunde (Ringbreite 2 = von Rand zu Rand) */
+  strength: number;
+  /** so weit schiebt ein richtiger (abwechselnder) Tastendruck */
+  push: number;
+  /** pro weiterer Runde wird der Gegner so viel stärker */
+  growth: number;
+  /** plötzlicher Stoß („Tsuppari!“): so weit wird Lina zurückgeschoben (0 = nie) */
+  shove: number;
+}
+
 export interface SumoState {
   /** -1 = Lina fliegt raus, +1 = Gegner fliegt raus */
   pos: number;
@@ -254,37 +266,64 @@ export interface SumoState {
   round: number;
   /** Gegner-Kraft je Sekunde (steigt pro Runde leicht) */
   strength: number;
+  level: SumoLevel;
+  /** Sekunden bis zum nächsten plötzlichen Stoß */
+  shoveIn: number;
+  /** Runde ist entschieden (bis `sumoNextRound`) */
+  roundOver: boolean;
 }
 
 export const SUMO_ROUNDS_TO_WIN = 2;
 
-export function newSumo(): SumoState {
-  return { pos: 0, last: null, won: 0, lost: 0, round: 1, strength: 0.32 };
+const SUMO_DEFAULT: SumoLevel = { strength: 0.3, push: 0.085, growth: 0.04, shove: 0 };
+
+export function newSumo(level: SumoLevel = SUMO_DEFAULT): SumoState {
+  return { pos: 0, last: null, won: 0, lost: 0, round: 1, strength: level.strength, level, shoveIn: 3, roundOver: false };
 }
 
-/** Taste gedrückt: nur abwechselnde Tasten schieben (gleiche Taste zweimal = Ausrutscher, kein Schub) */
-export function sumoPush(s: SumoState, side: 'left' | 'right'): boolean {
-  if (sumoOver(s)) return false;
+/**
+ * Taste gedrückt: nur abwechselnde Tasten schieben (gleiche Taste zweimal = Ausrutscher, kein Schub).
+ * Schiebt Lina den Gegner dabei über den Rand, ist die Runde **sofort** gewonnen.
+ */
+export function sumoPush(s: SumoState, side: 'left' | 'right'): 'ok' | 'rutsch' | 'gewonnen' | 'aus' {
+  if (sumoOver(s) || s.roundOver) return 'aus';
   const ok = s.last !== side;
   s.last = side;
-  if (ok) s.pos = Math.min(1, s.pos + 0.075);
-  return ok;
+  if (!ok) return 'rutsch';
+  s.pos = Math.min(1, s.pos + s.level.push);
+  if (s.pos >= 1) {
+    sumoRoundEnd(s, true);
+    return 'gewonnen';
+  }
+  return 'ok';
 }
 
-/** Zeit vergeht: der Gegner drückt (mit leichtem Wackeln, reproduzierbar über `t`) */
-export function sumoTick(s: SumoState, dt: number, t: number): 'weiter' | 'gewonnen' | 'verloren' {
-  if (sumoOver(s)) return 'weiter';
+/** Zeit vergeht: der Gegner drückt (mit leichtem Wackeln) und schiebt ab und zu plötzlich nach */
+export function sumoTick(s: SumoState, dt: number, t: number): 'weiter' | 'stoss' | 'verloren' {
+  if (sumoOver(s) || s.roundOver) return 'weiter';
   const wobble = 0.6 + 0.4 * Math.abs(Math.sin(t * 1.7));
   s.pos = Math.max(-1, s.pos - s.strength * wobble * dt);
-  if (s.pos >= 1) return sumoRoundEnd(s, true);
-  if (s.pos <= -1) return sumoRoundEnd(s, false);
-  return 'weiter';
+  let event: 'weiter' | 'stoss' = 'weiter';
+  if (s.level.shove > 0) {
+    s.shoveIn -= dt;
+    if (s.shoveIn <= 0) {
+      s.pos = Math.max(-1, s.pos - s.level.shove);
+      // nächster Stoß nach 2,5 – 4,5 s (reproduzierbar über die Zeit)
+      s.shoveIn = 2.5 + Math.abs(Math.sin(t * 3.1)) * 2;
+      event = 'stoss';
+    }
+  }
+  if (s.pos <= -1) {
+    sumoRoundEnd(s, false);
+    return 'verloren';
+  }
+  return event;
 }
 
-function sumoRoundEnd(s: SumoState, win: boolean): 'gewonnen' | 'verloren' {
+function sumoRoundEnd(s: SumoState, win: boolean) {
+  s.roundOver = true;
   if (win) s.won += 1;
   else s.lost += 1;
-  return win ? 'gewonnen' : 'verloren';
 }
 
 /** Nächste Runde vorbereiten (Gegner wird etwas stärker) */
@@ -292,10 +331,15 @@ export function sumoNextRound(s: SumoState) {
   s.pos = 0;
   s.last = null;
   s.round += 1;
-  s.strength += 0.06;
+  s.strength += s.level.growth;
+  s.shoveIn = 3;
+  s.roundOver = false;
 }
 
 export const sumoOver = (s: SumoState) => s.won >= SUMO_ROUNDS_TO_WIN || s.lost >= SUMO_ROUNDS_TO_WIN;
+
+/** Match gewonnen? (dann wird das nächste Sumo-Level frei) */
+export const sumoWon = (s: SumoState) => s.won >= SUMO_ROUNDS_TO_WIN;
 
 export function sumoRank(s: SumoState): Rank {
   if (s.won >= SUMO_ROUNDS_TO_WIN && s.lost === 0) return 'super';

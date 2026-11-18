@@ -94,6 +94,24 @@ export const palette = {
   sparkle: '#ffffff',
 
   // --- Benutzeroberfläche ----------------------------------------------------
+  /** Kissen-Sumo mit Lars: Ringer und Dohyō (Ring aus Lehm mit Strohseil) */
+  sumo: {
+    skin: '#f4d2b6',
+    skinShade: '#e2b392',
+    linaHair: '#7a3b20',
+    larsHair: '#d98a48',
+    linaBelt: '#e27896',
+    larsBelt: '#3b5ca8',
+    beltShade: 'rgba(0,0,0,0.18)',
+    clay: '#dcb37c',
+    clayDark: '#c69a62',
+    straw: '#efdfae',
+    strawDark: '#cdb77c',
+    line: '#ffffff',
+    face: '#3a2a2a',
+    blush: 'rgba(240,120,130,0.45)',
+    freckle: '#b0703f',
+  },
   /** Malen mit Jens: Farbstimmungen der Leinwand (Rollen je Stimmung, gezeichnet in `gfx/malen.ts`) */
   malen: {
     pastell: { skyTop: '#bfe0f5', skyBottom: '#fde4ec', sea: '#9fd3e6', seaDeep: '#78b9d6', seaLight: '#e8f7fc', sand: '#f8e6c6', grass: '#cfe9bf', grassDark: '#a9d49a', accent: '#f4a3bd', sun: '#fff1b3', wall: '#fdf0e6', wallDark: '#f1d9cc', wood: '#e2c39c', night: '#4a4f86', nightDeep: '#2c3060', light: '#ffffff', dark: '#6f6283' },

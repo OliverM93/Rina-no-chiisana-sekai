@@ -372,3 +372,10 @@ vergeht. Kein Fortschritt, keine Belohnung, keine Zahlen, nichts gespeichert –
 **Bewusst nicht:** Belohnungen für Level (nur die Freude am nächsten Boss), Strafen beim Nicht-Freischalten, Zeitdruck außerhalb der Runde.
 **Designprüfung:** 1 „Wir schaffen den nächsten Boss!“ · 2 beliebig oft · 3 Zeit mit den Liebsten, jede Person mit eigenem Spiel · 4 Level geben Oli-Zocken ein Langzeitziel ohne Druck · 5 keine Ökonomie-Wirkung · 6 Risiko Frust bei hohen Leveln → erreichte Level bleiben, kein Verlieren · 7 kein FOMO · 8 ✅ getestet (Level, Sumo, Puzzle-Symbole), Szene im Browser geprüft.
 
+### D50 · Kissen-Sumo gewinnbar und in Rängen (Nov. 2026)
+
+**Anlass:** Lina: Das Sumo war nicht zu gewinnen und hörte nie auf. Ursache: Der Gegendruck wurde im selben Moment abgezogen, in dem Lina Lars über den Rand schob, bevor der Sieg geprüft wurde.
+**Entscheidung:** ✅ Der Stoß über den Rand gewinnt sofort; ein Test spielt jedes Level in echter Zeit durch (gewinnbar mit 8 Drücken/s, Level 1 schon mit 4/s; das schwerste nicht mit 4/s). ✅ 5 Ränge (Jonokuchi → Yokozuna) wie die Level bei Oli, freigeschaltet durch ein gewonnenes Match. ✅ Gezeichnete Sumo-Ringer (Mawashi, Haarknoten, Lars mit Bart) auf einem Dohyō.
+**Bewusst nicht:** Belohnungen pro Rang, Strafen bei Niederlagen.
+**Designprüfung:** 1 „Ich werde Yokozuna!“ · 2 beliebig oft · 3 Zeit mit Lars, sein Sumo-Hobby · 4 Ränge als Langzeitziel ohne Druck · 5 keine Ökonomie-Wirkung · 6 Frust → erreichte Ränge bleiben, Level 1 leicht · 7 kein FOMO · 8 ✅ Echtzeit-Simulation im Test, im Browser gespielt.
+
