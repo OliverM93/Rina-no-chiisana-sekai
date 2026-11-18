@@ -2157,7 +2157,8 @@ export class World3D {
       this.updateGhost();
       const yard = this.session.yardRoom();
       const t = this.hoverCell && yard ? this.yard.topAt(yard, this.hoverCell.x, this.hoverCell.y) : null;
-      this.canvas.style.cursor = this.decor ? 'grabbing' : t ? 'grab' : '';
+      const nature = !t && !this.decor && (this.yardNatureUnder(e) ?? (this.hoverCell && this.natureAt(this.session.yardArea().x + this.hoverCell.x, this.session.yardArea().y + this.hoverCell.y)));
+      this.canvas.style.cursor = this.decor ? 'grabbing' : t ? 'grab' : nature ? 'pointer' : '';
       return;
     }
     const hit = this.pick(e);
@@ -2184,7 +2185,12 @@ export class World3D {
     }
     if (this.session.decorActive) {
       this.hoverCell = this.yardCellAt(e);
-      this.decorClick();
+      this.natureClicked = this.decor ? undefined : this.yardNatureUnder(e);
+      const yard = this.session.yardRoom();
+      const furnitureThere = !!(this.hoverCell && yard && this.yard.topAt(yard, this.hoverCell.x, this.hoverCell.y));
+      if (this.natureClicked && !furnitureThere) this.askFellNature(this.natureClicked.x, this.natureClicked.y);
+      else this.decorClick();
+      this.natureClicked = undefined;
       return;
     }
     const hit = this.pick(e);
@@ -4846,8 +4852,39 @@ export class World3D {
   }
 
   /** Im Garten gestalten auf einen Baum, eine Kiefer oder einen Busch klicken: Fällen? (gibt Äste, bleibt weg) */
+  /** Baum, Kiefer oder Busch im Garten unter dem Mauszeiger – man darf das Gewächs selbst anklicken, nicht nur den Boden dahinter */
+  private yardNatureUnder(e: PointerEvent) {
+    const area = this.session.yardArea();
+    const cands: THREE.Object3D[] = [];
+    const byNode = new Map<THREE.Object3D, string>();
+    for (const o of this.session.map.objects) {
+      if (o.kind !== 'tree' && o.kind !== 'pine' && o.kind !== 'bush') continue;
+      if (o.x < area.x || o.y < area.y || o.x >= area.x + area.w || o.y >= area.y + area.h || !isActive(this.session.map, o.id)) continue;
+      const node = this.view.nodes.get(o.id);
+      if (node) {
+        cands.push(node);
+        byNode.set(node, o.id);
+      }
+    }
+    if (cands.length === 0) return undefined;
+    this.raycaster.setFromCamera(this.ndc(e), this.camera);
+    const hit = this.raycaster.intersectObjects(cands, true)[0];
+    for (let o: THREE.Object3D | null = hit?.object ?? null; o; o = o.parent) {
+      const id = byNode.get(o);
+      if (id) return this.session.map.objects.find((m) => m.id === id);
+    }
+    return undefined;
+  }
+
+  /** Beim Klick im Gartenmodus: das angeklickte Gewächs (falls man es selbst getroffen hat) */
+  private natureClicked: MapObject | undefined;
+
+  private natureAt(x: number, y: number) {
+    return this.session.map.objects.find((o) => (o.kind === 'tree' || o.kind === 'pine' || o.kind === 'bush') && o.x === x && o.y === y && isActive(this.session.map, o.id));
+  }
+
   private askFellNature(x: number, y: number) {
-    const obj = this.session.map.objects.find((o) => (o.kind === 'tree' || o.kind === 'pine' || o.kind === 'bush') && o.x === x && o.y === y && isActive(this.session.map, o.id));
+    const obj = this.natureAt(x, y);
     if (!obj) return;
     const name = obj.kind === 'bush' ? 'Busch' : obj.kind === 'pine' ? 'Kiefer' : 'Baum';
     this.session.bus.emit('dialog:open', {

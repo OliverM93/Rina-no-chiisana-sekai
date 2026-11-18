@@ -198,8 +198,22 @@ export function moveFurniture(session: Session, uid: string, x: number, y: numbe
   const c = currentRoom(session);
   const item = c?.room.items.find((i) => i.uid === uid);
   const data = session.data;
-  if (!session.inside && data && bedTiles(session, uid).some((t) => data.world.garden[spotKey(t.x, t.y)])) return false;
-  if (!c || !item || !canPlace(session, item.itemId, x, y, rot, uid) || !moveItem(c.room, c.layout, uid, x, y, rot, furnitureInfo)) return false;
+  if (!c || !item || !canPlace(session, item.itemId, x, y, rot, uid)) return false;
+  // Hochbeet: die gepflanzten Pflanzen ziehen mit um (auch beim Drehen)
+  const carry = !session.inside && data ? bedPlants(session, uid, item.rot) : [];
+  if (!moveItem(c.room, c.layout, uid, x, y, rot, furnitureInfo)) return false;
+  if (carry.length > 0 && data) {
+    for (const p of carry) delete data.world.garden[spotKey(p.from.x, p.from.y)];
+    const tiles = bedTiles(session, uid);
+    const f = FURNITURE_BY_ITEM[item.itemId];
+    const { w, d } = footprint(f.def, rot);
+    for (const p of carry) {
+      const [nx, ny] = turnCell(p.lx, p.ly, p.w, p.d, (rot - p.rot + 4) % 4);
+      // bedTiles läuft über dx (Breite), dann dy (Tiefe)
+      const t = tiles[nx * d + ny];
+      if (t && nx < w && ny < d) data.world.garden[spotKey(t.x, t.y)] = p.plant;
+    }
+  }
   if (recolor && recolor !== item.itemId && sameFamily(recolor, item.itemId)) item.itemId = recolor;
   roomChanged(session);
   return true;
@@ -215,6 +229,34 @@ export function bedTiles(session: Session, uid: string): Array<{ x: number; y: n
   const { w, d } = footprint(f.def, item.rot);
   const out: Array<{ x: number; y: number }> = [];
   for (let dx = 0; dx < w; dx++) for (let dy = 0; dy < d; dy++) out.push({ x: area.x + item.x + dx, y: area.y + item.y + dy });
+  return out;
+}
+
+/** Eine Zelle (lx, ly) eines w×d-Feldes k-mal um 90° drehen → neue Zelle im gedrehten Feld */
+function turnCell(lx: number, ly: number, w: number, d: number, k: number): [number, number] {
+  let x = lx;
+  let y = ly;
+  let cw = w;
+  let cd = d;
+  for (let i = 0; i < k; i++) {
+    [x, y] = [cd - 1 - y, x];
+    [cw, cd] = [cd, cw];
+  }
+  return [x, y];
+}
+
+/** Die im Hochbeet gepflanzten Pflanzen samt ihrer Zelle im Beet (vor dem Verschieben) */
+function bedPlants(session: Session, uid: string, rot: Rotation) {
+  const data = session.data;
+  const out: Array<{ from: { x: number; y: number }; lx: number; ly: number; w: number; d: number; rot: Rotation; plant: NonNullable<typeof data>['world']['garden'][string] }> = [];
+  const found = session.findYardItem(uid);
+  const f = found ? FURNITURE_BY_ITEM[found.item.itemId] : undefined;
+  if (!data || !found || !f?.def.bed) return out;
+  const { w, d } = footprint(f.def, rot);
+  bedTiles(session, uid).forEach((t, i) => {
+    const plant = data.world.garden[spotKey(t.x, t.y)];
+    if (plant) out.push({ from: t, lx: Math.floor(i / d), ly: i % d, w, d, rot, plant });
+  });
   return out;
 }
 

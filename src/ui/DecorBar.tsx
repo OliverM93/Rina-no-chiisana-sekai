@@ -99,7 +99,7 @@ export function DecorBar({ session, decor }: { session: Session; decor: DecorSta
           {holding
             ? `${holding}: Klicken zum Abstellen${decor.valid ? '' : ' (hier passt es nicht)'}`
             : outside
-              ? 'Klick auf Gartensachen zum Verschieben. Kamera: ziehen oder WASD, Mausrad zoomt.'
+              ? 'Klick auf Gartensachen zum Verschieben – auf einen Busch oder Baum zum Wegmachen. Kamera: ziehen oder WASD, Mausrad zoomt.'
               : 'Klick auf ein Möbel zum Verschieben – C = noch eins. Kamera: ziehen oder WASD, Mausrad zoomt.'}
         </span>
         {decor.variants.length > 1 && (
