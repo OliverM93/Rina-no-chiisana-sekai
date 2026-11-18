@@ -9,6 +9,7 @@ import type { PlacedItem, Room, RoomLayout } from '../core/room';
 import { INSEL_YARD_AREA, YARD_AREA, YARD_AREAS, type YardId } from '../data/yard';
 import { RECIPE_BY_ID, START_RECIPES } from '../data/recipes';
 import type { Appearance } from '../core/appearance';
+import type { RoundResult } from './unternehmungen';
 import { Emitter } from '../core/events';
 import { createNpcState } from '../core/friendship';
 import { hashString } from '../core/rng';
@@ -67,6 +68,7 @@ export type UiPanel =
   | { kind: 'galerie' }
   | { kind: 'tv'; withOli: boolean }
   | { kind: 'minispiel' }
+  | { kind: 'zusammen'; id: string; round: string; onDone: (r: RoundResult) => void; onCancel: () => void }
   | { kind: 'ukulele' }
   | { kind: 'notizbuch' }
   | { kind: 'herd' }

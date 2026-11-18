@@ -4,6 +4,7 @@
  * (`world.dates['moment:<id>']`), es braucht kein eigenes Spielstand-Format.
  * Ton: Lina erzählt in der Ich-Form, warm und knapp – nie Pflicht, nie eine Liste zum Abhaken.
  */
+import { UNTERNEHMUNGEN, zusammenErstKey } from './unternehmungen';
 
 /** Woran man erkennt, dass der Moment eingetreten ist */
 export type MomentSource =
@@ -79,6 +80,8 @@ export const MOMENTS: readonly MomentDef[] = [
   { id: 'versteck-waldwinkel', source: { dateKey: 'versteck:waldwinkel' }, text: 'Im Waldwinkel stand eine Vogeltränke. Zwei Spatzen waren empört, aber sie kommen drüber weg.' },
   { id: 'versteck-felsnische', source: { dateKey: 'versteck:felsnische' }, text: 'Neben dem großen Felsen lag ein kleines Steinmännchen. Jemand hat sich Mühe gegeben, ich hab es mitgenommen.' },
   { id: 'versteck-treibgut', source: { dateKey: 'versteck:treibgut' }, text: 'Im Treibgut steckte eine Flaschenpost: „Such weiter, wo der Sand aufhört.“ Ich bin gespannt, was das heißt.' },
+  // gemeinsame Unternehmungen: das erste Mal mit jeder Person
+  ...UNTERNEHMUNGEN.map((u) => ({ id: `zusammen-${u.id}`, source: { dateKey: zusammenErstKey(u.id) }, text: u.album })),
 ];
 
 /** Ein Herzenswunsch ist erfüllt: Text wird in `game/album.ts` je Wunsch erzeugt. */

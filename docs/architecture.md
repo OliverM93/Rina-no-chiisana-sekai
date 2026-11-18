@@ -90,7 +90,7 @@ src/
   ui/          Preact-Overlay: App, TitleScreen, CharacterEditor, Hud, DialogBox (mit Auswahl & Herzen),
                InventoryPanel (Tasche/Verkaufen/Schenken), MailPanel, Menu, store.ts,
                CatalogPanel (Möbelkatalog, Tastatur `catalogNav.ts`; Ordnung `data/catalog.ts`, Filter `game/catalog.ts`), CraftPanel (Werkbank/Küche/Apotheke), CollectionBook (Sammelbuch),
-               DecorBar (Einrichten), BankPanel, SeedStandPanel (Samenstand), MapPanel (Dorfkarte), GalleryPanel, TvPanel, NotebookPanel (Notizbuch, Logik `game/notebook.ts`), MiniGamePanel (Dackel-Snake, Logik `core/snake.ts`), Preview3D
+               DecorBar (Einrichten), BankPanel, SeedStandPanel (Samenstand), MapPanel (Dorfkarte), GalleryPanel, TvPanel, NotebookPanel (Notizbuch, Logik `game/notebook.ts`), MiniGamePanel (Dackel-Snake, Logik `core/snake.ts`), ZusammenPanel (gemeinsame Unternehmungen: Memory, Puzzle, Takt, Pfeil-Duell, Quiz, Malen – Logik `core/unternehmungen.ts`, Regeln `game/unternehmungen.ts`, Inhalte `data/unternehmungen.ts`), Preview3D
   dev/         Entwickler-Galerie (wird nicht ins Spiel gebaut)
 ```
 
