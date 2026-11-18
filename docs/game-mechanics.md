@@ -172,7 +172,7 @@ Wetter und Feste laufen nach echter Zeit.
 - **Garten:** `data/yard.ts` (`YARD_AREA`) legt Linas Grundstück fest. Gartensachen sind Möbel mit
   `outdoor: true` (Stil „garten“) und nutzen dieselbe Raumlogik wie drinnen (`currentRoom` = Garten, wenn
   Lina draußen ist). Sie blockieren die Karte über `WorldMap.extra` (`session.syncYardCollision()`); Wege und
-  Tore nicht. `keepsAccess` verhindert, dass etwas Wichtiges unerreichbar wird. Hochbeete sind Pflanzplätze.
+  Tore nicht. `keepsAccess` verhindert, dass etwas Wichtiges unerreichbar wird. Hochbeete sind Pflanzplätze. **Hochbeete lassen sich samt Bepflanzung verschieben/drehen** (Nov. 2026): die Pflanzen ziehen mit um (`home.ts → moveFurniture`, Test `hochbeetVerschieben.test.ts`); nur *Wegräumen* in die Tasche bleibt gesperrt, solange etwas wächst. **Büsche, Bäume und Kiefern im Garten** lassen sich im Gestalten-Modus direkt anklicken (auch das Gewächs selbst, nicht nur der Boden dahinter), der Mauszeiger wird zur Hand, die Leiste weist darauf hin (`World3D.yardNatureUnder`).
 - **Oli:** wohnt in Linas Haus (`home: 'haus-lina'`). Ist er „zu Hause“ und Lina drinnen, zeigt World3D ihn im
   Zimmer (`updateHomeOli`: Platz je nach Tagesablauf-Label an Schreibtisch/Kaffeemaschine/Hantelbank, nachts
   auf dem Futon). Gemeinsame Momente in `game/romance.ts`, Tage in `world.dates`. **Küsschen** so oft man mag
