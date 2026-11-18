@@ -69,15 +69,15 @@ export function finishActivity(session: Session, id: string, result: RoundResult
     }
   }
 
-  // Pfeil-Duell: nächstes Level freischalten
-  const levels = def.duell?.levels;
-  if (levels && result.level !== undefined && result.score !== undefined) {
-    const lv = levels[result.level];
+  // Level-Spiele (Pfeil-Duell, Kissen-Sumo): nächstes Level freischalten
+  const levels = levelNames(def);
+  if (levels.length > 1 && result.level !== undefined && result.score !== undefined) {
     const reached = unlockedLevels(session, id);
-    if (lv && result.level === reached - 1 && reached < levels.length && duelUnlocksNext(result.score, lv.length)) {
+    const earned = def.duell ? duelUnlocksNext(result.score, def.duell.levels[result.level]?.length ?? 99) : result.rank !== 'gemuetlich';
+    if (result.level === reached - 1 && reached < levels.length && earned) {
       dates[zusammenLevelKey(id)] = String(reached + 1);
-      const next = levels[reached];
-      lines.push(pickByDay(session, `zusammen-level:${id}:${reached}`, def.duell?.unlocked ?? ['Neues Level!']), `🔓 Level ${reached + 1}: ${next.boss}`);
+      const unlockedLines = def.duell?.unlocked ?? def.sumo?.unlocked ?? ['Neues Level!'];
+      lines.push(pickByDay(session, `zusammen-level:${id}:${reached}`, unlockedLines), `🔓 Level ${reached + 1}: ${levels[reached]}`);
     }
   }
 
@@ -94,7 +94,14 @@ export function finishActivity(session: Session, id: string, result: RoundResult
 /** Wie viele Level schon erreicht sind (mindestens das erste) */
 export function unlockedLevels(session: Session, id: string): number {
   const def = UNTERNEHMUNG_BY_ID[id];
-  const max = def?.duell?.levels.length ?? 1;
+  const max = def ? Math.max(1, levelNames(def).length) : 1;
   const n = Number.parseInt(session.data?.world.dates[zusammenLevelKey(id)] ?? '1', 10);
   return Math.max(1, Math.min(max, Number.isFinite(n) ? n : 1));
+}
+
+/** Namen der Level (Pfeil-Duell: Boss, Sumo: Rang); leer bei Spielen ohne Level */
+export function levelNames(def: UnternehmungDef): string[] {
+  if (def.duell) return def.duell.levels.map((l) => l.boss);
+  if (def.sumo) return def.sumo.levels.map((l) => l.name);
+  return [];
 }

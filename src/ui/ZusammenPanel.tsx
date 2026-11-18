@@ -31,11 +31,13 @@ import {
   sumoPush,
   sumoRank,
   sumoTick,
+  SUMO_ROUNDS_TO_WIN,
 } from '../core/unternehmungen';
 import type { UnternehmungDef } from '../data/unternehmungen';
 import { drawPainting } from '../gfx/malen';
 import type { Session } from '../game/session';
-import { bestOf, type RoundResult, unlockedLevels } from '../game/unternehmungen';
+import { bestOf, levelNames, type RoundResult, unlockedLevels } from '../game/unternehmungen';
+import { palette } from '../style/palette';
 
 interface GameProps {
   session: Session;
@@ -226,31 +228,49 @@ function TaktGame({ def, onDone, session }: GameProps) {
 const ARROW_ICON: Record<Arrow, string> = { up: '⬆️', down: '⬇️', left: '⬅️', right: '➡️' };
 const ARROW_KEYS: Record<string, Arrow> = { ArrowUp: 'up', KeyW: 'up', ArrowDown: 'down', KeyS: 'down', ArrowLeft: 'left', KeyA: 'left', ArrowRight: 'right', KeyD: 'right' };
 
+/** Level-Auswahl (Pfeil-Duell, Kissen-Sumo): nur erreichte Level sind wählbar, das neueste ist hervorgehoben */
+function LevelSelect({ session, def, title, hint, best, onPick }: { session: Session; def: UnternehmungDef; title: string; hint: string; best: (i: number) => string | null; onPick: (i: number) => void }) {
+  const names = levelNames(def);
+  const reached = unlockedLevels(session, def.id);
+  return (
+    <>
+      <div class="zs-status">{title}</div>
+      <div class="zs-levels">
+        {names.map((name, i) => {
+          const open = i < reached;
+          const b = open ? best(i) : null;
+          return (
+            <button key={i} class={`btn ${open ? (i === reached - 1 ? 'primary' : 'ghost') : 'ghost locked'}`} disabled={!open} onClick={() => onPick(i)}>
+              <span class="zs-level-no">{open ? `Level ${i + 1}` : `🔒 Level ${i + 1}`}</span>
+              <span class="zs-level-boss">{open ? name : '???'}</span>
+              {b && <span class="zs-level-best">{b}</span>}
+            </button>
+          );
+        })}
+      </div>
+      <div class="zs-cheer">{hint}</div>
+    </>
+  );
+}
+
 /** Pfeil-Duell: erst ein Level wählen (nur erreichte), dann der Kampf */
 function DuellGame(props: GameProps) {
   const { def, session } = props;
   const levels = def.duell?.levels ?? [];
-  const reached = unlockedLevels(session, def.id);
   const [level, setLevel] = useState<number | null>(levels.length <= 1 ? 0 : null);
   if (level === null) {
     return (
-      <>
-        <div class="zs-status">Welcher Boss ist heute dran?</div>
-        <div class="zs-levels">
-          {levels.map((lv, i) => {
-            const open = i < reached;
-            const best = bestOf(session, def.id, i);
-            return (
-              <button key={i} class={`btn ${open ? (i === reached - 1 ? 'primary' : 'ghost') : 'ghost locked'}`} disabled={!open} onClick={() => setLevel(i)}>
-                <span class="zs-level-no">{open ? `Level ${i + 1}` : `🔒 Level ${i + 1}`}</span>
-                <span class="zs-level-boss">{open ? lv.boss : '???'}</span>
-                {open && best !== null && <span class="zs-level-best">Bestwert {best} / {lv.length}</span>}
-              </button>
-            );
-          })}
-        </div>
-        <div class="zs-cheer">Schaff mindestens 60 % Treffer, dann wird das nächste Level frei.</div>
-      </>
+      <LevelSelect
+        session={session}
+        def={def}
+        title="Welcher Boss ist heute dran?"
+        hint="Schaff mindestens 60 % Treffer, dann wird das nächste Level frei."
+        best={(i) => {
+          const b = bestOf(session, def.id, i);
+          return b === null ? null : `Bestwert ${b} / ${levels[i]?.length ?? '?'}`;
+        }}
+        onPick={setLevel}
+      />
     );
   }
   return <DuellFight {...props} level={level} />;
@@ -334,16 +354,115 @@ function DuellFight({ def, seed, onDone, level }: GameProps & { level: number })
 
 // ---------------------------------------------------------------------------
 
-/** Kissen-Sumo: abwechselnd ← und → drücken schiebt den Gegner aus dem Ring */
-function SumoGame({ def, onDone }: GameProps) {
-  const st = useRef(newSumo());
+/** Ein gezeichneter Sumo-Ringer (Chibi): runder Bauch, Mawashi-Gürtel, Haarknoten; schaut nach rechts */
+function SumoRinger({ who, push, fallen }: { who: 'lina' | 'lars'; push: number; fallen: boolean }) {
+  const c = palette.sumo;
+  const hair = who === 'lina' ? c.linaHair : c.larsHair;
+  const belt = who === 'lina' ? c.linaBelt : c.larsBelt;
+  // vorgebeugt beim Drücken, umgekippt nach einer verlorenen Runde
+  const lean = fallen ? -70 : 8 + push * 10;
+  return (
+    <svg class="zs-ringer" viewBox="0 0 100 100" aria-hidden="true">
+      <g transform={`rotate(${lean} 50 90)`}>
+        {/* Beine im Grätschstand */}
+        <ellipse cx="34" cy="86" rx="11" ry="9" fill={c.skinShade} />
+        <ellipse cx="66" cy="86" rx="11" ry="9" fill={c.skinShade} />
+        {/* Bauch */}
+        <ellipse cx="50" cy="62" rx="33" ry="27" fill={c.skin} />
+        <ellipse cx="56" cy="58" rx="14" ry="12" fill="rgba(255,255,255,0.25)" />
+        {/* Mawashi mit Knoten vorn */}
+        <rect x="18" y="68" width="64" height="12" rx="5" fill={belt} />
+        <rect x="18" y="76" width="64" height="4" rx="2" fill={c.beltShade} />
+        <path d="M46 80 L54 80 L56 92 L44 92 Z" fill={belt} />
+        {/* Arme nach vorn (zum Gegner) */}
+        <ellipse cx="78" cy="54" rx="13" ry="8" fill={c.skin} transform="rotate(-15 78 54)" />
+        <ellipse cx="72" cy="64" rx="12" ry="7" fill={c.skinShade} transform="rotate(-5 72 64)" />
+        {/* Kopf */}
+        {who === 'lina' && (
+          <>
+            {/* Locken um das Gesicht */}
+            <circle cx="38" cy="30" r="9" fill={hair} />
+            <circle cx="40" cy="42" r="7" fill={hair} />
+            <circle cx="64" cy="32" r="7" fill={hair} />
+          </>
+        )}
+        <circle cx="52" cy="32" r="15" fill={c.skin} />
+        {/* Haare oben und Haarknoten (Chonmage) */}
+        <path d="M37 30 Q40 14 52 15 Q65 14 67 30 Q60 22 52 23 Q44 22 37 30 Z" fill={hair} />
+        <ellipse cx="54" cy="12" rx="6" ry="4.5" fill={hair} />
+        <rect x="51" y="13" width="6" height="4" rx="1" fill={hair} />
+        {/* Gesicht: entschlossen, aber freundlich */}
+        <path d="M54 29 l6 -2" stroke={c.face} stroke-width="1.6" stroke-linecap="round" />
+        <path d="M45 29 l5 1" stroke={c.face} stroke-width="1.6" stroke-linecap="round" />
+        <circle cx="58" cy="33" r="1.8" fill={c.face} />
+        <circle cx="48" cy="33" r="1.8" fill={c.face} />
+        <ellipse cx="62" cy="38" rx="3" ry="1.8" fill={c.blush} />
+        <ellipse cx="44" cy="38" rx="3" ry="1.8" fill={c.blush} />
+        {who === 'lina' && (
+          <>
+            <circle cx="61" cy="36" r="0.7" fill={c.freckle} />
+            <circle cx="63" cy="35" r="0.7" fill={c.freckle} />
+            <circle cx="45" cy="36" r="0.7" fill={c.freckle} />
+            <path d="M50 40 Q54 42 57 40" stroke={c.face} stroke-width="1.4" fill="none" stroke-linecap="round" />
+          </>
+        )}
+        {who === 'lars' && (
+          // rotblonder Vollbart
+          <path d="M39 34 Q40 50 52 50 Q64 50 66 34 Q62 42 52 42 Q43 42 39 34 Z" fill={hair} />
+        )}
+      </g>
+    </svg>
+  );
+}
+
+/** Kissen-Sumo: erst einen Rang wählen, dann abwechselnd ← und → drücken */
+function SumoGame(props: GameProps) {
+  const { def, session } = props;
+  const levels = def.sumo?.levels ?? [];
+  const [level, setLevel] = useState<number | null>(levels.length <= 1 ? 0 : null);
+  if (level === null) {
+    return (
+      <LevelSelect
+        session={session}
+        def={def}
+        title="Gegen welchen Lars trittst du an?"
+        hint="Gewinn das Match (zwei Runden), dann wird der nächste Rang frei."
+        best={(i) => ((bestOf(session, def.id, i) ?? 0) >= SUMO_ROUNDS_TO_WIN ? '🏆 geschafft' : null)}
+        onPick={setLevel}
+      />
+    );
+  }
+  return <SumoBout {...props} level={level} />;
+}
+
+function SumoBout({ def, onDone, level }: GameProps & { level: number }) {
+  const lv = def.sumo?.levels[level];
+  const st = useRef(newSumo(lv));
   const [, redraw] = useState(0);
   const [msg, setMsg] = useState('');
   const [pause, setPause] = useState(false);
+  const [pushK, setPushK] = useState(0);
   const pauseRef = useRef(false);
   const t0 = useRef(performance.now());
   const s = st.current;
   const sumo = def.sumo;
+  const endRound = (win: boolean) => {
+    const lines = win ? (sumo?.win ?? []) : (sumo?.lose ?? []);
+    setMsg(lines[(s.won + s.lost) % Math.max(1, lines.length)] ?? '');
+    pauseRef.current = true;
+    setPause(true);
+    redraw((n) => n + 1);
+    window.setTimeout(() => {
+      if (sumoOver(s)) {
+        onDone({ rank: sumoRank(s), score: s.won, level });
+        return;
+      }
+      sumoNextRound(s);
+      pauseRef.current = false;
+      setPause(false);
+      setMsg(`Runde ${s.round}! ${pickCheer(def, s.round)}`);
+    }, 2200);
+  };
   useEffect(() => {
     let raf = 0;
     let last = performance.now();
@@ -353,22 +472,8 @@ function SumoGame({ def, onDone }: GameProps) {
       last = now;
       if (!pauseRef.current && !sumoOver(s)) {
         const r = sumoTick(s, dt, (now - t0.current) / 1000);
-        if (r !== 'weiter') {
-          const lines = r === 'gewonnen' ? (sumo?.win ?? []) : (sumo?.lose ?? []);
-          setMsg(lines[(s.won + s.lost) % Math.max(1, lines.length)] ?? '');
-          pauseRef.current = true;
-          setPause(true);
-          window.setTimeout(() => {
-            if (sumoOver(s)) {
-              onDone({ rank: sumoRank(s), score: s.won });
-              return;
-            }
-            sumoNextRound(s);
-            pauseRef.current = false;
-            setPause(false);
-            setMsg(`Runde ${s.round}! ${pickCheer(def, s.round)}`);
-          }, 2200);
-        }
+        if (r === 'verloren') endRound(false);
+        else if (r === 'stoss') setMsg('„Tsuppari!“ Lars schiebt plötzlich nach – dagegenhalten!');
         redraw((n) => n + 1);
       }
       raf = requestAnimationFrame(tick);
@@ -378,9 +483,10 @@ function SumoGame({ def, onDone }: GameProps) {
   }, []);
   const push = (side: 'left' | 'right') => {
     if (pauseRef.current) return;
-    const ok = sumoPush(s, side);
-    if (!ok) setMsg('Ausgerutscht! Immer abwechselnd ← und →.');
-    else if (Math.random() < 0.06) setMsg(pickCheer(def, Math.floor(Math.random() * 10)));
+    const r = sumoPush(s, side);
+    if (r === 'rutsch') setMsg('Ausgerutscht! Immer abwechselnd ← und →.');
+    if (r === 'ok' || r === 'gewonnen') setPushK((k) => (k + 1) % 2);
+    if (r === 'gewonnen') endRound(true);
     redraw((n) => n + 1);
   };
   useEffect(() => {
@@ -398,21 +504,29 @@ function SumoGame({ def, onDone }: GameProps) {
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
   }, []);
-  // Ring: Lina links, Gegner rechts; beide stehen Schulter an Schulter an der Druckstelle
-  const center = 50 + s.pos * 38;
+  // Druckpunkt zwischen den beiden: -1 = Linas Rand (links), +1 = Lars' Rand (rechts)
+  const center = 50 + s.pos * 30;
+  const linaOut = pause && s.lost > 0 && s.pos <= -1;
+  const larsOut = pause && s.pos >= 1;
   return (
     <>
       <div class="zs-status">
-        Runde {s.round} · Lina {s.won} : {s.lost} {sumo?.opponent}
+        Level {level + 1} · Runde {s.round} · Lina {s.won} : {s.lost} {sumo?.opponent}
       </div>
-      <div class="zs-ring">
-        <div class="zs-ring-line left" />
-        <div class="zs-ring-line right" />
-        <div class={`zs-wrestler lina ${pause ? '' : 'push'}`} style={{ left: `${center - 9}%` }}>
-          🧍‍♀️
+      <div class="zs-dohyo">
+        <svg class="zs-dohyo-ring" viewBox="0 0 400 120" preserveAspectRatio="none" aria-hidden="true">
+          <rect x="0" y="0" width="400" height="120" rx="18" fill={palette.sumo.clayDark} />
+          <ellipse cx="200" cy="60" rx="186" ry="52" fill={palette.sumo.clay} />
+          <ellipse cx="200" cy="60" rx="178" ry="47" fill="none" stroke={palette.sumo.straw} stroke-width="8" />
+          <ellipse cx="200" cy="60" rx="178" ry="47" fill="none" stroke={palette.sumo.strawDark} stroke-width="2" stroke-dasharray="6 5" />
+          <rect x="176" y="44" width="5" height="32" fill={palette.sumo.line} />
+          <rect x="219" y="44" width="5" height="32" fill={palette.sumo.line} />
+        </svg>
+        <div class={`zs-ringer-pos lina ${pushK ? 'shove' : ''}`} style={{ left: `${center - 25}%` }}>
+          <SumoRinger who="lina" push={pause ? 0 : 1} fallen={linaOut} />
         </div>
-        <div class={`zs-wrestler gegner ${pause ? '' : 'push'}`} style={{ left: `${center + 1}%` }}>
-          🧔
+        <div class="zs-ringer-pos lars" style={{ left: `${center - 2}%` }}>
+          <SumoRinger who="lars" push={pause ? 0 : 1} fallen={larsOut} />
         </div>
       </div>
       <div class="zs-arrow-buttons">
@@ -423,7 +537,7 @@ function SumoGame({ def, onDone }: GameProps) {
           ➡️
         </button>
       </div>
-      <div class="zs-cheer">{msg || 'Abwechselnd ← und → drücken! Zwei gewonnene Runden gewinnen.'}</div>
+      <div class="zs-cheer">{msg || `${lv?.name ?? ''}: abwechselnd ← und → drücken! Zwei gewonnene Runden gewinnen.`}</div>
     </>
   );
 }

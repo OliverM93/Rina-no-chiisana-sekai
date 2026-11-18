@@ -3071,50 +3071,44 @@ body:has(.dialog-layer) .decor-bar {
   transform: rotate(180deg);
 }
 
-/* Kissen-Sumo */
-.zs-ring {
+/* Kissen-Sumo: Dohyō (Lehmring mit Strohseil) und zwei gezeichnete Ringer */
+.zs-dohyo {
   position: relative;
-  width: min(420px, 82vw);
-  height: 110px;
-  border-radius: 50%;
-  background: var(--ui-butter);
-  border: 6px solid var(--ui-accent);
-  overflow: hidden;
+  width: min(440px, 84vw);
+  height: 200px;
 }
-.zs-ring-line {
+.zs-dohyo-ring {
   position: absolute;
-  top: 18%;
-  bottom: 18%;
-  width: 4px;
-  background: var(--ui-panel);
-  opacity: 0.8;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  height: 92px;
 }
-.zs-ring-line.left {
-  left: 44%;
-}
-.zs-ring-line.right {
-  left: 56%;
-}
-.zs-wrestler {
+.zs-ringer-pos {
   position: absolute;
-  top: 22px;
-  width: 8%;
-  font-size: 2.6rem;
-  text-align: center;
+  bottom: 26px;
+  width: 27%;
   transition: left 0.08s linear;
 }
-.zs-wrestler.lina {
+.zs-ringer {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+.zs-ringer-pos.lars .zs-ringer {
   transform: scaleX(-1);
 }
-.zs-wrestler.push {
-  animation: zs-wobble 0.35s ease-in-out infinite alternate;
+.zs-ringer-pos.shove .zs-ringer {
+  animation: zs-shove 0.12s ease-out;
 }
-@keyframes zs-wobble {
+@keyframes zs-shove {
   from {
-    margin-top: 0;
+    transform: translateX(-3px);
   }
   to {
-    margin-top: 3px;
+    transform: translateX(0);
   }
 }
 

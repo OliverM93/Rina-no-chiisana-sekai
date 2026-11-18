@@ -4,7 +4,7 @@
  * Kein Scheitern (das Ergebnis wählt nur den Abschluss-Satz), Herzen höchstens einmal am Tag je Person,
  * beim ersten Mal ein Eintrag im Album. Logik `core/unternehmungen.ts` + `game/unternehmungen.ts`.
  */
-import type { Rank } from '../core/unternehmungen';
+import type { Rank, SumoLevel } from '../core/unternehmungen';
 
 export type GameKind = 'memory' | 'puzzle' | 'takt' | 'duell' | 'sumo' | 'quiz' | 'malen';
 
@@ -49,7 +49,8 @@ export interface UnternehmungDef {
   takt?: { reps: number; period: number };
   /** Pfeil-Duell in Leveln; das nächste wird mit mindestens 60 % Treffern freigeschaltet */
   duell?: { levels: readonly DuelLevel[]; unlocked: readonly string[] };
-  sumo?: { opponent: string; win: readonly string[]; lose: readonly string[] };
+  /** Kissen-Sumo in Leveln (Sumo-Ränge); das nächste wird mit einem gewonnenen Match freigeschaltet */
+  sumo?: { opponent: string; levels: ReadonlyArray<SumoLevel & { name: string }>; unlocked: readonly string[]; win: readonly string[]; lose: readonly string[] };
   quiz?: { questions: readonly QuizQuestion[]; count: number; right: readonly string[]; wrong: readonly string[] };
   malen?: {
     motifs: ReadonlyArray<{ id: string; label: string; verdict: string }>;
@@ -198,6 +199,20 @@ export const UNTERNEHMUNGEN: readonly UnternehmungDef[] = [
     game: 'sumo',
     sumo: {
       opponent: 'Lars',
+      // Ein Druck im Wechsel schiebt `push`; Lars drückt mit `strength` je Sekunde dagegen (Ring = 2 breit).
+      // Level 1 schafft man gemütlich (~4 Drücke/s), Level 5 braucht flinke Finger (~8/s) und hält Stöße aus.
+      levels: [
+        { name: 'Jonokuchi – Lars im Schlafanzug', strength: 0.2, push: 0.1, growth: 0.03, shove: 0 },
+        { name: 'Jonidan – Lars nach dem Mittagessen', strength: 0.28, push: 0.09, growth: 0.03, shove: 0.12 },
+        { name: 'Makushita – Lars mit Stirnband', strength: 0.34, push: 0.085, growth: 0.04, shove: 0.16 },
+        { name: 'Ōzeki – Lars in Bestform', strength: 0.4, push: 0.08, growth: 0.04, shove: 0.2 },
+        { name: 'Yokozuna – Lars, der Unbezwingbare', strength: 0.46, push: 0.078, growth: 0.05, shove: 0.24 },
+      ],
+      unlocked: [
+        'Respekt, Schwesterherz. Nächster Rang! Ich muss mich jetzt ernsthaft aufwärmen.',
+        'Du steigst auf! Ich hol mein Stirnband. Und eine Wärmflasche für danach.',
+        'Neuer Rang! Langsam glaube ich, du trainierst heimlich mit Thalia.',
+      ],
       win: ['Lars fliegt aus dem Ring und landet auf dem Sofakissen. „Das war Absicht. Für die Bandscheibe.“', '„Oshidashi! Herausgeschoben! Schwesterherz, das war Lehrbuch.“', 'Lars rollt rückwärts aus dem Ring. „Ich bin Arzt. Ich weiß, wie man richtig fällt.“'],
       lose: ['Lars schiebt dich sanft aus dem Ring. „Tut mir leid. Nein, tut es nicht. Doch, ein bisschen.“', '„Yorikiri! Rausgedrückt! Aber du hast gekämpft wie eine echte Ozeki.“', 'Du landest auf dem Kissen. Lars: „Diagnose: Lachkrampf. Bei uns beiden.“'],
     },
