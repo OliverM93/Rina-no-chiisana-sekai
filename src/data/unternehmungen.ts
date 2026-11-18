@@ -6,7 +6,18 @@
  */
 import type { Rank } from '../core/unternehmungen';
 
-export type GameKind = 'memory' | 'puzzle' | 'takt' | 'duell' | 'quiz' | 'malen';
+export type GameKind = 'memory' | 'puzzle' | 'takt' | 'duell' | 'sumo' | 'quiz' | 'malen';
+
+/** Ein Level im Pfeil-Duell: wird mit jedem Level schwieriger */
+export interface DuelLevel {
+  boss: string;
+  /** Anzahl Pfeile */
+  length: number;
+  /** Sekunden je Pfeil */
+  window: number;
+  /** Anteil roter Umkehr-Pfeile (Gegenrichtung drücken) */
+  reverse: number;
+}
 
 export interface QuizQuestion {
   q: string;
@@ -36,7 +47,9 @@ export interface UnternehmungDef {
   memory?: { symbols: readonly string[] };
   puzzle?: { picture: readonly string[] };
   takt?: { reps: number; period: number };
-  duell?: { boss: string; length: number; window: number };
+  /** Pfeil-Duell in Leveln; das nächste wird mit mindestens 60 % Treffern freigeschaltet */
+  duell?: { levels: readonly DuelLevel[]; unlocked: readonly string[] };
+  sumo?: { opponent: string; win: readonly string[]; lose: readonly string[] };
   quiz?: { questions: readonly QuizQuestion[]; count: number; right: readonly string[]; wrong: readonly string[] };
   malen?: {
     motifs: ReadonlyArray<{ id: string; label: string; verdict: string }>;
@@ -111,10 +124,10 @@ export const UNTERNEHMUNGEN: readonly UnternehmungDef[] = [
     label: '🧩 Puzzle legen',
     title: 'Puzzle mit Christin',
     game: 'puzzle',
-    puzzle: { picture: ['🌸', '🌼', '🌷', '🍃', '🏡', '🍃', '🌻', '🦋'] },
+    puzzle: { picture: ['🌸', '🌼', '🌷', '🌳', '🏡', '🌲', '🌻', '🦋'] },
     intro: [
       ['Ein Puzzle! Da kommt alles an seinen Platz. Das mag ich.', 'Schieb die Teile, bis das Bild stimmt. Ganz in Ruhe.'],
-      ['Ich hab das Puzzle extra abgestaubt. Also, zweimal.', 'Die Reihenfolge ist: Blüten oben, Haus in der Mitte, Sonnenblume und Schmetterling unten.'],
+      ['Ich hab das Puzzle extra abgestaubt. Also, zweimal.', 'Oben die Blüten, in der Mitte das Haus zwischen den Bäumen, unten Sonnenblume und Schmetterling.'],
     ],
     cheers: ['„Ordentlich!“', '„Das passt schon viel besser.“', '„Ganz ruhig, Schritt für Schritt.“', '„Sehr schön, das Teil sitzt.“'],
     done: {
@@ -140,9 +153,22 @@ export const UNTERNEHMUNGEN: readonly UnternehmungDef[] = [
     label: '🎮 Zusammen zocken',
     title: 'Zocken mit Oli',
     game: 'duell',
-    duell: { boss: 'Der Hohle König', length: 14, window: 1.5 },
+    duell: {
+      levels: [
+        { boss: 'Der Schleimkönig', length: 10, window: 1.9, reverse: 0 },
+        { boss: 'Der Hohle König', length: 13, window: 1.55, reverse: 0 },
+        { boss: 'Die Glockenhexe', length: 15, window: 1.35, reverse: 0.2 },
+        { boss: 'Der Drache im Nebel', length: 18, window: 1.15, reverse: 0.3 },
+        { boss: 'Der Uralte Ritter', length: 22, window: 0.95, reverse: 0.4 },
+      ],
+      unlocked: [
+        'Nächstes Level freigeschaltet! Lini, wir sind unaufhaltsam.',
+        'Wir kommen weiter! Ich hab ehrlich gesagt nicht geglaubt, dass wir hier mal ankommen.',
+        'Neues Level! Ich hol schon mal Snacks. Das wird hart.',
+      ],
+    },
     intro: [
-      ['Lini! Couch, Controller, Snacks. Der Hohle König wartet.', 'Drück die Pfeile, die erscheinen. Ich halt dir den Rücken frei.'],
+      ['Lini! Couch, Controller, Snacks. Welcher Boss ist heute dran?', 'Drück die Pfeile, die erscheinen. Bei roten Pfeilen die Gegenrichtung! Ich halt dir den Rücken frei.'],
       ['Ich hab gestern geübt. Also … ich bin gestern zwölfmal gestorben.', 'Mit dir schaffen wir das.'],
       ['Zocken mit dir ist das Beste. Du schreist immer so süß, wenn der Boss angreift.'],
     ],
@@ -162,36 +188,41 @@ export const UNTERNEHMUNGEN: readonly UnternehmungDef[] = [
       ],
     },
     record: ['Neuer Rekord! Lini, du bist besser als ich. Ich bin gleichzeitig stolz und beleidigt.'],
-    album: 'Zocken mit Oli: Der Hohle König hatte keine Chance. Oli hat lauter geschrien als ich.',
+    album: 'Zocken mit Oli: Der erste Boss hatte keine Chance. Oli hat lauter geschrien als ich.',
   },
   {
-    id: 'zocken-lars',
+    id: 'sumo-lars',
     npc: 'lars',
-    label: '🎮 Zockabend',
-    title: 'Zockabend mit Lars',
-    game: 'duell',
-    duell: { boss: 'Der Strahlen-Koloss', length: 14, window: 1.4 },
+    label: '🤼 Kissen-Sumo',
+    title: 'Kissen-Sumo mit Lars',
+    game: 'sumo',
+    sumo: {
+      opponent: 'Lars',
+      win: ['Lars fliegt aus dem Ring und landet auf dem Sofakissen. „Das war Absicht. Für die Bandscheibe.“', '„Oshidashi! Herausgeschoben! Schwesterherz, das war Lehrbuch.“', 'Lars rollt rückwärts aus dem Ring. „Ich bin Arzt. Ich weiß, wie man richtig fällt.“'],
+      lose: ['Lars schiebt dich sanft aus dem Ring. „Tut mir leid. Nein, tut es nicht. Doch, ein bisschen.“', '„Yorikiri! Rausgedrückt! Aber du hast gekämpft wie eine echte Ozeki.“', 'Du landest auf dem Kissen. Lars: „Diagnose: Lachkrampf. Bei uns beiden.“'],
+    },
     intro: [
-      ['Zockabend! Ich hab Chips und ein alkoholfreies Bier. Ärztlich empfohlen.', 'Pfeile drücken, Koloss umhauen. Ganz einfache Anamnese.'],
-      ['Oli sagt, du bist gut. Mal sehen. Ich bin Arzt, ich hab ruhige Hände.', '… Meistens.'],
+      ['Kissen-Sumo! Wie im Fernsehen, nur weicher. Der Teppich ist der Ring.', 'Drück abwechselnd ← und →, dann schiebst du mich raus. Gleiche Taste zweimal heißt Ausrutscher.'],
+      ['Ich hab heute Sumo geschaut. Die wiegen zweihundert Kilo. Ich nur … weniger. Deutlich.', 'Zwei gewonnene Runden gewinnen. Abwechselnd ← und → drücken!'],
+      ['Ärztlicher Hinweis: Nach dem Sumo kein Bier. Vor dem Sumo auch keins. Also … alkoholfrei.', 'Los geht’s: abwechselnd ← und →!'],
     ],
-    cheers: ['„Pass auf links!“', '„Treffer! Diagnose: gewonnen.“', '„Das tat ihm weh. Ich merk das. Beruflich.“', '„Keine Panik, ich bin Arzt!“'],
+    cheers: ['„Hakkeyoi!“', '„Noch nicht vorbei!“', '„Uff, du drückst ja richtig!“', '„Die Bandscheibe hält. Noch.“', '„Nokotta, nokotta!“'],
     done: {
       super: [
-        ['Fehlerfrei! Schwesterherz, du hast Reflexe wie eine Chirurgin.', 'So, und nicht mit e, sonst ist es ein See. … Das passt gerade nicht. Aber es ist mein Spruch.'],
-        ['Der Koloss ist erledigt. Ich stell ihm jetzt einen Totenschein aus.'],
+        ['Zwei zu null! Ich ernenne dich hiermit zur Yokozuna des Dorfes.', 'So, und nicht mit e, sonst ist es ein See. … Das passt nicht. Aber ich bin zu erschöpft für einen neuen Spruch.'],
+        ['Glatt gewonnen. Ich muss mich jetzt hinlegen. Medizinisch angeordnet. Von mir.'],
       ],
       gut: [
-        ['Gut gemacht! Ich hätte ihn natürlich schneller … nein, hätte ich nicht.'],
-        ['Geschafft! Puls 140. Meiner, nicht deiner.'],
+        ['Knapp, aber gewonnen! Ich hab dich die erste Runde gewinnen lassen. … Oder die zweite. Eine davon.'],
+        ['Gewonnen! Ich gratuliere. Und ich hol uns jetzt ein Eis. Für die Muskeln.'],
       ],
       gemuetlich: [
-        ['Na, der Koloss war heute gut drauf. Wir nicht so. Macht nichts.', 'Hauptsache, wir hatten Spaß. Rezept: nächste Woche wiederholen.'],
-        ['Verloren, aber mit Stil. Ich hab übrigens die Hälfte der Chips gegessen. Schuldig.'],
+        ['Heute war ich der Stärkere. Aber du hast mich zum Lachen gebracht, das zählt doppelt.', 'Revanche jederzeit. Ich bin ein fairer Mensch.'],
+        ['Gewonnen hab ich, aber mir tut alles weh. Wer hat jetzt eigentlich gewonnen?'],
       ],
     },
-    record: ['Neuer Rekord! Das trag ich in deine Akte ein. Unter „Besondere Fähigkeiten“.'],
-    album: 'Zockabend mit Lars: Er hat „Keine Panik, ich bin Arzt!“ gerufen und dabei die Chips verschüttet.',
+    record: [],
+    album: 'Kissen-Sumo mit Lars: Er hat „Hakkeyoi!“ gerufen, ich habe so gelacht, dass ich fast aus dem Ring gefallen bin.',
   },
   {
     id: 'raetsel-olaf',
@@ -296,5 +327,7 @@ export const ZUSAMMEN_PUNKTE = 10;
 export const zusammenErstKey = (id: string) => `zusammen:${id}`;
 /** Schlüssel in `world.dates`: Tag, an dem es zuletzt Herzen mit dieser Person gab */
 export const zusammenTagKey = (npc: string) => `zusammen-tag:${npc}`;
-/** Schlüssel in `world.dates`: bisher bestes Ergebnis */
-export const zusammenBestKey = (id: string) => `zusammen-best:${id}`;
+/** Schlüssel in `world.dates`: bisher bestes Ergebnis (bei Leveln je Level) */
+export const zusammenBestKey = (id: string, level?: number) => (level === undefined ? `zusammen-best:${id}` : `zusammen-best:${id}:${level}`);
+/** Schlüssel in `world.dates`: wie viele Level schon erreicht sind */
+export const zusammenLevelKey = (id: string) => `zusammen-level:${id}`;

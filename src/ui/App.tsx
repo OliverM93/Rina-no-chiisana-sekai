@@ -149,6 +149,7 @@ export function App({ session }: { session: Session }) {
       {state.panel?.kind === 'minispiel' && <MiniGamePanel session={session} />}
       {state.panel?.kind === 'zusammen' && UNTERNEHMUNG_BY_ID[state.panel.id] && (
         <ZusammenPanel
+          session={session}
           def={UNTERNEHMUNG_BY_ID[state.panel.id]}
           round={state.panel.round}
           onDone={(r) => {

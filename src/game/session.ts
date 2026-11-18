@@ -126,6 +126,10 @@ export type GameEvents = {
   'state:changed': undefined;
   /** Die Welt bittet die Oberfläche, ein Fenster zu öffnen */
   'ui:open': UiPanel;
+  /** Training mit Thalia: Tiefe der Kniebeuge 0..1 (null = Ende) */
+  'zusammen:takt': number | null;
+  /** Training mit Thalia: wie der Druck war */
+  'zusammen:takt-treffer': 'perfekt' | 'gut' | 'daneben';
   /** Werkzeug in der Hand (null = keins) */
   'tool:changed': ToolId | null;
   /** Lina ist zu Hause (true) bzw. draußen */

@@ -5,7 +5,7 @@ import { UNTERNEHMUNGEN, zusammenErstKey } from '../data/unternehmungen';
 import { NPCS, NPC_BY_ID } from '../data/npcs';
 import { albumEntries, syncAlbum } from './album';
 import { npcState } from './gameplay';
-import { activitiesFor, bestOf, finishActivity } from './unternehmungen';
+import { activitiesFor, bestOf, finishActivity, unlockedLevels } from './unternehmungen';
 import { Session } from './session';
 
 vi.mock('../gfx/items', () => ({ itemIconUrl: () => '' }));
@@ -71,9 +71,9 @@ describe('Gemeinsame Unternehmungen', () => {
     expect(rec.some((l) => UNTERNEHMUNGEN[0].record.includes(l))).toBe(true);
     finishActivity(s, 'memory-oma', { rank: 'gut', score: 15 });
     expect(bestOf(s, 'memory-oma')).toBe(8);
-    finishActivity(s, 'zocken-oli', { rank: 'gut', score: 9 });
-    finishActivity(s, 'zocken-oli', { rank: 'super', score: 13 });
-    expect(bestOf(s, 'zocken-oli')).toBe(13);
+    finishActivity(s, 'sumo-lars', { rank: 'gut', score: 1 });
+    finishActivity(s, 'sumo-lars', { rank: 'super', score: 2 });
+    expect(bestOf(s, 'sumo-lars')).toBe(2);
   });
 
   it('Malen: Jens kommentiert Motiv und Farben', () => {
@@ -90,5 +90,32 @@ describe('Gemeinsame Unternehmungen', () => {
     expect(s.data!.world.dates[zusammenErstKey('gym-thalia')]).toBe('2026-06-10');
     syncAlbum(s);
     expect(albumEntries(s).some((e) => e.id === 'zusammen-gym-thalia')).toBe(true);
+  });
+
+  it('Zocken mit Oli: Level werden nacheinander freigeschaltet, Bestwert je Level', () => {
+    const { s } = fresh();
+    expect(unlockedLevels(s, 'zocken-oli')).toBe(1);
+    // zu wenig Treffer: bleibt bei Level 1
+    finishActivity(s, 'zocken-oli', { rank: 'gemuetlich', score: 3, level: 0 });
+    expect(unlockedLevels(s, 'zocken-oli')).toBe(1);
+    const lines = finishActivity(s, 'zocken-oli', { rank: 'gut', score: 8, level: 0 });
+    expect(unlockedLevels(s, 'zocken-oli')).toBe(2);
+    expect(lines.some((l) => l.includes('Level 2'))).toBe(true);
+    expect(bestOf(s, 'zocken-oli', 0)).toBe(8);
+    // ein altes Level nochmal spielen schaltet nichts weiter frei
+    finishActivity(s, 'zocken-oli', { rank: 'super', score: 10, level: 0 });
+    expect(unlockedLevels(s, 'zocken-oli')).toBe(2);
+    // bis zum letzten Level, nie darüber hinaus
+    const levels = UNTERNEHMUNGEN.find((u) => u.id === 'zocken-oli')!.duell!.levels;
+    for (let l = 1; l < levels.length + 1; l++) finishActivity(s, 'zocken-oli', { rank: 'super', score: 99, level: Math.min(l, levels.length - 1) });
+    expect(unlockedLevels(s, 'zocken-oli')).toBe(levels.length);
+  });
+
+  it('Lars spielt Kissen-Sumo statt dasselbe Spiel wie Oli', () => {
+    const { s } = fresh();
+    const lars = activitiesFor(s, 'lars');
+    const oli = activitiesFor(s, 'oli');
+    expect(lars[0].game).toBe('sumo');
+    expect(lars[0].game).not.toBe(oli[0].game);
   });
 });

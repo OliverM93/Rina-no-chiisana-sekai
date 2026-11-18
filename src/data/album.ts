@@ -82,6 +82,8 @@ export const MOMENTS: readonly MomentDef[] = [
   { id: 'versteck-treibgut', source: { dateKey: 'versteck:treibgut' }, text: 'Im Treibgut steckte eine Flaschenpost: „Such weiter, wo der Sand aufhört.“ Ich bin gespannt, was das heißt.' },
   // gemeinsame Unternehmungen: das erste Mal mit jeder Person
   ...UNTERNEHMUNGEN.map((u) => ({ id: `zusammen-${u.id}`, source: { dateKey: zusammenErstKey(u.id) }, text: u.album })),
+  // früheres Spiel mit Lars (vor dem Kissen-Sumo) – wer es schon gespielt hat, behält die Erinnerung
+  { id: 'zusammen-zocken-lars', source: { dateKey: zusammenErstKey('zocken-lars') }, text: 'Zockabend mit Lars: Er hat „Keine Panik, ich bin Arzt!“ gerufen und dabei die Chips verschüttet.' },
 ];
 
 /** Ein Herzenswunsch ist erfüllt: Text wird in `game/album.ts` je Wunsch erzeugt. */

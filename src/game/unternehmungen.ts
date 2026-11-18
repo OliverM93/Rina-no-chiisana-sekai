@@ -3,9 +3,9 @@
  * Herzen nur einmal am Tag je Person, das erste Mal kommt ins Album, ein neuer Bestwert wird kommentiert.
  * Es wird nichts Neues im Spielstand-Format gebraucht: alles liegt in `world.dates` (Text-Schlüssel).
  */
-import type { Rank } from '../core/unternehmungen';
+import { duelUnlocksNext, type Rank } from '../core/unternehmungen';
 import { NPC_BY_ID } from '../data/npcs';
-import { UNTERNEHMUNG_BY_ID, UNTERNEHMUNGEN, type UnternehmungDef, ZUSAMMEN_PUNKTE, zusammenBestKey, zusammenErstKey, zusammenTagKey } from '../data/unternehmungen';
+import { UNTERNEHMUNG_BY_ID, UNTERNEHMUNGEN, type UnternehmungDef, ZUSAMMEN_PUNKTE, zusammenBestKey, zusammenErstKey, zusammenLevelKey, zusammenTagKey } from '../data/unternehmungen';
 import { addFriendship, hasMovedIn, pickByDay } from './gameplay';
 import type { Session } from './session';
 
@@ -23,6 +23,8 @@ export function introLines(session: Session, def: UnternehmungDef): readonly str
 export interface RoundResult {
   rank: Rank;
   score?: number;
+  /** Pfeil-Duell: gespieltes Level (0 = erstes) */
+  level?: number;
   /** Malen: gewähltes Motiv & Farben */
   motif?: string;
   palette?: string;
@@ -31,8 +33,8 @@ export interface RoundResult {
 /** Bei Memory und Puzzle zählen Züge – da ist weniger besser */
 export const lowerIsBetter = (def: UnternehmungDef) => def.game === 'memory' || def.game === 'puzzle';
 
-export function bestOf(session: Session, id: string): number | null {
-  const raw = session.data?.world.dates[zusammenBestKey(id)];
+export function bestOf(session: Session, id: string, level?: number): number | null {
+  const raw = session.data?.world.dates[zusammenBestKey(id, level)];
   const n = raw === undefined ? Number.NaN : Number.parseInt(raw, 10);
   return Number.isFinite(n) ? n : null;
 }
@@ -59,11 +61,23 @@ export function finishActivity(session: Session, id: string, result: RoundResult
 
   // Bestwert (erst ab der zweiten Runde ein „Rekord“ – beim ersten Mal ist alles neu)
   if (result.score !== undefined && !def.malen) {
-    const best = bestOf(session, id);
+    const best = bestOf(session, id, result.level);
     const better = best === null || (lowerIsBetter(def) ? result.score < best : result.score > best);
     if (better) {
-      dates[zusammenBestKey(id)] = String(result.score);
+      dates[zusammenBestKey(id, result.level)] = String(result.score);
       if (best !== null && def.record.length > 0) lines.push(pickByDay(session, `zusammen-rekord:${id}:${count}`, def.record));
+    }
+  }
+
+  // Pfeil-Duell: nächstes Level freischalten
+  const levels = def.duell?.levels;
+  if (levels && result.level !== undefined && result.score !== undefined) {
+    const lv = levels[result.level];
+    const reached = unlockedLevels(session, id);
+    if (lv && result.level === reached - 1 && reached < levels.length && duelUnlocksNext(result.score, lv.length)) {
+      dates[zusammenLevelKey(id)] = String(reached + 1);
+      const next = levels[reached];
+      lines.push(pickByDay(session, `zusammen-level:${id}:${reached}`, def.duell?.unlocked ?? ['Neues Level!']), `🔓 Level ${reached + 1}: ${next.boss}`);
     }
   }
 
@@ -75,4 +89,12 @@ export function finishActivity(session: Session, id: string, result: RoundResult
   session.changed();
   session.save();
   return lines;
+}
+
+/** Wie viele Level schon erreicht sind (mindestens das erste) */
+export function unlockedLevels(session: Session, id: string): number {
+  const def = UNTERNEHMUNG_BY_ID[id];
+  const max = def?.duell?.levels.length ?? 1;
+  const n = Number.parseInt(session.data?.world.dates[zusammenLevelKey(id)] ?? '1', 10);
+  return Math.max(1, Math.min(max, Number.isFinite(n) ? n : 1));
 }

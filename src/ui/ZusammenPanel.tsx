@@ -1,20 +1,23 @@
 /**
- * Gemeinsame Unternehmungen: das Fenster mit dem kleinen Spiel (Memory, Puzzle, Takt, Pfeil-Duell, Quiz, Malen).
+ * Gemeinsame Unternehmungen: das Fenster mit dem kleinen Spiel (Memory, Puzzle, Takt, Pfeil-Duell in Leveln, Kissen-Sumo, Quiz, Malen).
  * Kein Scheitern – jede Runde endet und gibt ein Ergebnis zurück; „Lieber ein andermal“ geht jederzeit.
  */
 import { useEffect, useMemo, useRef, useState } from 'preact/hooks';
 import { hashString } from '../core/rng';
 import {
   type Arrow,
-  arrowSequence,
+  duelAnswer,
   duelRank,
+  duelSequence,
   flipMemory,
   memoryDone,
   memoryRank,
   newMemory,
   newPuzzle,
-  puzzleDone,
+  newSumo,
+  puzzleDoneWith,
   puzzleRank,
+  puzzleRightAt,
   quizRank,
   type Rank,
   rhythmHit,
@@ -23,12 +26,19 @@ import {
   shuffled,
   slidePuzzle,
   slidePuzzleDir,
+  sumoNextRound,
+  sumoOver,
+  sumoPush,
+  sumoRank,
+  sumoTick,
 } from '../core/unternehmungen';
 import type { UnternehmungDef } from '../data/unternehmungen';
-import type { RoundResult } from '../game/unternehmungen';
-import { palette } from '../style/palette';
+import { drawPainting } from '../gfx/malen';
+import type { Session } from '../game/session';
+import { bestOf, type RoundResult, unlockedLevels } from '../game/unternehmungen';
 
 interface GameProps {
+  session: Session;
   def: UnternehmungDef;
   seed: number;
   onDone: (r: RoundResult) => void;
@@ -88,9 +98,11 @@ function PuzzleGame({ def, seed, onDone }: GameProps) {
     if (!moved) return;
     redraw((n) => n + 1);
     if (s.moves % 8 === 0) setCheer(pickCheer(def, s.moves / 8));
-    if (puzzleDone(s) && !done.current) {
+    // gelöst, sobald jedes Bild am richtigen Platz liegt (gleiche Symbole sind austauschbar)
+    if (puzzleDoneWith(s, pic) && !done.current) {
       done.current = true;
-      window.setTimeout(() => onDone({ rank: puzzleRank(s), score: s.moves }), 700);
+      setCheer('Fertig! Alles an seinem Platz. ✨');
+      window.setTimeout(() => onDone({ rank: puzzleRank(s), score: s.moves }), 900);
     }
   };
   useEffect(() => {
@@ -104,26 +116,39 @@ function PuzzleGame({ def, seed, onDone }: GameProps) {
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
   }, []);
+  const right = s.tiles.filter((_, i) => puzzleRightAt(s, pic, i)).length;
   return (
     <>
       <div class="zs-status">
-        Züge: {s.moves} · Ziel: <span class="zs-goal">{pic.slice(0, 3).join('')} / {pic.slice(3, 6).join('')} / {pic.slice(6, 8).join('')}⬜</span>
+        Züge: {s.moves} · richtig: {right} / {pic.length}
       </div>
-      <div class="zs-puzzle">
-        {s.tiles.map((t, i) => (
-          <button key={i} class={`zs-tile ${t === 0 ? 'gap' : ''} ${t === i + 1 ? 'right' : ''}`} onClick={() => after(slidePuzzle(s, i))} disabled={t === 0}>
-            {t === 0 ? '' : pic[t - 1]}
-          </button>
-        ))}
+      <div class="zs-puzzle-row">
+        <div class="zs-puzzle">
+          {s.tiles.map((t, i) => (
+            <button key={i} class={`zs-tile ${t === 0 ? 'gap' : ''} ${puzzleRightAt(s, pic, i) ? 'right' : ''}`} onClick={() => after(slidePuzzle(s, i))} disabled={t === 0 || done.current}>
+              {t === 0 ? '' : pic[t - 1]}
+            </button>
+          ))}
+        </div>
+        <div class="zs-goal-box">
+          <div class="zs-goal-title">So soll es aussehen</div>
+          <div class="zs-goal-grid">
+            {[...pic, ''].map((sym, i) => (
+              <span key={i} class={sym ? '' : 'gap'}>
+                {sym}
+              </span>
+            ))}
+          </div>
+        </div>
       </div>
-      <div class="zs-cheer">{cheer || 'Klick ein Teil neben der Lücke an (oder Pfeiltasten).'}</div>
+      <div class="zs-cheer">{cheer || 'Klick ein Teil neben der Lücke an (oder Pfeiltasten). Grün umrandet = richtiger Platz.'}</div>
     </>
   );
 }
 
 // ---------------------------------------------------------------------------
 
-function TaktGame({ def, onDone }: GameProps) {
+function TaktGame({ def, onDone, session }: GameProps) {
   const reps = def.takt?.reps ?? 10;
   const period = def.takt?.period ?? 0.9;
   const [pos, setPos] = useState(0);
@@ -140,10 +165,15 @@ function TaktGame({ def, onDone }: GameProps) {
       const p = rhythmPos((performance.now() - t0.current) / 1000, period);
       posRef.current = p;
       setPos(p);
+      // Lina und Thalia gehen im Takt in die Knie: ganz unten, wenn der Punkt in der Mitte ist
+      if (!finished.current) session.bus.emit('zusammen:takt', 1 - Math.abs(p - 0.5) * 2);
       raf = requestAnimationFrame(tick);
     };
     raf = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(raf);
+    return () => {
+      cancelAnimationFrame(raf);
+      session.bus.emit('zusammen:takt', null);
+    };
   }, []);
   const press = () => {
     if (lock.current || finished.current) return;
@@ -156,8 +186,10 @@ function TaktGame({ def, onDone }: GameProps) {
     setPoints(total);
     setRep(n);
     setMsg(h === 'perfekt' ? `Perfekt! ${pickCheer(def, n)}` : h === 'gut' ? `Gut! ${pickCheer(def, n + 1)}` : `Knapp daneben – ${pickCheer(def, n + 2)}`);
+    session.bus.emit('zusammen:takt-treffer', h);
     if (n >= reps) {
       finished.current = true;
+      session.bus.emit('zusammen:takt', null);
       window.setTimeout(() => onDone({ rank: rhythmRank(total, reps), score: total }), 700);
     }
   };
@@ -184,7 +216,7 @@ function TaktGame({ def, onDone }: GameProps) {
       <button class="btn primary zs-big" onClick={press}>
         💪 Jetzt! (Leertaste)
       </button>
-      <div class="zs-cheer">{msg || 'Drück, wenn der Punkt in der Mitte ist.'}</div>
+      <div class="zs-cheer">{msg || 'Drück, wenn ihr ganz unten in der Kniebeuge seid (Punkt in der Mitte).'}</div>
     </>
   );
 }
@@ -194,10 +226,40 @@ function TaktGame({ def, onDone }: GameProps) {
 const ARROW_ICON: Record<Arrow, string> = { up: '⬆️', down: '⬇️', left: '⬅️', right: '➡️' };
 const ARROW_KEYS: Record<string, Arrow> = { ArrowUp: 'up', KeyW: 'up', ArrowDown: 'down', KeyS: 'down', ArrowLeft: 'left', KeyA: 'left', ArrowRight: 'right', KeyD: 'right' };
 
-function DuellGame({ def, seed, onDone }: GameProps) {
-  const len = def.duell?.length ?? 12;
-  const windowS = def.duell?.window ?? 1.5;
-  const seq = useMemo(() => arrowSequence(seed, len), [seed]);
+/** Pfeil-Duell: erst ein Level wählen (nur erreichte), dann der Kampf */
+function DuellGame(props: GameProps) {
+  const { def, session } = props;
+  const levels = def.duell?.levels ?? [];
+  const reached = unlockedLevels(session, def.id);
+  const [level, setLevel] = useState<number | null>(levels.length <= 1 ? 0 : null);
+  if (level === null) {
+    return (
+      <>
+        <div class="zs-status">Welcher Boss ist heute dran?</div>
+        <div class="zs-levels">
+          {levels.map((lv, i) => {
+            const open = i < reached;
+            const best = bestOf(session, def.id, i);
+            return (
+              <button key={i} class={`btn ${open ? (i === reached - 1 ? 'primary' : 'ghost') : 'ghost locked'}`} disabled={!open} onClick={() => setLevel(i)}>
+                <span class="zs-level-no">{open ? `Level ${i + 1}` : `🔒 Level ${i + 1}`}</span>
+                <span class="zs-level-boss">{open ? lv.boss : '???'}</span>
+                {open && best !== null && <span class="zs-level-best">Bestwert {best} / {lv.length}</span>}
+              </button>
+            );
+          })}
+        </div>
+        <div class="zs-cheer">Schaff mindestens 60 % Treffer, dann wird das nächste Level frei.</div>
+      </>
+    );
+  }
+  return <DuellFight {...props} level={level} />;
+}
+
+function DuellFight({ def, seed, onDone, level }: GameProps & { level: number }) {
+  const lv = def.duell?.levels[level] ?? { boss: '?', length: 12, window: 1.5, reverse: 0 };
+  const len = lv.length;
+  const seq = useMemo(() => duelSequence(seed + level * 7919, len, lv.reverse), [seed, level]);
   const [i, setI] = useState(0);
   const [hits, setHits] = useState(0);
   const [left, setLeft] = useState(1);
@@ -216,13 +278,13 @@ function DuellGame({ def, seed, onDone }: GameProps) {
     started.current = performance.now();
     if (st.i >= len) {
       st.done = true;
-      window.setTimeout(() => onDone({ rank: duelRank(st.hits, len), score: st.hits }), 700);
+      window.setTimeout(() => onDone({ rank: duelRank(st.hits, len), score: st.hits, level }), 700);
     }
   };
   useEffect(() => {
     let raf = 0;
     const tick = () => {
-      const k = 1 - (performance.now() - started.current) / 1000 / windowS;
+      const k = 1 - (performance.now() - started.current) / 1000 / lv.window;
       setLeft(Math.min(1, Math.max(0, k)));
       if (k <= 0) advance(false);
       raf = requestAnimationFrame(tick);
@@ -232,8 +294,8 @@ function DuellGame({ def, seed, onDone }: GameProps) {
   }, []);
   const press = (a: Arrow) => {
     const st = state.current;
-    if (st.done) return;
-    advance(seq[st.i] === a);
+    if (st.done || performance.now() < started.current) return;
+    advance(duelAnswer(seq[st.i]) === a);
   };
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -245,16 +307,16 @@ function DuellGame({ def, seed, onDone }: GameProps) {
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
   }, []);
-  const bossHp = 1 - hits / len;
+  const cur = seq[i];
   return (
     <>
       <div class="zs-status">
-        {def.duell?.boss} · Treffer {hits} / {len}
+        Level {level + 1}: {lv.boss} · Treffer {hits} / {len}
       </div>
       <div class="zs-hp">
-        <div class="zs-hp-fill" style={{ width: `${bossHp * 100}%` }} />
+        <div class="zs-hp-fill" style={{ width: `${(1 - hits / len) * 100}%` }} />
       </div>
-      <div class="zs-arrow">{i < len ? ARROW_ICON[seq[i]] : '🏆'}</div>
+      <div class={`zs-arrow ${cur?.reverse ? 'reverse' : ''}`}>{i < len && cur ? ARROW_ICON[cur.dir] : '🏆'}</div>
       <div class="zs-timer">
         <div class="zs-timer-fill" style={{ width: `${left * 100}%` }} />
       </div>
@@ -265,7 +327,103 @@ function DuellGame({ def, seed, onDone }: GameProps) {
           </button>
         ))}
       </div>
-      <div class="zs-cheer">{msg || 'Drück den Pfeil, der erscheint (Pfeiltasten oder Knöpfe).'}</div>
+      <div class="zs-cheer">{msg || (lv.reverse > 0 ? 'Achtung: Bei roten Pfeilen die Gegenrichtung drücken!' : 'Drück den Pfeil, der erscheint (Pfeiltasten oder Knöpfe).')}</div>
+    </>
+  );
+}
+
+// ---------------------------------------------------------------------------
+
+/** Kissen-Sumo: abwechselnd ← und → drücken schiebt den Gegner aus dem Ring */
+function SumoGame({ def, onDone }: GameProps) {
+  const st = useRef(newSumo());
+  const [, redraw] = useState(0);
+  const [msg, setMsg] = useState('');
+  const [pause, setPause] = useState(false);
+  const pauseRef = useRef(false);
+  const t0 = useRef(performance.now());
+  const s = st.current;
+  const sumo = def.sumo;
+  useEffect(() => {
+    let raf = 0;
+    let last = performance.now();
+    const tick = () => {
+      const now = performance.now();
+      const dt = Math.min(0.1, (now - last) / 1000);
+      last = now;
+      if (!pauseRef.current && !sumoOver(s)) {
+        const r = sumoTick(s, dt, (now - t0.current) / 1000);
+        if (r !== 'weiter') {
+          const lines = r === 'gewonnen' ? (sumo?.win ?? []) : (sumo?.lose ?? []);
+          setMsg(lines[(s.won + s.lost) % Math.max(1, lines.length)] ?? '');
+          pauseRef.current = true;
+          setPause(true);
+          window.setTimeout(() => {
+            if (sumoOver(s)) {
+              onDone({ rank: sumoRank(s), score: s.won });
+              return;
+            }
+            sumoNextRound(s);
+            pauseRef.current = false;
+            setPause(false);
+            setMsg(`Runde ${s.round}! ${pickCheer(def, s.round)}`);
+          }, 2200);
+        }
+        redraw((n) => n + 1);
+      }
+      raf = requestAnimationFrame(tick);
+    };
+    raf = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf);
+  }, []);
+  const push = (side: 'left' | 'right') => {
+    if (pauseRef.current) return;
+    const ok = sumoPush(s, side);
+    if (!ok) setMsg('Ausgerutscht! Immer abwechselnd ← und →.');
+    else if (Math.random() < 0.06) setMsg(pickCheer(def, Math.floor(Math.random() * 10)));
+    redraw((n) => n + 1);
+  };
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.repeat) return;
+      if (e.code === 'ArrowLeft' || e.code === 'KeyA') {
+        e.preventDefault();
+        push('left');
+      }
+      if (e.code === 'ArrowRight' || e.code === 'KeyD') {
+        e.preventDefault();
+        push('right');
+      }
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, []);
+  // Ring: Lina links, Gegner rechts; beide stehen Schulter an Schulter an der Druckstelle
+  const center = 50 + s.pos * 38;
+  return (
+    <>
+      <div class="zs-status">
+        Runde {s.round} · Lina {s.won} : {s.lost} {sumo?.opponent}
+      </div>
+      <div class="zs-ring">
+        <div class="zs-ring-line left" />
+        <div class="zs-ring-line right" />
+        <div class={`zs-wrestler lina ${pause ? '' : 'push'}`} style={{ left: `${center - 9}%` }}>
+          🧍‍♀️
+        </div>
+        <div class={`zs-wrestler gegner ${pause ? '' : 'push'}`} style={{ left: `${center + 1}%` }}>
+          🧔
+        </div>
+      </div>
+      <div class="zs-arrow-buttons">
+        <button class="btn ghost" onClick={() => push('left')}>
+          ⬅️
+        </button>
+        <button class="btn ghost" onClick={() => push('right')}>
+          ➡️
+        </button>
+      </div>
+      <div class="zs-cheer">{msg || 'Abwechselnd ← und → drücken! Zwei gewonnene Runden gewinnen.'}</div>
     </>
   );
 }
@@ -327,20 +485,31 @@ function QuizGame({ def, seed, onDone }: GameProps) {
 
 function MalenGame({ def, onDone }: GameProps) {
   const m = def.malen;
-  const [motif, setMotif] = useState<string | null>(null);
-  const [pal, setPal] = useState<string | null>(null);
+  const [motif, setMotif] = useState<string>(m?.motifs[0]?.id ?? 'meer');
+  const [pal, setPal] = useState<string>(m?.palettes[0]?.id ?? 'pastell');
+  const [touched, setTouched] = useState(false);
+  const canvas = useRef<HTMLCanvasElement>(null);
+  useEffect(() => {
+    const ctx = canvas.current?.getContext('2d');
+    if (ctx) drawPainting(ctx, motif, pal, 360, 250);
+  }, [motif, pal]);
   if (!m) return null;
-  const colors = pal ? palette.malen[pal as keyof typeof palette.malen] : null;
-  const icon = motif ? (m.motifs.find((x) => x.id === motif)?.label.split(' ')[0] ?? '') : '🖼️';
   return (
     <>
-      <div class="zs-canvas" style={colors ? { background: `linear-gradient(135deg, ${colors.join(', ')})` } : undefined}>
-        <span>{icon}</span>
+      <div class="zs-easel">
+        <canvas ref={canvas} class="zs-painting" width={360} height={250} />
       </div>
       <div class="zs-choose-title">Motiv</div>
       <div class="zs-choose">
         {m.motifs.map((x) => (
-          <button key={x.id} class={`btn ${motif === x.id ? 'primary' : 'ghost'}`} onClick={() => setMotif(x.id)}>
+          <button
+            key={x.id}
+            class={`btn ${motif === x.id ? 'primary' : 'ghost'}`}
+            onClick={() => {
+              setMotif(x.id);
+              setTouched(true);
+            }}
+          >
             {x.label}
           </button>
         ))}
@@ -348,12 +517,19 @@ function MalenGame({ def, onDone }: GameProps) {
       <div class="zs-choose-title">Farben</div>
       <div class="zs-choose">
         {m.palettes.map((x) => (
-          <button key={x.id} class={`btn ${pal === x.id ? 'primary' : 'ghost'}`} onClick={() => setPal(x.id)}>
+          <button
+            key={x.id}
+            class={`btn ${pal === x.id ? 'primary' : 'ghost'}`}
+            onClick={() => {
+              setPal(x.id);
+              setTouched(true);
+            }}
+          >
             {x.label}
           </button>
         ))}
       </div>
-      <button class="btn primary" disabled={!motif || !pal} onClick={() => motif && pal && onDone({ rank: 'super' as Rank, motif, palette: pal })}>
+      <button class="btn primary" disabled={!touched} onClick={() => onDone({ rank: 'super' as Rank, motif, palette: pal })}>
         🎨 Bild fertig malen
       </button>
     </>
@@ -362,7 +538,7 @@ function MalenGame({ def, onDone }: GameProps) {
 
 // ---------------------------------------------------------------------------
 
-export function ZusammenPanel({ def, round, onDone, onCancel }: { def: UnternehmungDef; round: string; onDone: (r: RoundResult) => void; onCancel: () => void }) {
+export function ZusammenPanel({ session, def, round, onDone, onCancel }: { session: Session; def: UnternehmungDef; round: string; onDone: (r: RoundResult) => void; onCancel: () => void }) {
   const seed = hashString(`zusammen:${def.id}:${round}`);
   const [finished, setFinished] = useState(false);
   const done = (r: RoundResult) => {
@@ -380,15 +556,17 @@ export function ZusammenPanel({ def, round, onDone, onCancel }: { def: Unternehm
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
   }, []);
-  const props = { def, seed, onDone: done };
+  const props = { def, seed, onDone: done, session };
   return (
-    <div class="modal-layer">
-      <div class="card zusammen pop-in" role="dialog" aria-label={def.title}>
+    // Beim Training rückt das Fenster nach unten, damit man Lina und Thalia bei den Kniebeugen sieht
+    <div class={`modal-layer ${def.game === 'takt' ? 'zs-low' : ''}`}>
+      <div class={`card zusammen pop-in ${def.game === 'takt' ? 'compact' : ''}`} role="dialog" aria-label={def.title}>
         <h2 class="card-title">{def.title}</h2>
         {def.game === 'memory' && <MemoryGame {...props} />}
         {def.game === 'puzzle' && <PuzzleGame {...props} />}
         {def.game === 'takt' && <TaktGame {...props} />}
         {def.game === 'duell' && <DuellGame {...props} />}
+        {def.game === 'sumo' && <SumoGame {...props} />}
         {def.game === 'quiz' && <QuizGame {...props} />}
         {def.game === 'malen' && <MalenGame {...props} />}
         <div class="card-actions">

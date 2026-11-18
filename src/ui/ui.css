@@ -2979,3 +2979,166 @@ body:has(.dialog-layer) .decor-bar {
   font-size: 1.6rem;
   min-width: 64px;
 }
+
+/* Training mit Thalia: Fenster unten, die Welt bleibt sichtbar (Kniebeugen) */
+.modal-layer.zs-low {
+  align-items: flex-end;
+  background: transparent;
+  backdrop-filter: none;
+  padding-bottom: 18px;
+}
+.card.zusammen.compact {
+  gap: 6px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+.card.zusammen.compact .card-title {
+  margin: 0;
+}
+
+/* Puzzle: Spielfeld und Ziel nebeneinander */
+.zs-puzzle-row {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+.zs-goal-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+.zs-goal-title {
+  font-size: 0.8rem;
+  font-weight: 800;
+  color: var(--ui-text-soft);
+}
+.zs-goal-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 30px);
+  gap: 3px;
+  padding: 4px;
+  border-radius: 10px;
+  background: var(--ui-border);
+}
+.zs-goal-grid span {
+  height: 30px;
+  border-radius: 6px;
+  background: var(--ui-panel);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+}
+.zs-goal-grid span.gap {
+  background: transparent;
+}
+
+/* Zocken: Level-Auswahl */
+.zs-levels {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: min(360px, 86vw);
+}
+.zs-levels .btn {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 10px;
+  text-align: left;
+}
+.zs-levels .btn.locked {
+  opacity: 0.5;
+}
+.zs-level-no {
+  font-weight: 800;
+}
+.zs-level-boss {
+  flex: 1;
+}
+.zs-level-best {
+  font-size: 0.8rem;
+  opacity: 0.8;
+}
+.zs-arrow.reverse {
+  filter: hue-rotate(160deg) saturate(1.8);
+  transform: rotate(180deg);
+}
+
+/* Kissen-Sumo */
+.zs-ring {
+  position: relative;
+  width: min(420px, 82vw);
+  height: 110px;
+  border-radius: 50%;
+  background: var(--ui-butter);
+  border: 6px solid var(--ui-accent);
+  overflow: hidden;
+}
+.zs-ring-line {
+  position: absolute;
+  top: 18%;
+  bottom: 18%;
+  width: 4px;
+  background: var(--ui-panel);
+  opacity: 0.8;
+}
+.zs-ring-line.left {
+  left: 44%;
+}
+.zs-ring-line.right {
+  left: 56%;
+}
+.zs-wrestler {
+  position: absolute;
+  top: 22px;
+  width: 8%;
+  font-size: 2.6rem;
+  text-align: center;
+  transition: left 0.08s linear;
+}
+.zs-wrestler.lina {
+  transform: scaleX(-1);
+}
+.zs-wrestler.push {
+  animation: zs-wobble 0.35s ease-in-out infinite alternate;
+}
+@keyframes zs-wobble {
+  from {
+    margin-top: 0;
+  }
+  to {
+    margin-top: 3px;
+  }
+}
+
+/* Malen: Staffelei mit Rahmen */
+.zs-easel {
+  padding: 10px;
+  border-radius: 6px;
+  background: var(--ui-butter);
+  box-shadow:
+    inset 0 0 0 3px var(--ui-gold),
+    0 4px 0 var(--ui-border);
+}
+.zs-painting {
+  display: block;
+  width: min(360px, 80vw);
+  height: auto;
+  border-radius: 2px;
+}
+/* Malen: kompakter, damit alles ohne Scrollen passt */
+.zs-choose .btn {
+  font-size: 0.85rem;
+  padding: 5px 10px;
+}
+.card.zusammen .zs-painting {
+  width: min(300px, 70vw);
+}
+.card.zusammen .zs-choose-title {
+  margin-top: 0;
+  font-size: 0.85rem;
+}

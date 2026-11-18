@@ -94,11 +94,11 @@ export const palette = {
   sparkle: '#ffffff',
 
   // --- Benutzeroberfläche ----------------------------------------------------
-  /** Malen mit Jens: Farbstimmungen der Leinwand */
+  /** Malen mit Jens: Farbstimmungen der Leinwand (Rollen je Stimmung, gezeichnet in `gfx/malen.ts`) */
   malen: {
-    pastell: ['#f7c6d4', '#c9e7f2', '#fbe7a8', '#cfe9c4'],
-    kraeftig: ['#e8484f', '#f08a2a', '#f7d26a', '#4a9fd8'],
-    schwarz: ['#1e1b22', '#3a3540', '#5a5462', '#b7a9c2'],
+    pastell: { skyTop: '#bfe0f5', skyBottom: '#fde4ec', sea: '#9fd3e6', seaDeep: '#78b9d6', seaLight: '#e8f7fc', sand: '#f8e6c6', grass: '#cfe9bf', grassDark: '#a9d49a', accent: '#f4a3bd', sun: '#fff1b3', wall: '#fdf0e6', wallDark: '#f1d9cc', wood: '#e2c39c', night: '#4a4f86', nightDeep: '#2c3060', light: '#ffffff', dark: '#6f6283' },
+    kraeftig: { skyTop: '#2f7fd8', skyBottom: '#ffb04f', sea: '#1f78c8', seaDeep: '#0f4f92', seaLight: '#9fe0ff', sand: '#f4c24a', grass: '#4fb34f', grassDark: '#2f8a3a', accent: '#e8384f', sun: '#ffd23a', wall: '#f7c873', wallDark: '#e09a3c', wood: '#b8733a', night: '#1c2f8a', nightDeep: '#0b1550', light: '#fff6e0', dark: '#2b2340' },
+    schwarz: { skyTop: '#2a2730', skyBottom: '#4a4552', sea: '#3a3742', seaDeep: '#1f1d24', seaLight: '#8a8494', sand: '#5c5664', grass: '#3d3a44', grassDark: '#2a2830', accent: '#b9a7c9', sun: '#ece6f2', wall: '#3a3640', wallDark: '#26232b', wood: '#5a5260', night: '#1a1820', nightDeep: '#0c0b0f', light: '#e2dce9', dark: '#0e0d11' },
   },
   ui: {
     bg: '#fff8ef',

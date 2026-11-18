@@ -365,3 +365,10 @@ vergeht. Kein Fortschritt, keine Belohnung, keine Zahlen, nichts gespeichert –
 **Bewusst nicht:** Ranglisten, Streaks, tägliche Pflicht, Belohnungen in Sternen oder Gegenständen (sonst wird es Farmen), Zeitdruck außerhalb des Spiels selbst, Strafe für schwache Runden.
 **Designprüfung:** 1 „Ich hab noch Lust – was machen wir zusammen?“ · 2 beliebig oft, wenige Minuten je Runde · 3 Bewohner mit Charakter, Zeit mit den Liebsten · 4 trägt lange Sitzungen im Spätspiel ohne Ressourcen-Druck · 5 keine Wirtschaftswirkung, Herzen gedeckelt · 6 Risiko Wiederholung → viele Satz-Varianten, Rekord-Kommentare, Quiz zufällig gemischt · 7 kein FOMO, nichts verfällt · 8 ✅ getestet (`core/unternehmungen.test.ts`, `game/unternehmungen.test.ts`).
 
+### D49 · Unternehmungen, Runde 2: Level, Kissen-Sumo, Kniebeugen (Nov. 2026)
+
+**Anlass:** Linas Rückmeldung zu D48: Das Spiel mit Oli braucht Fortschritt (Level), Lars spielte dasselbe wie Oli, Christins Puzzle erkannte gleiche Symbole nicht, Jens’ Bilder sahen nicht schön aus, beim Training fehlte der Bezug zur Anzeige.
+**Entscheidung:** ✅ Oli: 5 Level mit wachsender Schwierigkeit (Anzahl, Tempo, Umkehr-Pfeile), freigeschaltet ab 60 % Treffern, erreichte Level frei wählbar. ✅ Lars: eigenes Spiel **Kissen-Sumo** (er schaut gern Sumo-Ringen). ✅ Puzzle: Lösung nach Bildern, eindeutiges Bild, Ziel als Raster. ✅ Malen: gemalte Bilder mit Pinselstrich-Effekt je Motiv und Stimmung. ✅ Training: Lina und Thalia machen in der Welt Kniebeugen im Takt der Anzeige.
+**Bewusst nicht:** Belohnungen für Level (nur die Freude am nächsten Boss), Strafen beim Nicht-Freischalten, Zeitdruck außerhalb der Runde.
+**Designprüfung:** 1 „Wir schaffen den nächsten Boss!“ · 2 beliebig oft · 3 Zeit mit den Liebsten, jede Person mit eigenem Spiel · 4 Level geben Oli-Zocken ein Langzeitziel ohne Druck · 5 keine Ökonomie-Wirkung · 6 Risiko Frust bei hohen Leveln → erreichte Level bleiben, kein Verlieren · 7 kein FOMO · 8 ✅ getestet (Level, Sumo, Puzzle-Symbole), Szene im Browser geprüft.
+

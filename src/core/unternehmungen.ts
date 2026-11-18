@@ -140,6 +140,26 @@ export function slidePuzzleDir(s: PuzzleState, dir: 'up' | 'down' | 'left' | 'ri
 
 export const puzzleDone = (s: PuzzleState) => puzzleSolvedTiles(s.tiles);
 
+/**
+ * Gelöst, wenn an jedem Platz das **richtige Bild** liegt – gleiche Symbole sind austauschbar
+ * (zwei Blätter dürfen also auch vertauscht liegen). `picture[n-1]` = Symbol von Teil n.
+ */
+export function puzzleDoneWith(s: PuzzleState, picture: readonly string[]): boolean {
+  const last = s.tiles.length - 1;
+  if (s.tiles[last] !== 0) return false;
+  for (let i = 0; i < last; i++) {
+    const t = s.tiles[i];
+    if (t === 0 || picture[t - 1] !== picture[i]) return false;
+  }
+  return true;
+}
+
+/** Liegt an Platz `pos` das richtige Bild? (für die grüne Markierung) */
+export function puzzleRightAt(s: PuzzleState, picture: readonly string[], pos: number): boolean {
+  const t = s.tiles[pos];
+  return t !== 0 && pos < s.tiles.length - 1 && picture[t - 1] === picture[pos];
+}
+
 export function puzzleRank(s: PuzzleState): Rank {
   if (s.moves <= 40) return 'super';
   if (s.moves <= 90) return 'gut';
@@ -183,6 +203,26 @@ export function arrowSequence(seed: number, length: number): Arrow[] {
   return Array.from({ length }, () => ARROWS[Math.floor(rnd() * ARROWS.length)]);
 }
 
+export const OPPOSITE: Readonly<Record<Arrow, Arrow>> = { up: 'down', down: 'up', left: 'right', right: 'left' };
+
+/** Ein Pfeil im Duell; `reverse` = roter Umkehr-Pfeil: die **Gegenrichtung** drücken */
+export interface DuelArrow {
+  dir: Arrow;
+  reverse: boolean;
+}
+
+/** Pfeilfolge für ein Level; `reverseShare` = Anteil der Umkehr-Pfeile (0 = keine) */
+export function duelSequence(seed: number, length: number, reverseShare = 0): DuelArrow[] {
+  const rnd = mulberry32(seed ^ 0x5bd1e995);
+  return arrowSequence(seed, length).map((dir, i) => ({ dir, reverse: i > 1 && rnd() < reverseShare }));
+}
+
+/** Richtige Taste für einen Pfeil */
+export const duelAnswer = (a: DuelArrow): Arrow => (a.reverse ? OPPOSITE[a.dir] : a.dir);
+
+/** Nächstes Level freigeschaltet? (mindestens 60 % Treffer) */
+export const duelUnlocksNext = (hits: number, total: number) => hits >= Math.ceil(total * 0.6);
+
 export function duelRank(hits: number, total: number): Rank {
   if (hits >= total * 0.85) return 'super';
   if (hits >= total * 0.55) return 'gut';
@@ -196,5 +236,69 @@ export function duelRank(hits: number, total: number): Rank {
 export function quizRank(correct: number, total: number): Rank {
   if (correct >= total) return 'super';
   if (correct >= Math.ceil(total / 2)) return 'gut';
+  return 'gemuetlich';
+}
+
+// ---------------------------------------------------------------------------
+// Kissen-Sumo: abwechselnd ← und → drücken schiebt nach vorn, der Gegner drückt dagegen
+// ---------------------------------------------------------------------------
+
+export interface SumoState {
+  /** -1 = Lina fliegt raus, +1 = Gegner fliegt raus */
+  pos: number;
+  /** zuletzt gedrückte Seite (für das Abwechseln) */
+  last: 'left' | 'right' | null;
+  /** gewonnene Runden Lina / Gegner */
+  won: number;
+  lost: number;
+  round: number;
+  /** Gegner-Kraft je Sekunde (steigt pro Runde leicht) */
+  strength: number;
+}
+
+export const SUMO_ROUNDS_TO_WIN = 2;
+
+export function newSumo(): SumoState {
+  return { pos: 0, last: null, won: 0, lost: 0, round: 1, strength: 0.32 };
+}
+
+/** Taste gedrückt: nur abwechselnde Tasten schieben (gleiche Taste zweimal = Ausrutscher, kein Schub) */
+export function sumoPush(s: SumoState, side: 'left' | 'right'): boolean {
+  if (sumoOver(s)) return false;
+  const ok = s.last !== side;
+  s.last = side;
+  if (ok) s.pos = Math.min(1, s.pos + 0.075);
+  return ok;
+}
+
+/** Zeit vergeht: der Gegner drückt (mit leichtem Wackeln, reproduzierbar über `t`) */
+export function sumoTick(s: SumoState, dt: number, t: number): 'weiter' | 'gewonnen' | 'verloren' {
+  if (sumoOver(s)) return 'weiter';
+  const wobble = 0.6 + 0.4 * Math.abs(Math.sin(t * 1.7));
+  s.pos = Math.max(-1, s.pos - s.strength * wobble * dt);
+  if (s.pos >= 1) return sumoRoundEnd(s, true);
+  if (s.pos <= -1) return sumoRoundEnd(s, false);
+  return 'weiter';
+}
+
+function sumoRoundEnd(s: SumoState, win: boolean): 'gewonnen' | 'verloren' {
+  if (win) s.won += 1;
+  else s.lost += 1;
+  return win ? 'gewonnen' : 'verloren';
+}
+
+/** Nächste Runde vorbereiten (Gegner wird etwas stärker) */
+export function sumoNextRound(s: SumoState) {
+  s.pos = 0;
+  s.last = null;
+  s.round += 1;
+  s.strength += 0.06;
+}
+
+export const sumoOver = (s: SumoState) => s.won >= SUMO_ROUNDS_TO_WIN || s.lost >= SUMO_ROUNDS_TO_WIN;
+
+export function sumoRank(s: SumoState): Rank {
+  if (s.won >= SUMO_ROUNDS_TO_WIN && s.lost === 0) return 'super';
+  if (s.won >= SUMO_ROUNDS_TO_WIN) return 'gut';
   return 'gemuetlich';
 }
