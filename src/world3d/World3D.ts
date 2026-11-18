@@ -112,6 +112,8 @@ import { Interior3D, ROOM_X, ROOM_Y } from './Interior3D';
 import { Yard3D } from './Yard3D';
 import { DigSpots3D } from './DigSpots3D';
 import { Festivals3D } from './Festivals3D';
+import { Fireflies3D } from './Fireflies3D';
+import { fireflyStrength } from '../core/fireflies';
 import { todaysFestivals } from '../game/festivals';
 import { FESTIVAL_INFO } from '../data/festivals';
 import { digSpot } from '../game/digging';
@@ -272,6 +274,7 @@ export class World3D {
   private kissCount = 0;
   /** Automatisches Gehen (Tür-Animation) */
   private autoWalk: { dx: number; dy: number; until: number } | null = null;
+  private fireflies: Fireflies3D;
   private dolphins: Dolphins3D;
   private luau3d: Luau3D;
   /** Bewohner, die gerade beim Luau am Strand sitzen */
@@ -378,6 +381,7 @@ export class World3D {
     this.garden = new Garden3D(this.scene, session, this.tweens);
     this.interactive.add('beet-lina');
     this.houseView = new HouseView3D(this.scene);
+    this.fireflies = new Fireflies3D(this.scene, session.map, this.view.terrain.heightAt);
     this.dolphins = new Dolphins3D(this.scene);
     this.luau3d = new Luau3D(this.scene, { x: 26.5, z: 53.5 }, this.view.terrain.heightAt);
     this.yardDorf = new Yard3D(this.scene, this.view.terrain.heightAt, YARD_AREA);
@@ -472,6 +476,13 @@ export class World3D {
     this.insects.update(dt, this.night);
     this.digSpots.update(dt, !this.session.inside);
     this.festivals.update(dt, this.night, !this.session.inside);
+    {
+      // Glühwürmchen: Frühlings- und Sommerabende, nur draußen im Dorf und nicht bei Regen
+      const pl = this.player;
+      const w = currentWeather(this.session);
+      const strength = fireflyStrength({ season: getSeason(this.session.clock()), night: this.night, wet: isPrecipitation(w.kind), inside: this.session.inside, onIsland: this.session.onIsland });
+      this.fireflies.update(dt, pl ? strength : 0, pl ? pl.x * UNIT : 0, pl ? pl.y * UNIT : 0);
+    }
     {
       const h = this.session.clock().getHours();
       const night = h >= 21 || h < 6;
