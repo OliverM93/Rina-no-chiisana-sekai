@@ -138,8 +138,8 @@ import { findVersteck, hint as hintVersteck, unhintedNear, versteckAt } from '..
 import { WINSTON_SNIFF_RANGE, WINSTON_SNIFF_TOAST } from '../data/verstecke';
 import { Kater } from './Kater';
 import { KATER_NAME } from '../data/kater';
-import { petWinston, winstonAppeared, winstonDig, winstonDue, winstonFound, winstonMayDig, winstonState } from '../game/pet';
-import { DIG_LINES, WINSTON_APPEARS_TOAST, WINSTON_FIND_LINES, WINSTON_FREED_LINES, WINSTON_SPOT } from '../data/winston';
+import { learnedTricks, nextTrick, practiceNextTrick, petWinston, showTrickLine, trickProgress, winstonAppeared, winstonDig, winstonDue, winstonFound, winstonMayDig, winstonState } from '../game/pet';
+import { DIG_LINES, TRICK_ALL_LEARNED, TRICKS_NONE_YET, type TrickId, WINSTON_APPEARS_TOAST, WINSTON_FIND_LINES, WINSTON_FREED_LINES, WINSTON_NAME, WINSTON_SPOT } from '../data/winston';
 import { setModelSeason } from './models/furniture';
 import { makeBush } from './models/nature';
 import { lampGlass, makeHouse, windowGlass } from './models/buildings';
@@ -3569,7 +3569,66 @@ export class World3D {
       this.session.bus.emit('sfx', 'bellen');
       this.fxAt('herzen', w.x, w.y, -0.45);
     }
-    this.session.bus.emit('toast', { text: lines.join(' ') });
+    this.session.bus.emit('dialog:open', {
+      title: WINSTON_NAME,
+      lines,
+      choices: sleeping
+        ? [{ label: '👋 Weiter', onSelect: () => undefined }]
+        : [
+            { label: '🐾 Noch einmal', onSelect: () => this.petDog() },
+            { label: '🎓 Tricks', onSelect: () => this.trickMenu() },
+            { label: '👋 Weiter', onSelect: () => undefined },
+          ],
+    });
+  }
+
+  /** Tricks: gelernte vorführen lassen oder mit einem Keks den nächsten üben */
+  private trickMenu() {
+    const known = learnedTricks(this.session);
+    const next = nextTrick(this.session);
+    const progress = trickProgress(this.session);
+    const lines = known.length === 0 ? [TRICKS_NONE_YET] : next ? [`Winston kann ${known.map((t) => t.name).join(', ')}. Als Nächstes lernt er „${next.name}“ (${progress?.done ?? 0} von ${progress?.needed ?? 0} Übungen).`] : [TRICK_ALL_LEARNED];
+    this.session.bus.emit('dialog:open', {
+      title: `${WINSTON_NAME}s Tricks`,
+      lines,
+      choices: [
+        ...known.map((t) => ({ label: `${t.icon} ${t.name}`, onSelect: () => this.showTrick(t.id) })),
+        ...(next ? [{ label: '🍪 Üben (1 Keks)', onSelect: () => this.practiceTrick() }] : []),
+        { label: '👋 Weiter', onSelect: () => undefined },
+      ],
+    });
+  }
+
+  private showTrick(id: TrickId) {
+    const w = this.winston;
+    const player = this.player;
+    if (!w || !player) return;
+    const line = showTrickLine(this.session, id);
+    player.faceTowards(w.x, w.y);
+    w.doTrick(id, player.x, player.y, () => {
+      if (id === 'singen') this.session.bus.emit('sfx', 'bellen');
+    });
+    if (id === 'singen') this.session.bus.emit('sfx', 'bellen');
+    this.session.bus.emit('toast', { text: line });
+    this.session.save();
+  }
+
+  private practiceTrick() {
+    const w = this.winston;
+    const player = this.player;
+    if (!w || !player) return;
+    const r = practiceNextTrick(this.session);
+    this.session.bus.emit('dialog:open', {
+      title: WINSTON_NAME,
+      lines: r.lines,
+      onClose: () => {
+        if (r.ok && r.trick && r.learned) {
+          w.doTrick(r.trick.id, player.x, player.y, () => undefined);
+          this.fxAt('konfetti', w.x, w.y);
+          this.session.save();
+        } else if (r.ok) this.session.save();
+      },
+    });
   }
 
   private updateWinston(dtMs: number, player: Character, blocked: boolean, solid: (tx: number, ty: number) => boolean) {

@@ -15,13 +15,17 @@ export interface PetState {
   digTokens: number;
   /** Tag, bis zu dem die Fundstellen gezählt sind */
   digSeen: string;
+  /** Gelernte Tricks (IDs, in der Reihenfolge des Lernens) */
+  tricks: string[];
+  /** Übungen je Trick, der noch nicht gelernt ist (Leckerli) */
+  practice: Record<string, number>;
 }
 
 /** So viele Tage Buddelfunde sammeln sich an (wer einen Tag auslässt, verpasst nichts) */
 export const DIG_DAYS_MAX = 3;
 
 export function createPet(): PetState {
-  return { pettedDay: '', pets: 0, digDay: '', digTokens: 0, digSeen: '' };
+  return { pettedDay: '', pets: 0, digDay: '', digTokens: 0, digSeen: '', tricks: [], practice: {} };
 }
 
 /** Streicheln: gibt zurück, ob es das erste Mal heute war */
@@ -63,5 +67,24 @@ export function normalizePet(raw: unknown): PetState {
   if (typeof r.digTokens === 'number' && Number.isFinite(r.digTokens)) p.digTokens = Math.max(0, Math.min(DIG_DAYS_MAX, Math.floor(r.digTokens)));
   if (typeof r.digSeen === 'string') p.digSeen = r.digSeen;
   if (typeof r.pets === 'number' && Number.isFinite(r.pets)) p.pets = Math.max(0, Math.floor(r.pets));
+  if (Array.isArray(r.tricks)) p.tricks = [...new Set(r.tricks.filter((t): t is string => typeof t === 'string'))];
+  if (r.practice && typeof r.practice === 'object' && !Array.isArray(r.practice)) {
+    for (const [k, v] of Object.entries(r.practice as Record<string, unknown>)) if (typeof v === 'number' && Number.isFinite(v) && v > 0) p.practice[k] = Math.floor(v);
+  }
   return p;
+}
+
+/**
+ * Trick üben: Jede Übung (mit einem Leckerli) bringt den nächsten, noch nicht gelernten Trick einen Schritt weiter.
+ * `needed` = so viele Übungen braucht dieser Trick. Gibt zurück, ob er jetzt gelernt ist.
+ */
+export function practiceTrick(p: PetState, id: string, needed: number): 'ueben' | 'gelernt' {
+  if (p.tricks.includes(id)) return 'gelernt';
+  p.practice[id] = (p.practice[id] ?? 0) + 1;
+  if (p.practice[id] >= needed) {
+    p.tricks.push(id);
+    delete p.practice[id];
+    return 'gelernt';
+  }
+  return 'ueben';
 }

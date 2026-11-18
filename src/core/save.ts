@@ -22,7 +22,7 @@ import { createInventory, type Inventory, normalizeInventory, STORAGE_SIZE } fro
 import { createMailbox, type Mailbox, normalizeMailbox } from './mail';
 import { type DayMonth, DEFAULT_LINA_BIRTHDAY, formatIsoDay } from './time';
 
-export const SAVE_VERSION = 19;
+export const SAVE_VERSION = 20;
 export const SAVE_KEY = 'rina-no-chiisana-sekai.save';
 export const BACKUP_KEY = 'rina-no-chiisana-sekai.save.backup';
 
@@ -272,6 +272,8 @@ export const MIGRATIONS: Record<number, (old: RawSave) => RawSave> = {
   },
   // v18 → v19 (Obst & Stöcke verschwinden): Bodengegenstände können einen Zeitpunkt `expires` tragen. Alte bleiben unverändert.
   18: (old) => ({ ...old }),
+  // v19 → v20 (Winston-Tricks): Winston merkt sich gelernte Tricks (`pet.tricks`, `pet.practice`). `normalizePet` ergänzt sie leer.
+  19: (old) => ({ ...old }),
 };
 
 export function migrate(raw: RawSave, migrations = MIGRATIONS, target = SAVE_VERSION): RawSave {

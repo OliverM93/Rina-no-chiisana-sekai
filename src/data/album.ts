@@ -72,6 +72,8 @@ export const MOMENTS: readonly MomentDef[] = [
   { id: 'insel-delfine', source: { dateKey: 'insel:delfine' }, text: 'Delfine vor der Insel! Zwei Sprünge, ein Platsch, und ich habe eine Minute lang vergessen zu atmen.' },
   { id: 'insel-flaschenpost', source: { dateKey: 'insel:flaschenpost' }, text: 'Eine Flaschenpost ist angespült worden. Es war ein Brief von einem meiner Liebsten, und ich habe ihn dreimal gelesen.' },
   { id: 'insel-luau', source: { dateKey: 'insel:luau' }, text: 'Abends am Strand: Feuer, Fackeln und alle sitzen im Kreis. Ein kleines Luau, ganz ohne Grund.' },
+  { id: 'winston-trick-1', source: { dateKey: 'winston:trick:sitz' }, text: 'Winston kann „Sitz“! Er hat dabei geschaut, als hätte er es schon immer gekonnt.' },
+  { id: 'winston-tricks-alle', source: { dateKey: 'winston:tricks-alle' }, text: 'Winston kann alle seine Tricks: Sitz, Pfötchen, Rolle, Männchen und Singen. Ich bin so stolz, dass es fast komisch ist.' },
   { id: 'sammlung-tassen', source: { dateKey: 'sammlung:tassen' }, text: 'Alle Sammeltassen stehen im Regal. Kaffee schmeckt daraus besser, ganz sicher.' },
   { id: 'versteck-feenlichtung', source: { dateKey: 'versteck:feenlichtung' }, text: 'Ich habe die stille Lichtung gefunden. Zwischen den Bäumen glitzert es, als würden Lichter im Gras wohnen.' },
   { id: 'versteck-waldwinkel', source: { dateKey: 'versteck:waldwinkel' }, text: 'Im Waldwinkel stand eine Vogeltränke. Zwei Spatzen waren empört, aber sie kommen drüber weg.' },
