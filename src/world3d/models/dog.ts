@@ -36,6 +36,8 @@ export interface DogPose {
   /** Augen zu (Schlafen) */
   eyesClosed: boolean;
   t: number;
+  /** Trick-Vorführung: Art und Fortschritt 0..1 (siehe `data/winston.ts`) */
+  trick?: { kind: string; k: number };
 }
 
 export class Dog3D {
@@ -175,6 +177,34 @@ export class Dog3D {
     const wagSpeed = 6 + p.wag * 12;
     this.tail.rotation.z = Math.sin(p.t * wagSpeed) * (0.15 + p.wag * 0.6);
     this.tail.rotation.x = p.rest === 2 ? -1.5 : -1.25 + p.wag * 0.25;
+
+    // Tricks (überschreiben Haltung von Körper, Beinen und Kopf)
+    this.body.rotation.z = 0;
+    if (p.trick) {
+      const { kind, k } = p.trick;
+      const env = Math.min(1, k * 6, (1 - k) * 6);
+      if (kind === 'pfoetchen') {
+        fr.rotation.x = -1.45 + Math.sin(p.t * 9) * 0.22 * env;
+        fr.rotation.z = -0.2;
+      } else if (kind === 'rolle') {
+        const turn = Math.min(1, Math.max(0, (k - 0.2) / 0.6));
+        this.body.rotation.z = turn * Math.PI * 2;
+        this.body.position.y = 0.17 + 0.05 * env;
+        fl.rotation.x = fr.rotation.x = -0.9;
+        bl.rotation.x = br.rotation.x = -0.6;
+      } else if (kind === 'maennchen') {
+        this.body.rotation.x = -1.15 * env;
+        this.body.position.y = 0.17 + 0.14 * env;
+        fl.rotation.x = fr.rotation.x = -0.7 * env;
+        bl.rotation.x = br.rotation.x = 0.9 * env;
+        this.head.rotation.x = 0.7 * env;
+      } else if (kind === 'singen') {
+        this.head.rotation.x = -0.85 * env + Math.sin(p.t * 3) * 0.06;
+        this.head.rotation.z = Math.sin(p.t * 2.2) * 0.12 * env;
+      }
+    } else {
+      fr.rotation.z = 0;
+    }
 
     // Augen
     for (const e of this.eyes) e.visible = !p.eyesClosed;
