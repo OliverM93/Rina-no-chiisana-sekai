@@ -41,7 +41,7 @@ export const PAIR_CHATS: Readonly<Record<string, readonly Exchange[]>> = {
     ['Soll ich dir was aus Paris mitbringen, Gisela?', 'Eine anständige Wollmütze.'],
   ],
   'oli+thalia': [
-    ['Oli, Hardcore und Techno haben dieselbe Bruchkante.', 'Das stimmt nicht, Thalia.', 'Gefühlt.'],
+    ['Oli, Hardcore und Techno haben denselben Herzschlag.', 'Das stimmt nicht, Thalia.', 'Auf der Tanzfläche schon.'],
     ['Thalia, hast du schon mal einen Moshpit gesehen?', 'Ja. Das ist Tanzen mit Körpereinsatz. Ich bin Fan.'],
   ],
   'gisela+lars': [
@@ -49,7 +49,7 @@ export const PAIR_CHATS: Readonly<Record<string, readonly Exchange[]>> = {
     ['Lars, die Ärzte wollen nur mein Geld.', 'Oma, ich bin Arzt. Ich will nur deinen Blutdruck.'],
   ],
   'olaf+jens': [
-    ['Jens, ich bin der Pünktlichere.', 'Und ich bin der Hübschere, Olaf.'],
+    ['Jens, du hast die Sonntagsrechnung wieder nicht abgeheftet.', 'Frère, das war ein Kunstwerk. Kunst heftet man nicht ab.'],
     ['Jens, deine Zahlen stimmen nicht.', 'Meine Zahlen sind künstlerisch, Olaf.'],
   ],
   'christin+thalia': [

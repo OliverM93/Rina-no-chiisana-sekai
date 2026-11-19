@@ -27,7 +27,7 @@ const HEARTS_FIVE: Readonly<Record<string, string>> = {
   gisela: 'Oma Gisela und ich: fünf Herzen. Sie hat das letzte Wort behalten, aber ich glaube, sie hat dabei gelächelt.',
   olaf: 'Papa und ich: fünf Herzen. Er hat es vermutlich schon ausgerechnet.',
   christin: 'Christin und ich: fünf Herzen. Mein Zimmer sieht trotzdem so aus, als hätte sie es kurz angeschaut.',
-  oli: 'Oli und ich: fünf Herzen. Mehr als ein Wort braucht es nicht, Lini genügt.',
+  oli: 'Oli und ich: fünf Herzen. Er sagt „Lini“, und mehr muss er gar nicht sagen.',
   jens: 'Onkel Jens und ich: fünf Herzen. „Ma chérie“, hat er gesagt, und ich hab „Fabelhaft“ geantwortet.',
   lars: 'Lars und ich: fünf Herzen. Er hat einen Spruch dazu gemacht. Natürlich.',
   thalia: 'Thalia und ich: fünf Herzen. Beste Freundin war ich schon, jetzt steht es auch im Album.',
@@ -38,9 +38,9 @@ const HEARTS_THREE: Readonly<Record<string, string>> = {
   olaf: 'Papa und ich sind ein richtig gutes Team geworden.',
   christin: 'Christin und ich verstehen uns richtig gut. Ich räume jetzt freiwillig auf. Fast.',
   oli: 'Bei Oli fühlt sich alles nach Zuhause an.',
-  jens: 'Onkel Jens und ich sind richtig dicke. Frère wäre stolz.',
+  jens: 'Onkel Jens und ich sind richtig dicke. Papa sagt, er ist fast eifersüchtig. Fast.',
   lars: 'Lars und ich haben inzwischen einen eigenen Insiderwitz. Ich verrate ihn nicht.',
-  thalia: 'Thalia und ich sind wieder wie früher – nur im Dorf statt auf Reisen.',
+  thalia: 'Thalia und ich sind wie in Tschechien damals – nur mit weniger Nachtbus und mehr Kuchen.',
 };
 
 const HOUSE_TEXTS: Readonly<Record<number, string>> = {
@@ -77,8 +77,8 @@ export const MOMENTS: readonly MomentDef[] = [
   { id: 'winston-tricks-alle', source: { dateKey: 'winston:tricks-alle' }, text: 'Winston kann alle seine Tricks: Sitz, Pfötchen, Rolle, Männchen und Singen. Ich bin so stolz, dass es fast komisch ist.' },
   { id: 'sammlung-tassen', source: { dateKey: 'sammlung:tassen' }, text: 'Alle Sammeltassen stehen im Regal. Kaffee schmeckt daraus besser, ganz sicher.' },
   { id: 'versteck-feenlichtung', source: { dateKey: 'versteck:feenlichtung' }, text: 'Ich habe die stille Lichtung gefunden. Zwischen den Bäumen glitzert es, als würden Lichter im Gras wohnen.' },
-  { id: 'versteck-waldwinkel', source: { dateKey: 'versteck:waldwinkel' }, text: 'Im Waldwinkel stand eine Vogeltränke. Zwei Spatzen waren empört, aber sie kommen drüber weg.' },
-  { id: 'versteck-felsnische', source: { dateKey: 'versteck:felsnische' }, text: 'Neben dem großen Felsen lag ein kleines Steinmännchen. Jemand hat sich Mühe gegeben, ich hab es mitgenommen.' },
+  { id: 'versteck-waldwinkel', source: { dateKey: 'versteck:waldwinkel' }, text: 'Im Waldwinkel stand eine Vogeltränke. Zwei Spatzen waren erst empört. Inzwischen baden sie in meinem Garten.' },
+  { id: 'versteck-felsnische', source: { dateKey: 'versteck:felsnische' }, text: 'Neben dem großen Felsen lag ein kleines Steinmännchen. Jemand hat sich Mühe gegeben. Ich hab zu Hause eins nachgebaut, genau so.' },
   { id: 'versteck-treibgut', source: { dateKey: 'versteck:treibgut' }, text: 'Im Treibgut steckte eine Flaschenpost: „Such weiter, wo der Sand aufhört.“ Ich bin gespannt, was das heißt.' },
   // gemeinsame Unternehmungen: das erste Mal mit jeder Person
   ...UNTERNEHMUNGEN.map((u) => ({ id: `zusammen-${u.id}`, source: { dateKey: zusammenErstKey(u.id) }, text: u.album })),

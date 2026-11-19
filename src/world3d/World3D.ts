@@ -11,6 +11,7 @@ import * as THREE from 'three';
 import { DPR, TILE, UNIT } from '../config';
 import { CollisionGrid, findPath, nearestWalkable, type Tile } from '../core/grid';
 import { buildPlanGrid, type FloorPlan, planSize, roomAt, roomsBehind, roomsBeside, wallStrips } from '../core/floorplan';
+import { possessive } from '../core/grammar';
 import { floorsOf, groundFloor } from '../data/floorplan';
 import { checkPlacement, type Exit, riderOffset, exitAt, footprint, type Room, type RoomLayout, type Rotation, wallRotationAt } from '../core/room';
 import { FURNITURE_BY_ITEM, furnitureInfo, SURFACE_BY_ID } from '../data/furniture';
@@ -1320,7 +1321,7 @@ export class World3D {
     if (tool === 'angel' && (!target || target.kind === 'flowers') && this.castRod()) return;
     if (target) this.act(target);
     else if (tool === 'netz') this.swingNet(true);
-    else if (tool === 'angel') this.session.bus.emit('toast', { text: 'Stell dich ans Wasser und schau aufs Wasser, dann kannst du auswerfen. 🎣' });
+    else if (tool === 'angel') this.session.bus.emit('toast', { text: 'Stell dich ans Ufer und schau aufs Wasser, dann kannst du auswerfen. 🎣' });
     else if (tool === 'giesskanne') this.session.bus.emit('toast', { text: 'Gießen kannst du die Pflanzen in deinem Beet. 🌱' });
     else if (tool === 'schaufel') this.session.bus.emit('toast', { text: 'Hier ist nichts. Such nach kleinen Rissen im Boden, die funkeln! ✨' });
   }
@@ -1625,19 +1626,19 @@ export class World3D {
       this.tweens.add(600, (k) => this.player && (this.player.armForward = -0.6 - Math.sin(k * Math.PI) * 0.5), () => this.player && (this.player.armForward = -0.35));
       if (waterAt(this.session, t.x, t.y)) {
         this.garden.bounce(t);
-        this.session.bus.emit('toast', { text: `Gegossen! Morgen wächst die ${name} ein Stück. 💧` });
+        this.session.bus.emit('toast', { text: 'Gegossen! Bis morgen wächst es ein Stück weiter. 💧' });
       } else {
         this.session.bus.emit('toast', { text: 'Die Erde ist noch schön feucht. Morgen wieder!' });
       }
       return;
     }
-    const stage = (CROP_BY_ID[plant.flower] ? ['ist frisch eingesät', 'keimt', 'wächst kräftig heran'] : ['ist frisch eingepflanzt', 'keimt', 'hat eine Knospe'])[plant.stage];
+    const stage = (CROP_BY_ID[plant.flower] ? ['Frisch eingesät.', 'Keimt schon.', 'Wächst kräftig heran.'] : ['Frisch eingepflanzt.', 'Keimt schon.', 'Hat schon eine Knospe.'])[plant.stage];
     const watered = isFrozen(this.session, t.x, t.y)
-      ? 'Im Winter ruht das Beet. Erst im Frühling wächst sie weiter – oder in einem Frühbeet oder Gewächshaus. ❄️'
+      ? 'Im Winter ruht das Beet. Erst im Frühling geht es weiter – oder in einem Frühbeet oder Gewächshaus. ❄️'
       : isWatered(plant, day)
         ? 'Heute schon gegossen. 💧'
-        : 'Mit der Gießkanne (Taste 3) gießen, dann wächst sie bis morgen. 💧';
-    this.session.bus.emit('dialog:open', { title: name, lines: [`Die ${name} ${stage}.`, watered] });
+        : 'Mit der Gießkanne (Taste 3) gießen, dann wächst es bis morgen ein Stück. 💧';
+    this.session.bus.emit('dialog:open', { title: name, lines: [stage, watered] });
   }
 
   private act(target: Target) {
@@ -1799,13 +1800,13 @@ export class World3D {
     const ctx = this.session.interactionContext();
     const pick = <T>(list: readonly T[]) => list[(ctx.now.getDate() + ctx.now.getHours()) % list.length];
     let lines: readonly string[];
-    if (npc.present) lines = [`${npc.def.name}s Häuschen.`, 'Niemand zu Hause. Auf einem Zettel steht: „Bin unterwegs. Die Tür ist offen – aber nichts anfassen!“'];
+    if (npc.present) lines = [`${possessive(npc.def.name)} Häuschen.`, 'Niemand zu Hause. Auf einem Zettel steht: „Bin unterwegs. Die Tür ist offen – aber nichts anfassen!“'];
     else lines = pick(npc.isSleeping ? npc.def.dialogue.atHomeSleeping : npc.def.dialogue.atHome);
     // Besuch: nur, wenn gerade niemand schläft
     const houseId = Object.keys(GUEST_HOUSES).find((k) => GUEST_HOUSES[k].npc === npcId || (k === 'haus-olaf' && (npcId === 'olaf' || npcId === 'christin')));
     const canVisit = !!houseId && !npc.isSleeping;
     this.session.bus.emit('dialog:open', {
-      title: `${npc.def.name}s Häuschen`,
+      title: `${possessive(npc.def.name)} Häuschen`,
       lines: lines.map((l) => fillPlaceholders(l, ctx)),
       ...(canVisit && houseId
         ? { choices: [{ label: '🚪 Hineingehen', onSelect: () => this.doorTransition('up', () => this.enterGuest(houseId), 'up') }, { label: 'Lieber nicht', onSelect: () => undefined }] }
@@ -2809,7 +2810,7 @@ export class World3D {
     // Sonntagsessen bei Jens zu Hause
     if (isDinnerTime(this.session)) {
       if (this.session.data?.world.dates.essen === this.session.today()) {
-        this.session.bus.emit('dialog:open', { title, lines: ['Drinnen wird gelacht und mit Gläsern geklirrt.', '„Lina, chérie, du warst doch grad schon da! Nächsten Sonntag wieder, gell?“'] });
+        this.session.bus.emit('dialog:open', { title, lines: ['Drinnen wird gelacht und mit Gläsern geklirrt.', '„Lina, chérie, du warst doch grad schon da! Nächsten Sonntag wieder, nu?“'] });
         return;
       }
       this.session.bus.emit('dialog:open', {
@@ -3202,7 +3203,7 @@ export class World3D {
       if (pool) lines.push(pool[hashString(`${day}:${id}`) % pool.length]);
       addFriendship(this.session, id, id === 'jens' ? 16 : 10);
     }
-    lines.push('Nu, war\'s lecker? Nächsten Sonntag wieder, gell? Bisous! 💋');
+    lines.push('Nu, war\'s lecker? Nächsten Sonntag wieder, nu glar? Bisous! 💋');
     this.winston?.burst('herz');
     const who = guests.filter((g) => g !== 'jens').map((g) => this.npcs.get(g)?.def.name).filter(Boolean);
     lines.unshift(`Am großen Tisch bei Jens sitzen schon: ${who.join(', ')}. 🍽️`);
@@ -4822,7 +4823,7 @@ export class World3D {
         return;
       }
       const r = buyFromCatalog(this.session, itemId);
-      if (r === 'zu-teuer') return void this.session.bus.emit('toast', { text: `Noch eins ${name}? Dafür reichen die Sternchen nicht. ⭐` });
+      if (r === 'zu-teuer') return void this.session.bus.emit('toast', { text: `Noch ein Stück „${name}“? Dafür reichen die Sternchen nicht. ⭐` });
       if (r !== 'ok') return void this.session.bus.emit('toast', { text: r === 'tasche-voll' ? 'Tasche und Truhe sind voll! 🎒' : `${name} gibt es noch nicht im Katalog.` });
       this.session.bus.emit('toast', { text: `${name} nachgekauft. 🛒` });
     }

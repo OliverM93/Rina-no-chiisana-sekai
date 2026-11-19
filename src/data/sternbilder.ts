@@ -39,7 +39,7 @@ export const CONSTELLATIONS: readonly Constellation[] = [
     season: 'herbst',
     stars: [[10, 42, 2], [30, 18, 2], [50, 36, 3], [70, 14, 2], [90, 34, 2]],
     lines: [[0, 1], [1, 2], [2, 3], [3, 4]],
-    lines_: ['Schau, ein großes W am Himmel. Das ist Kassiopeia.', 'Im Herbst steht sie ganz hoch. Wenn du sie suchst, dreh dich einfach nach oben und denk an mich. Ich guck schon.'],
+    lines_: ['Schau, ein großes W am Himmel. Das ist Kassiopeia.', 'Im Herbst steht sie ganz hoch. Wenn du sie suchst, schau einfach nach oben und denk an mich. Ich guck schon.'],
   },
   {
     id: 'orion',

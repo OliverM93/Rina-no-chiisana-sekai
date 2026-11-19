@@ -52,14 +52,14 @@ export const CAFE_GUESTS: Readonly<Record<string, CafeGuestDef>> = {
     drinks: ['☕ Oli trinkt einen doppelten Espresso. Er sagt, das sei „Treibstoff“.', '🥤 Oli rührt in einem Eiskaffee. „Dessert und Koffein“, sagt er.'],
     comments: [
       ['Lini, hier läuft so schöne Musik. Und es riecht nach Kaffee und Butter. Ich bleib noch ein bisschen.'],
-      ['Die Wandbänke sind echt bequem. Perfekt, um sich in ein Buch zu vergraben. Oder in dich. Aber das ist ja nicht das Thema.'],
+      ['Die Wandbänke sind echt bequem. Perfekt, um sich in ein Buch zu vergraben. Oder an dich zu lehnen. Das ist noch bequemer.'],
       ['Jens hat hier echt was gebaut. Ich komm öfter, wenn du nichts dagegen hast. 💕'],
     ],
   },
   lars: {
     hours: [12.5, 14],
     everyNthDay: 4,
-    drinks: ['🍺 Lars hat ein kleines Bier vor sich. „Mittagspause, ärztlich genehmigt.“', '☕ Lars trinkt einen Milchkaffee. „Das ist die gesündere Variante“, sagt er und zwinkert.'],
+    drinks: ['☕ Lars hat einen doppelten Espresso vor sich. „Mittagspause. Ärztlich verordnet.“', '☕ Lars trinkt einen Milchkaffee. „Das ist die gesündere Variante“, sagt er und zwinkert.'],
     comments: [
       ['Wenig Stolperfallen, viele Sitzgelegenheiten. Das nenne ich ein gut geplantes Café.'],
       ['Der Tresen hier ist aus Zink, glaube ich. Hygienisch gesehen top. Gemütlich gesehen auch.'],
@@ -104,7 +104,7 @@ export const JENS_CAFE_CHATS: Readonly<Record<string, ReadonlyArray<readonly [st
   ],
   lars: [
     ['Lars, mon cher, noch ein Stück Kuchen?', 'Medizinisch betrachtet ist das ein Notfall. Gib her.'],
-    ['Lars, ein Gläschen für die Seele?', 'Das habe ich schon auf Rezept verschrieben. Heute ein kleines.'],
+    ['Lars, ein Gläschen für die Seele?', 'Nach Feierabend, Jens. Ich bin Arzt, nicht Heiliger.'],
   ],
   thalia: [
     ['Thalia, ma chérie, noch einen Spritz vor der Party?', 'Nur einen, Jens. Danach wird getanzt.'],
@@ -114,8 +114,8 @@ export const JENS_CAFE_CHATS: Readonly<Record<string, ReadonlyArray<readonly [st
 
 /** Gespräche zwischen Gästen im Café (zusätzlich zu den allgemeinen in `gespraeche.ts`); Schlüssel „erster+zweiter“ */
 export const CAFE_PAIR_CHATS: Readonly<Record<string, ReadonlyArray<readonly [string, string] | readonly [string, string, string]>>> = {
-  'gisela+olaf': [['Olaf, der Kaffee kostet hier drei Euro. Drei! Dafür gab es früher einen Sack Kartoffeln.', 'Gisela, das ist die Inflation. Ich habe eine Tabelle.', 'Ich will keine Tabelle. Ich will meinen Kaffee.']],
-  'gisela+christin': [['Christin, hast du Jens’ Tische gezählt?', 'Es sind acht, Gisela. Und alle stehen im Quadrat.', 'Köstlich. Wie bei mir.']],
+  'gisela+olaf': [['Olaf, der Kaffee kostet hier drei Sternchen. Drei! Dafür gab es früher einen Sack Kartoffeln.', 'Gisela, das ist die Inflation. Ich habe eine Tabelle.', 'Ich will keine Tabelle. Ich will meinen Kaffee.']],
+  'gisela+christin': [['Christin, hast du Jens’ Tische gezählt?', 'Es sind zehn, Gisela. Und alle stehen gerade.', 'Köstlich. Wie bei mir.']],
   'olaf+christin': [['Christin, wir sollten öfter hierher.', 'Das habe ich auch gedacht. Aber nur, wenn wir die Stühle gerade rücken dürfen.']],
   'oli+lars': [['Lars, was gibt’s Neues in der Praxis?', 'Oli, ärztliche Schweigepflicht. Aber der Kaffee hier ist besser als meiner.']],
   'thalia+lars': [['Lars, ich war heute früh im Studio.', 'Das war vor dem Frühstück, Thalia. Ich bewundere dich und sorge mich zugleich.']],
@@ -124,7 +124,7 @@ export const CAFE_PAIR_CHATS: Readonly<Record<string, ReadonlyArray<readonly [st
   'olaf+lars': [['Lars, wie viel Zucker nimmst du?', 'Keinen, Papa. Medizinisch reicht der im Kuchen.']],
   'christin+lars': [['Lars, deine Tasse steht auf dem Rand des Tellers.', 'Christin, das ist eine ärztlich begründete Schieflage.']],
   'christin+oli': [['Oli, deine Jacke liegt über dem Stuhl.', 'Die ruht sich nur aus, Christin.', 'Dann soll sie sich bitte am Haken ausruhen.']],
-  'gisela+oli': [['Oli, du siehst dünn aus.', 'Oma Gisela, ich bin normal.', 'Du bist dünn. Iss ein Stück Torte.']],
+  'gisela+oli': [['Oli, du warst schon wieder im Studio, oder?', 'Nur kurz, Oma Gisela.', 'Kurz ist zu lang. Iss ein Stück Torte.']],
   'gisela+thalia': [['Thalia, trinkst du Wein am Nachmittag?', 'Spritz, Oma Gisela. Das ist praktisch Obst.', 'Köstlich. Pfui. Köstlich.']],
   'olaf+thalia': [['Thalia, hast du die Kosten fürs Studio bedacht?', 'Olaf, das ist eine Investition in mich.', 'Das lasse ich gelten.']],
   'christin+thalia': [['Thalia, du siehst müde aus.', 'Ich war trainieren, Christin. Das ist müde mit Stolz.']],

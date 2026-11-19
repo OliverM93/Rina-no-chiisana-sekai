@@ -84,23 +84,23 @@ export interface TipsyReaction {
 export const TIPSY_NPC_LINES: Readonly<Record<string, TipsyReaction>> = {
   gisela: {
     leicht: [['Kindchen, du glühst ja so. Hast du etwa ein Likörchen gehabt?', '… Ich frag nur für mich. Rein fachlich.'], ['Du kicherst ja, ohne dass ich was gesagt hab. Das ist verdächtig. Bei mir kichert nur der Wasserkocher.']],
-    schummrig: [['Lina! Du schwankst wie ein Schiff im Sturm. Setz dich hin, Kind – und sag nichts.', 'Ich hab sowieso das letzte Wort.'], ['Ach du liebe Güte. Gleich Wasser und ein Keks! Ich hab Erfahrung, glaub mir. Ludwig hat nach dem Sportfest auch so geguckt.']],
+    schummrig: [['Lina! Du schwankst wie ein Schiff im Sturm. Setz dich hin, Kind – und sag nichts.', 'Und jetzt keine Widerrede. Ich hab ausgeredet.'], ['Ach du liebe Güte. Gleich Wasser und ein Keks! Ich hab Erfahrung, glaub mir. Ludwig hat nach dem Sportfest auch so geguckt.']],
   },
   olaf: {
-    leicht: [['Du bist ein bisschen rot um die Nase, Lina. Ist das das Wetter? … Oder die Steuer?', 'Keine Sorge, ich buch das unter „Feierabend“.'], ['Ein Gläschen in Ehren? Völlig steuerfrei. Prost, Lina.']],
+    leicht: [['Du bist ein bisschen rot um die Nase, Lina. Ist das das Wetter? … Ich trag es mal unter „Sonstiges“ ein.', 'Keine Sorge, ich buch das unter „Feierabend“.'], ['Ein Gläschen in Ehren? Völlig steuerfrei. Prost, Lina.']],
     schummrig: [['Mein Gott, Lina, das ist ja eine Schlagseite! Ich hol dir ein Wasser. Und einen Stuhl. Und ein Formular.', 'Das Formular ist für mich, zur Beruhigung.'], ['Dieses Schwanken ist nicht im Haushaltsplan vorgesehen. Setz dich einen Moment, ja?']],
   },
   christin: {
-    leicht: [['Du hast ein Glas gehabt, oder? Ich seh es an deinem Lächeln. Und an deinem schiefen Haarknoten.', 'Komm, ich richte ihn kurz. Nur kurz.'], ['Du riechst nach Feierabend. Ist nicht schlimm. Aber bitte nicht auf das frisch gemachte Sofa fallen.']],
-    schummrig: [['Lina, du läufst Schlangenlinien! Bitte nicht in die Blumenbeete, die habe ich gerade erst gerade gezogen.', 'Ich hol dir Wasser. Und einen Untersetzer.'], ['Oje. Setz dich, ich stell dir ein Glas Wasser hin – auf einen Untersetzer, versteht sich.']],
+    leicht: [['Du hast ein Glas gehabt, oder? Ich seh es an deinem Lächeln. Und daran, dass deine Locken heute machen, was sie wollen.', 'Komm, ich richte ihn kurz. Nur kurz.'], ['Du riechst nach Feierabend. Ist nicht schlimm. Aber bitte nicht auf das frisch gemachte Sofa fallen.']],
+    schummrig: [['Lina, du läufst Schlangenlinien! Bitte nicht in die Blumenbeete, die habe ich gerade erst ausgerichtet.', 'Ich hol dir Wasser. Und einen Untersetzer.'], ['Oje. Setz dich, ich stell dir ein Glas Wasser hin – auf einen Untersetzer, versteht sich.']],
   },
   jens: {
     leicht: [['Ma chérie, du strahlst! Hat mein Wein dich geküsst?', 'Das nenn ich ein Kompliment an die Winzerin!'], ['Nu, du bist ja richtig aufgekratzt! Gefällt mir. Santé!']],
-    schummrig: [['Oh là là! Du tanzt ja schon, ohne dass Musik läuft! Setz dich, ich hol dir ein Wasser mit Zitrone.', 'Doppelt hält besser, gell?'], ['Ma chérie, die Welt dreht sich, was? Das ist normal, die Erde dreht sich auch. Aber trink jetzt ein Wasser, Bisous.']],
+    schummrig: [['Oh là là! Du tanzt ja schon, ohne dass Musik läuft! Setz dich, ich hol dir ein Wasser mit Zitrone.', 'Und noch eens. Nu glar, Wasser! Was denkst’n du?'], ['Ma chérie, die Welt dreht sich, was? Das ist normal, die Erde dreht sich auch. Aber trink jetzt ein Wasser, Bisous.']],
   },
   lars: {
     leicht: [['Schwesterherz, du hast so einen Glanz in den Augen. Ärztliche Diagnose: ein Glas. Oder anderthalb.', 'Alles gut. Ich schreib nichts auf.'], ['Du bist ganz schön kichrig. Medizinisch gesehen ist Lachen gesund. Alkohol nicht, aber die Mischung ist okay.']],
-    schummrig: [['Rezept vom Doktor: Wasser, Brot, Sofa. Und morgen ein langer Spaziergang.', 'Ich schreib es dir auf. Wenn ich meinen Stift treffe.'], ['Lina, du wankst. Ich bin Arzt und sag: Setz dich, trink Wasser und rede nicht mit Oma über Politik.']],
+    schummrig: [['Rezept vom Doktor: Wasser, Brot, Sofa. Und morgen ein langer Spaziergang.', 'Ich schreib es dir auf. Morgen. Wenn du es wieder lesen kannst.'], ['Lina, du wankst. Ich bin Arzt und sag: Setz dich, trink Wasser und rede nicht mit Oma über Politik.']],
   },
   thalia: {
     leicht: [['Lina! Du bist ja schon in Partystimmung! Warte, ich hol die Playlist!', 'Das wird ein guter Abend.'], ['Hihi, du kicherst! Ich liebe das. Wer braucht schon einen Club, wenn man dich hat?']],

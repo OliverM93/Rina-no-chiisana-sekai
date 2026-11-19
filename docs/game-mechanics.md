@@ -128,7 +128,7 @@ Wetter und Feste laufen nach echter Zeit.
   Oma davon erzählt; 6 Eier + 3 Kekse am Herd/im Kochstudio; Dank: Likörchen-Set), **Olaf** baut mit Lina ein **Flugzeugmodell** (Äste, Kiesel, Muscheln,
   600 ⭐; Dank: sein Modell), **Christin** führt einen **Volkstanz** auf dem Dorfplatz auf (bunter Strauß + Apfelkuchen; danach „🪗 Volkstanz tanzen“ mit Christin
   & Olaf, einmal am Tag), **Jens** lädt zum **Urlaub** ein – **Hawaii oder Japan zur Wahl** (1.500 ⭐ + zwei Gerichte; Dank: die Tasse „Honolulu“ bzw. „Nara“),
-  **Lars** wünscht sich einen **Wolframit** (neuer seltener Fund mit der Schaufel; Dank: sein Lieblingsbuch „Die Sandsterne“) und **Thalia** eine **große Party**
+  **Lars** wünscht sich einen **Wolframit** als Wertanlage (kein Steine-Hobby; neuer seltener Fund mit der Schaufel; Dank: sein Lieblingsbuch „Die Sandsterne“, das Oli ihm aufgeschwatzt hat) und **Thalia** eine **große Party**
   (vier Gerichte, bunter Strauß, 400 ⭐; Dank: die Discokugel). Geschenke kommen über `WishResult.rewards` (`giveOrDrop`), Wünsche mit Wahl über `options`.
 - **Pater Matteo – Thalias Brieffreund** (`WISHES_3`, `data/matteo.ts`, `game/matteo.ts`): Nach der Party wünscht sich Thalia einen Brieffreund: **Pater Matteo**, eine
   **ausgedachte** Figur (Pfarrer in einem Bergdorf, schreibt über Steine und Wanderwege, bescheiden und humorvoll). Lina hilft beim Päckchen (Bergkristall, Lavendelkekse, 100 ⭐
@@ -278,8 +278,10 @@ Wetter und Feste laufen nach echter Zeit.
   `Chibi3D(appearance, season, day)`; Aufdrucke als gebogene Fläche vor dem Oberteil (`printDecal`), Galerie
   `?ansicht=kleidung`. Keine echten Marken-/Filmnamen auf Kleidung – eigene Designs.
 - **Fernseher & Küche:** Sendungen in `data/tv.ts` (ausgedachte Formate, keine echten Sendungsnamen/Fälle/Personen).
-  **Bewusst kein Kuschelfernsehen:** Nachrichten, Datingshow, Doku, True Crime, Horror und Kochshow zeigen ernste
-  Themen nüchtern und ehrlich – als ironischer Bruch mit der Pastell-Welt. Grenzen: nichts Explizites, keine
+  **Kein reines Kuschelfernsehen:** Nachrichten, Datingshow, Doku, True Crime, Horror und Kochshow zeigen ernste
+  Themen nüchtern und ehrlich – als Bruch mit der Pastell-Welt. **Auch fröhliche Momente (Nov. 2026):** Jede
+  Nachrichtensendung endet mit „Und zum Schluss: …“ (eine gute Meldung), in der Datingshow klappt es auch mal
+  (Tobias; Bärbel & Bernd), die Kochshow endet hoffnungsvoller. Grenzen: nichts Explizites, keine
   Gewaltdetails, niemand wird verspottet (die Doku nimmt ihre Protagonisten ernst). Regeln
   in `game/tv.ts` (Folge pro Tag, Oli schaut mit, Kochshow lehrt Rezepte mit `tv: true`). Linas Herd =
   `CraftPanel` mit `station="herd"` (Küchen-Rezepte zu Hause).
@@ -324,7 +326,7 @@ Wetter und Feste laufen nach echter Zeit.
 - **Christin:** gießt abends (ab 18:30, nach dem Angeln mit Olaf; sonntags nach dem Essen bei Jens – Tagesablauf „Gießt Linas Garten“) einmal alles in Linas Beeten, was
   noch durstig ist – nicht bei Regen (`game/christin.ts`, `world.dates.christinGiesst`, Dialog-Tag `beet-gegossen`).
   Im Gespräch „💡 Ordnungstipp?“: jeden Tag ein echter kleiner Spieltipp in ihrer Art (`CHRISTIN_TIPS`) – bewusst
-  kein Lob fürs Aufräumen.
+  kein Lob fürs Aufräumen. Tipps, die nichts mit Ordnung zu tun haben, beginnen mit „Kleiner Tipp:“.
 - **Winterzauber:** `data/winter.ts` + `game/winter.ts`. **Olis Adventskalender:** 1.–24. Dezember je ein Brief
   (`checkAdvent`, ID `advent-<jahr>-<tür>`), das 24. Türchen (Schneekugel `schneekugel-wir`) kommt notfalls bis
   Silvester; Rezeptkarten für Bratapfel & Zimtsterne (Herd/Kochstudio). **Schneebälle** liegen Dezember–Februar auf
