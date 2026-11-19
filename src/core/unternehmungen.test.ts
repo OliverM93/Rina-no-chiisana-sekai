@@ -160,24 +160,30 @@ describe('Kissen-Sumo', () => {
     expect(s.roundOver).toBe(false);
   });
 
-  /** Ein Match in echter Zeit (60 Bilder/s), `rate` = Tastendrücke je Sekunde im Wechsel */
+  /**
+   * Ein Match in echter Zeit: Bilder alle 1/60 s, die Tastendrücke kommen zu ihrem **exakten** Zeitpunkt dazwischen
+   * (sonst könnte die Simulation nur Tempi wie 60/7 oder 60/6 Drücke je Sekunde abbilden). `rate` = Drücke je Sekunde im Wechsel.
+   */
   function play(level: SumoLevel, rate: number) {
     const s = newSumo(level);
     let t = 0;
     let nextTap = 0;
     let side: 'left' | 'right' = 'left';
     while (!sumoOver(s) && t < 300) {
-      const dt = 1 / 60;
-      t += dt;
       if (s.roundOver) {
         sumoNextRound(s);
+        nextTap = t;
         continue;
       }
-      sumoTick(s, dt, t);
-      if (t >= nextTap && !s.roundOver) {
+      const step = Math.min(1 / 60, Math.max(0, nextTap - t));
+      if (step > 0) {
+        sumoTick(s, step, t + step);
+        t += step;
+      }
+      if (t >= nextTap - 1e-9 && !s.roundOver) {
         sumoPush(s, side);
         side = side === 'left' ? 'right' : 'left';
-        nextTap = t + 1 / rate;
+        nextTap += 1 / rate;
       }
     }
     return s;
@@ -192,6 +198,9 @@ describe('Kissen-Sumo', () => {
     };
     const tempos = UNTERNEHMUNG_BY_ID['sumo-lars'].sumo!.levels.map(need);
     for (let i = 1; i < tempos.length; i++) expect(tempos[i], `Level ${i + 1}`).toBeGreaterThanOrEqual(tempos[i - 1]);
+    // gewünschte Stufen am Ende: Level 7 ab ~8,25, Level 8 ab ~9 Drücken je Sekunde
+    expect(tempos[6]).toBe(8.25);
+    expect(tempos[7]).toBe(9);
     const levels = UNTERNEHMUNG_BY_ID['sumo-lars'].sumo!.levels;
     expect(levels.length).toBe(8);
     // Level 1 gemütlich mit 4 Drücken/s, alle mit 10/s
