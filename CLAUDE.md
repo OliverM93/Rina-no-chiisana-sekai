@@ -93,6 +93,7 @@ Die Doku liegt in `docs/` – **bei Änderungen die passende Datei mitpflegen**:
 | [`docs/development-status.md`](docs/development-status.md) | Meilensteine (✅/🚧/⬜), aktueller Stand, Ideen-Parkplatz, offene Fragen | ein Feature fertig wird oder Pläne sich ändern |
 | [`README.md`](README.md) | Spielen, Steuerung, Entwickeln, Veröffentlichung | Steuerung/Befehle ändern sich |
 | [`docs/game-design/`](docs/game-design/README.md) | Game-Design-Wissensbasis: Vision, Designsäulen, Loops, Progression, Ökonomie, Balancing, Pacing, Psychologie, Playtesting, Entscheidungen, priorisierte Verbesserungen | neue Mechaniken, Balancing-Änderungen, Designentscheidungen |
+| [`docs/narrative/`](docs/narrative/dialogue-audit.md) | Narrative- und Dialog-Audit: Figurenstimmen, Bewertung jeder Spieltext-Zeile, problematische Texte mit Alternativen, Maßnahmenplan | Figurentexte geschrieben oder geändert werden (Konzept-Abgleich, Formeln, Dubletten) |
 
 ### Game Design (Rolle: Game Designer & Game Director)
 
