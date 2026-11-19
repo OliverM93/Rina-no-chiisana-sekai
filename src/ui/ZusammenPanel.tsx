@@ -232,6 +232,31 @@ const ARROW_KEYS: Record<string, Arrow> = { ArrowUp: 'up', KeyW: 'up', ArrowDown
 function LevelSelect({ session, def, title, hint, best, onPick }: { session: Session; def: UnternehmungDef; title: string; hint: string; best: (i: number) => string | null; onPick: (i: number) => void }) {
   const names = levelNames(def);
   const reached = unlockedLevels(session, def.id);
+  // Tastatur: ↑/↓ (oder W/S) wählt unter den erreichten Leveln, Enter/Leertaste startet; Start beim neuesten
+  const [sel, setSel] = useState(reached - 1);
+  const buttons = useRef<Array<HTMLButtonElement | null>>([]);
+  const selRef = useRef(sel);
+  selRef.current = sel;
+  useEffect(() => {
+    buttons.current[sel]?.focus();
+  }, [sel]);
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.code === 'ArrowUp' || e.code === 'KeyW') {
+        e.preventDefault();
+        setSel((v) => Math.max(0, v - 1));
+      } else if (e.code === 'ArrowDown' || e.code === 'KeyS') {
+        e.preventDefault();
+        setSel((v) => Math.min(reached - 1, v + 1));
+      } else if (e.code === 'Enter' || e.code === 'Space' || e.code === 'NumpadEnter') {
+        e.preventDefault();
+        e.stopPropagation();
+        onPick(selRef.current);
+      }
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [reached]);
   return (
     <>
       <div class="zs-status">{title}</div>
@@ -240,7 +265,16 @@ function LevelSelect({ session, def, title, hint, best, onPick }: { session: Ses
           const open = i < reached;
           const b = open ? best(i) : null;
           return (
-            <button key={i} class={`btn ${open ? (i === reached - 1 ? 'primary' : 'ghost') : 'ghost locked'}`} disabled={!open} onClick={() => onPick(i)}>
+            <button
+              key={i}
+              ref={(el) => {
+                buttons.current[i] = el;
+              }}
+              class={`btn ${open ? (i === sel ? 'primary' : 'ghost') : 'ghost locked'}`}
+              disabled={!open}
+              onMouseEnter={() => open && setSel(i)}
+              onClick={() => onPick(i)}
+            >
               <span class="zs-level-no">{open ? `Level ${i + 1}` : `🔒 Level ${i + 1}`}</span>
               <span class="zs-level-boss">{open ? name : '???'}</span>
               {b && <span class="zs-level-best">{b}</span>}
@@ -248,7 +282,7 @@ function LevelSelect({ session, def, title, hint, best, onPick }: { session: Ses
           );
         })}
       </div>
-      <div class="zs-cheer">{hint}</div>
+      <div class="zs-cheer">{hint} · ↑/↓ wählen, Enter startet.</div>
     </>
   );
 }
