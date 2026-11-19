@@ -57,6 +57,9 @@ export const OLI: NpcDef = {
       { text: ['Schnee, Lini! ❄️', 'Wer zuerst einen Schneemann baut, kriegt einen Kakao. Ich verlier auch absichtlich.'], when: { tags: ['wetter-schnee'] }, weight: 3 },
     ],
     chat: [
+      { text: ['Lini, der AirFryer läuft schon wieder.', 'Es riecht nach Rippchen. Ich frag nicht weiter. Ich deck einfach den Tisch.'], weight: 2 },
+      { text: ['Du hast schon wieder Kohl gekauft, oder? Drei Köpfe.', 'Ich weiß noch nicht, was du daraus machst. Aber ich weiß, dass ich zweimal nachnehme.'] },
+      { text: ['Weißt du, was ich an deinem AirFryer mag?', 'Er piept, und dann strahlst du. Das ist mein Lieblingsgeräusch in der Küche.'], when: { minHearts: 2 } },
       { text: ['Lini, wie viele Pflanzen sind das jetzt eigentlich bei uns?', 'Ich hab aufgehört zu zählen. Ich gieß sie trotzdem alle. Sogar die, die gar keine Pflanzen sind.'] },
       { text: ['Du siehst so zufrieden aus, wenn du unter deiner schweren Decke liegst.', 'Ich guck dann manchmal einfach nur zu. Das ist mein ruhigster Moment am Tag.'], when: { minHearts: 2 } },
       { text: ['Heute Abend Sofa, schwere Decke, Wärmflasche und Käse?', 'Ich hol schon mal das Brett. Es ist ein sehr gutes Brett.'], when: { phases: ['abend', 'abenddaemmerung'] } },

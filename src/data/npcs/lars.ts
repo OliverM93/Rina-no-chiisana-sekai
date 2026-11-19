@@ -49,6 +49,9 @@ export const LARS: NpcDef = {
       { text: ['Schnee! Schal an, Mütze auf!', 'Ärztliche Anordnung. Und brüderliche auch.'], when: { tags: ['wetter-schnee'] }, weight: 3 },
     ],
     chat: [
+      { text: ['Rippchen aus dem AirFryer?', 'Ärztlich gesehen: weniger Fett als aus der Pfanne. Brüderlich gesehen: gib her.'] },
+      { text: ['Kohl ist medizinisch gesehen ein Superheld.', 'Vitamin C, Ballaststoffe, alles drin. Den einzigen Nachteil merkt man später. Ich sag nur: lüften.'] },
+      { text: ['Jens fährt nur erste Klasse ICE.', 'Er sagt, in der zweiten gibt es keinen richtigen Kaffee. Ich war dabei. Er hatte recht.'], when: { tags: ['jens-da'] } },
       { text: ['Schlaf ist die älteste Medizin.', 'Wer gern und viel schläft, macht medizinisch gesehen vieles richtig. Ich sag das nicht nur, weil ich dich kenne.'] },
       { text: ['Eine Wärmflasche ist ein wunderbares Hausmittel.', 'Die gibt’s leider nicht auf Rezept. Dabei hilft sie mehr als manche Tablette.'] },
       { text: ['Du baust Gemüse an? Sehr gut.', 'Karotten, Salat, Kräuter. Als Arzt sage ich: Das ist die beste Medizin. Als Bruder sage ich: Bitte nicht nur Pfannkuchen.'], weight: 3 },
