@@ -200,7 +200,7 @@ export const UNTERNEHMUNGEN: readonly UnternehmungDef[] = [
     sumo: {
       opponent: 'Lars',
       // Ein Druck im Wechsel schiebt `push`; Lars drückt mit `strength` je Sekunde dagegen (Ring = 2 breit).
-      // Nötiges Tempo (Drücke/s, laut Simulation): 2 · 3,5 · 4,5 · 5,5 · 6,5 · 6,75 · 8,25 · 9
+      // Nötiges Tempo (Drücke/s, laut Simulation): 2 · 3,5 · 4,5 · 5,5 · 6,5 · 7,25 · 8,25 · 9
       levels: [
         { name: 'Jonokuchi – Lars im Schlafanzug', strength: 0.2, push: 0.1, growth: 0.03, shove: 0 },
         { name: 'Jonidan – Lars nach dem Mittagessen', strength: 0.28, push: 0.09, growth: 0.03, shove: 0.12 },
@@ -208,7 +208,7 @@ export const UNTERNEHMUNGEN: readonly UnternehmungDef[] = [
         { name: 'Ōzeki – Lars in Bestform', strength: 0.4, push: 0.08, growth: 0.04, shove: 0.2 },
         { name: 'Yokozuna – Lars, der Unbezwingbare', strength: 0.46, push: 0.078, growth: 0.05, shove: 0.24 },
         // nach dem Yokozuna: Lars gibt nicht auf
-        { name: 'Revanche – Lars mit Glückssocken', strength: 0.48, push: 0.078, growth: 0.05, shove: 0.25 },
+        { name: 'Revanche – Lars mit Glückssocken', strength: 0.48, push: 0.076, growth: 0.05, shove: 0.29 },
         { name: 'Dorfmeisterschaft – Lars nach drei Kaffee', strength: 0.535, push: 0.074, growth: 0.05, shove: 0.33 },
         { name: 'Legende – Lars, der Kissenkaiser', strength: 0.605, push: 0.074, growth: 0.05, shove: 0.33 },
       ],
