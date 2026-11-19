@@ -48,6 +48,10 @@ export const OLAF: NpcDef = {
       { text: ['Bei dem Regen arbeiten selbst die Enten im Homeoffice.', '… War ein Witz. Ein guter, finde ich.'], when: { tags: ['wetter-regen'] }, weight: 3 },
     ],
     chat: [
+      { text: ['Christin und ich waren mal im Schwarzwald.', 'Kuckucksuhren, Kirschtorte, Tannen. Ich hab die Wanderwege nach Länge sortiert, Christin nach Aussicht. Gelaufen sind wir ihre.'] },
+      { text: ['In Dresden haben Christin und ich mal ein ganzes Wochenende verbracht.', 'Frauenkirche, Elbufer, Eierschecke. Die Quittungen hab ich heute noch. Abgeheftet unter „Schöne Erinnerungen“.'] },
+      { text: ['Dein AirFryer ist eine sehr effiziente Anschaffung, Lina.', 'Ich hab’s durchgerechnet: Deine Rippchen kosten darin ungefähr halb so viel Strom wie im Backofen. Für die Rechnung musste ich natürlich eins probieren.'] },
+      { text: ['Jens fliegt nur Business Class.', 'Ich hab ihm mal den Unterschied zur Economy ausgerechnet. Er hat gesagt: „Frère, das ist der Preis für Würde.“'], when: { tags: ['jens-da'] } },
       { text: ['Kartoffeln sind eine solide Anlage.', 'Man steckt eine in die Erde und bekommt vier zurück. Das ist eine Rendite von vierhundert Prozent. Ohne Risiko. Außer Kartoffelkäfer.'], weight: 3 },
       { text: ['Weißt du, was ein Pirat am Computer drückt?', '… Die Enter-Taste. Hehehe. Christin sagt, ich soll aufhören. Ich sage: Ich bin gerade erst warm geworden.'] },
       { text: ['Was ist grün und schaut durchs Schlüsselloch?', '… Ein Spionat. Hehe. Das ist von mir. Also nicht von mir. Aber ich hab es bei der Arbeit erzählt. Es gab zwei Lacher. Einer davon war Herr Meier.'] },

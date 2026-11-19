@@ -52,6 +52,8 @@ export const THALIA: NpcDef = {
       { text: ['Heute ist Party-Abend! 💃', 'Ab sieben auf dem Dorfplatz. Komm unbedingt – ich hab eine Playlist gemacht. Drei Stunden. Nur Bangers.'], when: { weekdays: [6] }, weight: 4 },
     ],
     chat: [
+      { text: ['Kochst du heute Rippchen? Dann komm ich direkt vom Training rüber.', 'Eiweiß nach dem Beintag. Und deine sind die besten im Dorf – das hab ich sogar auf meiner Karte markiert.'] },
+      { text: ['Dein AirFryer ist schneller als jeder Lieferdienst.', 'Und du bist netter als jeder Fahrer. Ich bleib zum Essen.'] },
       { text: ['Ich war heute früh im Studio. Beintag.', 'Ich kann offiziell keine Treppen mehr. Rückwärts geht. Frag nicht.'] },
       { text: ['Wusstest du, dass Flüsse immer den bequemsten Weg nehmen?', 'Wie ich am Sonntagmorgen. Vom Bett zur Kaffeemaschine. Und zurück.'] },
       { text: ['Hast du die Wolken heute gesehen?', 'Die eine sah aus wie Winston. Die andere wie Winston mit Hut.'] },

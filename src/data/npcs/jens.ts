@@ -53,6 +53,10 @@ export const JENS: NpcDef = {
       { text: ['Ein Regenbogen! 🌈', 'Na, wenn das mal kein Zeichen ist. Für uns Fabelhaften ist das ja quasi die Hausfahne.'], when: { tags: ['regenbogen'] }, weight: 5 },
     ],
     chat: [
+      { text: ['Kohl, ma chérie! Völlig unterschätzt!', 'In Paris kochen sie ihn mit Butter, in Leipzsch mit Kümmel, und du mit Liebe. Alles richtig.'] },
+      { text: ['Ich fliege nur Business Class, meine Kleene.', 'Nicht wegen des Luxus. Wegen der Kissen. … Nu gut, auch wegen des Champagners.'] },
+      { text: ['Mit dem Zug? Nu freilich! Aber nur erste Klasse ICE.', 'Die zweite Klasse hab ich einmal probiert. 1998. Ich red nicht gern drüber.'] },
+      { text: ['Ein AirFryer in meiner Bistroküche? Mon Dieu, niemals!', 'Dann hab ich deine Rippchen probiert. … Ich hab mir einen bestellt. Er steht im Hinterzimmer, damit ihn keiner sieht.'] },
       { text: ['Ma chérie, ein Käsebrett ist wie ein kleines Theater.', 'Jeder Käse hat seine Rolle. Du bist natürlich immer die Hauptdarstellerin. Nu glar.'] },
       { text: ['Weißt du, was Kyoto mir beigebracht hat? Dass eine Bento-Box ein Gedicht in Fächern ist.', 'Deine hätte mir gefallen. Du kochst, als würdest du Geschichten erzählen.'] },
       { text: ['Chérie, hast du schon Basilikum im Beet?', 'Ohne Basilikum ist eine Tomate nur eine rote Kugel. Mit Basilikum ist sie Poesie.'], weight: 3 },
@@ -161,14 +165,14 @@ export const TRAVELS: ReadonlyArray<{ city: string; text: string; souvenir: stri
   { city: 'Venedig', text: 'Gondeln! Masken! Ein Gondoliere, der „O sole mio“ gesungen hat – nur für mich. Na ja, für mich und zwölf Touristen.', souvenir: 'venedig-maske', mug: 'tasse-stadt-venedig' },
   { city: 'Amsterdam', text: 'Tulpen, so weit das Auge reicht. Und Museen! Ich stand eine Stunde vor einem Bild mit Sonnenblumen und hab geweint. Vor Glück.', souvenir: 'holzschuhe', mug: 'tasse-stadt-amsterdam' },
   { city: 'Sevilla', text: 'Flamenco! Ich hab mitgetanzt. Die Tänzer sagen, ich hätte Talent. Mein Knie sagt was anderes.', souvenir: 'faecher', mug: 'tasse-stadt-sevilla' },
-  { city: 'New York', text: 'Die Stadt schläft nie – und ich auch nicht. Broadway, Galerien, Pizza um drei Uhr nachts. Fabelhaft!', souvenir: 'schneekugel', mug: 'tasse-stadt-new-york' },
+  { city: 'New York', text: 'Die Stadt schläft nie – und ich auch nicht. Im Flieger schon gar nicht, Business Class hat zu gute Kissen. Broadway, Galerien, Pizza um drei Uhr nachts. Fabelhaft!', souvenir: 'schneekugel', mug: 'tasse-stadt-new-york' },
   { city: 'Kyoto', text: 'Kirschblüten und Tempel. Alles so still und schön. Ich hab gelernt, Tee zu machen. Und mir einen Glücksbringer gekauft.', souvenir: 'daruma', mug: 'tasse-stadt-kyoto' },
   { city: 'Tokio', text: 'Alles blinkt, alles ist niedlich, und die Katzen winken! Ich hab in einem Café fünf Stunden gesessen und nur geguckt. Lina, du musst da mal hin. Du sprichst ja sogar ein bisschen Japanisch!', souvenir: 'tasse-stadt-tokio' },
   { city: 'Wien', text: 'Kaffeehaus, Torte, Walzer. Ich hab drei Stunden an einem einzigen Kaffee gesessen und der Kellner hat sich nicht beschwert. Das nenne ich Kultur!', souvenir: 'tasse-stadt-wien' },
   { city: 'Lissabon', text: 'Blaue Fliesen, gelbe Straßenbahnen und ein Fado-Sänger, der mich zum Weinen gebracht hat. Dann hab ich Sardinen gegessen. Auch schön.', souvenir: 'tasse-stadt-lissabon' },
   { city: 'Honolulu', text: 'Aloha! Blumenketten, Brandung und ein Sonnenuntergang, der aussieht wie von mir gemalt. Ich hab mich sofort verbrannt – stilvoll natürlich.', souvenir: 'tasse-stadt-honolulu' },
   { city: 'Nara', text: 'Hier laufen Rehe frei durch den Park und verbeugen sich, wenn man ihnen was gibt. Ich hab drei Stunden Matcha getrunken und kein einziges Wort gesagt. Ein Wunder.', souvenir: 'tasse-stadt-nara' },
-  { city: 'Leipzig', text: 'Ich war mal in meiner Wahlheimat! Nu, die Thomaskirche steht noch, und ich hab drei Eierschecke gegessen. Ich hab so ein Heimweh gekriegt, dass ich dir gleich was mitgebracht hab.', souvenir: 'tasse-stadt-leipzig' },
+  { city: 'Leipzig', text: 'Ich war mal in meiner Wahlheimat! Erste Klasse ICE, nu freilich. Nu, die Thomaskirche steht noch, und ich hab drei Eierschecke gegessen. Ich hab so ein Heimweh gekriegt, dass ich dir gleich was mitgebracht hab.', souvenir: 'tasse-stadt-leipzig' },
 ];
 
 /** Postkarte des Tages (wenn Jens reist) */

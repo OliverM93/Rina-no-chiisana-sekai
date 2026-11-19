@@ -53,6 +53,9 @@ export const GISELA: NpcDef = {
       { text: ['Kindchen! Mein Lieblingsbesuch.', '… Ja, ich weiß, das sag ich zu allen. Bei dir stimmt’s.'], when: { minHearts: 2 } },
     ],
     chat: [
+      { text: ['Rippchen, Kind? Die isst du doch so gern.', 'Mein Ludwig auch. Der hat sie mit den Fingern gegessen, und ich hab jedes Mal „pfui“ gesagt.', 'Mit Messer und Gabel schmecken sie aber nur halb so gut. Das geb ich zu. Einmal.'] },
+      { text: ['Du kochst mit Kohl? Gut so.', 'Kohl ist ehrlich. Der tut nicht so, als wär er was Besseres. Wie ich.'] },
+      { text: ['Dieses Ding in deiner Küche … AirFryer, sagt ihr?', 'Pommes ohne Fett? Da stimmt doch was nicht. … Gib mal eine. … Hm. Na gut.'] },
       // Oma durchdenkt alles viel zu viel
       { text: ['Ich hab heute Morgen zwanzig Minuten überlegt, ob ich die Bank links oder rechts abwische.', 'Dann hab ich überlegt, warum ich überhaupt überlegt hab. Dann war der Kaffee kalt.', 'Köstlich. Also die Überlegung. Der Kaffee nicht.'], weight: 2 },
       { text: ['Soll ich Kekse backen? Oder ist das zu viel? Oder zu wenig?', 'Wenn ich keine backe, fehlt was. Wenn ich welche backe, essen alle zu viel.', 'Ich hab sie gebacken. Nur das Nachdenken hat gedauert.'] },
