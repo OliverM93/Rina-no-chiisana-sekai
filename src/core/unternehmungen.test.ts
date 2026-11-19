@@ -184,13 +184,21 @@ describe('Kissen-Sumo', () => {
   }
 
   it('jedes Lars-Level ist mit flinken Fingern gewinnbar; zu langsam verliert man (ohne Strafe)', () => {
+    // die Level werden der Reihe nach schwerer: das nötige Tempo steigt (nie fällt es)
+    const need = (lv: SumoLevel) => {
+      let r = 2;
+      while (r < 15 && !sumoWon(play(lv, r))) r += 0.25;
+      return r;
+    };
+    const tempos = UNTERNEHMUNG_BY_ID['sumo-lars'].sumo!.levels.map(need);
+    for (let i = 1; i < tempos.length; i++) expect(tempos[i], `Level ${i + 1}`).toBeGreaterThanOrEqual(tempos[i - 1]);
     const levels = UNTERNEHMUNG_BY_ID['sumo-lars'].sumo!.levels;
-    expect(levels.length).toBe(5);
-    // Level 1 gemütlich mit 4 Drücken/s, das schwerste mit 8/s
+    expect(levels.length).toBe(8);
+    // Level 1 gemütlich mit 4 Drücken/s, alle mit 10/s
     expect(sumoWon(play(levels[0], 4))).toBe(true);
-    for (const lv of levels) expect(sumoWon(play(lv, 8)), lv.name).toBe(true);
+    for (const lv of levels) expect(sumoWon(play(lv, 10)), lv.name).toBe(true);
     // das schwerste Level ist mit 4/s nicht zu schaffen – es wird also wirklich schwieriger
-    expect(sumoWon(play(levels[levels.length - 1], 4))).toBe(false);
+    expect(sumoWon(play(levels[levels.length - 1], 6))).toBe(false);
     // wer gar nicht drückt, verliert – das Spiel endet trotzdem
     const idle = play(levels[0], 0.01);
     expect(sumoOver(idle)).toBe(true);

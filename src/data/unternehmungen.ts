@@ -207,6 +207,10 @@ export const UNTERNEHMUNGEN: readonly UnternehmungDef[] = [
         { name: 'Makushita – Lars mit Stirnband', strength: 0.34, push: 0.085, growth: 0.04, shove: 0.16 },
         { name: 'Ōzeki – Lars in Bestform', strength: 0.4, push: 0.08, growth: 0.04, shove: 0.2 },
         { name: 'Yokozuna – Lars, der Unbezwingbare', strength: 0.46, push: 0.078, growth: 0.05, shove: 0.24 },
+        // nach dem Yokozuna: Lars gibt nicht auf
+        { name: 'Revanche – Lars mit Glückssocken', strength: 0.48, push: 0.078, growth: 0.05, shove: 0.25 },
+        { name: 'Dorfmeisterschaft – Lars nach drei Kaffee', strength: 0.53, push: 0.077, growth: 0.05, shove: 0.29 },
+        { name: 'Legende – Lars, der Kissenkaiser', strength: 0.58, push: 0.075, growth: 0.055, shove: 0.33 },
       ],
       unlocked: [
         'Respekt, Schwesterherz. Nächster Rang! Ich muss mich jetzt ernsthaft aufwärmen.',
