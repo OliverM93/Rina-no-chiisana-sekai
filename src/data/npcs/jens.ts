@@ -56,7 +56,7 @@ export const JENS: NpcDef = {
       { text: ['Kohl, ma chérie! Völlig unterschätzt!', 'In Paris kochen sie ihn mit Butter, in Leipzsch mit Kümmel, und du mit Liebe. Alles richtig.'] },
       { text: ['Ich fliege nur Business Class, meine Kleene.', 'Nicht wegen des Luxus. Wegen der Kissen. … Nu gut, auch wegen des Champagners.'] },
       { text: ['Mit dem Zug? Nu freilich! Aber nur erste Klasse ICE.', 'Die zweite Klasse hab ich einmal probiert. 1998. Ich red nicht gern drüber.'] },
-      { text: ['Du hast einen AirFryer? Mon Dieu.', 'Ich hab’s nicht verstanden, bis ich deine Rippchen probiert hab. Jetzt will ich auch einen. In Gold.'] },
+      { text: ['Ein AirFryer in meiner Bistroküche? Mon Dieu, niemals!', 'Dann hab ich deine Rippchen probiert. … Ich hab mir einen bestellt. Er steht im Hinterzimmer, damit ihn keiner sieht.'] },
       { text: ['Ma chérie, ein Käsebrett ist wie ein kleines Theater.', 'Jeder Käse hat seine Rolle. Du bist natürlich immer die Hauptdarstellerin. Nu glar.'] },
       { text: ['Weißt du, was Kyoto mir beigebracht hat? Dass eine Bento-Box ein Gedicht in Fächern ist.', 'Deine hätte mir gefallen. Du kochst, als würdest du Geschichten erzählen.'] },
       { text: ['Chérie, hast du schon Basilikum im Beet?', 'Ohne Basilikum ist eine Tomate nur eine rote Kugel. Mit Basilikum ist sie Poesie.'], weight: 3 },

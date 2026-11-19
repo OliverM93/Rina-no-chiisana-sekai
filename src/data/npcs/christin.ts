@@ -56,7 +56,7 @@ export const CHRISTIN: NpcDef = {
     chat: [
       { text: ['Im Schwarzwald waren Olaf und ich mal eine ganze Woche.', 'Die Holzstapel dort! Ganz exakt geschichtet. Ich hab Fotos gemacht. Nur von den Holzstapeln.'] },
       { text: ['Dresden war schön. Olaf hat jede Brücke gezählt.', 'Ich hab mir die Fenster der Frauenkirche angesehen. So sauber! Da putzt jemand sehr Ordentliches.'] },
-      { text: ['Dein AirFryer hat einen Korb zum Herausnehmen, oder?', 'Sehr vernünftig. Der passt in die Spülmaschine. Ich mag Geräte, die mitdenken.'] },
+      { text: ['Seit du den AirFryer hast, spritzt in deiner Küche kein Fett mehr.', 'Kein Film auf den Fliesen, keine Spritzer am Herd. Lina, das ist das schönste Küchengerät, das ich kenne.'] },
       { text: ['Im Winter ruht die Erde. Sie hat sich das verdient.', 'Wer trotzdem etwas ernten will, braucht ein Frühbeet oder ein Gewächshaus. Ordentlich, geschützt, mit Tür. Ich träume schon davon.'], when: { seasons: ['winter'] }, weight: 4 },
       { text: ['Dein Gemüse steht übrigens in Reihen. Sehr schön.', 'Karotten links, Salat rechts, Kräuter vorn. Wer so sät, kann so ernten.'], weight: 3 },
       { text: ['Ich hab heute die Gewürze nach Alphabet sortiert.', 'Olaf hat gefragt, wo der Zimt ist. Ich hab gesagt: Zwischen Kurkuma und Zitronenpfeffer. Er hat mich angeschaut, als wär ich eine Zauberin.'] },

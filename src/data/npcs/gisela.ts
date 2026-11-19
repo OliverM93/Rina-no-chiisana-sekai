@@ -53,7 +53,7 @@ export const GISELA: NpcDef = {
       { text: ['Kindchen! Mein Lieblingsbesuch.', '… Ja, ich weiß, das sag ich zu allen. Bei dir stimmt’s.'], when: { minHearts: 2 } },
     ],
     chat: [
-      { text: ['Rippchen, Kind! Die isst du doch so gern.', 'Ludwig hat die immer mit den Fingern gegessen. Ich hab „pfui“ gesagt. Und dann hab ich’s genauso gemacht. Köstlich.'] },
+      { text: ['Rippchen, Kind? Die isst du doch so gern.', 'Mein Ludwig auch. Der hat sie mit den Fingern gegessen, und ich hab jedes Mal „pfui“ gesagt.', 'Mit Messer und Gabel schmecken sie aber nur halb so gut. Das geb ich zu. Einmal.'] },
       { text: ['Du kochst mit Kohl? Gut so.', 'Kohl ist ehrlich. Der tut nicht so, als wär er was Besseres. Wie ich.'] },
       { text: ['Dieses Ding in deiner Küche … AirFryer, sagt ihr?', 'Pommes ohne Fett? Da stimmt doch was nicht. … Gib mal eine. … Hm. Na gut.'] },
       // Oma durchdenkt alles viel zu viel
