@@ -198,7 +198,8 @@ describe('Kissen-Sumo', () => {
     };
     const tempos = UNTERNEHMUNG_BY_ID['sumo-lars'].sumo!.levels.map(need);
     for (let i = 1; i < tempos.length; i++) expect(tempos[i], `Level ${i + 1}`).toBeGreaterThanOrEqual(tempos[i - 1]);
-    // gewünschte Stufen am Ende: Level 7 ab ~8,25, Level 8 ab ~9 Drücken je Sekunde
+    // gewünschte Stufen am Ende: Level 6 ab ~7,25, Level 7 ab ~8,25, Level 8 ab ~9 Drücken je Sekunde
+    expect(tempos[5]).toBe(7.25);
     expect(tempos[6]).toBe(8.25);
     expect(tempos[7]).toBe(9);
     const levels = UNTERNEHMUNG_BY_ID['sumo-lars'].sumo!.levels;
