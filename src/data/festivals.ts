@@ -29,16 +29,16 @@ export const FEST_GIFTS: Partial<Record<FestivalId, Record<string, FestGift>>> =
     oli: { itemId: 'kuscheldecke', count: 1, lines: ['Frohe Weihnachten, Lini! 🎄💕', 'Eine Kuscheldecke – für uns beide. Für Filmabende. Und für Winston, der sie eh klaut.'] },
     jens: { itemId: 'lebkuchenherz', count: 1, lines: ['Joyeux Noël, ma chérie! 🎄', 'Ein Lebkuchenherz – mit Zuckerguss und einem Hauch Glitzer. Natürlich.'] },
     lars: { itemId: 'kamillentee', count: 3, lines: ['Frohe Weihnachten, Schwesterherz!', 'Kamillentee. Gegen zu viel Plätzchen. Ärztlich empfohlen.', '… Und von Oma abgesegnet. Ausnahmsweise sind wir uns einig.'] },
-    thalia: { itemId: 'bergkristall', count: 1, lines: ['Frohe Weihnachten, Süße! 🎁', 'Ein Bergkristall. Ich hab ihn selbst gefunden. Er funkelt fast so wie du.'] },
+    thalia: { itemId: 'bergkristall', count: 1, lines: ['Frohe Weihnachten, Süße! 🎁', 'Ein Bergkristall. Den hab ich in Tschechien gekauft und nie hergegeben. Bis jetzt.'] },
   },
   geburtstag: {
     gisela: { itemId: 'keks', count: 5, lines: ['Mein Mäuschen hat Geburtstag! 🎂', 'Kekse. Fünf Stück. Eins für jedes Jahr, das ich dich schon besonders lieb hab.', '… Na gut, es sind mehr Jahre. Aber mehr Kekse passten nicht in die Dose.'] },
-    olaf: { itemId: 'apfelkuchen', count: 1, lines: ['Alles Gute zum Geburtstag, mein Schatz! 🎂', 'Christin hat gebacken, ich hab den Kuchen getragen. Arbeitsteilung!'] },
+    olaf: { itemId: 'apfelkuchen', count: 1, lines: ['Alles Gute zum Geburtstag, mein Schatz! 🎂', 'Christin hat gebacken, ich hab den Kuchen getragen. Ohne Delle. Ich bin sehr stolz.'] },
     christin: { itemId: 'rose', count: 3, lines: ['Alles Liebe zum Geburtstag, Lina! 🌹', 'Drei Rosen. Ganz gerade geschnitten. Ich hab nachgemessen.'] },
-    oli: { itemId: 'geburtstagstorte', count: 1, lines: ['Happy Birthday, Lini! 🎂💕', 'Die Torte hab ich selbst gemacht. Mit drei Stockwerken. Zwei stehen noch.', 'Ich hab dich so lieb. Heute ganz besonders. Und morgen auch.'] },
-    jens: { itemId: 'crepes', count: 2, lines: ['Bon anniversaire, ma chérie! 🎉', 'Crêpes – mit extra viel Liebe. Und Puderzucker. Und noch mehr Liebe.'] },
+    oli: { itemId: 'geburtstagstorte', count: 1, lines: ['Happy Birthday, Lini! 🎂💕', 'Die Torte hab ich selbst gemacht. Winston hat schon probiert. Er findet sie gut.', 'Ich hab dich so lieb. Heute ganz besonders. Und morgen auch.'] },
+    jens: { itemId: 'crepes', count: 2, lines: ['Bon anniversaire, ma chérie! 🎉', 'Crêpes – hauchdünn, wie am Montmartre. Und mit so viel Puderzucker, dass Christin nervös wird.'] },
     lars: { itemId: 'pfefferminztee', count: 2, lines: ['Alles Gute, Schwesterherz! 🎂', 'Ich hab dich untersucht: Du bist ein Jahr älter.', 'Diagnose: immer noch die beste kleine Schwester der Welt. Unheilbar.'] },
-    thalia: { itemId: 'amethyst', count: 1, lines: ['HAPPY BIRTHDAAAY! 🎉🎂', 'Eine Amethyst-Druse – außen unscheinbar, innen voller Glitzer. Wie unser Geheimnis: Du bist die Beste!'] },
+    thalia: { itemId: 'amethyst', count: 1, lines: ['HAPPY BIRTHDAAAY! 🎉🎂', 'Eine Amethyst-Druse – außen unscheinbar, innen voller Glitzer. Wie ich vor dem ersten Kaffee.'] },
   },
   silvester: {
     gisela: { itemId: 'gluecksklee', count: 1, lines: ['Guten Rutsch, Kindchen!', 'Hier, ein Glücksklee. Und rutsch nicht wirklich aus – das hab ich letztes Jahr gemacht.'] },
@@ -66,7 +66,7 @@ export const FEST_LINES: Partial<Record<FestivalId, Record<string, readonly stri
     jens: ['Bonne année, chérie!', 'Mein Vorsatz: mehr reisen, mehr malen, mehr Glitzer. Also wie immer!'],
   },
   ostern: {
-    thalia: ['Frohe Ostern!', 'Wusstest du, dass der Ostertermin vom Mond abhängt? Erster Sonntag nach dem ersten Frühlingsvollmond. Astronomie ist so cool!'],
+    thalia: ['Frohe Ostern!', 'Wusstest du, dass der Ostertermin vom Mond abhängt? Erster Sonntag nach dem ersten Frühlingsvollmond. Den Termin hab ich in meinen Kalender eingetragen. Mit Party-Emoji.'],
     christin: ['Frohe Ostern!', 'Ich hab die Ostereier nach Farben sortiert versteckt. Damit es ordentlich bleibt.'],
   },
   halloween: {

@@ -59,7 +59,7 @@ export const MILESTONES: readonly Milestone[] = [
     hintBy: 'oli',
     hints: {
       gebaut: ['Lini, Jens hat geschrieben! Er will wissen, ob du schon was Schönes gebastelt hast.', 'Er sagt, „ein Mensch ohne Handarbeit ist wie ein Croissant ohne Butter“. Ich glaub, die Werkbank wär was.'],
-      sammelbuch: ['Jens fragt nach Fotos von den Tieren hier. Er reist so viel und sammelt Naturgeschichten.', 'Noch ein paar Fische oder Insekten fürs Sammelbuch, und er packt bestimmt die Koffer.'],
+      sammelbuch: ['Jens fragt nach Fotos von den Tieren hier. Er will sie malen. Für die Galerie.', 'Noch ein paar Fische oder Insekten fürs Sammelbuch, und er packt bestimmt die Koffer.'],
     },
   },
   {
@@ -88,7 +88,7 @@ export const MILESTONES: readonly Milestone[] = [
     flagHints: {
       [FLAG_AUSBAU_BESTELLT]: [
         'Schwesterherz, Thalia fragt, ob sie bei dir mal übernachten kann, wenn sie zu Besuch ist. Dein Häuschen ist ja eher … kompakt.',
-        'Papa macht dir an der Dorfkasse einen Ausbau – zinslos, ohne Frist. Finanzamt-Ehrenwort. Zahlen kannst du, wann du willst.',
+        'Papa finanziert dir an der Dorfkasse einen Ausbau – zinslos, ohne Frist. Finanzamt-Ehrenwort. Zahlen kannst du, wann du willst.',
       ],
     },
     hints: {

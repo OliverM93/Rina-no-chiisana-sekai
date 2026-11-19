@@ -76,7 +76,7 @@ export const RECIPES: readonly RecipeDef[] = [
   { id: 'weg-stein', result: 'weg-stein', count: 2, ingredients: [{ itemId: 'stein', count: 3 }], start: true, hint: '' },
   { id: 'vogelhaus', result: 'vogelhaus', ingredients: [{ itemId: 'ast', count: 5 }, { itemId: 'stein', count: 1 }], hint: 'Oma Gisela beobachtet gern Vögel …' },
   { id: 'hundekoerbchen', result: 'hundekoerbchen', ingredients: [{ itemId: 'ast', count: 6 }, { itemId: 'wildblumen', count: 2 }], hint: 'Oma Gisela hat bestimmt eine Idee für Winston …' },
-  { id: 'steinmaennchen', result: 'steinmaennchen', ingredients: [{ itemId: 'stein', count: 5 }, { itemId: 'glitzerstein', count: 1 }], hint: 'Thalia kennt sich mit Steinen aus …' },
+  { id: 'steinmaennchen', result: 'steinmaennchen', ingredients: [{ itemId: 'stein', count: 5 }, { itemId: 'glitzerstein', count: 1 }], hint: 'Mit Thalias Schaufel findest du vielleicht etwas Glänzendes …' },
   { id: 'kieselmosaik', result: 'kieselmosaik', ingredients: [{ itemId: 'stein', count: 10 }], hint: 'Kommt vielleicht mit der Post von Olaf.' },
   { id: 'steinlaterne', result: 'steinlaterne', ingredients: [{ itemId: 'stein', count: 6 }, { itemId: 'ast', count: 1 }], hint: 'Freunde dich mit Olaf an.' },
   { id: 'treibholzregal', result: 'treibholzregal', ingredients: [{ itemId: 'ast', count: 8 }, { itemId: 'stein', count: 2 }], hint: 'Freunde dich mit Christin an.' },

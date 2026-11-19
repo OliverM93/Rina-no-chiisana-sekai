@@ -34,7 +34,7 @@ export const ANKUNFT_ERSTMALS: readonly string[] = [
 /** Überraschungsparty: jeder sagt etwas (Reihenfolge = Reihenfolge der Sprecher) */
 export const FEST_LINES: ReadonlyArray<{ npc: string; lines: readonly string[] }> = [
   { npc: 'oli', lines: ['ÜBERRASCHUNG, Lini!', 'Wir wollten dir was zeigen. Weil du uns allen so ein Zuhause gebaut hast.', 'Du hast doch immer von einem kleinen Hüttchen auf Hawaii geträumt. Mit einer eigenen Wachtelfarm.', 'Dein Traum ist jetzt wahr. Die Hütte steht da hinten, und der Garten davor gehört dir. 🌺🐦'] },
-  { npc: 'gisela', lines: ['Ich hab Kekse mitgebracht. Und meinen Sonnenhut. Das hier ist ja fast wie Urlaub, Kind.', 'Hawaii. Pfui, kein Strickmuster dafür. Aber köstlich!'] },
+  { npc: 'gisela', lines: ['Ich hab Kekse mitgebracht. Und meinen Sonnenhut. Das hier ist ja fast wie Urlaub, Kind.', 'Hawaii. Pfui, so wenig an! … Aber die Blumenketten: köstlich.'] },
   { npc: 'olaf', lines: ['Ich habe ausgerechnet: Fünf Herzen bei sieben Personen. Das ist eine hervorragende Quote. Dafür gibt es eine Insel.'] },
   { npc: 'christin', lines: ['Sand an den Schuhen. Normalerweise würde mich das stören. Heute nicht. Heute ist besonders.'] },
   { npc: 'jens', lines: ['Ma chérie! Aloha, bonjour, was auch immer! Ich habe mir sagen lassen, hier trinkt man aus Kokosnüssen. Ich bin begeistert.'] },
@@ -70,7 +70,7 @@ export const ANKUNFT_WIEDER: readonly string[] = [
 /** Palmen schütteln: Kokosnüsse (jede Palme einmal am Tag, nicht jede hat etwas) */
 export const KOKOS_CHANCE = 45;
 export const KOKOS_GEFUNDEN: readonly string[] = ['🥥 Plong! Eine Kokosnuss fällt aus der Krone.', '🥥 Es raschelt, und eine Kokosnuss plumpst in den Sand.', '🥥 Ein dumpfes Geräusch: Da lag eine Kokosnuss im Blattschopf!'];
-export const KOKOS_LEER: readonly string[] = ['Die Palme raschelt, aber heute fällt nichts herunter. 🌴', 'Nur ein paar Blätter wirbeln durch die Luft. Heute nicht. 🌴'];
+export const KOKOS_LEER: readonly string[] = ['Die Palme raschelt, aber heute fällt nichts herunter. 🌴', 'Nur ein paar Blätter wirbeln durch die Luft. Heute fällt nichts herunter. 🌴'];
 export const KOKOS_SCHON: readonly string[] = ['Diese Palme hat heute schon alles hergegeben. Morgen wieder! 🌴'];
 
 /** Tägliche Strandfunde auf der Insel (nach der Party): mehr Seesterne als im Dorf */
@@ -101,20 +101,20 @@ export interface FlaschenBrief {
 
 /** Briefe aus der Flasche – je Bewohner zwei, jeder kommt nur einmal */
 export const FLASCHEN_BRIEFE: readonly FlaschenBrief[] = [
-  { id: 'oli-1', npc: 'oli', subject: 'Aus dem Meer gefischt', body: 'Lini,\n\nich habe diese Flasche gestern Abend ins Wasser geworfen und gehofft, dass sie bei dir ankommt. Wenn du das liest: Es hat geklappt.\n\nIch denke gerade an dich, ganz genau jetzt. Komm bald nach Hause, ich koch uns was (oder bestelle was, aber ich tu so, als hätte ich gekocht).\n\nDein Oli' },
+  { id: 'oli-1', npc: 'oli', subject: 'Aus dem Meer gefischt', body: 'Lini,\n\nich habe diese Flasche gestern Abend ins Wasser geworfen und gehofft, dass sie bei dir ankommt. Wenn du das liest: Es hat geklappt.\n\nIch denke gerade an dich, ganz genau jetzt. Komm bald nach Hause, ich koch uns dein Lieblingsessen (und tu so, als wär das ganz spontan gewesen).\n\nDein Oli' },
   { id: 'oli-2', npc: 'oli', subject: 'Noch eine Flasche', body: 'Lini,\n\nich hab dir ja versprochen, dass die nächste Flasche kommt. Hier ist sie.\n\nWeißt du, wann ich zuletzt so ruhig war wie auf deiner Insel? Nie. Danke, dass du mich mitgenommen hast.\n\nDein Oli', gift: { itemId: 'seestern', count: 1 } },
   { id: 'gisela-1', npc: 'gisela', subject: 'Flaschenpost von Oma', body: 'Liebes Kind,\n\nein Brief in einer Flasche. Der Postbote hat gesagt, das macht man nicht. Ich habe gesagt, das macht man doch.\n\nIss was Ordentliches und sitz nicht zu lange in der Sonne. Es sei denn, es ist ein Sonnenhut dabei. Köstlich!\n\nOma' },
   { id: 'gisela-2', npc: 'gisela', subject: 'Schon wieder Oma', body: 'Liebes Kind,\n\nIch habe noch eine Flasche gefunden. Ludwig hätte jetzt gesagt: „Gisela, du hast zu viele Flaschen.“\n\nIch hab gesagt: „Ludwig, du hast zu viele Meinungen.“\n\nPass auf dich auf.\nOma', gift: { itemId: 'keks', count: 3 } },
   { id: 'olaf-1', npc: 'olaf', subject: 'Offizielle Meldung per Flasche', body: 'Liebe Lina,\n\nich habe berechnet, dass die Chance, dass diese Flasche dich erreicht, bei etwa 0,3 % liegt. Ich habe sie trotzdem losgeschickt.\n\nDie Dorfkasse ist stolz auf dich. Ich übrigens auch, aber das steht nicht im Kontoauszug.\n\nPapa' },
-  { id: 'olaf-2', npc: 'olaf', subject: 'Zweite Meldung (ebenfalls per Flasche)', body: 'Liebe Lina,\n\nChristin sagt, ich soll dir ein Witzchen mitschicken: Warum sind Fische so schlau? Weil sie in Schwärmen lernen.\n\nSie sagt, der war schlecht. Ich finde ihn gut.\n\nPapa' },
+  { id: 'olaf-2', npc: 'olaf', subject: 'Zweite Meldung (ebenfalls per Flasche)', body: 'Liebe Lina,\n\nChristin sagt, ich soll dir ein Witzchen mitschicken: Was macht ein Fisch am Computer? Er geht ins Netz.\n\nSie sagt, der war schlecht. Ich finde ihn gut.\n\nPapa' },
   { id: 'christin-1', npc: 'christin', subject: 'Eine ordentliche Flasche', body: 'Liebe Lina,\n\ndiese Flasche ist gespült, gut verschlossen und ordentlich beschriftet. Ich hoffe, du schaffst es, sie ebenso ordentlich zu öffnen.\n\nDie Insel sieht von weitem sehr aufgeräumt aus. Das gefällt mir.\n\nChristin' },
   { id: 'christin-2', npc: 'christin', subject: 'Kleiner Gruß', body: 'Liebe Lina,\n\nich habe das Kräuterbeet gegossen und die Flaschenpost vorbereitet. Beides geht schneller, wenn man vorher alles an seinen Platz räumt.\n\nGrüß die Palmen von mir.\n\nChristin' },
   { id: 'jens-1', npc: 'jens', subject: 'Message in a bottle, ma chérie!', body: 'Ma chérie,\n\nich habe mir sagen lassen, dass man auf Inseln Flaschenpost bekommt. Also schicke ich dir eine. Aus Kunstgründen.\n\nSteffen aus San Francisco lässt grüßen, er meint, deine Insel sei das hübscheste Hawaii, das er nie gesehen hat.\n\nDein Jens' },
   { id: 'jens-2', npc: 'jens', subject: 'Zweite Flasche, zweite Weltreise', body: 'Ma chérie,\n\njede Flasche ist ein kleines Kunstwerk, findest du nicht? Diese hier ist von meiner letzten Reise: ein Hauch Meer, ein Hauch Wein, ein Hauch Übertreibung.\n\nBis Sonntag!\nJens' },
   { id: 'lars-1', npc: 'lars', subject: 'Ärztlicher Rat in der Flasche', body: 'Liebe Lina,\n\nRezept: Sonne, Meer und mindestens zwei Nachtische. Dosierung: täglich. Nebenwirkungen: gute Laune.\n\nDie Flasche ist übrigens mit Pflaster verschlossen. Man muss improvisieren.\n\nLars' },
-  { id: 'lars-2', npc: 'lars', subject: 'Zweites Rezept', body: 'Liebe Lina,\n\nso, und nicht mit e, sonst ist es ein See: Das hier ist ein Meer. Und du bist die Einzige, die davon so viel Ahnung hat.\n\nBitte Sonnencreme nicht vergessen. Das ist ein ärztlicher Rat, kein Spruch.\n\nLars' },
+  { id: 'lars-2', npc: 'lars', subject: 'Zweites Rezept', body: 'Liebe Lina,\n\nso, und nicht mit e, sonst ist es ein See: Das hier ist ein Meer. Und du bist die Einzige, die darin so gut angeln kann.\n\nBitte Sonnencreme nicht vergessen. Das ist ein ärztlicher Rat, kein Spruch.\n\nLars' },
   { id: 'thalia-1', npc: 'thalia', subject: 'Karte aus der Flasche', body: 'Lina!\n\nich habe die Insel auf eine Karte gezeichnet und die Karte in die Flasche gesteckt. Nein, warte, doch nicht. Die Insel soll ein Geheimnis bleiben. Also steht hier nur eine Wolke.\n\nSamstag tanzen?\nThalia' },
-  { id: 'thalia-2', npc: 'thalia', subject: 'Noch ein Plan', body: 'Lina!\n\nplan für den Strand: erst Beintag am Wasser, dann Hula. Ich hab das schon im Kalender eingetragen. Du kommst mit. Keine Widerrede!\n\nUnd Mo findet das auch gut. Glaube ich. Frag ihn bitte nicht.\n\nThalia' },
+  { id: 'thalia-2', npc: 'thalia', subject: 'Noch ein Plan', body: 'Lina!\n\nPlan für den Strand: erst Beintag am Wasser, dann Hula. Ich hab das schon im Kalender eingetragen. Du kommst mit. Keine Widerrede!\n\nUnd Mo findet das auch gut. Glaube ich. Frag ihn bitte nicht.\n\nThalia' },
 ];
 
 export const FLASCHENPOST_GEFUNDEN = 'Eine Flaschenpost! 🍾 Sie ist schon geöffnet – der Brief liegt im Briefkasten.';

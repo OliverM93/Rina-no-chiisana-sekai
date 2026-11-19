@@ -92,7 +92,7 @@ export const INTERACTIONS: Record<string, Interaction> = {
           `Darunter steht: „Heute ist ${WEEKDAYS[ctx.now.getDay()]} – ein guter Tag für einen Spaziergang!“`,
           '„Gesucht: Menschen, die {dorf} noch gemütlicher machen. Bewerbung nicht nötig.“',
           '„Tipp: Am Strand soll es abends wunderschöne Sonnenuntergänge geben.“',
-          '„Fundsache: ein einzelner Socke. Bitte beim Brunnen abholen.“',
+          '„Fundsache: eine einzelne Socke. Bitte beim Brunnen abholen.“',
         ]),
       );
       return lines;
@@ -181,7 +181,7 @@ export const INTERACTIONS: Record<string, Interaction> = {
     lines: (ctx) =>
       isNight(ctx)
         ? ['Du schaust durchs Fernrohr in den Nachthimmel.', daily(ctx, ['Der Mond ist ganz nah – man sieht sogar die Krater. 🌙', 'Ein Sternenhaufen funkelt wie verschütteter Zucker. ✨', 'Eine Sternschnuppe! Schnell was wünschen … 🌠'])]
-        : ['Du schaust durchs Fernrohr aufs Meer.', daily(ctx, ['Weit draußen tuckert ein kleines Fischerboot. ⛵', 'Möwen kreisen über den Wellen. Eine schaut genau zurück.', 'Ganz links, wenn du dich anstrengst: Omas Bank. Sie winkt. Natürlich.']), 'Auf der Tafel daneben: „Fundstücke aus {dorf} – gesammelt von Lina & Thalia.“'],
+        : ['Du schaust durchs Fernrohr aufs Meer.', daily(ctx, ['Weit draußen tuckert ein kleines Fischerboot. ⛵', 'Möwen kreisen über den Wellen. Eine schaut genau zurück.', 'Ganz links, wenn du dich anstrengst: Omas Bank. Sie winkt. Natürlich.']), 'Auf der Tafel daneben: „Lieblingsorte in {dorf} – kartiert von Lina & Thalia.“'],
   },
 
   'bank-wiese': {

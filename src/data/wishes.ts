@@ -94,7 +94,7 @@ export const WISHES: readonly WishDef[] = [
     intro: [
       'Lina, ich hab ein Projekt durchgerechnet. Ein Angelsteg am Fluss! Christin und ich könnten von da aus angeln – und du natürlich auch.',
       'Material: 20 Äste, 10 Kieselsteine für das Fundament. Und 3.000 Sternchen für Nägel, Bretter und Lack.',
-      'Die andere Hälfte übernimmt die Dorfkasse. Steuerlich ist das quasi eine Investition in die Infrastruktur!',
+      'Den Rest – Holz, Pfähle, Arbeitszeit – übernimmt die Dorfkasse. Steuerlich ist das quasi eine Investition in die Infrastruktur!',
     ],
     reminder: ['Der Steg läuft nicht weg, mein Schatz. Der Fluss auch nicht. Ich hab nachgeschaut.'],
     needs: [
@@ -199,7 +199,7 @@ export const WISHES: readonly WishDef[] = [
     done: [
       'Perfekt! Ein Fünf-Sterne-Hotel für Insekten. Mit Blumen-Frühstück.',
       'Die Erstbewohner haben sofort eingecheckt. Keine Beschwerden bisher.',
-      'Danke, Lina. Ab sofort bin ich nicht nur Hausarzt, sondern auch Hotelier. So, und nicht mit „Hotel-Tier“ – das wäre was anderes.',
+      'Danke, Lina. Ab sofort bin ich nicht nur Hausarzt, sondern auch Hotelier. Für Bienen. Zimmerservice inklusive.',
     ],
     place: 'insektenhotel',
   },
@@ -346,15 +346,15 @@ export const WISHES_2: readonly WishDef[] = [
     order: 2,
     title: 'Ein Wolfram-Stein',
     intro: [
-      'Schwesterherz, ich hab ein Hobby, über das ich nie rede: Steine. Genauer: Wolframit. Dunkel, schwer, fast schwarz. Sieht aus wie ein verschluckter Schatten.',
+      'Schwesterherz, ich hab einen Plan für mein Erspartes: Wolfram. Dunkel, schwer, fast schwarz – und er behält seinen Wert. Papa nennt das eine solide Anlage. Das hat er über meine Ideen noch nie gesagt.',
       'Thalia sagt, so einen findet man mit der Schaufel – aber sehr, sehr selten. Wenn du einen ausgräbst, bring ihn mir. Ich revanchiere mich, versprochen.',
     ],
-    reminder: ['Der Wolframit? Geduld. Das ist Geologie, keine Ungeduld. Er liegt seit Millionen Jahren dort und wartet.'],
+    reminder: ['Der Wolframit? Geduld. Eine gute Anlage sitzt man aus. Er liegt seit Millionen Jahren dort, auf ein paar Tage mehr kommt’s ihm nicht an.'],
     needs: [{ item: 'wolframit', count: 1, label: 'Wolframit (mit der Schaufel ausgraben, selten)' }],
     done: [
-      'Wolframit! Wirklich! Wiegt ein Kilo auf zehn Zentimetern. Das ist Physik, kein Zauber.',
-      'Weißt du, wofür man Wolfram nimmt? Für Glühfäden, Bohrer, Dartpfeile. Ich nehme ihn für meinen Schreibtisch.',
-      'Als Dank bekommst du mein Lieblingsbuch: ein sehr dicker Science-Fiction-Roman über einen Planeten aus Sand und Politik. Lies es im Sessel mit Tee. Und nicht auf den Fuß fallen lassen – ärztlich nicht empfohlen.',
+      'Wolframit! Wirklich! Schwer wie ein Ziegelstein und wertbeständig wie Papas Sparbuch.',
+      'Weißt du, wofür man Wolfram nimmt? Für Glühfäden, Bohrer, Dartpfeile. Ich nehme ihn als Wertanlage. Und als Briefbeschwerer, solange er im Tresor nichts zu tun hat.',
+      'Als Dank bekommst du mein Lieblingsbuch. Oli hat es mir aufgeschwatzt, jetzt geb ich es nur noch an dich weiter: ein sehr dicker Science-Fiction-Roman über einen Planeten aus Sand und Politik. Lies es im Sessel mit Tee. Und nicht auf den Fuß fallen lassen – ärztlich nicht empfohlen.',
     ],
     rewardItems: [{ itemId: 'buch-sandsterne', count: 1 }],
   },
@@ -411,7 +411,7 @@ export const WISHES_3: readonly WishDef[] = [
     order: 2,
     title: 'Mitternachtskino mit Lini',
     intro: [
-      'Lini, in der Stadt läuft eine Mitternachtsvorstellung. Ein alter Schwarz-Weiß-Kultfilm, „Verlorene Autobahn“. Von deinem Lieblingsregisseur – du weißt schon, der mit dem Radierkopf auf deinem Pulli.',
+      'Lini, in der Stadt läuft eine Mitternachtsvorstellung. Ein alter Kultfilm, „Verlorene Autobahn“. Von deinem Lieblingsregisseur – du weißt schon, der mit dem Radierkopf auf deinem Pulli.',
       'Ich hab ehrlich gesagt keine Ahnung, worum es geht. Soll ja keiner verstehen. Aber ich würde es so gern mit dir sehen. Du erklärst mir hinterher alles. Oder auch nichts. Das ist ja der Witz.',
       'Zwei Karten und ein bisschen Kinogeld: 120 Sternchen. Und zwei Snacks, die man im Dunkeln leise essen kann. Nicht zu knusprig, bitte. Die Leute zischen sonst.',
     ],
@@ -421,7 +421,7 @@ export const WISHES_3: readonly WishDef[] = [
     done: [
       'Das war … ich habe wirklich kein Wort verstanden. Es gab eine Autobahn bei Nacht, einen Mann mit sehr langsamer Stimme und ungefähr elf Mal dieselbe Tür. Ich glaube, es war wichtig.',
       'Aber du hast die ganze Zeit gestrahlt. Und ich hab die ganze Zeit dich angeguckt. Das war der beste Film meines Lebens, Lini. 💕',
-      'Ich hab uns zur Erinnerung das Plakat mitgenommen. Hängt es irgendwo auf, wo ich es nachts im Vorbeigehen sehe. Dann rätsle ich weiter.',
+      'Ich hab uns zur Erinnerung das Plakat mitgenommen. Häng es irgendwo auf, wo ich es nachts im Vorbeigehen sehe. Dann rätsle ich weiter.',
     ],
     rewardItems: [{ itemId: 'poster-verlorene-autobahn', count: 1 }],
   },

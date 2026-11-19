@@ -67,19 +67,19 @@ export const UNTERNEHMUNGEN: readonly UnternehmungDef[] = [
     game: 'memory',
     memory: { symbols: ['🍪', '☕', '🧶', '🌹', '🐚', '🕊️'] },
     intro: [
-      ['Memory? Kindchen, ich hab ein Gedächtnis wie ein Elefant.', 'Ich weiß sogar noch, was der Bäcker 1987 für ein Brötchen wollte. Unverschämt.'],
+      ['Memory? Kindchen, ich hab ein Gedächtnis wie ein Elefant.', 'Ich weiß sogar noch, was der Bäcker 1987 für ein Brötchen verlangt hat. Unverschämt.'],
       ['Setz dich. Ich misch. Und guck nicht so, ich schummle nicht.', '… Fast nie.'],
       ['Ludwig hat immer verloren. Absichtlich, sagt er. Ich sag: Ausrede.'],
     ],
     cheers: ['„Na, na, na! Die lag doch woanders!“', '„Das hab ich mir gemerkt. Du nicht? Tja.“', '„Köstlich! Ein Paar!“', '„Ich denke da jetzt sehr lange drüber nach.“', '„Pfui, daneben.“'],
     done: {
       super: [
-        ['Na sowas! Das hast du von mir.', 'Von deinem Vater jedenfalls nicht. Der vergisst sogar, wo er die Brille hat. Auf der Nase.'],
+        ['Na sowas! Woher du das wohl hast.', 'Von deinem Vater jedenfalls nicht. Der vergisst sogar, wo er die Brille hat. Auf der Nase.'],
         ['Kein einziger Fehler zu viel. Ich bin beeindruckt. Und ein bisschen beleidigt.'],
       ],
       gut: [
         ['Gut gespielt, Kindchen. Ich hab natürlich mehr gefunden.', '… Hab ich nicht? Dann hab ich dich gewinnen lassen. Genau.'],
-        ['Ordentlich! Noch eine Runde, und ich zieh dir die Hammelbeine lang. Liebevoll.'],
+        ['Ordentlich! Noch eine Runde, und ich zeig dir, wo der Hammer hängt. Liebevoll.'],
       ],
       gemuetlich: [
         ['Na, das war gemütlich. Hauptsache, wir haben gequatscht.', 'Das Gedächtnis trainiert man am besten mit Keksen. Ich hab noch welche.'],
@@ -97,7 +97,7 @@ export const UNTERNEHMUNGEN: readonly UnternehmungDef[] = [
     game: 'takt',
     takt: { reps: 10, period: 0.9 },
     intro: [
-      ['Gym-Date! Endlich! 💪', 'Drück genau dann, wenn der Punkt in der Mitte ist. Wie beim Bankdrücken. Nur ohne Schweiß.'],
+      ['Gym-Date! Endlich! 💪', 'Drück genau dann, wenn der Punkt in der Mitte ist – ganz unten in der Kniebeuge. Nur ohne Muskelkater.'],
       ['Okay, Lina, heute Beine. … Nein, Spaß, heute Rhythmus.', 'Ich zähl mit. Eins, zwei, … ach, du machst das schon.'],
       ['Wer zusammen trainiert, bleibt zusammen. Hab ich mir gerade ausgedacht. Gut, oder?'],
     ],
@@ -188,7 +188,7 @@ export const UNTERNEHMUNGEN: readonly UnternehmungDef[] = [
         ['Wir sind gestorben. Gemeinsam. Das ist irgendwie auch romantisch.'],
       ],
     },
-    record: ['Neuer Rekord! Lini, du bist besser als ich. Ich bin gleichzeitig stolz und beleidigt.'],
+    record: ['Neuer Rekord! Lini, du bist besser als ich. Ich bin stolz. Und ein kleines bisschen beleidigt.'],
     album: 'Zocken mit Oli: Der erste Boss hatte keine Chance. Oli hat lauter geschrien als ich.',
   },
   {
@@ -251,7 +251,7 @@ export const UNTERNEHMUNGEN: readonly UnternehmungDef[] = [
     game: 'quiz',
     quiz: {
       count: 5,
-      right: ['Richtig! Das gibt Zinsen.', 'Korrekt. Ordnungsgemäß beantwortet.', 'Stimmt! Das hast du von mir.', 'Genau! Ich mach einen Haken dran.'],
+      right: ['Richtig! Das gibt Zinsen.', 'Korrekt. Ordnungsgemäß beantwortet.', 'Stimmt! Ich hab’s gewusst. Ich hab’s nur nicht gesagt.', 'Genau! Ich mach einen Haken dran.'],
       wrong: ['Knapp daneben. Aber ehrlich gemeint, das zählt.', 'Nicht ganz. Ich hätte es aber auch nachschlagen müssen.', 'Hm, nein. Aber schön geraten!'],
       questions: [
         { q: 'Wie viele Herzen hat ein Krake?', answers: ['Eins', 'Drei', 'Fünf'], right: 1 },
@@ -287,7 +287,7 @@ export const UNTERNEHMUNGEN: readonly UnternehmungDef[] = [
       ],
       gut: [
         ['Mehr als die Hälfte! Solide. Mit Zinsen wird das nächste Mal noch mehr.'],
-        ['Gut gemacht, mein Schatz. Ich hab bei einer Frage auch kurz gezweifelt. Bei der mit dem Krake.'],
+        ['Gut gemacht, mein Schatz. Ich hab bei einer Frage auch kurz gezweifelt. Bei der mit dem Kraken.'],
       ],
       gemuetlich: [
         ['Na, das waren auch knifflige Fragen. Ich hab sie mir ja ausgesucht.', 'Hauptsache, wir haben zusammen gerätselt. Das ist der eigentliche Gewinn.'],
@@ -295,7 +295,7 @@ export const UNTERNEHMUNGEN: readonly UnternehmungDef[] = [
       ],
     },
     record: ['Neuer Höchststand! Den trag ich ins Sparbuch ein. Also gedanklich.'],
-    album: 'Rätselecke mit Papa: Er hat beim Krake geflunkert. Drei Herzen hat er. Der Krake, nicht Papa.',
+    album: 'Rätselecke mit Papa: Bei der Kraken-Frage hat er kurz gezweifelt. Drei Herzen hat er. Der Krake, nicht Papa.',
   },
   {
     id: 'malen-jens',
@@ -318,7 +318,7 @@ export const UNTERNEHMUNGEN: readonly UnternehmungDef[] = [
       ],
     },
     intro: [
-      ['Ma chérie! Leinwand, Pinsel, Wein für mich, Saft für dich.', 'Such dir ein Motiv und die Farben aus. Der Rest ist Gefühl.'],
+      ['Ma chérie! Leinwand, Pinsel, Wein für mich, Cola Zero für dich – ich kenn doch meine Nichte.', 'Such dir ein Motiv und die Farben aus. Der Rest ist Gefühl.'],
       ['Kunst ist, wenn man Mut hat. Und Farbe. Und einen Onkel, der begeistert ist.', 'Allez, wir malen!'],
       ['Weißt du, in Leipzig hab ich in einer Woche zwölf Bilder gemalt. Elf davon waren Kaffeeflecken.'],
     ],
@@ -326,7 +326,7 @@ export const UNTERNEHMUNGEN: readonly UnternehmungDef[] = [
     done: {
       super: [
         ['Fabelhaft! Das hängen wir in die Galerie. Gleich neben meine Kaffeeflecken.', 'Ei verbibbsch, ist das schön geworden!'],
-        ['Ich bin gerührt. Gib mir ein Taschentuch. Und dann noch eins.'],
+        ['Ich bin gerührt. Das kommt in die Galerie. Ganz nach vorn.'],
         ['Bravo! Das signierst du unten rechts. Ganz klein. Große Künstler signieren klein.'],
       ],
       gut: [['Sehr schön!']],

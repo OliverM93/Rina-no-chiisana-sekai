@@ -42,7 +42,7 @@ export const KATER_PET_FIRST: readonly (readonly string[])[] = [
   ['Er drückt den Kopf in deine Hand. Mehr! Mehr! Mehr!'],
   ['Kater rollt sich zur Seite. Das ist eine Falle. Der Bauch ist verboten. Aber der Rücken nicht. 😼'],
 ];
-export const KATER_PET_AGAIN: readonly string[] = ['Brrr, brrr, brrr. Er schnurrt weiter.', 'Kater blinzelt dich an.', 'Der Schwanz geht langsam hin und her. Zufrieden.', 'Ein kleines Miau. Was heißt „Du bist okay“.'];
+export const KATER_PET_AGAIN: readonly string[] = ['Brrr, brrr, brrr. Er schnurrt weiter.', 'Kater blinzelt dich an.', 'Der Schwanz geht langsam hin und her. Zufrieden.', 'Ein kleines Miau. Das heißt: „Du bist okay.“'];
 
 /** Wenn er schläft oder bei Regen nicht zu sehen ist, steht nichts da – dies sind Texte für den Notfall (Klick auf den leeren Platz) */
 export const KATER_RAIN_LINE = 'Bei Regen ist Kater lieber drinnen. Wer will es ihm verdenken?';

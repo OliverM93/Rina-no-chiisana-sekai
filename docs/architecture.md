@@ -21,6 +21,7 @@ src/
     friendship.ts  Herzen, Plaudern, Geschenke, Herz-Belohnungen
     schedule.ts    Tagesabläufe der Bewohner
     dialogue.ts    Auswahl von Dialogzeilen nach Tageszeit/Jahreszeit/Herzen/Tagen
+    grammar.ts     kleine Grammatik-Helfer für zusammengesetzte Texte (Genitiv: „Olafs“, „Lars’“)
     daily.ts       tägliche Funde, Obst-Nachwachsen
     mail.ts        Briefkasten
     weather.ts     Wetter pro Tag (reproduzierbar), Regen-Stunden, Regenbogen, `?wetter=` zum Testen

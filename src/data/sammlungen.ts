@@ -32,7 +32,7 @@ export const SAMMLUNGEN: readonly SammlungDef[] = [
     npc: 'lars',
     color: '#6fb06a',
     subject: 'Offizielles Attest',
-    body: 'Schwesterherz,\n\nalle Insekten und Krabbeltiere im Sammelbuch. Alle. Das ist ärztlich gesehen eine Leistung, medizinisch gesehen eine Marotte und als Bruder bin ich stolz.\n\nBeiliegend: eine Urkunde. Mit Stempel. Der Stempel ist echt. Ich hab ihn gefunden.\n\nDein großer Bruder',
+    body: 'Schwesterherz,\n\nalle Insekten und Krabbeltiere im Sammelbuch. Alle. Ärztlich gesehen ist das eine Leistung, wissenschaftlich gesehen eine Marotte – und als Bruder bin ich stolz.\n\nBeiliegend: eine Urkunde. Mit Stempel. Der Stempel ist echt. Ich hab ihn gefunden.\n\nDein großer Bruder',
   },
   {
     id: 'funde',
@@ -40,7 +40,7 @@ export const SAMMLUNGEN: readonly SammlungDef[] = [
     npc: 'thalia',
     color: '#c9a77a',
     subject: 'Feldforscherin des Jahres',
-    body: 'Lina!!\n\nAlle Fossilien und Kristalle! Alle! Ich hab es nachgezählt, dreimal, und es stimmt.\n\nDafür gibt es eine Urkunde. Ich hab sie selbst entworfen. Mit Lineal. Hänge sie auf, damit ich nicht vergesse, wie viel du ausgegraben hast.\n\nDeine Thalia 🦴',
+    body: 'Lina!!\n\nAlle Fossilien und Kristalle! Alle! Ich hab es nachgezählt, dreimal, und es stimmt.\n\nDafür gibt es eine Urkunde. Ich hab sie selbst entworfen. Mit Glitzerstift. Hänge sie auf, damit ich nicht vergesse, wie viel du ausgegraben hast.\n\nDeine Thalia 🦴',
   },
   {
     id: 'blumen',

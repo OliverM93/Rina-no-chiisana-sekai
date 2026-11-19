@@ -54,7 +54,7 @@ export const MEETUPS: readonly MeetupDef[] = [
     replies: {
       gisela: ['Ach, Kind, ich sitz hier mit Christin und Olaf. Die zwei sind sich nie einig – das macht den Kaffee erst gut.', 'Christin und Olaf streiten gerade, wer die Kekse zählt. Ich zähl mit. Eine andere Zahl, natürlich.'],
       christin: ['Gisela sagt, die Bank hat Patina. Ich sage: Staub. Wir einigen uns nicht. Jeden zweiten Tag.', 'Olaf erklärt Gisela gerade, was ein Keks steuerlich bedeutet. Sie sagt: „Ein Keks.“ Sehr überzeugend.'],
-      olaf: ['Ich hab Gisela gerade erklärt, was ein Keks steuerlich bedeutet. Sie sagt: „Ein Keks.“ Ein starkes Argument.', 'Christin sortiert den Zucker. Gisela sagt, sie soll ihn essen. Wir sind uns einig, dass wir uneinig sind.'],
+      olaf: ['Ich hab Gisela gerade erklärt, dass Kekse keine Zinsen bringen. Sie hat mir noch einen gegeben. Gegenargument angenommen.', 'Christin sortiert den Zucker. Gisela sagt, sie soll ihn essen. Wir sind uns einig, dass wir uneinig sind.'],
     },
   },
   {
@@ -77,7 +77,7 @@ export const MEETUPS: readonly MeetupDef[] = [
     ],
     replies: {
       olaf: ['Pssst. Christin hat gerade vorgeschlagen, die Angelsachen nach Größe zu sortieren. Ich stimme leise zu.', 'Ich zähle die Fische, Christin räumt auf. Bisher ist die Quote … überschaubar.'],
-      christin: ['Olaf zählt gerade Fische, die nicht da sind. Ich räum so lange auf. Das passt gut zusammen.', 'Pssst. Olaf hat mir gerade erklärt, dass Fische keine Ohren haben. Ich bin trotzdem leise.'],
+      christin: ['Olaf zählt gerade Fische, die nicht da sind. Ich räum so lange auf. Das passt gut zusammen.', 'Pssst. Ich hab Olaf gerade erklärt, dass Fische keine Ohren haben. Er flüstert trotzdem.'],
     },
   },
   {
@@ -92,18 +92,18 @@ export const MEETUPS: readonly MeetupDef[] = [
     },
     emotes: ['💪', '🏃', '💦', '😤'],
     talks: [
-      ['Oli: „Noch zehn Liegestütze!“', 'Lars: „Als Arzt sag ich: Fünf reichen.“', 'Oli: „Und als Bruder?“ – Lars: „… Zehn. Na gut.“'],
-      ['Lars: „Weißt du, warum Skelette nie Sport machen?“', 'Oli: „Warum?“', 'Lars: „Sie haben keinen Body dafür.“ – Oli muss so lachen, dass er sich setzen muss.'],
+      ['Oli: „Noch zehn Liegestütze!“', 'Lars: „Als Arzt sag ich: Fünf reichen.“', 'Oli: „Und als Schwager in spe?“ – Lars: „… Zehn. Na gut.“'],
+      ['Lars: „Weißt du, warum Skelette nie ins Gym gehen?“', 'Oli: „Warum?“', 'Lars: „Die sind schon bis auf die Knochen definiert.“ – Oli prustet in seinen Shake.'],
       ['Oli macht Kniebeugen. Lars macht Kniebeugen. Winston macht … ein Nickerchen.', 'Oli: „Lini! Machst du mit? Wir sind bei Satz drei von … sehr vielen.“'],
     ],
     replies: {
-      oli: ['Lars sagt, ich soll weniger Eiweiß essen. Ich hab gesagt: ärztlicher Rat? Er hat „Bruderrat“ gesagt.', 'Lars zählt meine Liegestütze. Die Hälfte zählt er mit Kommentar.'],
-      lars: ['Oli macht Kniebeugen und ich zähle mit. Die Hälfte zählt medizinisch nicht, aber ich bin nett.', 'Oli will wissen, ob Training gesund ist. Ich hab gesagt: In Maßen. Er hat „Maßen“ nicht verstanden.'],
+      oli: ['Lars sagt, ich soll weniger Eiweiß essen. Ich hab gesagt: ärztlicher Rat? Er hat „Schwagerrat“ gesagt.', 'Lars zählt meine Liegestütze. Die Hälfte zählt er mit Kommentar.'],
+      lars: ['Oli macht Kniebeugen und ich zähle mit. Die Hälfte zählt medizinisch nicht, aber ich bin nett.', 'Oli hat gefragt, wie viele Sätze gesund sind. Ich hab gesagt: In Maßen. Er hat ein Maßband geholt und seinen Bizeps gemessen.'],
     },
   },
   {
     id: 'strand',
-    name: 'Steine & Skizzen am Strand',
+    name: 'Dehnen & Skizzen am Strand',
     weekdays: [2, 5],
     hours: [13, 15],
     members: ['thalia', 'jens'],
@@ -119,7 +119,7 @@ export const MEETUPS: readonly MeetupDef[] = [
     ],
     replies: {
       thalia: ['Jens malt mich gerade. Ich halte still. Ich hab gesagt, er soll die Muskeln nicht zu klein malen.', 'Jens erklärt mir den Farbkreis, ich ihm den Beinbeuger. Wir sind quitt.'],
-      jens: ['Ma chérie, Thalia zeigt mir seit zehn Minuten Dehnübungen. Ich male sie trotzdem schöner.', 'Thalia hält still, ich male. Das ist ein Meisterwerk, gell? Wenn sie sich nicht bewegt.'],
+      jens: ['Ma chérie, Thalia zeigt mir seit zehn Minuten Dehnübungen. Ich male sie trotzdem schöner.', 'Thalia hält still, ich male. Das wird ä Meisterwerk, nu glar. Wenn sie sich nicht bewegt.'],
     },
   },
   {
@@ -134,13 +134,13 @@ export const MEETUPS: readonly MeetupDef[] = [
     },
     emotes: ['🌅', '🎶', '💬', '✨'],
     talks: [
-      ['Thalia: „Der Sonnenuntergang ist heute 0,3 Prozent schöner als gestern. Ich hab nachgemessen.“', 'Lars: „Als Arzt sage ich: Genieß ihn einfach.“ – Thalia: „Ich genieße ihn ja. Mit Messwerten.“'],
+      ['Thalia: „Der Sonnenuntergang kommt in meine Karte. Lieblingsort Nummer zwölf.“', 'Lars: „Und wie viele Lieblingsorte hast du?“ – Thalia: „Zwölf. Seit eben.“'],
       ['Lars: „Feierabend. Sieben Patienten, davon fünf mit Schnupfen.“', 'Thalia: „Und die zwei anderen?“ – Lars: „Wollten nur reden. Das ist auch Medizin.“'],
       ['Thalia hat ihre Lieblingsplaylist für Samstag dabei und hält Lars einen Kopfhörer hin.', 'Lars: „Das ist … sehr laut.“ – Thalia: „Das ist ein Banger.“ – Lars: „… Das ist ein Banger.“'],
       ['Die beiden sitzen einfach da und gucken aufs Meer.', 'Lars: „Weißt du, warum ich das so gern mag?“ – Thalia: „Weil es nichts kostet?“ – Lars: „Weil es mich nichts fragt.“'],
     ],
     replies: {
-      thalia: ['Lars und ich messen den Sonnenuntergang. Er misst mit Gefühl, ich mit Lineal. Wir kommen auf dasselbe.', 'Lars hat gerade gefragt, wie alt der Sand ist. Ich hab es ihm erklärt. Er hat genickt. Zweimal.'],
+      thalia: ['Lars und ich gucken den Sonnenuntergang. Er sagt „schön“, ich sag „Banger“. Wir meinen dasselbe.', 'Lars hat gefragt, ob ich jemals stillsitze. Ich hab’s ihm gezeigt. Zehn Sekunden. Er war beeindruckt.'],
       lars: ['Thalia hat gerade ihren Trainingsplan für die Woche erklärt. Ich hab gefragt: „Wann schläfst du?“ – „Samstag nach der Party.“', 'Feierabend, Strand, Thalia redet über Hanteln und Playlists. Medizinisch gesehen entspannend. Ich merke es mir.'],
     },
   },

@@ -571,7 +571,7 @@ function SumoBout({ def, onDone, level }: GameProps & { level: number }) {
           ➡️
         </button>
       </div>
-      <div class="zs-cheer">{msg || `${lv?.name ?? ''}: abwechselnd ← und → drücken! Zwei gewonnene Runden gewinnen.`}</div>
+      <div class="zs-cheer">{msg || `${lv?.name ?? ''}: abwechselnd ← und → drücken! Wer zuerst zwei Runden holt, gewinnt.`}</div>
     </>
   );
 }

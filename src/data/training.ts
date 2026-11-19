@@ -16,7 +16,7 @@ export const TRAINING_REPS: readonly string[] = [
 /** Lina allein (Oli nicht im Zimmer) */
 export const TRAINING_SOLO: readonly (readonly string[])[] = [
   ['Puh! Das war ein guter Satz. Winston guckt beeindruckt – oder er will ein Leckerli.', '„Nur noch ein Satz“, sagt man. Ich weiß jetzt, was Oli meint.'],
-  ['Geschafft! Ein Satz mit richtig viel Gewicht. Die Hantel ist so schwer, die Wärmflasche wäre neidisch.', 'Ich sollte Oli davon erzählen. Er würde ausflippen.'],
+  ['Geschafft! Ein Satz mit richtig viel Gewicht. Jetzt ein Kaffee und die Wärmflasche – verdient.', 'Ich sollte Oli davon erzählen. Er würde ausflippen.'],
 ];
 
 /** Oli ist dabei und ist begeistert */

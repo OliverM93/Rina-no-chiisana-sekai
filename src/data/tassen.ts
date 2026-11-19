@@ -32,7 +32,7 @@ export const TASSEN: readonly TasseDef[] = [
   tasse('klassik-schwarz', 'Klassik Schwarz', 'klassik', '#2a2a30', '#d9b45a', 150, 'Matt-schwarz mit goldenem Emblem. Passt zu Linas Lieblingsfarbe – und zu ihrem Kleiderschrank.'),
   tasse('klassik-weiss', 'Klassik Weiß', 'klassik', '#f7f5ec', '#2f7a5a', 150, 'Schlicht weiß mit grünem Band. Man sieht jeden Kaffeefleck. Lina findet das ehrlich.'),
   // Saison – nur in ihrer Jahreszeit im Katalog
-  tasse('saison-fruehling', 'Kirschblüte', 'saison', '#f7c6d4', '#d96a8a', 180, 'Die Frühlingstasse mit Kirschblüten. Sie ist nur im Frühling zu haben – danach ist sie weg.', 'fruehling'),
+  tasse('saison-fruehling', 'Kirschblüte', 'saison', '#f7c6d4', '#d96a8a', 180, 'Die Frühlingstasse mit Kirschblüten. Sie ist nur im Frühling zu haben – nächstes Jahr kommt sie wieder.', 'fruehling'),
   tasse('saison-sommer', 'Sommerbrise', 'saison', '#8ac8ff', '#f7d26a', 180, 'Himmelblau mit gelben Sonnenstrahlen. Nur im Sommer zu haben. Perfekt für Eiskaffee.', 'sommer'),
   tasse('saison-herbst', 'Kürbislatte', 'saison', '#e0883a', '#6e4630', 180, 'Orange mit kleinen Kürbissen und Blättern. Nur im Herbst zu haben. Duftet fast nach Zimt.', 'herbst'),
   tasse('saison-winter', 'Winterstern', 'saison', '#c9302c', '#ffffff', 180, 'Rot mit weißen Schneeflocken. Nur im Winter zu haben. Lina trinkt nur noch Kakao daraus.', 'winter'),
@@ -40,7 +40,7 @@ export const TASSEN: readonly TasseDef[] = [
   tasse('stadt-paris', 'Paris', 'stadt', '#a8c8e8', '#f7f5ec', 0, 'Mit Eiffelturm-Skizze und Croissant. Von Onkel Jens, natürlich mit einem Kussmund-Stempel.'),
   tasse('stadt-venedig', 'Venedig', 'stadt', '#b8445a', '#d9b45a', 0, 'Mit Gondel und goldener Karnevalsmaske. Von Onkel Jens – „sehr dramatisch, wie ich“.'),
   tasse('stadt-amsterdam', 'Amsterdam', 'stadt', '#e0883a', '#2a2a30', 0, 'Orange mit Grachtenhäusern und einer Tulpe. Von Onkel Jens.'),
-  tasse('stadt-sevilla', 'Sevilla', 'stadt', '#d8343c', '#f2c94c', 0, 'Mit Fächer und Flamenco-Tänzerin. Von Onkel Jens. „Olé!“'),
+  tasse('stadt-sevilla', 'Sevilla', 'stadt', '#d8343c', '#f2c94c', 0, 'Mit Fächer und Flamenco-Tänzerin. Von Onkel Jens, der dazu einen Flamenco-Schritt vorgeführt hat. Sein Knie erinnert sich noch.'),
   tasse('stadt-new-york', 'New York', 'stadt', '#3a4a6a', '#f7f5ec', 0, 'Mit Skyline, Brücke und Pizza-Stück. Von Onkel Jens.'),
   tasse('stadt-kyoto', 'Kyoto', 'stadt', '#f7efe2', '#d96a8a', 0, 'Mit Tempel und Kirschblüten. Von Onkel Jens. Auf der Unterseite steht ein Wort, das Lina übersetzen kann. Fast.'),
   tasse('stadt-tokio', 'Tokio', 'stadt', '#ff8fb1', '#2a2a30', 0, 'Mit Tokio-Turm und Katzenwinker. Von Onkel Jens. Lina liest die Aufschrift laut vor und strahlt.'),

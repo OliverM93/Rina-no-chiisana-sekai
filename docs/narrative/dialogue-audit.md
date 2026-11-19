@@ -3,6 +3,8 @@
 > **Stand:** 19.11.2026 · **Umfang:** alle Spieltexte in `src/` (ohne Tests) · **Art:** reine Analyse.
 > Für dieses Audit wurde **keine Spieldatei verändert**: kein Text entfernt, keine Mechanik, Dialogstruktur oder Trigger angefasst.
 > Alle Vorschläge in Teil 4 sind Empfehlungen und warten auf eine Entscheidung.
+>
+> **Umsetzung (Nov. 2026, PR #179):** Teil 6.1 und 6.2 sowie der Großteil von 6.3 sind umgesetzt. Entscheidungen: TV bekommt auch fröhliche Momente, echte Möbelnamen bleiben, Lars’ Wolfram ist eine Wertanlage, Sächsisch nach Linas Vorgaben (siehe `CLAUDE.md`). Offen: „chérie“ und „Fast.“-Pointen weiter ausdünnen. Die Zeilentabellen in `audit-zeilen/` zeigen den Stand **vor** der Überarbeitung.
 
 **Belastbarkeit** (wie im [Game-Design-Audit](../game-design/README.md)):
 - **[N] Nachweis:** steht so im Code, in `CLAUDE.md` oder in der Doku.

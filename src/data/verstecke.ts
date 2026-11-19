@@ -37,7 +37,7 @@ export const VERSTECKE: readonly VersteckDef[] = [
     y: 1,
     name: 'Der Waldwinkel',
     hint: 'Im Nordosten, in der allerletzten Ecke vom Wald, ist ein Kreuz eingezeichnet. Bestimmt trinken da Vögel.',
-    found: ['In der hintersten Waldecke steht, halb unter Efeu, eine steinerne Schale mit Regenwasser.', 'Zwei Spatzen schauen mich empört an. „Ja, ja“, sage ich. „Ich nehm sie ja nur mit, damit ihr es schöner habt.“'],
+    found: ['In der hintersten Waldecke steht, halb unter Efeu, eine steinerne Schale mit Regenwasser.', 'Zwei Spatzen schauen mich empört an. „Ja, ja“, sage ich. „Die kommt in meinen Garten. Ihr seid herzlich eingeladen.“'],
     items: [{ itemId: 'vogeltraenke', count: 1 }],
   },
   {
@@ -46,7 +46,7 @@ export const VERSTECKE: readonly VersteckDef[] = [
     y: 30,
     name: 'Die Felsnische',
     hint: 'Im Südwesten, neben dem einzelnen großen Felsen, ist eine Stelle markiert. Nimm die Schaufel mit.',
-    found: ['Neben dem großen Felsen liegen ein paar flache Steine, genau aufeinandergestapelt.', 'Wer auch immer das gebaut hat: Es ist hübsch. Ich stell es mir zu Hause hin. 🪨'],
+    found: ['Neben dem großen Felsen liegen ein paar flache Steine, genau aufeinandergestapelt.', 'Wer auch immer das gebaut hat: Es ist hübsch. Ich bau es mir zu Hause nach – genau so. 🪨'],
     items: [{ itemId: 'steinmaennchen', count: 1 }],
   },
   {

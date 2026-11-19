@@ -92,10 +92,10 @@ export const BENCH_LINES: Readonly<Record<string, Readonly<Record<BenchMood, rea
   },
   herbst: {
     tag: ['Der Wind pustet Blätter über den Strand. Ihr rückt näher zusammen.', '„Ich hab eine Thermoskanne mitgebracht. Kaffee. Natürlich.“', 'Ihr trinkt abwechselnd aus dem Deckel. Er behauptet, es sei der erste Schluck.'],
-    abend: ['Es wird früh dunkel, die Wellen klingen tiefer.', '„Im Herbst sieht man das Meer am besten. Es zieht sich mehr Mühe.“', 'Du ziehst seine Jacke über deine Schultern. Sie riecht nach Kaffee. ☕'],
+    abend: ['Es wird früh dunkel, die Wellen klingen tiefer.', '„Im Herbst sieht man das Meer am besten. Es gibt sich mehr Mühe.“', 'Du ziehst seine Jacke über deine Schultern. Sie riecht nach Kaffee. ☕'],
   },
   winter: {
-    tag: ['Die Bank ist kalt, aber ihr habt Mützen und eine Decke.', '„Eisige Luft, Meeresrauschen, du. Mehr brauch ich nicht.“', 'Euer Atem malt Wölkchen in die Luft. Ihr malt sie mit.'],
+    tag: ['Die Bank ist kalt, aber ihr habt Mützen und eine Decke.', '„Eisige Luft, Meeresrauschen, du. Mehr brauch ich nicht.“', 'Euer Atem malt Wölkchen in die Luft. Oli versucht, ein Herz hinzupusten. Fast.'],
     abend: ['Der Himmel ist klar, die ersten Sterne kommen raus.', '„Wenn man lang genug guckt, bewegen sie sich. Sagt Thalia. Ich glaub ihr nicht. Aber ich guck.“', 'Ihr guckt zusammen, bis die Finger kalt sind. ✨'],
   },
 };
