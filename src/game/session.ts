@@ -85,6 +85,8 @@ export interface DecorState {
   holding: string | null;
   /** passt er an die Stelle unter dem Mauszeiger? */
   valid: boolean;
+  /** Warum es nicht passt (nur wenn `valid` falsch ist) */
+  reason?: string;
   /** Farben des gehaltenen Möbels (leer = keine) */
   variants: Array<{ itemId: string; label: string; color: string }>;
   /** Gibt es etwas, das sich rückgängig machen lässt? */

@@ -6,7 +6,7 @@
 import { bausparShare, borrow, canBorrow, deposit, repay, withdraw } from '../core/bank';
 import { addItem as invAdd, countItem, freeSlots, removeItem as invRemove, spaceFor } from '../core/inventory';
 import { keepsAccess, yardBlockedTiles } from '../core/yard';
-import { tileOf } from '../core/worldmap';
+import { objectAtTile, terrainAt, tileOf } from '../core/worldmap';
 import { YARD_AREA } from '../data/yard';
 import { spotKey } from '../core/garden';
 import { cellsOf, checkPlacement, footprint, misfits, moveItem, placeItem, type PlacedItem, type Room, type RoomLayout, type Rotation, removeItem } from '../core/room';
@@ -146,30 +146,58 @@ export function fitsHere(session: Session, itemId: string): boolean {
 }
 
 export function canPlace(session: Session, itemId: string, x: number, y: number, rot: Rotation, moving?: string): boolean {
+  return placeProblem(session, itemId, x, y, rot, moving) === null;
+}
+
+/**
+ * Warum passt das hier nicht? `null` = passt. Draußen gibt es einen konkreten Grund (für den Hinweis beim Aufstellen),
+ * damit Lina versteht, warum ein scheinbar leeres Feld nicht geht.
+ */
+export function placeProblem(session: Session, itemId: string, x: number, y: number, rot: Rotation, moving?: string): string | null {
   const c = currentRoom(session);
-  if (!c || !fitsHere(session, itemId) || !checkPlacement(c.room, c.layout, itemId, x, y, rot, furnitureInfo, moving).ok) return false;
-  if (session.inside) return true;
+  if (!c || !fitsHere(session, itemId)) return 'Das gehört nicht hierher.';
+  if (!checkPlacement(c.room, c.layout, itemId, x, y, rot, furnitureInfo, moving).ok) return session.inside ? 'Hier passt es nicht.' : yardCellProblem(session, itemId, x, y, rot);
+  if (session.inside) return null;
   // nicht auf die Anbauten von Linas Haus
   const info = furnitureInfo(itemId);
+  const area = session.yardArea();
   const annex = new Set(session.houseAnnexTiles());
-  if (info && cellsOf(x, y, info, rot).some(([cx, cy]) => annex.has((cy + session.yardArea().y) * session.map.width + cx + session.yardArea().x))) return false;
+  if (info && cellsOf(x, y, info, rot).some(([cx, cy]) => annex.has((cy + area.y) * session.map.width + cx + area.x))) return 'Hier steht dein Haus.';
   // Garten: Probe-Aufstellung → niemand wird eingesperrt, Lina steht nicht im Weg
   const trial: Room = structuredClone(c.room);
   if (moving) {
-    if (!moveItem(trial, c.layout, moving, x, y, rot, furnitureInfo)) return false;
-  } else if (!placeItem(trial, c.layout, itemId, x, y, rot, furnitureInfo, 'probe')) return false;
-  return yardOk(session, trial);
+    if (!moveItem(trial, c.layout, moving, x, y, rot, furnitureInfo)) return 'Hier passt es nicht.';
+  } else if (!placeItem(trial, c.layout, itemId, x, y, rot, furnitureInfo, 'probe')) return 'Hier passt es nicht.';
+  return yardProblem(session, trial);
 }
 
-/** Bleibt im Garten alles erreichbar und steht nichts auf Lina? */
-function yardOk(session: Session, yard: Room): boolean {
+/** Grund, warum ein Gartenfeld belegt oder frei zu halten ist */
+function yardCellProblem(session: Session, itemId: string, x: number, y: number, rot: Rotation): string {
+  const info = furnitureInfo(itemId);
+  const area = session.yardArea();
+  if (!info) return 'Hier passt es nicht.';
+  for (const [cx, cy] of cellsOf(x, y, info, rot)) {
+    if (cx < 0 || cy < 0 || cx >= area.w || cy >= area.h) return 'Das ragt aus dem Garten heraus.';
+    const tx = cx + area.x;
+    const ty = cy + area.y;
+    if (objectAtTile(session.map, tx, ty)) return 'Da steht schon etwas.';
+    if (terrainAt(session.map, tx, ty) === 'path') return 'Der Weg bleibt frei.';
+    if (session.map.baseBlocked[ty * session.map.width + tx]) return 'Da steht schon etwas.';
+    const reserved = session.yardLayoutOf().reserved?.some(([rx, ry]) => rx === cx && ry === cy);
+    if (reserved) return 'Hier muss man stehen können – vor Briefkasten, Beet, Werkbank oder Verkaufskiste.';
+  }
+  return 'Da steht schon etwas.';
+}
+
+/** Bleibt im Garten alles erreichbar und steht nichts auf Lina? (`null` = alles gut) */
+function yardProblem(session: Session, yard: Room): string | null {
   const data = session.data;
-  if (!data) return false;
+  if (!data) return 'Hier passt es nicht.';
   const area = session.yardArea();
   const tiles = [...yardBlockedTiles(session.map, area, yard, session.yardLayoutOf(), furnitureInfo), ...session.houseAnnexTiles()];
   const lina = tileOf(data.player.x, data.player.y);
-  if (tiles.includes(lina.y * session.map.width + lina.x)) return false;
-  return keepsAccess(session.map, area, tiles);
+  if (tiles.includes(lina.y * session.map.width + lina.x)) return 'Hier stehst du gerade – geh einen Schritt zur Seite.';
+  return keepsAccess(session.map, area, tiles) ? null : 'Dann käme man nicht mehr überall hin (Weg, Baum oder Briefkasten wären versperrt).';
 }
 
 /** Nach Änderungen im Garten: Kollision & Speichern */

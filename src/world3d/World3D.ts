@@ -43,7 +43,7 @@ import {
   welcomeLetter,
 } from '../game/gameplay';
 import { KeyboardInput } from '../game/input';
-import { applySurface, bedTiles, buyFromCatalog, canPlace, catalogPrice, currentRoom, finishExpansion, fitsHere, moveFurniture, pickUpFurniture, placeFromBag, restoreFurniture, stockCount, variantsOf } from '../game/home';
+import { applySurface, bedTiles, buyFromCatalog, placeProblem, catalogPrice, currentRoom, finishExpansion, fitsHere, moveFurniture, pickUpFurniture, placeFromBag, restoreFurniture, stockCount, variantsOf } from '../game/home';
 import { checkStory } from '../game/story';
 import { drinkCoffee, drinksFor, isCoffeeMachine, KICK_SPEED, kickActive } from '../game/coffee';
 import { tassenStand } from '../game/tassen';
@@ -4710,11 +4710,12 @@ export class World3D {
     this.yard.hideGhost();
   }
 
-  private emitDecor(valid = true) {
+  private emitDecor(valid = true, reason?: string) {
     this.session.bus.emit('decor:state', {
       active: this.session.decorActive,
       holding: this.decor?.itemId ?? null,
       valid,
+      reason,
       variants: this.decor ? variantsOf(this.decor.itemId) : [],
       canUndo: this.undoStack.length > 0,
     });
@@ -4850,13 +4851,15 @@ export class World3D {
     const x = cell.x - Math.floor((fp.w - 1) / 2);
     const y = cell.y - Math.floor((fp.d - 1) / 2);
     const p = checkPlacement(home, this.lay, d.itemId, x, y, d.rot, furnitureInfo, d.uid ?? undefined);
-    if (p.ok) p.ok = canPlace(this.session, d.itemId, x, y, d.rot, d.uid ?? undefined);
+    // Draußen: konkreter Grund, warum es nicht passt (scheinbar leere Felder sollen erklärt sein)
+    const problem = p.ok || !this.session.inside ? placeProblem(this.session, d.itemId, x, y, d.rot, d.uid ?? undefined) : 'Hier passt es nicht.';
+    if (problem) p.ok = false;
     const base = p.on ? home.items.find((i) => i.uid === p.on) : undefined;
     const h = base ? (FURNITURE_BY_ITEM[base.itemId]?.def.surfaceHeight ?? 0) : 0;
     const baseInfo = base ? furnitureInfo(base.itemId) : undefined;
     const off = base && baseInfo ? riderOffset(baseInfo, base.rot, p.slot ?? 0) : undefined;
     this.dv.showGhost(d.itemId, x, y, p.rot ?? d.rot, p.ok, h, off);
-    this.emitDecor(p.ok);
+    this.emitDecor(p.ok, problem ?? undefined);
   }
 
   /** Wand-Deko dreht sich von selbst zur Wand, auf die man zielt (oder an der das Feld liegt) */
