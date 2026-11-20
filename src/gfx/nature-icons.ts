@@ -339,6 +339,20 @@ const CROP_ICONS: Record<string, Draw> = {
     ctx.restore();
     ellipse(ctx, 25, 6, 2.6, 1.8, '#f7d26a', '#d9a83a', 0.8);
   },
+  kohl: (ctx) => {
+    // runder Kopf mit äußeren Blättern
+    for (const [x, y, rx, ry] of [[9, 19, 7, 8], [23, 19, 7, 8], [16, 24, 10, 5]] as const) ellipse(ctx, x, y, rx, ry, '#7fbf6a', darken('#7fbf6a', 0.3), 1.2);
+    ellipse(ctx, 16, 17, 9.5, 9, '#a9d38a', darken('#a9d38a', 0.3), 1.3);
+    ellipse(ctx, 16, 15, 6.5, 6, '#c9e6ae', darken('#a9d38a', 0.2), 0.9);
+    ctx.strokeStyle = darken('#a9d38a', 0.25);
+    ctx.lineWidth = 0.9;
+    ctx.beginPath();
+    ctx.moveTo(16, 9.5);
+    ctx.quadraticCurveTo(13, 15, 16, 21);
+    ctx.moveTo(16, 9.5);
+    ctx.quadraticCurveTo(19.5, 15, 17, 21);
+    ctx.stroke();
+  },
   kuerbis: (ctx) => {
     for (const x of [9, 23]) ellipse(ctx, x, 19, 6, 8.5, '#f08a2a', darken('#f08a2a', 0.3), 1.3);
     for (const x of [13, 19]) ellipse(ctx, x, 19, 6, 9, '#f59a3a', darken('#f08a2a', 0.3), 1.3);

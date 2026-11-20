@@ -60,7 +60,7 @@ import { DINNER_LINES, DINNER_OPENERS, JENS_WELCOME } from '../data/npcs/jens';
 import { pairChatKey, PAIR_CHATS } from '../data/gespraeche';
 import { GUEST_HOUSES } from '../data/gastHaeuser';
 import { TRAINING_OLI, TRAINING_REPS, TRAINING_SOLO, TRAINING_THALIA, TRAINING_THALIA_ABSENT, TRAINING_THALIA_LEAD } from '../data/training';
-import { dinnerGuests, isDinnerTime } from '../game/dinner';
+import { dinnerGuests, dinnerTakeaway, isDinnerTime } from '../game/dinner';
 import { activeMeetups, joinMeetup, meetupOf, meetupReply } from '../game/meetups';
 import { CHECKUP_GIFTS, CHECKUP_LINES, LARS_WELCOME } from '../data/npcs/lars';
 import { hashString } from '../core/rng';
@@ -140,6 +140,8 @@ import { Luau3D } from './Luau3D';
 import { findVersteck, hint as hintVersteck, unhintedNear, versteckAt } from '../game/verstecke';
 import { WINSTON_SNIFF_RANGE, WINSTON_SNIFF_TOAST } from '../data/verstecke';
 import { Kater } from './Kater';
+import { canInviteMo, inviteMo, moAtParty, talkToMo } from '../game/mo';
+import { MO_LOOK, MO_NAME, MO_WAITING_LINE } from '../data/mo';
 import { KATER_NAME } from '../data/kater';
 import { learnedTricks, nextTrick, practiceNextTrick, petWinston, showTrickLine, trickProgress, winstonAppeared, winstonDig, winstonDue, winstonFound, winstonMayDig, winstonState } from '../game/pet';
 import { DIG_LINES, TRICK_ALL_LEARNED, TRICKS_NONE_YET, type TrickId, WINSTON_APPEARS_TOAST, WINSTON_FIND_LINES, WINSTON_FREED_LINES, WINSTON_NAME, WINSTON_SPOT } from '../data/winston';
@@ -161,6 +163,7 @@ type Target =
   | { kind: 'winston' }
   | { kind: 'besucher'; id: string }
   | { kind: 'kater' }
+  | { kind: 'mo' }
   | { kind: 'tier'; index: number };
 
 const SPECIAL_OBJECTS = ['verkaufskiste', 'haus-gisela', 'haus-olaf', 'briefkasten-lina', 'werkbank-lina', 'bistro-jens', 'praxis-lars', 'haus-thalia', 'punschstand', 'samenstand', 'boot-dorf', 'boot-insel', 'inselhuette', 'schildkroete'];
@@ -258,6 +261,8 @@ export class World3D {
   private winston: Winston | null = null;
   /** Kater, der schwarze Kater (erst, wenn Olaf und Christin da sind) */
   private kater: Kater | null = null;
+  /** Mo (Olis bester Freund) – nur zu Besuch auf der Samstagsparty */
+  private mo: Character | null = null;
   /** Das Gestrüpp, in dem sich Winston verfangen hat (bis Lina ihn befreit) */
   private winstonBush: THREE.Object3D | null = null;
   private stepAcc = 0;
@@ -554,6 +559,7 @@ export class World3D {
       this.updatePrints(dtMs, player);
       this.updateWinston(dtMs, player, blocked, solid);
       this.updateKater(dtMs, player);
+      this.updateMo(dtMs);
       this.updateIslandState(player);
       this.updateInselExtras(dtMs / 1000, player);
       this.updateVersteckSniff(dtMs / 1000, player);
@@ -1079,6 +1085,9 @@ export class World3D {
   /** Wohin das Symbol über dem Ziel gehört – Sprechblase bei Figuren, Funkeln bei Dingen */
   private bubbleFor(target: Target | null): { key: string; pos: THREE.Vector3; talk: boolean } | null {
     if (!target) return null;
+    if (target.kind === 'mo' && this.mo?.visible) {
+      return { key: 'mo', talk: true, pos: this.mo.root.position.clone().add(new THREE.Vector3(0, 1.15, 0)) };
+    }
     if (target.kind === 'kater' && this.kater?.visible) {
       return { key: 'kater', talk: true, pos: this.kater.cat.root.position.clone().add(new THREE.Vector3(0, 0.5, 0)) };
     }
@@ -1268,6 +1277,13 @@ export class World3D {
         if (isDoor && !directlyInFront) break;
         return { kind: 'npc', npc };
       }
+    }
+    // Mo auf der Party
+    if (this.mo?.visible) {
+      const dx = this.mo.x - player.x;
+      const dy = this.mo.y - player.y;
+      const d = Math.hypot(dx, dy);
+      if (d < TILE * 1.35 && dx * fx + dy * fy > d * 0.35) return { kind: 'mo' };
     }
     // Kater direkt davor (nur wenn kein Bewohner näher ist)
     if (this.kater?.visible) {
@@ -1666,6 +1682,9 @@ export class World3D {
       case 'kater':
         this.talkToKater();
         return;
+      case 'mo':
+        this.talkMo();
+        return;
       case 'winston':
         if (this.winston?.stranded) this.rescueWinston();
         else this.petDog();
@@ -2011,6 +2030,8 @@ export class World3D {
                 },
               }))
           : []),
+        ...(id === 'oli' && canInviteMo(this.session) ? [{ label: '💘 Mo zur Party einladen', onSelect: () => this.npcDialog(npc, inviteMo(this.session), npcHearts(this.session, id)) }] : []),
+        ...(id === 'oli' && this.session.data?.flags.moEingeladen && !this.session.data.flags.moKennengelernt ? [{ label: '💘 Und Mo?', onSelect: () => this.npcDialog(npc, [MO_WAITING_LINE], npcHearts(this.session, id)) }] : []),
         ...(canInvite(this.session, id) ? [{ label: '🏠 Zu mir einladen', onSelect: () => this.npcDialog(npc, inviteNpc(this.session, id), npcHearts(this.session, id)) }] : []),
         ...(activeWish(this.session, id) ? [{ label: '💭 Herzenswunsch', onSelect: () => this.wishDialog(npc) }] : []),
         ...(id === 'thalia' && isPartyTime(this.session) && this.session.data?.world.dates.party !== this.session.today()
@@ -2763,7 +2784,7 @@ export class World3D {
         title: oli.def.name,
         lines: OLI_WELCOME.map((l) => fillPlaceholders(l, ctx)),
         onClose: () => {
-          this.giveOrDropAll([{ itemId: 'schreibtisch-pc', count: 1 }, { itemId: 'hantelbank', count: 1 }]);
+          this.giveOrDropAll([{ itemId: 'schreibtisch-pc', count: 1 }, { itemId: 'hantelbank', count: 1 }, { itemId: 'airfryer', count: 1 }]);
           // Oli startet mit einem Herz (und schickt gleich seinen ersten Herz-Brief)
           addFriendship(this.session, 'oli', 40);
           this.session.setFlag('oliBegruesst');
@@ -3203,6 +3224,7 @@ export class World3D {
       if (pool) lines.push(pool[hashString(`${day}:${id}`) % pool.length]);
       addFriendship(this.session, id, id === 'jens' ? 16 : 10);
     }
+    lines.push(...dinnerTakeaway(this.session));
     lines.push('Nu, war\'s lecker? Nächsten Sonntag wieder, nu glar? Bisous! 💋');
     this.winston?.burst('herz');
     const who = guests.filter((g) => g !== 'jens').map((g) => this.npcs.get(g)?.def.name).filter(Boolean);
@@ -3652,6 +3674,35 @@ export class World3D {
     if (!this.kater.visible) this.kater.setVisible(true);
     this.kater.heightAt = this.view.terrain.heightAt;
     this.kater.update(dtMs, { x: player.x, y: player.y });
+  }
+
+  /** Mo steht während der Party am Rand der Tanzfläche (nur draußen, nur wenn eingeladen) */
+  private updateMo(dtMs: number) {
+    const here = !this.session.inside && moAtParty(this.session);
+    if (!here) {
+      if (this.mo?.visible) this.mo.setVisible(false);
+      return;
+    }
+    if (!this.mo) {
+      const t = { x: 31, y: 20 };
+      this.mo = new Character(this.scene, MO_LOOK, (t.x + 0.5) * TILE, (t.y + 0.5) * TILE, 'left', this.view.terrain.heightAt, this.session.season, this.session.today());
+    }
+    if (!this.mo.visible) this.mo.setVisible(true);
+    this.mo.heightAt = this.view.terrain.heightAt;
+    this.mo.update(dtMs, { dx: 0, dy: 0, run: false }, () => true);
+  }
+
+  private talkMo() {
+    const mo = this.mo;
+    const player = this.player;
+    if (!mo || !player) return;
+    player.faceTowards(mo.x, mo.y);
+    mo.faceTowards(player.x, player.y);
+    mo.wave();
+    const first = !this.session.data?.flags.moKennengelernt;
+    const lines = talkToMo(this.session);
+    this.session.bus.emit('dialog:open', { title: MO_NAME, lines });
+    if (first) this.session.save();
   }
 
   private talkToKater() {
@@ -4200,6 +4251,10 @@ export class World3D {
     }
     if (f.def.id === 'herd') {
       this.session.bus.emit('ui:open', { kind: 'herd' });
+      return;
+    }
+    if (f.def.id === 'airfryer') {
+      this.session.bus.emit('ui:open', { kind: 'airfryer' });
       return;
     }
     if (item.itemId === 'witzkalender') {

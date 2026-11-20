@@ -57,7 +57,7 @@ export interface NpcDef {
   };
 
   /** Kleines Geschenk beim ersten Gespräch mancher Tage */
-  dailyTreat?: { itemId: string; chance: number; lines: readonly string[] };
+  dailyTreat?: { itemId: string; chance: number; lines: readonly string[]; count?: number };
 
   /** Briefe: zufällig alle paar Tage */
   letters: readonly LetterTemplate[];

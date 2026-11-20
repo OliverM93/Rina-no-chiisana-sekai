@@ -61,6 +61,7 @@ src/
     gameplay.ts    Spielregeln: Sammeln, Verkaufen, Plaudern, Schenken, Post
     nature.ts      Werkzeuge, Angeln, Insekten, Beet, aktuelles Wetter
     crafting.ts    Rezepte lernen (Rezeptkarten aus Briefen, Ideen beim ersten Fund), an der Werkbank bauen
+    mo.ts          Mo zu Besuch: Einladung über Oli, Treffen auf der Samstagsparty (Verkupplung geht nicht aus)
     pet.ts         Winston streicheln & buddeln lassen
     romance.ts     Gemeinsame Momente mit Oli (Picknick, Sterne gucken): wann möglich, Freundschaft
     home.ts        Katalog kaufen, Möbel aufstellen/verschieben/wegräumen, Tapete & Boden, Ausbau & Kredit

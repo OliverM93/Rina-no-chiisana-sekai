@@ -37,7 +37,7 @@ export const JENS: NpcDef = {
   ],
   preferences: {
     loves: ['lavendel', 'rose', 'seestern', 'glitzerstein', 'apfelkuchen', 'crepes', 'ratatouille', 'basilikum', 'thymian', 'kraeuterquark', 'strauss-mischfarben', 'strauss-lavendel', 'strauss-kraeuter', 'strauss-rosen'],
-    likes: ['pfirsich', 'apfel', 'birne', 'ei', 'wachtelei', 'hering', 'makrele', 'tulpe', 'sonnenblume', 'vergissmeinnicht', 'schneckenhaus', 'tagpfauenauge', 'ruehrei', 'obstsalat', 'fischbroetchen', 'tomatensalat', 'tomate', 'zucchini', 'petersilie', 'gruener-salat', 'strauss-bunt', 'strauss-sonne', 'strauss-schwarz', 'aal-gruen', 'steinbutt-ofen'],
+    likes: ['krautsalat', 'pfirsich', 'apfel', 'birne', 'ei', 'wachtelei', 'hering', 'makrele', 'tulpe', 'sonnenblume', 'vergissmeinnicht', 'schneckenhaus', 'tagpfauenauge', 'ruehrei', 'obstsalat', 'fischbroetchen', 'tomatensalat', 'tomate', 'zucchini', 'petersilie', 'gruener-salat', 'strauss-bunt', 'strauss-sonne', 'strauss-schwarz', 'aal-gruen', 'steinbutt-ofen'],
     dislikes: ['ast', 'stein', 'weinbergschnecke', 'ohrenqualle'],
   },
   dialogue: {
