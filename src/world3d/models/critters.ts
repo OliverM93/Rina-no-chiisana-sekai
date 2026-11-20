@@ -290,6 +290,22 @@ function makeCrop(stage: number, id: string, color: string, center: string): THR
         g.add(p(sphere, '#f7d26a', 0.03, 0.025, 0.03, 0.02, 0.14, -0.06));
       }
       break;
+    case 'kohl': {
+      // äußere Blätter als Rosette, reif: fester Kopf in der Mitte
+      const n = ripe ? 7 : 5;
+      for (let i = 0; i < n; i++) {
+        const a = (i / n) * Math.PI * 2;
+        const l = p(sphere, ripe ? '#7fbf6a' : color, 0.085, 0.016, 0.065, Math.cos(a) * 0.08, 0.05 + (i % 2) * 0.015, Math.sin(a) * 0.08);
+        l.rotation.y = -a;
+        l.rotation.z = 0.35;
+        g.add(l);
+      }
+      if (ripe) {
+        g.add(p(sphere, color, 0.085, 0.075, 0.085, 0, 0.1, 0));
+        g.add(p(sphere, center, 0.06, 0.05, 0.06, 0, 0.14, 0));
+      } else g.add(p(sphere, color, 0.04, 0.035, 0.04, 0, 0.07, 0));
+      break;
+    }
     case 'kuerbis':
       for (let i = 0; i < 4; i++) {
         const a = (i / 4) * Math.PI * 2 + 0.4;

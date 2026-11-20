@@ -600,6 +600,75 @@ const DRAW: Record<string, Draw> = {
     ellipse(ctx, 16, 16, 3.4, 3, '#ffe3cf');
     roundRect(ctx, 11, 19, 10, 3, 1.5, '#c8b6e8', null);
   },
+  rippchen: (ctx) => {
+    // Rippchenstrang auf Butterpapier
+    roundRect(ctx, 4, 9, 24, 17, 3, '#f7efe0', '#d9c4a0', 1.1);
+    roundRect(ctx, 7, 12, 18, 11, 5, '#c96a4a', darken('#c96a4a', 0.35), 1.3);
+    ctx.strokeStyle = '#f7e6d0';
+    ctx.lineWidth = 1.4;
+    for (const x of [11, 15, 19]) {
+      ctx.beginPath();
+      ctx.moveTo(x, 13);
+      ctx.lineTo(x + 1, 22);
+      ctx.stroke();
+    }
+  },
+  'airfryer-rippchen': (ctx) => {
+    ellipse(ctx, 16, 20, 13, 6, '#ffffff', '#c9c4bc', 1.2);
+    roundRect(ctx, 6, 13, 15, 9, 4, '#a8502e', darken('#a8502e', 0.35), 1.3);
+    ctx.strokeStyle = '#e8a06a';
+    ctx.lineWidth = 1.3;
+    for (const x of [9.5, 13, 16.5]) {
+      ctx.beginPath();
+      ctx.moveTo(x, 14);
+      ctx.lineTo(x + 0.6, 21);
+      ctx.stroke();
+    }
+    ellipse(ctx, 23, 19, 5, 3.5, '#e9f2d6', '#a9c48a', 1);
+    for (const [x, y] of [[21.5, 18.5], [24, 19.5]] as const) ellipse(ctx, x, y, 1.1, 0.6, '#f59a3a');
+  },
+  'airfryer-pommes': (ctx) => {
+    roundRect(ctx, 9, 15, 14, 13, [1, 1, 4, 4], '#e8484f', darken('#e8484f', 0.35), 1.3);
+    for (const [x, h, r] of [[11, 12, -0.15], [13.5, 14, -0.05], [16, 13, 0.02], [18.5, 14, 0.08], [21, 12, 0.18]] as const) {
+      ctx.save();
+      ctx.translate(x, 16);
+      ctx.rotate(r);
+      roundRect(ctx, -1.2, -h, 2.4, h, 0.8, '#f7cf5a', '#c9a03a', 0.8);
+      ctx.restore();
+    }
+    roundRect(ctx, 9, 15, 14, 3, 1, '#ffffff', null);
+  },
+  kohlchips: (ctx) => {
+    ellipse(ctx, 16, 21, 12.5, 6, '#f2e6cf', '#c9b08f', 1.2);
+    for (const [x, y, r] of [[11, 17, -0.4], [17, 15.5, 0.2], [22, 18, 0.6], [14, 20, 0.9]] as const) {
+      ctx.save();
+      ctx.translate(x, y);
+      ctx.rotate(r);
+      ellipse(ctx, 0, 0, 4.5, 3, '#8fbf5a', darken('#8fbf5a', 0.3), 0.9);
+      ellipse(ctx, -1, -0.5, 1.6, 0.9, '#c9a03a');
+      ctx.restore();
+    }
+  },
+  krautsalat: (ctx) => {
+    ellipse(ctx, 16, 19, 12.5, 7, '#8ac8ff', darken('#8ac8ff', 0.3), 1.4);
+    ellipse(ctx, 16, 16, 10, 4.5, '#e9f2d6', '#b9d39a', 1);
+    ctx.strokeStyle = '#a9c48a';
+    ctx.lineWidth = 0.8;
+    for (const [x, y] of [[11, 15], [14, 17], [18, 15], [21, 16.5], [16, 14]] as const) {
+      ctx.beginPath();
+      ctx.moveTo(x - 2, y);
+      ctx.quadraticCurveTo(x, y - 1.4, x + 2, y);
+      ctx.stroke();
+    }
+    for (const [x, y] of [[13, 16], [19, 16.5], [16, 15]] as const) ellipse(ctx, x, y, 1.2, 0.6, '#f59a3a');
+    roundRect(ctx, 4, 18, 24, 7, 3.5, '#8ac8ff', darken('#8ac8ff', 0.3), 1.2);
+  },
+  kohleintopf: (ctx) => {
+    ellipse(ctx, 16, 17, 12, 6.5, '#d9c48a', darken('#c9a96a', 0.3), 1.2);
+    for (const [x, y, c] of [[11, 16, '#a9d38a'], [16, 15, '#f2e0b0'], [21, 16.5, '#f59a3a'], [14, 18, '#a9d38a'], [19, 18.5, '#f2e0b0']] as const) ellipse(ctx, x, y, 2.2, 1.4, c, darken(c, 0.25), 0.6);
+    roundRect(ctx, 4, 17, 24, 9, [1, 1, 9, 9], '#8a6a9e', darken('#8a6a9e', 0.35), 1.3);
+    for (const x of [10, 16, 22]) ellipse(ctx, x, 21.5, 1, 1, '#f7f5ec');
+  },
   keksrezept: (ctx) => {
     roundRect(ctx, 6, 4, 20, 25, 3, '#fff8e6', '#d9c4a0', 1.2);
     ctx.strokeStyle = '#c9b08f';

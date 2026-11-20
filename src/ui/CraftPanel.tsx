@@ -19,10 +19,11 @@ const TEXT = {
   werkbank: { title: '🔨 Ludwigs Werkbank', intro: 'Aus Ästen, Steinen, Muscheln & Blumen wird etwas Schönes.', button: '🔨 Bauen', done: 'gebaut! Ab in die Tasche – aufstellen mit „Einrichten“.' },
   apotheke: { title: '🌿 Apotheke von Dr. Lars', intro: '„Tee hilft immer. Sagt Oma. Und ausnahmsweise geb ich ihr recht.“', button: '🫖 Aufbrühen', done: 'aufgebrüht! Wohl bekomm\'s!' },
   herd: { title: '🍳 Linas Küche', intro: 'Lina kocht für ihr Leben gern. Heute wird es bestimmt lecker!', button: '🍳 Kochen', done: 'gekocht! Riecht das gut! Ab in die Tasche.' },
+  airfryer: { title: '🍟 Linas AirFryer', intro: 'Knusprig mit ganz wenig Öl. Lina liebt dieses Gerät.', button: '🍟 Knusprig machen', done: 'fertig! Knusprig und duftend. Ab in die Tasche.' },
   kueche: { title: '👨‍🍳 Kochstudio „Chez Jens“', intro: '„Kochen ist wie Malen, chérie – ein Klecks hiervon, ein Klecks davon!“', button: '🍳 Kochen', done: 'gekocht! Magnifique! Ab in die Tasche.' },
 };
 
-export function CraftPanel({ session, station = 'werkbank' }: { session: Session; station?: 'werkbank' | 'kueche' | 'apotheke' | 'herd' }) {
+export function CraftPanel({ session, station = 'werkbank' }: { session: Session; station?: 'werkbank' | 'kueche' | 'apotheke' | 'herd' | 'airfryer' }) {
   const [group, setGroup] = useState<'alle' | 'bauen' | 'blumen'>('alle');
   const ALL = RECIPES.filter((r) => (r.station ?? 'werkbank') === (station === 'herd' ? 'kueche' : station));
   // An der Werkbank gibt es zwei Reiter: Bauen & Blumen binden
