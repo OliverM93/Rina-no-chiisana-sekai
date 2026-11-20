@@ -39,7 +39,7 @@ export const OLI: NpcDef = {
     { from: '23:30', label: 'schläft', activity: { kind: 'zuhause', sleeping: true } },
   ],
   preferences: {
-    loves: ['ruehrei', 'fischbroetchen', 'ei', 'hering', 'dorsch', 'keks', 'glitzerstein', 'kuerbissuppe', 'strauss-rosen', 'strauss-schwarz'],
+    loves: ['airfryer-rippchen', 'ruehrei', 'fischbroetchen', 'ei', 'hering', 'dorsch', 'keks', 'glitzerstein', 'kuerbissuppe', 'strauss-rosen', 'strauss-schwarz'],
     likes: ['wachtelei', 'apfel', 'birne', 'pfirsich', 'barsch', 'scholle', 'bachforelle', 'makrele', 'sonnenblume', 'rose', 'hirschkaefer', 'stein', 'tomate', 'tomatensalat', 'ratatouille', 'kartoffelsuppe', 'strauss-bunt', 'strauss-sonne', 'raeuchermakrele', 'dorsch-gemuese'],
     dislikes: ['weinbergschnecke', 'ohrenqualle'],
   },
@@ -137,6 +137,7 @@ export const OLI: NpcDef = {
   },
   dailyTreat: { itemId: 'keks', chance: 0.25, lines: ['Ach, warte – ich hab dir was gebacken!', 'Selbstgemacht. Nach Omas Rezept. Sie sagt, ihrer ist besser. Sie hat recht.'] },
   letters: [
+    { id: 'airfryer', subject: 'Für deine Küche', body: 'Lini,\n\nich hab dir einen AirFryer besorgt. Ich weiß doch, wie sehr du Rippchen liebst. Und Pommes. Und eigentlich alles, was knusprig ist.\n\nStell ihn auf die Küchenzeile oder einen Tisch. Ich deck dann den Tisch.\n\nDein Oli 🍟💕', gift: { itemId: 'airfryer', count: 1 } },
     { id: 'tasse-schwarz', subject: 'Für dein Regal', body: 'Lini,\n\nich hab diese Tasse gesehen und musste an dich denken: komplett schwarz, mit goldenem Emblem. Ich weiß, du hast schon viele – aber die hier passt einfach zu dir. Schwarz, schlicht, mit einem kleinen Glanz.\n\nStell sie neben die anderen. Und wenn du sie benutzt, mach ich uns einen Kaffee rein.\n\nDein Oli ☕💕', gift: { itemId: 'tasse-klassik-schwarz', count: 1 } },
     { id: 'vergissmeinnicht-rosa', subject: 'Für unser Beet', body: 'Lini,\n\nich hab rosa Vergissmeinnicht-Samen gefunden! Rosa! Ich wusste gar nicht, dass es das gibt.\n\nWenn du sie neben die blauen pflanzt, kommt vielleicht etwas Lila raus. Wie der Himmel an unserer Herzbank. Also … fast.\n\nDein Oli 💕', gift: { itemId: 'samen-vergissmeinnicht-rosa', count: 2 } },
     { id: 'zettel', subject: 'Zettel am Kühlschrank', body: 'Lini,\n\nbin beim Training. Kaffee steht in der Kanne, noch warm.\n\nHab einen schönen Tag! 💕\n\nOli', gift: { itemId: 'keks', count: 1 } },
@@ -166,7 +167,7 @@ export const OLI_WELCOME: readonly string[] = [
   'Okay, eigentlich mit einem Koffer, zwei Hanteln und meinem Computer. Das Wichtigste eben.',
   'Ich hab dich so vermisst.',
   'Und jetzt wohnen wir zusammen. In deinem kleinen Häuschen. Ich freu mich so!',
-  'Meinen Schreibtisch und die Hantelbank hab ich dir in die Tasche gepackt – stell sie hin, wo du magst. Du hast das bessere Auge dafür.',
+  'Meinen Schreibtisch, die Hantelbank und einen AirFryer für dich hab ich dir in die Tasche gepackt – stell sie hin, wo du magst. Du hast das bessere Auge dafür.',
   STYLE_ARRIVAL_LINES.oli,
 ];
 

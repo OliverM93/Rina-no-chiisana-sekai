@@ -33,7 +33,7 @@ export const OLAF: NpcDef = {
   ],
   preferences: {
     loves: ['hering', 'dorsch', 'glitzerstein', 'teeservice', 'fischbroetchen', 'kartoffelsuppe'],
-    likes: ['ei', 'wachtelei', 'apfel', 'birne', 'scholle', 'barsch', 'stein', 'tulpe', 'keks', 'kartoffel', 'kraeuterquark', 'tomatensalat', 'strauss-bunt', 'strauss-rosen', 'strauss-kraeuter', 'karpfen-kartoffeln', 'scholle-kartoffel'],
+    likes: ['krautsalat', 'ei', 'wachtelei', 'apfel', 'birne', 'scholle', 'barsch', 'stein', 'tulpe', 'keks', 'kartoffel', 'kraeuterquark', 'tomatensalat', 'strauss-bunt', 'strauss-rosen', 'strauss-kraeuter', 'karpfen-kartoffeln', 'scholle-kartoffel'],
     dislikes: ['waldameise', 'ohrenqualle', 'weinbergschnecke'],
   },
   dialogue: {
@@ -109,6 +109,7 @@ export const OLAF: NpcDef = {
     atHomeSleeping: [['Alles still. Auf der Tür klebt ein Zettel: „Dorfkasse ab 9 Uhr geöffnet. Bitte nicht klopfen. Danke! – Olaf“']],
     goodbye: ['Bis später, mein Schatz!', 'Pass auf dich auf!', 'Und immer schön die Quittungen aufheben!'],
   },
+  dailyTreat: { itemId: 'rippchen', count: 2, chance: 0.2, lines: ['Ach, Lina – beim Metzger waren Rippchen im Angebot. Zwei hab ich dir mitgebracht.', 'Den Kassenbon hab ich behalten. Für die Statistik.'] },
   letters: [
     { id: 'sonnenblumen-rot', subject: 'Rote Sonnenblumen', body: 'Liebe Lina,\n\nein Kollege vom Amt hat mir rote Sonnenblumen-Samen mitgebracht. Ich hab dreimal nachgefragt, ob sie wirklich rot werden. Er hat dreimal „ja“ gesagt.\n\nGelb und Rot nebeneinander, heißt es, ergibt Orange. Ich glaube das nicht. Beweis es mir.\n\nPapa', gift: { itemId: 'samen-sonnenblume-rot', count: 2 } },
     { id: 'tipp', subject: 'Ein kleiner Spartipp', body: 'Liebe Lina,\n\nwer jeden Tag ein paar Muscheln verkauft, hat am Ende des Monats eine ordentliche Summe. Kleinvieh macht auch Mist!\n\nDein Papa' },

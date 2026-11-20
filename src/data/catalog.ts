@@ -208,6 +208,7 @@ const FURNITURE_META: Record<string, Row> = {
   stehlampe: ['moebel', 'lampen'],
   fernseher: ['moebel', 'technik'],
   herd: ['moebel', 'technik'],
+  airfryer: ['moebel', 'technik'],
   sofa: ['moebel', 'sofas'],
   bett: ['moebel', 'betten'],
   wandregal: ['moebel', 'regale', ['skandinavisch']],
