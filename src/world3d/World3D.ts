@@ -2763,7 +2763,7 @@ export class World3D {
         title: oli.def.name,
         lines: OLI_WELCOME.map((l) => fillPlaceholders(l, ctx)),
         onClose: () => {
-          this.giveOrDropAll([{ itemId: 'schreibtisch-pc', count: 1 }, { itemId: 'hantelbank', count: 1 }]);
+          this.giveOrDropAll([{ itemId: 'schreibtisch-pc', count: 1 }, { itemId: 'hantelbank', count: 1 }, { itemId: 'airfryer', count: 1 }]);
           // Oli startet mit einem Herz (und schickt gleich seinen ersten Herz-Brief)
           addFriendship(this.session, 'oli', 40);
           this.session.setFlag('oliBegruesst');

@@ -84,7 +84,7 @@ Wetter und Feste laufen nach echter Zeit.
   **Kohleintopf** am Herd (gelernt bei der ersten Ernte). **AirFryer** (`airfryer`, 950 ⭐, Katalog „Küche & Technik“, klein – passt
   auf Tisch oder Küchenzeile) ist eine **eigene Kochstation** (`station: 'airfryer'`, Panel „🍟 Linas AirFryer“): **Knusprige Rippchen**
   (2 Rippchen + Krautsalat), **AirFryer-Pommes**, **Kohlchips** – alle von Anfang an bekannt. **Rippchen** packt Jens nach dem
-  **Sonntagsessen** ein (2 Stück, `dinnerTakeaway` in `game/dinner.ts`). Oli liebt die knusprigen Rippchen, Oma den Kohleintopf.
+  **Sonntagsessen** ein (2 Stück, `dinnerTakeaway` in `game/dinner.ts`); außerdem bringt **Olaf** ab und zu zwei vom Metzger mit (`dailyTreat`, 20 %). Den **AirFryer schenkt Oli** (Brief; in neuen Spielen gleich beim Einzug), kaufen kann man ihn trotzdem. Oli liebt die knusprigen Rippchen, Oma den Kohleintopf.
   **Sträuße & Blumendeko (Phase 4):** `data/straeusse.ts` – an Ludwigs Werkbank gibt es den Reiter „💐 Blumen binden“ (`RecipeDef.group:
   'blumen'`). **7 Sträuße** (Rosen, Sonnenblumen, Bunter Frühling, Lavendel, Kräuterbund, Mischfarben, Schwarz) aus Blumen/Kräutern vom
   eigenen Beet; die seltenen (Mischfarben `tulpe-orange`, Schwarz `rose-schwarz`) lernt Lina beim ersten Erhalt der Mischfarbe. Sträuße sind

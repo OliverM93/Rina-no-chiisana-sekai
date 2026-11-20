@@ -39,6 +39,22 @@ describe('Linas Küche: Kohl, AirFryer, Rippchen', () => {
     expect(recipeWhere(air[0])).toContain('AirFryer');
   });
 
+  it('kein AirFryer-Gericht ist ein Wert-Ausreißer (höchstens 6,5-fach der Zutaten)', () => {
+    for (const r of RECIPES.filter((x) => x.station === 'airfryer' || ['krautsalat', 'kohleintopf'].includes(x.id))) {
+      const cost = r.ingredients.reduce((a, i) => a + (itemDef(i.itemId)?.price ?? 0) * i.count, 0);
+      const value = (itemDef(r.result)?.price ?? 0) * (r.count ?? 1);
+      expect(value / cost, r.id).toBeLessThanOrEqual(6.5);
+    }
+  });
+
+  it('den AirFryer schenkt Oli, Rippchen bringt auch Olaf ab und zu mit', async () => {
+    const { OLI } = await import('../data/npcs/oli');
+    const { OLAF } = await import('../data/npcs/olaf');
+    expect(OLI.letters.some((l) => l.gift?.itemId === 'airfryer')).toBe(true);
+    expect(OLAF.dailyTreat?.itemId).toBe('rippchen');
+    expect(OLAF.dailyTreat?.count).toBe(2);
+  });
+
   it('Rippchen gibt Jens nach dem Sonntagsessen mit', () => {
     const s = newTestSession();
     const lines = dinnerTakeaway(s);

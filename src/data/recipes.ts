@@ -71,7 +71,7 @@ export const RECIPES: readonly RecipeDef[] = [
   { id: 'kohleintopf', station: 'kueche', result: 'kohleintopf', ingredients: [{ itemId: 'kohl', count: 1 }, { itemId: 'kartoffel', count: 2 }, { itemId: 'karotte', count: 1 }], fund: 'kohl', hint: 'Pflanz Kohl im Beet …' },
   // AirFryer (Linas Küchengerät aus dem Möbelkatalog – kocht nur dort)
   { id: 'airfryer-rippchen', station: 'airfryer', result: 'airfryer-rippchen', ingredients: [{ itemId: 'rippchen', count: 2 }, { itemId: 'krautsalat', count: 1 }], start: true, hint: '' },
-  { id: 'airfryer-pommes', station: 'airfryer', result: 'airfryer-pommes', count: 2, ingredients: [{ itemId: 'kartoffel', count: 2 }], start: true, hint: '' },
+  { id: 'airfryer-pommes', station: 'airfryer', result: 'airfryer-pommes', ingredients: [{ itemId: 'kartoffel', count: 2 }], start: true, hint: '' },
   { id: 'kohlchips', station: 'airfryer', result: 'kohlchips', count: 2, ingredients: [{ itemId: 'kohl', count: 1 }], start: true, hint: '' },
   { id: 'kuerbissuppe', station: 'kueche', result: 'kuerbissuppe', ingredients: [{ itemId: 'kuerbis', count: 1 }, { itemId: 'thymian', count: 1 }], fund: 'kuerbis', hint: 'Pflanz Kürbis im Beet …' },
   // Winter: Rezeptkarten aus Olis Adventskalender
