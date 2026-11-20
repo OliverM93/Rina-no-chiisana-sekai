@@ -95,10 +95,10 @@ export const MEMORIES: readonly Memory[] = [
   { id: 'lars-gewaechshaus', npc: 'lars', tag: 'gewaechshaus', text: ['Ein Gewächshaus: Kräuter im Winter. Gegen Husten, Schnupfen und schlechte Laune. Gute Investition!'] },
 
   { id: 'gisela-matteo', npc: 'gisela', tag: 'matteo', text: ['Ein Pfarrer als Brieffreund für Thalia? Na, das ist wenigstens ein anständiger Mensch.', 'Ich will den Brief sehen. Ich les ihn gegen. Mit meiner Brille. Die ich nicht habe. Egal.'] },
-  { id: 'jens-matteo', npc: 'jens', tag: 'matteo', text: ['Ein Italiener! Ein Pater! Thalia schreibt Briefe in die Berge – quelle romance, ma chérie!', 'Ich schicke ihm eine Postkarte aus Paris. Nur zur Konkurrenz. Mit Herz, natürlich.'] },
+  { id: 'jens-matteo', npc: 'jens', tag: 'matteo', text: ['Ein Italiener! Ein Pater! Thalia schreibt Briefe in die Berge – quelle romance!', 'Ich schicke ihm eine Postkarte aus Paris. Nur zur Konkurrenz. Mit Herz, natürlich.'] },
   { id: 'lars-matteo', npc: 'lars', tag: 'matteo', text: ['Thalia und Pater Matteo. Ich hab ärztlich nichts einzuwenden – außer, dass sie ihm zu viele Kekse schickt. Zucker, Schwesterherz.'] },
   // ---- Thalia ----
-  { id: 'thalia-buch-10', npc: 'thalia', tag: 'buch-10', text: ['Zehn Arten im Sammelbuch! Du bist offiziell Feldforscherin. Ich hab einen Stempel dafür. Fast.'] },
+  { id: 'thalia-buch-10', npc: 'thalia', tag: 'buch-10', text: ['Zehn Arten im Sammelbuch! Du bist offiziell Feldforscherin. Ich hab sogar einen Stempel dafür. Selbst gebastelt.'] },
   { id: 'thalia-arbeitszimmer', npc: 'thalia', tag: 'haus-arbeitszimmer', text: ['In deinem Arbeitszimmer fehlt nur noch eine Karte an der Wand. Ich such dir eine schöne aus. Ich muss das mal kartieren.'] },
   { id: 'thalia-schwarz', npc: 'thalia', tag: 'schwarze-blume', text: ['Eine schwarze Blume im Beet? Das ist biologisch fast unmöglich. Ich liebe es!'] },
   { id: 'thalia-monat', npc: 'thalia', tag: 'monat-1', text: ['Ein Monat {dorf}! Ich hab schon einen Plan, wohin wir als Nächstes wandern. Ich hab immer einen Plan.'] },
@@ -160,5 +160,5 @@ export const MEMORIES: readonly Memory[] = [
   { id: 'jens-memphis', npc: 'jens', tag: 'stil-memphis', text: ['Memphis! Kringel, Kegel, Konfetti – Lina, das ist Kunst, auf der man sitzen kann!', 'Ich bin begeistert. Ich bin ergriffen. Ich setz mich mal.'] },
   { id: 'christin-memphis', npc: 'christin', tag: 'stil-memphis', text: ['Sehr … bunt. Ich sortiere es im Kopf gerade nach Farben.', 'Doch, es ist schön. Und die Kringel liegen sogar alle parallel.'] },
   { id: 'gisela-bauhaus', npc: 'gisela', tag: 'stil-bauhaus', text: ['Stahlrohr und Leder! Kind, das ist ja wie bei uns in Dessau. Da standen die überall.', 'Ich hab früher immer gesagt, das sieht aus wie Zahnarztstühle. Jetzt find ich’s schön. Das bleibt unter uns.'] },
-  { id: 'jens-bauhaus', npc: 'jens', tag: 'stil-bauhaus', text: ['Bauhaus! Form folgt Funktion, ma chérie – und bei dir folgt sie auch noch dem Herzen.', 'Frag mal Mutti nach Dessau. Aber setz dich vorher. Das dauert.'] },
+  { id: 'jens-bauhaus', npc: 'jens', tag: 'stil-bauhaus', text: ['Bauhaus! Form folgt Funktion – und bei dir folgt sie auch noch dem Herzen.', 'Frag mal Mutti nach Dessau. Aber setz dich vorher. Das dauert.'] },
 ];

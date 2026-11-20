@@ -52,7 +52,7 @@ export const FEST_GIFTS: Partial<Record<FestivalId, Record<string, FestGift>>> =
 export const FEST_LINES: Partial<Record<FestivalId, Record<string, readonly string[]>>> = {
   advent: {
     gisela: ['Adventszeit! Da wird gebacken.', 'Zimtsterne, Vanillekipferl, Butterplätzchen. Wer mithilft, darf naschen. Wer nicht mithilft, auch.'],
-    jens: ['Die Adventszeit, chérie!', 'Ich hab das Bistro geschmückt. Mit 400 Lichtern. Zu viel? Pas du tout!'],
+    jens: ['Die Adventszeit!', 'Ich hab das Bistro geschmückt. Mit 400 Lichtern. Zu viel? Pas du tout!'],
     oli: ['Lini, ich hab einen Adventskalender für dich gebastelt!', '24 Türchen. In jedem ist ein Zettel: „Ich hab dich lieb“. Ich weiß, sehr kreativ.'],
   },
   silvester: {

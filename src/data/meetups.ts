@@ -119,7 +119,7 @@ export const MEETUPS: readonly MeetupDef[] = [
     ],
     replies: {
       thalia: ['Jens malt mich gerade. Ich halte still. Ich hab gesagt, er soll die Muskeln nicht zu klein malen.', 'Jens erklärt mir den Farbkreis, ich ihm den Beinbeuger. Wir sind quitt.'],
-      jens: ['Ma chérie, Thalia zeigt mir seit zehn Minuten Dehnübungen. Ich male sie trotzdem schöner.', 'Thalia hält still, ich male. Das wird ä Meisterwerk, nu glar. Wenn sie sich nicht bewegt.'],
+      jens: ['Thalia zeigt mir seit zehn Minuten Dehnübungen. Ich male sie trotzdem schöner.', 'Thalia hält still, ich male. Das wird ä Meisterwerk, nu glar. Wenn sie sich nicht bewegt.'],
     },
   },
   {
