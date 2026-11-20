@@ -755,6 +755,18 @@ export function makeFurniture(itemId: string, links: FenceLinks = { n: false, e:
       seatY = 0.46;
       break;
     }
+    case 'airfryer': {
+      // rund, schwarz, vorne eine Schublade mit Griff, oben ein leuchtendes Bedienfeld
+      const body = '#26252b';
+      g.add(c(0.13, 0.03, '#3a3a44', 0, 0.015, 0));
+      g.add(c(0.125, 0.26, body, 0, 0.16, -0.005));
+      g.add(s(0.125, 0.04, 0.125, body, 0, 0.29, -0.005));
+      g.add(b(0.17, 0.11, 0.06, '#33323a', 0, 0.1, 0.09));
+      g.add(b(0.08, 0.025, 0.04, '#8a8a92', 0, 0.12, 0.14));
+      g.add(b(0.12, 0.05, 0.01, '#121216', 0, 0.255, 0.115));
+      g.add(b(0.05, 0.02, 0.012, glowMat('#ff9a4a'), 0, 0.255, 0.121));
+      break;
+    }
     case 'kaffeemaschine': {
       g.add(b(0.26, 0.04, 0.22, '#3a3a44', 0, 0.02, 0));
       g.add(b(0.26, 0.3, 0.12, '#c9cbd3', 0, 0.17, -0.05));

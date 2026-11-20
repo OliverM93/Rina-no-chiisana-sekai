@@ -75,7 +75,7 @@ export const DESIGN_STYLES: readonly DesignStyleDef[] = [
 export const STYLE_ARRIVAL_LINES: Readonly<Record<'olaf' | 'oli' | 'jens' | 'lars' | 'thalia', string>> = {
   olaf: 'Und weil Christin Ordnung liebt: Im Möbelkatalog gibt es jetzt Minimalismus und Skandinavisch – nur das Nötige, schön sortiert.',
   oli: 'Ach ja, im Möbelkatalog gibt es jetzt Space Age und Cyberpunk. Rein zufällig meine Lieblingsstile. 😇',
-  jens: 'Und im Möbelkatalog gibt es jetzt Französisches Bistro, Art déco und Memphis – très chic, ma chérie!',
+  jens: 'Und im Möbelkatalog gibt es jetzt Französisches Bistro, Art déco und Memphis – Glitzer für alle!',
   lars: 'Und für jedes Loft: Im Möbelkatalog gibt es jetzt Industrial – Backstein, Stahl, olle Fabriklampen. Sehr ich.',
   thalia: 'Ich hab dem Möbelkatalog übrigens Dark Academia und Brutalismus mitgebracht. Beton ist gemütlich, wenn man genug Kissen hat!',
 };
@@ -208,6 +208,7 @@ const FURNITURE_META: Record<string, Row> = {
   stehlampe: ['moebel', 'lampen'],
   fernseher: ['moebel', 'technik'],
   herd: ['moebel', 'technik'],
+  airfryer: ['moebel', 'technik'],
   sofa: ['moebel', 'sofas'],
   bett: ['moebel', 'betten'],
   wandregal: ['moebel', 'regale', ['skandinavisch']],

@@ -28,7 +28,7 @@ export const DRINKS: readonly Drink[] = [
   { id: 'cappuccino', name: 'Cappuccino', icon: '☕', milk: true, kick: 180, lines: ['Ein Cappuccino mit einer festen Haube aus Milchschaum. Dazu etwas Kakaopulver. Himmlisch.'] },
   { id: 'latte-macchiato', name: 'Latte Macchiato', icon: '🥛', milk: true, kick: 180, lines: ['Latte Macchiato in drei Schichten: Milch, Espresso, Schaum. Du schaust ihm eine Weile beim Schichten zu.'] },
   { id: 'flat-white', name: 'Flat White', icon: '☕', milk: true, kick: 200, lines: ['Ein Flat White mit samtiger Mikroschaum-Milch. Glatt wie ein See.'] },
-  { id: 'herz-latte', name: 'Latte mit Herz', icon: '🤎', milk: true, art: true, kick: 240, lines: ['Auf dem Milchschaum schwimmt ein perfektes Herz. Du traust dich kaum, es kaputt zu trinken. Fast.'] },
+  { id: 'herz-latte', name: 'Latte mit Herz', icon: '🤎', milk: true, art: true, kick: 240, lines: ['Auf dem Milchschaum schwimmt ein perfektes Herz. Du traust dich kaum, es kaputt zu trinken. Erst mal ein Foto.'] },
 ];
 
 export const DRINK_BY_ID: Readonly<Record<string, Drink>> = Object.fromEntries(DRINKS.map((d) => [d.id, d]));

@@ -42,7 +42,7 @@ export const STRAUSS_LINES: Readonly<Record<string, StraussLines>> = {
   jens: {
     thanks: ['Fleurs! Pour moi? Ma chérie, du verwöhnst mich. Ich stelle sie in die schönste Vase des Hauses.'],
     lust: ['Ich träume von einem {strauss}, ma chérie. Fürs Bistro, auf dem Tresen. Nur so eine Idee, nur so!'],
-    lustThanks: ['Ein {strauss}! Magnifique! Genau den habe ich gemeint. Du kannst Gedanken lesen, ma chérie!'],
+    lustThanks: ['Ein {strauss}! Magnifique! Genau den habe ich gemeint. Du kannst Gedanken lesen!'],
   },
   lars: {
     thanks: ['Blumen! Ärztlich verordnet: gute Laune. Danke, Schwesterherz, die kommen in die Praxis.'],

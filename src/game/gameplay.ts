@@ -292,7 +292,7 @@ export function talkToNpc(session: Session, npcId: string): TalkOutcome {
     const treat = npc.dailyTreat;
     if (treat && dayRandom(session, `${npcId}:treat`)() < treat.chance) {
       lines.push(...treat.lines);
-      giveItem(session, treat.itemId, 1);
+      giveItem(session, treat.itemId, treat.count ?? 1);
     }
   } else {
     lines.push(...pickLine([...npc.dialogue.chat, ...memoryLinesFor(session, npcId)], ctx));

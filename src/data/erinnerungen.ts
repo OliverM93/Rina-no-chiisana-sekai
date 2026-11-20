@@ -19,6 +19,13 @@ export interface Memory {
 }
 
 export const MEMORIES: readonly Memory[] = [
+  // ---- Mo auf der Party (Linas Verkupplungsplan – aus Thalia und Mo wird nichts, Mo hat Jule kennengelernt) ----
+  { id: 'thalia-mo', npc: 'thalia', tag: 'mo-kennengelernt', text: ['Wegen Samstag: Ich bin dir nicht böse. Ehrlich.', 'Mo ist nett, und Jule hat Glück. Und ich hab einen neuen Lieblings-Tanzpartner für die Party. Dich.'] },
+  { id: 'oli-mo', npc: 'oli', tag: 'mo-kennengelernt', text: ['Mo hat geschrieben. Er fand den Abend super und Thalia „mega lustig“.', 'Lini … beim nächsten Verkupplungsplan frag ich vorher, ob der Kandidat noch frei ist. Versprochen.'] },
+  { id: 'gisela-mo', npc: 'gisela', tag: 'mo-kennengelernt', text: ['Ich hab gehört, deine Verkupplung ist ins Wasser gefallen, Kind.', 'Wer nicht wagt, der nicht gewinnt. Diesmal hat eben die Jule gewonnen. Die Thalia findet schon noch einen. Ich hab da so ein Gefühl.'] },
+  { id: 'jens-mo', npc: 'jens', tag: 'mo-kennengelernt', text: ['Meine Kleene, das Menü für Thalia und Mo hatte ich schon geplant. Drei Gänge, Kerzenlicht.', 'Nu, dann kochen wir’s eben für uns alle. Liebe geht durch den Magen – Freundschaft ooch.'] },
+  { id: 'lars-mo', npc: 'lars', tag: 'mo-kennengelernt', text: ['Ich hab gehört, Amor hatte am Samstag frei?', 'Ärztlich gesehen geht’s Thalia prächtig. Sie hat mir auf dem Heimweg drei Lieder vorgesungen. Falsch, aber fröhlich.'] },
+
   // ---- Kater (gehört zu Lina, Olaf und Christin; taucht auf, sobald die beiden im Dorf wohnen) ----
   { id: 'olaf-kater-1', npc: 'olaf', tag: 'kater', text: ['Kater hat heute wieder Mäuse gefangen. Drei Stück! Er legt sie mir immer vor die Tür.', 'Ich hab sie nach Größe sortiert. Aus Respekt. Und Christin gerufen.'] },
   { id: 'olaf-kater-2', npc: 'olaf', tag: 'kater', text: ['Ich habe Kater gestern beim Mittagsschlaf auf meinem Aktenordner erwischt. Genau auf dem Bescheid.', 'Fachlich gesehen: ein Katzenhaar im Verfahren. Ich lasse es durchgehen.'] },
@@ -88,10 +95,10 @@ export const MEMORIES: readonly Memory[] = [
   { id: 'lars-gewaechshaus', npc: 'lars', tag: 'gewaechshaus', text: ['Ein Gewächshaus: Kräuter im Winter. Gegen Husten, Schnupfen und schlechte Laune. Gute Investition!'] },
 
   { id: 'gisela-matteo', npc: 'gisela', tag: 'matteo', text: ['Ein Pfarrer als Brieffreund für Thalia? Na, das ist wenigstens ein anständiger Mensch.', 'Ich will den Brief sehen. Ich les ihn gegen. Mit meiner Brille. Die ich nicht habe. Egal.'] },
-  { id: 'jens-matteo', npc: 'jens', tag: 'matteo', text: ['Ein Italiener! Ein Pater! Thalia schreibt Briefe in die Berge – quelle romance, ma chérie!', 'Ich schicke ihm eine Postkarte aus Paris. Nur zur Konkurrenz. Mit Herz, natürlich.'] },
+  { id: 'jens-matteo', npc: 'jens', tag: 'matteo', text: ['Ein Italiener! Ein Pater! Thalia schreibt Briefe in die Berge – quelle romance!', 'Ich schicke ihm eine Postkarte aus Paris. Nur zur Konkurrenz. Mit Herz, natürlich.'] },
   { id: 'lars-matteo', npc: 'lars', tag: 'matteo', text: ['Thalia und Pater Matteo. Ich hab ärztlich nichts einzuwenden – außer, dass sie ihm zu viele Kekse schickt. Zucker, Schwesterherz.'] },
   // ---- Thalia ----
-  { id: 'thalia-buch-10', npc: 'thalia', tag: 'buch-10', text: ['Zehn Arten im Sammelbuch! Du bist offiziell Feldforscherin. Ich hab einen Stempel dafür. Fast.'] },
+  { id: 'thalia-buch-10', npc: 'thalia', tag: 'buch-10', text: ['Zehn Arten im Sammelbuch! Du bist offiziell Feldforscherin. Ich hab sogar einen Stempel dafür. Selbst gebastelt.'] },
   { id: 'thalia-arbeitszimmer', npc: 'thalia', tag: 'haus-arbeitszimmer', text: ['In deinem Arbeitszimmer fehlt nur noch eine Karte an der Wand. Ich such dir eine schöne aus. Ich muss das mal kartieren.'] },
   { id: 'thalia-schwarz', npc: 'thalia', tag: 'schwarze-blume', text: ['Eine schwarze Blume im Beet? Das ist biologisch fast unmöglich. Ich liebe es!'] },
   { id: 'thalia-monat', npc: 'thalia', tag: 'monat-1', text: ['Ein Monat {dorf}! Ich hab schon einen Plan, wohin wir als Nächstes wandern. Ich hab immer einen Plan.'] },
@@ -153,5 +160,5 @@ export const MEMORIES: readonly Memory[] = [
   { id: 'jens-memphis', npc: 'jens', tag: 'stil-memphis', text: ['Memphis! Kringel, Kegel, Konfetti – Lina, das ist Kunst, auf der man sitzen kann!', 'Ich bin begeistert. Ich bin ergriffen. Ich setz mich mal.'] },
   { id: 'christin-memphis', npc: 'christin', tag: 'stil-memphis', text: ['Sehr … bunt. Ich sortiere es im Kopf gerade nach Farben.', 'Doch, es ist schön. Und die Kringel liegen sogar alle parallel.'] },
   { id: 'gisela-bauhaus', npc: 'gisela', tag: 'stil-bauhaus', text: ['Stahlrohr und Leder! Kind, das ist ja wie bei uns in Dessau. Da standen die überall.', 'Ich hab früher immer gesagt, das sieht aus wie Zahnarztstühle. Jetzt find ich’s schön. Das bleibt unter uns.'] },
-  { id: 'jens-bauhaus', npc: 'jens', tag: 'stil-bauhaus', text: ['Bauhaus! Form folgt Funktion, ma chérie – und bei dir folgt sie auch noch dem Herzen.', 'Frag mal Mutti nach Dessau. Aber setz dich vorher. Das dauert.'] },
+  { id: 'jens-bauhaus', npc: 'jens', tag: 'stil-bauhaus', text: ['Bauhaus! Form folgt Funktion – und bei dir folgt sie auch noch dem Herzen.', 'Frag mal Mutti nach Dessau. Aber setz dich vorher. Das dauert.'] },
 ];

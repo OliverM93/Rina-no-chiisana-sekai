@@ -95,7 +95,7 @@ export const BENCH_LINES: Readonly<Record<string, Readonly<Record<BenchMood, rea
     abend: ['Es wird früh dunkel, die Wellen klingen tiefer.', '„Im Herbst sieht man das Meer am besten. Es gibt sich mehr Mühe.“', 'Du ziehst seine Jacke über deine Schultern. Sie riecht nach Kaffee. ☕'],
   },
   winter: {
-    tag: ['Die Bank ist kalt, aber ihr habt Mützen und eine Decke.', '„Eisige Luft, Meeresrauschen, du. Mehr brauch ich nicht.“', 'Euer Atem malt Wölkchen in die Luft. Oli versucht, ein Herz hinzupusten. Fast.'],
+    tag: ['Die Bank ist kalt, aber ihr habt Mützen und eine Decke.', '„Eisige Luft, Meeresrauschen, du. Mehr brauch ich nicht.“', 'Euer Atem malt Wölkchen in die Luft. Oli versucht, ein Herz hinzupusten. Es wird eine Wolke. Er ist trotzdem stolz.'],
     abend: ['Der Himmel ist klar, die ersten Sterne kommen raus.', '„Wenn man lang genug guckt, bewegen sie sich. Sagt Thalia. Ich glaub ihr nicht. Aber ich guck.“', 'Ihr guckt zusammen, bis die Finger kalt sind. ✨'],
   },
 };
