@@ -72,6 +72,7 @@ export type UiPanel =
   | { kind: 'ukulele' }
   | { kind: 'notizbuch' }
   | { kind: 'herd' }
+  | { kind: 'airfryer' }
   | { kind: 'samenstand' }
   | { kind: 'truhe' }
   | { kind: 'foto'; image: string }

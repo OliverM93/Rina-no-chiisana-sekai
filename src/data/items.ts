@@ -102,6 +102,12 @@ const list: ItemDef[] = [
   { id: 'karottensuppe', name: 'Karottensuppe', plural: 'Teller Karottensuppe', category: 'essen', price: 110, description: 'Orange und samtig, mit einem Büschel Petersilie. Lars: „Gut für die Augen.“' },
   { id: 'ratatouille', name: 'Ratatouille', plural: 'Portionen Ratatouille', category: 'essen', price: 190, description: 'Tomate, Zucchini, Basilikum und Thymian – wie in der Provence. Jens weint vor Glück.' },
   { id: 'gruener-salat', name: 'Gemischter Salat', plural: 'Schüsseln gemischter Salat', category: 'essen', price: 100, description: 'Salat, Tomate und Schnittlauch. Knackig und frisch. Christin nickt anerkennend.' },
+  { id: 'rippchen', name: 'Rippchen', plural: 'Rippchen', category: 'essen', price: 60, description: 'Rippchen vom Metzger in Leipzsch, Jens bringt sie zum Sonntagsessen mit. Linas Lieblingsessen – am liebsten aus dem AirFryer.' },
+  { id: 'airfryer-rippchen', name: 'Knusprige Rippchen', plural: 'Portionen knusprige Rippchen', category: 'essen', price: 260, description: 'Aus dem AirFryer: außen knusprig, innen zart, dazu ein Klecks Krautsalat. Linas Lieblingsessen. Oli hat schon den Tisch gedeckt.' },
+  { id: 'airfryer-pommes', name: 'AirFryer-Pommes', plural: 'Portionen AirFryer-Pommes', category: 'essen', price: 90, description: 'Goldgelb und knusprig, mit ganz wenig Öl. Oma hat erst „pfui“ gesagt – und dann die Hälfte gegessen.' },
+  { id: 'kohlchips', name: 'Knusprige Kohlchips', plural: 'Schälchen Kohlchips', category: 'essen', price: 70, description: 'Kohlblätter mit etwas Salz und Paprika, knusprig aus dem AirFryer. Lars nennt sie „ärztlich vertretbare Chips“.' },
+  { id: 'krautsalat', name: 'Krautsalat', plural: 'Schüsseln Krautsalat', category: 'essen', price: 80, description: 'Fein gehobelter Kohl mit Karotte und einem Hauch Essig. Gehört zu Rippchen wie Winston zu Lina.' },
+  { id: 'kohleintopf', name: 'Kohleintopf', plural: 'Teller Kohleintopf', category: 'essen', price: 170, description: 'Kohl, Kartoffeln und Karotten, lange geschmort. Wärmt von innen. Oma sagt: „So hat man das in Dessau gemacht.“' },
   { id: 'kuerbissuppe', name: 'Kürbissuppe', plural: 'Teller Kürbissuppe', category: 'essen', price: 200, description: 'Cremig, orange, mit einem Zweig Thymian. Das Beste an kalten Tagen.' },
   // Aus der Kochshow
   { id: 'apfelpfannkuchen', name: 'Apfelpfannkuchen', plural: 'Apfelpfannkuchen', category: 'essen', price: 110, description: 'Fluffig, mit Apfelscheiben und einer Prise Zimt. Fast so gut wie bei Oma. Psst!' },

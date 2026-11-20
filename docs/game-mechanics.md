@@ -80,6 +80,11 @@ Wetter und Feste laufen nach echter Zeit.
   mit Kräuterquark, Karottensuppe, Ratatouille, Gemischter Salat, Kürbissuppe. Die meisten Rezepte lernt sie bei der **ersten Ernte**
   (`fund`). Bewohner mögen sie (Vorlieben von Jens, Lars, Oma, Olaf, Oli, Christin, Thalia) und erzählen davon im Plausch.
   3D-Pflanzen je Stufe: `makeCrop` in `world3d/models/critters.ts`; Symbole: `CROP_ICONS` in `gfx/nature-icons.ts`, Gerichte in `gfx/items.ts`.
+  **Linas Küche (Nov. 2026):** **Kohl** als siebtes Gemüse (Samen im Sommer & Herbst, einmal ernten) mit **Krautsalat** und
+  **Kohleintopf** am Herd (gelernt bei der ersten Ernte). **AirFryer** (`airfryer`, 950 ⭐, Katalog „Küche & Technik“, klein – passt
+  auf Tisch oder Küchenzeile) ist eine **eigene Kochstation** (`station: 'airfryer'`, Panel „🍟 Linas AirFryer“): **Knusprige Rippchen**
+  (2 Rippchen + Krautsalat), **AirFryer-Pommes**, **Kohlchips** – alle von Anfang an bekannt. **Rippchen** packt Jens nach dem
+  **Sonntagsessen** ein (2 Stück, `dinnerTakeaway` in `game/dinner.ts`). Oli liebt die knusprigen Rippchen, Oma den Kohleintopf.
   **Sträuße & Blumendeko (Phase 4):** `data/straeusse.ts` – an Ludwigs Werkbank gibt es den Reiter „💐 Blumen binden“ (`RecipeDef.group:
   'blumen'`). **7 Sträuße** (Rosen, Sonnenblumen, Bunter Frühling, Lavendel, Kräuterbund, Mischfarben, Schwarz) aus Blumen/Kräutern vom
   eigenen Beet; die seltenen (Mischfarben `tulpe-orange`, Schwarz `rose-schwarz`) lernt Lina beim ersten Erhalt der Mischfarbe. Sträuße sind

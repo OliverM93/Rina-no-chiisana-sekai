@@ -60,7 +60,7 @@ import { DINNER_LINES, DINNER_OPENERS, JENS_WELCOME } from '../data/npcs/jens';
 import { pairChatKey, PAIR_CHATS } from '../data/gespraeche';
 import { GUEST_HOUSES } from '../data/gastHaeuser';
 import { TRAINING_OLI, TRAINING_REPS, TRAINING_SOLO, TRAINING_THALIA, TRAINING_THALIA_ABSENT, TRAINING_THALIA_LEAD } from '../data/training';
-import { dinnerGuests, isDinnerTime } from '../game/dinner';
+import { dinnerGuests, dinnerTakeaway, isDinnerTime } from '../game/dinner';
 import { activeMeetups, joinMeetup, meetupOf, meetupReply } from '../game/meetups';
 import { CHECKUP_GIFTS, CHECKUP_LINES, LARS_WELCOME } from '../data/npcs/lars';
 import { hashString } from '../core/rng';
@@ -3203,6 +3203,7 @@ export class World3D {
       if (pool) lines.push(pool[hashString(`${day}:${id}`) % pool.length]);
       addFriendship(this.session, id, id === 'jens' ? 16 : 10);
     }
+    lines.push(...dinnerTakeaway(this.session));
     lines.push('Nu, war\'s lecker? Nächsten Sonntag wieder, nu glar? Bisous! 💋');
     this.winston?.burst('herz');
     const who = guests.filter((g) => g !== 'jens').map((g) => this.npcs.get(g)?.def.name).filter(Boolean);
@@ -4200,6 +4201,10 @@ export class World3D {
     }
     if (f.def.id === 'herd') {
       this.session.bus.emit('ui:open', { kind: 'herd' });
+      return;
+    }
+    if (f.def.id === 'airfryer') {
+      this.session.bus.emit('ui:open', { kind: 'airfryer' });
       return;
     }
     if (item.itemId === 'witzkalender') {
