@@ -25,16 +25,27 @@ export interface YardArea {
 export const YARD_ID = 'garten';
 export const YARD_INSEL_ID = 'garten-insel';
 
-/** Interaktionsfelder aller Objekte (Kachel-Indizes) */
+/**
+ * Bäume, Felsen und Palmen erreicht man von jeder Seite – es reicht, wenn **eine** Seite frei bleibt.
+ * Ihre Nachbarfelder werden deshalb nicht reserviert (sonst wäre rund um jeden Baum unsichtbar Platz blockiert);
+ * `keepsAccess` prüft stattdessen, dass jeder von ihnen noch von mindestens einer Seite erreichbar ist.
+ */
+const ONE_SIDE_ENOUGH = new Set(['tree', 'rock', 'palme']);
+
+function interactIndices(map: WorldMap, o: WorldMap['objects'][number]): number[] {
+  const out: number[] = [];
+  for (const [dx, dy] of OBJECT_KINDS[o.kind].interactFrom ?? []) {
+    const x = o.x + dx;
+    const y = o.y + dy;
+    if (x >= 0 && y >= 0 && x < map.width && y < map.height) out.push(y * map.width + x);
+  }
+  return out;
+}
+
+/** Interaktionsfelder, die frei bleiben müssen (Kachel-Indizes) – ohne Bäume, Felsen, Palmen */
 function interactionTiles(map: WorldMap): Set<number> {
   const out = new Set<number>();
-  for (const o of map.objects) {
-    for (const [dx, dy] of OBJECT_KINDS[o.kind].interactFrom ?? []) {
-      const x = o.x + dx;
-      const y = o.y + dy;
-      if (x >= 0 && y >= 0 && x < map.width && y < map.height) out.add(y * map.width + x);
-    }
-  }
+  for (const o of map.objects) if (!ONE_SIDE_ENOUGH.has(o.kind)) for (const i of interactIndices(map, o)) out.add(i);
   return out;
 }
 
@@ -104,6 +115,15 @@ export function keepsAccess(map: WorldMap, area: YardArea, blockedTiles: Iterabl
     if (!before[i] || after[i] || extra.has(i)) continue;
     // abgeschlossene Ecken im eigenen Garten sind erlaubt – außer vor Briefkasten & Co.
     if (!inYard(i) || inter.has(i)) return false;
+  }
+  // Bäume, Felsen & Palmen: mindestens eine Seite bleibt frei und erreichbar (wenn das vorher so war)
+  for (const o of map.objects) {
+    if (!ONE_SIDE_ENOUGH.has(o.kind)) continue;
+    const sides = interactIndices(map, o);
+    if (!sides.some((i) => extra.has(i))) continue; // nichts in der Nähe verändert
+    const was = sides.some((i) => before[i]);
+    const still = sides.some((i) => after[i] && !extra.has(i));
+    if (was && !still) return false;
   }
   return true;
 }

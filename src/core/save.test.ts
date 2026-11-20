@@ -7,6 +7,8 @@ import {
   exportFileName,
   MemoryStorage,
   migrate,
+  MIGRATIONS,
+  YARD_GROWTH_NORTH,
   parseSave,
   SAVE_KEY,
   SAVE_VERSION,
@@ -97,6 +99,13 @@ describe('Migrationen', () => {
 
   it('bricht ab, wenn eine Migration fehlt', () => {
     expect(() => migrate({ version: 1 }, {}, 2)).toThrow();
+  });
+
+  it('v20 → v21: Gartensachen rücken mit, weil der Garten nach Norden gewachsen ist', () => {
+    const out = MIGRATIONS[20]({ version: 20, yard: { id: 'garten', items: [{ uid: 'a', itemId: 'hochbeet', x: 3, y: 4, rot: 0 }] } });
+    const items = (out.yard as { items: Array<{ x: number; y: number }> }).items;
+    expect(items[0]).toMatchObject({ x: 3, y: 4 + YARD_GROWTH_NORTH });
+    expect(MIGRATIONS[20]({ version: 20 })).toEqual({ version: 20 });
   });
 });
 

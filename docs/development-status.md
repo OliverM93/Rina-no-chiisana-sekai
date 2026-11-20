@@ -286,6 +286,7 @@ Legende: ✅ erledigt · 🚧 in Arbeit · ⬜ geplant
 - ✅ **Winston-Tricks (Nov. 2026):** fünf Tricks (Sitz, Pfötchen, Rolle, Männchen, Singen), geübt mit Omas Keks, vorführbar über das neue Winston-Menü.
 - ✅ **Gemeinsame Unternehmungen (Nov. 2026):** je Bewohner ein kleines, wiederholbares Spiel im Gesprächsmenü (Memory mit Oma, Training mit Thalia mit Kniebeugen in 3D, Puzzle mit Christin, Zocken mit Oli in 5 Leveln, Kissen-Sumo mit Lars in 8 Leveln, Rätselecke mit Papa, Malen mit Jens mit gemalten Bildern) – gegen Leerlauf im Spätspiel, kein Scheitern, Herzen einmal am Tag je Person, erstes Mal im Album (D48).
 - ✅ **Glühwürmchen (Nov. 2026):** Frühlings- und Sommerabende, rein als Stimmung.
+- ✅ **Mehr Platz im Garten (Nov. 2026):** Garten 16 × 15 statt 16 × 11 (Spielstand v21, alte Gartensachen rücken mit), Bäume sperren nur noch eine Seite statt aller vier, Kräuterspirale aus dem Garten verlegt, beim Aufstellen steht der Grund, warum etwas nicht passt.
 - ✅ **Feinschliff Floskeln (Nov. 2026):** Jens sagt seltener „chérie“ (83 → ~45, dafür auch „meine Kleene“), 14 „Fast.“-Pointen durch konkrete kleine Beobachtungen ersetzt.
 - ✅ **Mo zu Besuch (Nov. 2026):** Lina lädt Mo über Oli zur Samstagsparty ein, um Thalia zu verkuppeln – Mo hat aber Jule kennengelernt. Thalia nimmt es mit Humor, Album-Eintrag und Reaktionen der Familie; danach kommt Mo ab und zu samstags vorbei.
 - ✅ **Linas Küche (Nov. 2026):** Kohl im Beet (Krautsalat, Kohleintopf), AirFryer als eigene Kochstation (knusprige Rippchen, Pommes, Kohlchips), Rippchen von Jens nach dem Sonntagsessen.

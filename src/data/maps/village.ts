@@ -112,7 +112,7 @@ export const VILLAGE_OBJECTS: readonly MapObjectDef[] = [
   // Orte aus den Herzenswünschen (`data/wishes.ts`) – erscheinen, wenn der Wunsch erfüllt ist
   { id: 'beet-gisela', kind: 'landmark', variant: 'blumenbeet', x: 41, y: 17, w: 3, h: 1, requires: 'wunsch-oma-beet' },
   { id: 'angelsteg', kind: 'steg', x: 39, y: 9, w: 2, h: 1, requires: 'wunsch-olaf-steg' },
-  { id: 'kraeuterspirale', kind: 'landmark', variant: 'kraeuterspirale', x: 15, y: 16, w: 2, h: 1, requires: 'wunsch-christin-kraeuter' },
+  { id: 'kraeuterspirale', kind: 'landmark', variant: 'kraeuterspirale', x: 17, y: 21, w: 2, h: 1, requires: 'wunsch-christin-kraeuter' }, // südlich des Hauptwegs, zwischen Linas und Christins Haus – nicht im Garten, damit dort kein unsichtbarer Platz reserviert ist
   { id: 'herzbank', kind: 'bench', variant: 'herz', x: 30, y: 32, requires: 'wunsch-oli-bank' },
   { id: 'aquarium-jens', kind: 'landmark', variant: 'aquarium', x: 53, y: 17, w: 2, h: 1, requires: 'wunsch-jens-aquarium' },
   { id: 'insektenhotel', kind: 'landmark', variant: 'insektenhotel', x: 28, y: 13, w: 1, h: 1, requires: 'wunsch-lars-insekten' },

@@ -22,7 +22,7 @@ import { createInventory, type Inventory, normalizeInventory, STORAGE_SIZE } fro
 import { createMailbox, type Mailbox, normalizeMailbox } from './mail';
 import { type DayMonth, DEFAULT_LINA_BIRTHDAY, formatIsoDay } from './time';
 
-export const SAVE_VERSION = 20;
+export const SAVE_VERSION = 21;
 export const SAVE_KEY = 'rina-no-chiisana-sekai.save';
 export const BACKUP_KEY = 'rina-no-chiisana-sekai.save.backup';
 
@@ -274,7 +274,17 @@ export const MIGRATIONS: Record<number, (old: RawSave) => RawSave> = {
   18: (old) => ({ ...old }),
   // v19 → v20 (Winston-Tricks): Winston merkt sich gelernte Tricks (`pet.tricks`, `pet.practice`). `normalizePet` ergänzt sie leer.
   19: (old) => ({ ...old }),
+  // v20 → v21 (größerer Garten): Linas Garten beginnt drei Reihen weiter oben (y 8 → 5). Gartensachen liegen relativ
+  // zur linken oberen Ecke – sie rücken um drei Reihen nach unten und stehen damit in der Welt genau dort wie vorher.
+  20: (old) => {
+    const yard = old.yard as { items?: Array<Record<string, unknown>> } | undefined;
+    if (!yard || !Array.isArray(yard.items)) return { ...old };
+    return { ...old, yard: { ...yard, items: yard.items.map((it) => (it && typeof it.y === 'number' ? { ...it, y: it.y + YARD_GROWTH_NORTH } : it)) } };
+  },
 };
+
+/** Um so viele Reihen ist Linas Garten in v21 nach Norden gewachsen (siehe `data/yard.ts`) */
+export const YARD_GROWTH_NORTH = 3;
 
 export function migrate(raw: RawSave, migrations = MIGRATIONS, target = SAVE_VERSION): RawSave {
   let current = raw;

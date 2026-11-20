@@ -4,7 +4,11 @@
  */
 import type { YardArea } from '../core/yard';
 
-export const YARD_AREA: YardArea = { x: 1, y: 8, w: 16, h: 11, from: { x: 27, y: 17 } };
+/**
+ * Seit Spielstand v21 größer: drei Reihen Wiese hinter dem Haus (y 5–7) und eine Reihe vor dem Hauptweg (y 19) gehören
+ * dazu – Platz für Beete, Ställe und Deko. Gartensachen alter Spielstände rücken per Migration mit.
+ */
+export const YARD_AREA: YardArea = { x: 1, y: 5, w: 16, h: 15, from: { x: 27, y: 17 } };
 
 /**
  * Der Garten vor der Strandhütte auf der versteckten Insel (Linas Traum: Hütte und Wachtelfarm auf Hawaii).
