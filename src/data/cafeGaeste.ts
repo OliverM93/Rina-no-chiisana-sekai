@@ -96,7 +96,7 @@ export const JENS_CAFE_CHATS: Readonly<Record<string, ReadonlyArray<readonly [st
   ],
   christin: [
     ['Christin, deine Tasse steht schon wieder parallel. Das ist mir ein Fest!', 'Danke, Jens. Dein Löffel liegt übrigens schief.', 'Ich … rücke ihn gleich gerade.'],
-    ['Kräutertee, ma chérie? Vom Haus?', 'Gern. Aber bitte ohne Zucker, ohne Zimt und ohne Überraschungen.'],
+    ['Kräutertee, Christin? Vom Haus?', 'Gern. Aber bitte ohne Zucker, ohne Zimt und ohne Überraschungen.'],
   ],
   oli: [
     ['Oli, mein Lieber, wieder zu viel Espresso?', 'Nur der dritte, Jens.', 'Der dritte. Aha. Ich schreib’s mir auf.'],
@@ -107,7 +107,7 @@ export const JENS_CAFE_CHATS: Readonly<Record<string, ReadonlyArray<readonly [st
     ['Lars, ein Gläschen für die Seele?', 'Nach Feierabend, Jens. Ich bin Arzt, nicht Heiliger.'],
   ],
   thalia: [
-    ['Thalia, ma chérie, noch einen Spritz vor der Party?', 'Nur einen, Jens. Danach wird getanzt.'],
+    ['Thalia, meine Kleene, noch einen Spritz vor der Party?', 'Nur einen, Jens. Danach wird getanzt.'],
     ['Thalia, ich habe dir einen Platz am Fenster reserviert.', 'Für die Landkarte? Die hab ich dabei!'],
   ],
 };

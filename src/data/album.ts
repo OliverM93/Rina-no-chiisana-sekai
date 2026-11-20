@@ -38,7 +38,7 @@ const HEARTS_THREE: Readonly<Record<string, string>> = {
   olaf: 'Papa und ich sind ein richtig gutes Team geworden.',
   christin: 'Christin und ich verstehen uns richtig gut. Ich räume jetzt freiwillig auf. Fast.',
   oli: 'Bei Oli fühlt sich alles nach Zuhause an.',
-  jens: 'Onkel Jens und ich sind richtig dicke. Papa sagt, er ist fast eifersüchtig. Fast.',
+  jens: 'Onkel Jens und ich sind richtig dicke. Papa sagt, er ist ein bisschen eifersüchtig. Jens findet das großartig.',
   lars: 'Lars und ich haben inzwischen einen eigenen Insiderwitz. Ich verrate ihn nicht.',
   thalia: 'Thalia und ich sind wie in Tschechien damals – nur mit weniger Nachtbus und mehr Kuchen.',
 };

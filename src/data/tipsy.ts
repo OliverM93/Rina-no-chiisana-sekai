@@ -9,7 +9,7 @@ export type DrinkPlace = 'cafe' | 'zuhause';
 /** Zeilen zum Getränk, je nach Ort */
 export const DRINK_LINES: Readonly<Record<DrinkKind, Readonly<Record<DrinkPlace, readonly string[]>>>> = {
   bier: {
-    cafe: ['Jens zapft selbst: „Ein Bier für meine Lieblingsnichte – aufs Haus!“ 🍺', '„Santé, ma chérie! Aber in Maßen, hm?“'],
+    cafe: ['Jens zapft selbst: „Ein Bier für meine Lieblingsnichte – aufs Haus!“ 🍺', '„Santé! Aber in Maßen, hm?“'],
     zuhause: ['Ein kühles Feierabendbier. 🍺', 'Ssssscht. Das ist das schönste Geräusch des Tages.'],
   },
   wein: {
@@ -96,7 +96,7 @@ export const TIPSY_NPC_LINES: Readonly<Record<string, TipsyReaction>> = {
   },
   jens: {
     leicht: [['Ma chérie, du strahlst! Hat mein Wein dich geküsst?', 'Das nenn ich ein Kompliment an die Winzerin!'], ['Nu, du bist ja richtig aufgekratzt! Gefällt mir. Santé!']],
-    schummrig: [['Oh là là! Du tanzt ja schon, ohne dass Musik läuft! Setz dich, ich hol dir ein Wasser mit Zitrone.', 'Und noch eens. Nu glar, Wasser! Was denkst’n du?'], ['Ma chérie, die Welt dreht sich, was? Das ist normal, die Erde dreht sich auch. Aber trink jetzt ein Wasser, Bisous.']],
+    schummrig: [['Oh là là! Du tanzt ja schon, ohne dass Musik läuft! Setz dich, ich hol dir ein Wasser mit Zitrone.', 'Und noch eens. Nu glar, Wasser! Was denkst’n du?'], ['Meine Kleene, die Welt dreht sich, was? Das ist normal, die Erde dreht sich auch. Aber trink jetzt ein Wasser, Bisous.']],
   },
   lars: {
     leicht: [['Schwesterherz, du hast so einen Glanz in den Augen. Ärztliche Diagnose: ein Glas. Oder anderthalb.', 'Alles gut. Ich schreib nichts auf.'], ['Du bist ganz schön kichrig. Medizinisch gesehen ist Lachen gesund. Alkohol nicht, aber die Mischung ist okay.']],

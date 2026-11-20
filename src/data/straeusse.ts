@@ -56,7 +56,7 @@ export interface WreathDef {
 
 export const WREATHS: readonly WreathDef[] = [
   { id: 'kranz-lavendel', name: 'Lavendelkranz', colors: ['#a98ad8', '#ffffff'], ingredients: [{ itemId: 'lavendel', count: 4 }, { itemId: 'ast', count: 2 }], price: 700, description: 'Ein Kranz aus Lavendel und Ästen für die Wand. Der Raum riecht gleich nach Urlaub.' },
-  { id: 'kranz-rosen', name: 'Rosenkranz', colors: ['#e8484f', '#f4a3c0'], ingredients: [{ itemId: 'rose', count: 3 }, { itemId: 'ast', count: 2 }], price: 800, description: 'Rote und rosa Rosen in einem Kranz aus Zweigen. Romantisch, aber nicht kitschig. Fast.' },
+  { id: 'kranz-rosen', name: 'Rosenkranz', colors: ['#e8484f', '#f4a3c0'], ingredients: [{ itemId: 'rose', count: 3 }, { itemId: 'ast', count: 2 }], price: 800, description: 'Rote und rosa Rosen in einem Kranz aus Zweigen. Romantisch, aber nicht kitschig. Christin hat es geprüft.' },
   { id: 'kranz-wiese', name: 'Wiesenkranz', colors: ['#f7c832', '#ffffff', '#f4a3c0', '#7ab8f0'], ingredients: [{ itemId: 'wildblumen', count: 3 }, { itemId: 'ast', count: 2 }], price: 500, description: 'Ein Kranz aus Wildblumen. Sieht aus, als hätte ihn jemand beim Spazierengehen gebunden.' },
   { id: 'kranz-kraeuter', name: 'Kräuterkranz', colors: ['#4fa84f', '#f4c6e0'], ingredients: [{ itemId: 'basilikum', count: 1 }, { itemId: 'thymian', count: 1 }, { itemId: 'petersilie', count: 1 }, { itemId: 'ast', count: 2 }], price: 600, description: 'Ein grüner Kranz aus Küchenkräutern. Passt an jede Küchenwand – und riecht noch besser.' },
 ];
