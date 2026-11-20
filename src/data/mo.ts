@@ -27,7 +27,7 @@ export const MO_WAITING_LINE = 'Mo kommt Samstag zur Party. Ab 19 Uhr auf dem Do
 
 /** Das erste Treffen auf der Party */
 export const MO_MEETING: readonly string[] = [
-  'Neben der Musik steht Mo: kurze braune Haare, Dreitagebart, schwarze Weste, breites Grinsen. „Lina! Endlich mal wieder!“',
+  'Neben der Musik steht Mo: kurze braune Haare, Dreitagebart, schwarze Steppweste überm weißen T-Shirt, breites Grinsen. „Lina! Endlich mal wieder!“',
   'Oli, leise zu dir: „Ich hab ihm nichts verraten. Ehrenwort. … Fast nichts.“',
   'Du winkst Thalia rüber. Sie kommt tanzend an – und richtet ganz unauffällig ihr Halstuch.',
   'Thalia: „Hi! Ich bin Thalia. Ich hab die Playlist gemacht. Wenn sie dir nicht gefällt, war es Oli.“',

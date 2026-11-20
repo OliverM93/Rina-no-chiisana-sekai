@@ -147,14 +147,14 @@ export const LOOKS: Readonly<Record<string, Appearance>> = {
   /** Mo (Olis bester Freund, nur zu Besuch): kurze braune Haare (Fade), Dreitagebart, schwarze Steppweste über weißem T-Shirt */
   mo: {
     ...base,
-    hairStyle: 'fade',
+    hairStyle: 'kurzhaar',
     hairColor: palette.hair.braun,
-    outfit: 'weste',
+    outfit: 'steppweste',
     outfitColor: '#26252b',
-    accentColor: '#f7f4ee',
+    accentColor: '#f7f5f0',
     height: 1.03,
     build: 1.08,
-    beard: 'kurz',
+    beard: 'stoppel',
     eyeColor: palette.eyeColors.graublau,
     smile: 'grinsen',
     shoes: 'sneaker',
