@@ -74,39 +74,6 @@ function drawFace(a: Appearance, blink: boolean): HTMLCanvasElement {
     }
   }
 
-  // Dreitagebart: nur ein feiner Schatten an Kinn, Kiefer und Oberlippe (kein eigenes 3D-Teil)
-  if (a.beard === 'stoppel') {
-    const bc = a.beardColor || a.hairColor;
-    const rnd = mulberry32(11);
-    ctx.save();
-    ctx.globalAlpha = 0.3;
-    ctx.fillStyle = bc;
-    ctx.beginPath();
-    ctx.moveTo(36, eyeY + 18);
-    ctx.quadraticCurveTo(44, eyeY + 76, 128, eyeY + 82);
-    ctx.quadraticCurveTo(212, eyeY + 76, 220, eyeY + 18);
-    ctx.quadraticCurveTo(200, eyeY + 52, 160, eyeY + 52);
-    ctx.quadraticCurveTo(128, eyeY + 60, 96, eyeY + 52);
-    ctx.quadraticCurveTo(56, eyeY + 52, 36, eyeY + 18);
-    ctx.fill();
-    // Oberlippe
-    ctx.beginPath();
-    ctx.ellipse(128, eyeY + 32, 20, 5, 0, 0, Math.PI * 2);
-    ctx.fill();
-    // ein paar Stoppel-Pünktchen
-    ctx.globalAlpha = 0.35;
-    for (let i = 0; i < 70; i++) {
-      const t = rnd() * Math.PI;
-      const rr = 0.8 + rnd() * 0.2;
-      const x = 128 - Math.cos(t) * 88 * rr;
-      const y = eyeY + 40 + Math.sin(t) * 36 * rr;
-      ctx.beginPath();
-      ctx.arc(x, y, 1.1, 0, Math.PI * 2);
-      ctx.fill();
-    }
-    ctx.restore();
-  }
-
   // Augenbrauen (weich geschwungen)
   ctx.strokeStyle = browColor;
   ctx.lineWidth = a.beard !== 'keiner' || a.height > 1.1 ? 5.5 : 4.2;
@@ -164,7 +131,7 @@ function drawFace(a: Appearance, blink: boolean): HTMLCanvasElement {
 
   // Mund
   // Mit Bart sitzt der Mund in der Lücke zwischen Schnurrbart und Bart
-  const my = a.beard === 'voll' || a.beard === 'kurz' ? eyeY + 43 : eyeY + 40;
+  const my = a.beard === 'voll' || a.beard === 'kurz' || a.beard === 'stoppel' ? eyeY + 43 : eyeY + 40;
   const lip = darken(a.skinTone, 0.55);
   if (a.smile === 'laecheln') {
     ctx.strokeStyle = lip;
@@ -1004,6 +971,16 @@ export class Chibi3D {
         m.rotation.z = s * -0.18;
         this.head.add(m);
       }
+    } else if (a.beard === 'stoppel') {
+      // Dreitagebart: dieselbe Form wie der kurze Bart, aber hauteng und nur als Schatten (Haut + Haarfarbe gemischt)
+      const bc = mixHex(a.skinTone, a.beardColor || a.hairColor, 0.38);
+      const stubble = beardShell(R * 1.012, bc, 2.02, 1.6, 2.66);
+      if (oval) taperChin(stubble.geometry, R * 1.012);
+      stubble.scale.set(wide, 0.93, 0.95);
+      this.head.add(stubble);
+      // Oberlippe: ganz flacher Schatten statt Schnurrbart
+      const lip = part(sphereLow, mixHex(a.skinTone, a.beardColor || a.hairColor, 0.3), R * 0.17, R * 0.035, R * 0.025, 0, -R * 0.105, R * 0.928);
+      this.head.add(lip);
     } else if (a.beard === 'kurz' || a.beard === 'voll') {
       const bc = a.beardColor || lighten(a.hairColor, 0.05);
       const full = a.beard === 'voll';
