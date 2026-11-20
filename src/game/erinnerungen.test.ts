@@ -24,7 +24,7 @@ function fresh(iso = '2026-05-12T12:00:00') {
 
 describe('Erinnerungen – Daten', () => {
   it('jede Zeile gehört zu einem Bewohner, hat eine eindeutige ID und einen bekannten Tag', () => {
-    const known = ['haus-anbau', 'haus-arbeitszimmer', 'haus-kueche', 'haus-keller', 'buch-10', 'buch-20', 'buch-30', 'huehner', 'gewaechshaus', 'tassen-viele', 'sparbuch', 'schwarze-blume', 'jens-reise', 'matteo', 'kino', 'tourshirt', 'pflanzen-viele', 'bett', 'waermflasche', 'monat-1', 'jahr-1', 'stil-japanisch', 'stil-cottage', 'stil-retro', 'stil-modern', 'stil-midcentury', 'stil-bistro', 'stil-japandi', 'stil-minimalismus', 'stil-skandinavisch', 'stil-industrial', 'stil-darkacademia', 'stil-artdeco', 'stil-spaceage', 'stil-cyberpunk', 'stil-brutalismus', 'stil-memphis', 'stil-bauhaus', 'parkett-edel', 'tapete-uni', 'garten-deko', 'kater', 'igor', 'blumendeko'];
+    const known = ['haus-anbau', 'haus-arbeitszimmer', 'haus-kueche', 'haus-keller', 'buch-10', 'buch-20', 'buch-30', 'huehner', 'gewaechshaus', 'tassen-viele', 'sparbuch', 'schwarze-blume', 'jens-reise', 'matteo', 'kino', 'tourshirt', 'pflanzen-viele', 'bett', 'waermflasche', 'monat-1', 'jahr-1', 'stil-japanisch', 'stil-cottage', 'stil-retro', 'stil-modern', 'stil-midcentury', 'stil-bistro', 'stil-japandi', 'stil-minimalismus', 'stil-skandinavisch', 'stil-industrial', 'stil-darkacademia', 'stil-artdeco', 'stil-spaceage', 'stil-cyberpunk', 'stil-brutalismus', 'stil-memphis', 'stil-bauhaus', 'parkett-edel', 'tapete-uni', 'garten-deko', 'kater', 'igor', 'blumendeko', 'mo-kennengelernt'];
     const ids = new Set<string>();
     for (const m of MEMORIES) {
       expect(NPC_BY_ID[m.npc], m.id).toBeTruthy();

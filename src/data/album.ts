@@ -59,6 +59,7 @@ export const MOMENTS: readonly MomentDef[] = [
   { id: 'einzug-oli', source: { flag: 'oliEingezogen' }, text: 'Oli ist bei mir eingezogen. Zu Hause ist jetzt noch ein bisschen mehr zu Hause.' },
   { id: 'einzug-jens', source: { flag: 'jensEingezogen' }, text: 'Onkel Jens ist im Dorf. Das Bistro duftet nach Kaffee und Kunst.' },
   { id: 'einzug-lars', source: { flag: 'larsEingezogen' }, text: 'Lars ist eingezogen. Die Praxis hat geöffnet, und er hat schon den ersten Spruch parat.' },
+  { id: 'mo-party', source: { flag: 'moKennengelernt' }, text: 'Ich wollte Thalia mit Mo verkuppeln. Mo hat Jule kennengelernt – und Thalia und ich haben den Rest der Nacht zusammen getanzt. Plan gescheitert, Abend gerettet.' },
   { id: 'einzug-thalia', source: { flag: 'thaliaEingezogen' }, text: 'Thalia ist eingezogen. Jetzt sind wir komplett – und es wird laut. Zum Glück.' },
   ...Object.entries(HOUSE_TEXTS).map(([n, text]): MomentDef => ({ id: `haus-${n}`, source: { houseStage: Number(n) }, text })),
   ...Object.keys(HEARTS_THREE).map((npc): MomentDef => ({ id: `herzen3-${npc}`, source: { hearts: { npc, min: 3 } }, text: HEARTS_THREE[npc] })),
