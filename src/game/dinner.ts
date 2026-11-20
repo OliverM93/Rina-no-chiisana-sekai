@@ -6,6 +6,7 @@
 import { hashString } from '../core/rng';
 import type { ScheduleEntry } from '../core/schedule';
 import { NPC_BY_ID } from '../data/npcs';
+import { giveItem } from './gameplay';
 import type { Session } from './session';
 
 export const DINNER_DAY = 0; // Sonntag
@@ -45,3 +46,12 @@ export function dinnerEntry(session: Session, npcId: string): ScheduleEntry | nu
 const ENTRIES: Record<string, ScheduleEntry> = Object.fromEntries(
   [...ALWAYS, ...SOMETIMES].map((id) => [id, { from: '18:00', label: 'Sonntagsessen bei Jens', activity: { kind: 'zuhause', at: id === 'jens' ? undefined : 'bistro-jens' } } satisfies ScheduleEntry]),
 );
+
+/** Wie viele Rippchen Jens nach dem Sonntagsessen einpackt (Linas Lieblingsessen – für den AirFryer) */
+export const DINNER_RIPPCHEN = 2;
+
+/** Jens packt Lina nach dem Essen Rippchen ein. Gibt die Zeilen zurück, die Jens dazu sagt. */
+export function dinnerTakeaway(session: Session): string[] {
+  giveItem(session, 'rippchen', DINNER_RIPPCHEN);
+  return ['Jens drückt dir ein Päckchen in die Hand: „Rippchen vom Metzger, meine Kleene. Für deinen AirFryer. Nu glar weiß ich, was du magst!“ 🍖'];
+}

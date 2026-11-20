@@ -166,7 +166,8 @@ export function App({ session }: { session: Session }) {
       )}
       {state.panel?.kind === 'ukulele' && <UkulelePanel session={session} />}
       {state.panel?.kind === 'herd' && <CraftPanel session={session} station="herd" />}
-      {state.panel && !['mail', 'book', 'catalog', 'bank', 'werkbank', 'kochstudio', 'apotheke', 'karte', 'galerie', 'tv', 'minispiel', 'zusammen', 'ukulele', 'notizbuch', 'herd', 'samenstand', 'truhe', 'foto'].includes(state.panel.kind) && <InventoryPanel session={session} panel={state.panel} />}
+      {state.panel?.kind === 'airfryer' && <CraftPanel session={session} station="airfryer" />}
+      {state.panel && !['mail', 'book', 'catalog', 'bank', 'werkbank', 'kochstudio', 'apotheke', 'karte', 'galerie', 'tv', 'minispiel', 'zusammen', 'ukulele', 'notizbuch', 'herd', 'airfryer', 'samenstand', 'truhe', 'foto'].includes(state.panel.kind) && <InventoryPanel session={session} panel={state.panel} />}
       {state.dialog && (
         <DialogBox
           dialog={state.dialog}

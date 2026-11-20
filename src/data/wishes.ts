@@ -167,7 +167,7 @@ export const WISHES: readonly WishDef[] = [
       'So was will ich auch! Mit Fischen aus unserem Dorf. Du bist doch die beste Anglerin weit und breit.',
       'Drei Fische, egal welche – und ein Seestern als Deko. Nu, das wird schick! Gell?',
     ],
-    reminder: ['Mein Aquarium! Ich hab schon den Platz freigeräumt. Kein Stress, chérie – die Fische schwimmen ja noch.'],
+    reminder: ['Mein Aquarium! Ich hab schon den Platz freigeräumt. Kein Stress – die Fische schwimmen ja noch.'],
     needs: [
       { category: 'fisch', count: 3, label: 'Fische (jede Art)' },
       { item: 'seestern', count: 1, label: 'Seestern' },
@@ -313,7 +313,7 @@ export const WISHES_2: readonly WishDef[] = [
       'Zwei Wochen Urlaub. Ich übernehme den Charme, du Flug und Hotel: 1.500 Sternchen. Dazu etwas Reiseproviant, zwei Gerichte, damit wir nicht verhungern.',
       'Und jetzt die große Frage, die ich seit Tagen nicht beantworten kann: Hawaii oder Japan? Du darfst wählen!',
     ],
-    reminder: ['Unser Urlaub! Der Koffer steht schon bereit – der Koffer steht immer bereit. Wähl in Ruhe, ma chérie.'],
+    reminder: ['Unser Urlaub! Der Koffer steht schon bereit – der Koffer steht immer bereit. Wähl in Ruhe.'],
     needs: [{ category: 'essen', count: 2, label: 'Reiseproviant (zwei Gerichte)' }],
     stars: 1500,
     done: [],
@@ -324,7 +324,7 @@ export const WISHES_2: readonly WishDef[] = [
         done: [
           'Aloha! Blumenketten, Brandung, ein Sonnenuntergang wie von mir gemalt – und ich hab mich sofort verbrannt. Stilvoll natürlich!',
           'Du hast im Meer geplanscht, ich hab Skizzen gemacht. Und ein Kellner hat „Lina“ auf deinen Becher geschrieben. Mit Herz.',
-          'Ich hab dir eine Tasse mitgebracht. Und mir ein Hemd gekauft, das nie wieder jemand sehen darf. Merci, ma chérie!',
+          'Ich hab dir eine Tasse mitgebracht. Und mir ein Hemd gekauft, das nie wieder jemand sehen darf. Merci!',
         ],
         rewardItems: [{ itemId: 'tasse-stadt-honolulu', count: 1 }],
       },
@@ -334,7 +334,7 @@ export const WISHES_2: readonly WishDef[] = [
         done: [
           'Konnichiwa! Du hast tatsächlich ein bisschen Japanisch gesprochen. Ich hab nur genickt und gelächelt. Das reicht meistens.',
           'Tempel, Tee und Rehe, die sich verbeugen. Wir haben stundenlang Matcha getrunken und kein Wort gesagt. Ein Wunder!',
-          'Ich hab dir eine Tasse mitgebracht. Arigatō, ma chérie – das war der schönste Urlaub seit Langem.',
+          'Ich hab dir eine Tasse mitgebracht. Arigatō – das war der schönste Urlaub seit Langem.',
         ],
         rewardItems: [{ itemId: 'tasse-stadt-nara', count: 1 }],
       },

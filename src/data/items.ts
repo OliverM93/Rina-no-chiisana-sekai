@@ -82,7 +82,7 @@ const list: ItemDef[] = [
   { id: 'wachtelei', name: 'Wachtelei', plural: 'Wachteleier', category: 'essen', price: 14, description: 'Winzig, gesprenkelt und sehr niedlich.' },
   // Gerichte aus Jens' Kochstudio
   { id: 'ruehrei', name: 'Rührei', plural: 'Portionen Rührei', category: 'essen', price: 70, description: 'Fluffig, goldgelb, mit einer Prise Schnittlauch. Olis Lieblingsfrühstück.' },
-  { id: 'wachtel-spiegelei', name: 'Wachtel-Spiegeleier', plural: 'Portionen Wachtel-Spiegeleier', category: 'essen', price: 75, description: 'Winzige Spiegeleier – so niedlich, dass man sie fast nicht essen mag. Fast.' },
+  { id: 'wachtel-spiegelei', name: 'Wachtel-Spiegeleier', plural: 'Portionen Wachtel-Spiegeleier', category: 'essen', price: 75, description: 'Winzige Spiegeleier – so niedlich, dass man sie fast nicht essen mag. Oli schafft es trotzdem in einem Bissen.' },
   { id: 'obstsalat', name: 'Obstsalat', plural: 'Schüsseln Obstsalat', category: 'essen', price: 60, description: 'Apfel, Birne und Pfirsich – frisch geschnippelt und bunt wie ein Gemälde.' },
   { id: 'fischbroetchen', name: 'Fischbrötchen', plural: 'Fischbrötchen', category: 'essen', price: 155, description: 'Nach Jens\' Geheimrezept: „In Leipzig gelernt, in Paris verfeinert, bei dir perfektioniert.“' },
   { id: 'apfelkuchen', name: 'Apfelkuchen', plural: 'Apfelkuchen', category: 'essen', price: 180, description: 'Mit Zimt und Liebe. Oma sagt, ihrer ist besser. Oma sagt das immer.' },
@@ -102,6 +102,12 @@ const list: ItemDef[] = [
   { id: 'karottensuppe', name: 'Karottensuppe', plural: 'Teller Karottensuppe', category: 'essen', price: 110, description: 'Orange und samtig, mit einem Büschel Petersilie. Lars: „Gut für die Augen.“' },
   { id: 'ratatouille', name: 'Ratatouille', plural: 'Portionen Ratatouille', category: 'essen', price: 190, description: 'Tomate, Zucchini, Basilikum und Thymian – wie in der Provence. Jens weint vor Glück.' },
   { id: 'gruener-salat', name: 'Gemischter Salat', plural: 'Schüsseln gemischter Salat', category: 'essen', price: 100, description: 'Salat, Tomate und Schnittlauch. Knackig und frisch. Christin nickt anerkennend.' },
+  { id: 'rippchen', name: 'Rippchen', plural: 'Rippchen', category: 'essen', price: 60, description: 'Rippchen vom Metzger in Leipzsch, Jens bringt sie zum Sonntagsessen mit. Linas Lieblingsessen – am liebsten aus dem AirFryer.' },
+  { id: 'airfryer-rippchen', name: 'Knusprige Rippchen', plural: 'Portionen knusprige Rippchen', category: 'essen', price: 260, description: 'Aus dem AirFryer: außen knusprig, innen zart, dazu ein Klecks Krautsalat. Linas Lieblingsessen. Oli hat schon den Tisch gedeckt.' },
+  { id: 'airfryer-pommes', name: 'AirFryer-Pommes', plural: 'Portionen AirFryer-Pommes', category: 'essen', price: 90, description: 'Goldgelb und knusprig, mit ganz wenig Öl. Oma hat erst „pfui“ gesagt – und dann die Hälfte gegessen.' },
+  { id: 'kohlchips', name: 'Knusprige Kohlchips', plural: 'Schälchen Kohlchips', category: 'essen', price: 70, description: 'Kohlblätter mit etwas Salz und Paprika, knusprig aus dem AirFryer. Lars nennt sie „ärztlich vertretbare Chips“.' },
+  { id: 'krautsalat', name: 'Krautsalat', plural: 'Schüsseln Krautsalat', category: 'essen', price: 80, description: 'Fein gehobelter Kohl mit Karotte und einem Hauch Essig. Gehört zu Rippchen wie Winston zu Lina.' },
+  { id: 'kohleintopf', name: 'Kohleintopf', plural: 'Teller Kohleintopf', category: 'essen', price: 170, description: 'Kohl, Kartoffeln und Karotten, lange geschmort. Wärmt von innen. Oma sagt: „So hat man das in Dessau gemacht.“' },
   { id: 'kuerbissuppe', name: 'Kürbissuppe', plural: 'Teller Kürbissuppe', category: 'essen', price: 200, description: 'Cremig, orange, mit einem Zweig Thymian. Das Beste an kalten Tagen.' },
   // Aus der Kochshow
   { id: 'apfelpfannkuchen', name: 'Apfelpfannkuchen', plural: 'Apfelpfannkuchen', category: 'essen', price: 110, description: 'Fluffig, mit Apfelscheiben und einer Prise Zimt. Fast so gut wie bei Oma. Psst!' },
@@ -111,7 +117,7 @@ const list: ItemDef[] = [
   { id: 'scholle-kartoffel', name: 'Scholle mit Bratkartoffeln', plural: 'Portionen Scholle mit Bratkartoffeln', category: 'essen', price: 230, description: 'Die flache Scholle, goldgelb gebraten. Dazu knusprige Kartoffeln. Einfach und herrlich.' },
   { id: 'raeuchermakrele', name: 'Geräucherte Makrele', plural: 'Geräucherte Makrelen', category: 'essen', price: 275, description: 'Mit ein paar Ästen im Rauch gegart. Riecht nach Lagerfeuer und Meer. Oma: „Pfui.“ Und dann: „Gib mal ein Stück.“' },
   { id: 'dorsch-gemuese', name: 'Dorsch auf Gemüsebett', plural: 'Portionen Dorsch auf Gemüsebett', category: 'essen', price: 445, description: 'Zarter Dorsch auf Zucchini und Tomate, ganz leicht und sommerlich. Lars nimmt sich zweimal. „Rein dienstlich.“' },
-  { id: 'aal-gruen', name: 'Aal grün', plural: 'Portionen Aal grün', category: 'essen', price: 1030, description: 'Ein Festessen mit viel frischem Grün. Jens: „Ma chérie, das ist Kunst mit Gräten.“' },
+  { id: 'aal-gruen', name: 'Aal grün', plural: 'Portionen Aal grün', category: 'essen', price: 1030, description: 'Ein Festessen mit viel frischem Grün. Jens: „Das ist Kunst mit Gräten.“' },
   { id: 'steinbutt-ofen', name: 'Steinbutt aus dem Ofen', plural: 'Portionen Steinbutt aus dem Ofen', category: 'essen', price: 1240, description: 'Der König der Plattfische, im Ofen mit Thymian gegart. Nur für besondere Anlässe. Oder einfach für Dienstag.' },
   { id: 'kaese', name: 'Käse', plural: 'Stücke Käse', category: 'essen', price: 45, description: 'Ein schönes Stück Käse. Lina riecht kurz daran und lächelt. Der Käse ist nicht lange sicher.' },
   { id: 'kaeseomelett', name: 'Käse-Omelett', plural: 'Käse-Omeletts', category: 'essen', price: 170, description: 'Goldgelb, außen zart und innen schön schmelzig. Linas Lieblings-Frühstück.' },
@@ -121,7 +127,7 @@ const list: ItemDef[] = [
   { id: 'kokoskekse', name: 'Kokoskekse', plural: 'Kokoskekse', category: 'essen', price: 75, description: 'Omas Keks trifft Inselkokos: knusprig, weiß bestäubt, nach Urlaub duftend.' },
   { id: 'kaesebrett', name: 'Käsebrett', plural: 'Käsebretter', category: 'essen', price: 230, description: 'Ein Brett mit Käse, Apfelspalten und Keksen. Ideal für Filmabende (und Linas Herz).' },
   { id: 'bento', name: 'Bento-Box', plural: 'Bento-Boxen', category: 'essen', price: 120, description: 'Ein Fach mit Omelett, eins mit Möhrchen, eins mit Apfelhäschen. Lina packt sie mit viel Liebe – jedes Fach genau passend.' },
-  { id: 'blumensalat', name: 'Blumensalat', plural: 'Schüsseln Blumensalat', category: 'essen', price: 140, description: 'Ein bunter Salat mit essbaren Blüten. Zu schön zum Essen. Fast.' },
+  { id: 'blumensalat', name: 'Blumensalat', plural: 'Schüsseln Blumensalat', category: 'essen', price: 140, description: 'Ein bunter Salat mit essbaren Blüten. Zu schön zum Essen – Christin hat trotzdem zweimal genommen.' },
   // Feste
   { id: 'plaetzchen', name: 'Omas Plätzchen', plural: 'Omas Plätzchen', category: 'essen', price: 15, description: 'Zimtsterne, Vanillekipferl, Butterplätzchen. Weihnachten in Keksform.' },
   // Winter
