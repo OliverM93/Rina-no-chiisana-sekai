@@ -32,6 +32,7 @@ export function memoryTags(session: Session): string[] {
   if (!data) return [];
   const tags: string[] = [];
   const stage = data.house.stage;
+  if (data.flags.moKennengelernt) tags.push('mo-kennengelernt');
   if (stage >= 2) tags.push('haus-anbau');
   if (stage >= 3) tags.push('haus-arbeitszimmer');
   if (stage >= 4) tags.push('haus-kueche');

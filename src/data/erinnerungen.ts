@@ -19,6 +19,13 @@ export interface Memory {
 }
 
 export const MEMORIES: readonly Memory[] = [
+  // ---- Mo auf der Party (Linas Verkupplungsplan – aus Thalia und Mo wird nichts, Mo hat Jule kennengelernt) ----
+  { id: 'thalia-mo', npc: 'thalia', tag: 'mo-kennengelernt', text: ['Wegen Samstag: Ich bin dir nicht böse. Ehrlich.', 'Mo ist nett, und Jule hat Glück. Und ich hab einen neuen Lieblings-Tanzpartner für die Party. Dich.'] },
+  { id: 'oli-mo', npc: 'oli', tag: 'mo-kennengelernt', text: ['Mo hat geschrieben. Er fand den Abend super und Thalia „mega lustig“.', 'Lini … beim nächsten Verkupplungsplan frag ich vorher, ob der Kandidat noch frei ist. Versprochen.'] },
+  { id: 'gisela-mo', npc: 'gisela', tag: 'mo-kennengelernt', text: ['Ich hab gehört, deine Verkupplung ist ins Wasser gefallen, Kind.', 'Wer nicht wagt, der nicht gewinnt. Diesmal hat eben die Jule gewonnen. Die Thalia findet schon noch einen. Ich hab da so ein Gefühl.'] },
+  { id: 'jens-mo', npc: 'jens', tag: 'mo-kennengelernt', text: ['Meine Kleene, das Menü für Thalia und Mo hatte ich schon geplant. Drei Gänge, Kerzenlicht.', 'Nu, dann kochen wir’s eben für uns alle. Liebe geht durch den Magen – Freundschaft ooch.'] },
+  { id: 'lars-mo', npc: 'lars', tag: 'mo-kennengelernt', text: ['Ich hab gehört, Amor hatte am Samstag frei?', 'Ärztlich gesehen geht’s Thalia prächtig. Sie hat mir auf dem Heimweg drei Lieder vorgesungen. Falsch, aber fröhlich.'] },
+
   // ---- Kater (gehört zu Lina, Olaf und Christin; taucht auf, sobald die beiden im Dorf wohnen) ----
   { id: 'olaf-kater-1', npc: 'olaf', tag: 'kater', text: ['Kater hat heute wieder Mäuse gefangen. Drei Stück! Er legt sie mir immer vor die Tür.', 'Ich hab sie nach Größe sortiert. Aus Respekt. Und Christin gerufen.'] },
   { id: 'olaf-kater-2', npc: 'olaf', tag: 'kater', text: ['Ich habe Kater gestern beim Mittagsschlaf auf meinem Aktenordner erwischt. Genau auf dem Bescheid.', 'Fachlich gesehen: ein Katzenhaar im Verfahren. Ich lasse es durchgehen.'] },
