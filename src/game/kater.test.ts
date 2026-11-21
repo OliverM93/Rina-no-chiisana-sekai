@@ -1,11 +1,12 @@
 import { describe, expect, it, vi } from 'vitest';
 import { DEFAULT_LINA } from '../core/appearance';
 import type { StorageLike } from '../core/save';
-import { KATER_FIRST, KATER_HELLO, KATER_PET_AGAIN, KATER_PET_FIRST } from '../data/kater';
+import { KATER_CUSHION, KATER_FIRST, KATER_HELLO, KATER_MITBRINGSEL, KATER_PET_AGAIN, KATER_PET_FIRST } from '../data/kater';
 import { MEMORIES } from '../data/erinnerungen';
-import { katerDa, katerDraussen, katerHello, katerPet } from './kater';
+import { katerBeiLina, katerCushionRoom, katerDa, katerDraussen, katerHello, katerHomeHello, katerPet, katerVisitDay } from './kater';
 import { memoryTags, takeMemory } from './erinnerungen';
 import { Session } from './session';
+import { countItem } from '../core/inventory';
 
 vi.mock('../gfx/items', () => ({ itemIconUrl: () => '' }));
 
@@ -83,5 +84,67 @@ describe('Kater', () => {
       expect(text, m.id).toContain('Igor');
       expect(text, m.id).toMatch(/vermiss|fehlt|Herzen|Leine|Keks|warm/);
     }
+  });
+});
+
+describe('Kater bei Lina zu Hause (Katzenkissen)', () => {
+  const setWeather = (s: Session, w: string) => ((s as { weatherOverride: string | null }).weatherOverride = w);
+  const putCushion = (s: Session) => s.data!.house.rooms[0].items.push({ itemId: KATER_CUSHION, x: 2, y: 2, rot: 0 } as never);
+  /** einen Tag finden, an dem Kater von sich aus vorbeischaut bzw. nicht */
+  const findDay = (s: Session, setTime: (t: string) => void, visit: boolean) => {
+    for (let d = 1; d <= 28; d++) {
+      setTime(`2026-06-${String(d).padStart(2, '0')}T15:00:00`);
+      if (katerVisitDay(s) === visit) return;
+    }
+    throw new Error('kein passender Tag');
+  };
+
+  it('kommt nur, wenn ein Katzenkissen im Haus steht', () => {
+    const { s } = session();
+    olafDa(s);
+    setWeather(s, 'regen');
+    expect(katerBeiLina(s)).toBe(false);
+    putCushion(s);
+    expect(katerCushionRoom(s)).toBe('haupt');
+    expect(katerBeiLina(s)).toBe(true);
+    expect(katerDraussen(s)).toBe(false);
+  });
+
+  it('bei Sonne nur an Besuchstagen ab nachmittags – sonst streunert er draußen', () => {
+    const { s, setTime } = session();
+    olafDa(s);
+    putCushion(s);
+    setWeather(s, 'sonnig');
+    findDay(s, setTime, false);
+    expect(katerBeiLina(s)).toBe(false);
+    expect(katerDraussen(s)).toBe(true);
+    findDay(s, setTime, true);
+    expect(katerBeiLina(s)).toBe(true);
+    expect(katerDraussen(s)).toBe(false);
+    setTime(s.today() + 'T10:00:00');
+    expect(katerBeiLina(s)).toBe(false);
+    setTime(s.today() + 'T23:00:00');
+    expect(katerBeiLina(s)).toBe(false);
+  });
+
+  it('bringt höchstens einmal am Tag ein Fundstück mit', () => {
+    const { s, setTime } = session();
+    olafDa(s);
+    putCushion(s);
+    setWeather(s, 'regen');
+    let gifts = 0;
+    for (let d = 1; d <= 20; d++) {
+      setTime(`2026-07-${String(d).padStart(2, '0')}T15:00:00`);
+      const before = KATER_MITBRINGSEL.reduce((n, g) => n + countItem(s.data!.inventory, g.itemId), 0);
+      const lines = katerHomeHello(s);
+      expect(lines.length).toBeGreaterThan(0);
+      katerHomeHello(s);
+      const after = KATER_MITBRINGSEL.reduce((n, g) => n + countItem(s.data!.inventory, g.itemId), 0);
+      expect(after - before).toBeLessThanOrEqual(1);
+      gifts += after - before;
+    }
+    expect(gifts).toBeGreaterThan(2);
+    expect(gifts).toBeLessThan(20);
+    expect(KATER_MITBRINGSEL.length).toBeGreaterThan(2);
   });
 });

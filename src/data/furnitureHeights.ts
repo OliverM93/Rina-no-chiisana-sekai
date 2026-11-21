@@ -204,6 +204,7 @@ export const FURNITURE_HEIGHTS: Readonly<Record<string, number>> = {
   'wimpelkette': 1.24,
   'witzkalender': 1.12,
   'wollkorb': 0.56,
+  'katzenkissen': 0.1,
   'wuerfelregal': 0.92,
   'yucca': 1.38,
   'zabuton': 0.13,

@@ -241,6 +241,7 @@ export const FURNITURE: readonly FurnitureDef[] = [
   { id: 'haekelteppich', name: 'Häkelteppich', style: 'cottage', rug: true, price: 450, w: 2, d: 2, description: 'Ein runder Teppich, Masche für Masche gehäkelt. Oma hat ein paar Reihen beigesteuert.', variants: { rosa: '#f4b6c2', mint: '#9ad8c0', himmel: '#a9c8ff', flieder: '#c9b3e8', gelb: '#f2c14e' }, baseVariant: 'rosa' },
   { id: 'kraeutertoepfe', name: 'Kräutertöpfchen', style: 'cottage', small: true, price: 220, w: 1, d: 1, description: 'Basilikum, Thymian und Rosmarin in drei kleinen Tontöpfen. Riecht nach Kochen.' },
   { id: 'kerzenleuchter', name: 'Kerzenleuchter', style: 'cottage', small: true, light: true, price: 300, w: 1, d: 1, description: 'Ein Messingleuchter mit drei Kerzen. Flackert abends gemütlich.' },
+  { id: 'katzenkissen', name: 'Katzenkissen', style: 'basis', price: 280, w: 1, d: 1, description: 'Ein rundes, weiches Kissen mit hohem Rand. Steht es in deinem Haus, kommt Kater ab und zu vorbei – bei Regen ganz bestimmt.' },
   { id: 'wollkorb', name: 'Wollkorb', style: 'cottage', price: 260, w: 1, d: 1, description: 'Ein Weidenkorb voller Wollknäuel. Winston findet ihn sehr verdächtig.' },
   // Retro-Oma-Chic (M8g): Ohrensessel, Nierentisch, Fransen & Kristall
   { id: 'ohrensessel', name: 'Ohrensessel', style: 'retro', sit: 'sitzen', price: 1300, w: 1, d: 1, description: 'Samtig, gemütlich und mit großen „Ohren“. Oma sagt: „So einen hatte Ludwig auch. Köstlich!“', variants: { senf: '#d9a441', rost: '#b8573a', petrol: '#3f7a7a', salbei: '#a9c4a0', creme: '#f3ead8' } },

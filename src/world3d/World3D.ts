@@ -129,7 +129,9 @@ import { INSEL_YARD_AREA, YARD_AREA } from '../data/yard';
 import { makeCan, makeNet, makeRod, makeShovel, type ToolModel } from './models/critters';
 import { Weather3D } from './Weather3D';
 import { Winston } from './Winston';
-import { katerDraussen, katerHello, katerPet } from '../game/kater';
+import { katerBeiLina, katerCushionRoom, katerDraussen, katerHello, katerHomeHello, katerPet } from '../game/kater';
+import { Cat3D } from './models/cat';
+import { KATER_CUSHION } from '../data/kater';
 import { TASCHE_VOLL, TASCHE_VOLL_MEHRERE } from '../data/texts';
 import { GARTEN_HINWEIS, ANKUNFT_ERSTMALS, ANKUNFT_WIEDER, BOOT_DORF_LINES, BOOT_INSEL_LINES, FAHRT_HIN, FAHRT_ZURUECK, FEST_FINALE, FEST_LINES, INSEL_BELOHNUNG, INSEL_FEST_FLAG } from '../data/insel';
 import { DORF_BOOT_RETURN, INSEL_ARRIVAL, INSEL_FEST, INSEL_Y0 } from '../data/maps/insel';
@@ -261,6 +263,11 @@ export class World3D {
   private winston: Winston | null = null;
   /** Kater, der schwarze Kater (erst, wenn Olaf und Christin da sind) */
   private kater: Kater | null = null;
+  /** Kater zu Hause auf dem Katzenkissen (eigene Figur, liegt nur da) */
+  private homeCat: Cat3D | null = null;
+  /** Position des Katers zu Hause (Weltkoordinaten wie bei Lina) */
+  private homeCatPos: { x: number; y: number } | null = null;
+  private homeCatTime = 0;
   /** Mo (Olis bester Freund) – nur zu Besuch auf der Samstagsparty */
   private mo: Character | null = null;
   /** Das Gestrüpp, in dem sich Winston verfangen hat (bis Lina ihn befreit) */
@@ -559,6 +566,7 @@ export class World3D {
       this.updatePrints(dtMs, player);
       this.updateWinston(dtMs, player, blocked, solid);
       this.updateKater(dtMs, player);
+      this.updateHomeCat(dtMs);
       this.updateMo(dtMs);
       this.updateIslandState(player);
       this.updateInselExtras(dtMs / 1000, player);
@@ -1088,6 +1096,9 @@ export class World3D {
     if (target.kind === 'mo' && this.mo?.visible) {
       return { key: 'mo', talk: true, pos: this.mo.root.position.clone().add(new THREE.Vector3(0, 1.15, 0)) };
     }
+    if (target.kind === 'kater' && this.session.inside && this.homeCat?.root.visible) {
+      return { key: 'kater-haus', talk: true, pos: this.homeCat.root.position.clone().add(new THREE.Vector3(0, 0.45, 0)) };
+    }
     if (target.kind === 'kater' && this.kater?.visible) {
       return { key: 'kater', talk: true, pos: this.kater.cat.root.position.clone().add(new THREE.Vector3(0, 0.5, 0)) };
     }
@@ -1258,7 +1269,7 @@ export class World3D {
       }
     }
     // Bewohner gehen vor – Winston wird gestreichelt, wenn sonst niemand vor Lina steht
-    if (this.session.inside) return this.winstonInFront(player) ? { kind: 'winston' } : this.homeTarget(player);
+    if (this.session.inside) return this.winstonInFront(player) ? { kind: 'winston' } : this.homeCatInFront(player) ? { kind: 'kater' } : this.homeTarget(player);
     const pickup = this.collectibles.pickupNear(tile, player.facing, player.x, player.y);
     if (pickup) return { kind: 'pickup', id: pickup };
     const [fx, fy] = DIRS[player.facing];
@@ -3705,7 +3716,53 @@ export class World3D {
     if (first) this.session.save();
   }
 
+  /** Kater liegt bei Lina auf dem Katzenkissen (nur im Raum mit dem Kissen, wenn er zu Besuch ist) */
+  private updateHomeCat(dtMs: number) {
+    const room = this.room;
+    const want = this.session.inside && !this.session.visiting && !!room && katerBeiLina(this.session) && katerCushionRoom(this.session) === room.id;
+    const cushion = want ? room?.items.find((i) => i.itemId === KATER_CUSHION) : undefined;
+    if (!cushion) {
+      if (this.homeCat?.root.visible) this.homeCat.root.visible = false;
+      this.homeCatPos = null;
+      return;
+    }
+    if (!this.homeCat) {
+      this.homeCat = new Cat3D();
+      this.scene.add(this.homeCat.root);
+    }
+    const tx = this.ox + cushion.x + 0.5;
+    const tz = this.oy + cushion.y + 0.5;
+    this.homeCatPos = { x: tx * TILE, y: tz * TILE };
+    this.homeCat.root.visible = true;
+    this.homeCat.root.position.set(tx, 0.05, tz);
+    this.homeCat.root.rotation.y = 0.6;
+    this.homeCatTime += dtMs / 1000;
+    // schläft zusammengerollt; ab und zu blinzelt er
+    const awake = this.homeCatTime % 9 < 1.2;
+    this.homeCat.pose({ step: 0, moving: false, rest: 2, tailUp: 0, eyesClosed: !awake, t: this.homeCatTime });
+  }
+
+  private homeCatInFront(player: Character): boolean {
+    const p = this.homeCatPos;
+    if (!p || !this.homeCat?.root.visible) return false;
+    const [fx, fy] = DIRS[player.facing];
+    const dx = p.x - player.x;
+    const dy = p.y - player.y;
+    const d = Math.hypot(dx, dy);
+    return d < TILE * 1.35 && dx * fx + dy * fy > d * 0.3;
+  }
+
   private talkToKater() {
+    if (this.session.inside && this.homeCatPos) {
+      const p = this.homeCatPos;
+      this.player?.faceTowards(p.x, p.y);
+      this.session.bus.emit('dialog:open', {
+        title: KATER_NAME,
+        lines: katerHomeHello(this.session),
+        choices: [{ label: '🐾 Streicheln', onSelect: () => this.petKater() }, { label: '👋 Weiter', onSelect: () => undefined }],
+      });
+      return;
+    }
     const k = this.kater;
     const player = this.player;
     if (!k || !player) return;
@@ -3719,12 +3776,16 @@ export class World3D {
   }
 
   private petKater() {
+    const home = this.session.inside ? this.homeCatPos : null;
     const k = this.kater;
     const player = this.player;
-    if (!k || !player) return;
+    if ((!k && !home) || !player) return;
     const r = katerPet(this.session);
-    k.purr();
-    this.fxAt('herzen', k.x, k.y, -0.3);
+    if (home) this.fxAt('herzen', home.x, home.y, -0.3);
+    else if (k) {
+      k.purr();
+      this.fxAt('herzen', k.x, k.y, -0.3);
+    }
     this.session.bus.emit('dialog:open', {
       title: KATER_NAME,
       lines: r.lines,
