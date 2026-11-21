@@ -255,6 +255,7 @@ export function normalizeAppearance(raw: unknown, fallback: Appearance = DEFAULT
     earrings: typeof r.earrings === 'boolean' ? r.earrings : fallback.earrings,
     shoes: pick(r.shoes, SHOES, fallback.shoes),
     faceShape: pick(r.faceShape, FACE_SHAPES, fallback.faceShape),
+    ...((typeof r.chain === 'boolean' ? r.chain : fallback.chain) ? { chain: true } : {}),
   };
 }
 
