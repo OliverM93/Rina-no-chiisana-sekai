@@ -131,7 +131,7 @@ function drawFace(a: Appearance, blink: boolean): HTMLCanvasElement {
 
   // Mund
   // Mit Bart sitzt der Mund in der Lücke zwischen Schnurrbart und Bart
-  const my = a.beard === 'voll' || a.beard === 'kurz' ? eyeY + 43 : eyeY + 40;
+  const my = a.beard === 'voll' || a.beard === 'kurz' || a.beard === 'stoppel' ? eyeY + 43 : eyeY + 40;
   const lip = darken(a.skinTone, 0.55);
   if (a.smile === 'laecheln') {
     ctx.strokeStyle = lip;
@@ -436,6 +436,15 @@ function addHair(head: THREE.Group, a: Appearance, R: number) {
       head.add(shell(R * 1.1 * k, col, FRONT - 0.95, 1.9, 0.3, 0.5)); // kurzer, glatter Pony
       break;
     }
+    case 'kurzhaar': {
+      // Kurzer Herrenschnitt (Fade): Seiten & Nacken nur ein Hauch (Haut schimmert durch),
+      // oben kurzes, glattes Deckhaar (ohne Tolle) – nichts hängt an den Wangen.
+      const k = Math.max(1, 1 + (a.build - 1) * 0.35);
+      backCap(1.72, 1.008 * k + 0.008, mixHex(a.skinTone, col, 0.35), 1.05);
+      backCap(1.12, 1.025 * k + 0.012, mixHex(a.skinTone, col, 0.7), 1.0);
+      topCap(0.8, 1.06 * k);
+      break;
+    }
     case 'zerzaust': {
       // Breitere (kräftigere) Köpfe brauchen etwas größere Kappen, sonst sticht die Haut zackig durch
       const k = Math.max(1, 1 + (a.build - 1) * 0.35);
@@ -618,6 +627,7 @@ export class Chibi3D {
         pants = a.accentColor === '#ffffff' ? '#7d6a73' : a.accentColor;
         break;
       case 'weste':
+      case 'steppweste':
         top = a.accentColor;
         pants = jeans;
         break;
@@ -719,7 +729,7 @@ export class Chibi3D {
     const street = o === 'sweatshirt' || o === 'shorts' || o === 'fleece' || !!printed;
     const summer = o === 'sommer';
     /** kurze Ärmel */
-    const shortSleeves = summer || o === 'bandshirt' || o === 'polo';
+    const shortSleeves = summer || o === 'bandshirt' || o === 'polo' || o === 'steppweste';
     // Oversize: weiter & länger (reicht über die Hüfte); „very oversized“ bei den Druck-Sweatshirts
     const big = printed ? 1.4 : o === 'fleece' ? 1.38 : 1.3;
     const shirtShape: [number, number, number, number, number] = street
@@ -771,6 +781,35 @@ export class Chibi3D {
       vest.position.y = torsoY + torso * 0.1;
       this.body.add(vest);
       for (let i = 0; i < 3; i++) this.body.add(part(sphereLow, '#c9c3b8', 0.011, 0.011, 0.011, 0.032, torsoY + 0.08 - i * 0.055, topR * 1.12));
+    }
+    if (o === 'steppweste') {
+      // Steppweste: ärmellos, vorne mit Reißverschluss, waagerechte Steppnähte; darunter ein T-Shirt mit rundem Halsausschnitt
+      const tee = mesh(new THREE.TorusGeometry(topR * 0.5, 0.01, 6, 18), toon(darken(a.accentColor, 0.08)));
+      tee.rotation.x = Math.PI / 2;
+      tee.position.y = neckY - 0.01;
+      this.body.add(tee);
+      const vh = torso * 0.8;
+      const vy = torsoY + torso * 0.08;
+      const vest = mesh(new THREE.CylinderGeometry(topR * 1.05, topR * 1.22, vh, 20, 1, true, 0.22, Math.PI * 2 - 0.44), toon(a.outfitColor, { side: THREE.DoubleSide }));
+      vest.position.y = vy;
+      this.body.add(vest);
+      // Steppnähte als flache Ringe (etwas heller als die Weste)
+      const seam = toon(lighten(a.outfitColor, 0.22));
+      for (let i = 1; i < 5; i++) {
+        const f = i / 5;
+        const r = topR * (1.22 - (1.22 - 1.05) * f) + 0.004;
+        const ring = mesh(new THREE.TorusGeometry(r, 0.0045, 4, 24, Math.PI * 2 - 0.5), seam);
+        ring.rotation.x = Math.PI / 2;
+        ring.rotation.z = Math.PI / 2 + 0.25;
+        ring.position.y = vy - vh / 2 + vh * f;
+        this.body.add(ring);
+      }
+      // Reißverschluss-Kanten
+      for (const s of [-1, 1]) this.body.add(part(box, darken(a.outfitColor, 0.15), 0.008, vh * 0.95, 0.006, s * 0.028, vy, topR * 1.14));
+      // Stehkragen der Weste
+      const collar = mesh(new THREE.CylinderGeometry(topR * 0.62, topR * 0.68, 0.035, 18, 1, true, 0.5, Math.PI * 2 - 1.0), toon(a.outfitColor, { side: THREE.DoubleSide }));
+      collar.position.y = neckY - 0.005;
+      this.body.add(collar);
     }
     if (o === 'hoodie') {
       // Kapuze im Nacken, Kordeln, Reißverschluss
@@ -868,6 +907,15 @@ export class Chibi3D {
       }
     }
 
+    // feine Halskette: liegt als kleines U vorne auf der Brust
+    if (a.chain) {
+      const r = topR * 0.42;
+      const chain = mesh(new THREE.TorusGeometry(r, 0.006, 5, 20, Math.PI), toon('#e0bd5a'));
+      chain.rotation.set(-0.3, 0, Math.PI);
+      chain.position.set(0, neckY - 0.012, topR * 0.98);
+      this.body.add(chain);
+    }
+
     // Arme (Drehpunkt an der Schulter)
     const shoulderY = this.hipY + torso * 0.92;
     const sleeve = o === 'weste' ? a.accentColor : top;
@@ -929,7 +977,17 @@ export class Chibi3D {
         m.rotation.z = s * -0.18;
         this.head.add(m);
       }
-    } else if (a.beard !== 'keiner') {
+    } else if (a.beard === 'stoppel') {
+      // Dreitagebart: dieselbe Form wie der kurze Bart, aber hauteng und nur als Schatten (Haut + Haarfarbe gemischt)
+      const bc = mixHex(a.skinTone, a.beardColor || a.hairColor, 0.48);
+      const stubble = beardShell(R * 1.012, bc, 2.02, 1.6, 2.66);
+      if (oval) taperChin(stubble.geometry, R * 1.012);
+      stubble.scale.set(wide, 0.93, 0.95);
+      this.head.add(stubble);
+      // Oberlippe: ganz flacher Schatten statt Schnurrbart
+      const lip = part(sphereLow, mixHex(a.skinTone, a.beardColor || a.hairColor, 0.42), R * 0.17, R * 0.035, R * 0.025, 0, -R * 0.105, R * 0.928);
+      this.head.add(lip);
+    } else if (a.beard === 'kurz' || a.beard === 'voll') {
       const bc = a.beardColor || lighten(a.hairColor, 0.05);
       const full = a.beard === 'voll';
       // Ein Stück: Koteletten an den Seiten hoch, in der Mitte bis knapp unter die Unterlippe (Mund bleibt frei)

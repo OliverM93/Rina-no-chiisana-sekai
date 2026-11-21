@@ -8,9 +8,9 @@
 import { palette } from '../style/palette';
 import type { Season } from './time';
 
-export type HairStyle = 'locken' | 'schulterlang' | 'bob' | 'zopf' | 'dutt' | 'kurz' | 'wuschel' | 'zerzaust' | 'kurzgeschoren' | 'glatt' | 'fade';
-export type Outfit = 'kleid' | 'pulli' | 'latzhose' | 'hemd' | 'strickjacke' | 'mantel' | 'weste' | 'streifenhemd' | 'hoodie' | 'troyer' | 'sweatshirt' | 'shorts' | 'sommer' | 'fleece' | 'hawaii' | 'sport' | 'radierkopf' | 'bandshirt' | 'polo' | 'jacke' | 'saison';
-export type Beard = 'keiner' | 'kurz' | 'voll' | 'schnurrbart';
+export type HairStyle = 'locken' | 'schulterlang' | 'bob' | 'zopf' | 'dutt' | 'kurz' | 'wuschel' | 'zerzaust' | 'kurzgeschoren' | 'glatt' | 'fade' | 'kurzhaar';
+export type Outfit = 'kleid' | 'pulli' | 'latzhose' | 'hemd' | 'strickjacke' | 'mantel' | 'weste' | 'streifenhemd' | 'hoodie' | 'troyer' | 'sweatshirt' | 'shorts' | 'sommer' | 'fleece' | 'hawaii' | 'sport' | 'radierkopf' | 'bandshirt' | 'polo' | 'jacke' | 'steppweste' | 'saison';
+export type Beard = 'keiner' | 'kurz' | 'voll' | 'schnurrbart' | 'stoppel';
 export type Smile = 'laecheln' | 'grinsen' | 'zahnluecke';
 export type GlassesShape = 'rund' | 'eckig';
 /** „saison“ = Schnürstiefel im Herbst/Winter, weiße Sneaker im Frühling/Sommer */
@@ -46,6 +46,8 @@ export interface Appearance {
   faceShape: FaceShape;
   /** Bandshirt: fester Bandname statt der Tages-Band (z. B. Olis seltenes Tourshirt) */
   band?: string;
+  /** feine Halskette (nur Bewohner, z. B. Mo) */
+  chain?: boolean;
 }
 
 export interface Option<T> {
@@ -65,6 +67,7 @@ export const HAIR_STYLES: Option<HairStyle>[] = [
   { id: 'kurzgeschoren', label: 'Kurz geschoren' },
   { id: 'glatt', label: 'Glatt mit Mittelscheitel' },
   { id: 'fade', label: 'Fade (kurze Seiten, Deckhaar oben)' },
+  { id: 'kurzhaar', label: 'Kurzhaarschnitt (Seiten ganz kurz)' },
 ];
 
 export const OUTFITS: Option<Outfit>[] = [
@@ -88,6 +91,7 @@ export const OUTFITS: Option<Outfit>[] = [
   { id: 'bandshirt', label: 'Bandshirt & Cargohose' },
   { id: 'polo', label: 'Polo mit Ärmel-Abzeichen & Cargohose' },
   { id: 'jacke', label: 'Überjacke mit Ärmel-Abzeichen & Cargohose' },
+  { id: 'steppweste', label: 'Steppweste & T-Shirt' },
   { id: 'saison', label: 'Streetwear je nach Jahreszeit (wechselt täglich)' },
 ];
 
@@ -228,6 +232,7 @@ export function normalizeAppearance(raw: unknown, fallback: Appearance = DEFAULT
     { id: 'kurz', label: '' },
     { id: 'voll', label: '' },
     { id: 'schnurrbart', label: '' },
+    { id: 'stoppel', label: '' },
   ];
   return {
     hairStyle: pick(r.hairStyle, HAIR_STYLES, fallback.hairStyle),
@@ -250,6 +255,7 @@ export function normalizeAppearance(raw: unknown, fallback: Appearance = DEFAULT
     earrings: typeof r.earrings === 'boolean' ? r.earrings : fallback.earrings,
     shoes: pick(r.shoes, SHOES, fallback.shoes),
     faceShape: pick(r.faceShape, FACE_SHAPES, fallback.faceShape),
+    ...((typeof r.chain === 'boolean' ? r.chain : fallback.chain) ? { chain: true } : {}),
   };
 }
 
@@ -273,6 +279,7 @@ export function appearanceKey(a: Appearance): string {
     a.smile,
     a.scarf,
     a.earrings ? 1 : 0,
+    a.chain ? 1 : 0,
     a.shoes,
     a.faceShape,
   ].join('|');

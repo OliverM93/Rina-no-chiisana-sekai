@@ -1,6 +1,6 @@
 /**
  * Entwickler-Galerie in 3D: Figuren und Modelle nebeneinander.
- * Aufruf: http://localhost:5173/gallery.html  (?ansicht=figuren|natur|gebaeude|kleidung, ?winkel=0..360)
+ * Aufruf: http://localhost:5173/gallery.html  (?ansicht=figuren|natur|gebaeude|kleidung, ?winkel=0..360, ?nur=oli,mo)
  */
 import * as THREE from 'three';
 import type { Season } from '../core/time';
@@ -40,7 +40,7 @@ let angle = Number(params.get('winkel') ?? 0) * (Math.PI / 180);
 const content = new THREE.Group();
 scene.add(content);
 
-const people: Array<[string, Appearance]> = [
+const allPeople: Array<[string, Appearance]> = [
   ['Lina', { ...DEFAULT_LINA, faceShape: (params.get('gesicht') as Appearance['faceShape'] | null) ?? DEFAULT_LINA.faceShape }],
   ['Gisela', LOOKS.gisela],
   ['Olaf', LOOKS.olaf],
@@ -49,7 +49,10 @@ const people: Array<[string, Appearance]> = [
   ['Jens', LOOKS.jens],
   ['Thalia', LOOKS.thalia],
   ['Oli', LOOKS.oli],
+  ['Mo', LOOKS.mo],
 ];
+const onlyNames = params.get('nur')?.toLowerCase().split(',');
+const people = onlyNames ? allPeople.filter(([name]) => onlyNames.includes(name.toLowerCase())) : allPeople;
 const chibis: Chibi3D[] = [];
 const dogs: Array<{ dog: Dog3D; rest: 0 | 1 | 2; moving: boolean; digging?: boolean }> = [];
 

@@ -98,6 +98,7 @@ export const THALIA: NpcDef = {
       { text: ['Du nach einem Bier bist die beste Lina.','Du erzählst Witze, die du nüchtern nie wagen würdest. Und lachst am lautesten selbst darüber. Ich liebe das.'] },
       { text: ['Ich spiele ja nicht so viel. Aber wenn Oli und Lars zocken, hol ich Chips.','Und ich kartiere ihre Fehler. Das wird eine sehr dicke Karte.'] },
       { text: ['Olis Freund Mo war letztens dabei, als wir am Strand waren.', 'Der ist … ganz süß. Also, nett. Er ist nett. Und Lina: Ich sehe dein Gesicht. Bitte plane jetzt nichts.'] },
+      { text: ['Wusstest du, dass Mo Jiu-Jitsu-Trainer ist?', 'Ich überlege, ob ich mal mittrainiere. Nur fürs Training! … Lina. Dein Gesicht. Schon wieder.'] },
       { text: ['Weißt du noch, Tschechien? In deinem Rucksack war mehr Cola Zero als Wechselwäsche.', 'Ich hab’s kartiert. Gedanklich.'] },
     ],
     gifts: {

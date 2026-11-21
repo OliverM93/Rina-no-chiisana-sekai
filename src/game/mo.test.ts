@@ -22,9 +22,10 @@ function sessionAt(iso: string) {
 }
 
 describe('Mo zu Besuch', () => {
-  it('hat ein eigenes Aussehen (schwarze Weste, Dreitagebart)', () => {
-    expect(LOOKS.mo.outfit).toBe('weste');
-    expect(LOOKS.mo.beard).toBe('kurz');
+  it('hat ein eigenes Aussehen (kurze Haare, Steppweste, Dreitagebart)', () => {
+    expect(LOOKS.mo.outfit).toBe('steppweste');
+    expect(LOOKS.mo.hairStyle).toBe('kurzhaar');
+    expect(LOOKS.mo.beard).toBe('stoppel');
   });
 
   it('Lina kann Mo erst einladen, wenn Oli und Thalia da sind und Thalia sie mag', () => {
