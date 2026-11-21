@@ -1,6 +1,6 @@
 /**
  * Festschmuck im Dorf: Weihnachtsbaum auf dem Dorfplatz (Advent & Weihnachten),
- * Kürbisse vor den Häusern (Halloween), Luftballons an Linas Haus (Geburtstag).
+ * Kürbisse vor den Häusern (Halloween), Luftballons am Haus des Geburtstagskinds (Lina oder ein Bewohner).
  * Feuerwerk und Sternenhimmel laufen als Oberfläche (die Kamera zeigt keinen Himmel).
  */
 import * as THREE from 'three';
@@ -29,9 +29,9 @@ export class Festivals3D {
   }
 
   /** Schmuck passend zu den heutigen Festen aufbauen */
-  refresh(fests: readonly FestivalId[]) {
+  refresh(fests: readonly FestivalId[], birthdayHome: string | null = null) {
     const houses = this.map.objects.filter((o) => (o.kind === 'house' || o.kind === 'bistro' || o.kind === 'praxis') && isActive(this.map, o.id));
-    const key = fests.join(',') + '|' + houses.map((h) => h.id).join(',');
+    const key = fests.join(',') + '|' + (birthdayHome ?? '') + '|' + houses.map((h) => h.id).join(',');
     if (key === this.key) return;
     this.key = key;
     this.group.clear();
@@ -63,13 +63,15 @@ export class Festivals3D {
         }
       }
     }
-    if (fests.includes('geburtstag')) {
-      const lina = this.map.objects.find((o) => o.id === 'haus-lina');
-      if (lina) {
-        for (const dx of [0.3, lina.w - 0.3]) {
+    // Luftballons am Haus des Geburtstagskinds (Lina oder ein Bewohner)
+    const bdayHome = fests.includes('geburtstag') ? 'haus-lina' : birthdayHome;
+    if (bdayHome) {
+      const home = this.map.objects.find((o) => o.id === bdayHome && isActive(this.map, o.id));
+      if (home) {
+        for (const dx of [0.3, home.w - 0.3]) {
           const b = makeBalloons();
-          const x = lina.x + dx;
-          const z = lina.y + lina.h + 0.2;
+          const x = home.x + dx;
+          const z = home.y + home.h + 0.2;
           b.position.set(x, this.ground(x, z), z);
           this.group.add(b);
           this.balloons.push(b);

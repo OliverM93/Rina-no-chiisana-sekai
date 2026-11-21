@@ -42,6 +42,7 @@ export const RECIPES: readonly RecipeDef[] = [
   // Jens' Kochstudio
   { id: 'ruehrei', station: 'kueche', result: 'ruehrei', ingredients: [{ itemId: 'ei', count: 2 }], start: true, hint: '' },
   { id: 'wachtel-spiegelei', station: 'kueche', result: 'wachtel-spiegelei', ingredients: [{ itemId: 'wachtelei', count: 3 }], start: true, hint: '' },
+  { id: 'geburtstagskuchen', station: 'kueche', result: 'geburtstagskuchen', ingredients: [{ itemId: 'ei', count: 2 }, { itemId: 'pfirsich', count: 1 }, { itemId: 'keks', count: 2 }], start: true, hint: '' },
   { id: 'obstsalat', station: 'kueche', result: 'obstsalat', ingredients: [{ itemId: 'apfel', count: 1 }, { itemId: 'birne', count: 1 }, { itemId: 'pfirsich', count: 1 }], start: true, hint: '' },
   { id: 'lavendelkekse', station: 'kueche', result: 'lavendelkekse', count: 2, ingredients: [{ itemId: 'lavendel', count: 1 }, { itemId: 'keks', count: 2 }], fund: 'lavendel', hint: 'Pflanz doch mal Lavendel im Beet …' },
   { id: 'koeder-teig', result: 'koeder-teig', count: 3, ingredients: [{ itemId: 'keks', count: 1 }, { itemId: 'hering', count: 1 }], fund: 'hering', hint: 'Fang mal einen Hering …' },
