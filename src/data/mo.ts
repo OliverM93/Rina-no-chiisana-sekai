@@ -35,7 +35,7 @@ export const MO_MEETING: readonly string[] = [
   'Du winkst Thalia rüber. Sie kommt tanzend an – und richtet ganz unauffällig ihr Halstuch.',
   'Thalia: „Hi! Ich bin Thalia. Ich hab die Playlist gemacht. Wenn sie dir nicht gefällt, war es Oli.“',
   'Mo lacht. Die beiden reden über Clubs, über Tschechien, über den besten Döner der Stadt.',
-  'Thalia: „Du gibst Jiu-Jitsu-Training? Zeig mal einen Griff!“ – Mo, ganz ruhig: „Erst nach dem Aufwärmen. Das sag ich auch meinen Zwölfjährigen.“ Es läuft. Du stupst Oli an.',
+  'Thalia: „Du gibst Jiu-Jitsu-Training? Zeig mal einen Griff!“ – Mo, ganz ruhig: „Erst nach dem Aufwärmen. Das sag ich auch meinen Leuten im Abendkurs – die sind alle erwachsen und trotzdem ungeduldig.“ Es läuft. Du stupst Oli an.',
   'Dann hält Mo stolz sein Handy hoch: „Darf ich euch was zeigen? Das ist Jule. Wir haben uns vor drei Wochen kennengelernt. Ich glaub, das wird was.“',
   'Kurze Stille. Oli schaut sehr interessiert in sein Glas. Du schaust Thalia an.',
   'Thalia grinst: „Jule hat Geschmack. Grüß sie von mir – und bring sie nächsten Samstag mit!“',
@@ -45,7 +45,7 @@ export const MO_MEETING: readonly string[] = [
 
 /** Wenn Mo später ab und zu samstags vorbeischaut */
 export const MO_LINES: readonly (readonly string[])[] = [
-  ['Ich komm grad vom Training. Kinderkurs, Jiu-Jitsu.', 'Eine Zwölfjährige hat mich heute in den Armhebel genommen. Ich hab abgeklopft und war sehr stolz. Auf sie.'],
+  ['Ich komm grad vom Training. Abendkurs, Jiu-Jitsu – lauter Erwachsene nach Feierabend.', 'Eine Steuerberaterin hat mich heute in den Armhebel genommen. Ich hab abgeklopft und war sehr stolz. Auf sie.'],
   ['Früher hab ich an der Tür gestanden. Türsteher, fünf Jahre.', 'Das Wichtigste, was ich da gelernt hab: freundlich bleiben. Die meisten wollen nur, dass jemand sie ernst nimmt.'],
   ['Ich lese gerade wieder Seneca.', 'Der meint, wir leiden öfter in der Vorstellung als in der Wirklichkeit. Hat bei mir geholfen. Nur nicht bei Spinnen.'],
   ['Hab Philosophie studiert. Die Leute fragen immer, was man damit macht.', 'Ich sag: Ich bringe Leuten bei, ruhig zu atmen, während jemand auf ihnen liegt. Das ist angewandte Philosophie.'],
