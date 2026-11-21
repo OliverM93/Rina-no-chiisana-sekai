@@ -148,17 +148,18 @@ export const LOOKS: Readonly<Record<string, Appearance>> = {
   mo: {
     ...base,
     hairStyle: 'kurzhaar',
-    hairColor: palette.hair.braun,
+    hairColor: palette.hair.dunkelbraun,
     outfit: 'steppweste',
     outfitColor: '#26252b',
     accentColor: '#f7f5f0',
     height: 1.03,
     build: 1.08,
     beard: 'stoppel',
-    eyeColor: palette.eyeColors.graublau,
+    eyeColor: palette.eyeColors.braun,
     smile: 'grinsen',
     shoes: 'sneaker',
     faceShape: 'oval',
+    chain: true,
   },
 };
 

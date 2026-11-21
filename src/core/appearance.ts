@@ -46,6 +46,8 @@ export interface Appearance {
   faceShape: FaceShape;
   /** Bandshirt: fester Bandname statt der Tages-Band (z. B. Olis seltenes Tourshirt) */
   band?: string;
+  /** feine Halskette (nur Bewohner, z. B. Mo) */
+  chain?: boolean;
 }
 
 export interface Option<T> {
@@ -276,6 +278,7 @@ export function appearanceKey(a: Appearance): string {
     a.smile,
     a.scarf,
     a.earrings ? 1 : 0,
+    a.chain ? 1 : 0,
     a.shoes,
     a.faceShape,
   ].join('|');

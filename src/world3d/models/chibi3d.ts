@@ -437,15 +437,18 @@ function addHair(head: THREE.Group, a: Appearance, R: number) {
       break;
     }
     case 'kurzhaar': {
-      // Klassischer kurzer Herrenschnitt: Seiten & Nacken nur ein Hauch (Haut schimmert durch),
-      // oben kurzes Deckhaar, vorne leicht nach oben gestrichen – nichts hängt an den Wangen herunter.
+      // Kurzer Herrenschnitt (Fade): Seiten & Nacken nur ein Hauch (Haut schimmert durch),
+      // oben kurzes, leicht strukturiertes Deckhaar, vorne etwas nach oben gestrichen – nichts hängt an den Wangen.
       const k = Math.max(1, 1 + (a.build - 1) * 0.35);
-      const buzz = mixHex(a.skinTone, col, 0.4);
-      backCap(1.75, 1.008 * k + 0.008, buzz, 1.05);
-      backCap(1.2, 1.03 * k + 0.012, mixHex(a.skinTone, col, 0.75), 1.0);
-      topCap(0.92, 1.075 * k);
-      // kleiner, nach oben gestrichener Ansatz vorne
-      for (let i = -2; i <= 2; i++) blob(onSphere(R * 1.06 * k, 0.62 + Math.abs(i) * 0.04, FRONT + i * 0.2), R * 0.17, shades[(i + 3) % 2]);
+      backCap(1.72, 1.008 * k + 0.008, mixHex(a.skinTone, col, 0.35), 1.05);
+      backCap(1.12, 1.025 * k + 0.012, mixHex(a.skinTone, col, 0.7), 1.0);
+      topCap(0.8, 1.06 * k);
+      // etwas Volumen oben (flach, glatt) und vorne ein kleiner hochgestrichener Ansatz
+      topCap(0.5, 1.09 * k, shades[1]);
+      for (let i = -1; i <= 1; i++) {
+        const p = onSphere(R * 1.05 * k, 0.5, FRONT + i * 0.32);
+        head.add(part(sphereLow, shades[i === 0 ? 0 : 2], R * 0.3, R * 0.12, R * 0.2, p.x, p.y, p.z));
+      }
       break;
     }
     case 'zerzaust': {
@@ -910,6 +913,15 @@ export class Chibi3D {
       }
     }
 
+    // feine Halskette: liegt als kleines U vorne auf der Brust
+    if (a.chain) {
+      const r = topR * 0.42;
+      const chain = mesh(new THREE.TorusGeometry(r, 0.006, 5, 20, Math.PI), toon('#e0bd5a'));
+      chain.rotation.set(-0.3, 0, Math.PI);
+      chain.position.set(0, neckY - 0.012, topR * 0.98);
+      this.body.add(chain);
+    }
+
     // Arme (Drehpunkt an der Schulter)
     const shoulderY = this.hipY + torso * 0.92;
     const sleeve = o === 'weste' ? a.accentColor : top;
@@ -973,13 +985,13 @@ export class Chibi3D {
       }
     } else if (a.beard === 'stoppel') {
       // Dreitagebart: dieselbe Form wie der kurze Bart, aber hauteng und nur als Schatten (Haut + Haarfarbe gemischt)
-      const bc = mixHex(a.skinTone, a.beardColor || a.hairColor, 0.38);
+      const bc = mixHex(a.skinTone, a.beardColor || a.hairColor, 0.48);
       const stubble = beardShell(R * 1.012, bc, 2.02, 1.6, 2.66);
       if (oval) taperChin(stubble.geometry, R * 1.012);
       stubble.scale.set(wide, 0.93, 0.95);
       this.head.add(stubble);
       // Oberlippe: ganz flacher Schatten statt Schnurrbart
-      const lip = part(sphereLow, mixHex(a.skinTone, a.beardColor || a.hairColor, 0.3), R * 0.17, R * 0.035, R * 0.025, 0, -R * 0.105, R * 0.928);
+      const lip = part(sphereLow, mixHex(a.skinTone, a.beardColor || a.hairColor, 0.42), R * 0.17, R * 0.035, R * 0.025, 0, -R * 0.105, R * 0.928);
       this.head.add(lip);
     } else if (a.beard === 'kurz' || a.beard === 'voll') {
       const bc = a.beardColor || lighten(a.hairColor, 0.05);

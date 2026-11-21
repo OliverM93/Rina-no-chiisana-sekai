@@ -108,7 +108,7 @@ describe('Frisur „Fade“', () => {
 
 describe('Mo: kurze Haare, Dreitagebart, Steppweste', () => {
   it('trägt Kurzhaarschnitt, Stoppelbart und Steppweste über weißem T-Shirt', () => {
-    expect(LOOKS.mo).toMatchObject({ hairStyle: 'kurzhaar', beard: 'stoppel', outfit: 'steppweste' });
+    expect(LOOKS.mo).toMatchObject({ hairStyle: 'kurzhaar', beard: 'stoppel', outfit: 'steppweste', chain: true });
   });
   it('neue Werte überstehen das Normalisieren (Editor & Spielstand)', () => {
     const a = normalizeAppearance({ hairStyle: 'kurzhaar', beard: 'stoppel', outfit: 'steppweste' });
