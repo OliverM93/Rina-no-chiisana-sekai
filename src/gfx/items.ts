@@ -527,6 +527,16 @@ const DRAW: Record<string, Draw> = {
     ellipse(ctx, 16, 3.2, 1.5, 2, '#f7d26a');
     for (const x of [8, 13, 19, 24]) ellipse(ctx, x, 21, 1.3, 1.3, '#e8484f');
   },
+  geburtstagskuchen: (ctx) => {
+    // Linas Kuchen: ein runder Schokokuchen mit Pfirsichstücken und drei Kerzen
+    roundRect(ctx, 5, 15, 22, 11, 4, '#8a5a3c', '#5e3b26', 1.3);
+    ellipse(ctx, 16, 15.5, 11, 3, '#a8714b', '#5e3b26', 1.1);
+    for (const x of [9, 16, 23]) ellipse(ctx, x, 15.2, 1.8, 1.2, '#f7b88a');
+    for (const x of [11, 16, 21]) {
+      roundRect(ctx, x - 1, 7, 2, 7, 1, '#f7a8be');
+      ellipse(ctx, x, 5.8, 1.3, 1.8, '#f7d26a');
+    }
+  },
   gluecksklee: (ctx) => {
     ctx.strokeStyle = '#4f9a5a';
     ctx.lineWidth = 2;

@@ -13,6 +13,7 @@ import type { NpcDef } from '../data/npcs/types';
 import type { Session } from '../game/session';
 import { wardrobeFor } from '../game/wishes';
 import { isPartyTime, PARTY_ENTRY } from '../game/party';
+import { birthdayEntry } from '../game/geburtstag';
 import { dinnerEntry } from '../game/dinner';
 import { cafeEntry } from '../game/cafe';
 import { meetupEntry } from '../game/meetups';
@@ -53,10 +54,10 @@ export class Npc {
     this.applyEntry(this.wantedEntry(), true);
   }
 
-  /** Was gerade dran ist: Party, Sonntagsessen, Treffen, Café-Besuch – sonst der normale Tagesablauf */
+  /** Was gerade dran ist: Party, Geburtstagsrunde, Sonntagsessen, Treffen, Café-Besuch – sonst der normale Tagesablauf */
   private wantedEntry(): ScheduleEntry {
     if (isPartyTime(this.session)) return PARTY_ENTRY;
-    return dinnerEntry(this.session, this.def.id) ?? meetupEntry(this.session, this.def.id) ?? cafeEntry(this.session, this.def.id) ?? activityAt(this.def.schedule, this.session.clock());
+    return birthdayEntry(this.session) ?? dinnerEntry(this.session, this.def.id) ?? meetupEntry(this.session, this.def.id) ?? cafeEntry(this.session, this.def.id) ?? activityAt(this.def.schedule, this.session.clock());
   }
 
   private get map(): WorldMap {

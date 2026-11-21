@@ -135,6 +135,7 @@ const list: ItemDef[] = [
   { id: 'bratapfel', name: 'Bratapfel', plural: 'Bratäpfel', category: 'essen', price: 95, description: 'Ein warmer Apfel mit Keks-Zimt-Füllung. Riecht das ganze Haus nach Weihnachten.' },
   { id: 'zimtsterne', name: 'Zimtsterne', plural: 'Zimtsterne', category: 'essen', price: 40, description: 'Kleine Sterne mit weißem Zuckerguss. Selbst gebacken! Oma sagt: „Gar nicht schlecht.“ Das ist ein großes Lob.' },
   { id: 'lebkuchenherz', name: 'Lebkuchenherz', plural: 'Lebkuchenherzen', category: 'geschenk', price: null, maxStack: 1, description: 'Von Jens, mit Zuckerguss: „Ma chérie“. Und ein Hauch Glitzer. Natürlich.' },
+  { id: 'geburtstagskuchen', name: 'Linas Geburtstagskuchen', plural: 'Linas Geburtstagskuchen', category: 'essen', price: 240, description: 'Selbst gebacken, mit Pfirsich und drei Kerzen. Am Geburtstag das schönste Geschenk von allen.' },
   { id: 'geburtstagstorte', name: 'Olis Geburtstagstorte', plural: 'Olis Geburtstagstorten', category: 'essen', price: 300, description: 'Drei Stockwerke geplant, zwei geschafft. Mit ganz viel Liebe und schiefer Kerze.' },
   { id: 'gluecksklee', name: 'Glücksklee', plural: 'Glücksklee', category: 'fund', price: 50, description: 'Ein vierblättriges Kleeblatt für das neue Jahr. Von Oma – „bringt Glück, keine Widerrede“.' },
   { id: 'osterei', name: 'Osterei', plural: 'Ostereier', category: 'fund', price: 30, description: 'Ein bunt bemaltes Ei. Irgendwer hat es im Gras versteckt …' },
