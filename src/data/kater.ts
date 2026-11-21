@@ -46,3 +46,29 @@ export const KATER_PET_AGAIN: readonly string[] = ['Brrr, brrr, brrr. Er schnurr
 
 /** Wenn er schläft oder bei Regen nicht zu sehen ist, steht nichts da – dies sind Texte für den Notfall (Klick auf den leeren Platz) */
 export const KATER_RAIN_LINE = 'Bei Regen ist Kater lieber drinnen. Wer will es ihm verdenken?';
+
+// ---- Kater bei Lina zu Hause (Katzenkissen) ----
+
+/** Möbel, auf dem Kater bei Lina schläft */
+export const KATER_CUSHION = 'katzenkissen';
+
+/** An Besuchstagen kommt er ab dieser Stunde (bei schlechtem Wetter schon ab morgens) */
+export const KATER_VISIT_FROM = 14;
+
+/** Jeden wievielten Tag (ungefähr) er von sich aus vorbeischaut */
+export const KATER_VISIT_EVERY = 3;
+
+/** Was er manchmal mitbringt (einmal je Besuchstag) – nichts Lebendiges, nur Fundstücke */
+export const KATER_MITBRINGSEL: readonly { itemId: string; line: string }[] = [
+  { itemId: 'schneckenhaus', line: 'Neben dem Kissen liegt ein leeres Schneckenhaus. Kater schaut sehr stolz.' },
+  { itemId: 'wildblumen', line: 'Kater hat ein paar Wildblumen mitgebracht. Etwas zerkaut. Es zählt die Geste.' },
+  { itemId: 'ast', line: 'Ein kleiner Ast liegt vor dem Kissen. Ein Geschenk! Lina bedankt sich förmlich.' },
+  { itemId: 'stein', line: 'Kater schiebt dir einen glatten Kiesel hin. Dann schaut er weg, als wäre nichts gewesen.' },
+];
+
+/** Wenn Lina ihn zu Hause anspricht (er liegt auf dem Kissen) */
+export const KATER_HOME_HELLO: readonly (readonly string[])[] = [
+  ['Kater liegt zusammengerollt auf dem Kissen. Ein Ohr dreht sich zu dir.', 'Er hat beschlossen, dass er hier jetzt auch wohnt. Manchmal.'],
+  ['Kater hat es sich auf dem Kissen gemütlich gemacht.', 'Lina: „Na, bist du wieder zu Besuch? Papa und Christin wissen Bescheid?“ – Kater blinzelt. Das heißt wohl ja.'],
+  ['Auf dem Kissen liegt ein schwarzer Brotlaib mit gelben Augen.', 'Winston schaut aus sicherer Entfernung zu. Die beiden haben einen Waffenstillstand.'],
+];

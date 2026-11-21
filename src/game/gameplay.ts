@@ -28,6 +28,8 @@ import { itemIconUrl } from '../gfx/items';
 import { onItemObtained } from './crafting';
 import { festTalk } from './festivals';
 import { isPartyTime } from './party';
+import { gatheringLines, isBirthdayEvening, noteBirthdayGift } from './geburtstag';
+import { BIRTHDAY_CAKE, CAKE_THANKS } from '../data/geburtstag';
 import { checkOliAnniversaries, playStageScene } from './romance';
 import { STAGE_LEAD } from '../data/oliStufen';
 import { checkMatteoLetters } from './matteo';
@@ -183,6 +185,7 @@ function dialogueContext(session: Session, npcId: string, firstToday: boolean): 
   if (session.data?.flags.larsEingezogen) tags.push('lars-da');
   if (session.data?.flags.thaliaEingezogen) tags.push('thalia-da');
   if (isPartyTime(session)) tags.push('party');
+  if (isBirthdayEvening(session)) tags.push('geburtstagsrunde');
   for (const f of festivalsOn(now, session.data?.player.birthday)) tags.push(`fest-${f}`);
   for (const n of NPCS) {
     if (!n.birthday) continue;
@@ -279,6 +282,7 @@ export function talkToNpc(session: Session, npcId: string): TalkOutcome {
     if (npc.birthday && npc.birthdayLines && isSameDayMonth(session.clock(), npc.birthday)) lines.push(...npc.birthdayLines.greeting);
     else if (fest.length > 0) lines.push(...fest);
     else lines.push(...pickLine(npc.dialogue.greetings, ctx));
+    lines.push(...gatheringLines(session, npcId));
     lines.push(...takeMemory(session, npcId));
     lines.push(...straussLustLines(session, npcId));
     if (npcId === 'thalia') lines.push(...thaliaMapLines(session));
@@ -295,7 +299,8 @@ export function talkToNpc(session: Session, npcId: string): TalkOutcome {
       giveItem(session, treat.itemId, treat.count ?? 1);
     }
   } else {
-    lines.push(...pickLine([...npc.dialogue.chat, ...memoryLinesFor(session, npcId)], ctx));
+    const runde = gatheringLines(session, npcId);
+    lines.push(...(runde.length > 0 ? runde : pickLine([...npc.dialogue.chat, ...memoryLinesFor(session, npcId)], ctx)));
   }
   if (result.heartUp) handleHeartUp(session, npc, st, lines);
   session.changed();
@@ -347,13 +352,16 @@ export function giftToNpc(session: Session, npcId: string, itemId: string): Gift
   // Werkzeuge & Erinnerungsstücke behält Lina (sonst wären sie für immer weg)
   if (!npc || isKeepsake(itemId) || !takeItem(session, itemId, 1)) return null;
   const st = npcState(session, npcId);
-  const r = giveGift(st, giftPreferences(npc.preferences, itemId), itemId, session.today());
+  const isBirthday = !!npc.birthday && isSameDayMonth(session.clock(), npc.birthday);
+  // Linas Geburtstagskuchen: am Geburtstag geliebt, sonst gemocht
+  const prefs = itemId === BIRTHDAY_CAKE ? { loves: isBirthday ? [itemId] : [], likes: isBirthday ? [] : [itemId], dislikes: [] } : giftPreferences(npc.preferences, itemId);
+  const r = giveGift(st, prefs, itemId, session.today());
   noteTaste(session, npcId, r.reaction, itemId);
   const lines: string[] = [];
   if (r.repeatToday) {
     lines.push(...npc.dialogue.giftRepeat);
   } else {
-    const special = npc.dialogue.giftsByItem[itemId] ?? npc.dialogue.giftsByItem[speciesOfFlower(itemId)];
+    const special = (isBirthday && itemId === BIRTHDAY_CAKE ? CAKE_THANKS[npcId] : undefined) ?? npc.dialogue.giftsByItem[itemId] ?? npc.dialogue.giftsByItem[speciesOfFlower(itemId)];
     lines.push(...(special ?? pickByDay(session, `${npcId}:gift:${itemId}`, npc.dialogue.gifts[r.reaction])));
     // ab und zu noch ein Satz genau zu diesem Geschenk (in der Stimme der Person, passend zu „mag / mag nicht“)
     if (!special) lines.push(...giftExtraLines(session, npcId, itemId));
@@ -367,7 +375,8 @@ export function giftToNpc(session: Session, npcId: string, itemId: string): Gift
     if (!r.heartUp && heartsFor(st.points) > before) handleHeartUp(session, npc, st, lines);
   } else lines.push(...bonus.lines);
   // Geburtstagsgeschenk: doppelte Freude
-  if (!r.repeatToday && npc.birthday && isSameDayMonth(session.clock(), npc.birthday)) {
+  if (!r.repeatToday && isBirthday) {
+    noteBirthdayGift(session, npcId);
     const before = heartsFor(st.points);
     st.points += r.gained;
     if (npc.birthdayLines) lines.push(...npc.birthdayLines.thanks);
