@@ -144,7 +144,7 @@ export const LOOKS: Readonly<Record<string, Appearance>> = {
     eyeColor: palette.eyeColors.graublau,
     smile: 'grinsen',
   },
-  /** Mo (Olis bester Freund, nur zu Besuch): kurze braune Haare (Fade), Dreitagebart, schwarze Steppweste über weißem T-Shirt */
+  /** Mo (Olis bester Freund, nur zu Besuch; BJJ-Trainer): kurze dunkelbraune Haare, braune Augen, Dreitagebart, Goldkette, schwarze Steppweste über weißem T-Shirt */
   mo: {
     ...base,
     hairStyle: 'kurzhaar',

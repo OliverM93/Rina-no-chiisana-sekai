@@ -5,7 +5,10 @@
  * aber Mo hat kürzlich jemanden kennengelernt (Jule) – aus der Verkupplung wird nichts. Thalia nimmt es mit Humor,
  * und der Abend wird trotzdem schön. Danach schaut Mo ab und zu samstags vorbei.
  *
- * Aussehen nach einem Foto nachempfunden (das Foto ist NICHT Teil des Projekts).
+ * Mo ist Brazilian-Jiu-Jitsu-Trainer, war früher Türsteher, liest viel (hat Philosophie studiert), hört wie Oli gern
+ * Hardcore und macht selbst Musik (E-Gitarre). Ruhig, freundlich, ein bisschen nachdenklich – nie Macho.
+ *
+ * Aussehen nach Fotos nachempfunden (die Fotos sind NICHT Teil des Projekts).
  */
 import type { Appearance } from '../core/appearance';
 import { LOOKS } from './npcs/looks';
@@ -31,7 +34,8 @@ export const MO_MEETING: readonly string[] = [
   'Oli, leise zu dir: „Ich hab ihm nichts verraten. Ehrenwort. … Fast nichts.“',
   'Du winkst Thalia rüber. Sie kommt tanzend an – und richtet ganz unauffällig ihr Halstuch.',
   'Thalia: „Hi! Ich bin Thalia. Ich hab die Playlist gemacht. Wenn sie dir nicht gefällt, war es Oli.“',
-  'Mo lacht. Die beiden reden über Clubs, über Tschechien, über den besten Döner der Stadt. Es läuft. Du stupst Oli an.',
+  'Mo lacht. Die beiden reden über Clubs, über Tschechien, über den besten Döner der Stadt.',
+  'Thalia: „Du gibst Jiu-Jitsu-Training? Zeig mal einen Griff!“ – Mo, ganz ruhig: „Erst nach dem Aufwärmen. Das sag ich auch meinen Zwölfjährigen.“ Es läuft. Du stupst Oli an.',
   'Dann hält Mo stolz sein Handy hoch: „Darf ich euch was zeigen? Das ist Jule. Wir haben uns vor drei Wochen kennengelernt. Ich glaub, das wird was.“',
   'Kurze Stille. Oli schaut sehr interessiert in sein Glas. Du schaust Thalia an.',
   'Thalia grinst: „Jule hat Geschmack. Grüß sie von mir – und bring sie nächsten Samstag mit!“',
@@ -41,6 +45,14 @@ export const MO_MEETING: readonly string[] = [
 
 /** Wenn Mo später ab und zu samstags vorbeischaut */
 export const MO_LINES: readonly (readonly string[])[] = [
+  ['Ich komm grad vom Training. Kinderkurs, Jiu-Jitsu.', 'Eine Zwölfjährige hat mich heute in den Armhebel genommen. Ich hab abgeklopft und war sehr stolz. Auf sie.'],
+  ['Früher hab ich an der Tür gestanden. Türsteher, fünf Jahre.', 'Das Wichtigste, was ich da gelernt hab: freundlich bleiben. Die meisten wollen nur, dass jemand sie ernst nimmt.'],
+  ['Ich lese gerade wieder Seneca.', 'Der meint, wir leiden öfter in der Vorstellung als in der Wirklichkeit. Hat bei mir geholfen. Nur nicht bei Spinnen.'],
+  ['Hab Philosophie studiert. Die Leute fragen immer, was man damit macht.', 'Ich sag: Ich bringe Leuten bei, ruhig zu atmen, während jemand auf ihnen liegt. Das ist angewandte Philosophie.'],
+  ['Ich schreib gerade an einem Song. Drei Akkorde, ganz viel Gefühl.', 'Oli macht den Schrei im Refrain. Er übt im Auto. Falls du an der Ampel was hörst: Das ist Kunst.'],
+  ['Oli und ich waren letzte Woche auf einem Hardcore-Konzert.', 'Er hat in der ersten Reihe gestanden und danach einem Fremden die Schuhe zugebunden. So ist die Szene. Und so ist Oli.'],
+  ['Kannst ja mal zum Probetraining kommen, Lina. Jiu-Jitsu ist wie Schach.', 'Nur dass der Gegner auf dir liegt. Thalia hat schon zugesagt. Sie meinte, für die Kondition.'],
+
   ['Lina! Jule lässt grüßen.', 'Sie sagt, euer Dorf sieht aus wie aus einem Videospiel. Ich hab gesagt: Ja. Genau deshalb komm ich gern.'],
   ['Oli hat mir zwanzig Minuten lang deine Rippchen beschrieben.', 'Mit Handbewegungen. Ich will die unbedingt mal probieren.'],
   ['Thalia hat mir einen Trainingsplan geschrieben. Drei Seiten.', 'Ich glaub, das war eine kleine Rache. Eine sehr nette Rache.'],

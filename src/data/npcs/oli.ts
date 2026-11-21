@@ -113,6 +113,8 @@ export const OLI: NpcDef = {
       { text: ['Du hast schon wieder einen Plan, wie wir Thalia verkuppeln, oder? Ich seh’s dir an.','Ich bin der Fahrer. Ich weiß nicht, wohin. Aber ich fahre.'] },
       { text: ['Eure Studienreise nach Tschechien, du und Thalia: eine Woche, bestimmt hat Thalia jeden Hügel kartiert.','Du musst mir mal alle Fotos zeigen, Lini. Ich verspreche auch, nicht zu viel zu kommentieren.'] },
       { text: ['Mo hat geschrieben. Er lässt dich grüßen, Lini.', 'Wir wollen bald mal wieder zu dritt kochen. Du kochst, Mo und ich bewundern. Das ist unsere Stärke.'] },
+      { text: ['Mo hat mir ein neues Riff auf der E-Gitarre vorgespielt. Über Handy. Sehr laut.', 'Ich hab gesagt, ich mach den Gesang. Er hat gesagt: „Schreien zählt nicht als Gesang.“ Wir proben trotzdem.'] },
+      { text: ['Mo hat mir wieder ein Buch geliehen. Philosophie.', 'Ich bin auf Seite zwölf und schon sehr nachdenklich. Und ein bisschen müde. Das gehört wohl dazu.'] },
       { text: ['Wollen wir heute Abend weiter „Berserk“ gucken, Lini?', 'Ich bin emotional bereit. Bin ich nicht. Aber mit dir auf dem Sofa schon.'] },
       { text: ['Ich hab heute Morgen beim Bäcker „Gabagool“ gesagt. Wie Tony in den „Sopranos“.', 'Die Verkäuferin hat nur genickt. Du hast gelacht. Mission erfüllt.'] },
       { text: ['Hab gestern nochmal „Blade Runner“ geguckt. Dieser Regen, dieses Neonlicht …', 'Lini, ich glaube, unser Zuhause braucht mehr Neon. Nur ein bisschen. Ein Schild. Mit Herz.'] },
