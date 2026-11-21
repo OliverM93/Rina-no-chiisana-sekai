@@ -379,3 +379,13 @@ vergeht. Kein Fortschritt, keine Belohnung, keine Zahlen, nichts gespeichert –
 **Bewusst nicht:** Belohnungen pro Rang, Strafen bei Niederlagen.
 **Designprüfung:** 1 „Ich werde Yokozuna!“ · 2 beliebig oft · 3 Zeit mit Lars, sein Sumo-Hobby · 4 Ränge als Langzeitziel ohne Druck · 5 keine Ökonomie-Wirkung · 6 Frust → erreichte Ränge bleiben, Level 1 leicht · 7 kein FOMO · 8 ✅ Echtzeit-Simulation im Test, im Browser gespielt.
 
+
+### D51 · Thalia bleibt single (Nov. 2026)
+
+**Anlass:** Audit 6, C7: Nach Mos Abend (Mo hat Jule kennengelernt) ist Linas Verkupplungswunsch erzählerisch abgeschlossen, Thalia aber weiter Single – offener Faden?
+**Entscheidung:** ✅ Lina: **Thalia bleibt im Spiel single.** Keine Liebesgeschichte, kein neuer Kandidat auf der Party. Lina darf weiter Pläne schmieden und Thalia
+darf weiter „Lina, dein Gesicht!“ sagen – das ist der Witz, nicht ein Auftrag. **Pater Matteo** bleibt, was er ist: ein Brieffreund aus Italien (kein Flirt), der
+Kalender „Padre del Mese“ ein Spaß.
+**Bewusst nicht:** ein Verkupplungs-Ziel, Herz-Bedingungen für eine Beziehung, Eifersuchts- oder Liebeskummer-Szenen.
+**Designprüfung:** 1 Freundschaft statt Romantik-Ziel · 2 kein Zwang · 3 Thalia als fröhliche beste Freundin (Säule Persönlichkeit) · 4 keine Ökonomie-Wirkung ·
+5 kein FOMO · 6 – · 7 – · 8 ✅ in `CLAUDE.md` (Thalia) festgehalten.
