@@ -15,7 +15,7 @@ import { possessive } from '../core/grammar';
 import { floorsOf, groundFloor } from '../data/floorplan';
 import { checkPlacement, type Exit, riderOffset, exitAt, footprint, type Room, type RoomLayout, type Rotation, wallRotationAt } from '../core/room';
 import { FURNITURE_BY_ITEM, furnitureInfo, SURFACE_BY_ID } from '../data/furniture';
-import { getDaylight, getSeason, isSameDayMonth } from '../core/time';
+import { getDaylight, getSeason } from '../core/time';
 import { IDLE_GAP, IDLE_START, type IdleAct } from '../data/idle';
 import { pickIdleAct } from '../game/idle';
 import { isWatered, spotKey } from '../core/garden';
@@ -73,6 +73,7 @@ import { KISS } from './Character3D';
 /** Abstand der Figurenmitten beim Küsschen (in Kacheln): Köpfe ~0,52 breit, beim Vorbeugen rücken sie je ~0,14 näher */
 const KISS_DISTANCE = 0.84;
 import { isPartyTime } from '../game/party';
+import { birthdayHost } from '../game/geburtstag';
 import { makePartyLights, makePicnic } from './models/buildings';
 import { cafeExchange, cafeGuests, cafeSeating, cafeTalk } from '../game/cafe';
 import { activitiesFor, finishActivity, introLines } from '../game/unternehmungen';
@@ -928,12 +929,13 @@ export class World3D {
   /** Festschmuck & Begrüßung zum Fest */
   private refreshFestivals() {
     const fests = todaysFestivals(this.session);
-    this.festivals.refresh(fests);
+    const host = birthdayHost(this.session);
+    this.festivals.refresh(fests, host && host.id !== 'lina' ? host.home : null);
     const day = this.session.today();
-    const bday = NPCS.find((n) => n.birthday && (!n.movesIn || this.session.data?.flags[n.movesIn]) && isSameDayMonth(this.session.clock(), n.birthday));
+    const bday = host && host.id !== 'lina' ? host : null;
     if ((fests.length > 0 || bday) && this.festToastDay !== day) {
       this.festToastDay = day;
-      const text = fests.length > 0 ? FESTIVAL_INFO[fests[0]].toast : `🎂 Heute hat ${bday?.name} Geburtstag! Vielleicht ein kleines Geschenk? 🎁`;
+      const text = fests.length > 0 ? FESTIVAL_INFO[fests[0]].toast : `🎂 Heute hat ${bday?.name} Geburtstag! Abends ab 18 Uhr feiern alle vor dem Haus. 🎈`;
       window.setTimeout(() => this.session.bus.emit('toast', { text }), 3500);
     }
   }
