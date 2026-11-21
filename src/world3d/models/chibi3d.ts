@@ -438,17 +438,11 @@ function addHair(head: THREE.Group, a: Appearance, R: number) {
     }
     case 'kurzhaar': {
       // Kurzer Herrenschnitt (Fade): Seiten & Nacken nur ein Hauch (Haut schimmert durch),
-      // oben kurzes, leicht strukturiertes Deckhaar, vorne etwas nach oben gestrichen – nichts hängt an den Wangen.
+      // oben kurzes, glattes Deckhaar (ohne Tolle) – nichts hängt an den Wangen.
       const k = Math.max(1, 1 + (a.build - 1) * 0.35);
       backCap(1.72, 1.008 * k + 0.008, mixHex(a.skinTone, col, 0.35), 1.05);
       backCap(1.12, 1.025 * k + 0.012, mixHex(a.skinTone, col, 0.7), 1.0);
       topCap(0.8, 1.06 * k);
-      // etwas Volumen oben (flach, glatt) und vorne ein kleiner hochgestrichener Ansatz
-      topCap(0.5, 1.09 * k, shades[1]);
-      for (let i = -1; i <= 1; i++) {
-        const p = onSphere(R * 1.05 * k, 0.5, FRONT + i * 0.32);
-        head.add(part(sphereLow, shades[i === 0 ? 0 : 2], R * 0.3, R * 0.12, R * 0.2, p.x, p.y, p.z));
-      }
       break;
     }
     case 'zerzaust': {
