@@ -31,6 +31,7 @@ und Freundschaft als „weiche Währung“. Alle Zahlen hier stammen aus den Dat
 | Eier | Hühner 2–3, Wachteln 3–4 je Tag | 20 / 14 ⭐ |
 | Beet (Blumen, Gemüse, Kräuter) | Plätze & 1 Stufe/Tag | Blumen 22–40 ⭐, Gemüse 10–45 ⭐ × Ertrag |
 | Kochen / Tees / Binden | Zutaten | siehe Margen |
+| **Rippchen** (Nov. 2026) | nicht kaufbar: 2 nach jedem Sonntagsessen bei Jens + Olafs Mitbringsel (20 % der Tage, je 2) | 60 ⭐ roh; 📏 ≈ 4–5 Stück/Woche, wer sonntags dabei ist |
 | Sparbuch-Zinsen | 5 %/Woche, max. 2 500 ⭐/Woche | ab 20 000 ⭐ Guthaben ≈ 1 000 ⭐/Woche (siehe Einordnung oben) |
 | Briefe, Feste, Daily Treats | Ereignisse | Gegenstände, selten Sternchen |
 
@@ -60,6 +61,8 @@ Der Katalog soll nicht unbemerkt weiter wachsen: siehe **Katalog-Budget** in `BA
 | Station | Spanne | Auffällig |
 |---|---|---|
 | Küche (31, davon 9 Fischgerichte ≈ 1,6×) | 1,6 – 6,3× | über 3,5×: Bratapfel 6,3×, Crêpes 5,8×, Lavendelkekse 4,5×, Apfelpfannkuchen 4,4×, Zimtsterne 4,0× – unkritisch, weil Zutaten begrenzt und Kochen keine Geldquelle ist |
+| **AirFryer** (3, Nov. 2026) | 1,3 – 6,4× | Kohlchips **6,4×** (1 Kohl 22 ⭐ → 2 × 70 ⭐), Pommes 4,5× (2 Kartoffeln → 90 ⭐; seit Audit 6 C1 nur 1 Portion), knusprige Rippchen 1,3× (2 Rippchen + Krautsalat → 260 ⭐; über die ganze Kette Kohl → Krautsalat → Rippchen ≈ 1,9×) |
+| Kohl-Gerichte in der Küche (2, Nov. 2026) | 3,1 – 4,7× | Krautsalat 4,7× (Kohl + Karotte → 2 Schüsseln à 80 ⭐), Kohleintopf 3,1× |
 | Apotheke (5) | 1,5 – 4,3× | Kräutermischung 4,3× (Kräuter-Ernte, begrenzt) |
 | Werkbank-Möbel | 0,8 – 3,2× | Möbelwert zählt nur ¼ → Verkaufen lohnt nicht; sie sind **Deko**, keine Einnahme |
 | Sträuße | 1,2 – 1,8× | Schwarz-Strauß 700 ⭐ (seltene Mischfarbe) |
@@ -105,7 +108,14 @@ Zutat (gemischter Salat). Das passt zur Absicht.
 4. ~~Insekten/Fische haben fast keine Verwendung~~ – seit W6 gibt es 9 Fischgerichte und Schaukästen (Vitrine, Insektenkasten, Fischtafel); Insekten gehen weiter fast nur in den Verkauf.
 5. **Inhaltswellen vergrößern die Senken, nicht das Einkommen** (Audit 4, A3): Der Katalog wuchs seit Audit 3 von ≈ 125 k auf ≈ 255 k ⭐. Gegenmittel: Katalog-Budget (Leitlinie + Test).
 
+**Küche nach Audit 6 (Nov. 2026) [N]:** Kohl wächst nur im Sommer und Herbst und trägt **einmal** je Pflanze (Samen 6 ⭐). Ein Beetplatz
+bringt damit höchstens ≈ 140 ⭐ je Wachstumszyklus (als Kohlchips) – gegenüber 15–25 k ⭐/h beim Angeln bleibt Kochen ein **Ritual mit
+Belohnung, keine Geldquelle**. Rippchen sind bewusst knapp (nur geschenkt, nie gekauft), damit Linas Lieblingsessen etwas Besonderes bleibt.
+
 ## Empfehlungen 💡
+
+- **Kohlchips beobachten (6,4×, Nov. 2026):** höchste Küchen-Marge, aber absolut klein (s. o.). Nur anfassen, wenn Lina Kohl *nur noch*
+  für Chips anbaut – dann 1 Schälchen statt 2 (≈ 3,2×), wie bei den Pommes (Audit 6, C1).
 
 - **Spätspiel-Senken mit Bedeutung statt Zahlen:** z. B. Dorf-Projekte (Brunnen verschönern, Steg am Fluss,
   Pavillon für die Party), die Lina *mitfinanziert* und die das Dorf sichtbar verändern. Verbindet Geld mit
