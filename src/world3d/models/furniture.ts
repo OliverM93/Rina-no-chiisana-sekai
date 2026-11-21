@@ -1735,6 +1735,18 @@ export function makeFurniture(itemId: string, links: FenceLinks = { n: false, e:
       }
       break;
     }
+    case 'katzenkissen': {
+      // kleines rundes Kissen mit weichem Rand (Donut) – katzengroß
+      const rim = mesh(new THREE.TorusGeometry(0.19, 0.06, 10, 24), toon('#b9a7c9'));
+      rim.rotation.x = Math.PI / 2;
+      rim.position.y = 0.06;
+      g.add(rim);
+      g.add(c(0.2, 0.04, '#d9cce4', 0, 0.03, 0));
+      // kleine Pfote als Muster am Rand
+      g.add(s(0.035, 0.008, 0.035, '#f0a3b6', 0.13, 0.11, 0.1));
+      for (const [dx, dz] of [[-0.035, -0.03], [0, -0.045], [0.035, -0.03]]) g.add(s(0.014, 0.008, 0.014, '#f0a3b6', 0.13 + dx, 0.11, 0.1 + dz));
+      break;
+    }
     case 'hundekoerbchen': {
       const basket = mesh(new THREE.CylinderGeometry(0.4, 0.34, 0.16, 20, 1, true), toon('#c9955f', { side: THREE.DoubleSide }));
       basket.scale.set(1, 1, 0.82);

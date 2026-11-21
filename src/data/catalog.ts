@@ -243,6 +243,7 @@ const FURNITURE_META: Record<string, Row> = {
   haekelteppich: ['moebel', 'teppiche', ['cottage']],
   kerzenleuchter: ['moebel', 'lampen', ['cottage']],
   wollkorb: ['moebel', 'deko', ['cottage']],
+  katzenkissen: ['moebel', 'deko'],
   // Retro-Oma-Chic
   ohrensessel: ['moebel', 'sofas', ['retro', 'darkacademia']],
   nierentisch: ['moebel', 'tische', ['retro', 'midcentury']],

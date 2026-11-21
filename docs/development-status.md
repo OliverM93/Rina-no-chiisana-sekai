@@ -275,7 +275,7 @@ Legende: ✅ erledigt · 🚧 in Arbeit · ⬜ geplant
 - ✅ **Einrichten im Fluss:** Katalog im Einrichtungsmodus (Kaufen = in die Hand), Vorrat aus Tasche + Truhe, C „noch eins“, V/1–9 Farbe, Strg+Z rückgängig
 - ✅ **Café-Gäste (Nov. 2026):** Bewohner sitzen ab und zu in Chez Jens, trinken etwas und kommentieren das Café. ✅ Gäste reden an den Tischen miteinander und mit Jens (Sprechblasen, Nov. 2026)
 - ✅ **Geburtstagsrunde (Nov. 2026):** Luftballons am Haus des Geburtstagskinds, abends feiern alle davor (18–21 Uhr), Gast-Zeilen, Linas Geburtstagskuchen zum Selberbacken, Album-Moment je Geburtstag. ❓ Omas Geburtstag fehlt noch
-- ✅ **Kater und Igor (Nov. 2026):** Linas schwarzer Kater streunert durchs Dorf (ab Einzug von Olaf und Christin), lässt sich streicheln; Olaf und Christin erzählen von ihm, mehrere Bewohner erinnern sich liebevoll an Igor. 🗓️ Offen: Kater im Haus (Körbchen, Fensterbrett), Mäuse-Geschenke, Kater im Café
+- ✅ **Kater und Igor (Nov. 2026):** Linas schwarzer Kater streunert durchs Dorf (ab Einzug von Olaf und Christin), lässt sich streicheln; Olaf und Christin erzählen von ihm, mehrere Bewohner erinnern sich liebevoll an Igor. ✅ Kater im Haus (Nov. 2026): Katzenkissen im Katalog, bei Regen und an Besuchstagen liegt er darauf, bringt manchmal ein Fundstück mit. 🗓️ Offen: Fensterbrett, Kater im Café
 - ✅ **Pflanzen ausgraben (Nov. 2026):** Schaufel am Beet gräbt eine Pflanze aus (Samen kommt zurück), dann lässt sich neu einsetzen
 - ✅ **Sträuße lohnen sich (Nov. 2026):** Geliebter Strauß +10 Punkte, wöchentliche „Lust auf einen Strauß“ (+10 mehr), Vase/Kranz im Haus wird von Gästen und Bewohnern bemerkt
 - ✅ **Strauß-Preise angehoben (Nov. 2026):** Verkaufswert ≈ 2,5–3× der Zutaten (vorher 1,2–1,8×), Test hält 2–4×
