@@ -1576,7 +1576,7 @@ export function makeFurniture(itemId: string, links: FenceLinks = { n: false, e:
       const glass = new THREE.MeshToonMaterial({ color: '#cfe8f4', transparent: true, opacity: 0.32, depthWrite: false });
       g.add(b(2.86, 0.36, 0.86, wood, 0, 0.18, 0));
       g.add(b(2.9, 0.04, 0.9, '#c9955f', 0, 0.37, 0));
-      g.add(b(2.74, 0.02, 0.74, '#6e4a32', 0, 0.38, 0));
+      g.add(b(2.74, 0.02, 0.74, '#6e4a32', 0, 0.4, 0)); // Erde knapp über dem Rand-Brett (gleiche Höhe → Flimmern)
       // Rahmen & Glas
       for (const x of [-1.42, 1.42]) {
         g.add(b(0.04, 0.6, 0.04, '#f7f5ec', x, 0.7, -0.4));
@@ -4175,10 +4175,13 @@ export function makeFurniture(itemId: string, links: FenceLinks = { n: false, e:
       g.add(b(0.6, 0.6, 0.6, col, 0, 0.3, 0));
   }
   g.traverse((o) => {
-    if ((o as THREE.Mesh).isMesh) {
-      o.castShadow = true;
-      o.receiveShadow = true;
-    }
+    const m = o as THREE.Mesh;
+    if (!m.isMesh) return;
+    // Glas & andere durchsichtige Teile werfen/empfangen keinen Schatten: dünne Scheiben flimmern sonst,
+    // sobald der Sonnenschatten beim Laufen mitwandert (Frühbeet, Gewächshaus, Vitrinen)
+    const see = (Array.isArray(m.material) ? m.material : [m.material]).some((mat) => mat.transparent);
+    m.castShadow = !see;
+    m.receiveShadow = !see;
   });
   return { group: g, glow, lightAt, seatY };
 }
