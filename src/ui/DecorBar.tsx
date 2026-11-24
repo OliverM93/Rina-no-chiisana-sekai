@@ -65,6 +65,8 @@ export function DecorBar({ session, decor }: { session: Session; decor: DecorSta
   // Vorrat: Tasche + Truhe (Möbel, Tapeten, Böden)
   const stock = decorStock(session).filter((s) => (FURNITURE_BY_ITEM[s.itemId] ? fitsHere(session, s.itemId) : !outside && !!SURFACE_BY_ID[s.itemId]));
   const holding = decor.holding ? itemDef(decor.holding)?.name : null;
+  /** Tapete/Boden in der Hand (wird per Klick auf einen Raum angebracht) */
+  const heldSurface = !!decor.holding && !!SURFACE_BY_ID[decor.holding];
 
   return (
     <>
@@ -96,7 +98,9 @@ export function DecorBar({ session, decor }: { session: Session; decor: DecorSta
       </div>
       <div class="decor-bar pop-in">
         <span class="decor-hint">
-          {holding
+          {holding && heldSurface
+            ? `${holding}: auf einen Raum klicken${decor.surfaceRoom ? ` → ${decor.surfaceRoom}` : ''} (T: zurücklegen)`
+            : holding
             ? `${holding}: Klicken zum Abstellen${decor.valid ? '' : ` – ${decor.reason ?? 'hier passt es nicht'}`}`
             : outside
               ? 'Klick auf Gartensachen zum Verschieben – auf einen Busch oder Baum zum Wegmachen. Kamera: ziehen oder WASD, Mausrad zoomt.'
@@ -111,7 +115,7 @@ export function DecorBar({ session, decor }: { session: Session; decor: DecorSta
             ))}
           </span>
         )}
-        <button class="btn small" disabled={!decor.holding} onClick={() => send({ kind: 'rotate' })}>
+        <button class="btn small" disabled={!decor.holding || heldSurface} onClick={() => send({ kind: 'rotate' })}>
           ↻ Drehen (R)
         </button>
         <button class="btn small" disabled={!decor.holding} onClick={() => send({ kind: 'store' })}>

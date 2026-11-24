@@ -274,6 +274,7 @@ Legende: ✅ erledigt · 🚧 in Arbeit · ⬜ geplant
 - ✅ **Oli in Stufen:** „Zeit zu zweit“-Szenen (eine je Herz), „Zur Herzbank“ mit Jahreszeiten-Zeilen, Jubiläums-Briefe nach 100 Tagen und einem Jahr (Audit F6)
 - ✅ **Einrichten im Fluss:** Katalog im Einrichtungsmodus (Kaufen = in die Hand), Vorrat aus Tasche + Truhe, C „noch eins“, V/1–9 Farbe, Strg+Z rückgängig
 - ✅ **Café-Gäste (Nov. 2026):** Bewohner sitzen ab und zu in Chez Jens, trinken etwas und kommentieren das Café. ✅ Gäste reden an den Tischen miteinander und mit Jens (Sprechblasen, Nov. 2026)
+- ✅ **Tapete & Boden gezielt (Nov. 2026):** erst in die Hand nehmen, dann auf den gewünschten Raum klicken (vorher landete er im zuletzt berührten Raum)
 - ✅ **Geburtstagsrunde (Nov. 2026):** Luftballons am Haus des Geburtstagskinds, abends feiern alle davor (18–21 Uhr), Gast-Zeilen, Linas Geburtstagskuchen zum Selberbacken, Album-Moment je Geburtstag. ❓ Omas Geburtstag fehlt noch
 - ✅ **Kater und Igor (Nov. 2026):** Linas schwarzer Kater streunert durchs Dorf (ab Einzug von Olaf und Christin), lässt sich streicheln; Olaf und Christin erzählen von ihm, mehrere Bewohner erinnern sich liebevoll an Igor. ✅ Kater im Haus (Nov. 2026): Katzenkissen im Katalog, bei Regen und an Besuchstagen liegt er darauf, bringt manchmal ein Fundstück mit. 🗓️ Offen: Fensterbrett, Kater im Café
 - ✅ **Pflanzen ausgraben (Nov. 2026):** Schaufel am Beet gräbt eine Pflanze aus (Samen kommt zurück), dann lässt sich neu einsetzen

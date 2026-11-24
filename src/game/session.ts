@@ -88,6 +88,8 @@ export interface DecorState {
   valid: boolean;
   /** Warum es nicht passt (nur wenn `valid` falsch ist) */
   reason?: string;
+  /** Tapete/Boden in der Hand: Name des Raums unter dem Mauszeiger */
+  surfaceRoom?: string;
   /** Farben des gehaltenen Möbels (leer = keine) */
   variants: Array<{ itemId: string; label: string; color: string }>;
   /** Gibt es etwas, das sich rückgängig machen lässt? */
