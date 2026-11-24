@@ -269,6 +269,8 @@ export class World3D {
   /** Position des Katers zu Hause (Weltkoordinaten wie bei Lina) */
   private homeCatPos: { x: number; y: number } | null = null;
   private homeCatTime = 0;
+  /** Tapete/Boden „in der Hand“: wird erst mit einem Klick auf einen Raum angebracht */
+  private heldSurface: string | null = null;
   /** Mo (Olis bester Freund) – nur zu Besuch auf der Samstagsparty */
   private mo: Character | null = null;
   /** Das Gestrüpp, in dem sich Winston verfangen hat (bis Lina ihn befreit) */
@@ -4661,8 +4663,9 @@ export class World3D {
     if (this.session.decorActive) {
       // Einrichten: Boden oder Wand (zum Aufhängen von Bildern & Regalen) in jedem Raum
       // ohne etwas in der Hand: auf Möbel zielen (auch Wand-Deko), sonst Boden/Wand
-      const targets = this.decor ? views.flatMap(([, v]) => [v.floor, ...v.walls]) : views.map(([, v]) => v.group);
-      const hit = this.raycaster.intersectObjects(targets, !this.decor)[0];
+      const holdsSomething = !!this.decor || !!this.heldSurface;
+      const targets = holdsSomething ? views.flatMap(([, v]) => [v.floor, ...v.walls]) : views.map(([, v]) => v.group);
+      const hit = this.raycaster.intersectObjects(targets, !holdsSomething)[0];
       this.hoverWall = null;
       if (!hit) return null;
       const rid = this.houseView.roomOf(hit.object);
@@ -4673,6 +4676,7 @@ export class World3D {
         this.session.roomId = rid;
         this.houseView.setActive(rid);
         for (const [id, v] of views) if (id !== rid) v.hideGhost();
+        if (this.heldSurface) this.emitDecor();
       }
       const view = this.interior;
       const L = this.lay;
@@ -4772,7 +4776,14 @@ export class World3D {
         this.decor = { itemId: c.itemId, uid: null, rot: 0, source: c.itemId };
         break;
       case 'surface':
-        this.applySurfaceWithUndo(c.itemId);
+        // Draußen gibt es nur einen „Raum“ (den Garten) – drinnen wählt Lina den Raum per Klick
+        if (!this.session.inside || this.session.visiting) {
+          this.applySurfaceWithUndo(c.itemId);
+          return;
+        }
+        this.cancelHold();
+        this.heldSurface = this.heldSurface === c.itemId ? null : c.itemId;
+        this.emitDecor();
         return;
       case 'pipette':
         this.pipette();
@@ -4787,6 +4798,11 @@ export class World3D {
         this.rotateHeld();
         return;
       case 'store':
+        if (this.heldSurface) {
+          this.cancelHold();
+          this.emitDecor();
+          return;
+        }
         this.storeHeld();
         return;
       case 'cancel':
@@ -4822,6 +4838,7 @@ export class World3D {
 
   private cancelHold() {
     this.decor = null;
+    this.heldSurface = null;
     this.interior.setHidden(null);
     this.interior.hideGhost();
     this.yard.setHidden(null);
@@ -4831,9 +4848,10 @@ export class World3D {
   private emitDecor(valid = true, reason?: string) {
     this.session.bus.emit('decor:state', {
       active: this.session.decorActive,
-      holding: this.decor?.itemId ?? null,
+      holding: this.decor?.itemId ?? this.heldSurface ?? null,
       valid,
       reason,
+      surfaceRoom: this.heldSurface && this.hoverRoom ? layoutOf(this.data?.house.stage ?? 0, this.hoverRoom).name : undefined,
       variants: this.decor ? variantsOf(this.decor.itemId) : [],
       canUndo: this.undoStack.length > 0,
     });
@@ -4994,6 +5012,14 @@ export class World3D {
     const home = this.room;
     const cell = this.hoverCell;
     if (!home || !cell) return;
+    // Tapete/Boden in der Hand: in den Raum unter dem Mauszeiger (der ist gerade der aktuelle Raum)
+    if (this.heldSurface) {
+      const itemId = this.heldSurface;
+      this.applySurfaceWithUndo(itemId);
+      if (stockCount(this.session, itemId) === 0) this.heldSurface = null;
+      this.emitDecor();
+      return;
+    }
     const d = this.decor;
     if (!d) {
       const top = this.dv.topAt(home, cell.x, cell.y, this.hoverWall);
