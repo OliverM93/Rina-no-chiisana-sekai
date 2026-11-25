@@ -4671,12 +4671,13 @@ export class World3D {
       const rid = this.houseView.roomOf(hit.object);
       if (!rid) return null;
       // Beim Einrichten wird der Raum unter dem Mauszeiger zum aktuellen Raum
+      const roomChanged = this.hoverRoom !== rid;
       this.hoverRoom = rid;
+      if (this.heldSurface && roomChanged) this.emitDecor();
       if (rid !== this.session.roomId) {
         this.session.roomId = rid;
         this.houseView.setActive(rid);
         for (const [id, v] of views) if (id !== rid) v.hideGhost();
-        if (this.heldSurface) this.emitDecor();
       }
       const view = this.interior;
       const L = this.lay;
