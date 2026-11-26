@@ -370,8 +370,16 @@ describe('Version 14 (Vorratstruhe)', () => {
     delete v13.storage;
     const r = parseSave(JSON.stringify(v13), SPAWN, NOW);
     expect(r.ok && r.data.version).toBe(SAVE_VERSION);
-    expect(r.ok && r.data.storage.slots.length).toBe(60);
+    expect(r.ok && r.data.storage.slots.length).toBe(120);
     expect(r.ok && r.data.storage.slots.every((x) => x === null)).toBe(true);
+  });
+
+  it('eine alte Truhe mit 60 Plätzen wächst auf 120 – der Inhalt bleibt', () => {
+    const old = freshSave() as unknown as { storage: { slots: Array<{ itemId: string; count: number } | null> } };
+    old.storage.slots = Array.from({ length: 60 }, (_, i) => (i === 59 ? { itemId: 'ast', count: 7 } : null));
+    const r = parseSave(JSON.stringify(old), SPAWN, NOW);
+    expect(r.ok && r.data.storage.slots.length).toBe(120);
+    expect(r.ok && r.data.storage.slots[59]).toEqual({ itemId: 'ast', count: 7 });
   });
 
   it('Inhalt der Truhe übersteht Speichern & Laden', () => {
