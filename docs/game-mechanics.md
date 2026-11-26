@@ -124,7 +124,7 @@ Wetter und Feste laufen nach echter Zeit.
   nachts Sterne). Alles über Story-Flags (`wunsch-<id>`, `wunsch-erzaehlt-<id>`), kein neues Spielstand-Feld. Keine Frist,
   keine Reihenfolge; Thalias Dorfkarte zeigt 💭 bei Bewohnern mit offenem Wunsch. Mehrere Wünsche je Bewohner sind
   vorbereitet (`order`).
-- **Vorratstruhe:** Möbel `vorratstruhe` (Katalog, 650 ⭐, 2×1, Dinge dürfen oben drauf stehen) öffnet ein Lager mit **60 Plätzen**
+- **Vorratstruhe:** Möbel `vorratstruhe` (Katalog, 650 ⭐, 2×1, Dinge dürfen oben drauf stehen) öffnet ein Lager mit **120 Plätzen** (bis Nov. 2026: 60; ältere Spielstände wachsen beim Laden einfach mit)
   (`SaveData.storage`, `game/storage.ts`, Fenster `ui/StoragePanel.tsx`). Klick (oder Enter/Leertaste, Pfeiltasten) legt einen ganzen
   Stapel von der Tasche in die Truhe und zurück; Werkzeuge bleiben in der Tasche; „↕ Sortieren“ ordnet die Truhe. **Alle Truhen teilen sich
   denselben Vorrat** – nichts geht verloren, wenn Lina eine verschiebt oder wegräumt. Was nicht mehr passt, bleibt, wo es war.
