@@ -16,7 +16,7 @@ import { guestLayout, guestRoom } from '../data/gastHaeuser';
 import { emptyRoom, HOUSE_STAGES, layoutOf, MAX_STAGE, roomLayouts } from '../data/house';
 import { itemDef, maxStackOf } from '../data/items';
 import { lineUnlocked } from './catalog';
-import { giveItem, takeItem } from './gameplay';
+import { giveItem } from './gameplay';
 import type { Session } from './session';
 
 /** Katalogpreis (Kaufpreis) eines Möbels, einer Tapete oder eines Bodens */
@@ -319,15 +319,16 @@ export function restoreFurniture(session: Session, items: readonly PlacedItem[])
   return true;
 }
 
-/** Tapete oder Boden im aktuellen Raum anbringen – die alte kommt in die Tasche. */
+/** Tapete oder Boden im aktuellen Raum anbringen (aus Tasche oder Truhe) – der alte kommt in die Tasche, ist sie voll in die Truhe. */
 export function applySurface(session: Session, itemId: string): boolean {
   const c = currentRoom(session);
   const s = SURFACE_BY_ID[itemId];
-  if (!c || !s || !takeItem(session, itemId, 1)) return false;
+  // aus dem Vorrat (Tasche, sonst Truhe) – wie bei Möbeln; vorher nur aus der Tasche, dann passierte nichts
+  if (!c || !s || !takeStock(session, itemId)) return false;
   const old = s.kind === 'tapete' ? c.room.wallpaper : c.room.floor;
   if (s.kind === 'tapete') c.room.wallpaper = itemId;
   else c.room.floor = itemId;
-  if (old && old !== itemId) giveItem(session, old, 1, false);
+  if (old && old !== itemId) giveStock(session, old);
   session.changed();
   session.save();
   return true;

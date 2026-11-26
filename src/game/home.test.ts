@@ -3,7 +3,7 @@ import { DEFAULT_LINA } from '../core/appearance';
 import { addItem } from '../core/inventory';
 import type { StorageLike } from '../core/save';
 import { INVENTORY_SIZE } from '../core/inventory';
-import { buyFromCatalog, decorStock, moveFurniture, nextStage, orderExpansion, pickUpFurniture, placeFromBag, restoreFurniture, stockCount, variantsOf } from './home';
+import { applySurface, buyFromCatalog, decorStock, moveFurniture, nextStage, orderExpansion, pickUpFurniture, placeFromBag, restoreFurniture, stockCount, variantsOf } from './home';
 import { giveItem } from './gameplay';
 import { Session } from './session';
 
@@ -118,3 +118,18 @@ describe('Olafs Bausparen', () => {
 function nextStageLoan() {
   return 9800;
 }
+
+describe('Tapete & Boden aus dem Vorrat', () => {
+  it('lässt sich auch anbringen, wenn er in der Truhe liegt; der alte kommt zurück', () => {
+    const s = newSession();
+    s.inside = true;
+    const room = s.data!.house.rooms[0];
+    const old = room.floor;
+    addItem(s.data!.storage, 'boden-tatami', 1);
+    expect(stockCount(s, 'boden-tatami')).toBe(1);
+    expect(applySurface(s, 'boden-tatami')).toBe(true);
+    expect(room.floor).toBe('boden-tatami');
+    expect(stockCount(s, 'boden-tatami')).toBe(0);
+    if (old) expect(stockCount(s, old)).toBe(1);
+  });
+});
