@@ -56,7 +56,7 @@ Wetter und Feste laufen nach echter Zeit.
 - **Natur:** Fische/Insekten in `data/species.ts` werden automatisch zu Gegenständen, Symbolen
   (`gfx/nature-icons.ts`) und Sammelbuch-Einträgen. Insekten wechseln stündlich (reproduzierbar), fliehen nie.
   Angeln: Verpassen ist kein Scheitern – der Fisch knabbert einfach nochmal. Regen gießt das Beet.
-  Der Regenbogen ist ein Bogen in der Oberfläche (die Schrägsicht zeigt keinen Himmel).
+  Der Regenbogen ist ein zarter, weichgezeichneter Bogen in der Oberfläche (die Schrägsicht zeigt keinen Himmel) und erscheint nur draußen, nicht in Gebäuden.
 - **Blumen & Kreuzungen (Beet/Samen, Phase 1):** `data/flowers.ts` legt je Blumenart (Tulpe, Rose, Sonnenblume, Lavendel,
   Vergissmeinnicht) die Standardfarbe, die Samen-Farben (gibt es als Samen aus Briefen, Omas Starterset …) und die
   Mischfarben fest, dazu die Mischregeln (`MIXES`: Rot × Gelb = Orange, Rot × Weiß = Rosa, Blau × Rosa = Lila,
