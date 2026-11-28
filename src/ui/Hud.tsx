@@ -46,7 +46,8 @@ export function Hud({ session }: { session: Session }) {
   useEffect(() => session.bus.on('overlay:fade', setFade), [session]);
   return (
     <>
-      {weather.rainbow && <div class="rainbow-overlay" aria-hidden="true" />}
+      {/* Regenbogen nur draußen – drinnen sieht man keinen Himmel */}
+      {weather.rainbow && !inside && <div class="rainbow-overlay" aria-hidden="true" />}
       {stars && <StarsOverlay season={season} />}
       <div class={`door-fade ${fade ? 'on' : ''}`} aria-hidden="true" />
       {isFireworkTime(now) && !inside && <FireworksOverlay />}

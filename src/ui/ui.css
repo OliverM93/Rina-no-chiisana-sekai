@@ -1503,19 +1503,21 @@ body:has(.dialog-layer) .decor-bar {
   transform: translateX(-50%);
   border-radius: 50%;
   pointer-events: none;
-  opacity: 0.32;
+  /* zart: schmaler Bogen, weiche Kanten, wenig Deckkraft */
+  opacity: 0.2;
+  filter: blur(4px);
   background: radial-gradient(
     closest-side,
-    transparent 78%,
-    var(--rb-violet) 80%,
-    var(--rb-blue) 83%,
-    var(--rb-green) 86%,
-    var(--rb-yellow) 89%,
-    var(--rb-orange) 92%,
-    var(--rb-red) 95%,
-    transparent 98%
+    transparent 85%,
+    var(--rb-violet) 87%,
+    var(--rb-blue) 89%,
+    var(--rb-green) 91%,
+    var(--rb-yellow) 93%,
+    var(--rb-orange) 95%,
+    var(--rb-red) 97%,
+    transparent 99%
   );
-  animation: fade-in 2s ease-out;
+  animation: fade-in 4s ease-out;
 }
 
 @keyframes fade-in {
